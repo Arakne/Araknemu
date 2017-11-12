@@ -1,0 +1,101 @@
+package fr.quatrevieux.araknemu.network.realm.in;
+
+import fr.quatrevieux.araknemu.network.in.Packet;
+import fr.quatrevieux.araknemu.network.in.PacketParser;
+import fr.quatrevieux.araknemu.network.in.ParsePacketException;
+import fr.quatrevieux.araknemu.network.realm.RealmSession;
+import org.apache.commons.lang3.StringUtils;
+
+/**
+ * Incoming login credentials
+ */
+final public class Credentials implements Packet {
+    public enum Method {
+        /** Method not used */
+        NONE,
+        /** Default method: vigenere cypher + pseudo base64 wrapping */
+        VIGENERE_BASE_64,
+        /** MD5 hash : md5( md5(user_input) + connection_key ) */
+        MD5
+        ;
+
+        /**
+         * Get method from method id char
+         * @param id The id char. Should be a number
+         * @return
+         */
+        static public Method get(char id) {
+            if (id > '9' || id < '0') {
+                throw new NumberFormatException();
+            }
+
+            int index = id - '0';
+
+            if (values().length <= index) {
+                throw new IndexOutOfBoundsException();
+            }
+
+            return values()[index];
+        }
+    }
+
+    final private String username;
+    final private String password;
+    final private Method method;
+
+    public Credentials(String username, String password, Method method) {
+        this.username = username;
+        this.password = password;
+        this.method   = method;
+    }
+
+    public String username() {
+        return username;
+    }
+
+    /**
+     * Password is encrypted
+     * The encryption method can be acceded using {@link Credentials#method()}
+     * The encryption key can be found on {@link RealmSession#key()}
+     */
+    public String password() {
+        return password;
+    }
+
+    /**
+     * Get the cypher method
+     */
+    public Method method() {
+        return method;
+    }
+
+    /**
+     * Get the packet parser instance
+     */
+    static public PacketParser parser() {
+        return input -> {
+            String[] parts = StringUtils.split(input, "\n", 2);
+
+            if (parts.length != 2) {
+                throw new ParsePacketException(input, "Missing password");
+            }
+
+            String username = parts[0].trim();
+            String hash     = parts[1].trim();
+
+            if (hash.charAt(0) != '#') {
+                throw new ParsePacketException(input, "Invalid hash format");
+            }
+
+            try {
+                return new Credentials(
+                    username,
+                    hash.substring(2),
+                    Method.get(hash.charAt(1))
+                );
+            } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                throw new ParsePacketException(input, "Invalid cypher method");
+            }
+        };
+    }
+}

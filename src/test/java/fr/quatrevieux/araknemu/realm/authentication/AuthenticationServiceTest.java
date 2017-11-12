@@ -1,0 +1,243 @@
+package fr.quatrevieux.araknemu.realm.authentication;
+
+import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
+import fr.quatrevieux.araknemu.realm.RealmBaseCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.sql.SQLException;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class AuthenticationServiceTest extends RealmBaseCase {
+    private AuthenticationService service;
+    private AccountRepository repository;
+    private String response;
+    private AuthenticationAccount _account;
+
+    @Override
+    @BeforeEach
+    public void setUp() throws Exception {
+        super.setUp();
+
+        service = new AuthenticationService(
+            repository = new AccountRepository(
+                app.database().get("realm")
+            )
+        );
+
+        repository.initialize();
+    }
+
+    @AfterEach
+    void tearDown() throws SQLException {
+        dropTable("ACCOUNT");
+    }
+
+    @Test
+    void login() {
+        AuthenticationAccount account = new AuthenticationAccount(
+            new Account(1),
+            service
+        );
+
+        assertFalse(service.isAuthenticated(account));
+
+        service.login(account);
+        account.attach(session);
+
+        assertTrue(service.isAuthenticated(account));
+    }
+
+    @Test
+    void logout() {
+        AuthenticationAccount account = new AuthenticationAccount(
+            new Account(1),
+            service
+        );
+
+        account.attach(session);
+
+        service.login(account);
+        assertTrue(service.isAuthenticated(account));
+
+        service.logout(account);
+        assertFalse(service.isAuthenticated(account));
+    }
+
+    @Test
+    void isAuthenticated() {
+        AuthenticationAccount account1 = new AuthenticationAccount(
+            new Account(1),
+            service
+        );
+
+        AuthenticationAccount account2 = new AuthenticationAccount(
+            new Account(1),
+            service
+        );
+
+        AuthenticationAccount account3 = new AuthenticationAccount(
+            new Account(2),
+            service
+        );
+
+        assertFalse(service.isAuthenticated(account1));
+        assertFalse(service.isAuthenticated(account2));
+        assertFalse(service.isAuthenticated(account3));
+
+        account1.attach(session);
+        service.login(account1);
+
+        assertTrue(service.isAuthenticated(account1));
+        assertTrue(service.isAuthenticated(account2));
+        assertFalse(service.isAuthenticated(account3));
+    }
+
+    @Test
+    void authenticateAccountNotFound() {
+        service.authenticate(new AuthenticationRequest() {
+            @Override
+            public String username() {
+                return "not_found";
+            }
+
+            @Override
+            public String password() {
+                return "";
+            }
+
+            @Override
+            public void success(AuthenticationAccount account) {
+
+            }
+
+            @Override
+            public void invalidCredentials() {
+                response = "invalidCredentials";
+            }
+
+            @Override
+            public void alreadyConnected() {
+
+            }
+        });
+
+        assertEquals("invalidCredentials", response);
+    }
+
+    @Test
+    void authenticateInvalidPassword() {
+        repository.add(new Account(-1, "test", "pass", "pseudo"));
+
+        service.authenticate(new AuthenticationRequest() {
+            @Override
+            public String username() {
+                return "test";
+            }
+
+            @Override
+            public String password() {
+                return "invalid";
+            }
+
+            @Override
+            public void success(AuthenticationAccount account) {
+
+            }
+
+            @Override
+            public void invalidCredentials() {
+                response = "invalidCredentials";
+            }
+
+            @Override
+            public void alreadyConnected() {
+
+            }
+        });
+
+        assertEquals("invalidCredentials", response);
+    }
+
+    @Test
+    void authenticateAlreadyConnected() {
+        Account account = repository.add(new Account(-1, "test", "pass", "pseudo"));
+
+        AuthenticationAccount authenticationAccount = new AuthenticationAccount(
+            account,
+            service
+        );
+
+        authenticationAccount.attach(session);
+        service.login(authenticationAccount);
+
+        service.authenticate(new AuthenticationRequest() {
+            @Override
+            public String username() {
+                return "test";
+            }
+
+            @Override
+            public String password() {
+                return "pass";
+            }
+
+            @Override
+            public void success(AuthenticationAccount account) {
+
+            }
+
+            @Override
+            public void invalidCredentials() {
+                response = "invalidCredentials";
+            }
+
+            @Override
+            public void alreadyConnected() {
+                response = "alreadyConnected";
+            }
+        });
+
+        assertEquals("alreadyConnected", response);
+    }
+
+    @Test
+    void authenticateSuccess() {
+        repository.add(new Account(-1, "test", "pass", "pseudo"));
+
+        service.authenticate(new AuthenticationRequest() {
+            @Override
+            public String username() {
+                return "test";
+            }
+
+            @Override
+            public String password() {
+                return "pass";
+            }
+
+            @Override
+            public void success(AuthenticationAccount account) {
+                response = "success";
+                _account = account;
+            }
+
+            @Override
+            public void invalidCredentials() {
+
+            }
+
+            @Override
+            public void alreadyConnected() {
+
+            }
+        });
+
+        assertEquals("success", response);
+        assertEquals("pseudo", _account.pseudo());
+    }
+}
