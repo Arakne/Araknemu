@@ -1,0 +1,29 @@
+package fr.quatrevieux.araknemu.core.di;
+
+/**
+ * Dependency injection container
+ */
+public interface Container {
+    /**
+     * Get instance from the container
+     * The return value of get, with same type SHOULD return equals value
+     * The value MAY reference to another instance
+     *
+     * @param type Type to find
+     * @param <T> Type
+     *
+     * @return The contained instance
+     *
+     * @throws ClassNotFoundException When cannot found given type
+     */
+    public <T> T get(Class<T> type) throws ClassNotFoundException;
+
+    /**
+     * Check if the container contains the type
+     *
+     * @param type Type to find
+     *
+     * @return true if the contains contains the type
+     */
+    public boolean has(Class type);
+}
