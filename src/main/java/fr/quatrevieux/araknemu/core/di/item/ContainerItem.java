@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.core.di.item;
 
 import fr.quatrevieux.araknemu.core.di.Container;
+import fr.quatrevieux.araknemu.core.di.ContainerException;
 
 /**
  * Item of a container
@@ -19,5 +20,5 @@ public interface ContainerItem<T> {
      *
      * @return The contained value
      */
-    public T value(Container container);
+    public T value(Container container) throws ContainerException;
 }

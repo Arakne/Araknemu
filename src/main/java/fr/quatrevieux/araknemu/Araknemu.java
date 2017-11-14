@@ -7,8 +7,13 @@ import fr.quatrevieux.araknemu.core.config.IniDriver;
 import fr.quatrevieux.araknemu.core.dbal.DatabaseConfiguration;
 import fr.quatrevieux.araknemu.core.dbal.DatabaseHandler;
 import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
+import fr.quatrevieux.araknemu.core.di.Container;
+import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
+import fr.quatrevieux.araknemu.data.RepositoriesModule;
 import fr.quatrevieux.araknemu.realm.RealmConfiguration;
 import fr.quatrevieux.araknemu.realm.RealmLoader;
+import fr.quatrevieux.araknemu.realm.RealmModule;
 import fr.quatrevieux.araknemu.realm.RealmService;
 import org.ini4j.Ini;
 import org.slf4j.Logger;
@@ -85,7 +90,7 @@ public class Araknemu {
     /**
      * Application entry point
      */
-    public static void main(String[] args) throws IOException, SQLException {
+    public static void main(String[] args) throws IOException, SQLException, ContainerException {
         Configuration configuration = new DefaultConfiguration(
             new IniDriver(
                 new Ini(new File("config.ini"))
@@ -99,7 +104,11 @@ public class Araknemu {
             )
         );
 
-        app.add(new RealmLoader(app).load());
+        Container container = new ItemPoolContainer();
+        container.register(new RepositoriesModule());
+        container.register(new RealmModule(app));
+
+        app.add(container.get(RealmService.class));
 
         app.boot();
 

@@ -14,9 +14,10 @@ public interface Container {
      *
      * @return The contained instance
      *
-     * @throws ClassNotFoundException When cannot found given type
+     * @throws ItemNotFoundException When cannot found given type
+     * @throws ContainerException When cannot instantiate the element
      */
-    public <T> T get(Class<T> type) throws ClassNotFoundException;
+    public <T> T get(Class<T> type) throws ContainerException;
 
     /**
      * Check if the container contains the type
@@ -26,4 +27,11 @@ public interface Container {
      * @return true if the contains contains the type
      */
     public boolean has(Class type);
+
+    /**
+     * Register a module into the container
+     *
+     * @param module Module to register
+     */
+    public void register(ContainerModule module);
 }

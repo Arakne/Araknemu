@@ -11,8 +11,6 @@ import org.apache.mina.core.session.IoSession;
 
 /**
  * IoHandler for realm
- *
- * @todo remove RealmService
  */
 final public class RealmIoHandler implements IoHandler {
     final private Dispatcher<RealmSession> dispatcher;
