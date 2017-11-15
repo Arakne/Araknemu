@@ -7,6 +7,9 @@ import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
 import fr.quatrevieux.araknemu.core.dbal.DatabaseConfiguration;
 import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
+import fr.quatrevieux.araknemu.core.di.Container;
+import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
+import fr.quatrevieux.araknemu.data.RepositoriesModule;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import org.apache.mina.core.filterchain.IoFilterAdapter;
 import org.apache.mina.core.service.IoHandler;
@@ -52,6 +55,7 @@ public class RealmBaseCase extends DatabaseTestCase {
         }
     }
 
+    protected Container container;
     protected RealmConfiguration configuration;
     protected RealmService service;
     protected RealmSession session;
@@ -75,7 +79,11 @@ public class RealmBaseCase extends DatabaseTestCase {
             )
         );
 
-        service = new RealmLoader(app).load();
+        container = new ItemPoolContainer();
+        container.register(new RealmModule(app));
+        container.register(new RepositoriesModule());
+
+        service = container.get(RealmService.class);
         configuration = service.configuration();
 
         ioSession = new DummySession();

@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.network.in.PingResponse;
 import fr.quatrevieux.araknemu.network.out.RPing;
 import fr.quatrevieux.araknemu.realm.ConnectionKey;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
+import org.apache.mina.core.session.DummySession;
 import org.apache.mina.core.session.IoSession;
 
 import java.util.concurrent.TimeUnit;
@@ -19,7 +20,7 @@ final public class RealmSession {
     final private boolean testing;
 
     public RealmSession(IoSession session) {
-        this(session, false);
+        this(session, session instanceof DummySession);
     }
 
     public RealmSession(IoSession session, boolean testing) {

@@ -2,7 +2,10 @@ package fr.quatrevieux.araknemu.realm;
 
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
+import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.network.realm.out.*;
+import org.apache.mina.core.session.DummySession;
+import org.apache.mina.core.session.IoSession;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -73,5 +76,45 @@ public class AuthenticationProtocolTest extends RealmBaseCase {
             new GMLevel(false),
             new Answer("")
         );
+    }
+
+    @Test
+    void authenticateTwiceError() throws Exception {
+        IoSession io = new DummySession();
+        RealmSession s1 = new RealmSession(io, true);
+
+        ioHandler.messageReceived(io, "1.29.1");
+        ioHandler.messageReceived(io,"test\n#1"+ConnectionKeyTest.cryptPassword("password", s1.key().key()));
+
+        assertTrue(s1.isLogged());
+        assertTrue(s1.account().isAlive());
+
+        // Authenticate with second session on same account
+        sendPacket("1.29.1");
+        sendPacket("test\n#1"+ConnectionKeyTest.cryptPassword("password", session.key().key()));
+
+        assertFalse(session.isLogged());
+        requestStack.assertLast(new LoginError(LoginError.ALREADY_LOGGED));
+
+        assertTrue(s1.isLogged());
+        assertTrue(s1.account().isAlive());
+    }
+
+    @Test
+    void authenticateAndLogout() throws Exception {
+        IoSession io = new DummySession();
+        RealmSession s1 = new RealmSession(io, true);
+
+        ioHandler.messageReceived(io, "1.29.1");
+        ioHandler.messageReceived(io,"test\n#1"+ConnectionKeyTest.cryptPassword("password", s1.key().key()));
+        s1.close();
+
+        assertFalse(s1.account().isAlive());
+
+        // Authenticate with second session on same account
+        sendPacket("1.29.1");
+        sendPacket("test\n#1"+ConnectionKeyTest.cryptPassword("password", session.key().key()));
+
+        assertTrue(session.isLogged());
     }
 }

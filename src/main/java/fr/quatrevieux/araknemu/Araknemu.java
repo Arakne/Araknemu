@@ -11,8 +11,6 @@ import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
 import fr.quatrevieux.araknemu.data.RepositoriesModule;
-import fr.quatrevieux.araknemu.realm.RealmConfiguration;
-import fr.quatrevieux.araknemu.realm.RealmLoader;
 import fr.quatrevieux.araknemu.realm.RealmModule;
 import fr.quatrevieux.araknemu.realm.RealmService;
 import org.ini4j.Ini;

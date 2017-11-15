@@ -25,7 +25,7 @@ import java.sql.SQLException;
 /**
  * DI module for RealmService
  */
-public class RealmModule implements ContainerModule {
+final public class RealmModule implements ContainerModule {
     final private Araknemu app;
 
     public RealmModule(Araknemu app) {
