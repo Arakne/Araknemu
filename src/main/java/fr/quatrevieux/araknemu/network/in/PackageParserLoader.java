@@ -2,12 +2,16 @@ package fr.quatrevieux.araknemu.network.in;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.FileSystem;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.jar.JarFile;
 
 /**
  * package parser loader for a package
+ *
+ * @todo https://stackoverflow.com/questions/11012819/how-can-i-get-a-resource-folder-from-inside-my-jar-file
  */
 final public class PackageParserLoader implements ParserLoader {
     final private String name;

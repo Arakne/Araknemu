@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.realm;
 
+import fr.quatrevieux.araknemu.core.BootException;
 import fr.quatrevieux.araknemu.core.Service;
 import fr.quatrevieux.araknemu.network.LoggedIoHandler;
 import fr.quatrevieux.araknemu.network.Server;
@@ -23,7 +24,7 @@ final public class RealmService implements Service {
     }
 
     @Override
-    public void boot() {
+    public void boot() throws BootException {
         try {
             server = new Server(
                 new LoggedIoHandler(
@@ -33,7 +34,7 @@ final public class RealmService implements Service {
                 configuration.port()
             );
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new BootException("Cannot start realm server", e);
         }
     }
 

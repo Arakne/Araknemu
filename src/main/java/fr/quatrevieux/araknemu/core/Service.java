@@ -9,7 +9,7 @@ public interface Service {
     /**
      * Start the service
      */
-    public void boot();
+    public void boot() throws BootException;
 
     /**
      * Stop the service

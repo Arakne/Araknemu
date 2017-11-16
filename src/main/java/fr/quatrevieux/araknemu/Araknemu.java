@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu;
 
+import fr.quatrevieux.araknemu.core.BootException;
 import fr.quatrevieux.araknemu.core.Service;
 import fr.quatrevieux.araknemu.core.config.Configuration;
 import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
@@ -41,7 +42,7 @@ public class Araknemu {
     /**
      * Boot all services
      */
-    public void boot() {
+    public void boot() throws BootException {
         logger.info("Booting services");
 
         for (Service service : services) {
@@ -88,7 +89,7 @@ public class Araknemu {
     /**
      * Application entry point
      */
-    public static void main(String[] args) throws IOException, SQLException, ContainerException {
+    public static void main(String[] args) throws IOException, SQLException, ContainerException, BootException {
         Configuration configuration = new DefaultConfiguration(
             new IniDriver(
                 new Ini(new File("config.ini"))

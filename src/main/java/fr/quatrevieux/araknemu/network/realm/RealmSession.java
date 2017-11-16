@@ -8,10 +8,6 @@ import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 import org.apache.mina.core.session.DummySession;
 import org.apache.mina.core.session.IoSession;
 
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 /**
  * Wrap IoSession for Realm
  */
