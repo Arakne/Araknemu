@@ -2,14 +2,19 @@ package fr.quatrevieux.araknemu.realm;
 
 import fr.quatrevieux.araknemu.Araknemu;
 import fr.quatrevieux.araknemu.DatabaseTestCase;
+import fr.quatrevieux.araknemu.TestingDataSet;
 import fr.quatrevieux.araknemu.core.config.Configuration;
 import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
 import fr.quatrevieux.araknemu.core.dbal.DatabaseConfiguration;
 import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
+import fr.quatrevieux.araknemu.core.dbal.repository.Repository;
 import fr.quatrevieux.araknemu.core.di.Container;
+import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
 import fr.quatrevieux.araknemu.data.RepositoriesModule;
+import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import org.apache.mina.core.filterchain.IoFilterAdapter;
 import org.apache.mina.core.service.IoHandler;
@@ -17,6 +22,7 @@ import org.apache.mina.core.session.DummySession;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.core.write.WriteRequest;
 import org.ini4j.Ini;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -63,6 +69,7 @@ public class RealmBaseCase extends DatabaseTestCase {
     protected SendingRequestStack requestStack;
     protected IoHandler ioHandler;
     protected Araknemu app;
+    protected TestingDataSet dataSet;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -91,6 +98,16 @@ public class RealmBaseCase extends DatabaseTestCase {
 
         ioSession.getFilterChain().addLast("test", requestStack = new SendingRequestStack());
         ioHandler = service.ioHandler();
+
+        dataSet = new TestingDataSet(container);
+        dataSet
+            .declare(Account.class, AccountRepository.class)
+        ;
+    }
+
+    @AfterEach
+    void tearDown() throws ContainerException {
+        dataSet.destroy();
     }
 
     public void assertClosed() {

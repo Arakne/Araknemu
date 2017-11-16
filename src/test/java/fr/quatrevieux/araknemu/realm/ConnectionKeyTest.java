@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ConnectionKeyTest {
+public class ConnectionKeyTest {
     @Test
     void constructor() {
         assertEquals("azerty", new ConnectionKey("azerty").key());

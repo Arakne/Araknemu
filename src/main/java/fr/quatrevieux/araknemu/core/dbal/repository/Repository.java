@@ -11,6 +11,12 @@ public interface Repository<E> {
     public void initialize() throws RepositoryException;
 
     /**
+     * Destroy the repository (drop)
+     * @throws RepositoryException
+     */
+    public void destroy() throws RepositoryException;
+
+    /**
      * Get an entity from the repository
      *
      * @param entity The entity to find (used as primary key criteria)

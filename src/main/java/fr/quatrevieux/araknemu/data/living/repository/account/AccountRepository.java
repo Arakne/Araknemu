@@ -56,6 +56,15 @@ final public class AccountRepository implements MutableRepository<Account> {
     }
 
     @Override
+    public void destroy() throws RepositoryException {
+        try {
+            pool.query("DROP TABLE ACCOUNT");
+        } catch (SQLException e) {
+            throw new RepositoryException(e);
+        }
+    }
+
+    @Override
     public Account add(Account entity) {
         return utils.update(
             "INSERT INTO ACCOUNT (`USERNAME`, `PASSWORD`, `PSEUDO`) VALUES (?, ?, ?)",

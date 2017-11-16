@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.realm.authentication;
 
+import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
@@ -14,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AuthenticationServiceTest extends RealmBaseCase {
     private AuthenticationService service;
-    private AccountRepository repository;
     private String response;
     private AuthenticationAccount _account;
 
@@ -24,17 +24,10 @@ class AuthenticationServiceTest extends RealmBaseCase {
         super.setUp();
 
         service = new AuthenticationService(
-            repository = new AccountRepository(
-                app.database().get("realm")
-            )
+            container.get(AccountRepository.class)
         );
 
-        repository.initialize();
-    }
-
-    @AfterEach
-    void tearDown() throws SQLException {
-        dropTable("ACCOUNT");
+        dataSet.use(Account.class);
     }
 
     @Test
@@ -130,8 +123,8 @@ class AuthenticationServiceTest extends RealmBaseCase {
     }
 
     @Test
-    void authenticateInvalidPassword() {
-        repository.add(new Account(-1, "test", "pass", "pseudo"));
+    void authenticateInvalidPassword() throws ContainerException {
+        dataSet.push(new Account(-1, "test", "pass", "pseudo"));
 
         service.authenticate(new AuthenticationRequest() {
             @Override
@@ -164,8 +157,8 @@ class AuthenticationServiceTest extends RealmBaseCase {
     }
 
     @Test
-    void authenticateAlreadyConnected() {
-        Account account = repository.add(new Account(-1, "test", "pass", "pseudo"));
+    void authenticateAlreadyConnected() throws ContainerException {
+        Account account = dataSet.push(new Account(-1, "test", "pass", "pseudo"));
 
         AuthenticationAccount authenticationAccount = new AuthenticationAccount(
             account,
@@ -206,8 +199,8 @@ class AuthenticationServiceTest extends RealmBaseCase {
     }
 
     @Test
-    void authenticateSuccess() {
-        repository.add(new Account(-1, "test", "pass", "pseudo"));
+    void authenticateSuccess() throws ContainerException {
+        dataSet.push(new Account(-1, "test", "pass", "pseudo"));
 
         service.authenticate(new AuthenticationRequest() {
             @Override
