@@ -4,13 +4,14 @@ import fr.quatrevieux.araknemu.network.in._testpackets.OtherPacket;
 import fr.quatrevieux.araknemu.network.in._testpackets.PacketWithParser;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class PackageParserLoaderTest {
     @Test
-    void loadWithFoundPackage() {
+    void loadWithFoundPackage() throws IOException {
         PackageParserLoader loader = new PackageParserLoader("fr.quatrevieux.araknemu.network.in._testpackets");
 
         Collection<SinglePacketParser> parsers = loader.load();
@@ -21,7 +22,7 @@ class PackageParserLoaderTest {
     }
 
     @Test
-    void loadWithNotFoundPackage() {
+    void loadWithNotFoundPackage() throws IOException {
         PackageParserLoader loader = new PackageParserLoader("not_found");
 
         assertTrue(loader.load().isEmpty());

@@ -1,11 +1,18 @@
 package fr.quatrevieux.araknemu.network.in;
 
+import fr.quatrevieux.araknemu.util.loader.ClassExtractorInterface;
+import fr.quatrevieux.araknemu.util.loader.JarClassExtractor;
+import fr.quatrevieux.araknemu.util.loader.SimpleClassExtractor;
+
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
-import java.nio.file.FileSystem;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.jar.JarFile;
 
 /**
@@ -21,28 +28,26 @@ final public class PackageParserLoader implements ParserLoader {
     }
 
     @Override
-    public Collection<SinglePacketParser> load() {
-        URL url = Thread.currentThread().getContextClassLoader().getResource(name.replace('.', '/'));
+    public Collection<SinglePacketParser> load() throws IOException {
+        URI uri;
 
-        if (url == null) {
+        try {
+            uri = Thread.currentThread().getContextClassLoader().getResource(name.replace('.', '/')).toURI();
+        } catch (Exception e) {
             return Collections.EMPTY_LIST;
+        }
+
+        ClassExtractorInterface extractor;
+
+        if (uri.getScheme().contains("jar")) {
+            extractor = new JarClassExtractor(name.replace('.', '/'));
+        } else {
+            extractor = new SimpleClassExtractor(name.replace('.', '/'));
         }
 
         Collection<SinglePacketParser> parsers = new ArrayList<>();
 
-        for (File file : new File(url.getFile()).listFiles()) {
-            if (!file.getName().endsWith(".class")) {
-                continue;
-            }
-
-            Class current;
-
-            try {
-                current = Class.forName(name + "." + file.getName().substring(0, file.getName().length() - 6));
-            } catch (ClassNotFoundException e) {
-                continue;
-            }
-
+        for (Class current : extractor.extract()) {
             if (!Packet.class.isAssignableFrom(current)) {
                 continue;
             }

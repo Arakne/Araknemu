@@ -20,6 +20,7 @@ import org.apache.mina.core.service.IoHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 /**
@@ -92,14 +93,20 @@ final public class RealmModule implements ContainerModule {
 
         configurator.factory(
             PacketParser.class,
-            container -> new AggregatePacketParser(
-                new AggregateParserLoader(
-                    new ParserLoader[] {
-                        new PackageParserLoader("fr.quatrevieux.araknemu.network.realm.in"),
-                        new PackageParserLoader("fr.quatrevieux.araknemu.network.in")
-                    }
-                ).load()
-            )
+            container -> {
+                try {
+                    return new AggregatePacketParser(
+                        new AggregateParserLoader(
+                            new ParserLoader[]{
+                                new PackageParserLoader("fr.quatrevieux.araknemu.network.realm.in"),
+                                new PackageParserLoader("fr.quatrevieux.araknemu.network.in")
+                            }
+                        ).load()
+                    );
+                } catch (IOException e) {
+                    throw new ContainerException(e);
+                }
+            }
         );
 
         configurator.persist(
