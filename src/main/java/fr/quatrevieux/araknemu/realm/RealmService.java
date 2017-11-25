@@ -2,10 +2,8 @@ package fr.quatrevieux.araknemu.realm;
 
 import fr.quatrevieux.araknemu.core.BootException;
 import fr.quatrevieux.araknemu.core.Service;
-import fr.quatrevieux.araknemu.network.LoggedIoHandler;
 import fr.quatrevieux.araknemu.network.Server;
 import org.apache.mina.core.service.IoHandler;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -27,10 +25,7 @@ final public class RealmService implements Service {
     public void boot() throws BootException {
         try {
             server = new Server(
-                new LoggedIoHandler(
-                    ioHandler,
-                    LoggerFactory.getLogger(getClass())
-                ),
+                ioHandler,
                 configuration.port()
             );
         } catch (IOException e) {

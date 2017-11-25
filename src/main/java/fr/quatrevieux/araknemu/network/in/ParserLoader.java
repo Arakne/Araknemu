@@ -1,6 +1,5 @@
 package fr.quatrevieux.araknemu.network.in;
 
-import java.io.IOException;
 import java.util.Collection;
 
 /**
@@ -10,5 +9,5 @@ public interface ParserLoader {
     /**
      * Load parsers
      */
-    public Collection<SinglePacketParser> load() throws IOException;
+    public Collection<SinglePacketParser> load();
 }

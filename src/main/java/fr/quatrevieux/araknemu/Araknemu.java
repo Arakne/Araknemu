@@ -12,6 +12,9 @@ import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
 import fr.quatrevieux.araknemu.data.RepositoriesModule;
+import fr.quatrevieux.araknemu.game.GameModule;
+import fr.quatrevieux.araknemu.game.GameService;
+import fr.quatrevieux.araknemu.game.connector.LocalModule;
 import fr.quatrevieux.araknemu.realm.RealmModule;
 import fr.quatrevieux.araknemu.realm.RealmService;
 import org.ini4j.Ini;
@@ -103,14 +106,32 @@ public class Araknemu {
             )
         );
 
-        Container container = new ItemPoolContainer();
-        container.register(new RepositoriesModule());
-        container.register(new RealmModule(app));
+        Container realmContainer = makeRealmContainer(app);
+        Container gameContainer  = makeGameContainer(app, realmContainer);
 
-        app.add(container.get(RealmService.class));
+        app.add(realmContainer.get(RealmService.class));
+        app.add(gameContainer.get(GameService.class));
 
         app.boot();
 
         Runtime.getRuntime().addShutdownHook(new Thread(app::shutdown));
+    }
+
+    static private Container makeRealmContainer(Araknemu app) {
+        Container container = new ItemPoolContainer();
+
+        container.register(new RepositoriesModule());
+        container.register(new RealmModule(app));
+
+        return container;
+    }
+
+    static private Container makeGameContainer(Araknemu app, Container realmContainer) {
+        Container container = new ItemPoolContainer();
+
+        container.register(new GameModule(app));
+        container.register(new LocalModule(realmContainer));
+
+        return container;
     }
 }

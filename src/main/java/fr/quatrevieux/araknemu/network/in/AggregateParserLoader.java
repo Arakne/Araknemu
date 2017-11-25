@@ -1,6 +1,5 @@
 package fr.quatrevieux.araknemu.network.in;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -15,7 +14,7 @@ final public class AggregateParserLoader implements ParserLoader {
     }
 
     @Override
-    public Collection<SinglePacketParser> load() throws IOException {
+    public Collection<SinglePacketParser> load() {
         Collection<SinglePacketParser> parsers = new ArrayList<>();
 
         for (ParserLoader loader : loaders) {

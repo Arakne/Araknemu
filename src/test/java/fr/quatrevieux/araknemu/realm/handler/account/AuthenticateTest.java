@@ -9,9 +9,15 @@ import fr.quatrevieux.araknemu.realm.ConnectionKeyTest;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
+import fr.quatrevieux.araknemu.realm.host.GameHost;
+import fr.quatrevieux.araknemu.realm.host.HostService;
 import org.apache.mina.core.session.DummySession;
+import org.apache.mina.core.session.IoSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,7 +30,8 @@ class AuthenticateTest extends RealmBaseCase {
         super.setUp();
 
         handler = new Authenticate(
-            container.get(AuthenticationService.class)
+            container.get(AuthenticationService.class),
+            container.get(HostService.class)
         );
 
         dataSet.push(new Account(-1, "login", "password", "pseudo"), "login_account");
@@ -45,7 +52,8 @@ class AuthenticateTest extends RealmBaseCase {
             new Pseudo("pseudo"),
             new Community(0),
             new GMLevel(false),
-            new Answer("")
+            new Answer(""),
+            "AH1;1;110;1"
         );
     }
 
@@ -68,7 +76,9 @@ class AuthenticateTest extends RealmBaseCase {
             (Account) dataSet.get("login_account"),
             container.get(AuthenticationService.class)
         );
-        account.attach(new RealmSession(new DummySession()));
+        IoSession ioSession = new DummySession();
+        ioSession.setAttribute("testing");
+        account.attach(new RealmSession(ioSession));
 
         handler.handle(session, new Credentials(
             "login",
@@ -79,5 +89,20 @@ class AuthenticateTest extends RealmBaseCase {
         assertFalse(session.isLogged());
 
         requestStack.assertLast(new LoginError(LoginError.ALREADY_LOGGED));
+    }
+
+    @Test
+    void handleIsPlaying() throws ContainerException {
+        connector.checkLogin = true;
+
+        handler.handle(session, new Credentials(
+            "login",
+            ConnectionKeyTest.cryptPassword("password", session.key().key()),
+            Credentials.Method.VIGENERE_BASE_64
+        ));
+
+        assertFalse(session.isLogged());
+
+        requestStack.assertLast(new LoginError(LoginError.ALREADY_LOGGED_GAME_SERVER));
     }
 }

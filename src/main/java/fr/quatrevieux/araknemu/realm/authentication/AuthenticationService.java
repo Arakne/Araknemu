@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.realm.authentication;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
+import fr.quatrevieux.araknemu.realm.host.HostService;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -14,6 +15,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 final public class AuthenticationService {
     final private AccountRepository repository;
+    final private HostService hosts;
 
     /**
      * Set of accounts which wait for authentication process
@@ -27,12 +29,16 @@ final public class AuthenticationService {
      */
     final private ConcurrentMap<Integer, AuthenticationAccount> authenticated = new ConcurrentHashMap<>();
 
-    public AuthenticationService(AccountRepository repository) {
+    public AuthenticationService(AccountRepository repository, HostService hosts) {
         this.repository = repository;
+        this.hosts = hosts;
     }
 
     /**
      * Perform authenticate request
+     *
+     * This method is synchronized to ensure that two account are not requested login
+     * in the same time
      */
     synchronized public void authenticate(AuthenticationRequest request) {
         AuthenticationAccount account;
@@ -62,10 +68,15 @@ final public class AuthenticationService {
 
         pending.add(account);
 
-        //@todo check authenticate game
+        hosts.checkLogin(account, response -> {
+            if (response) {
+                request.isPlaying();
+            } else {
+                request.success(account);
+            }
 
-        request.success(account);
-        pending.remove(account);
+            pending.remove(account);
+        });
     }
 
     /**

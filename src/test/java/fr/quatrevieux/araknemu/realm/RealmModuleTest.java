@@ -18,6 +18,7 @@ import fr.quatrevieux.araknemu.network.in.DefaultDispatcher;
 import fr.quatrevieux.araknemu.network.in.Dispatcher;
 import fr.quatrevieux.araknemu.network.in.PacketParser;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
+import fr.quatrevieux.araknemu.realm.host.HostService;
 import org.apache.mina.core.service.IoHandler;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.Test;
@@ -52,6 +53,7 @@ class RealmModuleTest {
         assertInstanceOf(DefaultDispatcher.class, container.get(Dispatcher.class));
         assertInstanceOf(AggregatePacketParser.class, container.get(PacketParser.class));
         assertInstanceOf(AuthenticationService.class, container.get(AuthenticationService.class));
+        assertInstanceOf(HostService.class, container.get(HostService.class));
 
     }
 

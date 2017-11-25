@@ -12,10 +12,13 @@ import fr.quatrevieux.araknemu.network.realm.RealmIoHandler;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.network.realm.in.Credentials;
 import fr.quatrevieux.araknemu.network.realm.in.DofusVersion;
+import fr.quatrevieux.araknemu.network.realm.in.RealmParserLoader;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
 import fr.quatrevieux.araknemu.realm.handler.*;
 import fr.quatrevieux.araknemu.realm.handler.account.Authenticate;
+import fr.quatrevieux.araknemu.realm.handler.account.ConnectGame;
 import fr.quatrevieux.araknemu.realm.handler.account.ListServers;
+import fr.quatrevieux.araknemu.realm.host.HostService;
 import org.apache.mina.core.service.IoHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,37 +86,43 @@ final public class RealmModule implements ContainerModule {
                     new StartSession(),
                     new StopSession(container.get(AuthenticationService.class)),
                     new CheckDofusVersion(container.get(RealmConfiguration.class)),
-                    new Authenticate(container.get(AuthenticationService.class)),
+                    new Authenticate(
+                        container.get(AuthenticationService.class),
+                        container.get(HostService.class)
+                    ),
                     new CheckQueuePosition(),
                     new ListServers(),
-                    new PongResponse()
+                    new PongResponse(),
+                    new ConnectGame(
+                        container.get(HostService.class)
+                    )
                 }
             )
         );
 
         configurator.factory(
             PacketParser.class,
-            container -> {
-                try {
-                    return new AggregatePacketParser(
-                        new AggregateParserLoader(
-                            new ParserLoader[]{
-                                new PackageParserLoader("fr.quatrevieux.araknemu.network.realm.in"),
-                                new PackageParserLoader("fr.quatrevieux.araknemu.network.in")
-                            }
-                        ).load()
-                    );
-                } catch (IOException e) {
-                    throw new ContainerException(e);
-                }
-            }
+            container ->  new AggregatePacketParser(
+                new AggregateParserLoader(
+                    new ParserLoader[]{
+                        new CommonParserLoader(),
+                        new RealmParserLoader()
+                    }
+                ).load()
+            )
         );
 
         configurator.persist(
             AuthenticationService.class,
             container -> new AuthenticationService(
-                container.get(AccountRepository.class)
+                container.get(AccountRepository.class),
+                container.get(HostService.class)
             )
+        );
+
+        configurator.persist(
+            HostService.class,
+            container -> new HostService()
         );
     }
 }

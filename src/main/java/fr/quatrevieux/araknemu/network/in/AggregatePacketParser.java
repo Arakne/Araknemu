@@ -34,7 +34,10 @@ final public class AggregatePacketParser implements PacketParser {
             String header = input.substring(0, len);
 
             if(parsers.containsKey(header)){
-                return parsers.get(header).parse(input);
+                return parsers
+                    .get(header)
+                    .parse(input.substring(len))
+                ;
             }
         }
 

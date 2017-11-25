@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.realm.authentication;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
+import fr.quatrevieux.araknemu.realm.host.HostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +20,8 @@ class AuthenticationAccountTest extends RealmBaseCase {
         service = new AuthenticationService(
             new AccountRepository(
                 app.database().get("realm")
-            )
+            ),
+            container.get(HostService.class)
         );
     }
 

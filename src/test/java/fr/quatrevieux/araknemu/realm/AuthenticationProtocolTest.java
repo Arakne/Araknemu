@@ -3,12 +3,14 @@ package fr.quatrevieux.araknemu.realm;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.network.realm.out.*;
+import fr.quatrevieux.araknemu.realm.host.GameHost;
 import org.apache.mina.core.session.DummySession;
 import org.apache.mina.core.session.IoSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -59,14 +61,16 @@ public class AuthenticationProtocolTest extends RealmBaseCase {
             new Pseudo("pseudo"),
             new Community(0),
             new GMLevel(false),
-            new Answer("")
+            new Answer(""),
+            "AH1;1;110;1"
         );
     }
 
     @Test
     void authenticateTwiceError() throws Exception {
         IoSession io = new DummySession();
-        RealmSession s1 = new RealmSession(io, true);
+        io.setAttribute("testing");
+        RealmSession s1 = new RealmSession(io);
 
         ioHandler.messageReceived(io, "1.29.1");
         ioHandler.messageReceived(io,"test\n#1"+ConnectionKeyTest.cryptPassword("password", s1.key().key()));
@@ -88,7 +92,8 @@ public class AuthenticationProtocolTest extends RealmBaseCase {
     @Test
     void authenticateAndLogout() throws Exception {
         IoSession io = new DummySession();
-        RealmSession s1 = new RealmSession(io, true);
+        io.setAttribute("testing");
+        RealmSession s1 = new RealmSession(io);
 
         ioHandler.messageReceived(io, "1.29.1");
         ioHandler.messageReceived(io,"test\n#1"+ConnectionKeyTest.cryptPassword("password", s1.key().key()));
@@ -101,5 +106,16 @@ public class AuthenticationProtocolTest extends RealmBaseCase {
         sendPacket("test\n#1"+ConnectionKeyTest.cryptPassword("password", session.key().key()));
 
         assertTrue(session.isLogged());
+    }
+
+    @Test
+    void selectGameServer() throws Exception {
+        sendPacket("1.29.1");
+        sendPacket("test\n#1"+ConnectionKeyTest.cryptPassword("password", session.key().key()));
+
+        connector.token = "my_token";
+        sendPacket("AX1");
+
+        requestStack.assertLast(new SelectServerPlain("127.0.0.1", 1234, "my_token"));
     }
 }

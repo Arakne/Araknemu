@@ -28,4 +28,9 @@ public interface AuthenticationRequest {
      * Called when account is already connected
      */
     public void alreadyConnected();
+
+    /**
+     * Called when the account is logged into a game server
+     */
+    public void isPlaying();
 }

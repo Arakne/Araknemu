@@ -11,9 +11,12 @@ import fr.quatrevieux.araknemu.network.realm.out.ServerList;
 final public class ListServers implements PacketHandler<RealmSession, AskServerList> {
     @Override
     public void handle(RealmSession session, AskServerList packet) {
-        session.write(
-            new ServerList(ServerList.ONE_YEAR)
-        );
+        ServerList out = new ServerList(ServerList.ONE_YEAR);
+
+        // @todo Send characters list
+        out.add(new ServerList.Server(0, 0));
+
+        session.write(out);
     }
 
     @Override

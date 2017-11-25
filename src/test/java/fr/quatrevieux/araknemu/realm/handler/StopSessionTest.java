@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.network.in.SessionClosed;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
+import fr.quatrevieux.araknemu.realm.host.HostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +28,8 @@ class StopSessionTest extends RealmBaseCase {
             service = new AuthenticationService(
                 new AccountRepository(
                     app.database().get("realm")
-                )
+                ),
+                container.get(HostService.class)
             )
         );
     }

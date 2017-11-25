@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
+import fr.quatrevieux.araknemu.realm.host.HostService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,8 @@ class AuthenticationServiceTest extends RealmBaseCase {
         super.setUp();
 
         service = new AuthenticationService(
-            container.get(AccountRepository.class)
+            container.get(AccountRepository.class),
+            container.get(HostService.class)
         );
 
         dataSet.use(Account.class);
@@ -117,6 +119,11 @@ class AuthenticationServiceTest extends RealmBaseCase {
             public void alreadyConnected() {
 
             }
+
+            @Override
+            public void isPlaying() {
+
+            }
         });
 
         assertEquals("invalidCredentials", response);
@@ -149,6 +156,11 @@ class AuthenticationServiceTest extends RealmBaseCase {
 
             @Override
             public void alreadyConnected() {
+
+            }
+
+            @Override
+            public void isPlaying() {
 
             }
         });
@@ -193,13 +205,67 @@ class AuthenticationServiceTest extends RealmBaseCase {
             public void alreadyConnected() {
                 response = "alreadyConnected";
             }
+
+            @Override
+            public void isPlaying() {
+
+            }
         });
 
         assertEquals("alreadyConnected", response);
     }
 
     @Test
+    void authenticateIsPlaying() throws ContainerException {
+        connector.checkLogin = true;
+        Account account = dataSet.push(new Account(-1, "test", "pass", "pseudo"));
+
+        AuthenticationAccount authenticationAccount = new AuthenticationAccount(
+            account,
+            service
+        );
+
+        service.login(authenticationAccount);
+
+        service.authenticate(new AuthenticationRequest() {
+            @Override
+            public String username() {
+                return "test";
+            }
+
+            @Override
+            public String password() {
+                return "pass";
+            }
+
+            @Override
+            public void success(AuthenticationAccount account) {
+
+            }
+
+            @Override
+            public void invalidCredentials() {
+                response = "invalidCredentials";
+            }
+
+            @Override
+            public void alreadyConnected() {
+                response = "alreadyConnected";
+            }
+
+            @Override
+            public void isPlaying() {
+                response = "isPlaying";
+            }
+        });
+
+        assertEquals("isPlaying", response);
+    }
+
+    @Test
     void authenticateSuccess() throws ContainerException {
+        connector.checkLogin = false;
+
         dataSet.push(new Account(-1, "test", "pass", "pseudo"));
 
         service.authenticate(new AuthenticationRequest() {
@@ -221,12 +287,17 @@ class AuthenticationServiceTest extends RealmBaseCase {
 
             @Override
             public void invalidCredentials() {
-
+                response = "invalidCredentials";
             }
 
             @Override
             public void alreadyConnected() {
+                response = "alreadyConnected";
+            }
 
+            @Override
+            public void isPlaying() {
+                response = "isPlaying";
             }
         });
 
