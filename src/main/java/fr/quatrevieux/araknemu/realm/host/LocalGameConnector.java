@@ -22,7 +22,8 @@ final public class LocalGameConnector implements GameConnector {
 
     @Override
     public void token(AuthenticationAccount account, HostResponse<String> response) {
-        // @todo Gérer token
-        response.response("azertyuiop");
+        response.response(
+            service.token(account.id())
+        );
     }
 }

@@ -129,6 +129,7 @@ public class Araknemu {
     static private Container makeGameContainer(Araknemu app, Container realmContainer) {
         Container container = new ItemPoolContainer();
 
+        container.register(new RepositoriesModule());
         container.register(new GameModule(app));
         container.register(new LocalModule(realmContainer));
 

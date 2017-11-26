@@ -1,12 +1,18 @@
 package fr.quatrevieux.araknemu.game;
 
 import fr.quatrevieux.araknemu.Araknemu;
+import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
+import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
+import fr.quatrevieux.araknemu.game.account.AccountService;
+import fr.quatrevieux.araknemu.game.account.TokenService;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.connector.ConnectorService;
 import fr.quatrevieux.araknemu.game.handler.StartSession;
+import fr.quatrevieux.araknemu.game.handler.StopSession;
+import fr.quatrevieux.araknemu.game.handler.account.Login;
 import fr.quatrevieux.araknemu.network.LoggedIoHandler;
 import fr.quatrevieux.araknemu.network.game.GameIoHandler;
 import fr.quatrevieux.araknemu.network.game.in.GameParserLoader;
@@ -16,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * Module for game service
@@ -29,6 +36,17 @@ final public class GameModule implements ContainerModule {
 
     @Override
     public void configure(ContainerConfigurator configurator) {
+        configurator.factory(
+            ConnectionPool.class,
+            container -> {
+                try {
+                    return app.database().get("game");
+                } catch (SQLException e) {
+                    throw new ContainerException(e);
+                }
+            }
+        );
+
         configurator.factory(
             Logger.class,
             container -> LoggerFactory.getLogger(GameService.class)
@@ -63,7 +81,12 @@ final public class GameModule implements ContainerModule {
             Dispatcher.class,
             container -> new DefaultDispatcher(
                 new PacketHandler[]{
-                    new StartSession()
+                    new StartSession(),
+                    new StopSession(),
+                    new Login(
+                        container.get(TokenService.class),
+                        container.get(AccountService.class)
+                    )
                 }
             )
         );
@@ -82,7 +105,19 @@ final public class GameModule implements ContainerModule {
 
         configurator.persist(
             ConnectorService.class,
-            container -> new ConnectorService()
+            container -> new ConnectorService(
+                container.get(TokenService.class)
+            )
+        );
+
+        configurator.persist(
+            TokenService.class,
+            container -> new TokenService()
+        );
+
+        configurator.persist(
+            AccountService.class,
+            container -> new AccountService(container.get(AccountRepository.class))
         );
     }
 }
