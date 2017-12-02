@@ -10,7 +10,11 @@ import fr.quatrevieux.araknemu.network.in.SessionClosed;
 final public class StopSession implements PacketHandler<GameSession, SessionClosed> {
     @Override
     public void handle(GameSession session, SessionClosed packet) {
-        // @todo 
+        // @todo
+
+        if (session.isLogged()) {
+            session.account().detach();
+        }
     }
 
     @Override

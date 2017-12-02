@@ -29,6 +29,22 @@ final public class GameAccount {
     }
 
     /**
+     * Detach the account from the session
+     */
+    public void detach() {
+        session.detach();
+        session = null;
+        service.logout(this);
+    }
+
+    /**
+     * Check if the account is logged
+     */
+    public boolean isLogged() {
+        return session != null;
+    }
+
+    /**
      * Get the account id
      */
     public int id() {

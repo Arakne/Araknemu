@@ -25,7 +25,7 @@ class DefaultDispatcherTest {
     }
 
     @Test
-    void dispatchFound() {
+    void dispatchFound() throws Exception {
         RealmSession session = new RealmSession(new DummySession());
         MyPacket packet = new MyPacket();
         MyHandler handler = new MyHandler();

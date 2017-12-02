@@ -1,5 +1,7 @@
 package fr.quatrevieux.araknemu.network.game;
 
+import fr.quatrevieux.araknemu.network.exception.CloseSession;
+import fr.quatrevieux.araknemu.network.exception.WritePacket;
 import fr.quatrevieux.araknemu.network.in.Dispatcher;
 import fr.quatrevieux.araknemu.network.in.PacketParser;
 import fr.quatrevieux.araknemu.network.in.SessionClosed;
@@ -45,7 +47,19 @@ final public class GameIoHandler implements IoHandler {
     }
 
     @Override
-    public void exceptionCaught(IoSession session, Throwable cause) throws Exception {}
+    public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
+        GameSession gs = new GameSession(session);
+
+        if (cause instanceof WritePacket) {
+            gs.write(
+                ((WritePacket) cause).packet()
+            );
+        }
+
+        if (cause instanceof CloseSession) {
+            gs.close();
+        }
+    }
 
     @Override
     public void messageReceived(IoSession session, Object message) throws Exception {

@@ -20,4 +20,26 @@ final public class GameSession extends AbstractSession {
     public void attach(GameAccount account) {
         session.setAttribute("account", account);
     }
+
+    /**
+     * Get the attached account
+     */
+    public GameAccount account() {
+        return (GameAccount) session.getAttribute("account");
+    }
+
+    /**
+     * Check if an account is attached
+     */
+    public boolean isLogged() {
+        return session.containsAttribute("account");
+    }
+
+    /**
+     * Remove the attached account
+     * @return The attached account
+     */
+    public GameAccount detach() {
+        return (GameAccount) session.removeAttribute("account");
+    }
 }

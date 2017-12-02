@@ -106,7 +106,8 @@ final public class GameModule implements ContainerModule {
         configurator.persist(
             ConnectorService.class,
             container -> new ConnectorService(
-                container.get(TokenService.class)
+                container.get(TokenService.class),
+                container.get(AccountService.class)
             )
         );
 

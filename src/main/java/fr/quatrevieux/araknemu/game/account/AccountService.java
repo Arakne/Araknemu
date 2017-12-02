@@ -36,9 +36,28 @@ final public class AccountService {
     }
 
     /**
+     * Check if the account is logged to the game server
+     * @param accountId Account id
+     */
+    public boolean isLogged(int accountId) {
+        if (!accounts.containsKey(accountId)) {
+            return false;
+        }
+
+        return accounts.get(accountId).isLogged();
+    }
+
+    /**
      * Set to logged accounts list
      */
     void login(GameAccount account) {
         accounts.put(account.id(), account);
+    }
+
+    /**
+     * Remove from logged accounts list
+     */
+    void logout(GameAccount account) {
+        accounts.remove(account.id());
     }
 }

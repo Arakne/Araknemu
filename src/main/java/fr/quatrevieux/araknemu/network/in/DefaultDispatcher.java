@@ -17,7 +17,7 @@ final public class DefaultDispatcher<S> implements Dispatcher<S> {
     }
 
     @Override
-    public void dispatch(S session, Packet packet) throws HandlerNotFoundException {
+    public void dispatch(S session, Packet packet) throws Exception {
         if (!handlers.containsKey(packet.getClass())) {
             throw new HandlerNotFoundException(packet);
         }

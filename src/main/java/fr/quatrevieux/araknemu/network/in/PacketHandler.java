@@ -9,8 +9,10 @@ public interface PacketHandler<S, P extends Packet> {
     /**
      * Handle the incoming packet
      * @param packet
+     *
+     * @throws Exception When an error occurs during handle the packet
      */
-    public void handle(S session, P packet);
+    public void handle(S session, P packet) throws Exception;
 
     /**
      * Get the handled packet class
