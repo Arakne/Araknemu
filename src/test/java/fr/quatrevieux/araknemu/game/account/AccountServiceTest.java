@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.GameConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +20,8 @@ class AccountServiceTest extends GameBaseCase {
         super.setUp();
 
         service = new AccountService(
-            container.get(AccountRepository.class)
+            container.get(AccountRepository.class),
+            container.get(GameConfiguration.class)
         );
 
         dataSet.use(Account.class);
@@ -38,6 +40,7 @@ class AccountServiceTest extends GameBaseCase {
         GameAccount ga = service.load(new Account(1));
 
         assertEquals(1, ga.id());
+        assertEquals(2, ga.serverId());
     }
 
     @Test
@@ -46,7 +49,8 @@ class AccountServiceTest extends GameBaseCase {
 
         GameAccount account = new GameAccount(
             new Account(1),
-            service
+            service,
+            1
         );
 
         account.attach(session);

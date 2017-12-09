@@ -4,14 +4,14 @@ package fr.quatrevieux.araknemu.network.game.out.account;
  * Packet for successfully login to game server
  */
 final public class LoginTokenSuccess {
-    final private int community;
+    final private String key;
 
-    public LoginTokenSuccess(int community) {
-        this.community = community;
+    public LoginTokenSuccess(String key) {
+        this.key = key;
     }
 
     @Override
     public String toString() {
-        return "ATK" + community;
+        return "ATK" + key;
     }
 }

@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LoginTokenSuccessTest {
+class RegionalVersionTest {
     @Test
     void generate() {
-        assertEquals("ATK0", new LoginTokenSuccess("0").toString());
+        assertEquals("AV0", new RegionalVersion(0).toString());
     }
 }

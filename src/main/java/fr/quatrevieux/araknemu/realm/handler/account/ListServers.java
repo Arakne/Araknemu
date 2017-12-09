@@ -14,7 +14,7 @@ final public class ListServers implements PacketHandler<RealmSession, AskServerL
         ServerList out = new ServerList(ServerList.ONE_YEAR);
 
         // @todo Send characters list
-        out.add(new ServerList.Server(0, 0));
+        out.add(new ServerList.Server(1, 1));
 
         session.write(out);
     }

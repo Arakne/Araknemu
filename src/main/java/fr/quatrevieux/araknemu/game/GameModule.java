@@ -6,13 +6,19 @@ import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
+import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.game.account.AccountService;
+import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.connector.ConnectorService;
+import fr.quatrevieux.araknemu.game.handler.EnsureLogged;
 import fr.quatrevieux.araknemu.game.handler.StartSession;
 import fr.quatrevieux.araknemu.game.handler.StopSession;
+import fr.quatrevieux.araknemu.game.handler.account.CreateCharacter;
+import fr.quatrevieux.araknemu.game.handler.account.ListCharacters;
 import fr.quatrevieux.araknemu.game.handler.account.Login;
+import fr.quatrevieux.araknemu.game.handler.account.SendRegionalVersion;
 import fr.quatrevieux.araknemu.network.LoggedIoHandler;
 import fr.quatrevieux.araknemu.network.game.GameIoHandler;
 import fr.quatrevieux.araknemu.network.game.in.GameParserLoader;
@@ -86,6 +92,17 @@ final public class GameModule implements ContainerModule {
                     new Login(
                         container.get(TokenService.class),
                         container.get(AccountService.class)
+                    ),
+                    new SendRegionalVersion(),
+                    new EnsureLogged(
+                        new ListCharacters(
+                            container.get(CharactersService.class)
+                        )
+                    ),
+                    new EnsureLogged(
+                        new CreateCharacter(
+                            container.get(CharactersService.class)
+                        )
                     )
                 }
             )
@@ -118,7 +135,17 @@ final public class GameModule implements ContainerModule {
 
         configurator.persist(
             AccountService.class,
-            container -> new AccountService(container.get(AccountRepository.class))
+            container -> new AccountService(
+                container.get(AccountRepository.class),
+                container.get(GameConfiguration.class)
+            )
+        );
+
+        configurator.persist(
+            CharactersService.class,
+            container -> new CharactersService(
+                container.get(PlayerRepository.class)
+            )
         );
     }
 }

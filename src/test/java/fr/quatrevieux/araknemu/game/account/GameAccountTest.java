@@ -13,7 +13,8 @@ class GameAccountTest extends GameBaseCase {
     void isLogged() throws ContainerException {
         GameAccount account = new GameAccount(
             new Account(-1),
-            container.get(AccountService.class)
+            container.get(AccountService.class),
+            1
         );
 
         assertFalse(account.isLogged());
@@ -25,7 +26,8 @@ class GameAccountTest extends GameBaseCase {
     void attachDetach() throws ContainerException {
         GameAccount account = new GameAccount(
             new Account(-1),
-            container.get(AccountService.class)
+            container.get(AccountService.class),
+            1
         );
 
         account.attach(session);
@@ -37,7 +39,8 @@ class GameAccountTest extends GameBaseCase {
     void getters() throws ContainerException {
         GameAccount account = new GameAccount(
             new Account(1),
-            container.get(AccountService.class)
+            container.get(AccountService.class),
+            1
         );
 
         assertEquals(1, account.id());

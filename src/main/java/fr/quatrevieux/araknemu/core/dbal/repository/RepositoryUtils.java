@@ -238,7 +238,8 @@ public class RepositoryUtils<E> {
                     }
 
                     return loader.fillKeys(entity, rs);
-                }
+                },
+                true
             );
         } catch (SQLException e) {
             throw new RepositoryException(e);

@@ -11,7 +11,11 @@ import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
 import fr.quatrevieux.araknemu.core.di.*;
 import fr.quatrevieux.araknemu.data.RepositoriesModule;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
+import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
+import fr.quatrevieux.araknemu.game.account.AccountService;
+import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
@@ -121,6 +125,7 @@ public class GameBaseCase extends DatabaseTestCase {
         dataSet = new TestingDataSet(container);
         dataSet
             .declare(Account.class, AccountRepository.class)
+            .declare(Player.class, PlayerRepository.class)
         ;
     }
 
@@ -135,5 +140,15 @@ public class GameBaseCase extends DatabaseTestCase {
 
     public void sendPacket(Object packet) throws Exception {
         ioHandler.messageReceived(ioSession, packet);
+    }
+
+    public void login() throws ContainerException {
+        session.attach(
+            new GameAccount(
+                new Account(1),
+                container.get(AccountService.class),
+                1
+            )
+        );
     }
 }

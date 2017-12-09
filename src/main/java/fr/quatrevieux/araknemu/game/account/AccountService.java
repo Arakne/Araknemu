@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.account;
 
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
+import fr.quatrevieux.araknemu.game.GameConfiguration;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -11,14 +12,16 @@ import java.util.concurrent.ConcurrentMap;
  */
 final public class AccountService {
     final private AccountRepository repository;
+    final private GameConfiguration configuration;
 
     /**
      * Accounts indexed by id
      */
     final private ConcurrentMap<Integer, GameAccount> accounts = new ConcurrentHashMap<>();
 
-    public AccountService(AccountRepository repository) {
+    public AccountService(AccountRepository repository, GameConfiguration configuration) {
         this.repository = repository;
+        this.configuration = configuration;
     }
 
     /**
@@ -31,7 +34,8 @@ final public class AccountService {
     public GameAccount load(Account account) {
         return new GameAccount(
             repository.get(account),
-            this
+            this,
+            configuration.id()
         );
     }
 

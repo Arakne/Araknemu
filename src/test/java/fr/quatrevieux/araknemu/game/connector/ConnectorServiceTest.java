@@ -31,7 +31,8 @@ class ConnectorServiceTest extends GameBaseCase {
 
         GameAccount ga = new GameAccount(
             new Account(1),
-            container.get(AccountService.class)
+            container.get(AccountService.class),
+            1
         );
 
         ga.attach(session);

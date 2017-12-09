@@ -17,7 +17,8 @@ class GameSessionTest extends GameBaseCase {
 
         GameAccount account = new GameAccount(
             new Account(1),
-            container.get(AccountService.class)
+            container.get(AccountService.class),
+            1
         );
 
         session.attach(account);

@@ -44,7 +44,39 @@ final public class ConnectionPoolUtils implements ConnectionPool {
      *     ResultSet rs = stmt.executeQuery();
      *
      *     return load(rs);
-     * });
+     * }, false);
+     *
+     * @param sql SQL query to prepare
+     * @param task Task to execute
+     * @param returnGeneratedKeys Set true to return generated keys (like auto increment)
+     * @param <T> The result type
+     *
+     * @return The result of the task
+     *
+     * @throws SQLException When error occurs during execution
+     */
+    public <T> T prepare(String sql, PreparedTask<T> task, boolean returnGeneratedKeys) throws SQLException {
+        return execute(connection -> {
+            try (PreparedStatement stmt = connection.prepareStatement(
+                sql,
+                returnGeneratedKeys
+                    ? PreparedStatement.RETURN_GENERATED_KEYS
+                    : PreparedStatement.NO_GENERATED_KEYS
+            )) {
+                return task.execute(stmt);
+            }
+        });
+    }
+
+    /**
+     * Prepare SQL query
+     *
+     * util.prepare("SELECT * FROM ACCOUNT WHERE ACCOUNT_ID = ?", stmt -> {
+     *     stmt.setString(1, 123);
+     *     ResultSet rs = stmt.executeQuery();
+     *
+     *     return load(rs);
+     * }, false);
      *
      * @param sql SQL query to prepare
      * @param task Task to execute
@@ -55,11 +87,7 @@ final public class ConnectionPoolUtils implements ConnectionPool {
      * @throws SQLException When error occurs during execution
      */
     public <T> T prepare(String sql, PreparedTask<T> task) throws SQLException {
-        return execute(connection -> {
-            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                return task.execute(stmt);
-            }
-        });
+        return prepare(sql, task, false);
     }
 
     /**

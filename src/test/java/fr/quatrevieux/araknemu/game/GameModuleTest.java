@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
 import fr.quatrevieux.araknemu.data.RepositoriesModule;
 import fr.quatrevieux.araknemu.game.account.AccountService;
+import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
 import fr.quatrevieux.araknemu.game.connector.ConnectorService;
 import fr.quatrevieux.araknemu.network.LoggedIoHandler;
@@ -33,6 +34,7 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(ConnectorService.class, container.get(ConnectorService.class));
         assertInstanceOf(TokenService.class, container.get(TokenService.class));
         assertInstanceOf(AccountService.class, container.get(AccountService.class));
+        assertInstanceOf(CharactersService.class, container.get(CharactersService.class));
     }
 
     public void assertInstanceOf(Class type, Object obj) {

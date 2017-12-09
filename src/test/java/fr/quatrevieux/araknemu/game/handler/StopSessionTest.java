@@ -26,7 +26,8 @@ class StopSessionTest extends GameBaseCase {
     void withAttachedAccount() throws ContainerException {
         GameAccount account = new GameAccount(
             new Account(2),
-            container.get(AccountService.class)
+            container.get(AccountService.class),
+            1
         );
         account.attach(session);
 
