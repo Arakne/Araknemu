@@ -8,6 +8,36 @@ import fr.quatrevieux.araknemu.core.config.PoolUtils;
  * Configuration class for game server
  */
 final public class GameConfiguration implements ConfigurationModule {
+    final public class PlayerConfiguration {
+        /**
+         * The player name regex
+         */
+        public String nameRegex() {
+            return pool.string("player.name.regex", "[A-Z][a-z]+(-[A-Z]?[a-z]+)?");
+        }
+
+        /**
+         * Minimal length of player name
+         */
+        public int nameMinLength() {
+            return pool.integer("player.name.minLength", 2);
+        }
+
+        /**
+         * Maximal length of player name
+         */
+        public int nameMaxLength() {
+            return pool.integer("player.name.maxLength", 20);
+        }
+
+        /**
+         * Maximum number for characters per account per server
+         */
+        public int maxPerAccount() {
+            return pool.integer("player.max", 5);
+        }
+    }
+
     private PoolUtils pool;
 
     @Override
@@ -39,5 +69,12 @@ final public class GameConfiguration implements ConfigurationModule {
      */
     public String ip() {
         return pool.string("server.ip", "127.0.0.1");
+    }
+
+    /**
+     * Get player configuration
+     */
+    public PlayerConfiguration player() {
+        return new PlayerConfiguration();
     }
 }

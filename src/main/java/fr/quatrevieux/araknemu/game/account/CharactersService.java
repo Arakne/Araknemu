@@ -1,6 +1,9 @@
 package fr.quatrevieux.araknemu.game.account;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
+import fr.quatrevieux.araknemu.data.living.constraint.EntityConstraint;
+import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.game.account.exception.CharacterCreationException;
 
@@ -12,19 +15,23 @@ import java.util.stream.Collectors;
  */
 final public class CharactersService {
     final private PlayerRepository repository;
+    final private EntityConstraint<Player, PlayerConstraints.Error> constraint;
 
-    public CharactersService(PlayerRepository repository) {
+    public CharactersService(PlayerRepository repository, EntityConstraint<Player, PlayerConstraints.Error> constraint) {
         this.repository = repository;
+        this.constraint = constraint;
     }
 
     /**
      * Create a new character
      *
      * @param character Character to create
-     *
-     * @todo check name, etc...
      */
     public AccountCharacter create(AccountCharacter character) throws CharacterCreationException {
+        if (!constraint.check(character.character())) {
+            throw new CharacterCreationException(constraint.error());
+        }
+
         try {
             return new AccountCharacter(
                 character.account(),

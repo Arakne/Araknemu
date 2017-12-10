@@ -90,4 +90,20 @@ class PlayerRepositoryTest extends DatabaseTestCase {
 
         assertFalse(repository.has(player));
     }
+
+    @Test
+    void nameExists() {
+        assertFalse(repository.nameExists(new Player(-1, 5, 1, "name", null, null, null, 1)));
+        repository.add(new Player(-1, 5, 1, "name", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1));
+        assertTrue(repository.nameExists(new Player(-1, 5, 1, "name", null, null, null, 1)));
+    }
+
+    @Test
+    void accountCharactersCount() {
+        repository.add(new Player(-1, 5, 1, "One", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1));
+        repository.add(new Player(-1, 5, 1, "Two", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1));
+        repository.add(new Player(-1, 5, 2, "Other", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1));
+
+        assertEquals(2, repository.accountCharactersCount(new Player(-1, 5, 1, null, null, null, null, 0)));
+    }
 }

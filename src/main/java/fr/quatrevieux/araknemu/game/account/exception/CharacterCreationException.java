@@ -1,47 +1,24 @@
 package fr.quatrevieux.araknemu.game.account.exception;
 
+import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
+
 /**
  * Throw when error occurs during character creation
  */
 public class CharacterCreationException extends Exception {
-    /**
-     * List of error codes
-     * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L580
-     */
-    public enum Error {
-        SUBSCRIPTION_OUT("s"),
-        CREATE_CHARACTER_FULL("f"),
-        NAME_ALEREADY_EXISTS("a"),
-        CREATE_CHARACTER_BAD_NAME("n"),
-        CREATE_CHARACTER_ERROR;
 
-        final private String code;
+    final private PlayerConstraints.Error error;
 
-        Error(String code) {
-            this.code = code;
-        }
-
-        Error() {
-            this("");
-        }
-
-        public String code() {
-            return code;
-        }
-    }
-
-    final private Error error;
-
-    public CharacterCreationException(Error error) {
+    public CharacterCreationException(PlayerConstraints.Error error) {
         this.error = error;
     }
 
     public CharacterCreationException(Throwable cause) {
         super(cause);
-        error = Error.CREATE_CHARACTER_ERROR;
+        error = PlayerConstraints.Error.CREATE_CHARACTER_ERROR;
     }
 
-    public Error error() {
+    public PlayerConstraints.Error error() {
         return error;
     }
 }

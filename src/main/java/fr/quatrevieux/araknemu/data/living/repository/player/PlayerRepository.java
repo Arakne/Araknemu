@@ -144,4 +144,29 @@ final public class PlayerRepository implements MutableRepository<Player> {
             }
         );
     }
+
+    public boolean nameExists(Player player) {
+        return utils.aggregate(
+            "SELECT COUNT(*) FROM PLAYER WHERE PLAYER_NAME = ? AND SERVER_ID = ?",
+            stmt -> {
+                stmt.setString(1, player.name());
+                stmt.setInt(2,    player.serverId());
+            }
+        ) > 0;
+    }
+
+    /**
+     * Get the account characters count
+     *
+     * @param player The player data
+     */
+    public int accountCharactersCount(Player player) {
+        return utils.aggregate(
+            "SELECT COUNT(*) FROM PLAYER WHERE ACCOUNT_ID = ? AND SERVER_ID = ?",
+            stmt -> {
+                stmt.setInt(1, player.accountId());
+                stmt.setInt(2, player.serverId());
+            }
+        );
+    }
 }

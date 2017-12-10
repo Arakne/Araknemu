@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.account;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
+import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
@@ -26,7 +27,8 @@ class CharactersServiceTest extends GameBaseCase {
         super.setUp();
 
         service = new CharactersService(
-            repository = container.get(PlayerRepository.class)
+            repository = container.get(PlayerRepository.class),
+            container.get(PlayerConstraints.class)
         );
 
         dataSet.use(Player.class);
@@ -81,5 +83,23 @@ class CharactersServiceTest extends GameBaseCase {
         assertEquals(Race.ECAFLIP, db.race());
         assertEquals(Sex.MALE, db.sex());
         assertArrayEquals(new int[]{123, 456, 789}, db.colors().toArray());
+    }
+
+    @Test
+    void createError() throws ContainerException, CharacterCreationException {
+        GameAccount account = new GameAccount(
+            new Account(5),
+            container.get(AccountService.class),
+            1
+        );
+
+        assertThrows(CharacterCreationException.class, () -> service.create(
+            new AccountCharacter(
+                account,
+                Player.forCreation(5, 1, "--invalid-name", Race.ECAFLIP, Sex.MALE, new Colors(123, 456, 789))
+            )
+        ));
+
+        assertTrue(service.list(account).isEmpty());
     }
 }

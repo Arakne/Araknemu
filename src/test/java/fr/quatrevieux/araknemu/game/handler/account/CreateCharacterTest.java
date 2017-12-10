@@ -2,13 +2,16 @@ package fr.quatrevieux.araknemu.game.handler.account;
 
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
+import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountCharacter;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
+import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.in.account.AddCharacterRequest;
 import fr.quatrevieux.araknemu.network.game.out.account.CharacterCreated;
+import fr.quatrevieux.araknemu.network.game.out.account.CharacterCreationError;
 import fr.quatrevieux.araknemu.network.game.out.account.CharactersList;
 import fr.quatrevieux.araknemu.network.realm.out.ServerList;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,8 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CreateCharacterTest extends GameBaseCase {
     private CreateCharacter handler;
@@ -62,5 +64,25 @@ class CreateCharacterTest extends GameBaseCase {
                 )
             ))
         );
+    }
+
+    @Test
+    void error() throws Exception {
+        try {
+            handler.handle(session, new AddCharacterRequest(
+                "-invalid-name",
+                Race.ECAFLIP,
+                Sex.MALE,
+                new Colors(123, 456, 789)
+            ));
+
+            fail("Error packet mst be thrown");
+        } catch (ErrorPacket e) {
+            assertTrue(e.packet() instanceof CharacterCreationError);
+            assertEquals(
+                new CharacterCreationError(PlayerConstraints.Error.CREATE_CHARACTER_BAD_NAME).toString(),
+                e.packet().toString()
+            );
+        }
     }
 }

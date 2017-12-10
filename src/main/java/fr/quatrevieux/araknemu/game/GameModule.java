@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
+import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.game.account.AccountService;
@@ -120,6 +121,18 @@ final public class GameModule implements ContainerModule {
             )
         );
 
+        configurator.factory(
+            PlayerConstraints.class,
+            container -> new PlayerConstraints(
+                container.get(PlayerRepository.class),
+                container.get(GameConfiguration.class).player()
+            )
+        );
+
+        //////////////
+        // Services //
+        //////////////
+
         configurator.persist(
             ConnectorService.class,
             container -> new ConnectorService(
@@ -144,7 +157,8 @@ final public class GameModule implements ContainerModule {
         configurator.persist(
             CharactersService.class,
             container -> new CharactersService(
-                container.get(PlayerRepository.class)
+                container.get(PlayerRepository.class),
+                container.get(PlayerConstraints.class)
             )
         );
     }
