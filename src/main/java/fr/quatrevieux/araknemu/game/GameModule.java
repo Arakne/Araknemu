@@ -16,10 +16,8 @@ import fr.quatrevieux.araknemu.game.connector.ConnectorService;
 import fr.quatrevieux.araknemu.game.handler.EnsureLogged;
 import fr.quatrevieux.araknemu.game.handler.StartSession;
 import fr.quatrevieux.araknemu.game.handler.StopSession;
-import fr.quatrevieux.araknemu.game.handler.account.CreateCharacter;
-import fr.quatrevieux.araknemu.game.handler.account.ListCharacters;
-import fr.quatrevieux.araknemu.game.handler.account.Login;
-import fr.quatrevieux.araknemu.game.handler.account.SendRegionalVersion;
+import fr.quatrevieux.araknemu.game.handler.account.*;
+import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.LoggedIoHandler;
 import fr.quatrevieux.araknemu.network.game.GameIoHandler;
 import fr.quatrevieux.araknemu.network.game.in.GameParserLoader;
@@ -104,6 +102,11 @@ final public class GameModule implements ContainerModule {
                         new CreateCharacter(
                             container.get(CharactersService.class)
                         )
+                    ),
+                    new EnsureLogged(
+                        new SelectCharacter(
+                            container.get(PlayerService.class)
+                        )
                     )
                 }
             )
@@ -159,6 +162,14 @@ final public class GameModule implements ContainerModule {
             container -> new CharactersService(
                 container.get(PlayerRepository.class),
                 container.get(PlayerConstraints.class)
+            )
+        );
+
+        configurator.persist(
+            PlayerService.class,
+            container -> new PlayerService(
+                container.get(PlayerRepository.class),
+                container.get(GameConfiguration.class)
             )
         );
     }

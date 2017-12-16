@@ -106,4 +106,35 @@ class PlayerRepositoryTest extends DatabaseTestCase {
 
         assertEquals(2, repository.accountCharactersCount(new Player(-1, 5, 1, null, null, null, null, 0)));
     }
+
+    @Test
+    void getForGamePlayerNotFound() {
+        int id = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1)).id();
+
+        assertThrows(EntityNotFoundException.class, () -> repository.getForGame(Player.forGame(-1, 123, 2)));
+    }
+
+    @Test
+    void getForGameBadAccount() {
+        int id = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1)).id();
+
+        assertThrows(EntityNotFoundException.class, () -> repository.getForGame(Player.forGame(id, 123, 1)));
+    }
+
+    @Test
+    void getForGameBadServer() {
+        int id = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1)).id();
+
+        assertThrows(EntityNotFoundException.class, () -> repository.getForGame(Player.forGame(id, 5, 2)));
+    }
+
+    @Test
+    void getForGameSuccess() {
+        int id = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1)).id();
+
+        Player player = repository.getForGame(Player.forGame(id, 5, 1));
+
+        assertEquals("One", player.name());
+        assertEquals(Race.FECA, player.race());
+    }
 }

@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.network.game;
 
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.AbstractSession;
 import org.apache.mina.core.session.IoSession;
 
@@ -41,5 +42,21 @@ final public class GameSession extends AbstractSession {
      */
     public GameAccount detach() {
         return (GameAccount) session.removeAttribute("account");
+    }
+
+    /**
+     * Set the logged player
+     */
+    public void setPlayer(GamePlayer player) {
+        session.setAttribute("player", player);
+    }
+
+    /**
+     * Get the logged player
+     *
+     * @return The player instance, or null is not in game
+     */
+    public GamePlayer player() {
+        return (GamePlayer) session.getAttribute("player");
     }
 }

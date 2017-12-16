@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.network.game;
+package fr.quatrevieux.araknemu.network.game.out.account;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Race;
@@ -10,42 +10,23 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import org.apache.mina.core.session.DummySession;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GameSessionTest extends GameBaseCase {
+class CharacterSelectedTest extends GameBaseCase {
     @Test
-    void account() throws ContainerException {
-        GameSession session = new GameSession(new DummySession());
-
-        GameAccount account = new GameAccount(
-            new Account(1),
-            container.get(AccountService.class),
-            1
-        );
-
-        session.attach(account);
-        assertSame(account, session.account());
-    }
-
-    @Test
-    void player() throws ContainerException {
-        GameSession session = new GameSession(new DummySession());
-
+    void generate() throws ContainerException {
         GamePlayer player = new GamePlayer(
             new GameAccount(
-                new Account(1),
+                new Account(5),
                 container.get(AccountService.class),
                 2
             ),
-            new Player(1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23),
+            new Player(123, 5, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23),
             session
         );
 
-        session.setPlayer(player);
-
-        assertSame(player, session.player());
+        assertEquals("ASK123|Bob|23||0|10|7b|1c8|315|", new CharacterSelected(player).toString());
     }
 }

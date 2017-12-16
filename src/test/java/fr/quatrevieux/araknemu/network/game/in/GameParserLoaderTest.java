@@ -1,5 +1,7 @@
 package fr.quatrevieux.araknemu.network.game.in;
 
+import fr.quatrevieux.araknemu.network.game.in.account.AskCharacterList;
+import fr.quatrevieux.araknemu.network.game.in.account.ChoosePlayingCharacter;
 import fr.quatrevieux.araknemu.network.game.in.account.LoginToken;
 import fr.quatrevieux.araknemu.network.in.ParserLoader;
 import fr.quatrevieux.araknemu.network.in.SinglePacketParser;
@@ -17,6 +19,8 @@ class GameParserLoaderTest {
         Collection<SinglePacketParser> parsers = loader.load();
 
         assertContainsInstance(LoginToken.Parser.class, parsers);
+        assertContainsInstance(AskCharacterList.Parser.class, parsers);
+        assertContainsInstance(ChoosePlayingCharacter.Parser.class, parsers);
     }
 
     public void assertContainsInstance(Class type, Collection collection) {

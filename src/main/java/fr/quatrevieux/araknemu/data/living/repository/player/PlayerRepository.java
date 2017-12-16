@@ -169,4 +169,18 @@ final public class PlayerRepository implements MutableRepository<Player> {
             }
         );
     }
+
+    /**
+     * Get the player entity by id, and ensure that account and server is valid
+     */
+    public Player getForGame(Player player) {
+        return utils.findOne(
+            "SELECT * FROM PLAYER WHERE PLAYER_ID = ? AND ACCOUNT_ID = ? AND SERVER_ID = ?",
+            stmt -> {
+                stmt.setInt(1, player.id());
+                stmt.setInt(2, player.accountId());
+                stmt.setInt(3, player.serverId());
+            }
+        );
+    }
 }

@@ -89,4 +89,13 @@ final public class Player {
     static public Player forCreation(int accountId, int serverId, String name, Race race, Sex sex, Colors colors) {
         return new Player(-1, accountId, serverId, name, race, sex, colors, 1);
     }
+
+    /**
+     * Get a player for load for entering game
+     *
+     * @see fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository#getForGame(Player)
+     */
+    static public Player forGame(int playerId, int accountId, int serverId) {
+        return new Player(playerId, accountId, serverId, null, null, null, null, 0);
+    }
 }
