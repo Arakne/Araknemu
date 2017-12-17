@@ -1,7 +1,7 @@
 package fr.quatrevieux.araknemu.network.realm;
 
 import fr.quatrevieux.araknemu.network.in.*;
-import fr.quatrevieux.araknemu.network.realm.in.AskQueuePosition;
+import fr.quatrevieux.araknemu.network.in.AskQueuePosition;
 import fr.quatrevieux.araknemu.network.realm.in.Credentials;
 import fr.quatrevieux.araknemu.network.realm.in.DofusVersion;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
@@ -10,9 +10,6 @@ import fr.quatrevieux.araknemu.realm.handler.StartSession;
 import org.apache.mina.core.session.DummySession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 

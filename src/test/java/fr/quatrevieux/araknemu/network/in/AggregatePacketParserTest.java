@@ -1,7 +1,5 @@
 package fr.quatrevieux.araknemu.network.in;
 
-import fr.quatrevieux.araknemu.network.realm.in.AskQueuePosition;
-import fr.quatrevieux.araknemu.network.realm.in.ChooseServer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

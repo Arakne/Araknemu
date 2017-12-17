@@ -14,6 +14,7 @@ class CommonParserLoaderTest {
         Collection<SinglePacketParser> parsers = loader.load();
 
         assertContainsInstance(PingResponse.Parser.class, parsers);
+        assertContainsInstance(AskQueuePosition.Parser.class, parsers);
     }
 
     public void assertContainsInstance(Class type, Collection collection) {

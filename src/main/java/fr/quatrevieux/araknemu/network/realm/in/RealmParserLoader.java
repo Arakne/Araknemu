@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.network.realm.in;
 
+import fr.quatrevieux.araknemu.network.in.AskQueuePosition;
 import fr.quatrevieux.araknemu.network.in.ParserLoader;
 import fr.quatrevieux.araknemu.network.in.SinglePacketParser;
 
@@ -13,7 +14,6 @@ final public class RealmParserLoader implements ParserLoader {
     @Override
     public Collection<SinglePacketParser> load() {
         return Arrays.asList(
-            new AskQueuePosition.Parser(),
             new AskServerList.Parser(),
             new ChooseServer.Parser()
         );

@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.network;
 
+import fr.quatrevieux.araknemu.network.in.HandlerNotFoundException;
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
@@ -43,6 +44,11 @@ final public class LoggedIoHandler implements IoHandler {
 
     @Override
     public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
+        if (cause instanceof HandlerNotFoundException) {
+            logger.warn(cause.getMessage());
+            return;
+        }
+
         logger.error("Uncaught exception", cause);
 
         handler.exceptionCaught(session, cause);

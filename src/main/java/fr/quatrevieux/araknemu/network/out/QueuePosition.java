@@ -1,7 +1,9 @@
-package fr.quatrevieux.araknemu.network.realm.out;
+package fr.quatrevieux.araknemu.network.out;
+
+import fr.quatrevieux.araknemu.network.in.AskQueuePosition;
 
 /**
- * Response for {@link fr.quatrevieux.araknemu.network.realm.in.AskQueuePosition}
+ * Response for {@link AskQueuePosition}
  */
 final public class QueuePosition {
     final private int position;

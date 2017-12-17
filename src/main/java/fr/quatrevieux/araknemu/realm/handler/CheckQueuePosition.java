@@ -2,8 +2,8 @@ package fr.quatrevieux.araknemu.realm.handler;
 
 import fr.quatrevieux.araknemu.network.in.PacketHandler;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
-import fr.quatrevieux.araknemu.network.realm.in.AskQueuePosition;
-import fr.quatrevieux.araknemu.network.realm.out.QueuePosition;
+import fr.quatrevieux.araknemu.network.in.AskQueuePosition;
+import fr.quatrevieux.araknemu.network.out.QueuePosition;
 
 /**
  * Check the queue position (Af packet)

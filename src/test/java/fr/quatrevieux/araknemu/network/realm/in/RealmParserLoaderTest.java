@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.network.realm.in;
 
+import fr.quatrevieux.araknemu.network.in.AskQueuePosition;
 import fr.quatrevieux.araknemu.network.in.ParserLoader;
 import fr.quatrevieux.araknemu.network.in.SinglePacketParser;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,6 @@ class RealmParserLoaderTest {
         Collection<SinglePacketParser> parsers = loader.load();
 
         assertContainsInstance(AskServerList.Parser.class, parsers);
-        assertContainsInstance(AskQueuePosition.Parser.class, parsers);
         assertContainsInstance(ChooseServer.Parser.class, parsers);
     }
 

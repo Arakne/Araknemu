@@ -13,6 +13,7 @@ import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.connector.ConnectorService;
+import fr.quatrevieux.araknemu.game.handler.CheckQueuePosition;
 import fr.quatrevieux.araknemu.game.handler.EnsureLogged;
 import fr.quatrevieux.araknemu.game.handler.StartSession;
 import fr.quatrevieux.araknemu.game.handler.StopSession;
@@ -88,6 +89,7 @@ final public class GameModule implements ContainerModule {
                 new PacketHandler[]{
                     new StartSession(),
                     new StopSession(),
+                    new CheckQueuePosition(),
                     new Login(
                         container.get(TokenService.class),
                         container.get(AccountService.class)

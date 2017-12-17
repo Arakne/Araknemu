@@ -1,8 +1,4 @@
-package fr.quatrevieux.araknemu.network.realm.in;
-
-import fr.quatrevieux.araknemu.network.in.Packet;
-import fr.quatrevieux.araknemu.network.in.ParsePacketException;
-import fr.quatrevieux.araknemu.network.in.SinglePacketParser;
+package fr.quatrevieux.araknemu.network.in;
 
 /**
  * Ask the position on the login queue
