@@ -5,6 +5,8 @@ import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
+import fr.quatrevieux.araknemu.data.transformer.CharacteristicsTransformer;
+import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 
 /**
  * DI module for repositories
@@ -21,7 +23,23 @@ final public class RepositoriesModule implements ContainerModule {
 
         configurator.persist(
             PlayerRepository.class,
-            container -> new PlayerRepository(container.get(ConnectionPool.class))
+            container -> new PlayerRepository(
+                container.get(ConnectionPool.class),
+                container.get(CharacteristicsTransformer.class)
+            )
+        );
+
+        configurator.persist(
+            PlayerRaceRepository.class,
+            container -> new PlayerRaceRepository(
+                container.get(ConnectionPool.class),
+                container.get(CharacteristicsTransformer.class)
+            )
+        );
+
+        configurator.persist(
+            CharacteristicsTransformer.class,
+            container -> new CharacteristicsTransformer()
         );
     }
 }

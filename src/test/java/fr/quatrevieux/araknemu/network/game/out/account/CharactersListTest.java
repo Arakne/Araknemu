@@ -35,7 +35,7 @@ class CharactersListTest extends GameBaseCase {
                             container.get(AccountService.class),
                             1
                         ),
-                        new Player(5, 12, 1, "name", Race.CRA, Sex.MALE, new Colors(-1, 51, 43), 15)
+                        new Player(5, 12, 1, "name", Race.CRA, Sex.MALE, new Colors(-1, 51, 43), 15, null)
                     )
                 )
             ).toString()

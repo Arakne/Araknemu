@@ -8,16 +8,16 @@ import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
+import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.connector.ConnectorService;
-import fr.quatrevieux.araknemu.game.handler.CheckQueuePosition;
-import fr.quatrevieux.araknemu.game.handler.EnsureLogged;
-import fr.quatrevieux.araknemu.game.handler.StartSession;
-import fr.quatrevieux.araknemu.game.handler.StopSession;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
+import fr.quatrevieux.araknemu.game.handler.*;
 import fr.quatrevieux.araknemu.game.handler.account.*;
+import fr.quatrevieux.araknemu.game.handler.game.CreateGame;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.LoggedIoHandler;
 import fr.quatrevieux.araknemu.network.game.GameIoHandler;
@@ -109,6 +109,11 @@ final public class GameModule implements ContainerModule {
                         new SelectCharacter(
                             container.get(PlayerService.class)
                         )
+                    ),
+                    new EnsurePlaying(
+                        new CreateGame(
+                            container.get(ExplorationService.class)
+                        )
                     )
                 }
             )
@@ -171,8 +176,14 @@ final public class GameModule implements ContainerModule {
             PlayerService.class,
             container -> new PlayerService(
                 container.get(PlayerRepository.class),
+                container.get(PlayerRaceRepository.class),
                 container.get(GameConfiguration.class)
             )
+        );
+
+        configurator.persist(
+            ExplorationService.class,
+            container -> new ExplorationService()
         );
     }
 }

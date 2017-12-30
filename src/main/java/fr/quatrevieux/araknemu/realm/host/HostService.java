@@ -29,7 +29,7 @@ final public class HostService {
     /**
      * Update the host status
      *
-     * @param id Host id
+     * @param id Host race
      * @param state Host state
      * @param canLog Can log into server
      */
@@ -42,7 +42,7 @@ final public class HostService {
 
     /**
      * Check if the requested host is available for login
-     * @param id The host id
+     * @param id The host race
      */
     public boolean isAvailable(int id) {
         return hosts.containsKey(id) && hosts.get(id).canLog();
@@ -50,7 +50,7 @@ final public class HostService {
 
     /**
      * Get a game host
-     * @param id The host id
+     * @param id The host race
      */
     public GameHost get(int id) {
         return hosts.get(id);

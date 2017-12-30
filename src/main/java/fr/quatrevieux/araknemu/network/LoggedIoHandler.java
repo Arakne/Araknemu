@@ -20,7 +20,7 @@ final public class LoggedIoHandler implements IoHandler {
 
     @Override
     public void sessionCreated(IoSession session) throws Exception {
-        logger.info("New session (id: {})", session.getId());
+        logger.info("New session (race: {})", session.getId());
 
         handler.sessionCreated(session);
     }
@@ -32,7 +32,7 @@ final public class LoggedIoHandler implements IoHandler {
 
     @Override
     public void sessionClosed(IoSession session) throws Exception {
-        logger.info("Session closed (id: {})", session.getId());
+        logger.info("Session closed (race: {})", session.getId());
 
         handler.sessionClosed(session);
     }
@@ -70,7 +70,7 @@ final public class LoggedIoHandler implements IoHandler {
 
     @Override
     public void inputClosed(IoSession session) throws Exception {
-        logger.debug("Input closes (id : {})", session.getId());
+        logger.debug("Input closes (race : {})", session.getId());
 
         handler.inputClosed(session);
     }

@@ -26,7 +26,7 @@ final public class ConnectorService {
     /**
      * Generate account token
      *
-     * @param accountId Account id
+     * @param accountId Account race
      */
     public String token(int accountId) {
         return tokens.generate(new Account(accountId));

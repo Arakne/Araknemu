@@ -31,7 +31,7 @@ final public class ChooseServer implements Packet {
     }
 
     /**
-     * The server id
+     * The server race
      */
     public int id() {
         return id;

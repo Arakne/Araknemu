@@ -48,7 +48,7 @@ final public class GameAccount {
     }
 
     /**
-     * Get the account id
+     * Get the account race
      */
     public int id() {
         return account.id();
@@ -73,7 +73,7 @@ final public class GameAccount {
     }
 
     /**
-     * Get the current game server id
+     * Get the current game server race
      */
     public int serverId() {
         return serverId;

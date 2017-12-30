@@ -20,8 +20,8 @@ final public class Credentials implements Packet {
         ;
 
         /**
-         * Get method from method id char
-         * @param id The id char. Should be a number
+         * Get method from method race char
+         * @param id The race char. Should be a number
          * @return
          */
         static public Method get(char id) {

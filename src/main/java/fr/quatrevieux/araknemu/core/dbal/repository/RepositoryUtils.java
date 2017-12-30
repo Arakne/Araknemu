@@ -213,7 +213,7 @@ public class RepositoryUtils<E> {
      *     account
      * );
      *
-     * account.id(); // new id
+     * account.race(); // new race
      *
      * @param query The update / insert query
      * @param binder The binder

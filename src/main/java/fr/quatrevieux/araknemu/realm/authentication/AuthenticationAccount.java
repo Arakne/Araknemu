@@ -60,7 +60,7 @@ final public class AuthenticationAccount {
     }
 
     /**
-     * Get the account id
+     * Get the account race
      */
     public int id() {
         return account.id();

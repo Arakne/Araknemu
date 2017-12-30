@@ -8,7 +8,9 @@ import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
+import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.Colors;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,6 +21,12 @@ import java.util.Collection;
  */
 final public class PlayerRepository implements MutableRepository<Player> {
     private static class Loader implements RepositoryUtils.Loader<Player> {
+        final private Transformer<Characteristics> characteristicsTransformer;
+
+        public Loader(Transformer<Characteristics> characteristicsTransformer) {
+            this.characteristicsTransformer = characteristicsTransformer;
+        }
+
         @Override
         public Player create(ResultSet rs) throws SQLException {
             return new Player(
@@ -33,7 +41,10 @@ final public class PlayerRepository implements MutableRepository<Player> {
                     rs.getInt("COLOR2"),
                     rs.getInt("COLOR3")
                 ),
-                rs.getInt("PLAYER_LEVEL")
+                rs.getInt("PLAYER_LEVEL"),
+                characteristicsTransformer.unserialize(
+                    rs.getString("PLAYER_STATS")
+                )
             );
         }
 
@@ -46,11 +57,16 @@ final public class PlayerRepository implements MutableRepository<Player> {
     }
 
     final private ConnectionPoolUtils pool;
+    final private Transformer<Characteristics> characteristicsTransformer;
+
     final private RepositoryUtils<Player> utils;
 
-    public PlayerRepository(ConnectionPool pool) {
+    public PlayerRepository(ConnectionPool pool, Transformer<Characteristics> characteristicsTransformer) {
         this.pool = new ConnectionPoolUtils(pool);
-        this.utils = new RepositoryUtils<>(this.pool, new PlayerRepository.Loader());
+        this.characteristicsTransformer = characteristicsTransformer;
+        this.utils = new RepositoryUtils<>(this.pool, new PlayerRepository.Loader(
+            characteristicsTransformer
+        ));
     }
 
     @Override
@@ -68,6 +84,7 @@ final public class PlayerRepository implements MutableRepository<Player> {
                     "COLOR2 INTEGER," +
                     "COLOR3 INTEGER," +
                     "PLAYER_LEVEL INTEGER," +
+                    "PLAYER_STATS TEXT," +
                     "UNIQUE (PLAYER_NAME, SERVER_ID)" +
                 ")"
             );
@@ -91,18 +108,19 @@ final public class PlayerRepository implements MutableRepository<Player> {
     public Player add(Player entity) throws RepositoryException {
         return utils.update(
             "INSERT INTO PLAYER " +
-                "(ACCOUNT_ID, SERVER_ID, PLAYER_NAME, RACE, SEX, COLOR1, COLOR2, COLOR3, PLAYER_LEVEL) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "(ACCOUNT_ID, SERVER_ID, PLAYER_NAME, RACE, SEX, COLOR1, COLOR2, COLOR3, PLAYER_LEVEL, PLAYER_STATS) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             stmt -> {
-                stmt.setInt(1,    entity.accountId());
-                stmt.setInt(2,    entity.serverId());
-                stmt.setString(3, entity.name());
-                stmt.setInt(4,    entity.race().ordinal());
-                stmt.setInt(5,    entity.sex().ordinal());
-                stmt.setInt(6,    entity.colors().color1());
-                stmt.setInt(7,    entity.colors().color2());
-                stmt.setInt(8,    entity.colors().color3());
-                stmt.setInt(9,    entity.level());
+                stmt.setInt(1,     entity.accountId());
+                stmt.setInt(2,     entity.serverId());
+                stmt.setString(3,  entity.name());
+                stmt.setInt(4,     entity.race().ordinal());
+                stmt.setInt(5,     entity.sex().ordinal());
+                stmt.setInt(6,     entity.colors().color1());
+                stmt.setInt(7,     entity.colors().color2());
+                stmt.setInt(8,     entity.colors().color3());
+                stmt.setInt(9,     entity.level());
+                stmt.setString(10, characteristicsTransformer.serialize(entity.stats()));
             },
             entity
         );
@@ -132,7 +150,7 @@ final public class PlayerRepository implements MutableRepository<Player> {
     /**
      * Get list of players by account
      *
-     * @param accountId The account id
+     * @param accountId The account race
      * @param serverId The server
      */
     public Collection<Player> findByAccount(int accountId, int serverId) {
@@ -171,7 +189,7 @@ final public class PlayerRepository implements MutableRepository<Player> {
     }
 
     /**
-     * Get the player entity by id, and ensure that account and server is valid
+     * Get the player entity by race, and ensure that account and server is valid
      */
     public Player getForGame(Player player) {
         return utils.findOne(

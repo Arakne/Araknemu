@@ -19,8 +19,8 @@ public enum Race {
     PANDAWA;
 
     /**
-     * Get a character race by its id
-     * @param i The race id
+     * Get a character race by its race
+     * @param i The race race
      */
     static public Race byId(int i) {
         if (i >= values().length || i == 0) {

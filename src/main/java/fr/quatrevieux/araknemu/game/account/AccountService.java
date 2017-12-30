@@ -15,7 +15,7 @@ final public class AccountService {
     final private GameConfiguration configuration;
 
     /**
-     * Accounts indexed by id
+     * Accounts indexed by race
      */
     final private ConcurrentMap<Integer, GameAccount> accounts = new ConcurrentHashMap<>();
 
@@ -41,7 +41,7 @@ final public class AccountService {
 
     /**
      * Check if the account is logged to the game server
-     * @param accountId Account id
+     * @param accountId Account race
      */
     public boolean isLogged(int accountId) {
         if (!accounts.containsKey(accountId)) {

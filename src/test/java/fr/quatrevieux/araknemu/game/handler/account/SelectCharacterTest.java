@@ -28,6 +28,7 @@ class SelectCharacterTest extends GameBaseCase {
         login();
 
         dataSet.use(Player.class);
+        insertRaces();
     }
 
     @Test
@@ -41,7 +42,7 @@ class SelectCharacterTest extends GameBaseCase {
 
     @Test
     void handleSuccess() throws Exception {
-        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23)).id();
+        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null)).id();
 
         handler.handle(session, new ChoosePlayingCharacter(id));
 

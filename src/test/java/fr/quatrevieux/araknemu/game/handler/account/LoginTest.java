@@ -41,7 +41,7 @@ class LoginTest extends GameBaseCase {
         handler.handle(session, new LoginToken(token));
 
         assertTrue(session.isLogged());
-        requestStack.assertLast(new LoginTokenSuccess("0"));
+        requestStack.assertLast(new LoginTokenSuccess());
         assertEquals(1, session.account().id());
     }
 
