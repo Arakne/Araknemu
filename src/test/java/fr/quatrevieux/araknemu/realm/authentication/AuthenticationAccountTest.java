@@ -18,9 +18,7 @@ class AuthenticationAccountTest extends RealmBaseCase {
         super.setUp();
 
         service = new AuthenticationService(
-            new AccountRepository(
-                app.database().get("realm")
-            ),
+            container.get(AccountRepository.class),
             container.get(HostService.class)
         );
     }

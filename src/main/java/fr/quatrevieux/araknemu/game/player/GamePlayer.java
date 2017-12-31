@@ -6,7 +6,6 @@ import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 /**
@@ -29,7 +28,7 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher {
         characteristics = new PlayerCharacteristics(
             new BaseCharacteristics(
                 race.baseStats(),
-                MutableCharacteristics.class.cast(entity.stats())
+                entity.stats()
             )
         );
     }
@@ -45,5 +44,12 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher {
 
     public PlayerCharacteristics characteristics() {
         return characteristics;
+    }
+
+    /**
+     * Send a packet to the player
+     */
+    public void send(Object packet) {
+        session.write(packet);
     }
 }

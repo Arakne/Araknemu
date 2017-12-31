@@ -1,10 +1,10 @@
-package fr.quatrevieux.araknemu.data.living;
+package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.DatabaseTestCase;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
-import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AccountRepositoryTest extends DatabaseTestCase {
-    private AccountRepository repository;
+    private fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository repository;
 
     @BeforeEach
     @Override

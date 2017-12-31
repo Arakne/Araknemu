@@ -11,17 +11,24 @@ import fr.quatrevieux.araknemu.core.dbal.DatabaseConfiguration;
 import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
 import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
 import fr.quatrevieux.araknemu.core.di.*;
-import fr.quatrevieux.araknemu.data.RepositoriesModule;
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.data.constant.Sex;
+import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.LivingRepositoriesModule;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
+import fr.quatrevieux.araknemu.data.value.Colors;
+import fr.quatrevieux.araknemu.data.world.repository.implementation.sql.WorldRepositoriesModule;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import org.apache.mina.core.filterchain.IoFilterAdapter;
 import org.apache.mina.core.service.IoHandler;
@@ -109,7 +116,12 @@ public class GameBaseCase extends DatabaseTestCase {
         container = new ItemPoolContainer();
         container.register(new ConnectorModule());
         container.register(new GameModule(app));
-        container.register(new RepositoriesModule());
+        container.register(new LivingRepositoriesModule(
+            app.database().get("game")
+        ));
+        container.register(new WorldRepositoriesModule(
+            app.database().get("game")
+        ));
 
         configuration = container.get(GameConfiguration.class);
 
@@ -151,10 +163,42 @@ public class GameBaseCase extends DatabaseTestCase {
         );
     }
 
+    public GamePlayer gamePlayer() throws ContainerException, SQLException {
+        if (!session.isLogged()) {
+            login();
+        }
+
+        if (session.player() != null) {
+            return session.player();
+        }
+
+        insertRaces();
+
+        MutableCharacteristics characteristics = new DefaultCharacteristics();
+
+        characteristics.set(Characteristic.STRENGTH, 50);
+        characteristics.set(Characteristic.INTELLIGENCE, 150);
+
+        Player player = dataSet.push(new Player(-1, 5, 1, "Bob", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 50, characteristics));
+
+        session.setPlayer(
+            new GamePlayer(
+                session.account(),
+                player,
+                dataSet.repository(PlayerRace.class).get(new PlayerRace(Race.FECA, null, null)),
+                session
+            )
+        );
+
+        return session.player();
+    }
+
     public void insertRaces() throws SQLException, ContainerException {
         dataSet.use(PlayerRace.class);
 
-        ConnectionPoolUtils utils = new ConnectionPoolUtils(container.get(ConnectionPool.class));
+        ConnectionPoolUtils utils = new ConnectionPoolUtils(
+            app.database().get("game")
+        );
 
         if (dataSet.repository(PlayerRace.class).has(new PlayerRace(Race.FECA, null, null))) {
             return;

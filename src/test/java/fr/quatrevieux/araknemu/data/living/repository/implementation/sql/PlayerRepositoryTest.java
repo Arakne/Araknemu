@@ -1,12 +1,16 @@
-package fr.quatrevieux.araknemu.data.living.repository.player;
+package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.DatabaseTestCase;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
-import fr.quatrevieux.araknemu.data.transformer.CharacteristicsTransformer;
+import fr.quatrevieux.araknemu.data.transformer.MutableCharacteristicsTransformer;
 import fr.quatrevieux.araknemu.data.value.Colors;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,14 +18,14 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerRepositoryTest extends DatabaseTestCase {
-    private PlayerRepository repository;
+    private fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository repository;
 
     @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
-        repository = new PlayerRepository(connection, new CharacteristicsTransformer());
+        repository = new PlayerRepository(connection, new MutableCharacteristicsTransformer());
         repository.initialize();
     }
 
@@ -137,5 +141,17 @@ class PlayerRepositoryTest extends DatabaseTestCase {
 
         assertEquals("One", player.name());
         assertEquals(Race.FECA, player.race());
+    }
+
+    @Test
+    void insertWithStats() {
+        MutableCharacteristics characteristics = new DefaultCharacteristics();
+
+        characteristics.set(Characteristic.ACTION_POINT, 12);
+        characteristics.set(Characteristic.STRENGTH, 5);
+
+        Player player = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, characteristics));
+
+        assertEquals(characteristics, repository.get(player).stats());
     }
 }

@@ -11,7 +11,8 @@ import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
-import fr.quatrevieux.araknemu.data.RepositoriesModule;
+import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.LivingRepositoriesModule;
+import fr.quatrevieux.araknemu.data.world.repository.implementation.sql.WorldRepositoriesModule;
 import fr.quatrevieux.araknemu.game.GameModule;
 import fr.quatrevieux.araknemu.game.GameService;
 import fr.quatrevieux.araknemu.game.connector.LocalModule;
@@ -117,19 +118,26 @@ public class Araknemu {
         Runtime.getRuntime().addShutdownHook(new Thread(app::shutdown));
     }
 
-    static private Container makeRealmContainer(Araknemu app) {
+    static private Container makeRealmContainer(Araknemu app) throws SQLException {
         Container container = new ItemPoolContainer();
 
-        container.register(new RepositoriesModule());
+        container.register(new LivingRepositoriesModule(
+            app.database().get("realm")
+        ));
         container.register(new RealmModule(app));
 
         return container;
     }
 
-    static private Container makeGameContainer(Araknemu app, Container realmContainer) {
+    static private Container makeGameContainer(Araknemu app, Container realmContainer) throws SQLException {
         Container container = new ItemPoolContainer();
 
-        container.register(new RepositoriesModule());
+        container.register(new LivingRepositoriesModule(
+            app.database().get("game")
+        ));
+        container.register(new WorldRepositoriesModule(
+            app.database().get("game")
+        ));
         container.register(new GameModule(app));
         container.register(new LocalModule(realmContainer));
 

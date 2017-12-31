@@ -4,8 +4,6 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
-import fr.quatrevieux.araknemu.network.game.out.account.Stats;
-import fr.quatrevieux.araknemu.network.game.out.game.GameCreated;
 import fr.quatrevieux.araknemu.network.game.out.game.GameCreationError;
 import fr.quatrevieux.araknemu.network.in.PacketHandler;
 
@@ -25,9 +23,7 @@ final public class CreateGame implements PacketHandler<GameSession, CreateGameRe
             throw new ErrorPacket(new GameCreationError());
         }
 
-        session.write(new GameCreated(packet.type()));
         service.start(session.player());
-        session.write(new Stats(session.player()));
     }
 
     @Override

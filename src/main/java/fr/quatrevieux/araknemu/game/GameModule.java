@@ -1,9 +1,7 @@
 package fr.quatrevieux.araknemu.game;
 
 import fr.quatrevieux.araknemu.Araknemu;
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
-import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
@@ -27,9 +25,6 @@ import org.apache.mina.core.service.IoHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 /**
  * Module for game service
  */
@@ -42,17 +37,6 @@ final public class GameModule implements ContainerModule {
 
     @Override
     public void configure(ContainerConfigurator configurator) {
-        configurator.factory(
-            ConnectionPool.class,
-            container -> {
-                try {
-                    return app.database().get("game");
-                } catch (SQLException e) {
-                    throw new ContainerException(e);
-                }
-            }
-        );
-
         configurator.factory(
             Logger.class,
             container -> LoggerFactory.getLogger(GameService.class)
@@ -139,10 +123,11 @@ final public class GameModule implements ContainerModule {
             )
         );
 
-        //////////////
-        // Services //
-        //////////////
+        configureSevices(configurator);
+    }
 
+    private void configureSevices(ContainerConfigurator configurator)
+    {
         configurator.persist(
             ConnectorService.class,
             container -> new ConnectorService(

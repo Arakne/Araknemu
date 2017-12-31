@@ -3,7 +3,7 @@ package fr.quatrevieux.araknemu.data.living.entity.player;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.value.Colors;
-import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 
 /**
  * Entity class for player
@@ -17,9 +17,9 @@ final public class Player {
     private Sex sex;
     private Colors colors;
     private int level;
-    private Characteristics stats;
+    private MutableCharacteristics stats;
 
-    public Player(int id, int accountId, int serverId, String name, Race race, Sex sex, Colors colors, int level, Characteristics stats) {
+    public Player(int id, int accountId, int serverId, String name, Race race, Sex sex, Colors colors, int level, MutableCharacteristics stats) {
         this.id = id;
         this.accountId = accountId;
         this.serverId = serverId;
@@ -67,7 +67,7 @@ final public class Player {
         return level;
     }
 
-    public Characteristics stats() {
+    public MutableCharacteristics stats() {
         return stats;
     }
 

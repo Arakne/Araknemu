@@ -10,9 +10,6 @@ import fr.quatrevieux.araknemu.realm.host.HostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class StopSessionTest extends RealmBaseCase {
@@ -26,9 +23,7 @@ class StopSessionTest extends RealmBaseCase {
 
         handler = new StopSession(
             service = new AuthenticationService(
-                new AccountRepository(
-                    app.database().get("realm")
-                ),
+                container.get(AccountRepository.class),
                 container.get(HostService.class)
             )
         );

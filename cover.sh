@@ -12,6 +12,18 @@ function isInterface() {
 	return 1
 }
 
+function isEnum() {
+	className=$(basename $1)
+	fileName="src/main/java/$1.java"
+
+	if grep -q "enum $className" "$fileName"
+	then
+		return 0
+	fi
+
+	return 1
+}
+
 SRC=$(find src/main -name '*.java' | sed s/src.main.java.// | sed s/.java// | sort) 
 TEST=$(find src/test -name '*.java' | sed s/src.test.java.// | sed s/Test.java// | sort)
 
@@ -41,7 +53,7 @@ done
 
 for file in ${FILES[@]}
 do
-	if isInterface $file
+	if isInterface $file || isEnum $file
 	then
 		((NB_FILES--))
 		continue

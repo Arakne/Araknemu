@@ -11,7 +11,7 @@ import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
-import fr.quatrevieux.araknemu.data.RepositoriesModule;
+import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.LivingRepositoriesModule;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
@@ -113,7 +113,9 @@ public class RealmBaseCase extends DatabaseTestCase {
 
         container = new ItemPoolContainer();
         container.register(new RealmModule(app));
-        container.register(new RepositoriesModule());
+        container.register(new LivingRepositoriesModule(
+            app.database().get("realm")
+        ));
 
         service = container.get(RealmService.class);
         configuration = service.configuration();

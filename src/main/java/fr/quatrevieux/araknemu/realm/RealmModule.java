@@ -1,9 +1,7 @@
 package fr.quatrevieux.araknemu.realm;
 
 import fr.quatrevieux.araknemu.Araknemu;
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
-import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.network.LoggedIoHandler;
@@ -23,9 +21,6 @@ import org.apache.mina.core.service.IoHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 /**
  * DI module for RealmService
  */
@@ -38,17 +33,6 @@ final public class RealmModule implements ContainerModule {
 
     @Override
     public void configure(ContainerConfigurator configurator) {
-        configurator.factory(
-            ConnectionPool.class,
-            container -> {
-                try {
-                    return app.database().get("realm");
-                } catch (SQLException e) {
-                    throw new ContainerException(e);
-                }
-            }
-        );
-
         configurator.factory(
             Logger.class,
             container -> LoggerFactory.getLogger(RealmService.class)

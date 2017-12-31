@@ -3,7 +3,6 @@ package fr.quatrevieux.araknemu.game.player;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
-import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
@@ -12,10 +11,10 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
  */
 final public class PlayerService {
     final private PlayerRepository repository;
-    final private PlayerRaceRepository raceRepository;
+    final private fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository raceRepository;
     final private GameConfiguration configuration;
 
-    public PlayerService(PlayerRepository repository, PlayerRaceRepository raceRepository, GameConfiguration configuration) {
+    public PlayerService(PlayerRepository repository, fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository raceRepository, GameConfiguration configuration) {
         this.repository = repository;
         this.raceRepository = raceRepository;
         this.configuration = configuration;

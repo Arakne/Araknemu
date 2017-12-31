@@ -1,7 +1,6 @@
 package fr.quatrevieux.araknemu.realm.authentication;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
-import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.realm.host.HostService;
 
 import java.util.Collections;
@@ -14,7 +13,7 @@ import java.util.concurrent.ConcurrentMap;
  * Service for handle authentication
  */
 final public class AuthenticationService {
-    final private AccountRepository repository;
+    final private fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository repository;
     final private HostService hosts;
 
     /**
@@ -29,7 +28,7 @@ final public class AuthenticationService {
      */
     final private ConcurrentMap<Integer, AuthenticationAccount> authenticated = new ConcurrentHashMap<>();
 
-    public AuthenticationService(AccountRepository repository, HostService hosts) {
+    public AuthenticationService(fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository repository, HostService hosts) {
         this.repository = repository;
         this.hosts = hosts;
     }
