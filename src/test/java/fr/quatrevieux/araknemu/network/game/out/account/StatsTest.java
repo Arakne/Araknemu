@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class StatsTest extends GameBaseCase {
     @Test
     void generateWithOnlyClassStats() throws ContainerException, SQLException {
-        insertRaces();
+        dataSet.pushRaces();
 
         GamePlayer player = new GamePlayer(
             new GameAccount(
@@ -30,7 +30,7 @@ class StatsTest extends GameBaseCase {
                 1
             ),
             new Player(1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, new DefaultCharacteristics()),
-            dataSet.repository(PlayerRace.class).get(new PlayerRace(Race.FECA, null, null)),
+            dataSet.repository(PlayerRace.class).get(new PlayerRace(Race.FECA)),
             session
         );
 

@@ -20,6 +20,7 @@ class WorldRepositoriesModuleTest extends GameBaseCase {
         ));
 
         assertInstanceOf(PlayerRaceRepository.class, container.get(fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository.class));
+        assertInstanceOf(MapTemplateRepository.class, container.get(fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository.class));
     }
 
     public void assertInstanceOf(Class type, Object obj) {

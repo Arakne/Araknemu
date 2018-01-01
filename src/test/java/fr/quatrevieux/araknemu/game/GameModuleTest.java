@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
 import fr.quatrevieux.araknemu.game.connector.ConnectorService;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.LoggedIoHandler;
 import fr.quatrevieux.araknemu.network.in.AggregatePacketParser;
@@ -43,6 +44,7 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(CharactersService.class, container.get(CharactersService.class));
         assertInstanceOf(PlayerService.class, container.get(PlayerService.class));
         assertInstanceOf(ExplorationService.class, container.get(ExplorationService.class));
+        assertInstanceOf(ExplorationMapService.class, container.get(ExplorationMapService.class));
     }
 
     public void assertInstanceOf(Class type, Object obj) {

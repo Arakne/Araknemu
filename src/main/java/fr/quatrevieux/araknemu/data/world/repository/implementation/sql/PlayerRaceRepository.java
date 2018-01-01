@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
+import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 
@@ -28,7 +29,11 @@ final class PlayerRaceRepository implements fr.quatrevieux.araknemu.data.world.r
             return new PlayerRace(
                 Race.byId(rs.getInt("RACE_ID")),
                 rs.getString("RACE_NAME"),
-                characteristicsTransformer.unserialize(rs.getString("RACE_STATS"))
+                characteristicsTransformer.unserialize(rs.getString("RACE_STATS")),
+                new Position(
+                    rs.getInt("MAP_ID"),
+                    rs.getInt("CELL_ID")
+                )
             );
         }
 
@@ -55,7 +60,9 @@ final class PlayerRaceRepository implements fr.quatrevieux.araknemu.data.world.r
                 "CREATE TABLE PLAYER_RACE (" +
                     "RACE_ID INTEGER PRIMARY KEY," +
                     "RACE_NAME VARCHAR(32)," +
-                    "RACE_STATS TEXT" +
+                    "RACE_STATS TEXT," +
+                    "MAP_ID INTEGER," +
+                    "CELL_ID INTEGER" +
                 ")"
             );
         } catch (SQLException e) {

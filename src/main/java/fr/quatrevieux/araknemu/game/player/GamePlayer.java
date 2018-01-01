@@ -1,11 +1,15 @@
 package fr.quatrevieux.araknemu.game.player;
 
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
+import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.event.exploration.MapLoaded;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
+import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 /**
@@ -18,6 +22,11 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher {
     final private PlayerCharacteristics characteristics;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
+
+    /**
+     * The current map
+     */
+    private ExplorationMap map;
 
     public GamePlayer(GameAccount account, Player entity, PlayerRace race, GameSession session) {
         super(account, entity);
@@ -51,5 +60,51 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher {
      */
     public void send(Object packet) {
         session.write(packet);
+    }
+
+    public Sprite sprite() {
+        return new PlayerSprite(this);
+    }
+
+    /**
+     * Get the current player position
+     *
+     * @see GamePlayer#map() For get the current map
+     */
+    public Position position() {
+        return entity.position();
+    }
+
+    /**
+     * Get the current exploration map
+     *
+     * @see GamePlayer#position() For get the player position
+     */
+    public ExplorationMap map() {
+        return map;
+    }
+
+    /**
+     * Change the current player position
+     */
+    public void goTo(Position position) {
+        entity.setPosition(position);
+    }
+
+    /**
+     * Join an exploration map
+     */
+    public void join(ExplorationMap map) {
+        this.map = map;
+        map.add(this);
+
+        dispatch(new MapLoaded(map));
+    }
+
+    /**
+     * Get the player race
+     */
+    public PlayerRace race() {
+        return race;
     }
 }

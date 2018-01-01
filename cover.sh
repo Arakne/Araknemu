@@ -24,6 +24,18 @@ function isEnum() {
 	return 1
 }
 
+function isEntity() {
+	className=$(basename $1)
+	fileName="src/main/java/$1.java"
+
+	if grep -q "package fr.quatrevieux.araknemu.data.*.entity.*;" "$fileName"
+	then
+		return 0
+	fi
+
+	return 1
+}
+
 SRC=$(find src/main -name '*.java' | sed s/src.main.java.// | sed s/.java// | sort) 
 TEST=$(find src/test -name '*.java' | sed s/src.test.java.// | sed s/Test.java// | sort)
 
@@ -53,7 +65,7 @@ done
 
 for file in ${FILES[@]}
 do
-	if isInterface $file || isEnum $file
+	if isInterface $file || isEnum $file || isEntity $file
 	then
 		((NB_FILES--))
 		continue

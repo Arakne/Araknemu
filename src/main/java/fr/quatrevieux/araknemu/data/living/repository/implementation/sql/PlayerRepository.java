@@ -9,6 +9,7 @@ import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.Colors;
+import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 
 import java.sql.ResultSet;
@@ -40,6 +41,10 @@ final class PlayerRepository implements fr.quatrevieux.araknemu.data.living.repo
                 rs.getInt("PLAYER_LEVEL"),
                 characteristicsTransformer.unserialize(
                     rs.getString("PLAYER_STATS")
+                ),
+                new Position(
+                    rs.getInt("MAP_ID"),
+                    rs.getInt("CELL_ID")
                 )
             );
         }
@@ -81,6 +86,8 @@ final class PlayerRepository implements fr.quatrevieux.araknemu.data.living.repo
                     "COLOR3 INTEGER," +
                     "PLAYER_LEVEL INTEGER," +
                     "PLAYER_STATS TEXT," +
+                    "MAP_ID INTEGER," +
+                    "CELL_ID INTEGER," +
                     "UNIQUE (PLAYER_NAME, SERVER_ID)" +
                 ")"
             );
@@ -104,8 +111,8 @@ final class PlayerRepository implements fr.quatrevieux.araknemu.data.living.repo
     public Player add(Player entity) throws RepositoryException {
         return utils.update(
             "INSERT INTO PLAYER " +
-                "(ACCOUNT_ID, SERVER_ID, PLAYER_NAME, RACE, SEX, COLOR1, COLOR2, COLOR3, PLAYER_LEVEL, PLAYER_STATS) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "(ACCOUNT_ID, SERVER_ID, PLAYER_NAME, RACE, SEX, COLOR1, COLOR2, COLOR3, PLAYER_LEVEL, PLAYER_STATS, MAP_ID, CELL_ID) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             stmt -> {
                 stmt.setInt(1,     entity.accountId());
                 stmt.setInt(2,     entity.serverId());
@@ -117,6 +124,8 @@ final class PlayerRepository implements fr.quatrevieux.araknemu.data.living.repo
                 stmt.setInt(8,     entity.colors().color3());
                 stmt.setInt(9,     entity.level());
                 stmt.setString(10, characteristicsTransformer.serialize(entity.stats()));
+                stmt.setInt(11,    entity.position().map());
+                stmt.setInt(12,    entity.position().cell());
             },
             entity
         );

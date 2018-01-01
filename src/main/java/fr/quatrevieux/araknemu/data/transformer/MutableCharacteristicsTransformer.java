@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.data.transformer;
 
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 
 /**
@@ -15,6 +16,12 @@ final public class MutableCharacteristicsTransformer implements Transformer<Muta
 
     @Override
     public MutableCharacteristics unserialize(String serialize) {
-        return inner.unserialize(serialize);
+        MutableCharacteristics characteristics = inner.unserialize(serialize);
+
+        if (characteristics == null) {
+            return new DefaultCharacteristics();
+        }
+
+        return characteristics;
     }
 }

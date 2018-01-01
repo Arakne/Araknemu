@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.value.Colors;
+import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountCharacter;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
@@ -33,7 +34,11 @@ class CreateCharacterTest extends GameBaseCase {
             container.get(CharactersService.class)
         );
 
-        dataSet.use(Player.class);
+        dataSet
+            .pushRaces()
+            .use(Player.class)
+        ;
+
         login();
     }
 
@@ -54,6 +59,7 @@ class CreateCharacterTest extends GameBaseCase {
         assertEquals(Race.ECAFLIP, player.race());
         assertEquals(Sex.MALE, player.sex());
         assertArrayEquals(new int[]{123, 456, 789}, player.colors().toArray());
+        assertEquals(new Position(10300, 320), player.position());
 
         requestStack.assertAll(
             new CharacterCreated(),

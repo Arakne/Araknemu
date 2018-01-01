@@ -32,11 +32,7 @@ class PlayerServiceTest extends GameBaseCase {
         );
 
         login();
-        try {
-            insertRaces();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        dataSet.pushRaces();
     }
 
     @Test

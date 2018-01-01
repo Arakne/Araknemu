@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.transformer.ImmutableCharacteristicsTransformer;
+import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
@@ -20,7 +21,7 @@ class PlayerRaceRepositoryTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        insertRaces();
+        dataSet.pushRaces();
 
         repository = new PlayerRaceRepository(
             app.database().get("game"),
@@ -41,6 +42,7 @@ class PlayerRaceRepositoryTest extends GameBaseCase {
         assertEquals("Feca", race.name());
         assertTrue(race.baseStats() instanceof DefaultCharacteristics);
         assertEquals(6, race.baseStats().get(Characteristic.ACTION_POINT));
+        assertEquals(new Position(10300, 320), race.startPosition());
     }
 
     @Test
@@ -48,14 +50,14 @@ class PlayerRaceRepositoryTest extends GameBaseCase {
         assertEquals(
             Race.FECA,
             repository.get(
-                new PlayerRace(Race.FECA, null, null)
+                new PlayerRace(Race.FECA)
             ).race()
         );
     }
 
     @Test
     void has() {
-        assertTrue(repository.has(new PlayerRace(Race.FECA, null, null)));
-        assertFalse(repository.has(new PlayerRace(Race.NO_CLASS, null, null)));
+        assertTrue(repository.has(new PlayerRace(Race.FECA)));
+        assertFalse(repository.has(new PlayerRace(Race.NO_CLASS)));
     }
 }

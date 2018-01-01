@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.data.living.constraint.EntityConstraint;
 import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
+import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.account.exception.CharacterCreationException;
 
 import java.util.List;
@@ -16,10 +17,12 @@ import java.util.stream.Collectors;
 final public class CharactersService {
     final private PlayerRepository repository;
     final private EntityConstraint<Player, PlayerConstraints.Error> constraint;
+    final private PlayerRaceRepository playerRaceRepository;
 
-    public CharactersService(PlayerRepository repository, EntityConstraint<Player, PlayerConstraints.Error> constraint) {
+    public CharactersService(PlayerRepository repository, EntityConstraint<Player, PlayerConstraints.Error> constraint, PlayerRaceRepository playerRaceRepository) {
         this.repository = repository;
         this.constraint = constraint;
+        this.playerRaceRepository = playerRaceRepository;
     }
 
     /**
@@ -31,6 +34,10 @@ final public class CharactersService {
         if (!constraint.check(character.character())) {
             throw new CharacterCreationException(constraint.error());
         }
+
+        character.character().setPosition(
+            playerRaceRepository.get(character.character().race()).startPosition()
+        );
 
         try {
             return new AccountCharacter(

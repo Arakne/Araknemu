@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.network.game.in;
 
 import fr.quatrevieux.araknemu.network.game.in.account.*;
+import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
 import fr.quatrevieux.araknemu.network.game.in.info.ScreenInfo;
 import fr.quatrevieux.araknemu.network.in.ParserLoader;
@@ -24,7 +25,8 @@ final public class GameParserLoader implements ParserLoader {
             new ClientUid.Parser(),
             new ScreenInfo.Parser(),
             new AskGift.Parser(),
-            new CreateGameRequest.Parser()
+            new CreateGameRequest.Parser(),
+            new AskExtraInfo.Parser()
         );
     }
 }

@@ -61,13 +61,11 @@ final public class CharacterSelected {
         }
 
         public void write(StringBuilder sb) {
-            for (int i = 0; i < parts.length; ++i) {
-                if (i != 0) {
-                    sb.append('|');
-                }
+            for (Object part : parts) {
+                sb.append('|');
 
-                if (parts[i] != null) {
-                    sb.append(parts[i].toString());
+                if (part != null) {
+                    sb.append(part.toString());
                 }
             }
         }

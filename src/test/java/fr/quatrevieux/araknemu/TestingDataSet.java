@@ -70,6 +70,10 @@ public class TestingDataSet {
         return entities.get(identifier);
     }
 
+    public <T> T refresh(T entity) throws ContainerException {
+        return repository(entity).get(entity);
+    }
+
     public TestingDataSet destroy() throws ContainerException {
         for (Repository repository : usedRepositories) {
             repository.destroy();

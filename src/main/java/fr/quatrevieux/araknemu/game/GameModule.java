@@ -7,15 +7,18 @@ import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.connector.ConnectorService;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.handler.*;
 import fr.quatrevieux.araknemu.game.handler.account.*;
 import fr.quatrevieux.araknemu.game.handler.game.CreateGame;
+import fr.quatrevieux.araknemu.game.handler.game.LoadExtraInfo;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.LoggedIoHandler;
 import fr.quatrevieux.araknemu.network.game.GameIoHandler;
@@ -24,6 +27,8 @@ import fr.quatrevieux.araknemu.network.in.*;
 import org.apache.mina.core.service.IoHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
 
 /**
  * Module for game service
@@ -47,7 +52,11 @@ final public class GameModule implements ContainerModule {
             container -> new GameService(
                 container.get(GameConfiguration.class),
                 container.get(RealmConnector.class),
-                container.get(IoHandler.class)
+                container.get(IoHandler.class),
+                container.get(Logger.class),
+                Arrays.asList(
+                    container.get(ExplorationMapService.class)
+                )
             )
         );
 
@@ -98,6 +107,9 @@ final public class GameModule implements ContainerModule {
                         new CreateGame(
                             container.get(ExplorationService.class)
                         )
+                    ),
+                    new EnsurePlaying(
+                        new LoadExtraInfo()
                     )
                 }
             )
@@ -153,7 +165,8 @@ final public class GameModule implements ContainerModule {
             CharactersService.class,
             container -> new CharactersService(
                 container.get(PlayerRepository.class),
-                container.get(PlayerConstraints.class)
+                container.get(PlayerConstraints.class),
+                container.get(PlayerRaceRepository.class)
             )
         );
 
@@ -168,7 +181,16 @@ final public class GameModule implements ContainerModule {
 
         configurator.persist(
             ExplorationService.class,
-            container -> new ExplorationService()
+            container -> new ExplorationService(
+                container.get(ExplorationMapService.class)
+            )
+        );
+
+        configurator.persist(
+            ExplorationMapService.class,
+            container -> new ExplorationMapService(
+                container.get(MapTemplateRepository.class)
+            )
         );
     }
 }

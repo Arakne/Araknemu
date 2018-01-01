@@ -27,8 +27,10 @@ class SelectCharacterTest extends GameBaseCase {
 
         login();
 
-        dataSet.use(Player.class);
-        insertRaces();
+        dataSet
+            .pushRaces()
+            .use(Player.class)
+        ;
     }
 
     @Test
@@ -46,6 +48,6 @@ class SelectCharacterTest extends GameBaseCase {
 
         handler.handle(session, new ChoosePlayingCharacter(id));
 
-        requestStack.assertLast("ASK1|Bob|23||0|10|7b|1c8|315|");
+        requestStack.assertLast("ASK|1|Bob|23||0|10|7b|1c8|315|");
     }
 }

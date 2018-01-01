@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.transformer.ImmutableCharacteristicsTransformer;
+import fr.quatrevieux.araknemu.data.world.transformer.MapCellTransformer;
 
 /**
  * DI module for world repositories
@@ -26,8 +27,21 @@ final public class WorldRepositoriesModule implements ContainerModule {
         );
 
         configurator.persist(
+            fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository.class,
+            container -> new MapTemplateRepository(
+                connection,
+                container.get(MapCellTransformer.class)
+            )
+        );
+
+        configurator.persist(
             ImmutableCharacteristicsTransformer.class,
             container -> new ImmutableCharacteristicsTransformer()
+        );
+
+        configurator.persist(
+            MapCellTransformer.class,
+            container -> new MapCellTransformer()
         );
     }
 }

@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.value.Colors;
+import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
@@ -43,7 +44,7 @@ class GameSessionTest extends GameBaseCase {
                 2
             ),
             new Player(1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null),
-            new PlayerRace(Race.FECA, "Feca", new DefaultCharacteristics()),
+            new PlayerRace(Race.FECA, "Feca", new DefaultCharacteristics(), new Position(10300, 308)),
             session
         );
 

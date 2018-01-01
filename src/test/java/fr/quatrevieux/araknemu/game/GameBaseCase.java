@@ -20,6 +20,9 @@ import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.value.Colors;
+import fr.quatrevieux.araknemu.data.value.Position;
+import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
+import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.sql.WorldRepositoriesModule;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
@@ -96,7 +99,7 @@ public class GameBaseCase extends DatabaseTestCase {
     protected SendingRequestStack requestStack;
     protected IoHandler ioHandler;
     protected Araknemu app;
-    protected TestingDataSet dataSet;
+    protected GameDataSet dataSet;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -132,11 +135,16 @@ public class GameBaseCase extends DatabaseTestCase {
         ioSession.getFilterChain().addLast("test", requestStack = new SendingRequestStack());
         //ioHandler = service.ioHandler();
 
-        dataSet = new TestingDataSet(container);
+        dataSet = new GameDataSet(
+            container,
+            new ConnectionPoolUtils(app.database().get("game"))
+        );
+
         dataSet
             .declare(Account.class, AccountRepository.class)
             .declare(Player.class, PlayerRepository.class)
             .declare(PlayerRace.class, PlayerRaceRepository.class)
+            .declare(MapTemplate.class, MapTemplateRepository.class)
         ;
     }
 
@@ -172,52 +180,24 @@ public class GameBaseCase extends DatabaseTestCase {
             return session.player();
         }
 
-        insertRaces();
+        dataSet.pushRaces();
 
         MutableCharacteristics characteristics = new DefaultCharacteristics();
 
         characteristics.set(Characteristic.STRENGTH, 50);
         characteristics.set(Characteristic.INTELLIGENCE, 150);
 
-        Player player = dataSet.push(new Player(-1, 5, 1, "Bob", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 50, characteristics));
+        Player player = dataSet.push(new Player(-1, 5, 1, "Bob", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 50, characteristics, new Position(10540, 200)));
 
         session.setPlayer(
             new GamePlayer(
                 session.account(),
                 player,
-                dataSet.repository(PlayerRace.class).get(new PlayerRace(Race.FECA, null, null)),
+                dataSet.repository(PlayerRace.class).get(new PlayerRace(Race.FECA)),
                 session
             )
         );
 
         return session.player();
-    }
-
-    public void insertRaces() throws SQLException, ContainerException {
-        dataSet.use(PlayerRace.class);
-
-        ConnectionPoolUtils utils = new ConnectionPoolUtils(
-            app.database().get("game")
-        );
-
-        if (dataSet.repository(PlayerRace.class).has(new PlayerRace(Race.FECA, null, null))) {
-            return;
-        }
-
-        utils.query(
-            "INSERT INTO PLAYER_RACE (RACE_ID, RACE_NAME, RACE_STATS) VALUES " +
-                "(1,  'Feca',     '8:1;9:34;a:6;b:3;j:1;')," +
-                "(2,  'Osamodas', '8:1;9:34;a:6;b:3;j:1;')," +
-                "(3,  'Enutrof',  '8:1;9:3o;a:6;b:3;j:1;')," +
-                "(4,  'Sram',     '8:1;9:34;a:6;b:3;j:1;')," +
-                "(5,  'Xelor',    '8:1;9:34;a:6;b:3;j:1;')," +
-                "(6,  'Ecaflip',  '8:1;9:34;a:6;b:3;j:1;')," +
-                "(7,  'Eniripsa', '8:1;9:34;a:6;b:3;j:1;')," +
-                "(8,  'Iop',      '8:1;9:34;a:6;b:3;j:1;')," +
-                "(9,  'Cra',      '8:1;9:34;a:6;b:3;j:1;')," +
-                "(10, 'Sadida',   '8:1;9:34;a:6;b:3;j:1;')," +
-                "(11, 'Sacrieur', '8:1;9:34;a:6;b:3;j:1;')," +
-                "(12, 'Pandawa',  '8:1;9:34;a:6;b:3;j:1;')"
-        );
     }
 }

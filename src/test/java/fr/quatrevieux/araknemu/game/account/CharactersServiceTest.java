@@ -8,6 +8,8 @@ import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.value.Colors;
+import fr.quatrevieux.araknemu.data.value.Position;
+import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.exception.CharacterCreationException;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,10 +30,14 @@ class CharactersServiceTest extends GameBaseCase {
 
         service = new CharactersService(
             repository = container.get(PlayerRepository.class),
-            container.get(PlayerConstraints.class)
+            container.get(PlayerConstraints.class),
+            container.get(PlayerRaceRepository.class)
         );
 
-        dataSet.use(Player.class);
+        dataSet
+            .pushRaces()
+            .use(Player.class)
+        ;
     }
 
     @Test
@@ -83,6 +89,7 @@ class CharactersServiceTest extends GameBaseCase {
         assertEquals(Race.ECAFLIP, db.race());
         assertEquals(Sex.MALE, db.sex());
         assertArrayEquals(new int[]{123, 456, 789}, db.colors().toArray());
+        assertEquals(new Position(10300, 320), db.position());
     }
 
     @Test
