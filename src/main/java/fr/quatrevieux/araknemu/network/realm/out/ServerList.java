@@ -1,37 +1,24 @@
 package fr.quatrevieux.araknemu.network.realm.out;
 
+import fr.quatrevieux.araknemu.data.value.ServerCharacters;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
 /**
  * Send list of used server (with characters count)
+ *
+ * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L372
  */
 final public class ServerList {
-    final static public class Server {
-        final private int id;
-        final private int count;
-
-        public Server(int id, int count) {
-            this.id = id;
-            this.count = count;
-        }
-    }
-
     final static public long ONE_YEAR = 31536000000L;
     
     final private long aboTime;
-    final private Collection<Server> servers = new ArrayList<>();
+    final private Collection<ServerCharacters> servers;
 
-    public ServerList(long aboTime) {
+    public ServerList(long aboTime, Collection<ServerCharacters> servers) {
         this.aboTime = aboTime;
-    }
-
-    /**
-     * Add a new server entry on the list
-     * @param server
-     */
-    public void add(Server server){
-        servers.add(server);
+        this.servers = servers;
     }
 
     @Override
@@ -40,8 +27,8 @@ final public class ServerList {
         
         ret.append("AxK").append(aboTime);
         
-        for (Server server : servers) {
-            ret.append('|').append(server.id).append(',').append(server.count);
+        for (ServerCharacters server : servers) {
+            ret.append('|').append(server.serverId()).append(',').append(server.charactersCount());
         }
         
         return ret.toString();

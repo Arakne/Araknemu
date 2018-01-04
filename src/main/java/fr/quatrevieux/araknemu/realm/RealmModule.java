@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.Araknemu;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
+import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.network.LoggedIoHandler;
 import fr.quatrevieux.araknemu.network.in.*;
 import fr.quatrevieux.araknemu.network.realm.RealmIoHandler;
@@ -75,7 +76,9 @@ final public class RealmModule implements ContainerModule {
                         container.get(HostService.class)
                     ),
                     new CheckQueuePosition(),
-                    new ListServers(),
+                    new ListServers(
+                        container.get(HostService.class)
+                    ),
                     new PongResponse(),
                     new ConnectGame(
                         container.get(HostService.class)
@@ -106,7 +109,9 @@ final public class RealmModule implements ContainerModule {
 
         configurator.persist(
             HostService.class,
-            container -> new HostService()
+            container -> new HostService(
+                container.get(PlayerRepository.class)
+            )
         );
     }
 }

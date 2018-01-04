@@ -10,10 +10,12 @@ import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
+import fr.quatrevieux.araknemu.data.value.ServerCharacters;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 final class PlayerRepository implements fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository {
@@ -183,6 +185,35 @@ final class PlayerRepository implements fr.quatrevieux.araknemu.data.living.repo
                 stmt.setInt(2, player.serverId());
             }
         );
+    }
+
+    @Override
+    public Collection<ServerCharacters> accountCharactersCount(int accountId) {
+        try {
+            return pool.prepare(
+                "SELECT SERVER_ID, COUNT(*) FROM PLAYER WHERE ACCOUNT_ID = ? GROUP BY SERVER_ID",
+                stmt -> {
+                    stmt.setInt(1, accountId);
+
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        Collection<ServerCharacters> list = new ArrayList<>();
+
+                        while (rs.next()) {
+                            list.add(
+                                new ServerCharacters(
+                                    rs.getInt("SERVER_ID"),
+                                    rs.getInt("COUNT(*)")
+                                )
+                            );
+                        }
+
+                        return list;
+                    }
+                }
+            );
+        } catch (SQLException e) {
+            throw new RepositoryException("Cannot load characters count", e);
+        }
     }
 
     @Override

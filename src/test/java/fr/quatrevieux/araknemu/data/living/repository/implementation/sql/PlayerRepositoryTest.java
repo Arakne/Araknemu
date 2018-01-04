@@ -8,12 +8,15 @@ import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.transformer.MutableCharacteristicsTransformer;
 import fr.quatrevieux.araknemu.data.value.Colors;
+import fr.quatrevieux.araknemu.data.value.ServerCharacters;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -153,5 +156,25 @@ class PlayerRepositoryTest extends DatabaseTestCase {
         Player player = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, characteristics));
 
         assertEquals(characteristics, repository.get(player).stats());
+    }
+
+    @Test
+    void allServersCharactersCount() {
+        repository.add(Player.forCreation(1, 1, "bob", Race.CRA, Sex.FEMALE, new Colors(-1, -1, -1)));
+        repository.add(Player.forCreation(1, 1, "cc", Race.CRA, Sex.FEMALE, new Colors(-1, -1, -1)));
+        repository.add(Player.forCreation(1, 1, "dd", Race.CRA, Sex.FEMALE, new Colors(-1, -1, -1)));
+        repository.add(Player.forCreation(1, 3, "other", Race.CRA, Sex.FEMALE, new Colors(-1, -1, -1)));
+
+        Collection<ServerCharacters> serverCharacters = repository.accountCharactersCount(1);
+
+        assertEquals(2, serverCharacters.size());
+
+        ServerCharacters[] arr = serverCharacters.toArray(new ServerCharacters[]{});
+
+        assertEquals(1, arr[0].serverId());
+        assertEquals(3, arr[0].charactersCount());
+
+        assertEquals(3, arr[1].serverId());
+        assertEquals(1, arr[1].charactersCount());
     }
 }

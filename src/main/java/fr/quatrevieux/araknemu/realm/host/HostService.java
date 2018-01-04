@@ -1,5 +1,8 @@
 package fr.quatrevieux.araknemu.realm.host;
 
+import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
+import fr.quatrevieux.araknemu.data.value.ServerCharacters;
+import fr.quatrevieux.araknemu.network.realm.out.ServerList;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 
 import java.util.*;
@@ -10,7 +13,13 @@ import java.util.concurrent.ConcurrentMap;
  * Handle game server hosts
  */
 final public class HostService {
+    final private PlayerRepository playerRepository;
     final private ConcurrentMap<Integer, GameHost> hosts = new ConcurrentHashMap<>();
+
+
+    public HostService(PlayerRepository playerRepository) {
+        this.playerRepository = playerRepository;
+    }
 
     /**
      * Get all declared hosts
@@ -87,5 +96,14 @@ final public class HostService {
                 }
             }
         }.run();
+    }
+
+    /**
+     * Get characters count for each hots
+     */
+    public Collection<ServerCharacters> charactersByHost(AuthenticationAccount account) {
+        return playerRepository.accountCharactersCount(
+            account.id()
+        );
     }
 }

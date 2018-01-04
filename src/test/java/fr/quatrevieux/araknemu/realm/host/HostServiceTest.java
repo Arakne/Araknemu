@@ -1,12 +1,20 @@
 package fr.quatrevieux.araknemu.realm.host;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.data.constant.Race;
+import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
+import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
+import fr.quatrevieux.araknemu.data.value.Colors;
+import fr.quatrevieux.araknemu.data.value.ServerCharacters;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,7 +31,11 @@ class HostServiceTest extends RealmBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        service = new HostService();
+        service = new HostService(
+            container.get(PlayerRepository.class)
+        );
+
+        dataSet.use(Player.class);
     }
 
     @Test
@@ -166,5 +178,31 @@ class HostServiceTest extends RealmBaseCase {
         assertSame(account, connector2.account);
         assertSame(account, connector3.account);
         assertTrue(checkLogin);
+    }
+
+    @Test
+    void charactersByHost() throws ContainerException {
+        dataSet.push(Player.forCreation(1, 1, "bob", Race.CRA, Sex.FEMALE, new Colors(-1, -1, -1)));
+        dataSet.push(Player.forCreation(1, 1, "cc", Race.CRA, Sex.FEMALE, new Colors(-1, -1, -1)));
+        dataSet.push(Player.forCreation(1, 1, "dd", Race.CRA, Sex.FEMALE, new Colors(-1, -1, -1)));
+        dataSet.push(Player.forCreation(1, 3, "other", Race.CRA, Sex.FEMALE, new Colors(-1, -1, -1)));
+        dataSet.push(Player.forCreation(2, 3, "bad_account", Race.CRA, Sex.FEMALE, new Colors(-1, -1, -1)));
+
+        Collection<ServerCharacters> serverCharacters = service.charactersByHost(
+            new AuthenticationAccount(
+                new Account(1),
+                container.get(AuthenticationService.class)
+            )
+        );
+
+        assertEquals(2, serverCharacters.size());
+
+        ServerCharacters[] arr = serverCharacters.toArray(new ServerCharacters[]{});
+
+        assertEquals(1, arr[0].serverId());
+        assertEquals(3, arr[0].charactersCount());
+
+        assertEquals(3, arr[1].serverId());
+        assertEquals(1, arr[1].charactersCount());
     }
 }
