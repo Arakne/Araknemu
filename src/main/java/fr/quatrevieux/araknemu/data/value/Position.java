@@ -24,6 +24,13 @@ final public class Position {
         return map == 0 && cell == 0;
     }
 
+    /**
+     * Change the cell position
+     */
+    public Position newCell(int cell) {
+        return new Position(map, cell);
+    }
+
     @Override
     public boolean equals(Object o) {
         return

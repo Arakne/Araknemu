@@ -36,4 +36,23 @@ final public class Base64 {
                 throw new InvalidParameterException("Invalid char value");
         }
     }
+
+    /**
+     * Encode an int value to pseudo base 64
+     *
+     * @param value Value to encode
+     * @param length The expected result length
+     *
+     * @return The encoded value
+     */
+    static public String encode(int value, int length) {
+        char[] encoded = new char[length];
+
+        for (int i = length - 1; i >= 0; --i) {
+            encoded[i] = CHARSET[value & 63];
+            value >>= 6;
+        }
+
+        return new String(encoded);
+    }
 }

@@ -12,10 +12,16 @@ final public class MapTemplate {
         /**
          * Check if the cell do not block the line of sight
          */
-        public boolean LineOfSight();
+        public boolean lineOfSight();
 
         /**
          * Get the permitted movement type
+         *
+         * The value is an int in range [0 - 5] :
+         *
+         * - 0 means not walkable
+         * - 1 means walkable, but not on a road
+         * - 2 to 5 means different levels of walkable cells. Bigger is the movement, lower is the weight on pathing
          */
         public int movement();
 
@@ -28,6 +34,11 @@ final public class MapTemplate {
          * Get the cell object id
          */
         public int objectId();
+
+        /**
+         * Check if the cell is active or not
+         */
+        public boolean active();
     }
 
     final private int id;

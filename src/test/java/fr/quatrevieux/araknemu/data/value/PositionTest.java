@@ -25,6 +25,14 @@ class PositionTest {
     }
 
     @Test
+    void newCell() {
+        Position position = new Position(1254, 235);
+
+        assertEquals(241, position.newCell(241).cell());
+        assertNotSame(position, position.newCell(241).cell());
+    }
+
+    @Test
     void generateString() {
         assertEquals("(1254, 235)", new Position(1254, 235).toString());
     }

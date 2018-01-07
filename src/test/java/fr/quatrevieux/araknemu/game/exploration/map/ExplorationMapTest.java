@@ -75,11 +75,11 @@ class ExplorationMapTest extends GameBaseCase {
         };
 
         GamePlayer player = gamePlayer();
-        player.dispatcher().add(listener);
 
         MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null));
 
         ExplorationMap map = new ExplorationMap(template);
+        map.dispatcher().add(listener);
 
         map.add(player);
 
@@ -100,5 +100,19 @@ class ExplorationMapTest extends GameBaseCase {
         map.add(other);
 
         assertEquals(other.sprite().toString(), ref.get().sprite().toString());
+    }
+
+    @Test
+    void sendWillSendToPlayers() throws ContainerException, SQLException {
+        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null));
+
+        ExplorationMap map = new ExplorationMap(template);
+
+        GamePlayer player = gamePlayer();
+        player.join(map);
+
+        map.send("my packet");
+
+        requestStack.assertLast("my packet");
     }
 }

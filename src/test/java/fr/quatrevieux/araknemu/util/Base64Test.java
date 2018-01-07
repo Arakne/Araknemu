@@ -20,4 +20,23 @@ class Base64Test {
     void ordInvalidChar() {
         assertThrows(InvalidParameterException.class, () -> Base64.ord('#'));
     }
+
+    @Test
+    void encodeSingleChar() {
+        String charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";
+
+        for (int i = 0; i < charset.length(); ++i) {
+            assertEquals(Character.toString(charset.charAt(i)), Base64.encode(i, 1));
+        }
+    }
+
+    @Test
+    void encodeWithTwoChars() {
+        assertEquals("cr", Base64.encode(145, 2));
+    }
+
+    @Test
+    void encodeWithTooSmallNumberWillKeepLength() {
+        assertEquals("aac", Base64.encode(2, 3));
+    }
 }

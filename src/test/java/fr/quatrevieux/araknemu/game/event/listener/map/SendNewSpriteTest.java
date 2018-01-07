@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.event.listener.player;
+package fr.quatrevieux.araknemu.game.event.listener.map;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Race;
@@ -11,6 +11,8 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.event.exploration.NewSpriteOnMap;
+import fr.quatrevieux.araknemu.game.event.listener.map.SendNewSprite;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerSprite;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
@@ -23,8 +25,6 @@ import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class SendNewSpriteTest extends GameBaseCase {
     private SendNewSprite listener;
 
@@ -33,8 +33,14 @@ class SendNewSpriteTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
+        dataSet.pushMaps();
+
+        gamePlayer().join(
+            container.get(ExplorationMapService.class).load(10300)
+        );
+
         listener = new SendNewSprite(
-            gamePlayer()
+            gamePlayer().map()
         );
     }
 

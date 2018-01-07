@@ -14,11 +14,14 @@ import fr.quatrevieux.araknemu.game.account.TokenService;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.connector.ConnectorService;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
+import fr.quatrevieux.araknemu.game.exploration.action.factory.ExplorationActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.handler.*;
 import fr.quatrevieux.araknemu.game.handler.account.*;
 import fr.quatrevieux.araknemu.game.handler.game.CreateGame;
+import fr.quatrevieux.araknemu.game.handler.game.EndGameAction;
 import fr.quatrevieux.araknemu.game.handler.game.LoadExtraInfo;
+import fr.quatrevieux.araknemu.game.handler.game.ValidateGameAction;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.LoggedIoHandler;
 import fr.quatrevieux.araknemu.network.game.GameIoHandler;
@@ -110,6 +113,14 @@ final public class GameModule implements ContainerModule {
                     ),
                     new EnsurePlaying(
                         new LoadExtraInfo()
+                    ),
+                    new EnsurePlaying(
+                        new ValidateGameAction(
+                            container.get(ExplorationService.class)
+                        )
+                    ),
+                    new EnsurePlaying(
+                        new EndGameAction()
                     )
                 }
             )
@@ -182,7 +193,8 @@ final public class GameModule implements ContainerModule {
         configurator.persist(
             ExplorationService.class,
             container -> new ExplorationService(
-                container.get(ExplorationMapService.class)
+                container.get(ExplorationMapService.class),
+                container.get(ExplorationActionFactory.class)
             )
         );
 
@@ -191,6 +203,11 @@ final public class GameModule implements ContainerModule {
             container -> new ExplorationMapService(
                 container.get(MapTemplateRepository.class)
             )
+        );
+
+        configurator.persist(
+            ExplorationActionFactory.class,
+            container -> new ExplorationActionFactory()
         );
     }
 }

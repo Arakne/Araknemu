@@ -37,7 +37,7 @@ class MapTemplateRepositoryTest extends GameBaseCase {
         assertEquals(479, map.cells().size());
 
         assertEquals(4, map.cells().get(308).movement());
-        assertTrue(map.cells().get(308).LineOfSight());
+        assertTrue(map.cells().get(308).lineOfSight());
     }
 
     @Test

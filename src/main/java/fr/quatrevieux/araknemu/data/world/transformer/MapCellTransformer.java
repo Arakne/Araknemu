@@ -21,7 +21,7 @@ final public class MapCellTransformer implements Transformer<MapTemplate.Cell> {
         }
 
         @Override
-        public boolean LineOfSight() {
+        public boolean lineOfSight() {
             return (data[0] & 1) == 1;
         }
 
@@ -38,6 +38,11 @@ final public class MapCellTransformer implements Transformer<MapTemplate.Cell> {
         @Override
         public int objectId() {
             return ((data[0] & 2) << 12) + ((data[7] & 1) << 12) + (data[8] << 6) + data[9];
+        }
+
+        @Override
+        public boolean active() {
+            return (data[0] & 32) >> 5 == 1;
         }
     }
 

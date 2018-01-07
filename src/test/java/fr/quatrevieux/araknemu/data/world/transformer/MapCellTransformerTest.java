@@ -26,7 +26,7 @@ class MapCellTransformerTest {
     void unserializeEmptyCell() {
         MapTemplate.Cell cell = transformer.unserialize("Hhaaeaaaaa");
 
-        assertTrue(cell.LineOfSight());
+        assertTrue(cell.lineOfSight());
         assertFalse(cell.interactive());
         assertEquals(0, cell.objectId());
         assertEquals(0, cell.movement());
@@ -36,9 +36,10 @@ class MapCellTransformerTest {
     void unserializeNotEmptyCell() {
         MapTemplate.Cell cell = transformer.unserialize("GhhceaaaWt");
 
-        assertFalse(cell.LineOfSight());
+        assertFalse(cell.lineOfSight());
         assertEquals(0, cell.movement());
         assertFalse(cell.interactive());
         assertEquals(3091, cell.objectId());
+        assertTrue(cell.active());
     }
 }

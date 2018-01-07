@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.exploration.MapLoaded;
+import fr.quatrevieux.araknemu.game.exploration.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.network.game.GameSession;
@@ -22,6 +23,7 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher {
     final private PlayerCharacteristics characteristics;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
+    final private ActionQueue actionQueue = new ActionQueue();
 
     /**
      * The current map
@@ -106,5 +108,9 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher {
      */
     public PlayerRace race() {
         return race;
+    }
+
+    public ActionQueue actionQueue() {
+        return actionQueue;
     }
 }
