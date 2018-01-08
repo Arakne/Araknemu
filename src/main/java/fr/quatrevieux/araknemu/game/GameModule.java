@@ -18,10 +18,7 @@ import fr.quatrevieux.araknemu.game.exploration.action.factory.ExplorationAction
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.handler.*;
 import fr.quatrevieux.araknemu.game.handler.account.*;
-import fr.quatrevieux.araknemu.game.handler.game.CreateGame;
-import fr.quatrevieux.araknemu.game.handler.game.EndGameAction;
-import fr.quatrevieux.araknemu.game.handler.game.LoadExtraInfo;
-import fr.quatrevieux.araknemu.game.handler.game.ValidateGameAction;
+import fr.quatrevieux.araknemu.game.handler.game.*;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.LoggedIoHandler;
 import fr.quatrevieux.araknemu.network.game.GameIoHandler;
@@ -79,6 +76,7 @@ final public class GameModule implements ContainerModule {
             )
         );
 
+        // @todo loader + constraint classes
         configurator.factory(
             Dispatcher.class,
             container -> new DefaultDispatcher(
@@ -121,6 +119,9 @@ final public class GameModule implements ContainerModule {
                     ),
                     new EnsurePlaying(
                         new EndGameAction()
+                    ),
+                    new EnsurePlaying(
+                        new CancelGameAction()
                     )
                 }
             )

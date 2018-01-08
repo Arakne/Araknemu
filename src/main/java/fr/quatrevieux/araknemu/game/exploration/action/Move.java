@@ -30,8 +30,8 @@ final public class Move implements Action {
     }
 
     @Override
-    public void stop() {
-
+    public void cancel(String argument) {
+        // @todo to implements
     }
 
     @Override

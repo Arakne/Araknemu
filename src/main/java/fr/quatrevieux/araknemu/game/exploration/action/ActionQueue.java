@@ -1,7 +1,6 @@
 package fr.quatrevieux.araknemu.game.exploration.action;
 
-import java.util.ArrayDeque;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * Queue for game actions
@@ -26,7 +25,7 @@ import java.util.Queue;
  *
  * The action have 2 different types of ending :
  * - {@link Action#end()}  When an action is successfully ended
- * - {@link Action#stop()} When an error occurs during the action, and should be stopped prematurely
+ * - {@link Action#cancel(String)} When an error occurs during the action, and should be stopped prematurely
  */
 final public class ActionQueue {
     final private Queue<Action> actions = new ArrayDeque<>();
@@ -53,14 +52,37 @@ final public class ActionQueue {
     /**
      * End an action which is successfully terminated
      *
-     * @todo specify ID
+     * @param actionId The action to end
      */
-    public void end() throws Exception {
+    public void end(int actionId) throws Exception {
+        if (actions.element().id() != actionId) {
+            throw new NoSuchElementException("The action ID do not corresponds");
+        }
+
         actions.remove().end();
 
         if (isBusy()) {
             run();
         }
+    }
+
+    /**
+     * Cancel an action in the queue
+     *
+     * @param actionId Action to cancel
+     * @param argument The cancel argument
+     *
+     * @throws Exception
+     */
+    public void cancel(int actionId, String argument) throws Exception {
+        Action current = actions.element();
+
+        if (current.id() != actionId) {
+            throw new NoSuchElementException("The action ID do not corresponds");
+        }
+
+        actions.element().cancel(argument);
+        actions.clear();
     }
 
     /**

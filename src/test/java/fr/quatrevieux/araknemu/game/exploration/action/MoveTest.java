@@ -48,7 +48,7 @@ class MoveTest extends GameBaseCase {
 
         assertTrue(player.actionQueue().isBusy());
 
-        player.actionQueue().end();
+        player.actionQueue().end(1);
         assertFalse(player.actionQueue().isBusy());
 
         assertEquals(395, player.position().cell());

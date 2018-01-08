@@ -12,7 +12,9 @@ import fr.quatrevieux.araknemu.network.in.PacketHandler;
 final public class EndGameAction implements PacketHandler<GameSession, GameActionAcknowledge> {
     @Override
     public void handle(GameSession session, GameActionAcknowledge packet) throws Exception {
-        session.player().actionQueue().end();
+        session.player().actionQueue().end(
+            packet.actionId()
+        );
     }
 
     @Override

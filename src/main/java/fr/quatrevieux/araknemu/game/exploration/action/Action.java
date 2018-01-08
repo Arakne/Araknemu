@@ -14,9 +14,9 @@ public interface Action {
     /**
      * The action must be stopped Unexpectedly
      *
-     * @todo pass the error parameter
+     * @param argument The cancel argument
      */
-    public void stop() throws Exception;
+    public void cancel(String argument) throws Exception;
 
     /**
      * End the action normally (i.e. the action is successfully done)
