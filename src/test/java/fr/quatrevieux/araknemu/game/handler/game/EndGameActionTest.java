@@ -1,11 +1,8 @@
 package fr.quatrevieux.araknemu.game.handler.game;
 
-import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.action.Move;
-import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
-import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.game.world.map.PathException;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,10 +26,7 @@ class EndGameActionTest extends GameBaseCase {
     void handleSuccess() throws Exception {
         dataSet.pushMaps();
 
-        GamePlayer player = gamePlayer();
-        player.join(
-            container.get(ExplorationMapService.class).load(10300)
-        );
+        ExplorationPlayer player = explorationPlayer();
 
         player.actionQueue().push(
             new Move(

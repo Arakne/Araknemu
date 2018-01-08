@@ -23,11 +23,15 @@ final public class ExplorationService {
     /**
      * Start exploration for a player
      */
-    public void start(GamePlayer player) {
-        player.dispatcher().add(new InitializeGame(player, mapService));
-        player.dispatcher().add(new SendMapData(player));
+    public ExplorationPlayer start(GamePlayer player) {
+        ExplorationPlayer exploration = new ExplorationPlayer(player);
 
-        player.dispatch(new StartExploration());
+        exploration.dispatcher().add(new InitializeGame(exploration, mapService));
+        exploration.dispatcher().add(new SendMapData(exploration));
+
+        exploration.dispatch(new StartExploration());
+
+        return exploration;
     }
 
     /**
@@ -38,7 +42,7 @@ final public class ExplorationService {
      *
      * @throws Exception When cannot perform the action
      */
-    public void action(GamePlayer player, GameActionRequest request) throws Exception {
+    public void action(ExplorationPlayer player, GameActionRequest request) throws Exception {
         player.actionQueue().push(
             actionFactory.create(player, request)
         );

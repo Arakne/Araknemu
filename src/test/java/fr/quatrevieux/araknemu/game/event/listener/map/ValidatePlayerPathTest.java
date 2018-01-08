@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.event.listener.map;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.exploration.action.PlayerMoving;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.action.Move;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
@@ -30,14 +31,13 @@ class ValidatePlayerPathTest extends GameBaseCase {
         dataSet.pushMaps();
 
         listener = new ValidatePlayerPath(
-            map = container.get(ExplorationMapService.class).load(10300)
+            map = explorationPlayer().map()
         );
     }
 
     @Test
     void onPlayerMovingWithNonWalkableCell() throws SQLException, ContainerException {
-        GamePlayer player = gamePlayer();
-        player.join(map);
+        ExplorationPlayer player = explorationPlayer();
 
         PlayerMoving event = new PlayerMoving(
             player,
@@ -58,8 +58,7 @@ class ValidatePlayerPathTest extends GameBaseCase {
 
     @Test
     void onPlayerMovingWithValidPath() throws SQLException, ContainerException, PathException {
-        GamePlayer player = gamePlayer();
-        player.join(map);
+        ExplorationPlayer player = explorationPlayer();
 
         PlayerMoving event = new PlayerMoving(
             player,

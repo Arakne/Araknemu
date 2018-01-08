@@ -29,6 +29,8 @@ import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceReposit
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
@@ -199,5 +201,30 @@ public class GameBaseCase extends DatabaseTestCase {
         );
 
         return session.player();
+    }
+
+    public ExplorationPlayer explorationPlayer() throws ContainerException, SQLException {
+        if (!session.isLogged()) {
+            login();
+        }
+
+        if (session.exploration() != null) {
+            return session.exploration();
+        }
+
+        GamePlayer player = gamePlayer();
+        player.setPosition(new Position(10300, 279));
+
+        dataSet.pushMaps();
+
+        ExplorationPlayer explorationPlayer = new ExplorationPlayer(player);
+
+        explorationPlayer.join(
+            container.get(ExplorationMapService.class).load(10300)
+        );
+
+        session.setExploration(explorationPlayer);
+
+        return explorationPlayer;
     }
 }

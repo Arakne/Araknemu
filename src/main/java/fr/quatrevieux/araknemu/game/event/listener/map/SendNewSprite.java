@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.event.listener.map;
 
 import fr.quatrevieux.araknemu.game.event.Listener;
 import fr.quatrevieux.araknemu.game.event.exploration.NewSpriteOnMap;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
@@ -23,7 +24,7 @@ final public class SendNewSprite implements Listener<NewSpriteOnMap> {
         // Save the string value for optimisation
         String packet = new AddSprites(Collections.singleton(event.sprite())).toString();
 
-        for (GamePlayer player : map.players()) {
+        for (ExplorationPlayer player : map.players()) {
             if (player.id() != event.sprite().id()) {
                 player.send(packet);
             }

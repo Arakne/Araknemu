@@ -33,14 +33,8 @@ class SendNewSpriteTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushMaps();
-
-        gamePlayer().join(
-            container.get(ExplorationMapService.class).load(10300)
-        );
-
         listener = new SendNewSprite(
-            gamePlayer().map()
+            explorationPlayer().map()
         );
     }
 

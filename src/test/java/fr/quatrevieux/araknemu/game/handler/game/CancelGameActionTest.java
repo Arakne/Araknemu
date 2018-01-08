@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.handler.game;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.action.Move;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
@@ -29,10 +30,7 @@ class CancelGameActionTest extends GameBaseCase {
     void handleCancelMove() throws Exception {
         dataSet.pushMaps();
 
-        GamePlayer player = gamePlayer();
-        player.join(
-            container.get(ExplorationMapService.class).load(10300)
-        );
+        ExplorationPlayer player = explorationPlayer();
 
         Move move = new Move(
             1,

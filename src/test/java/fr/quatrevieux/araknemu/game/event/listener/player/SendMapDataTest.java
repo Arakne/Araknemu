@@ -22,7 +22,7 @@ class SendMapDataTest extends GameBaseCase {
         dataSet.pushMaps();
 
         listener = new SendMapData(
-            gamePlayer()
+            explorationPlayer()
         );
     }
 

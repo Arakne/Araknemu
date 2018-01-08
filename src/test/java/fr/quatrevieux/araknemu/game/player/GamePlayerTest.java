@@ -75,36 +75,4 @@ class GamePlayerTest extends GameBaseCase {
     void position() {
         assertEquals(new Position(10300, 308), player.position());
     }
-
-    @Test
-    void sprite() {
-        assertEquals(
-            new PlayerSprite(player).toString(),
-            player.sprite().toString()
-        );
-    }
-
-    @Test
-    void join() throws ContainerException {
-        ExplorationMap map = container.get(ExplorationMapService.class).load(10300);
-
-        AtomicReference<ExplorationMap> ref = new AtomicReference<>();
-        Listener<MapLoaded> listener = new Listener<MapLoaded>() {
-            @Override
-            public void on(MapLoaded event) {
-                ref.set(event.map());
-            }
-
-            @Override
-            public Class<MapLoaded> event() {
-                return MapLoaded.class;
-            }
-        };
-
-        player.dispatcher().add(listener);
-        player.join(map);
-
-        assertSame(map, player.map());
-        assertSame(map, ref.get());
-    }
 }

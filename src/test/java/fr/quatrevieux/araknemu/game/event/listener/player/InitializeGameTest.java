@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.event.listener.player;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.exploration.StartExploration;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
@@ -17,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InitializeGameTest extends GameBaseCase {
     private InitializeGame listener;
+    private ExplorationPlayer player;
 
     @Override
     @BeforeEach
@@ -24,7 +26,9 @@ class InitializeGameTest extends GameBaseCase {
         super.setUp();
 
         listener = new InitializeGame(
-            gamePlayer(),
+            player = new ExplorationPlayer(
+                gamePlayer()
+            ),
             container.get(ExplorationMapService.class)
         );
 
@@ -33,8 +37,6 @@ class InitializeGameTest extends GameBaseCase {
 
     @Test
     void onStartExploration() throws SQLException, ContainerException {
-        GamePlayer player = gamePlayer();
-
         listener.on(new StartExploration());
 
         requestStack.assertAll(

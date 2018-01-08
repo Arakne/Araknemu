@@ -13,6 +13,7 @@ import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.event.Listener;
 import fr.quatrevieux.araknemu.game.event.exploration.NewSpriteOnMap;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import org.apache.mina.core.session.DummySession;
@@ -52,10 +53,10 @@ class ExplorationMapTest extends GameBaseCase {
 
         assertEquals(0, map.sprites().size());
 
-        map.add(gamePlayer());
+        map.add(explorationPlayer());
 
         assertEquals(1, map.sprites().size());
-        assertEquals(gamePlayer().sprite().toString(), map.sprites().toArray()[0].toString());
+        assertEquals(explorationPlayer().sprite().toString(), map.sprites().toArray()[0].toString());
     }
 
     @Test
@@ -74,7 +75,7 @@ class ExplorationMapTest extends GameBaseCase {
             }
         };
 
-        GamePlayer player = gamePlayer();
+        ExplorationPlayer player = explorationPlayer();
 
         MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null));
 
@@ -86,15 +87,17 @@ class ExplorationMapTest extends GameBaseCase {
         assertNotNull(ref.get());
         assertEquals(player.sprite().toString(), ref.get().sprite().toString());
 
-        GamePlayer other = new GamePlayer(
-            new GameAccount(
-                new Account(2),
-                container.get(AccountService.class),
-                1
-            ),
-            new Player(5, 2, 1, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1)),
-            dataSet.refresh(new PlayerRace(Race.CRA)),
-            new GameSession(new DummySession())
+        ExplorationPlayer other = new ExplorationPlayer(
+            new GamePlayer(
+                new GameAccount(
+                    new Account(2),
+                    container.get(AccountService.class),
+                    1
+                ),
+                new Player(5, 2, 1, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1)),
+                dataSet.refresh(new PlayerRace(Race.CRA)),
+                new GameSession(new DummySession())
+            )
         );
 
         map.add(other);
@@ -108,7 +111,7 @@ class ExplorationMapTest extends GameBaseCase {
 
         ExplorationMap map = new ExplorationMap(template);
 
-        GamePlayer player = gamePlayer();
+        ExplorationPlayer player = explorationPlayer();
         player.join(map);
 
         map.send("my packet");

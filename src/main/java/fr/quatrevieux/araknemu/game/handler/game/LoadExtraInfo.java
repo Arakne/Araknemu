@@ -15,13 +15,13 @@ import java.util.Collections;
 final public class LoadExtraInfo implements PacketHandler<GameSession, AskExtraInfo> {
     @Override
     public void handle(GameSession session, AskExtraInfo packet) throws Exception {
-        if (session.player().map() == null) {
+        if (session.exploration().map() == null) {
             throw new CloseImmediately("A map should be loaded before get extra info");
         }
 
         session.write(
             new AddSprites(
-                session.player().map().sprites()
+                session.exploration().map().sprites()
             )
         );
         session.write(new MapReady());

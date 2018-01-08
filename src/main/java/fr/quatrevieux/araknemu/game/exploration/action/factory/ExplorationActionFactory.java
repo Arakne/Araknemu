@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.game.exploration.action.factory;
 
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.action.Move;
@@ -29,7 +30,7 @@ final public class ExplorationActionFactory implements ActionFactory {
     }
 
     @Override
-    public Action create(GamePlayer player, GameActionRequest request) throws Exception {
+    public Action create(ExplorationPlayer player, GameActionRequest request) throws Exception {
         if (!factories.containsKey(request.type())) {
             throw new Exception("No factory found for game action : " + request.type());
         }

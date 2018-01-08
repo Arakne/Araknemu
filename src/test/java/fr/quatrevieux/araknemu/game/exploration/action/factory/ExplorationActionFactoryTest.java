@@ -28,19 +28,16 @@ class ExplorationActionFactoryTest extends GameBaseCase {
     void createNotFound() {
         assertThrows(
             Exception.class,
-            () -> factory.create(gamePlayer(), new GameActionRequest(ActionType.NONE, new String[] {})),
+            () -> factory.create(explorationPlayer(), new GameActionRequest(ActionType.NONE, new String[] {})),
             "No factory found for game action : NONE"
         );
     }
 
     @Test
     void createMove() throws Exception {
-        gamePlayer().goTo(gamePlayer().position().newCell(100));
-        gamePlayer().join(
-            container.get(ExplorationMapService.class).load(10300)
-        );
+        explorationPlayer().move(100);
 
-        Action action = factory.create(gamePlayer(), new GameActionRequest(ActionType.MOVE, new String[] {"ebIgbf"}));
+        Action action = factory.create(explorationPlayer(), new GameActionRequest(ActionType.MOVE, new String[] {"ebIgbf"}));
 
         assertTrue(action instanceof Move);
         Move move = (Move) action;

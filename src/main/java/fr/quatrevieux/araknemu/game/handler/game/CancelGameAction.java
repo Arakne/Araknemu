@@ -10,10 +10,14 @@ import fr.quatrevieux.araknemu.network.in.PacketHandler;
 final public class CancelGameAction implements PacketHandler<GameSession, GameActionCancel> {
     @Override
     public void handle(GameSession session, GameActionCancel packet) throws Exception {
-        session.player().actionQueue().cancel(
-            packet.actionId(),
-            packet.argument()
-        );
+        session
+            .exploration()
+            .actionQueue()
+            .cancel(
+                packet.actionId(),
+                packet.argument()
+            )
+        ;
     }
 
     @Override

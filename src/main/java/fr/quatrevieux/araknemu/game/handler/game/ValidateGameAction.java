@@ -21,7 +21,7 @@ final public class ValidateGameAction implements PacketHandler<GameSession, Game
     @Override
     public void handle(GameSession session, GameActionRequest packet) throws Exception {
         try {
-            service.action(session.player(), packet);
+            service.action(session.exploration(), packet);
         } catch (Exception e) {
             throw new ErrorPacket(
                 new GameActionResponse(0, ActionType.NONE, 0)

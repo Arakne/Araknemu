@@ -109,18 +109,18 @@ final public class GameModule implements ContainerModule {
                             container.get(ExplorationService.class)
                         )
                     ),
-                    new EnsurePlaying(
+                    new EnsureExploring(
                         new LoadExtraInfo()
                     ),
-                    new EnsurePlaying(
+                    new EnsureExploring(
                         new ValidateGameAction(
                             container.get(ExplorationService.class)
                         )
                     ),
-                    new EnsurePlaying(
+                    new EnsureExploring(
                         new EndGameAction()
                     ),
-                    new EnsurePlaying(
+                    new EnsureExploring(
                         new CancelGameAction()
                     )
                 }

@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.network.game;
 
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.AbstractSession;
 import org.apache.mina.core.session.IoSession;
@@ -58,5 +59,21 @@ final public class GameSession extends AbstractSession {
      */
     public GamePlayer player() {
         return (GamePlayer) session.getAttribute("player");
+    }
+
+    /**
+     * Get the exploration player
+     *
+     * @return The player instance, or null if not on exploration
+     */
+    public ExplorationPlayer exploration() {
+        return (ExplorationPlayer) session.getAttribute("exploration");
+    }
+
+    /**
+     * Set the exploration player
+     */
+    public void setExploration(ExplorationPlayer exploration) {
+        session.setAttribute("exploration", exploration);
     }
 }

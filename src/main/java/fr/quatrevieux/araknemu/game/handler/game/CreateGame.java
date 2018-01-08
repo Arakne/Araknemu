@@ -23,7 +23,9 @@ final public class CreateGame implements PacketHandler<GameSession, CreateGameRe
             throw new ErrorPacket(new GameCreationError());
         }
 
-        service.start(session.player());
+        session.setExploration(
+            service.start(session.player())
+        );
     }
 
     @Override

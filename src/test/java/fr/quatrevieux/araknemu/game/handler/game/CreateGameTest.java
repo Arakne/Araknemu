@@ -44,10 +44,12 @@ class CreateGameTest extends GameBaseCase {
     void handleSuccess() throws Exception {
         handler.handle(session, new CreateGameRequest(CreateGameRequest.Type.EXPLORATION));
 
+        assertNotNull(session.exploration());
+
         requestStack.assertAll(
             new GameCreated(CreateGameRequest.Type.EXPLORATION),
             new Stats(gamePlayer()),
-            new MapData(gamePlayer().map())
+            new MapData(explorationPlayer().map())
         );
     }
 }

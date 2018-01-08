@@ -29,9 +29,7 @@ class ValidateGameActionTest extends GameBaseCase {
             container.get(ExplorationService.class)
         );
 
-        map = container.get(ExplorationMapService.class).load(10300);
-        gamePlayer().join(map);
-        gamePlayer().goTo(new Position(10300, 279));
+        map = explorationPlayer().map();
     }
 
     @Test
@@ -48,12 +46,12 @@ class ValidateGameActionTest extends GameBaseCase {
             new GameActionResponse(
                 1,
                 ActionType.MOVE,
-                gamePlayer().id(),
+                explorationPlayer().id(),
                 "aexbftdgl"
             )
         );
 
-        assertTrue(gamePlayer().actionQueue().isBusy());
+        assertTrue(explorationPlayer().actionQueue().isBusy());
     }
 
     @Test

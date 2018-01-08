@@ -1,9 +1,7 @@
 package fr.quatrevieux.araknemu.game.exploration.action;
 
-import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
-import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +11,7 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MoveTest extends GameBaseCase {
-    private GamePlayer player;
+    private ExplorationPlayer player;
 
     @Override
     @BeforeEach
@@ -22,11 +20,7 @@ class MoveTest extends GameBaseCase {
 
         dataSet.pushMaps();
 
-        player = gamePlayer();
-        player.join(
-            container.get(ExplorationMapService.class).load(10300)
-        );
-        player.goTo(new Position(10300, 279));
+        player = explorationPlayer();
     }
 
     @Test

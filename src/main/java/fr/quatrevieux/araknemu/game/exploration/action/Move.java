@@ -1,7 +1,9 @@
 package fr.quatrevieux.araknemu.game.exploration.action;
 
 import fr.quatrevieux.araknemu.game.event.exploration.action.PlayerMoving;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.world.creature.Explorer;
 import fr.quatrevieux.araknemu.game.world.map.PathStep;
 
 import java.util.List;
@@ -11,10 +13,10 @@ import java.util.List;
  */
 final public class Move implements Action {
     final private int id;
-    final private GamePlayer player;
+    final private ExplorationPlayer player;
     private List<PathStep> path;
 
-    public Move(int id, GamePlayer player, List<PathStep> path) {
+    public Move(int id, ExplorationPlayer player, List<PathStep> path) {
         this.id = id;
         this.player = player;
         this.path = path;
@@ -35,9 +37,7 @@ final public class Move implements Action {
 
         for (PathStep step : path) {
             if (step.cell() == cellId) {
-                player.goTo(
-                    player.position().newCell(cellId)
-                );
+                player.move(cellId);
 
                 return;
             }
@@ -48,11 +48,7 @@ final public class Move implements Action {
 
     @Override
     public void end() {
-        player.goTo(
-            player.position().newCell(
-                path.get(path.size() - 1).cell()
-            )
-        );
+        player.move(path.get(path.size() - 1).cell());
     }
 
     @Override

@@ -43,26 +43,25 @@ class ExplorationServiceTest extends GameBaseCase {
     void start() throws SQLException, ContainerException {
         GamePlayer player = gamePlayer();
 
-        service.start(player);
+        ExplorationPlayer explorationPlayer = service.start(player);
 
-        assertTrue(player.dispatcher().has(InitializeGame.class));
-        assertTrue(player.dispatcher().has(SendMapData.class));
+        assertTrue(explorationPlayer.dispatcher().has(InitializeGame.class));
+        assertTrue(explorationPlayer.dispatcher().has(SendMapData.class));
 
-        assertNotNull(player.map());
-        assertEquals(10540, player.map().id());
+        assertNotNull(explorationPlayer.map());
+        assertEquals(10540, explorationPlayer.map().id());
 
         requestStack.assertAll(
             new GameCreated(CreateGameRequest.Type.EXPLORATION),
             new Stats(gamePlayer()),
-            new MapData(player.map())
+            new MapData(explorationPlayer.map())
         );
     }
 
     @Test
     void action() throws Exception {
-        GamePlayer player = gamePlayer();
-        player.goTo(new Position(10300, 100));
-        player.join(container.get(ExplorationMapService.class).load(10300));
+        ExplorationPlayer player = explorationPlayer();
+        gamePlayer().setPosition(new Position(10300, 100));
 
         service.action(
             player,

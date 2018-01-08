@@ -1,6 +1,5 @@
 package fr.quatrevieux.araknemu.game.handler.game;
 
-import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
@@ -25,25 +24,16 @@ class LoadExtraInfoTest extends GameBaseCase {
         handler = new LoadExtraInfo();
         dataSet.pushMaps();
         login();
-        gamePlayer();
-    }
-
-    @Test
-    void handleWithoutLoadMap() throws Exception {
-        assertThrows(CloseImmediately.class, () -> handler.handle(session, new AskExtraInfo()));
+        explorationPlayer();
     }
 
     @Test
     void handleSuccess() throws Exception {
-        gamePlayer().join(
-            container.get(ExplorationMapService.class).load(10300)
-        );
-
         handler.handle(session, new AskExtraInfo());
 
         requestStack.assertAll(
             new AddSprites(
-                gamePlayer().map().sprites()
+                explorationPlayer().map().sprites()
             ),
             new MapReady()
         );

@@ -7,28 +7,18 @@ import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.event.exploration.MapLoaded;
-import fr.quatrevieux.araknemu.game.exploration.action.ActionQueue;
-import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
-import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 /**
  * GamePlayer object
  * A player is a logged character, with associated game session
  */
-final public class GamePlayer extends AbstractCharacter implements Dispatcher {
+final public class GamePlayer extends AbstractCharacter implements Dispatcher, PlayerData {
     final private GameSession session;
     final private PlayerRace race;
     final private PlayerCharacteristics characteristics;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
-    final private ActionQueue actionQueue = new ActionQueue();
-
-    /**
-     * The current map
-     */
-    private ExplorationMap map;
 
     public GamePlayer(GameAccount account, Player entity, PlayerRace race, GameSession session) {
         super(account, entity);
@@ -53,6 +43,7 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher {
         return dispatcher;
     }
 
+    @Override
     public PlayerCharacteristics characteristics() {
         return characteristics;
     }
@@ -64,43 +55,18 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher {
         session.write(packet);
     }
 
-    public Sprite sprite() {
-        return new PlayerSprite(this);
-    }
-
     /**
      * Get the current player position
-     *
-     * @see GamePlayer#map() For get the current map
      */
     public Position position() {
         return entity.position();
     }
 
     /**
-     * Get the current exploration map
-     *
-     * @see GamePlayer#position() For get the player position
+     * Set new position
      */
-    public ExplorationMap map() {
-        return map;
-    }
-
-    /**
-     * Change the current player position
-     */
-    public void goTo(Position position) {
+    public void setPosition(Position position) {
         entity.setPosition(position);
-    }
-
-    /**
-     * Join an exploration map
-     */
-    public void join(ExplorationMap map) {
-        this.map = map;
-        map.add(this);
-
-        dispatch(new MapLoaded(map));
     }
 
     /**
@@ -108,9 +74,5 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher {
      */
     public PlayerRace race() {
         return race;
-    }
-
-    public ActionQueue actionQueue() {
-        return actionQueue;
     }
 }

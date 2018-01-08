@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.event.listener.map;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.exploration.action.PlayerMoving;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.action.Move;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
@@ -21,24 +22,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SendPlayerMoveTest extends GameBaseCase {
     private SendPlayerMove listener;
-    private ExplorationMap map;
 
     @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushMaps();
-
         listener = new SendPlayerMove(
-            map = container.get(ExplorationMapService.class).load(10300)
+            explorationPlayer().map()
         );
     }
 
     @Test
     void onPlayerMoving() throws SQLException, ContainerException {
-        GamePlayer player = gamePlayer();
-        player.join(map);
+        ExplorationPlayer player = explorationPlayer();
 
         listener.on(
             new PlayerMoving(

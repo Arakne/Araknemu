@@ -9,9 +9,11 @@ import fr.quatrevieux.araknemu.game.event.exploration.NewSpriteOnMap;
 import fr.quatrevieux.araknemu.game.event.listener.map.SendNewSprite;
 import fr.quatrevieux.araknemu.game.event.listener.map.SendPlayerMove;
 import fr.quatrevieux.araknemu.game.event.listener.map.ValidatePlayerPath;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.map.Decoder;
+import fr.quatrevieux.araknemu.game.world.util.Sender;
 
 import java.util.Collection;
 import java.util.List;
@@ -42,7 +44,7 @@ final public class ExplorationMap implements Dispatcher {
 
     final private MapTemplate template;
     final private List<Cell> cells;
-    final private ConcurrentMap<Integer, GamePlayer> players = new ConcurrentHashMap<>();
+    final private ConcurrentMap<Integer, ExplorationPlayer> players = new ConcurrentHashMap<>();
     final private DefaultListenerAggregate dispatcher = new DefaultListenerAggregate();
 
     public ExplorationMap(MapTemplate template) {
@@ -89,7 +91,7 @@ final public class ExplorationMap implements Dispatcher {
     /**
      * Add a new player to the map
      */
-    public void add(GamePlayer player) {
+    public void add(ExplorationPlayer player) {
         if (players.containsKey(player.id())) {
             throw new IllegalArgumentException("The player is already added");
         }
@@ -106,7 +108,7 @@ final public class ExplorationMap implements Dispatcher {
         return players
             .values()
             .stream()
-            .map(GamePlayer::sprite)
+            .map(ExplorationPlayer::sprite)
             .collect(Collectors.toList())
         ;
     }
@@ -114,7 +116,7 @@ final public class ExplorationMap implements Dispatcher {
     /**
      * Get all players on map
      */
-    public Collection<GamePlayer> players() {
+    public Collection<ExplorationPlayer> players() {
         return players.values();
     }
 
@@ -136,7 +138,7 @@ final public class ExplorationMap implements Dispatcher {
     public void send(Object packet) {
         String str = packet.toString(); // Store string value for optimisation
 
-        for (GamePlayer player : players.values()) {
+        for (Sender player : players.values()) {
             player.send(str);
         }
     }

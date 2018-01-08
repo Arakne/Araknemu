@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.game.exploration.action.factory;
 
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.action.Action;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
@@ -16,5 +17,5 @@ public interface ActionFactory {
      *
      * @return The new action
      */
-    public Action create(GamePlayer player, GameActionRequest request) throws Exception;
+    public Action create(ExplorationPlayer player, GameActionRequest request) throws Exception;
 }
