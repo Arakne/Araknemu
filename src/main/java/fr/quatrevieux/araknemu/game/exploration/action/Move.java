@@ -30,8 +30,20 @@ final public class Move implements Action {
     }
 
     @Override
-    public void cancel(String argument) {
-        // @todo to implements
+    public void cancel(String argument) throws Exception {
+        int cellId = Integer.parseInt(argument);
+
+        for (PathStep step : path) {
+            if (step.cell() == cellId) {
+                player.goTo(
+                    player.position().newCell(cellId)
+                );
+
+                return;
+            }
+        }
+
+        throw new Exception("Invalid cell");
     }
 
     @Override

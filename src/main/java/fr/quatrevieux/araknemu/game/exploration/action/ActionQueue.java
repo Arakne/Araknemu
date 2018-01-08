@@ -81,8 +81,11 @@ final public class ActionQueue {
             throw new NoSuchElementException("The action ID do not corresponds");
         }
 
-        actions.element().cancel(argument);
-        actions.clear();
+        try {
+            actions.element().cancel(argument);
+        } finally {
+            actions.clear();
+        }
     }
 
     /**

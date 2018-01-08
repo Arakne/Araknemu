@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.game.exploration.action;
 
+import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
@@ -25,6 +26,7 @@ class MoveTest extends GameBaseCase {
         player.join(
             container.get(ExplorationMapService.class).load(10300)
         );
+        player.goTo(new Position(10300, 279));
     }
 
     @Test
@@ -64,5 +66,59 @@ class MoveTest extends GameBaseCase {
 
         assertThrows(Exception.class, () -> player.actionQueue().push(move), "Empty path");
         assertFalse(player.actionQueue().isBusy());
+    }
+
+    @Test
+    void moveWithCancel() throws Exception {
+        Move move = new Move(
+            1,
+            player,
+            player.map().decoder().decodePath("bftdgl", 279)
+        );
+
+        player.actionQueue().push(move);
+
+        requestStack.assertLast(
+            new GameActionResponse(
+                1,
+                ActionType.MOVE,
+                gamePlayer().id(),
+                "aexbftdgl"
+            )
+        );
+
+        assertTrue(player.actionQueue().isBusy());
+
+        player.actionQueue().cancel(1, "294");
+        assertFalse(player.actionQueue().isBusy());
+
+        assertEquals(294, player.position().cell());
+    }
+
+    @Test
+    void moveWithCancelNotInPath() throws Exception {
+        Move move = new Move(
+            1,
+            player,
+            player.map().decoder().decodePath("bftdgl", 279)
+        );
+
+        player.actionQueue().push(move);
+
+        requestStack.assertLast(
+            new GameActionResponse(
+                1,
+                ActionType.MOVE,
+                gamePlayer().id(),
+                "aexbftdgl"
+            )
+        );
+
+        assertTrue(player.actionQueue().isBusy());
+
+        assertThrows(Exception.class, () -> player.actionQueue().cancel(1, "410"), "Invalid cell");
+        assertFalse(player.actionQueue().isBusy());
+
+        assertEquals(279, player.position().cell());
     }
 }

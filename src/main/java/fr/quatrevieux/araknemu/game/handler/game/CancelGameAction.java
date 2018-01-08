@@ -6,8 +6,6 @@ import fr.quatrevieux.araknemu.network.in.PacketHandler;
 
 /**
  * Cancel the current game action
- *
- * @todo test
  */
 final public class CancelGameAction implements PacketHandler<GameSession, GameActionCancel> {
     @Override
