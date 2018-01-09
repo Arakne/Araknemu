@@ -19,6 +19,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.handler.*;
 import fr.quatrevieux.araknemu.game.handler.account.*;
 import fr.quatrevieux.araknemu.game.handler.game.*;
+import fr.quatrevieux.araknemu.game.handler.loader.*;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.LoggedIoHandler;
 import fr.quatrevieux.araknemu.network.game.GameIoHandler;
@@ -76,54 +77,15 @@ final public class GameModule implements ContainerModule {
             )
         );
 
-        // @todo loader + constraint classes
         configurator.factory(
             Dispatcher.class,
             container -> new DefaultDispatcher(
-                new PacketHandler[]{
-                    new StartSession(),
-                    new StopSession(),
-                    new CheckQueuePosition(),
-                    new Login(
-                        container.get(TokenService.class),
-                        container.get(AccountService.class)
-                    ),
-                    new SendRegionalVersion(),
-                    new EnsureLogged(
-                        new ListCharacters(
-                            container.get(CharactersService.class)
-                        )
-                    ),
-                    new EnsureLogged(
-                        new CreateCharacter(
-                            container.get(CharactersService.class)
-                        )
-                    ),
-                    new EnsureLogged(
-                        new SelectCharacter(
-                            container.get(PlayerService.class)
-                        )
-                    ),
-                    new EnsurePlaying(
-                        new CreateGame(
-                            container.get(ExplorationService.class)
-                        )
-                    ),
-                    new EnsureExploring(
-                        new LoadExtraInfo()
-                    ),
-                    new EnsureExploring(
-                        new ValidateGameAction(
-                            container.get(ExplorationService.class)
-                        )
-                    ),
-                    new EnsureExploring(
-                        new EndGameAction()
-                    ),
-                    new EnsureExploring(
-                        new CancelGameAction()
-                    )
-                }
+                new AggregateLoader(
+                    new CommonLoader(),
+                    new LoggedLoader(),
+                    new PlayingLoader(),
+                    new ExploringLoader()
+                ).load(container)
             )
         );
 

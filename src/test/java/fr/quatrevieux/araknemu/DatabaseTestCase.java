@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu;
 
 
+import fr.quatrevieux.araknemu._test.TestCase;
 import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
 import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
@@ -15,7 +16,7 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DatabaseTestCase {
+public class DatabaseTestCase extends TestCase {
     protected ConnectionPool connection;
     protected ConnectionPoolUtils poolUtils;
 
