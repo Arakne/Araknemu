@@ -13,6 +13,10 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
 import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.LivingRepositoriesModule;
 import fr.quatrevieux.araknemu.network.LoggedIoHandler;
+import fr.quatrevieux.araknemu.network.adapter.Server;
+import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
+import fr.quatrevieux.araknemu.network.adapter.mina.MinaServer;
+import fr.quatrevieux.araknemu.network.adapter.util.LoggingSessionHandler;
 import fr.quatrevieux.araknemu.network.in.AggregatePacketParser;
 import fr.quatrevieux.araknemu.network.in.DefaultDispatcher;
 import fr.quatrevieux.araknemu.network.in.Dispatcher;
@@ -48,7 +52,8 @@ class RealmModuleTest {
         container.register(new LivingRepositoriesModule(app.database().get("realm")));
 
         assertInstanceOf(RealmService.class, container.get(RealmService.class));
-        assertInstanceOf(LoggedIoHandler.class, container.get(IoHandler.class));
+        assertInstanceOf(LoggingSessionHandler.class, container.get(SessionHandler.class));
+        assertInstanceOf(MinaServer.class, container.get(Server.class));
         assertInstanceOf(RealmConfiguration.class, container.get(RealmConfiguration.class));
         assertInstanceOf(DefaultDispatcher.class, container.get(Dispatcher.class));
         assertInstanceOf(AggregatePacketParser.class, container.get(PacketParser.class));

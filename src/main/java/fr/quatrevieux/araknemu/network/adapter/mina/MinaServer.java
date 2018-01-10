@@ -1,12 +1,12 @@
-package fr.quatrevieux.araknemu.network;
+package fr.quatrevieux.araknemu.network.adapter.mina;
 
+import fr.quatrevieux.araknemu.network.adapter.Server;
+import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
 import org.apache.mina.core.service.IoAcceptor;
-import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
@@ -14,51 +14,39 @@ import java.nio.charset.Charset;
 /**
  * Wrap Mima acceptor
  */
-@Deprecated
-final public class Server implements Closeable {
-    final private IoAcceptor acceptor;
+final public class MinaServer implements Server {
+    final private SessionHandler handler;
+    final private int port;
 
-    public Server(IoAcceptor acceptor) {
-        this.acceptor = acceptor;
-    }
+    private NioSocketAcceptor acceptor;
 
     /**
      * Auto-configure the acceptor
      *
      * @param handler The IO handle
      * @param port The bind port
-     * @throws IOException When bind error occurs
      */
-    public Server(IoHandler handler, int port) throws IOException {
-        this(makeAcceptor(handler, port));
+    public MinaServer(SessionHandler handler, int port) {
+        this.handler = handler;
+        this.port = port;
     }
 
     /**
      * Get the server acceptor
-     * @return
      */
     public IoAcceptor acceptor() {
         return acceptor;
     }
 
-    /**
-     * @throws IOException
-     */
-    public void close() throws IOException {
+    @Override
+    public void stop() throws IOException {
         acceptor.unbind();
         acceptor.dispose();
     }
 
-    /**
-     * Create the acceptor instance
-     *
-     * @param handler
-     * @param port
-     * @return
-     * @throws IOException
-     */
-    static private IoAcceptor makeAcceptor(IoHandler handler, int port) throws IOException {
-        NioSocketAcceptor acceptor = new NioSocketAcceptor(
+    @Override
+    public void start() throws IOException {
+        acceptor = new NioSocketAcceptor(
             Runtime.getRuntime().availableProcessors()
         );
 
@@ -78,10 +66,8 @@ final public class Server implements Closeable {
         );
 
         acceptor.setReuseAddress(true);
-        acceptor.setHandler(handler);
+        acceptor.setHandler(new IoHandlerAdapter(handler));
         acceptor.bind(new InetSocketAddress(port));
         acceptor.setCloseOnDeactivation(true);
-
-        return acceptor;
     }
 }

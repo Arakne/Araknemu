@@ -16,14 +16,14 @@ import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.LivingR
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
+import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
+import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 import fr.quatrevieux.araknemu.realm.host.GameConnector;
 import fr.quatrevieux.araknemu.realm.host.GameHost;
 import fr.quatrevieux.araknemu.realm.host.HostService;
 import org.apache.mina.core.filterchain.IoFilterAdapter;
-import org.apache.mina.core.service.IoHandler;
-import org.apache.mina.core.session.DummySession;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.core.write.WriteRequest;
 import org.ini4j.Ini;
@@ -33,15 +33,18 @@ import org.junit.jupiter.api.BeforeEach;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.Stack;
 
 public class RealmBaseCase extends DatabaseTestCase {
     static public class SendingRequestStack extends IoFilterAdapter {
-        public Stack<Object> messages = new Stack<>();
+        final public DummyChannel channel;
+
+        public SendingRequestStack(DummyChannel channel) {
+            this.channel = channel;
+        }
 
         @Override
         public void messageSent(NextFilter nextFilter, IoSession session, WriteRequest writeRequest) throws Exception {
-            messages.push(writeRequest.getMessage());
+            channel.getMessages().push(writeRequest.getMessage());
         }
 
         public void assertLast(Object packet) {
@@ -49,22 +52,22 @@ public class RealmBaseCase extends DatabaseTestCase {
         }
 
         public void assertLast(String packet) {
-            Assertions.assertEquals(packet, messages.peek().toString());
+            Assertions.assertEquals(packet, channel.getMessages().peek().toString());
         }
 
         public void assertCount(int count) {
-            Assertions.assertEquals(count, messages.size());
+            Assertions.assertEquals(count, channel.getMessages().size());
         }
 
         public void assertAll(Object... packets) {
             Assertions.assertArrayEquals(
                 Arrays.stream(packets).map(Object::toString).toArray(),
-                messages.stream().map(Object::toString).toArray()
+                channel.getMessages().stream().map(Object::toString).toArray()
             );
         }
 
         public void assertEmpty() {
-            Assertions.assertTrue(messages.isEmpty());
+            Assertions.assertTrue(channel.getMessages().isEmpty());
         }
     }
 
@@ -90,9 +93,9 @@ public class RealmBaseCase extends DatabaseTestCase {
     protected RealmConfiguration configuration;
     protected RealmService service;
     protected RealmSession session;
-    protected DummySession ioSession;
+    protected DummyChannel channel;
     protected SendingRequestStack requestStack;
-    protected IoHandler ioHandler;
+    protected SessionHandler<RealmSession> sessionHandler;
     protected Araknemu app;
     protected TestingDataSet dataSet;
     protected GameHost gameHost;
@@ -122,12 +125,10 @@ public class RealmBaseCase extends DatabaseTestCase {
         service = container.get(RealmService.class);
         configuration = service.configuration();
 
-        ioSession = new DummySession();
-        ioSession.setAttribute("testing");
-        session = new RealmSession(ioSession);
-
-        ioSession.getFilterChain().addLast("test", requestStack = new SendingRequestStack());
-        ioHandler = service.ioHandler();
+        sessionHandler = container.get(SessionHandler.class);
+        channel = new DummyChannel();
+        session = sessionHandler.create(channel);
+        requestStack = new SendingRequestStack(channel);
 
         dataSet = new TestingDataSet(container);
         dataSet
@@ -154,10 +155,10 @@ public class RealmBaseCase extends DatabaseTestCase {
     }
 
     public void assertClosed() {
-        Assertions.assertTrue(ioSession.isClosing());
+        Assertions.assertFalse(channel.isAlive());
     }
 
     public void sendPacket(Object packet) throws Exception {
-        ioHandler.messageReceived(ioSession, packet);
+        sessionHandler.received(session, packet.toString());
     }
 }

@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.network.in;
 
+import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import org.apache.mina.core.session.DummySession;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,7 @@ class DefaultDispatcherTest {
 
     @Test
     void dispatchFound() throws Exception {
-        RealmSession session = new RealmSession(new DummySession());
+        RealmSession session = new RealmSession(new DummyChannel(), null);
         MyPacket packet = new MyPacket();
         MyHandler handler = new MyHandler();
 
@@ -42,6 +43,6 @@ class DefaultDispatcherTest {
     void dispatchNotFound() {
         DefaultDispatcher<RealmSession> dispatcher = new DefaultDispatcher<>(new MyHandler[]{});
 
-        assertThrows(HandlerNotFoundException.class, () -> dispatcher.dispatch(new RealmSession(new DummySession()), new MyPacket()));
+        assertThrows(HandlerNotFoundException.class, () -> dispatcher.dispatch(new RealmSession(new DummyChannel(), null), new MyPacket()));
     }
 }

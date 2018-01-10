@@ -10,7 +10,8 @@ import fr.quatrevieux.araknemu.network.realm.RealmSession;
 final public class PongResponse implements PacketHandler<RealmSession, PingResponse> {
     @Override
     public void handle(RealmSession session, PingResponse packet) {
-        session.onPingResponse(packet);
+        //session.onPingResponse(packet);
+        // @todo
     }
 
     @Override

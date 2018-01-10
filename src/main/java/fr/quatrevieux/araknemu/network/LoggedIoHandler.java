@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 /**
  * Decorate IoHandler for adding logging
  */
+@Deprecated
 final public class LoggedIoHandler implements IoHandler {
     final private IoHandler handler;
     final private Logger logger;

@@ -1,16 +1,13 @@
 package fr.quatrevieux.araknemu.realm;
 
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.network.realm.out.*;
-import fr.quatrevieux.araknemu.realm.host.GameHost;
 import org.apache.mina.core.session.DummySession;
 import org.apache.mina.core.session.IoSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.sql.SQLException;
-import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -68,12 +65,10 @@ public class AuthenticationProtocolTest extends RealmBaseCase {
 
     @Test
     void authenticateTwiceError() throws Exception {
-        IoSession io = new DummySession();
-        io.setAttribute("testing");
-        RealmSession s1 = new RealmSession(io);
+        RealmSession s1 = sessionHandler.create(new DummyChannel());
 
-        ioHandler.messageReceived(io, "1.29.1");
-        ioHandler.messageReceived(io,"test\n#1"+ConnectionKeyTest.cryptPassword("password", s1.key().key()));
+        sessionHandler.received(s1, "1.29.1");
+        sessionHandler.received(s1,"test\n#1"+ConnectionKeyTest.cryptPassword("password", s1.key().key()));
 
         assertTrue(s1.isLogged());
         assertTrue(s1.account().isAlive());
@@ -91,12 +86,10 @@ public class AuthenticationProtocolTest extends RealmBaseCase {
 
     @Test
     void authenticateAndLogout() throws Exception {
-        IoSession io = new DummySession();
-        io.setAttribute("testing");
-        RealmSession s1 = new RealmSession(io);
+        RealmSession s1 = sessionHandler.create(new DummyChannel());
 
-        ioHandler.messageReceived(io, "1.29.1");
-        ioHandler.messageReceived(io,"test\n#1"+ConnectionKeyTest.cryptPassword("password", s1.key().key()));
+        sessionHandler.received(s1, "1.29.1");
+        sessionHandler.received(s1,"test\n#1"+ConnectionKeyTest.cryptPassword("password", s1.key().key()));
         s1.close();
 
         assertFalse(s1.account().isAlive());

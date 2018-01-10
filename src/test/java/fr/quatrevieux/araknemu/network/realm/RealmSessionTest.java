@@ -1,5 +1,7 @@
 package fr.quatrevieux.araknemu.network.realm;
 
+import fr.quatrevieux.araknemu.network.adapter.Channel;
+import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.in.PacketParser;
 import org.apache.mina.core.session.DummySession;
 import org.apache.mina.core.session.IoSession;
@@ -10,15 +12,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RealmSessionTest {
     @Test
-    void session() {
-        IoSession session = new DummySession();
+    void channel() {
+        Channel channel = new DummyChannel();
 
-        assertSame(session, new RealmSession(session).session());
+        assertSame(channel, new RealmSession(channel, null).channel());
     }
 
     @Test
     void key() {
-        RealmSession session = new RealmSession(new DummySession());
+        RealmSession session = new RealmSession(new DummyChannel(), null);
 
         assertEquals(32, session.key().key().length());
         assertSame(session.key(), session.key());
@@ -30,25 +32,10 @@ class RealmSessionTest {
 
     @Test
     void write() {
-        IoSession session = new DummySession();
+        DummyChannel channel = new DummyChannel();
 
-        new RealmSession(session).write("my message");
-    }
+        new RealmSession(channel, null).write("my message");
 
-    @Test
-    void parser() {
-        IoSession ioSession = new DummySession();
-        RealmSession session = new RealmSession(
-            ioSession
-        );
-
-        assertFalse(session.hasParser());
-
-        PacketParser parser = Mockito.mock(PacketParser.class);
-        session.setParser(parser);
-
-        assertTrue(session.hasParser());
-        assertSame(parser, session.parser());
-        assertSame(parser, new RealmSession(ioSession).parser());
+        assertEquals("my message", channel.getMessages().lastElement());
     }
 }

@@ -7,6 +7,7 @@ import org.apache.mina.core.session.IoSession;
 /**
  * Base Dofus session class
  */
+@Deprecated
 abstract public class AbstractSession {
     final protected IoSession session;
 

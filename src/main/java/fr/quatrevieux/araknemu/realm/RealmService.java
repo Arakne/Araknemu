@@ -2,8 +2,7 @@ package fr.quatrevieux.araknemu.realm;
 
 import fr.quatrevieux.araknemu.core.BootException;
 import fr.quatrevieux.araknemu.core.Service;
-import fr.quatrevieux.araknemu.network.Server;
-import org.apache.mina.core.service.IoHandler;
+import fr.quatrevieux.araknemu.network.adapter.Server;
 
 import java.io.IOException;
 
@@ -12,22 +11,17 @@ import java.io.IOException;
  */
 final public class RealmService implements Service {
     final private RealmConfiguration configuration;
-    final private IoHandler ioHandler;
+    final private Server server;
 
-    private Server server;
-
-    public RealmService(RealmConfiguration configuration, IoHandler ioHandler) {
+    public RealmService(RealmConfiguration configuration, Server server) {
         this.configuration = configuration;
-        this.ioHandler = ioHandler;
+        this.server = server;
     }
 
     @Override
     public void boot() throws BootException {
         try {
-            server = new Server(
-                ioHandler,
-                configuration.port()
-            );
+            server.start();
         } catch (IOException e) {
             throw new BootException("Cannot start realm server", e);
         }
@@ -36,7 +30,7 @@ final public class RealmService implements Service {
     @Override
     public void shutdown() {
         try {
-            server.close();
+            server.stop();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -44,9 +38,5 @@ final public class RealmService implements Service {
 
     public RealmConfiguration configuration() {
         return configuration;
-    }
-
-    public IoHandler ioHandler() {
-        return ioHandler;
     }
 }

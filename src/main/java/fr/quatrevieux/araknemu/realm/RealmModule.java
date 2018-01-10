@@ -5,9 +5,12 @@ import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
-import fr.quatrevieux.araknemu.network.LoggedIoHandler;
+import fr.quatrevieux.araknemu.network.adapter.Server;
+import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
+import fr.quatrevieux.araknemu.network.adapter.mina.MinaServer;
+import fr.quatrevieux.araknemu.network.adapter.util.LoggingSessionHandler;
 import fr.quatrevieux.araknemu.network.in.*;
-import fr.quatrevieux.araknemu.network.realm.RealmIoHandler;
+import fr.quatrevieux.araknemu.network.realm.RealmSessionHandler;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.network.realm.in.Credentials;
 import fr.quatrevieux.araknemu.network.realm.in.DofusVersion;
@@ -18,7 +21,6 @@ import fr.quatrevieux.araknemu.realm.handler.account.Authenticate;
 import fr.quatrevieux.araknemu.realm.handler.account.ConnectGame;
 import fr.quatrevieux.araknemu.realm.handler.account.ListServers;
 import fr.quatrevieux.araknemu.realm.host.HostService;
-import org.apache.mina.core.service.IoHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +45,7 @@ final public class RealmModule implements ContainerModule {
             RealmService.class,
             container -> new RealmService(
                 container.get(RealmConfiguration.class),
-                container.get(IoHandler.class)
+                container.get(Server.class)
             )
         );
 
@@ -53,9 +55,17 @@ final public class RealmModule implements ContainerModule {
         );
 
         configurator.factory(
-            IoHandler.class,
-            container -> new LoggedIoHandler(
-                new RealmIoHandler(
+            Server.class,
+            container -> new MinaServer(
+                container.get(SessionHandler.class),
+                container.get(RealmConfiguration.class).port()
+            )
+        );
+
+        configurator.factory(
+            SessionHandler.class,
+            container -> new LoggingSessionHandler(
+                new RealmSessionHandler(
                     container.get(Dispatcher.class),
                     new PacketParser[] {DofusVersion.parser(), Credentials.parser()},
                     container.get(PacketParser.class)

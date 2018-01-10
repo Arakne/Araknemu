@@ -6,9 +6,6 @@ import fr.quatrevieux.araknemu.realm.RealmBaseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class CheckDofusVersionTest extends RealmBaseCase {
@@ -28,7 +25,7 @@ class CheckDofusVersionTest extends RealmBaseCase {
             new DofusVersion("1.29.1")
         );
 
-        assertTrue(ioSession.isConnected());
+        assertTrue(channel.isAlive());
         requestStack.assertEmpty();
     }
 

@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.realm.handler.account;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.network.realm.in.Credentials;
 import fr.quatrevieux.araknemu.network.realm.out.*;
@@ -76,9 +77,7 @@ class AuthenticateTest extends RealmBaseCase {
             (Account) dataSet.get("login_account"),
             container.get(AuthenticationService.class)
         );
-        IoSession ioSession = new DummySession();
-        ioSession.setAttribute("testing");
-        account.attach(new RealmSession(ioSession));
+        account.attach(sessionHandler.create(new DummyChannel()));
 
         handler.handle(session, new Credentials(
             "login",
