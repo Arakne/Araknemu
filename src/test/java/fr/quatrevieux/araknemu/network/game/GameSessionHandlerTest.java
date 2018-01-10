@@ -2,8 +2,6 @@ package fr.quatrevieux.araknemu.network.game;
 
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.account.AccountService;
-import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.account.TokenService;
 import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.exception.CloseWithPacket;
@@ -16,53 +14,53 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GameIoHandlerTest extends GameBaseCase {
-    private GameIoHandler handler;
+class GameSessionHandlerTest extends GameBaseCase {
+    private GameSessionHandler handler;
 
     @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
-        handler = new GameIoHandler(
+        handler = new GameSessionHandler(
             container.get(Dispatcher.class),
             container.get(PacketParser.class)
         );
     }
 
     @Test
-    void sessionOpened() throws Exception {
-        handler.sessionOpened(ioSession);
+    void opened() throws Exception {
+        handler.opened(session);
 
         requestStack.assertLast("HG");
     }
 
     @Test
-    void sessionClosed() throws Exception {
-        handler.sessionClosed(ioSession);
+    void closed() throws Exception {
+        handler.closed(session);
         assertFalse(session.isLogged());
     }
 
     @Test
     void exceptionCaughtCloseSession() throws Exception {
-        handler.exceptionCaught(ioSession, new CloseImmediately());
+        handler.exception(session, new CloseImmediately());
 
-        assertTrue(ioSession.isClosing());
+        assertFalse(session.isLogged());
     }
 
     @Test
     void exceptionCaughtWritePacket() throws Exception {
-        handler.exceptionCaught(ioSession, new ErrorPacket(new LoginTokenError()));
+        handler.exception(session, new ErrorPacket(new LoginTokenError()));
 
         requestStack.assertLast(new LoginTokenError());
     }
 
     @Test
     void exceptionCaughtWriteAndClose() throws Exception {
-        handler.exceptionCaught(ioSession, new CloseWithPacket(new LoginTokenError()));
+        handler.exception(session, new CloseWithPacket(new LoginTokenError()));
 
         requestStack.assertLast(new LoginTokenError());
-        assertTrue(ioSession.isClosing());
+        assertFalse(session.isAlive());
     }
 
     @Test
@@ -72,7 +70,7 @@ class GameIoHandlerTest extends GameBaseCase {
 
         String token = container.get(TokenService.class).generate(account);
 
-        handler.messageReceived(ioSession, "AT" + token);
+        handler.received(session, "AT" + token);
 
         assertTrue(session.isLogged());
         assertEquals(1, session.account().id());

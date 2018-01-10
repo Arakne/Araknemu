@@ -15,7 +15,9 @@ import fr.quatrevieux.araknemu.game.event.Listener;
 import fr.quatrevieux.araknemu.game.event.exploration.NewSpriteOnMap;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+import fr.quatrevieux.araknemu.network.game.out.game.RemoveSprite;
 import org.apache.mina.core.session.DummySession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,7 +65,7 @@ class ExplorationMapTest extends GameBaseCase {
     void addPlayerWillDispatchEvent() throws SQLException, ContainerException {
         AtomicReference<NewSpriteOnMap> ref = new AtomicReference<>();
 
-        Listener<NewSpriteOnMap> listener = new Listener<NewSpriteOnMap>() {
+        Listener<NewSpriteOnMap> listener = new Listener<>() {
             @Override
             public void on(NewSpriteOnMap event) {
                 ref.set(event);
@@ -96,7 +98,7 @@ class ExplorationMapTest extends GameBaseCase {
                 ),
                 new Player(5, 2, 1, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1)),
                 dataSet.refresh(new PlayerRace(Race.CRA)),
-                new GameSession(new DummySession())
+                new GameSession(new DummyChannel())
             )
         );
 
@@ -117,5 +119,34 @@ class ExplorationMapTest extends GameBaseCase {
         map.send("my packet");
 
         requestStack.assertLast("my packet");
+    }
+
+    @Test
+    void removeWillSendPacket() throws ContainerException, SQLException {
+        explorationPlayer();
+        ExplorationPlayer other = new ExplorationPlayer(
+            new GamePlayer(
+                new GameAccount(
+                    new Account(2),
+                    container.get(AccountService.class),
+                    1
+                ),
+                new Player(5, 2, 1, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1)),
+                dataSet.refresh(new PlayerRace(Race.CRA)),
+                new GameSession(new DummyChannel())
+            )
+        );
+
+        ExplorationMap map = explorationPlayer().map();
+
+        other.join(map);
+        map.remove(other);
+
+        requestStack.assertLast(
+            new RemoveSprite(other.sprite())
+        );
+
+        assertTrue(map.players().contains(explorationPlayer()));
+        assertFalse(map.players().contains(other));
     }
 }

@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.handler.game;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
@@ -29,11 +30,14 @@ class LoadExtraInfoTest extends GameBaseCase {
 
     @Test
     void handleSuccess() throws Exception {
+        ExplorationPlayer player = explorationPlayer();
+        requestStack.clear();
+
         handler.handle(session, new AskExtraInfo());
 
         requestStack.assertAll(
             new AddSprites(
-                explorationPlayer().map().sprites()
+                player.map().sprites()
             ),
             new MapReady()
         );

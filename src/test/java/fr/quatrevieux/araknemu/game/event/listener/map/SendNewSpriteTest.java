@@ -16,6 +16,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerSprite;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import org.apache.mina.core.session.DummySession;
@@ -40,6 +41,8 @@ class SendNewSpriteTest extends GameBaseCase {
 
     @Test
     void onSelfSprite() throws SQLException, ContainerException {
+        requestStack.clear();
+
         listener.on(
             new NewSpriteOnMap(
                 new PlayerSprite(gamePlayer())
@@ -60,7 +63,7 @@ class SendNewSpriteTest extends GameBaseCase {
                 ),
                 new Player(5, 2, 1, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1)),
                 dataSet.refresh(new PlayerRace(Race.CRA)),
-                new GameSession(new DummySession())
+                new GameSession(new DummyChannel())
             )
         );
 

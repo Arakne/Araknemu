@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.event.exploration.MapLeaved;
 import fr.quatrevieux.araknemu.game.event.exploration.MapLoaded;
 import fr.quatrevieux.araknemu.game.exploration.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
@@ -95,6 +96,15 @@ final public class ExplorationPlayer implements PlayableCharacter, Sender, Creat
         map.add(this);
 
         dispatch(new MapLoaded(map));
+    }
+
+    /**
+     * Leave the current map
+     */
+    public void leave() {
+        map.remove(this);
+
+        dispatch(new MapLeaved(map));
     }
 
     /**

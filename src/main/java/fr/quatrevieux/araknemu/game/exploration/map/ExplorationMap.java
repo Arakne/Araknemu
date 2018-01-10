@@ -6,8 +6,10 @@ import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.exploration.NewSpriteOnMap;
+import fr.quatrevieux.araknemu.game.event.exploration.SpriteRemoveFromMap;
 import fr.quatrevieux.araknemu.game.event.listener.map.SendNewSprite;
 import fr.quatrevieux.araknemu.game.event.listener.map.SendPlayerMove;
+import fr.quatrevieux.araknemu.game.event.listener.map.SendSpriteRemoved;
 import fr.quatrevieux.araknemu.game.event.listener.map.ValidatePlayerPath;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
@@ -59,6 +61,7 @@ final public class ExplorationMap implements Dispatcher {
         dispatcher.add(new SendNewSprite(this));
         dispatcher.add(new ValidatePlayerPath(this));
         dispatcher.add(new SendPlayerMove(this));
+        dispatcher.add(new SendSpriteRemoved(this));
     }
 
     public int id() {
@@ -99,6 +102,18 @@ final public class ExplorationMap implements Dispatcher {
         players.put(player.id(), player);
 
         dispatch(new NewSpriteOnMap(player.sprite()));
+    }
+
+    /**
+     * Remove the player from the map
+     */
+    public void remove(ExplorationPlayer player) {
+        if (!players.containsKey(player.id())) {
+            throw new IllegalArgumentException("The player do not exists");
+        }
+
+        players.remove(player.id());
+        dispatch(new SpriteRemoveFromMap(player.sprite()));
     }
 
     /**

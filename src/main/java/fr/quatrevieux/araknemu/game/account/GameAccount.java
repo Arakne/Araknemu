@@ -44,7 +44,7 @@ final public class GameAccount {
      * Check if the account is logged
      */
     public boolean isLogged() {
-        return session != null;
+        return session != null && session.isAlive();
     }
 
     /**

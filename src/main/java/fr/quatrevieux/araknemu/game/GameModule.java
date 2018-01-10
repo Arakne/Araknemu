@@ -11,21 +11,20 @@ import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepo
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
-import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.connector.ConnectorService;
+import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.action.factory.ExplorationActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
-import fr.quatrevieux.araknemu.game.handler.*;
-import fr.quatrevieux.araknemu.game.handler.account.*;
-import fr.quatrevieux.araknemu.game.handler.game.*;
 import fr.quatrevieux.araknemu.game.handler.loader.*;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
-import fr.quatrevieux.araknemu.network.LoggedIoHandler;
-import fr.quatrevieux.araknemu.network.game.GameIoHandler;
+import fr.quatrevieux.araknemu.network.adapter.Server;
+import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
+import fr.quatrevieux.araknemu.network.adapter.mina.MinaServer;
+import fr.quatrevieux.araknemu.network.adapter.util.LoggingSessionHandler;
+import fr.quatrevieux.araknemu.network.game.GameSessionHandler;
 import fr.quatrevieux.araknemu.network.game.in.GameParserLoader;
 import fr.quatrevieux.araknemu.network.in.*;
-import org.apache.mina.core.service.IoHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +52,7 @@ final public class GameModule implements ContainerModule {
             container -> new GameService(
                 container.get(GameConfiguration.class),
                 container.get(RealmConnector.class),
-                container.get(IoHandler.class),
+                container.get(Server.class),
                 container.get(Logger.class),
                 Arrays.asList(
                     container.get(ExplorationMapService.class)
@@ -67,9 +66,17 @@ final public class GameModule implements ContainerModule {
         );
 
         configurator.factory(
-            IoHandler.class,
-            container -> new LoggedIoHandler(
-                new GameIoHandler(
+            Server.class,
+            container -> new MinaServer(
+                container.get(SessionHandler.class),
+                container.get(GameConfiguration.class).port()
+            )
+        );
+
+        configurator.factory(
+            SessionHandler.class,
+            container -> new LoggingSessionHandler(
+                new GameSessionHandler(
                     container.get(Dispatcher.class),
                     container.get(PacketParser.class)
                 ),

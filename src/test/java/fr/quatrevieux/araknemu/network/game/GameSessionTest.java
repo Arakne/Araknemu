@@ -14,6 +14,7 @@ import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
+import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import org.apache.mina.core.session.DummySession;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameSessionTest extends GameBaseCase {
     @Test
     void account() throws ContainerException {
-        GameSession session = new GameSession(new DummySession());
+        GameSession session = new GameSession(new DummyChannel());
 
         GameAccount account = new GameAccount(
             new Account(1),
@@ -36,7 +37,7 @@ class GameSessionTest extends GameBaseCase {
 
     @Test
     void player() throws ContainerException {
-        GameSession session = new GameSession(new DummySession());
+        GameSession session = new GameSession(new DummyChannel());
 
         GamePlayer player = new GamePlayer(
             new GameAccount(
@@ -56,7 +57,7 @@ class GameSessionTest extends GameBaseCase {
 
     @Test
     void exploration() throws ContainerException {
-        GameSession session = new GameSession(new DummySession());
+        GameSession session = new GameSession(new DummyChannel());
 
         ExplorationPlayer player = new ExplorationPlayer(
                 new GamePlayer(

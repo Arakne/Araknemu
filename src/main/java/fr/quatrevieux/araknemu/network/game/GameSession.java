@@ -3,15 +3,41 @@ package fr.quatrevieux.araknemu.network.game;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.network.AbstractSession;
-import org.apache.mina.core.session.IoSession;
+import fr.quatrevieux.araknemu.network.adapter.Channel;
+import fr.quatrevieux.araknemu.network.adapter.Session;
 
 /**
  * Session wrapper for game server
  */
-final public class GameSession extends AbstractSession {
-    public GameSession(IoSession session) {
-        super(session);
+final public class GameSession implements Session {
+    final private Channel channel;
+
+    private GameAccount account;
+    private GamePlayer player;
+    private ExplorationPlayer exploration;
+
+    public GameSession(Channel channel) {
+        this.channel = channel;
+    }
+
+    @Override
+    public Channel channel() {
+        return channel;
+    }
+
+    @Override
+    public void write(Object packet) {
+        channel.write(packet);
+    }
+
+    @Override
+    public void close() {
+        channel.close();
+    }
+
+    @Override
+    public boolean isAlive() {
+        return channel.isAlive();
     }
 
     /**
@@ -20,21 +46,21 @@ final public class GameSession extends AbstractSession {
      * @param account Account to attach
      */
     public void attach(GameAccount account) {
-        session.setAttribute("account", account);
+        this.account = account;
     }
 
     /**
      * Get the attached account
      */
     public GameAccount account() {
-        return (GameAccount) session.getAttribute("account");
+        return account;
     }
 
     /**
      * Check if an account is attached
      */
     public boolean isLogged() {
-        return session.containsAttribute("account");
+        return account != null;
     }
 
     /**
@@ -42,14 +68,14 @@ final public class GameSession extends AbstractSession {
      * @return The attached account
      */
     public GameAccount detach() {
-        return (GameAccount) session.removeAttribute("account");
+        return account = null;
     }
 
     /**
      * Set the logged player
      */
     public void setPlayer(GamePlayer player) {
-        session.setAttribute("player", player);
+        this.player = player;
     }
 
     /**
@@ -58,7 +84,7 @@ final public class GameSession extends AbstractSession {
      * @return The player instance, or null is not in game
      */
     public GamePlayer player() {
-        return (GamePlayer) session.getAttribute("player");
+        return player;
     }
 
     /**
@@ -67,13 +93,13 @@ final public class GameSession extends AbstractSession {
      * @return The player instance, or null if not on exploration
      */
     public ExplorationPlayer exploration() {
-        return (ExplorationPlayer) session.getAttribute("exploration");
+        return exploration;
     }
 
     /**
      * Set the exploration player
      */
     public void setExploration(ExplorationPlayer exploration) {
-        session.setAttribute("exploration", exploration);
+        this.exploration = exploration;
     }
 }

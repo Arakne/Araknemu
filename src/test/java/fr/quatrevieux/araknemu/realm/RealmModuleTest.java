@@ -4,15 +4,12 @@ import fr.quatrevieux.araknemu.Araknemu;
 import fr.quatrevieux.araknemu.core.config.Configuration;
 import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.DatabaseConfiguration;
 import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
-import fr.quatrevieux.araknemu.core.dbal.SimpleConnectionPool;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
 import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.LivingRepositoriesModule;
-import fr.quatrevieux.araknemu.network.LoggedIoHandler;
 import fr.quatrevieux.araknemu.network.adapter.Server;
 import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
 import fr.quatrevieux.araknemu.network.adapter.mina.MinaServer;
@@ -23,7 +20,6 @@ import fr.quatrevieux.araknemu.network.in.Dispatcher;
 import fr.quatrevieux.araknemu.network.in.PacketParser;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
 import fr.quatrevieux.araknemu.realm.host.HostService;
-import org.apache.mina.core.service.IoHandler;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RealmModuleTest {
     @Test

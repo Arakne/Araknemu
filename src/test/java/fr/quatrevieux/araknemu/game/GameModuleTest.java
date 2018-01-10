@@ -13,12 +13,14 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.action.factory.ExplorationActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
-import fr.quatrevieux.araknemu.network.LoggedIoHandler;
+import fr.quatrevieux.araknemu.network.adapter.Server;
+import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
+import fr.quatrevieux.araknemu.network.adapter.mina.MinaServer;
+import fr.quatrevieux.araknemu.network.adapter.util.LoggingSessionHandler;
 import fr.quatrevieux.araknemu.network.in.AggregatePacketParser;
 import fr.quatrevieux.araknemu.network.in.DefaultDispatcher;
 import fr.quatrevieux.araknemu.network.in.Dispatcher;
 import fr.quatrevieux.araknemu.network.in.PacketParser;
-import org.apache.mina.core.service.IoHandler;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -36,7 +38,8 @@ class GameModuleTest extends GameBaseCase {
         container.register(new GameModule(app));
 
         assertInstanceOf(GameService.class, container.get(GameService.class));
-        assertInstanceOf(LoggedIoHandler.class, container.get(IoHandler.class));
+        assertInstanceOf(LoggingSessionHandler.class, container.get(SessionHandler.class));
+        assertInstanceOf(MinaServer.class, container.get(Server.class));
         assertInstanceOf(DefaultDispatcher.class, container.get(Dispatcher.class));
         assertInstanceOf(AggregatePacketParser.class, container.get(PacketParser.class));
         assertInstanceOf(ConnectorService.class, container.get(ConnectorService.class));

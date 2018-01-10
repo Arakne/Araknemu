@@ -2,11 +2,9 @@ package fr.quatrevieux.araknemu.game;
 
 import fr.quatrevieux.araknemu.Araknemu;
 import fr.quatrevieux.araknemu.DatabaseTestCase;
-import fr.quatrevieux.araknemu.TestingDataSet;
 import fr.quatrevieux.araknemu.core.config.Configuration;
 import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.DatabaseConfiguration;
 import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
 import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
@@ -30,10 +28,13 @@ import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
+import fr.quatrevieux.araknemu.network.adapter.Channel;
+import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import org.apache.mina.core.filterchain.IoFilterAdapter;
 import org.apache.mina.core.service.IoHandler;
@@ -53,11 +54,15 @@ import java.util.Stack;
 
 public class GameBaseCase extends DatabaseTestCase {
     static public class SendingRequestStack extends IoFilterAdapter {
-        public Stack<Object> messages = new Stack<>();
+        final public DummyChannel channel;
+
+        public SendingRequestStack(DummyChannel channel) {
+            this.channel = channel;
+        }
 
         @Override
         public void messageSent(NextFilter nextFilter, IoSession session, WriteRequest writeRequest) throws Exception {
-            messages.push(writeRequest.getMessage());
+            channel.getMessages().push(writeRequest.getMessage());
         }
 
         public void assertLast(Object packet) {
@@ -65,22 +70,26 @@ public class GameBaseCase extends DatabaseTestCase {
         }
 
         public void assertLast(String packet) {
-            Assertions.assertEquals(packet, messages.peek().toString());
+            Assertions.assertEquals(packet, channel.getMessages().peek().toString());
         }
 
         public void assertCount(int count) {
-            Assertions.assertEquals(count, messages.size());
+            Assertions.assertEquals(count, channel.getMessages().size());
         }
 
         public void assertAll(Object... packets) {
             Assertions.assertArrayEquals(
                 Arrays.stream(packets).map(Object::toString).toArray(),
-                messages.stream().map(Object::toString).toArray()
+                channel.getMessages().stream().map(Object::toString).toArray()
             );
         }
 
         public void assertEmpty() {
-            Assertions.assertTrue(messages.isEmpty());
+            Assertions.assertTrue(channel.getMessages().isEmpty());
+        }
+
+        public void clear() {
+            channel.getMessages().clear();
         }
     }
 
@@ -96,7 +105,7 @@ public class GameBaseCase extends DatabaseTestCase {
 
     protected Container container;
     protected GameConfiguration configuration;
-    protected DummySession ioSession;
+    protected DummyChannel channel;
     protected GameSession session;
     protected SendingRequestStack requestStack;
     protected IoHandler ioHandler;
@@ -130,12 +139,9 @@ public class GameBaseCase extends DatabaseTestCase {
 
         configuration = container.get(GameConfiguration.class);
 
-        ioSession = new DummySession();
-        ioSession.setAttribute("testing");
-        session = new GameSession(ioSession);
-
-        ioSession.getFilterChain().addLast("test", requestStack = new SendingRequestStack());
-        //ioHandler = service.ioHandler();
+        channel = new DummyChannel();
+        session = new GameSession(channel);
+        requestStack = new SendingRequestStack(channel);
 
         dataSet = new GameDataSet(
             container,
@@ -156,21 +162,17 @@ public class GameBaseCase extends DatabaseTestCase {
     }
 
     public void assertClosed() {
-        Assertions.assertTrue(ioSession.isClosing());
-    }
-
-    public void sendPacket(Object packet) throws Exception {
-        ioHandler.messageReceived(ioSession, packet);
+        Assertions.assertFalse(channel.isAlive());
     }
 
     public void login() throws ContainerException {
-        session.attach(
-            new GameAccount(
-                new Account(1),
-                container.get(AccountService.class),
-                1
-            )
+        GameAccount account = new GameAccount(
+            new Account(1),
+            container.get(AccountService.class),
+            1
         );
+
+        account.attach(session);
     }
 
     public GamePlayer gamePlayer() throws ContainerException, SQLException {
@@ -217,11 +219,7 @@ public class GameBaseCase extends DatabaseTestCase {
 
         dataSet.pushMaps();
 
-        ExplorationPlayer explorationPlayer = new ExplorationPlayer(player);
-
-        explorationPlayer.join(
-            container.get(ExplorationMapService.class).load(10300)
-        );
+        ExplorationPlayer explorationPlayer = container.get(ExplorationService.class).start(player);
 
         session.setExploration(explorationPlayer);
 

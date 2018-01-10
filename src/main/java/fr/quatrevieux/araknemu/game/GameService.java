@@ -3,9 +3,8 @@ package fr.quatrevieux.araknemu.game;
 import fr.quatrevieux.araknemu.core.BootException;
 import fr.quatrevieux.araknemu.core.Service;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
-import fr.quatrevieux.araknemu.network.Server;
+import fr.quatrevieux.araknemu.network.adapter.Server;
 import fr.quatrevieux.araknemu.realm.host.GameHost;
-import org.apache.mina.core.service.IoHandler;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -17,16 +16,14 @@ import java.util.Collection;
 final public class GameService implements Service {
     final private GameConfiguration configuration;
     final private RealmConnector connector;
-    final private IoHandler ioHandler;
+    final private Server server;
     final private Collection<PreloadableService> preloadables;
     private final Logger logger;
 
-    private Server server;
-
-    public GameService(GameConfiguration configuration, RealmConnector connector, IoHandler ioHandler, Logger logger, Collection<PreloadableService> preloadables) {
+    public GameService(GameConfiguration configuration, RealmConnector connector, Server server, Logger logger, Collection<PreloadableService> preloadables) {
         this.configuration = configuration;
         this.connector = connector;
-        this.ioHandler = ioHandler;
+        this.server = server;
         this.preloadables = preloadables;
         this.logger = logger;
     }
@@ -38,10 +35,7 @@ final public class GameService implements Service {
         }
 
         try {
-            server = new Server(
-                ioHandler,
-                configuration.port()
-            );
+            server.start();
         } catch (IOException e) {
             throw new BootException(e);
         }
@@ -68,7 +62,7 @@ final public class GameService implements Service {
         );
 
         try {
-            server.close();
+            server.stop();
         } catch (IOException e) {
             e.printStackTrace();
         }

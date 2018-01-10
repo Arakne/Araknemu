@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
 import fr.quatrevieux.araknemu.game.handler.CheckQueuePosition;
+import fr.quatrevieux.araknemu.game.handler.PongResponse;
 import fr.quatrevieux.araknemu.game.handler.StartSession;
 import fr.quatrevieux.araknemu.game.handler.StopSession;
 import fr.quatrevieux.araknemu.game.handler.account.Login;
@@ -27,6 +28,7 @@ final public class CommonLoader implements Loader {
                 container.get(AccountService.class)
             ),
             new SendRegionalVersion(),
+            new PongResponse()
         };
     }
 }
