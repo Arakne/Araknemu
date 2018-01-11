@@ -15,18 +15,13 @@ final public class ChannelAdapter implements Channel {
     }
 
     @Override
-    public long id() {
-        //channel.id().asLongText()
-        return 0; // @todo
+    public Object id() {
+        return channel.channel().id();
     }
 
     @Override
     public void write(Object message) {
-        ChannelFuture future = channel.writeAndFlush(message.toString());
-
-        if (!future.isSuccess()) {
-            throw new RuntimeException("Cannot send packet", future.cause());
-        }
+        channel.writeAndFlush(message.toString());
     }
 
     @Override

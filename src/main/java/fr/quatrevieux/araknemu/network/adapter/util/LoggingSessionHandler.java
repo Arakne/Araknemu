@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.network.adapter.util;
 import fr.quatrevieux.araknemu.network.adapter.Channel;
 import fr.quatrevieux.araknemu.network.adapter.Session;
 import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
+import fr.quatrevieux.araknemu.network.in.HandlerNotFoundException;
 import org.slf4j.Logger;
 
 /**
@@ -47,6 +48,17 @@ final public class LoggingSessionHandler<S extends Session> implements SessionHa
 
     @Override
     public void exception(S session, Throwable cause) {
+        if (cause instanceof HandlerNotFoundException) {
+            logger.warn(cause.getMessage());
+            return;
+        }
+
+        logger.error("Uncaught exception", cause);
+
+        if (cause.getCause() != null) {
+            logger.error("Cause : {}", cause.getCause());
+        }
+
         handler.exception(session, cause);
     }
 

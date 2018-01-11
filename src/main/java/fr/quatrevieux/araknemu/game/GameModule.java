@@ -21,6 +21,7 @@ import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.adapter.Server;
 import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
 import fr.quatrevieux.araknemu.network.adapter.mina.MinaServer;
+import fr.quatrevieux.araknemu.network.adapter.netty.NettyServer;
 import fr.quatrevieux.araknemu.network.adapter.util.LoggingSessionHandler;
 import fr.quatrevieux.araknemu.network.game.GameSessionHandler;
 import fr.quatrevieux.araknemu.network.game.in.GameParserLoader;
@@ -67,7 +68,7 @@ final public class GameModule implements ContainerModule {
 
         configurator.factory(
             Server.class,
-            container -> new MinaServer(
+            container -> new NettyServer(
                 container.get(SessionHandler.class),
                 container.get(GameConfiguration.class).port()
             )

@@ -14,7 +14,7 @@ final public class ChannelAdapter implements Channel {
     }
 
     @Override
-    public long id() {
+    public Object id() {
         return session.getId();
     }
 

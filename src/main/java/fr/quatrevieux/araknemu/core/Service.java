@@ -2,8 +2,6 @@ package fr.quatrevieux.araknemu.core;
 
 /**
  * Base interface for service
- *
- * @todo boot exception
  */
 public interface Service {
     /**

@@ -13,7 +13,7 @@ final public class DummyChannel implements Channel {
     private Stack<Object> messages = new Stack<>();
 
     @Override
-    public long id() {
+    public Object id() {
         return id;
     }
 
