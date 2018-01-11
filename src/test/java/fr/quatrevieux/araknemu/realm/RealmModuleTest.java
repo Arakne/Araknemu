@@ -13,6 +13,7 @@ import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.LivingR
 import fr.quatrevieux.araknemu.network.adapter.Server;
 import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
 import fr.quatrevieux.araknemu.network.adapter.mina.MinaServer;
+import fr.quatrevieux.araknemu.network.adapter.netty.NettyServer;
 import fr.quatrevieux.araknemu.network.adapter.util.LoggingSessionHandler;
 import fr.quatrevieux.araknemu.network.in.AggregatePacketParser;
 import fr.quatrevieux.araknemu.network.in.DefaultDispatcher;
@@ -49,7 +50,7 @@ class RealmModuleTest {
 
         assertInstanceOf(RealmService.class, container.get(RealmService.class));
         assertInstanceOf(LoggingSessionHandler.class, container.get(SessionHandler.class));
-        assertInstanceOf(MinaServer.class, container.get(Server.class));
+        assertInstanceOf(NettyServer.class, container.get(Server.class));
         assertInstanceOf(RealmConfiguration.class, container.get(RealmConfiguration.class));
         assertInstanceOf(DefaultDispatcher.class, container.get(Dispatcher.class));
         assertInstanceOf(AggregatePacketParser.class, container.get(PacketParser.class));

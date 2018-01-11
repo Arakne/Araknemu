@@ -65,7 +65,7 @@ class ExplorationMapTest extends GameBaseCase {
     void addPlayerWillDispatchEvent() throws SQLException, ContainerException {
         AtomicReference<NewSpriteOnMap> ref = new AtomicReference<>();
 
-        Listener<NewSpriteOnMap> listener = new Listener<>() {
+        Listener<NewSpriteOnMap> listener = new Listener<NewSpriteOnMap>() {
             @Override
             public void on(NewSpriteOnMap event) {
                 ref.set(event);

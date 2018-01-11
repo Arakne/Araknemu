@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.network.adapter.Server;
 import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
 import fr.quatrevieux.araknemu.network.adapter.mina.MinaServer;
+import fr.quatrevieux.araknemu.network.adapter.netty.NettyServer;
 import fr.quatrevieux.araknemu.network.adapter.util.LoggingSessionHandler;
 import fr.quatrevieux.araknemu.network.in.*;
 import fr.quatrevieux.araknemu.network.realm.RealmSessionHandler;
@@ -56,7 +57,7 @@ final public class RealmModule implements ContainerModule {
 
         configurator.factory(
             Server.class,
-            container -> new MinaServer(
+            container -> new NettyServer(
                 container.get(SessionHandler.class),
                 container.get(RealmConfiguration.class).port()
             )

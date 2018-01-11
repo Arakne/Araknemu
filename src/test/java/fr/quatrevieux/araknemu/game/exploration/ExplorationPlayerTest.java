@@ -41,7 +41,7 @@ class ExplorationPlayerTest extends GameBaseCase {
         ExplorationMap map = container.get(ExplorationMapService.class).load(10300);
 
         AtomicReference<ExplorationMap> ref = new AtomicReference<>();
-        Listener<MapLoaded> listener = new Listener<>() {
+        Listener<MapLoaded> listener = new Listener<MapLoaded>() {
             @Override
             public void on(MapLoaded event) {
                 ref.set(event.map());
@@ -74,7 +74,7 @@ class ExplorationPlayerTest extends GameBaseCase {
         player.join(map);
 
         AtomicReference<ExplorationMap> ref = new AtomicReference<>();
-        Listener<MapLeaved> listener = new Listener<>() {
+        Listener<MapLeaved> listener = new Listener<MapLeaved>() {
             @Override
             public void on(MapLeaved event) {
                 ref.set(event.map());

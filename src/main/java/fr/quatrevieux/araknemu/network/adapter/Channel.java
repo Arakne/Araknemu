@@ -6,6 +6,8 @@ package fr.quatrevieux.araknemu.network.adapter;
 public interface Channel {
     /**
      * Get the channel id
+     *
+     * @todo return object
      */
     public long id();
 

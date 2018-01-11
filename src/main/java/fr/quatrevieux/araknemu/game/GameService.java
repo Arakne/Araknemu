@@ -36,7 +36,7 @@ final public class GameService implements Service {
 
         try {
             server.start();
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new BootException(e);
         }
 
@@ -63,7 +63,7 @@ final public class GameService implements Service {
 
         try {
             server.stop();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

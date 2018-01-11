@@ -22,7 +22,7 @@ final public class RealmService implements Service {
     public void boot() throws BootException {
         try {
             server.start();
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new BootException("Cannot start realm server", e);
         }
     }
@@ -31,7 +31,7 @@ final public class RealmService implements Service {
     public void shutdown() {
         try {
             server.stop();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
