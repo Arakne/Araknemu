@@ -91,6 +91,16 @@ public class GameBaseCase extends DatabaseTestCase {
         public void clear() {
             channel.getMessages().clear();
         }
+
+        public void assertContains(Class type) {
+            for (Object message : channel.getMessages()) {
+                if (type.isInstance(message)) {
+                    return;
+                }
+            }
+
+            Assertions.fail("Cannot find packet of type" + type.getSimpleName());
+        }
     }
 
     static public class ConnectorModule implements ContainerModule {

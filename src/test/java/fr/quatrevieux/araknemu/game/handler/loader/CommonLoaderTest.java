@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.game.handler.StartSession;
 import fr.quatrevieux.araknemu.game.handler.StopSession;
 import fr.quatrevieux.araknemu.game.handler.account.Login;
 import fr.quatrevieux.araknemu.game.handler.account.SendRegionalVersion;
+import fr.quatrevieux.araknemu.game.handler.basic.SendDateAndTime;
 import fr.quatrevieux.araknemu.network.in.PacketHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,5 +34,6 @@ class CommonLoaderTest extends GameBaseCase {
         assertContainsType(CheckQueuePosition.class, handlers);
         assertContainsType(Login.class, handlers);
         assertContainsType(SendRegionalVersion.class, handlers);
+        assertContainsType(SendDateAndTime.class, handlers);
     }
 }

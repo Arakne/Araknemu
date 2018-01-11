@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.game.handler.StartSession;
 import fr.quatrevieux.araknemu.game.handler.StopSession;
 import fr.quatrevieux.araknemu.game.handler.account.Login;
 import fr.quatrevieux.araknemu.game.handler.account.SendRegionalVersion;
+import fr.quatrevieux.araknemu.game.handler.basic.SendDateAndTime;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.in.PacketHandler;
 
@@ -28,7 +29,8 @@ final public class CommonLoader implements Loader {
                 container.get(AccountService.class)
             ),
             new SendRegionalVersion(),
-            new PongResponse()
+            new PongResponse(),
+            new SendDateAndTime()
         };
     }
 }

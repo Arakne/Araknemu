@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.network.game.in;
 
 import fr.quatrevieux.araknemu.network.game.in.account.*;
+import fr.quatrevieux.araknemu.network.game.in.basic.AskDate;
 import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionCancel;
@@ -32,7 +33,8 @@ final public class GameParserLoader implements ParserLoader {
             new AskExtraInfo.Parser(),
             new GameActionRequest.Parser(),
             new GameActionAcknowledge.Parser(),
-            new GameActionCancel.Parser()
+            new GameActionCancel.Parser(),
+            new AskDate.Parser()
         );
     }
 }
