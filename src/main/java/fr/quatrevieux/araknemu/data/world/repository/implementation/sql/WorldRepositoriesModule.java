@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.transformer.ImmutableCharacteristicsTransformer;
+import fr.quatrevieux.araknemu.data.world.repository.implementation.local.PlayerRaceRepositoryCache;
 import fr.quatrevieux.araknemu.data.world.transformer.MapCellTransformer;
 
 /**
@@ -20,9 +21,11 @@ final public class WorldRepositoriesModule implements ContainerModule {
     public void configure(ContainerConfigurator configurator) {
         configurator.persist(
             fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository.class,
-            container -> new PlayerRaceRepository(
-                connection,
-                container.get(ImmutableCharacteristicsTransformer.class)
+            container -> new PlayerRaceRepositoryCache(
+                new PlayerRaceRepository(
+                    connection,
+                    container.get(ImmutableCharacteristicsTransformer.class)
+                )
             )
         );
 
