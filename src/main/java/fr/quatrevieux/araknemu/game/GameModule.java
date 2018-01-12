@@ -11,8 +11,11 @@ import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepo
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
+import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.connector.ConnectorService;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
+import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.action.factory.ExplorationActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
@@ -56,7 +59,8 @@ final public class GameModule implements ContainerModule {
                 container.get(Server.class),
                 container.get(Logger.class),
                 Arrays.asList(
-                    container.get(ExplorationMapService.class)
+                    container.get(ExplorationMapService.class),
+                    container.get(ChatService.class)
                 )
             )
         );
@@ -157,7 +161,8 @@ final public class GameModule implements ContainerModule {
             container -> new PlayerService(
                 container.get(PlayerRepository.class),
                 container.get(PlayerRaceRepository.class),
-                container.get(GameConfiguration.class)
+                container.get(GameConfiguration.class),
+                container.get(fr.quatrevieux.araknemu.game.event.Dispatcher.class)
             )
         );
 
@@ -179,6 +184,23 @@ final public class GameModule implements ContainerModule {
         configurator.persist(
             ExplorationActionFactory.class,
             container -> new ExplorationActionFactory()
+        );
+
+        configurator.persist(
+            ChatService.class,
+            container -> new ChatService(
+                container.get(ListenerAggregate.class)
+            )
+        );
+
+        configurator.persist(
+            ListenerAggregate.class,
+            container -> new DefaultListenerAggregate()
+        );
+
+        configurator.factory(
+            fr.quatrevieux.araknemu.game.event.Dispatcher.class,
+            container -> container.get(ListenerAggregate.class)
         );
     }
 }
