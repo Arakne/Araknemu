@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 /**
@@ -74,5 +75,29 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
      */
     public PlayerRace race() {
         return race;
+    }
+
+    public String name() {
+        return entity.name();
+    }
+
+    /**
+     * Check if the player is exploring
+     */
+    public boolean isExploring() {
+        return session.exploration() != null;
+    }
+
+    /**
+     * Get the exploration player
+     *
+     * @throws IllegalStateException When the player is not on exploration state
+     */
+    public ExplorationPlayer exploration() {
+        if (!isExploring()) {
+            throw new IllegalStateException("The current player is not an exploration state");
+        }
+
+        return session.exploration();
     }
 }

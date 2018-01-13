@@ -9,37 +9,36 @@ import java.util.Map;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/managers/ChatManager.as#L718
  */
 public enum ChannelType {
-    INFO("i"),
-    ERRORS(""), // Error cannot be deactivated
-    MESSAGES("*"),
-    WISP("#p$"),
-    GUILD("%"),
-    PVP("!"),
-    RECRUITMENT("?"),
-    TRADE(":"),
-    MEETIC("^"),
-    ADMIN("@");
+    INFO('i'),
+    MESSAGES('*'),
+    PRIVATE('p'),
+    FIGHT_TEAM('#'),
+    GROUP('$'),
+    GUILD('%'),
+    PVP('!'),
+    RECRUITMENT('?'),
+    TRADE(':'),
+    MEETIC('^'),
+    ADMIN('@');
 
     final static private Map<Character, ChannelType> channels = new HashMap<>();
 
     static {
         for (ChannelType type : values()) {
-            for (char c : type.identifier.toCharArray()) {
-                channels.put(c, type);
-            }
+            channels.put(type.identifier, type);
         }
     }
 
-    final private String identifier;
+    final private char identifier;
 
-    ChannelType(String identifier) {
+    ChannelType(char identifier) {
         this.identifier = identifier;
     }
 
     /**
-     * Get the chat identifier string
+     * Get the chat identifier char
      */
-    public String identifier() {
+    public char identifier() {
         return identifier;
     }
 

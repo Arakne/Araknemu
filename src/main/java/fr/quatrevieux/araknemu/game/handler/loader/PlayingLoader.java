@@ -2,8 +2,10 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.handler.EnsurePlaying;
+import fr.quatrevieux.araknemu.game.handler.chat.SendMessage;
 import fr.quatrevieux.araknemu.game.handler.game.CreateGame;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.in.PacketHandler;
@@ -21,6 +23,9 @@ final public class PlayingLoader extends AbstractLoader {
         return new PacketHandler[] {
             new CreateGame(
                 container.get(ExplorationService.class)
+            ),
+            new SendMessage(
+                container.get(ChatService.class)
             )
         };
     }

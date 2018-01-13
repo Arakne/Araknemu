@@ -3,10 +3,15 @@ package fr.quatrevieux.araknemu.game.chat;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.event.listener.player.chat.MessageReceived;
 import fr.quatrevieux.araknemu.game.event.listener.service.RegisterChatListeners;
+import fr.quatrevieux.araknemu.network.game.in.chat.Message;
+import fr.quatrevieux.araknemu.network.game.out.chat.MessageSent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.helpers.NOPLogger;
+
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,5 +33,27 @@ class ChatServiceTest extends GameBaseCase {
         service.preload(NOPLogger.NOP_LOGGER);
 
         assertTrue(container.get(ListenerAggregate.class).has(RegisterChatListeners.class));
+    }
+
+    @Test
+    void sendMapChat() throws SQLException, ContainerException {
+        explorationPlayer();
+        gamePlayer().dispatcher().add(new MessageReceived(
+            gamePlayer()
+        ));
+
+        service.send(
+            gamePlayer(),
+            new Message(ChannelType.MESSAGES, null, "My message", "")
+        );
+
+        requestStack.assertLast(
+            new MessageSent(
+                gamePlayer(),
+                ChannelType.MESSAGES,
+                "My message",
+                ""
+            )
+        );
     }
 }

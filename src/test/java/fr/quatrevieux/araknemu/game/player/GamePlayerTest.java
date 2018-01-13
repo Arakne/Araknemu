@@ -1,6 +1,5 @@
 package fr.quatrevieux.araknemu.game.player;
 
-import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
@@ -12,18 +11,11 @@ import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
-import fr.quatrevieux.araknemu.game.event.Listener;
-import fr.quatrevieux.araknemu.game.event.exploration.MapLoaded;
-import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
-import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
-import fr.quatrevieux.araknemu.network.game.GameSession;
-import org.apache.mina.core.session.DummySession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -74,5 +66,30 @@ class GamePlayerTest extends GameBaseCase {
     @Test
     void position() {
         assertEquals(new Position(10300, 308), player.position());
+    }
+
+    @Test
+    void isExploring() {
+        assertFalse(player.isExploring());
+
+        session.setExploration(
+            new ExplorationPlayer(player)
+        );
+
+        assertTrue(player.isExploring());
+    }
+
+    @Test
+    void explorationNotExploring() {
+        assertThrows(IllegalStateException.class, () -> player.exploration(), "The current player is not an exploration state");
+    }
+
+    @Test
+    void exploration() {
+        session.setExploration(
+            new ExplorationPlayer(player)
+        );
+
+        assertSame(session.exploration(), player.exploration());
     }
 }

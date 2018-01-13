@@ -8,7 +8,7 @@ class ChannelTypeTest {
     @Test
     void byChar() {
         assertSame(ChannelType.ADMIN, ChannelType.byChar('@'));
-        assertSame(ChannelType.WISP, ChannelType.byChar('p'));
-        assertSame(ChannelType.WISP, ChannelType.byChar('#'));
+        assertSame(ChannelType.PRIVATE, ChannelType.byChar('p'));
+        assertSame(ChannelType.FIGHT_TEAM, ChannelType.byChar('#'));
     }
 }

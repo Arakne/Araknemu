@@ -11,9 +11,9 @@ class ChannelSubscribedTest {
     @Test
     void generate() {
         assertEquals(
-            "cC+i*#p$",
+            "cC+i*p",
             new ChannelSubscribed(
-                EnumSet.of(ChannelType.INFO, ChannelType.WISP, ChannelType.MESSAGES)
+                EnumSet.of(ChannelType.INFO, ChannelType.PRIVATE, ChannelType.MESSAGES)
             ).toString()
         );
     }

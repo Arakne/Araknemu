@@ -2,6 +2,8 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.handler.EnsurePlaying;
+import fr.quatrevieux.araknemu.game.handler.chat.SendMessage;
+import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
 import fr.quatrevieux.araknemu.network.in.PacketHandler;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,5 +29,6 @@ class PlayingLoaderTest extends LoaderTestCase {
         assertConstainsOnly(EnsurePlaying.class, handlers);
 
         assertHandlePacket(CreateGameRequest.class, handlers);
+        assertHandlePacket(Message.class, handlers);
     }
 }
