@@ -33,6 +33,7 @@ class GameParserLoaderTest {
         assertContainsInstance(GameActionAcknowledge.Parser.class, parsers);
         assertContainsInstance(GameActionCancel.Parser.class, parsers);
         assertContainsInstance(AskDate.Parser.class, parsers);
+        assertContainsInstance(Ping.Parser.class, parsers);
     }
 
     public void assertContainsInstance(Class type, Collection collection) {

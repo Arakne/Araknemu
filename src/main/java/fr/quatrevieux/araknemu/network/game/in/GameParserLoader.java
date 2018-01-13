@@ -34,7 +34,8 @@ final public class GameParserLoader implements ParserLoader {
             new GameActionRequest.Parser(),
             new GameActionAcknowledge.Parser(),
             new GameActionCancel.Parser(),
-            new AskDate.Parser()
+            new AskDate.Parser(),
+            new Ping.Parser()
         );
     }
 }
