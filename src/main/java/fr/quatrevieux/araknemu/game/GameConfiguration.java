@@ -54,7 +54,7 @@ final public class GameConfiguration implements ConfigurationModule {
      * Get the server ID. By default 1
      */
     public int id() {
-        return pool.integer("race", 1);
+        return pool.integer("id", 1);
     }
 
     /**

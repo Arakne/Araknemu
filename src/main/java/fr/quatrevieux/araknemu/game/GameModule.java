@@ -11,7 +11,12 @@ import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepo
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
+import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
+import fr.quatrevieux.araknemu.game.chat.channel.Channel;
+import fr.quatrevieux.araknemu.game.chat.channel.GlobalChannel;
+import fr.quatrevieux.araknemu.game.chat.channel.MapChannel;
+import fr.quatrevieux.araknemu.game.chat.channel.NullChannel;
 import fr.quatrevieux.araknemu.game.connector.ConnectorService;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
@@ -23,7 +28,6 @@ import fr.quatrevieux.araknemu.game.handler.loader.*;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.adapter.Server;
 import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
-import fr.quatrevieux.araknemu.network.adapter.mina.MinaServer;
 import fr.quatrevieux.araknemu.network.adapter.netty.NettyServer;
 import fr.quatrevieux.araknemu.network.adapter.util.LoggingSessionHandler;
 import fr.quatrevieux.araknemu.network.game.GameSessionHandler;
@@ -121,10 +125,10 @@ final public class GameModule implements ContainerModule {
             )
         );
 
-        configureSevices(configurator);
+        configureServices(configurator);
     }
 
-    private void configureSevices(ContainerConfigurator configurator)
+    private void configureServices(ContainerConfigurator configurator)
     {
         configurator.persist(
             ConnectorService.class,
@@ -189,7 +193,28 @@ final public class GameModule implements ContainerModule {
         configurator.persist(
             ChatService.class,
             container -> new ChatService(
-                container.get(ListenerAggregate.class)
+                container.get(ListenerAggregate.class),
+                new Channel[] {
+                    new MapChannel(),
+                    new GlobalChannel(
+                        ChannelType.INCARNAM,
+                        container.get(PlayerService.class)
+                    ),
+                    new GlobalChannel(
+                        ChannelType.TRADE,
+                        container.get(PlayerService.class)
+                    ),
+                    new GlobalChannel(
+                        ChannelType.RECRUITMENT,
+                        container.get(PlayerService.class)
+                    ),
+                    new GlobalChannel(
+                        ChannelType.ADMIN,
+                        player -> player.account().isMaster(),
+                        container.get(PlayerService.class)
+                    ),
+                    new NullChannel(ChannelType.MEETIC),
+                }
             )
         );
 

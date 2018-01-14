@@ -1,5 +1,7 @@
 package fr.quatrevieux.araknemu._test;
 
+import java.util.Collection;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestCase {
@@ -26,5 +28,13 @@ public class TestCase {
 
     public void assertCount(int count, Object[] objects) {
         assertEquals(count, objects.length, "Invalid count");
+    }
+
+    public void assertCount(int count, Collection objects) {
+        assertEquals(count, objects.size(), "Invalid count");
+    }
+
+    public void assertContains(Object expected, Collection collection) {
+        assertTrue(collection.contains(expected), "The collection do not contains " + expected);
     }
 }

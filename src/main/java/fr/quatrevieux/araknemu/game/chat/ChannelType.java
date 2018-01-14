@@ -18,8 +18,9 @@ public enum ChannelType {
     PVP('!'),
     RECRUITMENT('?'),
     TRADE(':'),
-    MEETIC('^'),
-    ADMIN('@');
+    INCARNAM('^'),
+    ADMIN('@'),
+    MEETIC('¤');
 
     final static private Map<Character, ChannelType> channels = new HashMap<>();
 

@@ -6,8 +6,15 @@ import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
+import fr.quatrevieux.araknemu.game.event.common.Disconnected;
 import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+
+import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * Service for handle {@link GamePlayer}
@@ -17,6 +24,8 @@ final public class PlayerService {
     final private PlayerRaceRepository raceRepository;
     final private GameConfiguration configuration;
     final private Dispatcher dispatcher;
+
+    final private ConcurrentMap<Integer, GamePlayer> onlinePlayers = new ConcurrentHashMap<>();
 
     public PlayerService(PlayerRepository repository, PlayerRaceRepository raceRepository, GameConfiguration configuration, Dispatcher dispatcher) {
         this.repository = repository;
@@ -35,6 +44,10 @@ final public class PlayerService {
      * @throws RepositoryException For any other repository errors
      */
     public GamePlayer load(GameSession session, int id) throws RepositoryException {
+        if (onlinePlayers.containsKey(id)) {
+            throw new IllegalStateException("The player is already loaded");
+        }
+
         Player player = repository.getForGame(
             Player.forGame(
                 id,
@@ -50,8 +63,33 @@ final public class PlayerService {
             session
         );
 
+        gamePlayer.dispatcher().add(
+            Disconnected.class,
+            e -> onlinePlayers.remove(gamePlayer.id())
+        );
+
         dispatcher.dispatch(new PlayerLoaded(gamePlayer));
+        onlinePlayers.put(id, gamePlayer);
 
         return gamePlayer;
+    }
+
+    /**
+     * Get all online players
+     */
+    public Collection<GamePlayer> online() {
+        return onlinePlayers.values();
+    }
+
+    /**
+     * Get filter stream over online players
+     *
+     * @param predicate The filter predicate
+     */
+    public Stream<GamePlayer> filter(Predicate<GamePlayer> predicate) {
+        return online()
+            .stream()
+            .filter(predicate)
+        ;
     }
 }

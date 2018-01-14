@@ -90,4 +90,13 @@ public class GameDataSet extends TestingDataSet {
     public Player createPlayer(int id) {
         return new Player(id, 10000 + id, 1, "PLAYER_" + id, Race.CRA, Sex.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(10540, 210));
     }
+
+    /**
+     * Create an push a new player
+     */
+    public Player pushPlayer(String name, int accountId, int serverId) throws ContainerException {
+        Player player = new Player(-1, accountId, serverId, name, Race.CRA, Sex.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(10540, 210));
+
+        return push(player);
+    }
 }

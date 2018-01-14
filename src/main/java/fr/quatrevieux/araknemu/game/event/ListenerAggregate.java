@@ -1,5 +1,7 @@
 package fr.quatrevieux.araknemu.game.event;
 
+import java.util.function.Consumer;
+
 /**
  * Handle listener and dispatch events
  */
@@ -32,4 +34,18 @@ public interface ListenerAggregate extends Dispatcher {
      * @param listenerClass The listener class
      */
     public <E extends Listener> E get(Class<E> listenerClass);
+
+    /**
+     * Register a listener using {@link SimpleListener}
+     *
+     * @param eventClass The event to listen
+     * @param consumer   The action to perform
+     *
+     * @param <E> The event type
+     */
+    public default <E> void add(Class<E> eventClass, Consumer<E> consumer) {
+        add(
+            new SimpleListener<>(eventClass, consumer)
+        );
+    }
 }

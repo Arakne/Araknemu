@@ -3,6 +3,9 @@ package fr.quatrevieux.araknemu.game.event;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class DefaultListenerAggregateTest {
@@ -118,5 +121,17 @@ class DefaultListenerAggregateTest {
         dispatcher.add(listenerA);
 
         assertSame(listenerA, dispatcher.get(ListenerA.class));
+    }
+
+    @Test
+    void addSimpleListener() {
+        AtomicReference<A> ref = new AtomicReference<>();
+
+        dispatcher.add(A.class, ref::set);
+        A a = new A();
+
+        dispatcher.dispatch(a);
+
+        assertSame(a, ref.get());
     }
 }

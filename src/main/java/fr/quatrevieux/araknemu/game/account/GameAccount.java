@@ -78,4 +78,13 @@ final public class GameAccount {
     public int serverId() {
         return serverId;
     }
+
+    /**
+     * Check if the account is an admin account
+     *
+     * @todo Admin
+     */
+    public boolean isMaster() {
+        return false;
+    }
 }

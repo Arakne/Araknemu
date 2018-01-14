@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.chat.channel;
 
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
+import fr.quatrevieux.araknemu.game.chat.ChatException;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 
@@ -19,5 +20,5 @@ public interface Channel {
      * @param from The sender
      * @param message The message
      */
-    public void send(GamePlayer from, Message message);
+    public void send(GamePlayer from, Message message) throws ChatException;
 }
