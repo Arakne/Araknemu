@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.event.listener.player.chat.InitializeChat;
 import fr.quatrevieux.araknemu.game.event.listener.player.chat.MessageReceived;
+import fr.quatrevieux.araknemu.game.event.listener.player.chat.PrivateMessageReceived;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,5 +32,6 @@ class RegisterChatListenersTest extends GameBaseCase {
 
         assertTrue(gamePlayer().dispatcher().has(InitializeChat.class));
         assertTrue(gamePlayer().dispatcher().has(MessageReceived.class));
+        assertTrue(gamePlayer().dispatcher().has(PrivateMessageReceived.class));
     }
 }

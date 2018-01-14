@@ -11,6 +11,7 @@ import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
@@ -26,6 +27,7 @@ final public class PlayerService {
     final private Dispatcher dispatcher;
 
     final private ConcurrentMap<Integer, GamePlayer> onlinePlayers = new ConcurrentHashMap<>();
+    final private ConcurrentMap<String, GamePlayer> playersByName  = new ConcurrentHashMap<>();
 
     public PlayerService(PlayerRepository repository, PlayerRaceRepository raceRepository, GameConfiguration configuration, Dispatcher dispatcher) {
         this.repository = repository;
@@ -63,13 +65,10 @@ final public class PlayerService {
             session
         );
 
-        gamePlayer.dispatcher().add(
-            Disconnected.class,
-            e -> onlinePlayers.remove(gamePlayer.id())
-        );
+        gamePlayer.dispatcher().add(Disconnected.class, e -> logout(gamePlayer));
 
         dispatcher.dispatch(new PlayerLoaded(gamePlayer));
-        onlinePlayers.put(id, gamePlayer);
+        login(gamePlayer);
 
         return gamePlayer;
     }
@@ -91,5 +90,41 @@ final public class PlayerService {
             .stream()
             .filter(predicate)
         ;
+    }
+
+    /**
+     * Check if the player is online
+     *
+     * @param name The player name
+     */
+    public boolean isOnline(String name) {
+        return playersByName.containsKey(name.toLowerCase());
+    }
+
+    /**
+     * Get a player by its name
+     *
+     * @param name The player name
+     *
+     * @throws NoSuchElementException When the player is not online (or do not exists)
+     */
+    public GamePlayer get(String name) {
+        name = name.toLowerCase();
+
+        if (!isOnline(name)) {
+            throw new NoSuchElementException("The player " + name + " cannot be found");
+        }
+
+        return playersByName.get(name);
+    }
+
+    private void login(GamePlayer player) {
+        onlinePlayers.put(player.id(), player);
+        playersByName.put(player.name().toLowerCase(), player);
+    }
+
+    private void logout(GamePlayer player) {
+        onlinePlayers.remove(player.id());
+        playersByName.remove(player.name().toLowerCase());
     }
 }

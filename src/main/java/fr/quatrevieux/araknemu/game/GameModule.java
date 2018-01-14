@@ -13,10 +13,7 @@ import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
-import fr.quatrevieux.araknemu.game.chat.channel.Channel;
-import fr.quatrevieux.araknemu.game.chat.channel.GlobalChannel;
-import fr.quatrevieux.araknemu.game.chat.channel.MapChannel;
-import fr.quatrevieux.araknemu.game.chat.channel.NullChannel;
+import fr.quatrevieux.araknemu.game.chat.channel.*;
 import fr.quatrevieux.araknemu.game.connector.ConnectorService;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
@@ -214,6 +211,9 @@ final public class GameModule implements ContainerModule {
                         container.get(PlayerService.class)
                     ),
                     new NullChannel(ChannelType.MEETIC),
+                    new PrivateChannel(
+                        container.get(PlayerService.class)
+                    )
                 }
             )
         );

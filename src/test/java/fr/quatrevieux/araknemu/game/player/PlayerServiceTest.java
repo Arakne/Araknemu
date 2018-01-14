@@ -24,6 +24,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -144,5 +145,34 @@ class PlayerServiceTest extends GameBaseCase {
         assertEquals(3, service.filter(player -> player.name().contains("o")).count());
         assertEquals(1, service.filter(player -> player.name().equalsIgnoreCase("bob")).count());
         assertEquals(0, service.filter(player -> player.name().equalsIgnoreCase("no exists")).count());
+    }
+
+    @Test
+    void isOnline() throws ContainerException {
+        assertFalse(service.isOnline("no_found"));
+
+        GameSession session1 = new GameSession(new DummyChannel());
+        session1.attach(new GameAccount(new Account(1), container.get(AccountService.class), 2));
+        GamePlayer player = service.load(session1, dataSet.pushPlayer("Bob", 1, 2).id());
+
+        assertTrue(service.isOnline("bob"));
+
+        player.dispatch(new Disconnected());
+
+        assertFalse(service.isOnline("bob"));
+    }
+
+    @Test
+    void getNotFound() {
+        assertThrows(NoSuchElementException.class, () -> service.get("not_found"));
+    }
+
+    @Test
+    void getSuccess() throws ContainerException {
+        GameSession session1 = new GameSession(new DummyChannel());
+        session1.attach(new GameAccount(new Account(1), container.get(AccountService.class), 2));
+        GamePlayer player = service.load(session1, dataSet.pushPlayer("Bob", 1, 2).id());
+
+        assertSame(player, service.get("bob"));
     }
 }
