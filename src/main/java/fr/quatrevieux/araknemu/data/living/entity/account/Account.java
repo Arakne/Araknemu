@@ -1,5 +1,10 @@
 package fr.quatrevieux.araknemu.data.living.entity.account;
 
+import fr.quatrevieux.araknemu.common.account.Permission;
+
+import java.util.EnumSet;
+import java.util.Set;
+
 /**
  * AuthenticationAccount data
  */
@@ -9,16 +14,22 @@ final public class Account {
     private String name;
     private String password;
     private String pseudo;
+    private Set<Permission> permissions;
 
-    public Account(int id, String name, String password, String pseudo) {
+    public Account(int id, String name, String password, String pseudo, Set<Permission> permissions) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.pseudo = pseudo;
+        this.permissions = permissions;
+    }
+
+    public Account(int id, String name, String password, String pseudo) {
+        this(id, name, password, pseudo, EnumSet.noneOf(Permission.class));
     }
 
     public Account(int id) {
-        this(id, null, null, null);
+        this(id, null, null, null, null);
     }
 
     public int id() {
@@ -37,12 +48,17 @@ final public class Account {
         return pseudo;
     }
 
+    public Set<Permission> permissions() {
+        return permissions;
+    }
+
     public Account withId(int id) {
         return new Account(
             id,
             this.name,
             this.password,
-            this.pseudo
+            this.pseudo,
+            this.permissions
         );
     }
 

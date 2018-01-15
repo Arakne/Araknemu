@@ -3,7 +3,7 @@ package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
-import fr.quatrevieux.araknemu.data.transformer.ImmutableCharacteristicsTransformer;
+import fr.quatrevieux.araknemu.data.living.transformer.PermissionsTransformer;
 import fr.quatrevieux.araknemu.data.transformer.MutableCharacteristicsTransformer;
 
 /**
@@ -20,7 +20,10 @@ final public class LivingRepositoriesModule implements ContainerModule {
     public void configure(ContainerConfigurator configurator) {
         configurator.persist(
             fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository.class,
-            container -> new AccountRepository(connection)
+            container -> new AccountRepository(
+                connection,
+                container.get(PermissionsTransformer.class)
+            )
         );
 
         configurator.persist(
@@ -34,6 +37,11 @@ final public class LivingRepositoriesModule implements ContainerModule {
         configurator.persist(
             MutableCharacteristicsTransformer.class,
             container -> new MutableCharacteristicsTransformer()
+        );
+
+        configurator.persist(
+            PermissionsTransformer.class,
+            container -> new PermissionsTransformer()
         );
     }
 }

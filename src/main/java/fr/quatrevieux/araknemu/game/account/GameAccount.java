@@ -1,21 +1,21 @@
 package fr.quatrevieux.araknemu.game.account;
 
+import fr.quatrevieux.araknemu.common.account.AbstractLivingAccount;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.realm.out.ServerList;
 
 /**
  * Account for game
  */
-final public class GameAccount {
-    final private Account account;
+final public class GameAccount extends AbstractLivingAccount<GameSession> {
     final private AccountService service;
     final private int serverId;
 
-    private GameSession session;
-
     public GameAccount(Account account, AccountService service, int serverId) {
-        this.account  = account;
+        super(account);
+
         this.service  = service;
         this.serverId = serverId;
     }
@@ -25,8 +25,10 @@ final public class GameAccount {
      *
      * @param session Session to attach
      */
+    @Override
     public void attach(GameSession session) {
-        this.session = session;
+        super.attach(session);
+
         service.login(this);
         session.attach(this);
     }
@@ -34,33 +36,12 @@ final public class GameAccount {
     /**
      * Detach the account from the session
      */
+    @Override
     public void detach() {
         session.detach();
-        session = null;
         service.logout(this);
-    }
 
-    /**
-     * Check if the account is logged
-     */
-    public boolean isLogged() {
-        return session != null && session.isAlive();
-    }
-
-    /**
-     * Get the account race
-     */
-    public int id() {
-        return account.id();
-    }
-
-    /**
-     * Get the community ID
-     *
-     * @todo constant, enum ?
-     */
-    public int community() {
-        return 0;
+        super.detach();
     }
 
     /**
@@ -73,18 +54,16 @@ final public class GameAccount {
     }
 
     /**
-     * Get the current game server race
+     * Get the current game server id
      */
     public int serverId() {
         return serverId;
     }
 
     /**
-     * Check if the account is an admin account
-     *
-     * @todo Admin
+     * Check if the account has the asked permission
      */
-    public boolean isMaster() {
-        return false;
+    public boolean isGranted(Permission permission) {
+        return account.permissions().contains(permission);
     }
 }

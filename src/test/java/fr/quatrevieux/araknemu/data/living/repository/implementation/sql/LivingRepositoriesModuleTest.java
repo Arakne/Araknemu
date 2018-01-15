@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
+import fr.quatrevieux.araknemu.data.living.transformer.PermissionsTransformer;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +22,8 @@ class LivingRepositoriesModuleTest extends RealmBaseCase {
 
         assertInstanceOf(AccountRepository.class, container.get(fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository.class));
         assertInstanceOf(PlayerRepository.class, container.get(fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository.class));
+
+        assertInstanceOf(PermissionsTransformer.class, container.get(PermissionsTransformer.class));
     }
 
     public void assertInstanceOf(Class type, Object obj) {

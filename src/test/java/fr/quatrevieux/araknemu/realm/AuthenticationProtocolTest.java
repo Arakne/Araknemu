@@ -4,8 +4,6 @@ import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.network.realm.out.*;
-import org.apache.mina.core.session.DummySession;
-import org.apache.mina.core.session.IoSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -71,7 +69,7 @@ public class AuthenticationProtocolTest extends RealmBaseCase {
         sessionHandler.received(s1,"test\n#1"+ConnectionKeyTest.cryptPassword("password", s1.key().key()));
 
         assertTrue(s1.isLogged());
-        assertTrue(s1.account().isAlive());
+        assertTrue(s1.account().isLogged());
 
         // Authenticate with second session on same account
         sendPacket("1.29.1");
@@ -81,7 +79,7 @@ public class AuthenticationProtocolTest extends RealmBaseCase {
         requestStack.assertLast(new LoginError(LoginError.ALREADY_LOGGED));
 
         assertTrue(s1.isLogged());
-        assertTrue(s1.account().isAlive());
+        assertTrue(s1.account().isLogged());
     }
 
     @Test
@@ -92,7 +90,7 @@ public class AuthenticationProtocolTest extends RealmBaseCase {
         sessionHandler.received(s1,"test\n#1"+ConnectionKeyTest.cryptPassword("password", s1.key().key()));
         s1.close();
 
-        assertFalse(s1.account().isAlive());
+        assertFalse(s1.account().isLogged());
 
         // Authenticate with second session on same account
         sendPacket("1.29.1");

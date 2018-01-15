@@ -4,19 +4,27 @@ import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.*;
 import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.data.living.transformer.PermissionsTransformer;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 final class AccountRepository implements fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository {
     private static class Loader implements RepositoryUtils.Loader<Account> {
+        final private PermissionsTransformer permissionsTransformer;
+
+        public Loader(PermissionsTransformer permissionsTransformer) {
+            this.permissionsTransformer = permissionsTransformer;
+        }
+
         @Override
         public Account create(ResultSet rs) throws SQLException {
             return new Account(
                 rs.getInt("ACCOUNT_ID"),
                 rs.getString("USERNAME"),
                 rs.getString("PASSWORD"),
-                rs.getString("PSEUDO")
+                rs.getString("PSEUDO"),
+                permissionsTransformer.unserialize(rs.getInt("PERMISSIONS"))
             );
         }
 
@@ -30,10 +38,12 @@ final class AccountRepository implements fr.quatrevieux.araknemu.data.living.rep
 
     final private ConnectionPoolUtils pool;
     final private RepositoryUtils<Account> utils;
+    final private PermissionsTransformer permissionsTransformer;
 
-    public AccountRepository(ConnectionPool pool) {
+    public AccountRepository(ConnectionPool pool, PermissionsTransformer permissionsTransformer) {
         this.pool = new ConnectionPoolUtils(pool);
-        this.utils = new RepositoryUtils<>(this.pool, new Loader());
+        this.utils = new RepositoryUtils<>(this.pool, new Loader(permissionsTransformer));
+        this.permissionsTransformer = permissionsTransformer;
     }
 
     @Override
@@ -44,7 +54,8 @@ final class AccountRepository implements fr.quatrevieux.araknemu.data.living.rep
                     "ACCOUNT_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "USERNAME VARCHAR(32) UNIQUE," +
                     "PASSWORD VARCHAR(256)," +
-                    "PSEUDO VARCHAR(32) UNIQUE" +
+                    "PSEUDO VARCHAR(32) UNIQUE," +
+                    "PERMISSIONS INTEGER" +
                 ")"
             );
         } catch (SQLException e) {
@@ -64,11 +75,12 @@ final class AccountRepository implements fr.quatrevieux.araknemu.data.living.rep
     @Override
     public Account add(Account entity) {
         return utils.update(
-            "INSERT INTO ACCOUNT (`USERNAME`, `PASSWORD`, `PSEUDO`) VALUES (?, ?, ?)",
+            "INSERT INTO ACCOUNT (`USERNAME`, `PASSWORD`, `PSEUDO`, `PERMISSIONS`) VALUES (?, ?, ?, ?)",
             rs -> {
                 rs.setString(1, entity.name());
                 rs.setString(2, entity.password());
                 rs.setString(3, entity.pseudo());
+                rs.setInt(4,    permissionsTransformer.serialize(entity.permissions()));
             },
             entity
         );

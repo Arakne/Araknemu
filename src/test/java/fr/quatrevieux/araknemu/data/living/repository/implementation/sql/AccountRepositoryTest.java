@@ -3,12 +3,14 @@ package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 import fr.quatrevieux.araknemu.DatabaseTestCase;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.data.living.transformer.PermissionsTransformer;
+import fr.quatrevieux.araknemu.common.account.Permission;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.EnumSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,7 +22,7 @@ class AccountRepositoryTest extends DatabaseTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        repository = new AccountRepository(connection);
+        repository = new AccountRepository(connection, new PermissionsTransformer());
         repository.initialize();
     }
 
@@ -81,5 +83,16 @@ class AccountRepositoryTest extends DatabaseTestCase {
         repository.add(new Account(0, "other", "pass", "aaa"));
 
         assertEquals(inserted, repository.findByUsername("test"));
+    }
+
+    @Test
+    void permissions() {
+        Account account = repository.add(new Account(0, "other", "pass", "aaa", EnumSet.of(Permission.ACCESS)));
+        account = repository.get(account);
+
+        assertEquals(
+            EnumSet.of(Permission.ACCESS),
+            account.permissions()
+        );
     }
 }

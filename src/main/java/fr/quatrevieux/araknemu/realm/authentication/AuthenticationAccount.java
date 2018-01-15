@@ -1,19 +1,18 @@
 package fr.quatrevieux.araknemu.realm.authentication;
 
+import fr.quatrevieux.araknemu.common.account.AbstractLivingAccount;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 
 /**
  * AuthenticationAccount entity for realm
  */
-final public class AuthenticationAccount {
-    final private Account account;
+final public class AuthenticationAccount extends AbstractLivingAccount<RealmSession> {
     final private AuthenticationService service;
 
-    private RealmSession session;
-
     public AuthenticationAccount(Account account, AuthenticationService service) {
-        this.account = account;
+        super(account);
+
         this.service = service;
     }
 
@@ -29,66 +28,23 @@ final public class AuthenticationAccount {
     /**
      * Attach account to a session
      */
+    @Override
     public void attach(RealmSession session) {
         session.attach(this);
         service.login(this);
 
-        this.session = session;
+        super.attach(session);
     }
 
     /**
      * Detach account from session
      */
+    @Override
     public void detach() {
         session.detach();
         service.logout(this);
-        session = null;
-    }
 
-    /**
-     * Check if the account session is active
-     *
-     * The session MAY not be notified for socket closed
-     * This method will check if the current session is active or not
-     */
-    public boolean isAlive() {
-        if (session == null) {
-            return false;
-        }
-
-        return session.isAlive();
-    }
-
-    /**
-     * Get the account race
-     */
-    public int id() {
-        return account.id();
-    }
-
-    /**
-     * Get the account pseudo
-     */
-    public String pseudo() {
-        return account.pseudo();
-    }
-
-    /**
-     * Get the community ID
-     *
-     * @todo constant, enum ?
-     */
-    public int community() {
-        return 0;
-    }
-
-    /**
-     * Is the account is a game master
-     *
-     * @todo to implements
-     */
-    public boolean isGameMaster() {
-        return false;
+        super.detach();
     }
 
     /**

@@ -34,7 +34,7 @@ class AuthenticationAccountTest extends RealmBaseCase {
         assertEquals("pseudo", account.pseudo());
         assertEquals("", account.answer());
         assertEquals(0, account.community());
-        assertFalse(account.isGameMaster());
+        assertFalse(account.isMaster());
     }
 
     @Test
@@ -55,13 +55,13 @@ class AuthenticationAccountTest extends RealmBaseCase {
             service
         );
 
-        assertFalse(account.isAlive());
+        assertFalse(account.isLogged());
 
         account.attach(session);
-        assertTrue(account.isAlive());
+        assertTrue(account.isLogged());
 
         session.close();
-        assertFalse(account.isAlive());
+        assertFalse(account.isLogged());
     }
 
     @Test

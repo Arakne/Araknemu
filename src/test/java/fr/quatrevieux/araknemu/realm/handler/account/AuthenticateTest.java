@@ -1,24 +1,20 @@
 package fr.quatrevieux.araknemu.realm.handler.account;
 
+import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
-import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.network.realm.in.Credentials;
 import fr.quatrevieux.araknemu.network.realm.out.*;
 import fr.quatrevieux.araknemu.realm.ConnectionKeyTest;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
-import fr.quatrevieux.araknemu.realm.host.GameHost;
 import fr.quatrevieux.araknemu.realm.host.HostService;
-import org.apache.mina.core.session.DummySession;
-import org.apache.mina.core.session.IoSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.EnumSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -47,12 +43,34 @@ class AuthenticateTest extends RealmBaseCase {
         ));
 
         assertTrue(session.isLogged());
-        assertTrue(session.account().isAlive());
+        assertTrue(session.account().isLogged());
 
         requestStack.assertAll(
             new Pseudo("pseudo"),
             new Community(0),
             new GMLevel(false),
+            new Answer(""),
+            "AH1;1;110;1"
+        );
+    }
+
+    @Test
+    void handleSuccessWithGameMaster() throws ContainerException {
+        dataSet.push(new Account(-1, "other", "password", "pseudo2", EnumSet.allOf(Permission.class)));
+
+        handler.handle(session, new Credentials(
+            "other",
+            ConnectionKeyTest.cryptPassword("password", session.key().key()),
+            Credentials.Method.VIGENERE_BASE_64
+        ));
+
+        assertTrue(session.isLogged());
+        assertTrue(session.account().isLogged());
+
+        requestStack.assertAll(
+            new Pseudo("pseudo2"),
+            new Community(0),
+            new GMLevel(true),
             new Answer(""),
             "AH1;1;110;1"
         );

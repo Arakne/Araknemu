@@ -86,7 +86,7 @@ final public class AuthenticationService {
             return false;
         }
 
-        return authenticated.get(account.id()).isAlive();
+        return authenticated.get(account.id()).isLogged();
     }
 
     /**
