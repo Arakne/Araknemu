@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game;
 
 import fr.quatrevieux.araknemu.Araknemu;
 import fr.quatrevieux.araknemu.DatabaseTestCase;
+import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.core.config.Configuration;
 import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
@@ -50,6 +51,7 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.Stack;
 
 public class GameBaseCase extends DatabaseTestCase {
@@ -177,7 +179,7 @@ public class GameBaseCase extends DatabaseTestCase {
 
     public void login() throws ContainerException {
         GameAccount account = new GameAccount(
-            new Account(1),
+            new Account(1, "toto", "", "bob", EnumSet.noneOf(Permission.class)),
             container.get(AccountService.class),
             1
         );

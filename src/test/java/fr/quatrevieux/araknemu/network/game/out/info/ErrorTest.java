@@ -9,4 +9,9 @@ class ErrorTest {
     void welcome() {
         assertEquals("Im189;", Error.welcome().toString());
     }
+
+    @Test
+    void cantDoOnServer() {
+        assertEquals("Im1226;", Error.cantDoOnServer().toString());
+    }
 }

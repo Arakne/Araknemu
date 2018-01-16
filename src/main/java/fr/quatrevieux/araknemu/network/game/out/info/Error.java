@@ -18,4 +18,11 @@ final public class Error extends InformationMessage {
     static public Error welcome() {
         return new Error(89);
     }
+
+    /**
+     * Cannot do the action on this server
+     */
+    static public Error cantDoOnServer() {
+        return new Error(226);
+    }
 }

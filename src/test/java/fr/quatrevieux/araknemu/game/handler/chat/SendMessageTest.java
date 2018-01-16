@@ -1,13 +1,16 @@
 package fr.quatrevieux.araknemu.game.handler.chat;
 
-import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
+import fr.quatrevieux.araknemu.game.chat.ChatException;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
+import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import fr.quatrevieux.araknemu.network.game.out.chat.MessageSent;
+import fr.quatrevieux.araknemu.network.game.out.chat.SendMessageError;
+import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.helpers.NOPLogger;
@@ -54,5 +57,50 @@ class SendMessageTest extends GameBaseCase {
                 ""
             )
         );
+    }
+
+    @Test
+    void handleUnauthorizedChannel() throws Exception {
+        explorationPlayer();
+
+        try {
+            handler.handle(
+                session,
+                new Message(
+                    ChannelType.ADMIN,
+                    null,
+                    "Hello World !",
+                    ""
+                )
+            );
+
+            fail("Error packet should be thrown");
+        } catch (ErrorPacket packet) {
+            assertEquals(Error.cantDoOnServer().toString(), packet.packet().toString());
+        }
+    }
+
+    @Test
+    void handleInvalidPrivateTarget() throws Exception {
+        explorationPlayer();
+
+        try {
+            handler.handle(
+                session,
+                new Message(
+                    ChannelType.PRIVATE,
+                    "not found",
+                    "Hello World !",
+                    ""
+                )
+            );
+
+            fail("Error packet should be thrown");
+        } catch (ErrorPacket packet) {
+            assertEquals(
+                new SendMessageError(ChatException.Error.USER_NOT_CONNECTED, "not found").toString(),
+                packet.packet().toString()
+            );
+        }
     }
 }
