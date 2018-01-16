@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
 import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import fr.quatrevieux.araknemu.network.game.out.game.GameCreated;
+import fr.quatrevieux.araknemu.network.game.out.info.Error;
 
 /**
  * Initialize game for the player
@@ -29,6 +30,8 @@ final public class InitializeGame implements Listener<StartExploration> {
         player.join(
             mapService.load(player.position().map()) // @todo handle entity not found
         );
+
+        player.send(Error.welcome());
     }
 
     @Override
