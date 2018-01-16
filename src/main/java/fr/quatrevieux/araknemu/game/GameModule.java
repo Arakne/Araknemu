@@ -197,13 +197,19 @@ final public class GameModule implements ContainerModule {
                         ChannelType.INCARNAM,
                         container.get(PlayerService.class)
                     ),
-                    new GlobalChannel(
-                        ChannelType.TRADE,
-                        container.get(PlayerService.class)
+                    new FloodGuardChannel(
+                        new GlobalChannel(
+                            ChannelType.TRADE,
+                            container.get(PlayerService.class)
+                        ),
+                        container.get(GameConfiguration.class).chat()
                     ),
-                    new GlobalChannel(
-                        ChannelType.RECRUITMENT,
-                        container.get(PlayerService.class)
+                    new FloodGuardChannel(
+                        new GlobalChannel(
+                            ChannelType.RECRUITMENT,
+                            container.get(PlayerService.class)
+                        ),
+                        container.get(GameConfiguration.class).chat()
                     ),
                     new GlobalChannel(
                         ChannelType.ADMIN,

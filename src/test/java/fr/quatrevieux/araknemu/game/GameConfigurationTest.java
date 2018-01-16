@@ -22,4 +22,9 @@ class GameConfigurationTest extends GameBaseCase {
         assertEquals(456, configuration.port());
         assertEquals("10.0.0.5", configuration.ip());
     }
+
+    @Test
+    void chat() {
+        assertEquals(30, configuration.chat().floodTime());
+    }
 }

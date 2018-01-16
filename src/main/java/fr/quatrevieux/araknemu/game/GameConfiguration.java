@@ -38,6 +38,17 @@ final public class GameConfiguration implements ConfigurationModule {
         }
     }
 
+    final public class ChatConfiguration {
+        /**
+         * Get the waiting time in seconds for global channel flood
+         *
+         * Set to -1 for deactivate
+         */
+        public int floodTime() {
+            return pool.integer("chat.flood.time", 30);
+        }
+    }
+
     private PoolUtils pool;
 
     @Override
@@ -76,5 +87,12 @@ final public class GameConfiguration implements ConfigurationModule {
      */
     public PlayerConfiguration player() {
         return new PlayerConfiguration();
+    }
+
+    /**
+     * Get the chat configuration
+     */
+    public ChatConfiguration chat() {
+        return new ChatConfiguration();
     }
 }
