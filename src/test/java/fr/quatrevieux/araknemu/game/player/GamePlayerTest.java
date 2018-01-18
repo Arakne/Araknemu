@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.game.player;
 
+import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
@@ -21,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GamePlayerTest extends GameBaseCase {
     private GamePlayer player;
+    private Player entity;
 
     @Override
     @BeforeEach
@@ -37,15 +39,18 @@ class GamePlayerTest extends GameBaseCase {
         characteristics.set(Characteristic.INTELLIGENCE, 150);
         characteristics.set(Characteristic.VITALITY, 50);
 
+        entity = dataSet.push(new Player(5, 2, 1, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1), 50, characteristics, new Position(10300, 308)));
+
         player = new GamePlayer(
             new GameAccount(
                 new Account(2),
                 container.get(AccountService.class),
                 1
             ),
-            new Player(5, 2, 1, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1), 50, characteristics, new Position(10300, 308)),
+            entity,
             dataSet.refresh(new PlayerRace(Race.CRA)),
-            session
+            session,
+            container.get(PlayerService.class)
         );
     }
 
@@ -91,5 +96,19 @@ class GamePlayerTest extends GameBaseCase {
         );
 
         assertSame(session.exploration(), player.exploration());
+    }
+
+    @Test
+    void save() throws ContainerException {
+        player.setPosition(
+            new Position(7894, 12)
+        );
+
+        player.characteristics().set(Characteristic.AGILITY, 123);
+
+        player.save();
+
+        assertEquals(new Position(7894, 12), dataSet.refresh(entity).position());
+        assertEquals(123, player.characteristics().get(Characteristic.AGILITY));
     }
 }

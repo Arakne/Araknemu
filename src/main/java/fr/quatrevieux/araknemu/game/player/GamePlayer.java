@@ -15,17 +15,19 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
  * A player is a logged character, with associated game session
  */
 final public class GamePlayer extends AbstractCharacter implements Dispatcher, PlayerData {
+    final private PlayerService service;
     final private GameSession session;
     final private PlayerRace race;
     final private PlayerCharacteristics characteristics;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
-    public GamePlayer(GameAccount account, Player entity, PlayerRace race, GameSession session) {
+    public GamePlayer(GameAccount account, Player entity, PlayerRace race, GameSession session, PlayerService service) {
         super(account, entity);
 
         this.race = race;
         this.session = session;
+        this.service = service;
 
         characteristics = new PlayerCharacteristics(
             new BaseCharacteristics(
@@ -99,5 +101,12 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
         }
 
         return session.exploration();
+    }
+
+    /**
+     * Save the player
+     */
+    public void save() {
+        service.save(this);
     }
 }

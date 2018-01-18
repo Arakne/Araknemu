@@ -13,6 +13,7 @@ import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import org.apache.mina.core.session.DummySession;
@@ -47,7 +48,8 @@ class GameSessionTest extends GameBaseCase {
             ),
             new Player(1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null),
             new PlayerRace(Race.FECA, "Feca", new DefaultCharacteristics(), new Position(10300, 308)),
-            session
+            session,
+            container.get(PlayerService.class)
         );
 
         session.setPlayer(player);
@@ -68,7 +70,8 @@ class GameSessionTest extends GameBaseCase {
                 ),
                 new Player(1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null),
                 new PlayerRace(Race.FECA, "Feca", new DefaultCharacteristics(), new Position(10300, 308)),
-                session
+                session,
+                container.get(PlayerService.class)
             )
         );
 

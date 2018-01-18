@@ -14,6 +14,7 @@ import fr.quatrevieux.araknemu.game.event.exploration.NewSpriteOnMap;
 import fr.quatrevieux.araknemu.game.event.listener.map.SendNewSprite;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.player.PlayerSprite;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
@@ -63,7 +64,8 @@ class SendNewSpriteTest extends GameBaseCase {
                 ),
                 new Player(5, 2, 1, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1)),
                 dataSet.refresh(new PlayerRace(Race.CRA)),
-                new GameSession(new DummyChannel())
+                new GameSession(new DummyChannel()),
+                container.get(PlayerService.class)
             )
         );
 

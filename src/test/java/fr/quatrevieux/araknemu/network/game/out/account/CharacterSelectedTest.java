@@ -12,6 +12,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +29,8 @@ class CharacterSelectedTest extends GameBaseCase {
             ),
             new Player(123, 5, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null),
             new PlayerRace(Race.FECA, "Feca", new DefaultCharacteristics(), new Position(10300, 308)),
-            session
+            session,
+            container.get(PlayerService.class)
         );
 
         assertEquals("ASK|123|Bob|23||0|10|7b|1c8|315|", new CharacterSelected(player).toString());

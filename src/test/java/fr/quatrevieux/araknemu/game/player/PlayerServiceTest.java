@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.value.Colors;
+import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
@@ -18,6 +19,7 @@ import fr.quatrevieux.araknemu.game.event.Listener;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.common.Disconnected;
 import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
+import fr.quatrevieux.araknemu.game.event.listener.player.SavePlayer;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,6 +64,8 @@ class PlayerServiceTest extends GameBaseCase {
         GamePlayer player = service.load(session, id);
 
         assertEquals(id, player.id());
+
+        assertTrue(player.dispatcher().has(SavePlayer.class));
     }
 
     @Test
@@ -174,5 +178,17 @@ class PlayerServiceTest extends GameBaseCase {
         GamePlayer player = service.load(session1, dataSet.pushPlayer("Bob", 1, 2).id());
 
         assertSame(player, service.get("bob"));
+    }
+
+    @Test
+    void save() throws ContainerException {
+        Player entity = dataSet.pushPlayer("Bob", 1, 2);
+        GamePlayer player = service.load(session, entity.id());
+
+        player.setPosition(new Position(963, 258));
+
+        service.save(player);
+
+        assertEquals(new Position(963, 258), dataSet.refresh(entity).position());
     }
 }

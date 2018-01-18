@@ -32,6 +32,7 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import fr.quatrevieux.araknemu.network.adapter.Channel;
@@ -181,13 +182,17 @@ public class GameBaseCase extends DatabaseTestCase {
         GameAccount account = new GameAccount(
             new Account(1, "toto", "", "bob", EnumSet.noneOf(Permission.class)),
             container.get(AccountService.class),
-            1
+            configuration.id()
         );
 
         account.attach(session);
     }
 
     public GamePlayer gamePlayer() throws ContainerException, SQLException {
+        return gamePlayer(false);
+    }
+
+    public GamePlayer gamePlayer(boolean load) throws ContainerException, SQLException {
         if (!session.isLogged()) {
             login();
         }
@@ -203,16 +208,26 @@ public class GameBaseCase extends DatabaseTestCase {
         characteristics.set(Characteristic.STRENGTH, 50);
         characteristics.set(Characteristic.INTELLIGENCE, 150);
 
-        Player player = dataSet.push(new Player(-1, 5, 1, "Bob", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 50, characteristics, new Position(10540, 200)));
+        Player player = dataSet.push(new Player(-1, session.account().id(), session.account().serverId(), "Bob", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 50, characteristics, new Position(10540, 200)));
 
-        session.setPlayer(
-            new GamePlayer(
-                session.account(),
-                player,
-                dataSet.repository(PlayerRace.class).get(new PlayerRace(Race.FECA)),
-                session
-            )
-        );
+        if (!load) {
+            session.setPlayer(
+                new GamePlayer(
+                    session.account(),
+                    player,
+                    dataSet.repository(PlayerRace.class).get(new PlayerRace(Race.FECA)),
+                    session,
+                    container.get(PlayerService.class)
+                )
+            );
+        } else {
+            session.setPlayer(
+                container.get(PlayerService.class).load(
+                    session,
+                    player.id()
+                )
+            );
+        }
 
         return session.player();
     }

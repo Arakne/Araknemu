@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
+import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
@@ -226,5 +227,25 @@ final class PlayerRepository implements fr.quatrevieux.araknemu.data.living.repo
                 stmt.setInt(3, player.serverId());
             }
         );
+    }
+
+    @Override
+    public void save(Player player) {
+        int rows = utils.update(
+            "UPDATE PLAYER SET " +
+                "PLAYER_LEVEL = ?, PLAYER_STATS = ?, MAP_ID = ?, CELL_ID = ? " +
+                "WHERE PLAYER_ID = ?",
+            stmt -> {
+                stmt.setInt(1,    player.level());
+                stmt.setString(2, characteristicsTransformer.serialize(player.stats()));
+                stmt.setInt(3,    player.position().map());
+                stmt.setInt(4,    player.position().cell());
+                stmt.setInt(5,    player.id());
+            }
+        );
+
+        if (rows != 1) {
+            throw new EntityNotFoundException();
+        }
     }
 }

@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.data.living.repository.player;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.MutableRepository;
+import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.value.ServerCharacters;
 
@@ -47,4 +48,11 @@ public interface PlayerRepository extends MutableRepository<Player> {
      * Get the player entity by race, and ensure that account and server is valid
      */
     Player getForGame(Player player);
+
+    /**
+     * Save the player entity
+     *
+     * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException When the entity cannot be updated
+     */
+    void save(Player player) throws RepositoryException;
 }

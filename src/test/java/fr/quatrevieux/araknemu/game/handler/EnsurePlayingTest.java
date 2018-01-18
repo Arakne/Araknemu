@@ -14,6 +14,7 @@ import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.handler.account.ListCharacters;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.game.in.account.AskCharacterList;
@@ -50,7 +51,8 @@ class EnsurePlayingTest extends GameBaseCase {
                 session.account(),
                 new Player(1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(-1,-1,-1), 5, null),
                 new PlayerRace(Race.FECA, "Feca", new DefaultCharacteristics(), new Position(10300, 308)),
-                session
+                session,
+                container.get(PlayerService.class)
             )
         );
 

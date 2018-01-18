@@ -13,6 +13,7 @@ import fr.quatrevieux.araknemu.game.event.Listener;
 import fr.quatrevieux.araknemu.game.event.common.BroadcastedMessage;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
@@ -52,7 +53,8 @@ class MapChannelTest extends GameBaseCase {
                 ),
                 dataSet.createPlayer(2),
                 new PlayerRace(Race.FECA),
-                new GameSession(new DummyChannel())
+                new GameSession(new DummyChannel()),
+                container.get(PlayerService.class)
             )
         );
 
@@ -65,7 +67,8 @@ class MapChannelTest extends GameBaseCase {
                 ),
                 dataSet.createPlayer(3),
                 new PlayerRace(Race.FECA),
-                new GameSession(new DummyChannel())
+                new GameSession(new DummyChannel()),
+                container.get(PlayerService.class)
             )
         );
 

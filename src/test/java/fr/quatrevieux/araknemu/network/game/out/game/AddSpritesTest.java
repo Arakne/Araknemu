@@ -13,6 +13,7 @@ import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
@@ -37,7 +38,8 @@ class AddSpritesTest extends GameBaseCase {
                 ),
                 new Player(5, 2, 1, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(10540, 210)),
                 dataSet.refresh(new PlayerRace(Race.CRA)),
-                new GameSession(new DummyChannel())
+                new GameSession(new DummyChannel()),
+                container.get(PlayerService.class)
             )
         );
 

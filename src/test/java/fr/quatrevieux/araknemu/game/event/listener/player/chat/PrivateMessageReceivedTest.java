@@ -9,6 +9,7 @@ import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.event.common.ConcealedMessage;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.out.chat.PrivateMessage;
@@ -42,7 +43,8 @@ class PrivateMessageReceivedTest extends GameBaseCase {
             ),
             dataSet.createPlayer(2),
             container.get(PlayerRaceRepository.class).get(Race.FECA),
-            new GameSession(new DummyChannel())
+            new GameSession(new DummyChannel()),
+            container.get(PlayerService.class)
         );
     }
 

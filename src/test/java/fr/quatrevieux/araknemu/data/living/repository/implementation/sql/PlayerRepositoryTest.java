@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.transformer.MutableCharacteristicsTransformer;
 import fr.quatrevieux.araknemu.data.value.Colors;
+import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.value.ServerCharacters;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
@@ -176,5 +177,25 @@ class PlayerRepositoryTest extends DatabaseTestCase {
 
         assertEquals(3, arr[1].serverId());
         assertEquals(1, arr[1].charactersCount());
+    }
+
+    @Test
+    void saveNotFound() {
+        assertThrows(EntityNotFoundException.class, () -> repository.save(Player.forCreation(5, 2, "bob", Race.CRA, Sex.FEMALE, new Colors(-1, -1, -1))));
+    }
+
+    @Test
+    void saveSuccess() {
+        Player player = repository.add(Player.forCreation(1, 1, "bob", Race.CRA, Sex.FEMALE, new Colors(-1, -1, -1)));
+
+        player.setPosition(new Position(1234, 56));
+        player.stats().set(Characteristic.ACTION_POINT, 12);
+
+        repository.save(player);
+
+        Player savedPlayer = repository.get(player);
+
+        assertEquals(new Position(1234, 56), savedPlayer.position());
+        assertEquals(12, savedPlayer.stats().get(Characteristic.ACTION_POINT));
     }
 }

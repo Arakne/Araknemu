@@ -15,6 +15,7 @@ import fr.quatrevieux.araknemu.game.event.Listener;
 import fr.quatrevieux.araknemu.game.event.exploration.NewSpriteOnMap;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.out.game.RemoveSprite;
@@ -98,7 +99,8 @@ class ExplorationMapTest extends GameBaseCase {
                 ),
                 new Player(5, 2, 1, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1)),
                 dataSet.refresh(new PlayerRace(Race.CRA)),
-                new GameSession(new DummyChannel())
+                new GameSession(new DummyChannel()),
+                container.get(PlayerService.class)
             )
         );
 
@@ -133,7 +135,8 @@ class ExplorationMapTest extends GameBaseCase {
                 ),
                 new Player(5, 2, 1, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1)),
                 dataSet.refresh(new PlayerRace(Race.CRA)),
-                new GameSession(new DummyChannel())
+                new GameSession(new DummyChannel()),
+                container.get(PlayerService.class)
             )
         );
 

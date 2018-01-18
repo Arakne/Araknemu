@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.common.Disconnected;
 import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
+import fr.quatrevieux.araknemu.game.event.listener.player.SavePlayer;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 import java.util.Collection;
@@ -62,12 +63,14 @@ final public class PlayerService {
             session.account(),
             player,
             raceRepository.get(player.race()),
-            session
+            session,
+            this
         );
 
         gamePlayer.dispatcher().add(Disconnected.class, e -> logout(gamePlayer));
-
         dispatcher.dispatch(new PlayerLoaded(gamePlayer));
+        gamePlayer.dispatcher().add(new SavePlayer(gamePlayer)); // After all events
+
         login(gamePlayer);
 
         return gamePlayer;
@@ -116,6 +119,13 @@ final public class PlayerService {
         }
 
         return playersByName.get(name);
+    }
+
+    /**
+     * Save the player
+     */
+    public void save(GamePlayer player) {
+        repository.save(player.entity);
     }
 
     private void login(GamePlayer player) {

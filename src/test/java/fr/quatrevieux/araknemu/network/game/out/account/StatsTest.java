@@ -11,6 +11,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +32,8 @@ class StatsTest extends GameBaseCase {
             ),
             new Player(1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, new DefaultCharacteristics()),
             dataSet.repository(PlayerRace.class).get(new PlayerRace(Race.FECA)),
-            session
+            session,
+            container.get(PlayerService.class)
         );
 
         assertEquals(

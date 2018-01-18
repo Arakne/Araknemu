@@ -54,7 +54,7 @@ class CreateCharacterTest extends GameBaseCase {
         Player player = dataSet.repository(Player.class).get(new Player(1));
 
         assertEquals(1, player.accountId());
-        assertEquals(1, player.serverId());
+        assertEquals(2, player.serverId());
         assertEquals("Bob", player.name());
         assertEquals(Race.ECAFLIP, player.race());
         assertEquals(Sex.MALE, player.sex());

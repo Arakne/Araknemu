@@ -1,7 +1,11 @@
 package fr.quatrevieux.araknemu.game.handler;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
+import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
+import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
@@ -71,5 +75,22 @@ class StopSessionTest extends GameBaseCase {
         assertNull(session.player());
         assertNull(session.exploration());
         assertFalse(player.map().players().contains(player));
+    }
+
+    @Test
+    void withPlayerWillSaveThePlayer() throws SQLException, ContainerException {
+        GamePlayer player = gamePlayer(true);
+
+        player.setPosition(new Position(1234, 56));
+        player.characteristics().set(Characteristic.ACTION_POINT, 12);
+
+        int playerid = gamePlayer().id();
+
+        handler.handle(session, new SessionClosed());
+
+        Player savedPlayer = container.get(PlayerRepository.class).get(new Player(playerid));
+
+        assertEquals(new Position(1234, 56), savedPlayer.position());
+        assertEquals(12, savedPlayer.stats().get(Characteristic.ACTION_POINT));
     }
 }
