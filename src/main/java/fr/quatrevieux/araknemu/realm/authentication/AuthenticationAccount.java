@@ -48,10 +48,10 @@ final public class AuthenticationAccount extends AbstractLivingAccount<RealmSess
     }
 
     /**
-     * Get the secret answer
+     * Get the secret question
      */
-    public String answer() {
-        return "";
+    public String question() {
+        return account.question();
     }
 
     @Override

@@ -180,7 +180,7 @@ public class GameBaseCase extends DatabaseTestCase {
 
     public void login() throws ContainerException {
         GameAccount account = new GameAccount(
-            new Account(1, "toto", "", "bob", EnumSet.noneOf(Permission.class)),
+            new Account(1, "toto", "", "bob", EnumSet.noneOf(Permission.class), "", ""),
             container.get(AccountService.class),
             configuration.id()
         );

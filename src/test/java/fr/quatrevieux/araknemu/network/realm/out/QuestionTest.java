@@ -4,17 +4,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AnswerTest {
+class QuestionTest {
     @Test
     void answer() {
         String s = "my answer";
-        Answer a = new Answer(s);
+        Question a = new Question(s);
 
         assertSame(s, a.answer());
     }
 
     @Test
     void test_toString() {
-        assertEquals("AQmy+answer", new Answer("my answer").toString());
+        assertEquals("AQmy+answer", new Question("my answer").toString());
     }
 }

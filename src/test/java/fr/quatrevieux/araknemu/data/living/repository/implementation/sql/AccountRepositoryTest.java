@@ -87,12 +87,21 @@ class AccountRepositoryTest extends DatabaseTestCase {
 
     @Test
     void permissions() {
-        Account account = repository.add(new Account(0, "other", "pass", "aaa", EnumSet.of(Permission.ACCESS)));
+        Account account = repository.add(new Account(0, "other", "pass", "aaa", EnumSet.of(Permission.ACCESS), "", ""));
         account = repository.get(account);
 
         assertEquals(
             EnumSet.of(Permission.ACCESS),
             account.permissions()
         );
+    }
+
+    @Test
+    void questionAndAnswer() {
+        Account account = repository.add(new Account(0, "other", "pass", "aaa", EnumSet.noneOf(Permission.class), "azerty", "uiop"));
+        account = repository.get(account);
+
+        assertEquals("azerty", account.question());
+        assertEquals("uiop", account.answer());
     }
 }

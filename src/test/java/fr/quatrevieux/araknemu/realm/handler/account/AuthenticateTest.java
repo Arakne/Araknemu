@@ -31,7 +31,7 @@ class AuthenticateTest extends RealmBaseCase {
             container.get(HostService.class)
         );
 
-        dataSet.push(new Account(-1, "login", "password", "pseudo"), "login_account");
+        dataSet.push(new Account(-1, "login", "password", "pseudo", EnumSet.noneOf(Permission.class), "My question", "My response"), "login_account");
     }
 
     @Test
@@ -49,14 +49,14 @@ class AuthenticateTest extends RealmBaseCase {
             new Pseudo("pseudo"),
             new Community(0),
             new GMLevel(false),
-            new Answer(""),
+            new Question("My+question"),
             "AH1;1;110;1"
         );
     }
 
     @Test
     void handleSuccessWithGameMaster() throws ContainerException {
-        dataSet.push(new Account(-1, "other", "password", "pseudo2", EnumSet.allOf(Permission.class)));
+        dataSet.push(new Account(-1, "other", "password", "pseudo2", EnumSet.allOf(Permission.class), "My other question", "response"));
 
         handler.handle(session, new Credentials(
             "other",
@@ -71,7 +71,7 @@ class AuthenticateTest extends RealmBaseCase {
             new Pseudo("pseudo2"),
             new Community(0),
             new GMLevel(true),
-            new Answer(""),
+            new Question("My+other+question"),
             "AH1;1;110;1"
         );
     }

@@ -41,7 +41,7 @@ final public class Authenticate implements PacketHandler<RealmSession, Credentia
             session.write(new Pseudo(account.pseudo()));
             session.write(new Community(account.community()));
             session.write(new GMLevel(account.isMaster()));
-            session.write(new Answer(account.answer()));
+            session.write(new Question(account.question()));
             session.write(new HostList(hosts.all()));
         }
 

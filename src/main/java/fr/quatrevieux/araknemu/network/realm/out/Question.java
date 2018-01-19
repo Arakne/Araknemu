@@ -3,10 +3,10 @@ package fr.quatrevieux.araknemu.network.realm.out;
 /**
  * Send secret answer to client
  */
-final public class Answer {
+final public class Question {
     final private String answer;
 
-    public Answer(String answer) {
+    public Question(String answer) {
         this.answer = answer;
     }
 
@@ -24,9 +24,9 @@ final public class Answer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Answer answer1 = (Answer) o;
+        Question question1 = (Question) o;
 
-        return answer != null ? answer.equals(answer1.answer) : answer1.answer == null;
+        return answer != null ? answer.equals(question1.answer) : question1.answer == null;
     }
 
     @Override

@@ -2,9 +2,11 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.handler.EnsureLogged;
 import fr.quatrevieux.araknemu.game.handler.account.CreateCharacter;
+import fr.quatrevieux.araknemu.game.handler.account.DeleteCharacter;
 import fr.quatrevieux.araknemu.game.handler.account.ListCharacters;
 import fr.quatrevieux.araknemu.game.handler.account.SelectCharacter;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
@@ -30,7 +32,11 @@ final public class LoggedLoader extends AbstractLoader {
             ),
             new SelectCharacter(
                 container.get(PlayerService.class)
-            )
+            ),
+            new DeleteCharacter(
+                container.get(CharactersService.class),
+                container.get(GameConfiguration.class).player()
+            ),
         };
     }
 }

@@ -53,7 +53,7 @@ class GameAccountTest extends GameBaseCase {
     @Test
     void isGranted() throws ContainerException {
         GameAccount account = new GameAccount(
-            new Account(1, "name", "password", "pseudo", EnumSet.of(Permission.ACCESS)),
+            new Account(1, "name", "password", "pseudo", EnumSet.of(Permission.ACCESS), "", ""),
             container.get(AccountService.class),
             1
         );

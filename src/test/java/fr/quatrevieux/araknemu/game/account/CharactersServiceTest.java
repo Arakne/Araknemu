@@ -12,6 +12,7 @@ import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.exception.CharacterCreationException;
+import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +32,8 @@ class CharactersServiceTest extends GameBaseCase {
         service = new CharactersService(
             repository = container.get(PlayerRepository.class),
             container.get(PlayerConstraints.class),
-            container.get(PlayerRaceRepository.class)
+            container.get(PlayerRaceRepository.class),
+            container.get(Dispatcher.class)
         );
 
         dataSet

@@ -20,6 +20,13 @@ final public class AccountCharacter extends AbstractCharacter {
     }
 
     /**
+     * Get the character level
+     */
+    public int level() {
+        return entity.level();
+    }
+
+    /**
      * Create the character from creation request
      *
      * @param account The creator account

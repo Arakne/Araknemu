@@ -7,6 +7,8 @@ import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.account.exception.CharacterCreationException;
+import fr.quatrevieux.araknemu.game.event.Dispatcher;
+import fr.quatrevieux.araknemu.game.event.common.PlayerDeleted;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,11 +20,13 @@ final public class CharactersService {
     final private PlayerRepository repository;
     final private EntityConstraint<Player, PlayerConstraints.Error> constraint;
     final private PlayerRaceRepository playerRaceRepository;
+    final private Dispatcher dispatcher;
 
-    public CharactersService(PlayerRepository repository, EntityConstraint<Player, PlayerConstraints.Error> constraint, PlayerRaceRepository playerRaceRepository) {
+    public CharactersService(PlayerRepository repository, EntityConstraint<Player, PlayerConstraints.Error> constraint, PlayerRaceRepository playerRaceRepository, Dispatcher dispatcher) {
         this.repository = repository;
         this.constraint = constraint;
         this.playerRaceRepository = playerRaceRepository;
+        this.dispatcher = dispatcher;
     }
 
     /**
@@ -62,5 +66,31 @@ final public class CharactersService {
             .map(player -> new AccountCharacter(account, player))
             .collect(Collectors.toList())
         ;
+    }
+
+    /**
+     * Get account character
+     *
+     * @param account The account
+     * @param id The character id
+     *
+     * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException When cannot found the character
+     */
+    public AccountCharacter get(GameAccount account, int id) {
+        return new AccountCharacter(
+            account,
+            repository.getForGame(
+                Player.forGame(id, account.id(), account.serverId())
+            )
+        );
+    }
+
+    /**
+     * Delete the character
+     */
+    public void delete(AccountCharacter character) {
+        repository.delete(character.character());
+
+        dispatcher.dispatch(new PlayerDeleted(character));
     }
 }

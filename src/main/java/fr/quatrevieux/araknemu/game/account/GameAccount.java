@@ -66,4 +66,11 @@ final public class GameAccount extends AbstractLivingAccount<GameSession> {
     public boolean isGranted(Permission permission) {
         return account.permissions().contains(permission);
     }
+
+    /**
+     * Check the secret answer
+     */
+    public boolean checkAnswer(String input) {
+        return account.answer().equalsIgnoreCase(input);
+    }
 }

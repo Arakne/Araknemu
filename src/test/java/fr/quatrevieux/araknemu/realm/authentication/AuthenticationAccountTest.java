@@ -1,11 +1,14 @@
 package fr.quatrevieux.araknemu.realm.authentication;
 
+import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
 import fr.quatrevieux.araknemu.realm.host.HostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.EnumSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,13 +29,13 @@ class AuthenticationAccountTest extends RealmBaseCase {
     @Test
     void accountValues() {
         AuthenticationAccount account = new AuthenticationAccount(
-            new Account(1, "user", "pass", "pseudo"),
+            new Account(1, "user", "pass", "pseudo", EnumSet.noneOf(Permission.class), "question", "response"),
             service
         );
 
         assertEquals(1, account.id());
         assertEquals("pseudo", account.pseudo());
-        assertEquals("", account.answer());
+        assertEquals("question", account.question());
         assertEquals(0, account.community());
         assertFalse(account.isMaster());
     }

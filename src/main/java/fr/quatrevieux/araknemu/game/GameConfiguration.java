@@ -36,6 +36,16 @@ final public class GameConfiguration implements ConfigurationModule {
         public int maxPerAccount() {
             return pool.integer("player.max", 5);
         }
+
+        /**
+         * Minimum level which needs secret answer for delete the character
+         * By default, value is set to 20
+         *
+         * To change this value, you should also change in lang.swf, the value `C.SECRET_ANSWER_SINCE_LEVEL`
+         */
+        public int deleteAnswerLevel() {
+            return pool.integer("player.deleteAnswerLevel", 20);
+        }
     }
 
     final public class ChatConfiguration {

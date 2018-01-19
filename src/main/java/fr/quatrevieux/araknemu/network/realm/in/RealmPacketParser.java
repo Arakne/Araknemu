@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.network.in.ParsePacketException;
  *                  <------     Community
  *                  <------     HostList
  *                  <------     GMLevel
- *                  <------     Answer
+ *                  <------     Question
  * //=== [Login success, standard packet exchange protocol] ===//
  * AskServerList    ------>     [load characters by server]
  *                  <------     ServerList

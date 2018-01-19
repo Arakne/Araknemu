@@ -1,11 +1,14 @@
 package fr.quatrevieux.araknemu.realm;
 
+import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.network.realm.out.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.EnumSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,7 +18,7 @@ public class AuthenticationProtocolTest extends RealmBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.push(new Account(-1, "test", "password", "pseudo"), "test_account");
+        dataSet.push(new Account(-1, "test", "password", "pseudo", EnumSet.noneOf(Permission.class), "security question", "secret answer"), "test_account");
     }
 
     @Test
@@ -56,7 +59,7 @@ public class AuthenticationProtocolTest extends RealmBaseCase {
             new Pseudo("pseudo"),
             new Community(0),
             new GMLevel(false),
-            new Answer(""),
+            new Question("security question"),
             "AH1;1;110;1"
         );
     }

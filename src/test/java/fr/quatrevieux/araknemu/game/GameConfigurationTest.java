@@ -27,4 +27,9 @@ class GameConfigurationTest extends GameBaseCase {
     void chat() {
         assertEquals(30, configuration.chat().floodTime());
     }
+
+    @Test
+    void player() {
+        assertEquals(20, configuration.player().deleteAnswerLevel());
+    }
 }

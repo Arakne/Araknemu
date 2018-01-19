@@ -24,7 +24,9 @@ final class AccountRepository implements fr.quatrevieux.araknemu.data.living.rep
                 rs.getString("USERNAME"),
                 rs.getString("PASSWORD"),
                 rs.getString("PSEUDO"),
-                permissionsTransformer.unserialize(rs.getInt("PERMISSIONS"))
+                permissionsTransformer.unserialize(rs.getInt("PERMISSIONS")),
+                rs.getString("QUESTION"),
+                rs.getString("ANSWER")
             );
         }
 
@@ -55,7 +57,9 @@ final class AccountRepository implements fr.quatrevieux.araknemu.data.living.rep
                     "USERNAME VARCHAR(32) UNIQUE," +
                     "PASSWORD VARCHAR(256)," +
                     "PSEUDO VARCHAR(32) UNIQUE," +
-                    "PERMISSIONS INTEGER" +
+                    "PERMISSIONS INTEGER," +
+                    "QUESTION VARCHAR(64)," +
+                    "ANSWER VARCHAR(255)" +
                 ")"
             );
         } catch (SQLException e) {
@@ -75,12 +79,14 @@ final class AccountRepository implements fr.quatrevieux.araknemu.data.living.rep
     @Override
     public Account add(Account entity) {
         return utils.update(
-            "INSERT INTO ACCOUNT (`USERNAME`, `PASSWORD`, `PSEUDO`, `PERMISSIONS`) VALUES (?, ?, ?, ?)",
+            "INSERT INTO ACCOUNT (`USERNAME`, `PASSWORD`, `PSEUDO`, `PERMISSIONS`, `QUESTION`, `ANSWER`) VALUES (?, ?, ?, ?, ?, ?)",
             rs -> {
                 rs.setString(1, entity.name());
                 rs.setString(2, entity.password());
                 rs.setString(3, entity.pseudo());
                 rs.setInt(4,    permissionsTransformer.serialize(entity.permissions()));
+                rs.setString(5, entity.question());
+                rs.setString(6, entity.answer());
             },
             entity
         );

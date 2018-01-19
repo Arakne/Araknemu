@@ -15,21 +15,25 @@ final public class Account {
     private String password;
     private String pseudo;
     private Set<Permission> permissions;
+    private String question;
+    private String answer;
 
-    public Account(int id, String name, String password, String pseudo, Set<Permission> permissions) {
+    public Account(int id, String name, String password, String pseudo, Set<Permission> permissions, String question, String answer) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.pseudo = pseudo;
         this.permissions = permissions;
+        this.question = question;
+        this.answer = answer;
     }
 
     public Account(int id, String name, String password, String pseudo) {
-        this(id, name, password, pseudo, EnumSet.noneOf(Permission.class));
+        this(id, name, password, pseudo, EnumSet.noneOf(Permission.class), "", "");
     }
 
     public Account(int id) {
-        this(id, null, null, null, null);
+        this(id, null, null, null, null, null, null);
     }
 
     public int id() {
@@ -52,13 +56,23 @@ final public class Account {
         return permissions;
     }
 
+    public String question() {
+        return question;
+    }
+
+    public String answer() {
+        return answer;
+    }
+
     public Account withId(int id) {
         return new Account(
             id,
             this.name,
             this.password,
             this.pseudo,
-            this.permissions
+            this.permissions,
+            this.question,
+            this.answer
         );
     }
 

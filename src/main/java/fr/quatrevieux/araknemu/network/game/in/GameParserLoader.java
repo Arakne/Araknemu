@@ -37,7 +37,8 @@ final public class GameParserLoader implements ParserLoader {
             new GameActionCancel.Parser(),
             new AskDate.Parser(),
             new Ping.Parser(),
-            new Message.Parser()
+            new Message.Parser(),
+            new DeleteCharacterRequest.Parser()
         );
     }
 }

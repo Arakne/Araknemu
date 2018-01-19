@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.network.game.in;
 
 import fr.quatrevieux.araknemu.network.game.in.account.AskCharacterList;
 import fr.quatrevieux.araknemu.network.game.in.account.ChoosePlayingCharacter;
+import fr.quatrevieux.araknemu.network.game.in.account.DeleteCharacterRequest;
 import fr.quatrevieux.araknemu.network.game.in.account.LoginToken;
 import fr.quatrevieux.araknemu.network.game.in.basic.AskDate;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
@@ -36,6 +37,7 @@ class GameParserLoaderTest {
         assertContainsInstance(AskDate.Parser.class, parsers);
         assertContainsInstance(Ping.Parser.class, parsers);
         assertContainsInstance(Message.Parser.class, parsers);
+        assertContainsInstance(DeleteCharacterRequest.Parser.class, parsers);
     }
 
     public void assertContainsInstance(Class type, Collection collection) {
