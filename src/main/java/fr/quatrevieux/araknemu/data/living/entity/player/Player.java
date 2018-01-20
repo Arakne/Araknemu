@@ -4,8 +4,12 @@ import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
+import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * Entity class for player
@@ -21,8 +25,9 @@ final public class Player {
     private int level;
     private MutableCharacteristics stats;
     private Position position;
+    private Set<ChannelType> channels;
 
-    public Player(int id, int accountId, int serverId, String name, Race race, Sex sex, Colors colors, int level, MutableCharacteristics stats, Position position) {
+    public Player(int id, int accountId, int serverId, String name, Race race, Sex sex, Colors colors, int level, MutableCharacteristics stats, Position position, Set<ChannelType> channels) {
         this.id = id;
         this.accountId = accountId;
         this.serverId = serverId;
@@ -33,14 +38,15 @@ final public class Player {
         this.level = level;
         this.stats = stats;
         this.position = position;
+        this.channels = channels;
     }
 
     public Player(int id, int accountId, int serverId, String name, Race race, Sex sex, Colors colors, int level, MutableCharacteristics characteristics) {
-        this(id, accountId, serverId, name, race, sex, colors, level, characteristics, new Position(0, 0));
+        this(id, accountId, serverId, name, race, sex, colors, level, characteristics, new Position(0, 0), EnumSet.noneOf(ChannelType.class));
     }
 
     public Player(int id, int accountId, int serverId, String name, Race race, Sex sex, Colors colors) {
-        this(id, accountId, serverId, name, race, sex, colors, 1, new DefaultCharacteristics(), new Position(0, 0));
+        this(id, accountId, serverId, name, race, sex, colors, 1, new DefaultCharacteristics(), new Position(0, 0), EnumSet.noneOf(ChannelType.class));
     }
 
     public Player(int id) {
@@ -91,6 +97,14 @@ final public class Player {
         this.position = position;
     }
 
+    public Set<ChannelType> channels() {
+        return channels;
+    }
+
+    public void setChannels(Set<ChannelType> channels) {
+        this.channels = channels;
+    }
+
     /**
      * Create a new player with new race
      *
@@ -107,7 +121,8 @@ final public class Player {
             colors,
             level,
             stats,
-            position
+            position,
+            channels
         );
     }
 
@@ -125,6 +140,6 @@ final public class Player {
      * @see fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository#getForGame(Player)
      */
     static public Player forGame(int playerId, int accountId, int serverId) {
-        return new Player(playerId, accountId, serverId, null, null, null, null, 1, null, null);
+        return new Player(playerId, accountId, serverId, null, null, null, null, 1, null, null, null);
     }
 }

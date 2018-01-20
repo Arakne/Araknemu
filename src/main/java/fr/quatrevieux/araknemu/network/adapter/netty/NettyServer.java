@@ -89,6 +89,6 @@ final public class NettyServer implements Server {
     @Override
     public void stop() throws Exception {
         serverChannel.closeFuture();
-        loopGroup.shutdownGracefully();
+        loopGroup.shutdownGracefully().sync();
     }
 }

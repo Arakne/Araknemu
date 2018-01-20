@@ -3,15 +3,14 @@ package fr.quatrevieux.araknemu.network.game.out.chat;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 
 import java.util.Collection;
-import java.util.Set;
 
 /**
- * List of subscribed chat channels
+ * Remove chat channel subscriptions
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Chat.as#L149
  */
-final public class ChannelSubscribed extends ChannelSubscriptionChanged {
-    public ChannelSubscribed(Collection<ChannelType> channels) {
-        super('+', channels);
+final public class ChannelUnsubscribed extends ChannelSubscriptionChanged {
+    public ChannelUnsubscribed(Collection<ChannelType> channels) {
+        super('-', channels);
     }
 }

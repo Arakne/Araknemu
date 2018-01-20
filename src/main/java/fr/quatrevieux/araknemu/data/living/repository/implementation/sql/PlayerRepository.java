@@ -12,21 +12,17 @@ import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.value.ServerCharacters;
+import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 final class PlayerRepository implements fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository {
-    private static class Loader implements RepositoryUtils.Loader<Player> {
-        final private Transformer<MutableCharacteristics> characteristicsTransformer;
-
-        public Loader(Transformer<MutableCharacteristics> characteristicsTransformer) {
-            this.characteristicsTransformer = characteristicsTransformer;
-        }
-
+    private class Loader implements RepositoryUtils.Loader<Player> {
         @Override
         public Player create(ResultSet rs) throws SQLException {
             return new Player(
@@ -48,7 +44,8 @@ final class PlayerRepository implements fr.quatrevieux.araknemu.data.living.repo
                 new Position(
                     rs.getInt("MAP_ID"),
                     rs.getInt("CELL_ID")
-                )
+                ),
+                channelsTransformer.unserialize(rs.getString("CHANNELS"))
             );
         }
 
@@ -62,15 +59,15 @@ final class PlayerRepository implements fr.quatrevieux.araknemu.data.living.repo
 
     final private ConnectionPoolUtils pool;
     final private Transformer<MutableCharacteristics> characteristicsTransformer;
+    final private Transformer<Set<ChannelType>> channelsTransformer;
 
     final private RepositoryUtils<Player> utils;
 
-    public PlayerRepository(ConnectionPool pool, Transformer<MutableCharacteristics> characteristicsTransformer) {
+    public PlayerRepository(ConnectionPool pool, Transformer<MutableCharacteristics> characteristicsTransformer, Transformer<Set<ChannelType>> channelsTransformer) {
         this.pool = new ConnectionPoolUtils(pool);
         this.characteristicsTransformer = characteristicsTransformer;
-        this.utils = new RepositoryUtils<>(this.pool, new PlayerRepository.Loader(
-            characteristicsTransformer
-        ));
+        this.channelsTransformer = channelsTransformer;
+        this.utils = new RepositoryUtils<>(this.pool, new PlayerRepository.Loader());
     }
 
     @Override
@@ -91,6 +88,7 @@ final class PlayerRepository implements fr.quatrevieux.araknemu.data.living.repo
                     "PLAYER_STATS TEXT," +
                     "MAP_ID INTEGER," +
                     "CELL_ID INTEGER," +
+                    "CHANNELS VARCHAR(16)," +
                     "UNIQUE (PLAYER_NAME, SERVER_ID)" +
                 ")"
             );
@@ -114,8 +112,8 @@ final class PlayerRepository implements fr.quatrevieux.araknemu.data.living.repo
     public Player add(Player entity) throws RepositoryException {
         return utils.update(
             "INSERT INTO PLAYER " +
-                "(ACCOUNT_ID, SERVER_ID, PLAYER_NAME, RACE, SEX, COLOR1, COLOR2, COLOR3, PLAYER_LEVEL, PLAYER_STATS, MAP_ID, CELL_ID) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "(ACCOUNT_ID, SERVER_ID, PLAYER_NAME, RACE, SEX, COLOR1, COLOR2, COLOR3, PLAYER_LEVEL, PLAYER_STATS, MAP_ID, CELL_ID, CHANNELS) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             stmt -> {
                 stmt.setInt(1,     entity.accountId());
                 stmt.setInt(2,     entity.serverId());
@@ -129,6 +127,7 @@ final class PlayerRepository implements fr.quatrevieux.araknemu.data.living.repo
                 stmt.setString(10, characteristicsTransformer.serialize(entity.stats()));
                 stmt.setInt(11,    entity.position().map());
                 stmt.setInt(12,    entity.position().cell());
+                stmt.setString(13, channelsTransformer.serialize(entity.channels()));
             },
             entity
         );
@@ -233,14 +232,15 @@ final class PlayerRepository implements fr.quatrevieux.araknemu.data.living.repo
     public void save(Player player) {
         int rows = utils.update(
             "UPDATE PLAYER SET " +
-                "PLAYER_LEVEL = ?, PLAYER_STATS = ?, MAP_ID = ?, CELL_ID = ? " +
+                "PLAYER_LEVEL = ?, PLAYER_STATS = ?, MAP_ID = ?, CELL_ID = ?, CHANNELS = ? " +
                 "WHERE PLAYER_ID = ?",
             stmt -> {
                 stmt.setInt(1,    player.level());
                 stmt.setString(2, characteristicsTransformer.serialize(player.stats()));
                 stmt.setInt(3,    player.position().map());
                 stmt.setInt(4,    player.position().cell());
-                stmt.setInt(5,    player.id());
+                stmt.setString(5, channelsTransformer.serialize(player.channels()));
+                stmt.setInt(6,    player.id());
             }
         );
 

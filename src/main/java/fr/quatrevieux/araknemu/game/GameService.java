@@ -7,7 +7,6 @@ import fr.quatrevieux.araknemu.network.adapter.Server;
 import fr.quatrevieux.araknemu.realm.host.GameHost;
 import org.slf4j.Logger;
 
-import java.io.IOException;
 import java.util.Collection;
 
 /**
@@ -30,6 +29,14 @@ final public class GameService implements Service {
 
     @Override
     public void boot() throws BootException {
+        long startTime = System.currentTimeMillis();
+        logger.info(
+            "Starting game server {} at {}:{}",
+            configuration.id(),
+            configuration.ip(),
+            configuration.port()
+        );
+
         for (PreloadableService service : preloadables) {
             service.preload(logger);
         }
@@ -51,10 +58,14 @@ final public class GameService implements Service {
             GameHost.State.ONLINE,
             true
         );
+
+        logger.info("Game server {} started in {}ms", configuration.id(), System.currentTimeMillis() - startTime);
     }
 
     @Override
     public void shutdown() {
+        logger.info("Stopping game server {}", configuration.id());
+
         connector.updateState(
             configuration.id(),
             GameHost.State.OFFLINE,
@@ -64,7 +75,9 @@ final public class GameService implements Service {
         try {
             server.stop();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error during stopping socket server", e);
         }
+
+        logger.info("Game server {} stopped", configuration.id());
     }
 }

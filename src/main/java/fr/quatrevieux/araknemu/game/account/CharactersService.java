@@ -9,6 +9,7 @@ import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceReposit
 import fr.quatrevieux.araknemu.game.account.exception.CharacterCreationException;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.common.PlayerDeleted;
+import fr.quatrevieux.araknemu.game.event.manage.CharacterCreationStarted;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,11 +40,14 @@ final public class CharactersService {
             throw new CharacterCreationException(constraint.error());
         }
 
+        // @todo configure into a listener
         character.character().setPosition(
             playerRaceRepository.get(character.character().race()).startPosition()
         );
 
         try {
+            dispatcher.dispatch(new CharacterCreationStarted(character));
+
             return new AccountCharacter(
                 character.account(),
                 repository.add(

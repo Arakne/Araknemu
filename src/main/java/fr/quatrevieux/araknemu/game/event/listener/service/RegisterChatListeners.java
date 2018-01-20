@@ -3,9 +3,7 @@ package fr.quatrevieux.araknemu.game.event.listener.service;
 import fr.quatrevieux.araknemu.game.event.Listener;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
-import fr.quatrevieux.araknemu.game.event.listener.player.chat.InitializeChat;
-import fr.quatrevieux.araknemu.game.event.listener.player.chat.MessageReceived;
-import fr.quatrevieux.araknemu.game.event.listener.player.chat.PrivateMessageReceived;
+import fr.quatrevieux.araknemu.game.event.listener.player.chat.*;
 
 /**
  * Register all chat listeners
@@ -18,6 +16,8 @@ final public class RegisterChatListeners implements Listener<PlayerLoaded> {
         dispatcher.add(new InitializeChat(event.player()));
         dispatcher.add(new MessageReceived(event.player()));
         dispatcher.add(new PrivateMessageReceived(event.player()));
+        dispatcher.add(new SubscriptionAddedAcknowledge(event.player()));
+        dispatcher.add(new SubscriptionRemovedAcknowledge(event.player()));
     }
 
     @Override

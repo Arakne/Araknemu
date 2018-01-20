@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
+import fr.quatrevieux.araknemu.data.living.transformer.ChannelsTransformer;
 import fr.quatrevieux.araknemu.data.living.transformer.PermissionsTransformer;
 import fr.quatrevieux.araknemu.data.transformer.MutableCharacteristicsTransformer;
 
@@ -30,7 +31,8 @@ final public class LivingRepositoriesModule implements ContainerModule {
             fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository.class,
             container -> new PlayerRepository(
                 connection,
-                container.get(MutableCharacteristicsTransformer.class)
+                container.get(MutableCharacteristicsTransformer.class),
+                container.get(ChannelsTransformer.class)
             )
         );
 
@@ -42,6 +44,11 @@ final public class LivingRepositoriesModule implements ContainerModule {
         configurator.persist(
             PermissionsTransformer.class,
             container -> new PermissionsTransformer()
+        );
+
+        configurator.persist(
+            ChannelsTransformer.class,
+            container -> new ChannelsTransformer()
         );
     }
 }

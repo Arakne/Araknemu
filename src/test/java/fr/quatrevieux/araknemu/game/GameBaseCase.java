@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
@@ -208,7 +209,7 @@ public class GameBaseCase extends DatabaseTestCase {
         characteristics.set(Characteristic.STRENGTH, 50);
         characteristics.set(Characteristic.INTELLIGENCE, 150);
 
-        Player player = dataSet.push(new Player(-1, session.account().id(), session.account().serverId(), "Bob", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 50, characteristics, new Position(10540, 200)));
+        Player player = dataSet.push(new Player(-1, session.account().id(), session.account().serverId(), "Bob", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 50, characteristics, new Position(10540, 200), EnumSet.allOf(ChannelType.class)));
 
         if (!load) {
             session.setPlayer(
@@ -251,5 +252,23 @@ public class GameBaseCase extends DatabaseTestCase {
         session.setExploration(explorationPlayer);
 
         return explorationPlayer;
+    }
+
+    public GamePlayer makeOtherPlayer() throws Exception {
+        dataSet.pushRaces();
+
+        Player player = dataSet.pushPlayer("other", 5, 2);
+        GameSession session = new GameSession(new DummyChannel());
+
+        session.attach(new GameAccount(
+            new Account(5),
+            container.get(AccountService.class),
+            2
+        ));
+
+        return container.get(PlayerService.class).load(
+            session,
+            player.id()
+        );
     }
 }

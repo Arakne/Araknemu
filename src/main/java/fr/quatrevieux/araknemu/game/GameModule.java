@@ -192,6 +192,7 @@ final public class GameModule implements ContainerModule {
             ChatService.class,
             container -> new ChatService(
                 container.get(ListenerAggregate.class),
+                container.get(GameConfiguration.class).chat(),
                 new Channel[] {
                     new MapChannel(),
                     new GlobalChannel(

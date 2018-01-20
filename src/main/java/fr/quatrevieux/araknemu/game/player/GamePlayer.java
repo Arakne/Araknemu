@@ -4,11 +4,15 @@ import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.game.chat.ChannelSet;
+import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+
+import java.util.Set;
 
 /**
  * GamePlayer object
@@ -19,6 +23,7 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
     final private GameSession session;
     final private PlayerRace race;
     final private PlayerCharacteristics characteristics;
+    final private Set<ChannelType> channels;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
@@ -28,6 +33,7 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
         this.race = race;
         this.session = session;
         this.service = service;
+        this.channels = new ChannelSet(entity.channels(), dispatcher);
 
         characteristics = new PlayerCharacteristics(
             new BaseCharacteristics(
@@ -81,6 +87,13 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
 
     public String name() {
         return entity.name();
+    }
+
+    /**
+     * Get channels subscriptions
+     */
+    public Set<ChannelType> subscriptions() {
+        return channels;
     }
 
     /**

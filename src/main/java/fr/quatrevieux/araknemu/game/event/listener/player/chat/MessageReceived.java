@@ -7,8 +7,6 @@ import fr.quatrevieux.araknemu.network.game.out.chat.MessageSent;
 
 /**
  * Listen broadcasted messages
- *
- * @todo filter
  */
 final public class MessageReceived implements Listener<BroadcastedMessage> {
     final private GamePlayer player;
@@ -19,6 +17,13 @@ final public class MessageReceived implements Listener<BroadcastedMessage> {
 
     @Override
     public void on(BroadcastedMessage event) {
+        if (
+            !player.subscriptions().contains(event.channel())
+            && event.sender() != player
+        ) {
+            return;
+        }
+
         player.send(
             new MessageSent(
                 event.sender(),

@@ -15,7 +15,7 @@ final public class AccountCharacter extends AbstractCharacter {
     /**
      * Get the character entity
      */
-    Player character() {
+    public Player character() {
         return entity;
     }
 

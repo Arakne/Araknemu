@@ -13,10 +13,13 @@ import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceReposit
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.exception.CharacterCreationException;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
+import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.event.manage.CharacterCreationStarted;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -68,6 +71,11 @@ class CharactersServiceTest extends GameBaseCase {
 
     @Test
     void createSuccess() throws ContainerException, CharacterCreationException {
+        ListenerAggregate dispatcher = container.get(ListenerAggregate.class);
+
+        AtomicReference<AccountCharacter> reference = new AtomicReference<>();
+        dispatcher.add(CharacterCreationStarted.class, characterCreationStarted -> reference.set(characterCreationStarted.character()));
+
         GameAccount account = new GameAccount(
             new Account(5),
             container.get(AccountService.class),
@@ -92,6 +100,8 @@ class CharactersServiceTest extends GameBaseCase {
         assertEquals(Sex.MALE, db.sex());
         assertArrayEquals(new int[]{123, 456, 789}, db.colors().toArray());
         assertEquals(new Position(10300, 320), db.position());
+        assertNotNull(reference.get());
+        assertEquals("Bob", reference.get().character().name());
     }
 
     @Test

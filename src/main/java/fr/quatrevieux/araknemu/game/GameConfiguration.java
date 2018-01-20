@@ -57,6 +57,20 @@ final public class GameConfiguration implements ConfigurationModule {
         public int floodTime() {
             return pool.integer("chat.flood.time", 30);
         }
+
+        /**
+         * Get list of default channels to add on character creation
+         */
+        public String defaultChannels() {
+            return pool.string("chat.channels.default", "*#%!pi$:?");
+        }
+
+        /**
+         * Channels to add on admin characters
+         */
+        public String adminChannels() {
+            return pool.string("chat.channels.admin", "@");
+        }
     }
 
     private PoolUtils pool;

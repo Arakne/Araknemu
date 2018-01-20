@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * Transformer for permissions set
  */
-public class PermissionsTransformer {
+final public class PermissionsTransformer {
     public int serialize(Set<Permission> value) {
         if (value == null)  {
             return 0;

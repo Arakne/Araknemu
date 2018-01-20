@@ -6,10 +6,12 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
+import fr.quatrevieux.araknemu.data.living.transformer.ChannelsTransformer;
 import fr.quatrevieux.araknemu.data.transformer.MutableCharacteristicsTransformer;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.value.ServerCharacters;
+import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
@@ -18,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
+import java.util.EnumSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,7 +32,12 @@ class PlayerRepositoryTest extends DatabaseTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        repository = new PlayerRepository(connection, new MutableCharacteristicsTransformer());
+        repository = new PlayerRepository(
+            connection,
+            new MutableCharacteristicsTransformer(),
+            new ChannelsTransformer()
+        );
+
         repository.initialize();
     }
 
@@ -190,6 +198,7 @@ class PlayerRepositoryTest extends DatabaseTestCase {
 
         player.setPosition(new Position(1234, 56));
         player.stats().set(Characteristic.ACTION_POINT, 12);
+        player.channels().add(ChannelType.INFO);
 
         repository.save(player);
 
@@ -197,5 +206,6 @@ class PlayerRepositoryTest extends DatabaseTestCase {
 
         assertEquals(new Position(1234, 56), savedPlayer.position());
         assertEquals(12, savedPlayer.stats().get(Characteristic.ACTION_POINT));
+        assertEquals(EnumSet.of(ChannelType.INFO), player.channels());
     }
 }
