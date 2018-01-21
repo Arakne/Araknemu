@@ -109,6 +109,11 @@ class PlayerRepositoryTest extends DatabaseTestCase {
     }
 
     @Test
+    void deleteNotFound() {
+        assertThrows(EntityNotFoundException.class, () -> repository.delete(new Player(15)));
+    }
+
+    @Test
     void nameExists() {
         assertFalse(repository.nameExists(new Player(-1, 5, 1, "name", null, null, null, 1, null)));
         repository.add(new Player(-1, 5, 1, "name", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, null));

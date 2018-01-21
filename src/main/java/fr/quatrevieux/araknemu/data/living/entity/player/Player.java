@@ -85,6 +85,10 @@ final public class Player {
         return level;
     }
 
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
     public MutableCharacteristics stats() {
         return stats;
     }

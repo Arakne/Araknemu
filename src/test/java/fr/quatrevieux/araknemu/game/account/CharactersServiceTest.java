@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.game.account;
 
+import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
@@ -14,7 +15,9 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.exception.CharacterCreationException;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.event.common.PlayerDeleted;
 import fr.quatrevieux.araknemu.game.event.manage.CharacterCreationStarted;
+import fr.quatrevieux.araknemu.network.game.out.account.CharacterDeleted;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -120,5 +123,100 @@ class CharactersServiceTest extends GameBaseCase {
         ));
 
         assertTrue(service.list(account).isEmpty());
+    }
+
+    @Test
+    void getNotFound() {
+        assertThrows(EntityNotFoundException.class, () -> service.get(
+            new GameAccount(
+                new Account(1),
+                container.get(AccountService.class),
+                2
+            ),
+            12
+        ));
+    }
+
+    @Test
+    void getBadServer() throws ContainerException {
+        Player player = dataSet.pushPlayer("test", 5, 1);
+
+        assertThrows(EntityNotFoundException.class, () -> service.get(
+            new GameAccount(
+                new Account(5),
+                container.get(AccountService.class),
+                2
+            ),
+            player.id()
+        ));
+    }
+
+    @Test
+    void getBadAccount() throws ContainerException {
+        Player player = dataSet.pushPlayer("test", 5, 2);
+
+        assertThrows(EntityNotFoundException.class, () -> service.get(
+            new GameAccount(
+                new Account(2),
+                container.get(AccountService.class),
+                2
+            ),
+            player.id()
+        ));
+    }
+
+    @Test
+    void getSuccess() throws ContainerException {
+        Player player = dataSet.pushPlayer("test", 5, 2);
+
+        AccountCharacter character = service.get(
+            new GameAccount(
+                new Account(5),
+                container.get(AccountService.class),
+                2
+            ),
+            player.id()
+        );
+
+        assertEquals("test", character.character().name());
+    }
+
+    @Test
+    void deleteNotFound() {
+        assertThrows(
+            EntityNotFoundException.class,
+            () -> service.delete(
+                new AccountCharacter(
+                    new GameAccount(
+                        new Account(5),
+                        container.get(AccountService.class),
+                        2
+                    ),
+                    new Player(5)
+                )
+            )
+        );
+    }
+
+    @Test
+    void deleteSuccess() throws Exception {
+        Player player = dataSet.pushPlayer("test", 5, 2);
+
+        AccountCharacter character = service.get(
+            new GameAccount(
+                new Account(5),
+                container.get(AccountService.class),
+                2
+            ),
+            player.id()
+        );
+
+        AtomicReference<AccountCharacter> ref = new AtomicReference<>();
+        container.get(ListenerAggregate.class).add(PlayerDeleted.class, evt -> ref.set(evt.character()));
+
+        service.delete(character);
+
+        assertSame(character, ref.get());
+        assertFalse(container.get(PlayerRepository.class).has(player));
     }
 }

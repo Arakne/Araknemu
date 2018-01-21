@@ -135,7 +135,9 @@ final class PlayerRepository implements fr.quatrevieux.araknemu.data.living.repo
 
     @Override
     public void delete(Player entity) throws RepositoryException {
-        utils.update("DELETE FROM PLAYER WHERE PLAYER_ID = ?", rs -> rs.setInt(1, entity.id()));
+        if (utils.update("DELETE FROM PLAYER WHERE PLAYER_ID = ?", rs -> rs.setInt(1, entity.id())) < 1) {
+            throw new EntityNotFoundException();
+        }
     }
 
     @Override
