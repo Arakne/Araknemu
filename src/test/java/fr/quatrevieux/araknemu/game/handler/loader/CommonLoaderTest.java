@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.game.handler.CheckQueuePosition;
 import fr.quatrevieux.araknemu.game.handler.SendPong;
 import fr.quatrevieux.araknemu.game.handler.StartSession;
 import fr.quatrevieux.araknemu.game.handler.StopSession;
+import fr.quatrevieux.araknemu.game.handler.account.GenerateName;
 import fr.quatrevieux.araknemu.game.handler.account.Login;
 import fr.quatrevieux.araknemu.game.handler.account.SendRegionalVersion;
 import fr.quatrevieux.araknemu.game.handler.basic.SendDateAndTime;
@@ -37,5 +38,6 @@ class CommonLoaderTest extends GameBaseCase {
         assertContainsType(SendRegionalVersion.class, handlers);
         assertContainsType(SendDateAndTime.class, handlers);
         assertContainsType(SendPong.class, handlers);
+        assertContainsType(GenerateName.class, handlers);
     }
 }

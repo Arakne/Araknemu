@@ -31,6 +31,20 @@ final public class GameConfiguration implements ConfigurationModule {
         }
 
         /**
+         * Maximal length for generated name
+         */
+        public int maxNameGeneratedLength() {
+            return pool.integer("player.name.generated.maxLength", 8);
+        }
+
+        /**
+         * Minimal length for generated name
+         */
+        public int minNameGeneratedLength() {
+            return pool.integer("player.name.generated.minLength", 4);
+        }
+
+        /**
          * Maximum number for characters per account per server
          */
         public int maxPerAccount() {

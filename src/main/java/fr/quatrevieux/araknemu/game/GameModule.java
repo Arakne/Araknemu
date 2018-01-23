@@ -11,6 +11,10 @@ import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepo
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
+import fr.quatrevieux.araknemu.game.account.generator.CamelizeName;
+import fr.quatrevieux.araknemu.game.account.generator.NameCheckerGenerator;
+import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
+import fr.quatrevieux.araknemu.game.account.generator.SimpleNameGenerator;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.chat.channel.*;
@@ -234,6 +238,19 @@ final public class GameModule implements ContainerModule {
         configurator.factory(
             fr.quatrevieux.araknemu.game.event.Dispatcher.class,
             container -> container.get(ListenerAggregate.class)
+        );
+
+        configurator.persist(
+            NameGenerator.class,
+            container -> new NameCheckerGenerator(
+                new CamelizeName(
+                    new SimpleNameGenerator(
+                        container.get(GameConfiguration.class).player()
+                    )
+                ),
+                container.get(PlayerRepository.class),
+                container.get(GameConfiguration.class)
+            )
         );
     }
 }

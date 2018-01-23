@@ -40,7 +40,8 @@ final public class GameParserLoader implements ParserLoader {
             new Ping.Parser(),
             new Message.Parser(),
             new DeleteCharacterRequest.Parser(),
-            new SubscribeChannels.Parser()
+            new SubscribeChannels.Parser(),
+            new AskRandomName.Parser()
         );
     }
 }

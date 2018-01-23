@@ -4,7 +4,9 @@ import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
+import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
 import fr.quatrevieux.araknemu.game.handler.*;
+import fr.quatrevieux.araknemu.game.handler.account.GenerateName;
 import fr.quatrevieux.araknemu.game.handler.account.Login;
 import fr.quatrevieux.araknemu.game.handler.account.SendRegionalVersion;
 import fr.quatrevieux.araknemu.game.handler.basic.SendDateAndTime;
@@ -28,7 +30,10 @@ final public class CommonLoader implements Loader {
             new SendRegionalVersion(),
             new PongResponse(),
             new SendDateAndTime(),
-            new SendPong()
+            new SendPong(),
+            new GenerateName(
+                container.get(NameGenerator.class)
+            )
         };
     }
 }
