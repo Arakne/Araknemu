@@ -42,7 +42,6 @@ class ValidatePlayerPathTest extends GameBaseCase {
         PlayerMoving event = new PlayerMoving(
             player,
             new Move(
-                1,
                 player,
                 Arrays.asList(
                     new PathStep(279, Direction.WEST),
@@ -63,7 +62,6 @@ class ValidatePlayerPathTest extends GameBaseCase {
         PlayerMoving event = new PlayerMoving(
             player,
             new Move(
-                1,
                 player,
                 map.decoder().decodePath("bftdgl", 279)
             )

@@ -30,7 +30,6 @@ class EndGameActionTest extends GameBaseCase {
 
         player.actionQueue().push(
             new Move(
-                1,
                 player,
                 player.map().decoder().decodePath("bftdgl", 279)
             )

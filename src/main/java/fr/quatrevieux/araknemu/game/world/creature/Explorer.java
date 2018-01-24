@@ -16,6 +16,8 @@ public interface Explorer {
      * Move to the cell
      *
      * @param cell The cell id
+     *
+     * @todo rename ? useful ?
      */
     public void move(int cell);
 

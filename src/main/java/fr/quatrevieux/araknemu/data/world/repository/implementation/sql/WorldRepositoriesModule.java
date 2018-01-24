@@ -38,6 +38,11 @@ final public class WorldRepositoriesModule implements ContainerModule {
         );
 
         configurator.persist(
+            fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository.class,
+            container -> new MapTriggerRepository(connection)
+        );
+
+        configurator.persist(
             ImmutableCharacteristicsTransformer.class,
             container -> new ImmutableCharacteristicsTransformer()
         );

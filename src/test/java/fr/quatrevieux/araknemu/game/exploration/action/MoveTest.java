@@ -26,10 +26,11 @@ class MoveTest extends GameBaseCase {
     @Test
     void success() throws Exception {
         Move move = new Move(
-            1,
             player,
             player.map().decoder().decodePath("bftdgl", 279)
         );
+
+        move.setId(1);
 
         player.actionQueue().push(move);
 
@@ -51,12 +52,30 @@ class MoveTest extends GameBaseCase {
     }
 
     @Test
+    void data() throws Exception {
+        Move move = new Move(
+            player,
+            player.map().decoder().decodePath("bftdgl", 279)
+        );
+
+        move.setId(1);
+
+        player.actionQueue().push(move);
+
+        assertEquals(1, move.id());
+        assertEquals(player, move.performer());
+        assertArrayEquals(new Object[] {"aexbftdgl"}, move.arguments());
+        assertEquals(ActionType.MOVE, move.type());
+    }
+
+    @Test
     void invalidPath() {
         Move move = new Move(
-            1,
             player,
             Collections.EMPTY_LIST
         );
+
+        move.setId(1);
 
         assertThrows(Exception.class, () -> player.actionQueue().push(move), "Empty path");
         assertFalse(player.actionQueue().isBusy());
@@ -65,10 +84,11 @@ class MoveTest extends GameBaseCase {
     @Test
     void moveWithCancel() throws Exception {
         Move move = new Move(
-            1,
             player,
             player.map().decoder().decodePath("bftdgl", 279)
         );
+
+        move.setId(1);
 
         player.actionQueue().push(move);
 
@@ -92,10 +112,11 @@ class MoveTest extends GameBaseCase {
     @Test
     void moveWithCancelNotInPath() throws Exception {
         Move move = new Move(
-            1,
             player,
             player.map().decoder().decodePath("bftdgl", 279)
         );
+
+        move.setId(1);
 
         player.actionQueue().push(move);
 

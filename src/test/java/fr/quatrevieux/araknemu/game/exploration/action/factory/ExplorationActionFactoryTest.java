@@ -42,7 +42,6 @@ class ExplorationActionFactoryTest extends GameBaseCase {
         assertTrue(action instanceof Move);
         Move move = (Move) action;
 
-        assertEquals(1, move.id());
         assertEquals(4, move.path().size());
         assertEquals(100, move.path().get(0).cell());
         assertEquals(99, move.path().get(1).cell());

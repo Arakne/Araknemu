@@ -2,16 +2,15 @@ package fr.quatrevieux.araknemu.game.exploration.map;
 
 import fr.quatrevieux.araknemu.data.value.Dimensions;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
+import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.exploration.NewSpriteOnMap;
 import fr.quatrevieux.araknemu.game.event.exploration.SpriteRemoveFromMap;
-import fr.quatrevieux.araknemu.game.event.listener.map.SendNewSprite;
-import fr.quatrevieux.araknemu.game.event.listener.map.SendPlayerMove;
-import fr.quatrevieux.araknemu.game.event.listener.map.SendSpriteRemoved;
-import fr.quatrevieux.araknemu.game.event.listener.map.ValidatePlayerPath;
+import fr.quatrevieux.araknemu.game.event.listener.map.*;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.map.trigger.MapTriggers;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.map.Decoder;
@@ -45,12 +44,15 @@ final public class ExplorationMap implements Dispatcher {
     }
 
     final private MapTemplate template;
+    final private MapTriggers triggers;
+
     final private List<Cell> cells;
     final private ConcurrentMap<Integer, ExplorationPlayer> players = new ConcurrentHashMap<>();
-    final private DefaultListenerAggregate dispatcher = new DefaultListenerAggregate();
+    final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
-    public ExplorationMap(MapTemplate template) {
+    public ExplorationMap(MapTemplate template, MapTriggers triggers) {
         this.template = template;
+        this.triggers = triggers;
 
         cells = template.cells()
             .stream()
@@ -62,6 +64,8 @@ final public class ExplorationMap implements Dispatcher {
         dispatcher.add(new ValidatePlayerPath(this));
         dispatcher.add(new SendPlayerMove(this));
         dispatcher.add(new SendSpriteRemoved(this));
+        dispatcher.add(new PerformCellActions(triggers));
+        dispatcher.add(new SendPlayerChangeCell(this));
     }
 
     public int id() {

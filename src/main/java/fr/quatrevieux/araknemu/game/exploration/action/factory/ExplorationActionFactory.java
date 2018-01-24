@@ -19,7 +19,6 @@ final public class ExplorationActionFactory implements ActionFactory {
         factories.put(
             ActionType.MOVE,
             (player, request) -> new Move(
-                player.actionQueue().generateId(),
                 player,
                 player.map().decoder().decodePath(
                     request.arguments()[0],

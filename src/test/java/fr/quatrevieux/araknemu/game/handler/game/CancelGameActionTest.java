@@ -33,7 +33,6 @@ class CancelGameActionTest extends GameBaseCase {
         ExplorationPlayer player = explorationPlayer();
 
         Move move = new Move(
-            1,
             player,
             player.map().decoder().decodePath("bftdgl", 279)
         );

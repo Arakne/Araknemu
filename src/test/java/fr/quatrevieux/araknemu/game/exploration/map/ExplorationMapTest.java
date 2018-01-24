@@ -14,6 +14,7 @@ import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.event.Listener;
 import fr.quatrevieux.araknemu.game.event.exploration.NewSpriteOnMap;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.map.trigger.MapTriggers;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
@@ -24,6 +25,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,7 +44,7 @@ class ExplorationMapTest extends GameBaseCase {
     void data() throws ContainerException {
         MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null));
 
-        ExplorationMap map = new ExplorationMap(template);
+        ExplorationMap map = new ExplorationMap(template, new MapTriggers(Collections.EMPTY_LIST, new HashMap<>()));
 
         assertEquals(10300, map.id());
         assertEquals(template.date(), map.date());
@@ -52,7 +55,7 @@ class ExplorationMapTest extends GameBaseCase {
     void addPlayerWillAddSprite() throws ContainerException, SQLException {
         MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null));
 
-        ExplorationMap map = new ExplorationMap(template);
+        ExplorationMap map = new ExplorationMap(template, new MapTriggers(Collections.EMPTY_LIST, new HashMap<>()));
 
         assertEquals(0, map.sprites().size());
 
@@ -82,7 +85,7 @@ class ExplorationMapTest extends GameBaseCase {
 
         MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null));
 
-        ExplorationMap map = new ExplorationMap(template);
+        ExplorationMap map = new ExplorationMap(template, new MapTriggers(Collections.EMPTY_LIST, new HashMap<>()));
         map.dispatcher().add(listener);
 
         map.add(player);
@@ -113,7 +116,7 @@ class ExplorationMapTest extends GameBaseCase {
     void sendWillSendToPlayers() throws ContainerException, SQLException {
         MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null));
 
-        ExplorationMap map = new ExplorationMap(template);
+        ExplorationMap map = new ExplorationMap(template, new MapTriggers(Collections.EMPTY_LIST, new HashMap<>()));
 
         ExplorationPlayer player = explorationPlayer();
         player.join(map);

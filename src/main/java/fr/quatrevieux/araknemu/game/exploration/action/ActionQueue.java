@@ -42,6 +42,8 @@ final public class ActionQueue {
      * Push the action to the queue, and start it if not busy
      */
     public void push(Action action) throws Exception {
+        action.setId(generateId());
+
         actions.add(action);
 
         if (actions.size() == 1) {
@@ -55,11 +57,14 @@ final public class ActionQueue {
      * @param actionId The action to end
      */
     public void end(int actionId) throws Exception {
-        if (actions.element().id() != actionId) {
+        Action action = actions.element();
+
+        if (action.id() != actionId) {
             throw new NoSuchElementException("The action ID do not corresponds");
         }
 
-        actions.remove().end();
+        action.end();
+        actions.remove();
 
         if (isBusy()) {
             run();
@@ -91,7 +96,7 @@ final public class ActionQueue {
     /**
      * Generate a new action id
      */
-    public int generateId() {
+    private int generateId() {
         return ++lastActionId;
     }
 

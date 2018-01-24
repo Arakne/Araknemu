@@ -1,11 +1,14 @@
 package fr.quatrevieux.araknemu.network.game.out.game.action;
 
+import fr.quatrevieux.araknemu.game.exploration.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.action.ActionType;
 
 /**
  * Response for a game action
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/GameActions.as#L127
+ *
+ * @todo Change constructor and arguments
  */
 final public class GameActionResponse {
     final private int id;
@@ -18,6 +21,10 @@ final public class GameActionResponse {
         this.type = type;
         this.spriteId = spriteId;
         this.arguments = arguments;
+    }
+
+    public GameActionResponse(Action action) {
+        this(action.id(), action.type(), action.performer().id(), action.arguments());
     }
 
     @Override

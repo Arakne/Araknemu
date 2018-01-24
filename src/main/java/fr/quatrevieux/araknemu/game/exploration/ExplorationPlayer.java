@@ -5,6 +5,8 @@ import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.event.exploration.CellChanged;
+import fr.quatrevieux.araknemu.game.event.exploration.MapChanged;
 import fr.quatrevieux.araknemu.game.event.exploration.MapLeaved;
 import fr.quatrevieux.araknemu.game.event.exploration.MapLoaded;
 import fr.quatrevieux.araknemu.game.exploration.action.ActionQueue;
@@ -96,6 +98,36 @@ final public class ExplorationPlayer implements PlayableCharacter, Sender, Creat
         map.add(this);
 
         dispatch(new MapLoaded(map));
+    }
+
+    /**
+     * Change the current map and cell
+     *
+     * @param map The new map
+     * @param cell The new cell
+     */
+    public void changeMap(ExplorationMap map, int cell) {
+        player.setPosition(
+            new Position(map.id(), cell)
+        );
+
+        join(map);
+        dispatch(new MapChanged(map));
+    }
+
+    /**
+     * Change the current cell of the player
+     *
+     * @param cell The new cell id
+     *
+     * @see ExplorationPlayer#changeMap(ExplorationMap, int) For changing the map and cell
+     */
+    public void changeCell(int cell) {
+        player.setPosition(
+            player.position().newCell(cell)
+        );
+
+        map.dispatch(new CellChanged(this, cell));
     }
 
     /**

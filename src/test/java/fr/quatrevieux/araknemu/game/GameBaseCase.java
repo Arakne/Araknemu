@@ -21,7 +21,9 @@ import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
+import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.sql.WorldRepositoriesModule;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
@@ -167,6 +169,7 @@ public class GameBaseCase extends DatabaseTestCase {
             .declare(Player.class, PlayerRepository.class)
             .declare(PlayerRace.class, PlayerRaceRepository.class)
             .declare(MapTemplate.class, MapTemplateRepository.class)
+            .declare(MapTrigger.class, MapTriggerRepository.class)
         ;
     }
 

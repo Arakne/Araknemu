@@ -1,17 +1,21 @@
 package fr.quatrevieux.araknemu.game.exploration;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.Listener;
+import fr.quatrevieux.araknemu.game.event.exploration.MapChanged;
 import fr.quatrevieux.araknemu.game.event.exploration.MapLeaved;
 import fr.quatrevieux.araknemu.game.event.exploration.MapLoaded;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.PlayerSprite;
+import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -92,5 +96,54 @@ class ExplorationPlayerTest extends GameBaseCase {
 
         assertFalse(map.players().contains(player));
         assertSame(map, ref.get());
+    }
+
+    @Test
+    void changeCell() throws ContainerException {
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10300);
+        player.join(map);
+
+        player.changeCell(741);
+
+        assertEquals(741, player.position().cell());
+
+        requestStack.assertLast(
+            new AddSprites(
+                Collections.singleton(player.sprite())
+            )
+        );
+    }
+
+    @Test
+    void changeMap() throws ContainerException {
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10300);
+
+        AtomicReference<MapLoaded> ref1 = new AtomicReference<>();
+        AtomicReference<MapChanged> ref2 = new AtomicReference<>();
+
+        player.dispatcher().add(new Listener<MapLoaded>() {
+            @Override
+            public void on(MapLoaded event) {
+                ref1.set(event);
+            }
+
+            @Override
+            public Class<MapLoaded> event() {
+                return MapLoaded.class;
+            }
+        });
+        player.dispatcher().add(MapChanged.class, ref2::set);
+
+        try {
+            player.changeMap(map, 85);
+        }catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+
+        assertSame(map, player.map());
+        assertSame(map, ref1.get().map());
+        assertSame(map, ref2.get().map());
+        assertEquals(new Position(10300, 85), player.position());
     }
 }

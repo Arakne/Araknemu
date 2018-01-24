@@ -21,12 +21,6 @@ class ActionQueueTest extends GameBaseCase {
     }
 
     @Test
-    void generateId() {
-        assertEquals(1, queue.generateId());
-        assertEquals(2, queue.generateId());
-    }
-
-    @Test
     void pushFirstWillRunAndSetBusy() throws Exception {
         Action action = Mockito.mock(Action.class);
 
@@ -34,6 +28,21 @@ class ActionQueueTest extends GameBaseCase {
 
         Mockito.verify(action).start();
         assertTrue(queue.isBusy());
+    }
+
+    @Test
+    void pushWillSetId() throws Exception {
+        Action a1 = Mockito.mock(Action.class);
+        Action a2 = Mockito.mock(Action.class);
+        Action a3 = Mockito.mock(Action.class);
+
+        queue.push(a1);
+        queue.push(a2);
+        queue.push(a3);
+
+        Mockito.verify(a1).setId(1);
+        Mockito.verify(a2).setId(2);
+        Mockito.verify(a3).setId(3);
     }
 
     @Test

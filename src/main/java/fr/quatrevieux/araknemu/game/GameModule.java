@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
@@ -25,6 +26,8 @@ import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.action.factory.ExplorationActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.exploration.map.trigger.CellActionPerformer;
+import fr.quatrevieux.araknemu.game.exploration.map.trigger.Teleport;
 import fr.quatrevieux.araknemu.game.handler.loader.*;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.adapter.Server;
@@ -183,7 +186,8 @@ final public class GameModule implements ContainerModule {
         configurator.persist(
             ExplorationMapService.class,
             container -> new ExplorationMapService(
-                container.get(MapTemplateRepository.class)
+                container.get(MapTemplateRepository.class),
+                container.get(MapTriggerRepository.class)
             )
         );
 

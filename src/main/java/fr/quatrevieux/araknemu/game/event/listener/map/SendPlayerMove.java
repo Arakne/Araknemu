@@ -2,7 +2,6 @@ package fr.quatrevieux.araknemu.game.event.listener.map;
 
 import fr.quatrevieux.araknemu.game.event.Listener;
 import fr.quatrevieux.araknemu.game.event.exploration.action.PlayerMoving;
-import fr.quatrevieux.araknemu.game.exploration.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 
@@ -19,12 +18,7 @@ final public class SendPlayerMove implements Listener<PlayerMoving> {
     @Override
     public void on(PlayerMoving event) {
         map.send(
-            new GameActionResponse(
-                event.action().id(),
-                ActionType.MOVE,
-                event.player().id(),
-                map.decoder().encodePath(event.action().path())
-            )
+            new GameActionResponse(event.action())
         );
     }
 

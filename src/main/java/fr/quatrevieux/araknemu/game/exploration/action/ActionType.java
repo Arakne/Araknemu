@@ -8,7 +8,8 @@ import java.util.Map;
  */
 public enum ActionType {
     NONE(0),
-    MOVE(1);
+    MOVE(1),
+    CHANGE_MAP(2);
 
     final private int id;
 

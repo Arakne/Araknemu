@@ -36,25 +36,23 @@ class SendPlayerMoveTest extends GameBaseCase {
     @Test
     void onPlayerMoving() throws SQLException, ContainerException {
         ExplorationPlayer player = explorationPlayer();
+        Move move = new Move(
+            player,
+            Arrays.asList(
+                new PathStep(100, Direction.WEST),
+                new PathStep(99, Direction.WEST),
+                new PathStep(98, Direction.WEST)
+            )
+        );
+        move.setId(123);
 
         listener.on(
-            new PlayerMoving(
-                player,
-                new Move(
-                    1,
-                    player,
-                    Arrays.asList(
-                        new PathStep(100, Direction.WEST),
-                        new PathStep(99, Direction.WEST),
-                        new PathStep(98, Direction.WEST)
-                    )
-                )
-            )
+            new PlayerMoving(player, move)
         );
 
         requestStack.assertLast(
             new GameActionResponse(
-                1,
+                123,
                 ActionType.MOVE,
                 player.id(),
                 "ebI"
