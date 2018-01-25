@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.network.game.in;
 
 import fr.quatrevieux.araknemu.network.game.in.account.*;
 import fr.quatrevieux.araknemu.network.game.in.basic.AskDate;
+import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminCommand;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import fr.quatrevieux.araknemu.network.game.in.chat.SubscribeChannels;
 import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
@@ -41,7 +42,8 @@ final public class GameParserLoader implements ParserLoader {
             new Message.Parser(),
             new DeleteCharacterRequest.Parser(),
             new SubscribeChannels.Parser(),
-            new AskRandomName.Parser()
+            new AskRandomName.Parser(),
+            new AdminCommand.Parser()
         );
     }
 }
