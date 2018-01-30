@@ -12,6 +12,8 @@ import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
 import fr.quatrevieux.araknemu.core.di.*;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Sex;
+import fr.quatrevieux.araknemu.data.living.entity.environment.SubArea;
+import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
 import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.LivingRepositoriesModule;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
@@ -170,6 +172,7 @@ public class GameBaseCase extends DatabaseTestCase {
             .declare(PlayerRace.class, PlayerRaceRepository.class)
             .declare(MapTemplate.class, MapTemplateRepository.class)
             .declare(MapTrigger.class, MapTriggerRepository.class)
+            .declare(SubArea.class, SubAreaRepository.class)
         ;
     }
 

@@ -37,6 +37,11 @@ final public class LivingRepositoriesModule implements ContainerModule {
         );
 
         configurator.persist(
+            fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository.class,
+            container -> new SubAreaRepository(connection)
+        );
+
+        configurator.persist(
             MutableCharacteristicsTransformer.class,
             container -> new MutableCharacteristicsTransformer()
         );

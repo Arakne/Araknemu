@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
+import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
@@ -25,6 +26,7 @@ import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.action.factory.ExplorationActionFactory;
+import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.trigger.CellActionPerformer;
 import fr.quatrevieux.araknemu.game.exploration.map.trigger.Teleport;
@@ -67,6 +69,7 @@ final public class GameModule implements ContainerModule {
                 container.get(Server.class),
                 container.get(Logger.class),
                 Arrays.asList(
+                    container.get(AreaService.class),
                     container.get(ExplorationMapService.class),
                     container.get(ChatService.class)
                 )
@@ -231,6 +234,14 @@ final public class GameModule implements ContainerModule {
                         container.get(PlayerService.class)
                     )
                 }
+            )
+        );
+
+        configurator.persist(
+            AreaService.class,
+            container -> new AreaService(
+                container.get(SubAreaRepository.class),
+                container.get(ListenerAggregate.class)
             )
         );
 

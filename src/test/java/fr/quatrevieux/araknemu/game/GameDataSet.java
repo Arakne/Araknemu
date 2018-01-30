@@ -5,8 +5,10 @@ import fr.quatrevieux.araknemu.core.dbal.repository.Repository;
 import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.data.constant.Alignment;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
+import fr.quatrevieux.araknemu.data.living.entity.environment.SubArea;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
@@ -121,5 +123,33 @@ public class GameDataSet extends TestingDataSet {
         );
 
         return trigger;
+    }
+
+    public SubArea pushSubArea(SubArea area) throws ContainerException, SQLException {
+        use(SubArea.class);
+
+        connection.prepare(
+            "INSERT INTO SUBAREA (SUBAREA_ID, AREA_ID, SUBAREA_NAME, CONQUESTABLE, ALIGNMENT) VALUES (?, ?, ?, ?, ?)",
+            stmt -> {
+                stmt.setInt(1, area.id());
+                stmt.setInt(2, area.area());
+                stmt.setString(3, area.name());
+                stmt.setBoolean(4, area.conquestable());
+                stmt.setInt(5, area.alignment().id());
+
+                return stmt.executeUpdate();
+            }
+        );
+
+        return area;
+    }
+
+    public GameDataSet pushSubAreas() throws SQLException, ContainerException {
+        pushSubArea(new SubArea(1, 0, "Port de Madrestam", true, Alignment.NONE));
+        pushSubArea(new SubArea(2, 0, "La montagne des Craqueleurs", true, Alignment.NEUTRAL));
+        pushSubArea(new SubArea(3, 0, "Le champ des Ingalsses", true, Alignment.BONTARIAN));
+        pushSubArea(new SubArea(4, 0, "La forêt d'Amakna", true, Alignment.BRAKMARIAN));
+
+        return this;
     }
 }

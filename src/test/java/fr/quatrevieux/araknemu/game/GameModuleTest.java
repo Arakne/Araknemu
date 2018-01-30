@@ -16,6 +16,7 @@ import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.action.factory.ExplorationActionFactory;
+import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.adapter.Server;
@@ -58,6 +59,7 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(DefaultListenerAggregate.class, container.get(ListenerAggregate.class));
         assertInstanceOf(ChatService.class, container.get(ChatService.class));
         assertInstanceOf(NameCheckerGenerator.class, container.get(NameGenerator.class));
+        assertInstanceOf(AreaService.class, container.get(AreaService.class));
 
         assertSame(
             container.get(ListenerAggregate.class),
