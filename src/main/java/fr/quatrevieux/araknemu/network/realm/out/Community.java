@@ -14,19 +14,4 @@ final public class Community {
     public String toString() {
         return "Ac" + communityId;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Community community = (Community) o;
-
-        return communityId == community.communityId;
-    }
-
-    @Override
-    public int hashCode() {
-        return communityId;
-    }
 }

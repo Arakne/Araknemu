@@ -53,6 +53,9 @@ public class Araknemu {
             service.boot();
         }
 
+        logger.info("Running garbage collector");
+        System.gc();
+
         logger.info("Araknemu started");
     }
 

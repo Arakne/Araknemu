@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu._test;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,6 +27,10 @@ public class TestCase {
         fail("Cannot found element of type " + type.getName());
     }
 
+    public void assertContainsType(Class type, Collection objects) {
+        assertContainsType(type, objects.toArray());
+    }
+
     public void assertCount(int count, Object[] objects) {
         assertEquals(count, objects.length, "Invalid count");
     }
@@ -36,5 +41,14 @@ public class TestCase {
 
     public void assertContains(Object expected, Collection collection) {
         assertTrue(collection.contains(expected), "The collection do not contains " + expected);
+    }
+
+    public void assertContainsAll(Collection collection, Object... objects) {
+        assertTrue(collection.containsAll(Arrays.asList(objects)));
+    }
+
+    public void assertCollectionEquals(Collection current, Object... values) {
+        assertCount(values.length, current);
+        assertContainsAll(current, values);
     }
 }

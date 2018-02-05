@@ -14,19 +14,4 @@ final public class GMLevel {
     public String toString() {
         return "AlK" + (gm ? "1" : "0");
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        GMLevel gmLevel = (GMLevel) o;
-
-        return gm == gmLevel.gm;
-    }
-
-    @Override
-    public int hashCode() {
-        return (gm ? 1 : 0);
-    }
 }

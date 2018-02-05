@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.Araknemu;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
@@ -17,6 +18,9 @@ import fr.quatrevieux.araknemu.game.account.generator.CamelizeName;
 import fr.quatrevieux.araknemu.game.account.generator.NameCheckerGenerator;
 import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
 import fr.quatrevieux.araknemu.game.account.generator.SimpleNameGenerator;
+import fr.quatrevieux.araknemu.game.admin.AdminService;
+import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
+import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.chat.channel.*;
@@ -107,7 +111,8 @@ final public class GameModule implements ContainerModule {
                     new CommonLoader(),
                     new LoggedLoader(),
                     new PlayingLoader(),
-                    new ExploringLoader()
+                    new ExploringLoader(),
+                    new AdminLoader()
                 ).load(container)
             )
         );
@@ -265,6 +270,32 @@ final public class GameModule implements ContainerModule {
                 ),
                 container.get(PlayerRepository.class),
                 container.get(GameConfiguration.class)
+            )
+        );
+
+        configurator.persist(
+            AdminService.class,
+            container -> new AdminService(
+                Arrays.asList(
+                    container.get(PlayerContextResolver.class),
+                    container.get(AccountContextResolver.class)
+                )
+            )
+        );
+
+        configurator.factory(
+            PlayerContextResolver.class,
+            container -> new PlayerContextResolver(
+                container.get(PlayerService.class),
+                container.get(AccountContextResolver.class)
+            )
+        );
+
+        configurator.persist(
+            AccountContextResolver.class,
+            container -> new AccountContextResolver(
+                container.get(AccountService.class),
+                container.get(AccountRepository.class)
             )
         );
     }

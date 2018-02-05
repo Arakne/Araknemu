@@ -18,19 +18,4 @@ final public class Question {
     public String toString() {
         return "AQ" + answer.replace(" ", "+");
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Question question1 = (Question) o;
-
-        return answer != null ? answer.equals(question1.answer) : question1.answer == null;
-    }
-
-    @Override
-    public int hashCode() {
-        return answer != null ? answer.hashCode() : 0;
-    }
 }

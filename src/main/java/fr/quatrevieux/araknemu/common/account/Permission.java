@@ -5,7 +5,9 @@ package fr.quatrevieux.araknemu.common.account;
  */
 public enum Permission {
     ACCESS,
-    SUPER_ADMIN;
+    SUPER_ADMIN,
+    MANAGE_PLAYER,
+    MANAGE_ACCOUNT;
 
     /**
      * Get the permission bit

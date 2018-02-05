@@ -20,19 +20,4 @@ final public class LoginError {
     public String toString(){
         return "AlE" + errorType;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        LoginError that = (LoginError) o;
-
-        return errorType == that.errorType;
-    }
-
-    @Override
-    public int hashCode() {
-        return (int) errorType;
-    }
 }

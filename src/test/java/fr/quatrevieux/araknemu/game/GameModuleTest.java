@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
 import fr.quatrevieux.araknemu.game.account.generator.NameCheckerGenerator;
 import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
+import fr.quatrevieux.araknemu.game.admin.AdminService;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.connector.ConnectorService;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
@@ -60,6 +61,7 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(ChatService.class, container.get(ChatService.class));
         assertInstanceOf(NameCheckerGenerator.class, container.get(NameGenerator.class));
         assertInstanceOf(AreaService.class, container.get(AreaService.class));
+        assertInstanceOf(AdminService.class, container.get(AdminService.class));
 
         assertSame(
             container.get(ListenerAggregate.class),

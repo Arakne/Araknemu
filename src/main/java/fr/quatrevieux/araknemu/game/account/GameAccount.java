@@ -6,6 +6,9 @@ import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.realm.out.ServerList;
 
+import java.util.Collections;
+import java.util.Set;
+
 /**
  * Account for game
  */
@@ -65,6 +68,20 @@ final public class GameAccount extends AbstractLivingAccount<GameSession> {
      */
     public boolean isGranted(Permission permission) {
         return account.permissions().contains(permission);
+    }
+
+    /**
+     * Check if the account has the asked permissions
+     */
+    public boolean isGranted(Set<Permission> permissions) {
+        return account.permissions().containsAll(permissions);
+    }
+
+    /**
+     * Grant list of permissions
+     */
+    public void grant(Permission ...permission) {
+        Collections.addAll(account.permissions(), permission);
     }
 
     /**
