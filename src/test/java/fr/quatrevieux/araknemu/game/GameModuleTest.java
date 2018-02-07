@@ -19,7 +19,13 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.action.factory.ExplorationActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.item.factory.DefaultItemFactory;
+import fr.quatrevieux.araknemu.game.item.factory.ItemFactory;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
+import fr.quatrevieux.araknemu.game.world.item.effect.mapping.EffectToCharacteristicMapping;
+import fr.quatrevieux.araknemu.game.world.item.effect.mapping.EffectToSpecialMapping;
+import fr.quatrevieux.araknemu.game.world.item.effect.mapping.EffectToWeaponMapping;
 import fr.quatrevieux.araknemu.network.adapter.Server;
 import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
 import fr.quatrevieux.araknemu.network.adapter.netty.NettyServer;
@@ -62,6 +68,11 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(NameCheckerGenerator.class, container.get(NameGenerator.class));
         assertInstanceOf(AreaService.class, container.get(AreaService.class));
         assertInstanceOf(AdminService.class, container.get(AdminService.class));
+        assertInstanceOf(ItemService.class, container.get(ItemService.class));
+        assertInstanceOf(EffectToCharacteristicMapping.class, container.get(EffectToCharacteristicMapping.class));
+        assertInstanceOf(EffectToSpecialMapping.class, container.get(EffectToSpecialMapping.class));
+        assertInstanceOf(EffectToWeaponMapping.class, container.get(EffectToWeaponMapping.class));
+        assertInstanceOf(DefaultItemFactory.class, container.get(ItemFactory.class));
 
         assertSame(
             container.get(ListenerAggregate.class),

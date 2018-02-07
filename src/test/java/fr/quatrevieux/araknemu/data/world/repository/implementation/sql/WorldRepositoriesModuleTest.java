@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
+import fr.quatrevieux.araknemu.data.world.repository.implementation.local.ItemTemplateRepositoryCache;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.local.PlayerRaceRepositoryCache;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ class WorldRepositoriesModuleTest extends GameBaseCase {
         assertInstanceOf(PlayerRaceRepositoryCache.class, container.get(fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository.class));
         assertInstanceOf(MapTemplateRepository.class, container.get(fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository.class));
         assertInstanceOf(MapTriggerRepository.class, container.get(fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository.class));
+        assertInstanceOf(ItemTemplateRepositoryCache.class, container.get(fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository.class));
     }
 
     public void assertInstanceOf(Class type, Object obj) {

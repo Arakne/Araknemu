@@ -25,7 +25,7 @@ class ExploringLoaderTest extends LoaderTestCase {
     void load() throws ContainerException {
         PacketHandler[] handlers = loader.load(container);
 
-        assertConstainsOnly(EnsureExploring.class, handlers);
+        assertContainsOnly(EnsureExploring.class, handlers);
 
         assertHandlePacket(AskExtraInfo.class, handlers);
         assertHandlePacket(GameActionRequest.class, handlers);

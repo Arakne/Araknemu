@@ -7,7 +7,8 @@ public enum Permission {
     ACCESS,
     SUPER_ADMIN,
     MANAGE_PLAYER,
-    MANAGE_ACCOUNT;
+    MANAGE_ACCOUNT,
+    DEBUG;
 
     /**
      * Get the permission bit

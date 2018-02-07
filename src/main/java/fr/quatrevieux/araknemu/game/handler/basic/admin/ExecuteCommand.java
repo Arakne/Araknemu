@@ -23,7 +23,7 @@ final public class ExecuteCommand implements PacketHandler<GameSession, AdminCom
 
         try {
             user.execute(packet.command());
-        } catch (AdminException e) {
+        } catch (Exception e) {
             user.error(e);
         }
     }

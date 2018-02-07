@@ -11,6 +11,7 @@ import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
+import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
@@ -20,6 +21,8 @@ import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
 import fr.quatrevieux.araknemu.game.account.generator.SimpleNameGenerator;
 import fr.quatrevieux.araknemu.game.admin.AdminService;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
+import fr.quatrevieux.araknemu.game.admin.debug.DebugContext;
+import fr.quatrevieux.araknemu.game.admin.debug.DebugContextResolver;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
@@ -35,7 +38,12 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.trigger.CellActionPerformer;
 import fr.quatrevieux.araknemu.game.exploration.map.trigger.Teleport;
 import fr.quatrevieux.araknemu.game.handler.loader.*;
+import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.item.factory.*;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
+import fr.quatrevieux.araknemu.game.world.item.effect.mapping.EffectToCharacteristicMapping;
+import fr.quatrevieux.araknemu.game.world.item.effect.mapping.EffectToSpecialMapping;
+import fr.quatrevieux.araknemu.game.world.item.effect.mapping.EffectToWeaponMapping;
 import fr.quatrevieux.araknemu.network.adapter.Server;
 import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
 import fr.quatrevieux.araknemu.network.adapter.netty.NettyServer;
@@ -75,7 +83,8 @@ final public class GameModule implements ContainerModule {
                 Arrays.asList(
                     container.get(AreaService.class),
                     container.get(ExplorationMapService.class),
-                    container.get(ChatService.class)
+                    container.get(ChatService.class),
+                    container.get(ItemService.class)
                 )
             )
         );
@@ -278,8 +287,17 @@ final public class GameModule implements ContainerModule {
             container -> new AdminService(
                 Arrays.asList(
                     container.get(PlayerContextResolver.class),
-                    container.get(AccountContextResolver.class)
+                    container.get(AccountContextResolver.class),
+                    container.get(DebugContextResolver.class)
                 )
+            )
+        );
+
+        configurator.persist(
+            ItemService.class,
+            container -> new ItemService(
+                container.get(ItemTemplateRepository.class),
+                container.get(ItemFactory.class)
             )
         );
 
@@ -296,6 +314,44 @@ final public class GameModule implements ContainerModule {
             container -> new AccountContextResolver(
                 container.get(AccountService.class),
                 container.get(AccountRepository.class)
+            )
+        );
+
+        configurator.persist(
+            DebugContextResolver.class,
+            DebugContextResolver::new
+        );
+
+        configurator.persist(
+            EffectToCharacteristicMapping.class,
+            container -> new EffectToCharacteristicMapping()
+        );
+
+        configurator.persist(
+            EffectToSpecialMapping.class,
+            container -> new EffectToSpecialMapping()
+        );
+
+        configurator.persist(
+            EffectToWeaponMapping.class,
+            container -> new EffectToWeaponMapping()
+        );
+
+        configurator.persist(
+            ItemFactory.class,
+            container -> new DefaultItemFactory(
+                new ResourceFactory(
+                    container.get(EffectToSpecialMapping.class)
+                ),
+                new WeaponFactory(
+                    container.get(EffectToWeaponMapping.class),
+                    container.get(EffectToCharacteristicMapping.class),
+                    container.get(EffectToSpecialMapping.class)
+                ),
+                new WearableFactory(
+                    container.get(EffectToCharacteristicMapping.class),
+                    container.get(EffectToSpecialMapping.class)
+                )
             )
         );
     }

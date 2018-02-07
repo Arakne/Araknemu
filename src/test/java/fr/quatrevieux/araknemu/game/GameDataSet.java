@@ -6,19 +6,26 @@ import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Alignment;
+import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.environment.SubArea;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.value.Colors;
+import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
+import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
+import fr.quatrevieux.araknemu.data.world.transformer.ItemEffectsTransformer;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
+import fr.quatrevieux.araknemu.game.world.item.Type;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 
 public class GameDataSet extends TestingDataSet {
@@ -149,6 +156,39 @@ public class GameDataSet extends TestingDataSet {
         pushSubArea(new SubArea(2, 0, "La montagne des Craqueleurs", true, Alignment.NEUTRAL));
         pushSubArea(new SubArea(3, 0, "Le champ des Ingalsses", true, Alignment.BONTARIAN));
         pushSubArea(new SubArea(4, 0, "La forêt d'Amakna", true, Alignment.BRAKMARIAN));
+
+        return this;
+    }
+
+    public ItemTemplate pushItemTemplate(ItemTemplate template) throws SQLException, ContainerException {
+        use(ItemTemplate.class);
+
+        connection.prepare(
+            "INSERT INTO ITEM_TEMPLATE (ITEM_TEMPLATE_ID, ITEM_TYPE, ITEM_NAME, ITEM_LEVEL, ITEM_EFFECTS, WEIGHT, ITEM_SET_ID, PRICE, CONDITIONS, WEAPON_INFO) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            stmt -> {
+                stmt.setInt(1, template.id());
+                stmt.setInt(2, template.type().ordinal());
+                stmt.setString(3, template.name());
+                stmt.setInt(4, template.level());
+                stmt.setString(5, new ItemEffectsTransformer().serialize(template.effects()));
+                stmt.setInt(6, template.weight());
+                stmt.setInt(7, template.itemSet());
+                stmt.setInt(8, template.price());
+                stmt.setString(9, template.condition());
+                stmt.setString(10, template.weaponInfo());
+
+                return stmt.executeUpdate();
+            }
+        );
+
+        return template;
+    }
+
+    public GameDataSet pushItemTemplates() throws SQLException, ContainerException {
+        pushItemTemplate(new ItemTemplate(39, Type.AMULETTE, "Petite Amulette du Hibou", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "0d0+2")), 4, "", 0, "", 100));
+        pushItemTemplate(new ItemTemplate(40, Type.EPEE, "Petite Epée de Boisaille", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")), 20, "CS>4", 0, "4;1;1;50;30;5;0", 200));
+        pushItemTemplate(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10));
+        pushItemTemplate(new ItemTemplate(2425, Type.AMULETTE, "Amulette du Bouftou", 3, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 10, 0, "1d10+0"), new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 10, 0, "1d10+0")), 10, "", 1, "", 550));
 
         return this;
     }

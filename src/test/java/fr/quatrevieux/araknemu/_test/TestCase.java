@@ -11,10 +11,14 @@ public class TestCase {
         assertTrue(type.isInstance(object), "Invalid instance. Expects " + type.getName() + " but get " + object.getClass().getName());
     }
 
-    public void assertConstainsOnly(Class type, Object[] objects) {
+    public void assertContainsOnly(Class type, Object[] objects) {
         for (Object object : objects) {
             assertInstanceOf(type, object);
         }
+    }
+
+    public void assertContainsOnly(Class type, Collection objects) {
+        assertContainsOnly(type, objects.toArray());
     }
 
     public void assertContainsType(Class type, Object[] objects) {
@@ -50,5 +54,10 @@ public class TestCase {
     public void assertCollectionEquals(Collection current, Object... values) {
         assertCount(values.length, current);
         assertContainsAll(current, values);
+    }
+
+    public void assertBetween(int min, int max, int value) {
+        assertTrue(value <= max);
+        assertTrue(value >= min);
     }
 }

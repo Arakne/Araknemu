@@ -33,7 +33,7 @@ class PermissionsTransformerTest {
 
     @Test
     void serializeAll() {
-        assertEquals(15, transformer.serialize(EnumSet.allOf(Permission.class)));
+        assertEquals(31, transformer.serialize(EnumSet.allOf(Permission.class)));
     }
 
     @Test

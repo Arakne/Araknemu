@@ -80,7 +80,7 @@ final public class AdminUserContext {
      * @param type The context type
      * @param argument The context resolve argument
      */
-    public Context resolve(String type, String argument) throws ContextException {
+    public Context resolve(String type, Object argument) throws ContextException {
         if (!resolvers.containsKey(type)) {
             throw new ContextException("Context type '" + type + "' not found");
         }

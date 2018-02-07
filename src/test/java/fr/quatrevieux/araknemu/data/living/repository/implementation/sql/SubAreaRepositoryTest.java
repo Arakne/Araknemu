@@ -64,6 +64,6 @@ class SubAreaRepositoryTest extends GameBaseCase {
         Collection<SubArea> areas = repository.all();
 
         assertCount(4, areas);
-        assertConstainsOnly(SubArea.class, areas.toArray());
+        assertContainsOnly(SubArea.class, areas.toArray());
     }
 }

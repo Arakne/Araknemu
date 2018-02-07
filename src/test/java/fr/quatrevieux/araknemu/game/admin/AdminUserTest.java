@@ -137,4 +137,16 @@ class AdminUserTest extends GameBaseCase {
             new CommandResult(LogType.ERROR, "Command 'test' is not found")
         );
     }
+
+    @Test
+    void player() throws SQLException, ContainerException {
+        assertSame(gamePlayer(), user.player());
+    }
+
+    @Test
+    void send() {
+        user.send("test");
+
+        requestStack.assertLast("test");
+    }
 }

@@ -10,8 +10,6 @@ import fr.quatrevieux.araknemu.network.in.PacketHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class LoggedLoaderTest extends LoaderTestCase {
     private LoggedLoader loader;
 
@@ -27,7 +25,7 @@ class LoggedLoaderTest extends LoaderTestCase {
     void load() throws ContainerException {
         PacketHandler[] handlers = loader.load(container);
 
-        assertConstainsOnly(EnsureLogged.class, handlers);
+        assertContainsOnly(EnsureLogged.class, handlers);
 
         assertHandlePacket(AskCharacterList.class, handlers);
         assertHandlePacket(AddCharacterRequest.class, handlers);

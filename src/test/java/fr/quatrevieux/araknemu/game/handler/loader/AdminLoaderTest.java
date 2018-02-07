@@ -22,7 +22,7 @@ class AdminLoaderTest extends LoaderTestCase {
     void load() throws ContainerException {
         PacketHandler[] handlers = loader.load(container);
 
-        assertConstainsOnly(EnsureAdmin.class, handlers);
+        assertContainsOnly(EnsureAdmin.class, handlers);
 
         assertHandlePacket(AdminCommand.class, handlers);
     }

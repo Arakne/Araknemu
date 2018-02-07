@@ -94,6 +94,22 @@ final public class AdminUser implements AdminPerformer {
         return player.id();
     }
 
+    /**
+     * Send packet to admin user
+     *
+     * @see AdminUser#log(LogType, String, Object...) to send a message to console
+     */
+    public void send(Object packet) {
+        player.send(packet);
+    }
+
+    /**
+     * Get the admin player
+     */
+    public GamePlayer player() {
+        return player;
+    }
+
     private void execute(CommandParser.Arguments arguments) throws AdminException {
         Command command = arguments.context().command(arguments.command());
 
