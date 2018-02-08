@@ -45,31 +45,11 @@ class MapChannelTest extends GameBaseCase {
         GamePlayer gp3;
 
         ExplorationPlayer p2 = new ExplorationPlayer(
-            gp2 = new GamePlayer(
-                new GameAccount(
-                    new Account(2),
-                    container.get(AccountService.class),
-                    1
-                ),
-                dataSet.createPlayer(2),
-                new PlayerRace(Race.FECA),
-                new GameSession(new DummyChannel()),
-                container.get(PlayerService.class)
-            )
+            gp2 = makeSimpleGamePlayer(2)
         );
 
         ExplorationPlayer p3 = new ExplorationPlayer(
-            gp3 = new GamePlayer(
-                new GameAccount(
-                    new Account(2),
-                    container.get(AccountService.class),
-                    1
-                ),
-                dataSet.createPlayer(3),
-                new PlayerRace(Race.FECA),
-                new GameSession(new DummyChannel()),
-                container.get(PlayerService.class)
-            )
+            gp3 = makeSimpleGamePlayer(3)
         );
 
         Listener<BroadcastedMessage> l1 = Mockito.mock(Listener.class);

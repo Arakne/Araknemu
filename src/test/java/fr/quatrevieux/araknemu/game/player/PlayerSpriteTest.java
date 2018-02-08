@@ -25,7 +25,7 @@ class PlayerSpriteTest extends GameBaseCase {
     @Test
     void generateString() throws SQLException, ContainerException {
         assertEquals(
-            "200;0;0;1;Bob;1;10^100x100;0;;-1;-1;-1;;;;;;;;",
+            "200;0;0;1;Bob;1;10^100x100;0;;7b;1c8;315;;;;;;;;",
             new PlayerSprite(gamePlayer()).toString()
         );
     }

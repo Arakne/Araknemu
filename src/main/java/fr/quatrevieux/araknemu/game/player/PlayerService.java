@@ -5,10 +5,13 @@ import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
+import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
+import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.common.Disconnected;
 import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.event.listener.player.SavePlayer;
+import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 import java.util.Collection;
@@ -26,15 +29,17 @@ final public class PlayerService {
     final private PlayerRaceRepository raceRepository;
     final private GameConfiguration configuration;
     final private Dispatcher dispatcher;
+    final private InventoryService inventoryService;
 
     final private ConcurrentMap<Integer, GamePlayer> onlinePlayers = new ConcurrentHashMap<>();
     final private ConcurrentMap<String, GamePlayer> playersByName  = new ConcurrentHashMap<>();
 
-    public PlayerService(PlayerRepository repository, PlayerRaceRepository raceRepository, GameConfiguration configuration, Dispatcher dispatcher) {
+    public PlayerService(PlayerRepository repository, PlayerRaceRepository raceRepository, GameConfiguration configuration, Dispatcher dispatcher, InventoryService inventoryService) {
         this.repository = repository;
         this.raceRepository = raceRepository;
         this.configuration = configuration;
         this.dispatcher = dispatcher;
+        this.inventoryService = inventoryService;
     }
 
     /**
@@ -59,17 +64,21 @@ final public class PlayerService {
             )
         );
 
+        ListenerAggregate dispatcher = new DefaultListenerAggregate();
+
         GamePlayer gamePlayer = new GamePlayer(
             session.account(),
             player,
             raceRepository.get(player.race()),
             session,
-            this
+            this,
+            dispatcher,
+            inventoryService.load(player, dispatcher)
         );
 
-        gamePlayer.dispatcher().add(Disconnected.class, e -> logout(gamePlayer));
-        dispatcher.dispatch(new PlayerLoaded(gamePlayer));
-        gamePlayer.dispatcher().add(new SavePlayer(gamePlayer)); // After all events
+        dispatcher.add(Disconnected.class, e -> logout(gamePlayer));
+        this.dispatcher.dispatch(new PlayerLoaded(gamePlayer));
+        dispatcher.add(new SavePlayer(gamePlayer)); // After all events
 
         login(gamePlayer);
 

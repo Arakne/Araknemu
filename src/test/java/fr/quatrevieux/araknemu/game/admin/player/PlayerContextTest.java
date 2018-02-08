@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.game.admin.NullContext;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContext;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
+import fr.quatrevieux.araknemu.game.item.ItemService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +26,8 @@ class PlayerContextTest extends GameBaseCase {
                 new NullContext(),
                 gamePlayer().account(),
                 container.get(AccountRepository.class)
-            )
+            ),
+            container.get(ItemService.class)
         );
     }
 

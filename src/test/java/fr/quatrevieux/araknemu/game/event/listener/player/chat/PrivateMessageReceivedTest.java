@@ -35,17 +35,7 @@ class PrivateMessageReceivedTest extends GameBaseCase {
             gamePlayer()
         );
 
-        other = new GamePlayer(
-            new GameAccount(
-                new Account(3),
-                container.get(AccountService.class),
-                2
-            ),
-            dataSet.createPlayer(2),
-            container.get(PlayerRaceRepository.class).get(Race.FECA),
-            new GameSession(new DummyChannel()),
-            container.get(PlayerService.class)
-        );
+        other = makeOtherPlayer();
     }
 
     @Test

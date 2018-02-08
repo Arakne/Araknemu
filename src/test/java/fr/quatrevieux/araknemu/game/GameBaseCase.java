@@ -13,12 +13,14 @@ import fr.quatrevieux.araknemu.core.di.*;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.environment.SubArea;
+import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
 import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.LivingRepositoriesModule;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
+import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
@@ -35,11 +37,14 @@ import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
+import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
+import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import fr.quatrevieux.araknemu.network.adapter.Channel;
@@ -176,6 +181,7 @@ public class GameBaseCase extends DatabaseTestCase {
             .declare(MapTrigger.class, MapTriggerRepository.class)
             .declare(SubArea.class, SubAreaRepository.class)
             .declare(ItemTemplate.class, ItemTemplateRepository.class)
+            .declare(PlayerItem.class, PlayerItemRepository.class)
         ;
     }
 
@@ -203,6 +209,8 @@ public class GameBaseCase extends DatabaseTestCase {
     }
 
     public GamePlayer gamePlayer(boolean load) throws ContainerException, SQLException {
+        dataSet.use(PlayerItem.class);
+
         if (!session.isLogged()) {
             login();
         }
@@ -218,7 +226,8 @@ public class GameBaseCase extends DatabaseTestCase {
         characteristics.set(Characteristic.STRENGTH, 50);
         characteristics.set(Characteristic.INTELLIGENCE, 150);
 
-        Player player = dataSet.push(new Player(-1, session.account().id(), session.account().serverId(), "Bob", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 50, characteristics, new Position(10540, 200), EnumSet.allOf(ChannelType.class)));
+        Player player = dataSet.push(new Player(-1, session.account().id(), session.account().serverId(), "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 50, characteristics, new Position(10540, 200), EnumSet.allOf(ChannelType.class)));
+        ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
         if (!load) {
             session.setPlayer(
@@ -227,7 +236,9 @@ public class GameBaseCase extends DatabaseTestCase {
                     player,
                     dataSet.repository(PlayerRace.class).get(new PlayerRace(Race.FECA)),
                     session,
-                    container.get(PlayerService.class)
+                    container.get(PlayerService.class),
+                    dispatcher,
+                    container.get(InventoryService.class).load(player, dispatcher)
                 )
             );
         } else {
@@ -265,8 +276,9 @@ public class GameBaseCase extends DatabaseTestCase {
 
     public GamePlayer makeOtherPlayer() throws Exception {
         dataSet.pushRaces();
+        dataSet.use(PlayerItem.class);
 
-        Player player = dataSet.pushPlayer("other", 5, 2);
+        Player player = dataSet.push(new Player(-1, 5, 2, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class)));
         GameSession session = new GameSession(new DummyChannel());
 
         session.attach(new GameAccount(
@@ -278,6 +290,27 @@ public class GameBaseCase extends DatabaseTestCase {
         return container.get(PlayerService.class).load(
             session,
             player.id()
+        );
+    }
+
+    public GamePlayer makeSimpleGamePlayer(int id) throws ContainerException {
+        dataSet.use(PlayerItem.class);
+
+        ListenerAggregate dispatcher = new DefaultListenerAggregate();
+        Player player = dataSet.createPlayer(id);
+
+        return new GamePlayer(
+            new GameAccount(
+                new Account(id),
+                container.get(AccountService.class),
+                2
+            ),
+            player,
+            new PlayerRace(Race.FECA),
+            new GameSession(new DummyChannel()),
+            container.get(PlayerService.class),
+            dispatcher,
+            container.get(InventoryService.class).load(player, dispatcher)
         );
     }
 }

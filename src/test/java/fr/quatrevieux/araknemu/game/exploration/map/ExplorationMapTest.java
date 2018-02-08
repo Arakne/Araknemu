@@ -66,7 +66,7 @@ class ExplorationMapTest extends GameBaseCase {
     }
 
     @Test
-    void addPlayerWillDispatchEvent() throws SQLException, ContainerException {
+    void addPlayerWillDispatchEvent() throws Exception {
         AtomicReference<NewSpriteOnMap> ref = new AtomicReference<>();
 
         Listener<NewSpriteOnMap> listener = new Listener<NewSpriteOnMap>() {
@@ -93,19 +93,7 @@ class ExplorationMapTest extends GameBaseCase {
         assertNotNull(ref.get());
         assertEquals(player.sprite().toString(), ref.get().sprite().toString());
 
-        ExplorationPlayer other = new ExplorationPlayer(
-            new GamePlayer(
-                new GameAccount(
-                    new Account(2),
-                    container.get(AccountService.class),
-                    1
-                ),
-                new Player(5, 2, 1, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1)),
-                dataSet.refresh(new PlayerRace(Race.CRA)),
-                new GameSession(new DummyChannel()),
-                container.get(PlayerService.class)
-            )
-        );
+        ExplorationPlayer other = new ExplorationPlayer(makeOtherPlayer());
 
         map.add(other);
 
@@ -127,21 +115,9 @@ class ExplorationMapTest extends GameBaseCase {
     }
 
     @Test
-    void removeWillSendPacket() throws ContainerException, SQLException {
+    void removeWillSendPacket() throws Exception {
         explorationPlayer();
-        ExplorationPlayer other = new ExplorationPlayer(
-            new GamePlayer(
-                new GameAccount(
-                    new Account(2),
-                    container.get(AccountService.class),
-                    1
-                ),
-                new Player(5, 2, 1, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1)),
-                dataSet.refresh(new PlayerRace(Race.CRA)),
-                new GameSession(new DummyChannel()),
-                container.get(PlayerService.class)
-            )
-        );
+        ExplorationPlayer other = new ExplorationPlayer(makeOtherPlayer());
 
         ExplorationMap map = explorationPlayer().map();
 

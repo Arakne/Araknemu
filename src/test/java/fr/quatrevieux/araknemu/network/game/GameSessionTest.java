@@ -11,6 +11,7 @@ import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
@@ -18,6 +19,8 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharac
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import org.apache.mina.core.session.DummySession;
 import org.junit.jupiter.api.Test;
+
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -49,7 +52,9 @@ class GameSessionTest extends GameBaseCase {
             new Player(1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null),
             new PlayerRace(Race.FECA, "Feca", new DefaultCharacteristics(), new Position(10300, 308)),
             session,
-            container.get(PlayerService.class)
+            container.get(PlayerService.class),
+            new DefaultListenerAggregate(),
+            null
         );
 
         session.setPlayer(player);
@@ -58,22 +63,10 @@ class GameSessionTest extends GameBaseCase {
     }
 
     @Test
-    void exploration() throws ContainerException {
+    void exploration() throws ContainerException, SQLException {
         GameSession session = new GameSession(new DummyChannel());
 
-        ExplorationPlayer player = new ExplorationPlayer(
-                new GamePlayer(
-                new GameAccount(
-                    new Account(1),
-                    container.get(AccountService.class),
-                    2
-                ),
-                new Player(1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null),
-                new PlayerRace(Race.FECA, "Feca", new DefaultCharacteristics(), new Position(10300, 308)),
-                session,
-                container.get(PlayerService.class)
-            )
-        );
+        ExplorationPlayer player = new ExplorationPlayer(gamePlayer());
 
         session.setExploration(player);
 

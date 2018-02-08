@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
+import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
@@ -20,6 +21,8 @@ import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.common.Disconnected;
 import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.event.listener.player.SavePlayer;
+import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
+import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,10 +46,12 @@ class PlayerServiceTest extends GameBaseCase {
             container.get(PlayerRepository.class),
             container.get(PlayerRaceRepository.class),
             container.get(GameConfiguration.class),
-            container.get(Dispatcher.class)
+            container.get(Dispatcher.class),
+            container.get(InventoryService.class)
         );
 
         login();
+        dataSet.use(PlayerItem.class);
         dataSet.pushRaces();
     }
 

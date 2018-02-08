@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.factory.DefaultItemFactory;
 import fr.quatrevieux.araknemu.game.item.factory.ItemFactory;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
+import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.world.item.effect.mapping.EffectToCharacteristicMapping;
 import fr.quatrevieux.araknemu.game.world.item.effect.mapping.EffectToSpecialMapping;
 import fr.quatrevieux.araknemu.game.world.item.effect.mapping.EffectToWeaponMapping;
@@ -73,6 +74,7 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(EffectToSpecialMapping.class, container.get(EffectToSpecialMapping.class));
         assertInstanceOf(EffectToWeaponMapping.class, container.get(EffectToWeaponMapping.class));
         assertInstanceOf(DefaultItemFactory.class, container.get(ItemFactory.class));
+        assertInstanceOf(InventoryService.class, container.get(InventoryService.class));
 
         assertSame(
             container.get(ListenerAggregate.class),

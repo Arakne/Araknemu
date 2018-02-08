@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.item.factory;
 
 import fr.quatrevieux.araknemu.data.constant.Effect;
+import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.Type;
@@ -8,6 +9,7 @@ import fr.quatrevieux.araknemu.game.world.item.effect.mapping.EffectToCharacteri
 import fr.quatrevieux.araknemu.game.world.item.effect.mapping.EffectToSpecialMapping;
 import fr.quatrevieux.araknemu.game.world.item.type.Wearable;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -24,25 +26,12 @@ final public class WearableFactory implements ItemFactory {
 
     @Override
     public Item create(ItemTemplate template, boolean maximize) {
-        return new Wearable(
-            template,
-            template
-                .effects()
-                .stream()
-                .filter(entry -> entry.effect().type() == Effect.Type.CHARACTERISTIC)
-                .map(
-                    maximize
-                        ? characteristicMapping::createMaximize
-                        : characteristicMapping::createRandom
-                )
-                .collect(Collectors.toList()),
-            template
-                .effects()
-                .stream()
-                .filter(entry -> entry.effect().type() == Effect.Type.SPECIAL)
-                .map(specialMapping::create)
-                .collect(Collectors.toList())
-        );
+        return create(template, template.effects(), maximize);
+    }
+
+    @Override
+    public Item retrieve(ItemTemplate template, List<ItemTemplateEffectEntry> effects) {
+        return create(template, effects, false);
     }
 
     @Override
@@ -51,5 +40,25 @@ final public class WearableFactory implements ItemFactory {
             Type.AMULETTE, Type.ANNEAU, Type.CEINTURE, Type.BOIS, Type.COIFFE,
             Type.CAPE, Type.DOFUS, Type.SAC_DOS,
         };
+    }
+
+    private Item create(ItemTemplate template, List<ItemTemplateEffectEntry> effects, boolean maximize) {
+        return new Wearable(
+            template,
+            effects
+                .stream()
+                .filter(entry -> entry.effect().type() == Effect.Type.CHARACTERISTIC)
+                .map(
+                    maximize
+                        ? characteristicMapping::createMaximize
+                        : characteristicMapping::createRandom
+                )
+                .collect(Collectors.toList()),
+            effects
+                .stream()
+                .filter(entry -> entry.effect().type() == Effect.Type.SPECIAL)
+                .map(specialMapping::create)
+                .collect(Collectors.toList())
+        );
     }
 }

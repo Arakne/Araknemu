@@ -1,12 +1,14 @@
 package fr.quatrevieux.araknemu.game.item.factory;
 
 import fr.quatrevieux.araknemu.data.constant.Effect;
+import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.Type;
 import fr.quatrevieux.araknemu.game.world.item.effect.mapping.EffectToSpecialMapping;
 import fr.quatrevieux.araknemu.game.world.item.type.Resource;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -22,9 +24,14 @@ final public class ResourceFactory implements ItemFactory {
 
     @Override
     public Item create(ItemTemplate template, boolean maximize) {
+        return retrieve(template, template.effects());
+    }
+
+    @Override
+    public Item retrieve(ItemTemplate template, List<ItemTemplateEffectEntry> effects) {
         return new Resource(
             template,
-            template.effects()
+            effects
                 .stream()
                 .filter(entry -> entry.effect().type() == Effect.Type.SPECIAL)
                 .map(mapping::create)

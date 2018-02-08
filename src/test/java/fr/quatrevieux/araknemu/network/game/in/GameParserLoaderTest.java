@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionCancel;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
+import fr.quatrevieux.araknemu.network.game.in.object.ObjectMoveRequest;
 import fr.quatrevieux.araknemu.network.in.ParserLoader;
 import fr.quatrevieux.araknemu.network.in.SinglePacketParser;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,7 @@ class GameParserLoaderTest {
         assertContainsInstance(SubscribeChannels.Parser.class, parsers);
         assertContainsInstance(AskRandomName.Parser.class, parsers);
         assertContainsInstance(AdminCommand.Parser.class, parsers);
+        assertContainsInstance(ObjectMoveRequest.Parser.class, parsers);
     }
 
     public void assertContainsInstance(Class type, Collection collection) {

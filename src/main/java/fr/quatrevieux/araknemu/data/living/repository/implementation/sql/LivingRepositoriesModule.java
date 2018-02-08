@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.transformer.ChannelsTransformer;
 import fr.quatrevieux.araknemu.data.living.transformer.PermissionsTransformer;
 import fr.quatrevieux.araknemu.data.transformer.MutableCharacteristicsTransformer;
+import fr.quatrevieux.araknemu.data.world.transformer.ItemEffectsTransformer;
 
 /**
  * DI module for living repositories
@@ -42,6 +43,14 @@ final public class LivingRepositoriesModule implements ContainerModule {
         );
 
         configurator.persist(
+            fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository.class,
+            container -> new PlayerItemRepository(
+                connection,
+                container.get(ItemEffectsTransformer.class)
+            )
+        );
+
+        configurator.persist(
             MutableCharacteristicsTransformer.class,
             container -> new MutableCharacteristicsTransformer()
         );
@@ -54,6 +63,11 @@ final public class LivingRepositoriesModule implements ContainerModule {
         configurator.persist(
             ChannelsTransformer.class,
             container -> new ChannelsTransformer()
+        );
+
+        configurator.persist(
+            ItemEffectsTransformer.class,
+            container -> new ItemEffectsTransformer()
         );
     }
 }

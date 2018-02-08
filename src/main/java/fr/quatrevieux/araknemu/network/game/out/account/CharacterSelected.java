@@ -3,7 +3,11 @@ package fr.quatrevieux.araknemu.network.game.out.account;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.value.Colors;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayableCharacter;
+import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import fr.quatrevieux.araknemu.network.game.out.object.ItemSerializer;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Confirm character select and start game
@@ -71,9 +75,9 @@ final public class CharacterSelected {
         }
     }
 
-    final private PlayableCharacter character;
+    final private GamePlayer character;
 
-    public CharacterSelected(PlayableCharacter character) {
+    public CharacterSelected(GamePlayer character) {
         this.character = character;
     }
 
@@ -85,6 +89,10 @@ final public class CharacterSelected {
         character.print(printer);
 
         printer.write(sb);
+
+        for (InventoryEntry entry : character.inventory()) {
+            sb.append(new ItemSerializer(entry)).append(';');
+        }
 
         return sb.toString();
     }

@@ -45,17 +45,7 @@ class EnsureAdminTest extends GameBaseCase {
             )
         );
 
-        dataSet.pushRaces();
-
-        session.setPlayer(
-            new GamePlayer(
-                session.account(),
-                dataSet.createPlayer(5),
-                container.get(PlayerRaceRepository.class).get(Race.FECA),
-                session,
-                container.get(PlayerService.class)
-            )
-        );
+        gamePlayer();
 
         Packet packet = new AskCharacterList(false);
 

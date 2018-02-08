@@ -102,4 +102,21 @@ class WearableFactoryTest extends GameBaseCase {
         assertCount(1, wearable.specials());
         assertEquals(Effect.NULL1, wearable.specials().get(0).effect());
     }
+
+    @Test
+    void retrieve() {
+        Item item = factory.retrieve(
+            new ItemTemplate(39, Type.AMULETTE, "Petite Amulette du Hibou", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "0d0+2")), 4, "", 0, "", 100),
+            Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 20, 0, 0, ""))
+        );
+
+        assertInstanceOf(Wearable.class, item);
+        assertCount(1, item.effects());
+
+        Wearable wearable = (Wearable) item;
+
+        assertCount(1, wearable.characteristics());
+        assertEquals(Effect.ADD_INTELLIGENCE, wearable.characteristics().get(0).effect());
+        assertEquals(20, wearable.characteristics().get(0).value());
+    }
 }

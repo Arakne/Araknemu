@@ -6,11 +6,14 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.item.factory.ItemFactory;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.Type;
+import fr.quatrevieux.araknemu.game.world.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.world.item.type.Wearable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
+
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -76,5 +79,18 @@ class ItemServiceTest extends GameBaseCase {
         assertEquals(10, wearable.characteristics().get(0).boost());
         assertEquals(Characteristic.STRENGTH, wearable.characteristics().get(1).characteristic());
         assertEquals(10, wearable.characteristics().get(1).boost());
+    }
+
+    @Test
+    void retrieve() {
+        Item item = service.create(2425);
+
+        assertEquals(
+            item,
+            service.retrieve(
+                2425,
+                item.effects().stream().map(ItemEffect::toTemplate).collect(Collectors.toList())
+            )
+        );
     }
 }

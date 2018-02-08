@@ -4,9 +4,9 @@ import fr.quatrevieux.araknemu.Araknemu;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
-import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
+import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
@@ -21,7 +21,6 @@ import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
 import fr.quatrevieux.araknemu.game.account.generator.SimpleNameGenerator;
 import fr.quatrevieux.araknemu.game.admin.AdminService;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
-import fr.quatrevieux.araknemu.game.admin.debug.DebugContext;
 import fr.quatrevieux.araknemu.game.admin.debug.DebugContextResolver;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
@@ -35,12 +34,11 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.action.factory.ExplorationActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
-import fr.quatrevieux.araknemu.game.exploration.map.trigger.CellActionPerformer;
-import fr.quatrevieux.araknemu.game.exploration.map.trigger.Teleport;
 import fr.quatrevieux.araknemu.game.handler.loader.*;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.factory.*;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
+import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.world.item.effect.mapping.EffectToCharacteristicMapping;
 import fr.quatrevieux.araknemu.game.world.item.effect.mapping.EffectToSpecialMapping;
 import fr.quatrevieux.araknemu.game.world.item.effect.mapping.EffectToWeaponMapping;
@@ -188,7 +186,8 @@ final public class GameModule implements ContainerModule {
                 container.get(PlayerRepository.class),
                 container.get(PlayerRaceRepository.class),
                 container.get(GameConfiguration.class),
-                container.get(fr.quatrevieux.araknemu.game.event.Dispatcher.class)
+                container.get(fr.quatrevieux.araknemu.game.event.Dispatcher.class),
+                container.get(InventoryService.class)
             )
         );
 
@@ -260,6 +259,15 @@ final public class GameModule implements ContainerModule {
         );
 
         configurator.persist(
+            InventoryService.class,
+            container -> new InventoryService(
+                container.get(PlayerItemRepository.class),
+                container.get(ItemService.class),
+                container.get(ListenerAggregate.class)
+            )
+        );
+
+        configurator.persist(
             ListenerAggregate.class,
             container -> new DefaultListenerAggregate()
         );
@@ -305,7 +313,8 @@ final public class GameModule implements ContainerModule {
             PlayerContextResolver.class,
             container -> new PlayerContextResolver(
                 container.get(PlayerService.class),
-                container.get(AccountContextResolver.class)
+                container.get(AccountContextResolver.class),
+                container.get(ItemService.class)
             )
         );
 

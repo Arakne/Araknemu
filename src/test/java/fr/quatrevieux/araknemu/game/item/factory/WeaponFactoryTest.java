@@ -119,4 +119,34 @@ class WeaponFactoryTest extends GameBaseCase {
         assertCount(1, weapon.specials());
         assertEquals(Effect.NULL1, weapon.specials().get(0).effect());
     }
+
+    @Test
+    void retrieve() {
+        Item item = factory.retrieve(
+            new ItemTemplate(40, Type.EPEE, "Petite Epée de Boisaille", 1,
+                Arrays.asList(
+                    new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")
+                ),
+                20, "CS>4", 0, "4;1;1;50;30;5;0", 200
+            ),
+            Arrays.asList(
+                new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0"),
+                new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 20, 0, 0, "")
+            )
+        );
+
+        assertInstanceOf(Weapon.class, item);
+        assertCount(2, item.effects());
+
+        Weapon weapon = (Weapon) item;
+
+        assertCount(1, weapon.weaponEffects());
+        assertEquals(Effect.INFLICT_DAMAGE_NEUTRAL, weapon.weaponEffects().get(0).effect());
+        assertEquals(1, weapon.weaponEffects().get(0).min());
+        assertEquals(7, weapon.weaponEffects().get(0).max());
+
+        assertCount(1, weapon.characteristics());
+        assertEquals(Effect.ADD_STRENGTH, weapon.characteristics().get(0).effect());
+        assertEquals(20, weapon.characteristics().get(0).value());
+    }
 }

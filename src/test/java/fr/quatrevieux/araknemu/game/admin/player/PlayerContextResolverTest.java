@@ -8,7 +8,9 @@ import fr.quatrevieux.araknemu.game.admin.NullContext;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContext;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
+import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
+import fr.quatrevieux.araknemu.game.world.item.Item;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +30,8 @@ class PlayerContextResolverTest extends GameBaseCase {
 
         resolver = new PlayerContextResolver(
             container.get(PlayerService.class),
-            container.get(AccountContextResolver.class)
+            container.get(AccountContextResolver.class),
+            container.get(ItemService.class)
         );
     }
 

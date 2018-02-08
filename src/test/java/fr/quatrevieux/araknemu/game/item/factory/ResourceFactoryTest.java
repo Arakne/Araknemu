@@ -61,4 +61,17 @@ class ResourceFactoryTest extends GameBaseCase {
         assertEquals(Effect.NULL1, item.effects().get(0).effect());
         assertEquals("test", item.specials().get(0).text());
     }
+
+    @Test
+    void retrieveWithSpecialEffect() {
+        ItemTemplate template = new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10);
+        Item item = factory.retrieve(template, Arrays.asList(new ItemTemplateEffectEntry(Effect.NULL1, 0, 0, 0, "test")));
+
+        assertInstanceOf(Resource.class, item);
+        assertSame(template, item.template());
+        assertCount(1, item.effects());
+
+        assertEquals(Effect.NULL1, item.effects().get(0).effect());
+        assertEquals("test", item.specials().get(0).text());
+    }
 }

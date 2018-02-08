@@ -1,38 +1,28 @@
 package fr.quatrevieux.araknemu.network.game.out.account;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
-import fr.quatrevieux.araknemu.data.constant.Race;
-import fr.quatrevieux.araknemu.data.constant.Sex;
-import fr.quatrevieux.araknemu.data.living.entity.account.Account;
-import fr.quatrevieux.araknemu.data.living.entity.player.Player;
-import fr.quatrevieux.araknemu.data.value.Colors;
-import fr.quatrevieux.araknemu.data.value.Position;
-import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.account.AccountService;
-import fr.quatrevieux.araknemu.game.account.GameAccount;
-import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.game.player.PlayerService;
-import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
+import fr.quatrevieux.araknemu.game.item.ItemService;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.sql.SQLException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CharacterSelectedTest extends GameBaseCase {
     @Test
-    void generate() throws ContainerException {
-        GamePlayer player = new GamePlayer(
-            new GameAccount(
-                new Account(5),
-                container.get(AccountService.class),
-                2
-            ),
-            new Player(123, 5, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null),
-            new PlayerRace(Race.FECA, "Feca", new DefaultCharacteristics(), new Position(10300, 308)),
-            session,
-            container.get(PlayerService.class)
-        );
+    void generate() throws ContainerException, SQLException {
+        assertEquals("ASK|1|Bob|50||0|10|7b|1c8|315|", new CharacterSelected(gamePlayer()).toString());
+    }
 
-        assertEquals("ASK|123|Bob|23||0|10|7b|1c8|315|", new CharacterSelected(player).toString());
+    @Test
+    void generateWithItems() throws SQLException, ContainerException {
+        dataSet.pushItemTemplates();
+
+        gamePlayer().inventory().add(container.get(ItemService.class).create(39), 1, 0);
+        gamePlayer().inventory().add(container.get(ItemService.class).create(40), 1, 1);
+        gamePlayer().inventory().add(container.get(ItemService.class).create(284), 10, -1);
+
+        assertEquals("ASK|1|Bob|50||0|10|7b|1c8|315|1~27~1~0~7e#2#0#0#0d0+2;2~28~1~1~64#1#7#0#1d7+0;3~11c~a~~;", new CharacterSelected(gamePlayer()).toString());
     }
 }

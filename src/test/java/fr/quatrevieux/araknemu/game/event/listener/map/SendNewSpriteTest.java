@@ -54,20 +54,8 @@ class SendNewSpriteTest extends GameBaseCase {
     }
 
     @Test
-    void onOtherSprite() throws ContainerException {
-        Sprite sprite = new PlayerSprite(
-            new GamePlayer(
-                new GameAccount(
-                    new Account(2),
-                    container.get(AccountService.class),
-                    1
-                ),
-                new Player(5, 2, 1, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1)),
-                dataSet.refresh(new PlayerRace(Race.CRA)),
-                new GameSession(new DummyChannel()),
-                container.get(PlayerService.class)
-            )
-        );
+    void onOtherSprite() throws Exception {
+        Sprite sprite = new PlayerSprite(makeOtherPlayer());
 
         listener.on(
             new NewSpriteOnMap(sprite)

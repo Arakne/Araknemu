@@ -1,11 +1,14 @@
 package fr.quatrevieux.araknemu.game.item;
 
+import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.game.item.factory.ItemFactory;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import org.slf4j.Logger;
+
+import java.util.List;
 
 /**
  * Service for handle items
@@ -35,9 +38,7 @@ final public class ItemService implements PreloadableService {
      * @param maximize Maximize item stats ?
      */
     public Item create(int id, boolean maximize) {
-        ItemTemplate template = repository.get(id);
-
-        return factory.create(template, maximize);
+        return factory.create(repository.get(id), maximize);
     }
 
     /**
@@ -47,5 +48,15 @@ final public class ItemService implements PreloadableService {
      */
     public Item create(int id) {
         return create(id, false);
+    }
+
+    /**
+     * Retrieve an item with its effects
+     *
+     * @param id The item template id
+     * @param effects The item effects
+     */
+    public Item retrieve(int id, List<ItemTemplateEffectEntry> effects) {
+        return factory.retrieve(repository.get(id), effects);
     }
 }
