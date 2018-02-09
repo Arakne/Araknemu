@@ -9,6 +9,8 @@ import fr.quatrevieux.araknemu.game.event.inventory.ObjectQuantityChanged;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.Type;
 import fr.quatrevieux.araknemu.game.world.item.effect.ItemEffect;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
 import fr.quatrevieux.araknemu.game.world.item.type.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -90,18 +92,18 @@ class SimpleItemStorageTest extends TestCase {
 
     @Test
     void getNotFound() {
-        assertThrows(NoSuchElementException.class, () -> storage.get(0));
+        assertThrows(ItemNotFoundException.class, () -> storage.get(0));
     }
 
     @Test
-    void addWillDispatchEvent() {
+    void addWillDispatchEvent() throws InventoryException {
         Entry entry = storage.add(new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>()));
 
         Mockito.verify(dispatcher).dispatch(Mockito.argThat(argument -> ObjectAdded.class.cast(argument).entry() == entry));
     }
 
     @Test
-    void addWillCreateNewEntry() {
+    void addWillCreateNewEntry() throws InventoryException {
         Item item = new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
         Entry entry = storage.add(item, 5);
 
@@ -112,7 +114,7 @@ class SimpleItemStorageTest extends TestCase {
     }
 
     @Test
-    void addWillIncrementId() {
+    void addWillIncrementId() throws InventoryException {
         Item item = new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
 
         assertEquals(1, storage.add(item, 5).id());
@@ -121,7 +123,7 @@ class SimpleItemStorageTest extends TestCase {
     }
 
     @Test
-    void addGet() {
+    void addGet() throws InventoryException {
         Item item = new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
         Entry entry = storage.add(item, 5);
 
@@ -129,7 +131,7 @@ class SimpleItemStorageTest extends TestCase {
     }
 
     @Test
-    void iterator() {
+    void iterator() throws InventoryException {
         Item item = new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
 
         List<Entry> entries = Arrays.asList(
@@ -142,7 +144,7 @@ class SimpleItemStorageTest extends TestCase {
     }
 
     @Test
-    void createWithInitialEntries() {
+    void createWithInitialEntries() throws InventoryException {
         List<Entry> entries = Arrays.asList(
             new Entry(5, Mockito.mock(Item.class), 2, -1),
             new Entry(9, Mockito.mock(Item.class), 1, -1),

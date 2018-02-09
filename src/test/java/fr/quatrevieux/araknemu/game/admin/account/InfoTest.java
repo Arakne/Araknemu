@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
+import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
@@ -19,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InfoTest extends CommandTestCase {
     @Test
-    void executeSimple() throws ContainerException, ContextException, SQLException {
+    void executeSimple() throws ContainerException, AdminException, SQLException {
         command = new Info(
             container.get(AccountService.class).load(dataSet.push(new Account(-1, "azerty", "", "uiop"))),
             container.get(AccountRepository.class)
@@ -39,7 +40,7 @@ class InfoTest extends CommandTestCase {
     }
 
     @Test
-    void executeLogged() throws ContainerException, ContextException, SQLException {
+    void executeLogged() throws ContainerException, AdminException, SQLException {
         GameAccount account = container.get(AccountService.class).load(dataSet.push(new Account(-1, "azerty", "", "uiop")));
 
         command = new Info(
@@ -55,7 +56,7 @@ class InfoTest extends CommandTestCase {
     }
 
     @Test
-    void executeAdmin() throws ContainerException, ContextException, SQLException {
+    void executeAdmin() throws ContainerException, AdminException, SQLException {
         GameAccount account = container.get(AccountService.class).load(dataSet.push(new Account(-1, "azerty", "", "uiop", EnumSet.of(Permission.ACCESS, Permission.MANAGE_ACCOUNT), "", "")));
 
         command = new Info(

@@ -66,14 +66,14 @@ abstract public class CommandTestCase extends GameBaseCase {
         return container.get(AdminService.class).user(gamePlayer(true));
     }
 
-    public void execute(AdminPerformer performer, String... arguments) {
+    public void execute(AdminPerformer performer, String... arguments) throws AdminException {
         command.execute(
             this.performer = new PerformerWrapper(performer),
             Arrays.asList(arguments)
         );
     }
 
-    public void execute(String... arguments) throws ContainerException, SQLException, ContextException {
+    public void execute(String... arguments) throws ContainerException, SQLException, AdminException {
         execute(user(), arguments);
     }
 

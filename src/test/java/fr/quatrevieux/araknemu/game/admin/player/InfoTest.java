@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.admin.player;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
+import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ class InfoTest extends CommandTestCase {
     }
 
     @Test
-    void execute() throws ContainerException, SQLException, ContextException {
+    void execute() throws ContainerException, SQLException, AdminException {
         execute("info");
 
         assertOutput(

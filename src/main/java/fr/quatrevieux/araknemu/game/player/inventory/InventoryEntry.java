@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.game.event.inventory.ObjectQuantityChanged;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.world.item.inventory.ItemEntry;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -71,9 +72,9 @@ final public class InventoryEntry implements ItemEntry {
      * @param position The new position
      * @param quantity Quantity to move
      */
-    public void move(int position, int quantity) {
+    public void move(int position, int quantity) throws InventoryException {
         if (quantity > quantity() || quantity <= 0) {
-            throw new IllegalArgumentException("Invalid quantity given");
+            throw new InventoryException("Invalid quantity given");
         }
 
         if (quantity == quantity()) {

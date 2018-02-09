@@ -40,7 +40,7 @@ class ItemServiceTest extends GameBaseCase {
         service.preload(logger);
 
         Mockito.verify(logger).info("Loading items...");
-        Mockito.verify(logger).info("Successfully load {} items", 4);
+        Mockito.verify(logger).info("Successfully load {} items", 11);
     }
 
     @Test

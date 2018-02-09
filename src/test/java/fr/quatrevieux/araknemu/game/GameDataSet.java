@@ -188,7 +188,15 @@ public class GameDataSet extends TestingDataSet {
         pushItemTemplate(new ItemTemplate(39, Type.AMULETTE, "Petite Amulette du Hibou", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "0d0+2")), 4, "", 0, "", 100));
         pushItemTemplate(new ItemTemplate(40, Type.EPEE, "Petite Epée de Boisaille", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")), 20, "CS>4", 0, "4;1;1;50;30;5;0", 200));
         pushItemTemplate(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10));
+        pushItemTemplate(new ItemTemplate(694, Type.DOFUS, "Dofus Pourpre", 6, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_DAMAGE_PERCENT, 26, 50, 0, "1d25+25")), 1, "", 0, "", 10));
+
+        pushItemTemplate(new ItemTemplate(2411, Type.COIFFE, "Coiffe du Bouftou", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 40, 0, "1d40+0"), new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 40, 0, "1d40+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(2414, Type.CAPE, "Cape Bouffante", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INITIATIVE, 1, 300, 0, "1d300+0"), new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 48, 0, "1d48+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(2416, Type.MARTEAU, "Marteau du Bouftou", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_EARTH, 4, 8, 0, "1d5+3"), new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_FIRE, 4, 8, 0, "1d5+3"), new ItemTemplateEffectEntry(Effect.ADD_SUMMONS, 1, 0, 0, "0d0+1")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(2419, Type.ANNEAU, "Anneau de Bouze le Clerc", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 28, 0, "1d28+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(2422, Type.BOTTES, "Boufbottes", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_DAMAGE_PERCENT, 1, 15, 0, "1d15+0"), new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 33, 0, "1d33+0")), 10, "", 1, "", 550));
         pushItemTemplate(new ItemTemplate(2425, Type.AMULETTE, "Amulette du Bouftou", 3, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 10, 0, "1d10+0"), new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 10, 0, "1d10+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(2428, Type.CEINTURE, "Amulette du Bouftou", 20, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_PODS, 1, 500, 0, "1d500+0")), 10, "", 1, "", 550));
 
         return this;
     }

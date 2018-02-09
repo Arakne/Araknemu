@@ -34,7 +34,10 @@ class PlayerContextTest extends GameBaseCase {
     @Test
     void commands() throws CommandNotFoundException {
         assertInstanceOf(Info.class, context.command("info"));
+        assertInstanceOf(GetItem.class, context.command("getitem"));
+
         assertContainsType(Info.class, context.commands());
+        assertContainsType(GetItem.class, context.commands());
     }
 
     @Test

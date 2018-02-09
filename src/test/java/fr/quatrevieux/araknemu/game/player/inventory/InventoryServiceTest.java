@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +47,7 @@ class InventoryServiceTest extends GameBaseCase {
     }
 
     @Test
-    void loadInventory() {
+    void loadInventory() throws ItemNotFoundException {
         Player player = new Player(5);
 
         repository.add(new PlayerItem(5, 3, 39, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "")), 1, 0));

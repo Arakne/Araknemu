@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.admin.debug;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.world.transformer.ItemEffectsTransformer;
 import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
+import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.item.ItemService;
@@ -29,14 +30,14 @@ class GenItemTest extends CommandTestCase {
     }
 
     @Test
-    void executeSimple() throws ContainerException, SQLException, ContextException {
+    void executeSimple() throws ContainerException, SQLException, AdminException {
         execute("genitem", "284");
 
         assertOutput("Generate item Sel (284) : Resource");
     }
 
     @Test
-    void executeMax() throws ContainerException, SQLException, ContextException {
+    void executeMax() throws ContainerException, SQLException, AdminException {
         execute("genitem", "--max", "39");
 
         assertOutput(
@@ -49,7 +50,7 @@ class GenItemTest extends CommandTestCase {
     }
 
     @Test
-    void executeRealUser() throws ContainerException, SQLException, ContextException {
+    void executeRealUser() throws ContainerException, SQLException, AdminException {
         command.execute(user(), Arrays.asList("genitem", "39"));
 
         requestStack.assertLast(

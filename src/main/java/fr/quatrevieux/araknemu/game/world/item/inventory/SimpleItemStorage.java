@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.world.item.inventory;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.inventory.ObjectAdded;
 import fr.quatrevieux.araknemu.game.world.item.Item;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
 
 import java.util.*;
 
@@ -42,9 +43,9 @@ final public class SimpleItemStorage<E extends ItemEntry> implements ItemStorage
     }
 
     @Override
-    public E get(int id) {
+    public E get(int id) throws ItemNotFoundException {
         if (!items.containsKey(id)) {
-            throw new NoSuchElementException("Item " + id + " is not found");
+            throw new ItemNotFoundException(id);
         }
 
         return items.get(id);

@@ -37,8 +37,8 @@ final public class WearableFactory implements ItemFactory {
     @Override
     public Type[] types() {
         return new Type[] {
-            Type.AMULETTE, Type.ANNEAU, Type.CEINTURE, Type.BOIS, Type.COIFFE,
-            Type.CAPE, Type.DOFUS, Type.SAC_DOS,
+            Type.AMULETTE, Type.ANNEAU, Type.CEINTURE, Type.COIFFE,
+            Type.CAPE, Type.DOFUS, Type.SAC_DOS, Type.BOTTES
         };
     }
 

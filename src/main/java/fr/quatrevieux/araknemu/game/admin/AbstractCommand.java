@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.admin;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -23,8 +24,8 @@ abstract public class AbstractCommand implements Command {
         /**
          * Set a command help message
          */
-        public Builder help(String help) {
-            AbstractCommand.this.help = help;
+        public Builder help(String... help) {
+            AbstractCommand.this.help = StringUtils.join(help, "\n");
 
             return this;
         }

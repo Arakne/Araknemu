@@ -67,7 +67,7 @@ class ItemTemplateRepositoryCacheTest extends GameBaseCase {
     void load() {
         Collection<ItemTemplate> templates = repository.load();
 
-        assertCount(4, templates);
+        assertCount(11, templates);
 
         for (ItemTemplate template : templates) {
             assertSame(

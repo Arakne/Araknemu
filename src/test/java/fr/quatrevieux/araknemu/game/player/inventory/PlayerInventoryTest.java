@@ -8,6 +8,8 @@ import fr.quatrevieux.araknemu.game.event.inventory.ObjectAdded;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.Type;
 import fr.quatrevieux.araknemu.game.world.item.inventory.ItemEntry;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
 import fr.quatrevieux.araknemu.game.world.item.type.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,18 +36,18 @@ class PlayerInventoryTest extends GameBaseCase {
 
     @Test
     void getNotFound() {
-        assertThrows(NoSuchElementException.class, () -> inventory.get(0));
+        assertThrows(ItemNotFoundException.class, () -> inventory.get(0));
     }
 
     @Test
-    void addWillDispatchEvent() {
+    void addWillDispatchEvent() throws InventoryException {
         InventoryEntry entry = inventory.add(new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>()));
 
         Mockito.verify(dispatcher).dispatch(Mockito.argThat(argument -> ObjectAdded.class.cast(argument).entry() == entry));
     }
 
     @Test
-    void addWillCreateNewEntry() {
+    void addWillCreateNewEntry() throws InventoryException {
         Item item = new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
         InventoryEntry entry = inventory.add(item, 5);
 
@@ -55,7 +57,7 @@ class PlayerInventoryTest extends GameBaseCase {
     }
 
     @Test
-    void addGet() {
+    void addGet() throws InventoryException {
         Item item = new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
         InventoryEntry entry = inventory.add(item, 5);
 
@@ -63,7 +65,7 @@ class PlayerInventoryTest extends GameBaseCase {
     }
 
     @Test
-    void iterator() {
+    void iterator() throws InventoryException {
         Item item = new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
 
         List<InventoryEntry> entries = Arrays.asList(
@@ -76,7 +78,7 @@ class PlayerInventoryTest extends GameBaseCase {
     }
 
     @Test
-    void createWithItems() {
+    void createWithItems() throws ItemNotFoundException {
         Item i1, i2;
 
         inventory = new PlayerInventory(

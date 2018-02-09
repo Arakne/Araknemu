@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.network.game.out.account;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -16,7 +17,7 @@ class CharacterSelectedTest extends GameBaseCase {
     }
 
     @Test
-    void generateWithItems() throws SQLException, ContainerException {
+    void generateWithItems() throws SQLException, ContainerException, InventoryException {
         dataSet.pushItemTemplates();
 
         gamePlayer().inventory().add(container.get(ItemService.class).create(39), 1, 0);

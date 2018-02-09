@@ -40,7 +40,7 @@ final public class WeaponFactory implements ItemFactory {
     @Override
     public Type[] types() {
         return new Type[] {
-            Type.ARC, Type.BAGUETTE, Type.BAGUETTE, Type.DAGUES, Type.EPEE, Type.MARTEAU,
+            Type.ARC, Type.BAGUETTE, Type.BATON, Type.DAGUES, Type.EPEE, Type.MARTEAU,
             Type.PELLE, Type.HACHE, Type.OUTIL, Type.PIOCHE, Type.FAUX, Type.ARBALETE,
             Type.ARME_MAGIQUE
         };

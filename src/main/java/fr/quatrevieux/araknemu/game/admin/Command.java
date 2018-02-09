@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.admin;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
+import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 
 import java.util.List;
 import java.util.Set;
@@ -30,7 +31,7 @@ public interface Command {
      * @param performer The command performer
      * @param arguments The command arguments
      */
-    public void execute(AdminPerformer performer, List<String> arguments);
+    public void execute(AdminPerformer performer, List<String> arguments) throws AdminException;
 
     /**
      * Get list of required permissions

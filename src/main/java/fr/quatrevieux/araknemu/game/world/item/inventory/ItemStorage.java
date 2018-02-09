@@ -1,6 +1,8 @@
 package fr.quatrevieux.araknemu.game.world.item.inventory;
 
 import fr.quatrevieux.araknemu.game.world.item.Item;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
 
 /**
  * Base type for store items
@@ -11,7 +13,7 @@ public interface ItemStorage<E extends ItemEntry> extends Iterable<E> {
      *
      * @param id The entry id
      */
-    public E get(int id);
+    public E get(int id) throws ItemNotFoundException;
 
     /**
      * Add a new item to the storage
@@ -20,7 +22,7 @@ public interface ItemStorage<E extends ItemEntry> extends Iterable<E> {
      *
      * @return The related entry
      */
-    default public E add(Item item) {
+    default public E add(Item item) throws InventoryException {
         return add(item, 1, ItemEntry.DEFAULT_POSITION);
     }
 
@@ -32,7 +34,7 @@ public interface ItemStorage<E extends ItemEntry> extends Iterable<E> {
      *
      * @return The related entry
      */
-    default public E add(Item item, int quantity) {
+    default public E add(Item item, int quantity) throws InventoryException {
         return add(item, quantity, ItemEntry.DEFAULT_POSITION);
     }
 
@@ -45,5 +47,5 @@ public interface ItemStorage<E extends ItemEntry> extends Iterable<E> {
      *
      * @return The related entry
      */
-    public E add(Item item, int quantity, int position);
+    public E add(Item item, int quantity, int position) throws InventoryException;
 }
