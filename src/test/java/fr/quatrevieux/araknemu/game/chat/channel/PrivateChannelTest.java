@@ -50,6 +50,7 @@ class PrivateChannelTest extends GameBaseCase {
         int playerId = dataSet.pushPlayer("Robert", 3, 2).id();
 
         other = container.get(PlayerService.class).load(otherSession, playerId);
+        otherSession.setPlayer(other);
     }
 
     @Test

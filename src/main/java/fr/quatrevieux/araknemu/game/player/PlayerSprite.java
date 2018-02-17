@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import fr.quatrevieux.araknemu.game.world.creature.accessory.Accessories;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -66,6 +67,13 @@ final public class PlayerSprite implements Sprite {
 
         @Override
         public PlayableCharacter.Printer server(int id) {
+            return this;
+        }
+
+        @Override
+        public PlayableCharacter.Printer accessories(Accessories accessories) {
+            parts[12] = accessories.toString();
+
             return this;
         }
     }

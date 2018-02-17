@@ -27,4 +27,9 @@ final public class DefaultSlot implements InventorySlot {
 
     @Override
     public void uncheckedSet(InventoryEntry entry) {}
+
+    @Override
+    public boolean hasEquipment() {
+        return false;
+    }
 }

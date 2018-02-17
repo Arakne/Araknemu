@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayableCharacter;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import fr.quatrevieux.araknemu.game.world.creature.accessory.Accessories;
 import fr.quatrevieux.araknemu.network.game.out.object.ItemSerializer;
 import org.apache.commons.lang3.StringUtils;
 
@@ -61,6 +62,11 @@ final public class CharacterSelected {
 
         @Override
         public PlayableCharacter.Printer server(int id) {
+            return this;
+        }
+
+        @Override
+        public PlayableCharacter.Printer accessories(Accessories accessories) {
             return this;
         }
 

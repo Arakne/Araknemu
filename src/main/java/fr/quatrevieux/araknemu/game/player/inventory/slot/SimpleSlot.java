@@ -47,4 +47,9 @@ final public class SimpleSlot implements InventorySlot {
     public void uncheckedSet(InventoryEntry entry) {
         this.entry = entry;
     }
+
+    @Override
+    public boolean hasEquipment() {
+        return false;
+    }
 }

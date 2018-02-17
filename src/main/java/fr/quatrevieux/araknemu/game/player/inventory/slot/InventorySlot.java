@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.MoveException;
+import fr.quatrevieux.araknemu.game.world.item.type.Equipment;
 
 /**
  * Slot for player inventory
@@ -32,7 +33,7 @@ public interface InventorySlot {
      */
     default public void set(InventoryEntry entry) throws InventoryException {
         if (!check(entry.item(), entry.quantity())) {
-            throw new MoveException("Cannot moe to this slot");
+            throw new MoveException("Cannot move to this slot");
         }
 
         uncheckedSet(entry);
@@ -48,5 +49,17 @@ public interface InventorySlot {
      */
     default public void unset() {
         uncheckedSet(null);
+    }
+
+    /**
+     * Check if the slot has an equipment set
+     */
+    public boolean hasEquipment();
+
+    /**
+     * Get the current equipment
+     */
+    default public Equipment equipment() {
+        return Equipment.class.cast(entry().item());
     }
 }

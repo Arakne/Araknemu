@@ -40,17 +40,12 @@ class MapChannelTest extends GameBaseCase {
     void sendExplorationMap() throws SQLException, ContainerException {
         ExplorationPlayer player = explorationPlayer();
 
+        GameSession s2 = makeSimpleExplorationSession(2);
+        GameSession s3 = makeSimpleExplorationSession(3);
+
         GamePlayer gp1 = gamePlayer();
-        GamePlayer gp2;
-        GamePlayer gp3;
-
-        ExplorationPlayer p2 = new ExplorationPlayer(
-            gp2 = makeSimpleGamePlayer(2)
-        );
-
-        ExplorationPlayer p3 = new ExplorationPlayer(
-            gp3 = makeSimpleGamePlayer(3)
-        );
+        GamePlayer gp2 = s2.player();
+        GamePlayer gp3 = s3.player();
 
         Listener<BroadcastedMessage> l1 = Mockito.mock(Listener.class);
         Listener<BroadcastedMessage> l2 = Mockito.mock(Listener.class);
@@ -64,8 +59,8 @@ class MapChannelTest extends GameBaseCase {
         gp2.dispatcher().add(l2);
         gp3.dispatcher().add(l3);
 
-        player.map().add(p2);
-        player.map().add(p3);
+        player.map().add(s2.exploration());
+        player.map().add(s3.exploration());
 
         channel.send(
             gamePlayer(),

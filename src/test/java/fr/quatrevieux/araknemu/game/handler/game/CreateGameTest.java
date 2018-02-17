@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.handler.game;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.event.listener.map.SendAccessories;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
@@ -27,7 +28,8 @@ class CreateGameTest extends GameBaseCase {
         );
 
         dataSet.pushMaps();
-        gamePlayer();
+        gamePlayer(true);
+        requestStack.clear();
     }
 
     @Test
@@ -46,6 +48,8 @@ class CreateGameTest extends GameBaseCase {
         handler.handle(session, new CreateGameRequest(CreateGameRequest.Type.EXPLORATION));
 
         assertNotNull(session.exploration());
+
+        assertTrue(session.exploration().dispatcher().has(SendAccessories.class));
 
         requestStack.assertAll(
             new GameCreated(CreateGameRequest.Type.EXPLORATION),

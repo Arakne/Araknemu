@@ -9,11 +9,14 @@ import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * SQL implementation for {@link PlayerItem} repository
@@ -153,5 +156,28 @@ final class PlayerItemRepository implements fr.quatrevieux.araknemu.data.living.
                 stmt.setInt(2, entity.entryId());
             }
         ) > 0;
+    }
+
+    @Override
+    public Map<Integer, List<PlayerItem>> forCharacterList(int serverId, int accountId, int[] positions) {
+        return utils
+            .findAll(
+                "SELECT I.* " +
+                "FROM PLAYER_ITEM I " +
+                "NATURAL JOIN PLAYER " +
+                "WHERE SERVER_ID = ? AND ACCOUNT_ID = ? AND POSITION IN(" + StringUtils.repeat("?, ", positions.length - 1) + "?)",
+                stmt -> {
+                    int i = 0;
+                    stmt.setInt(++i, serverId);
+                    stmt.setInt(++i, accountId);
+
+                    for (int position : positions) {
+                        stmt.setInt(++i, position);
+                    }
+                }
+            )
+            .stream()
+            .collect(Collectors.groupingBy(PlayerItem::playerId))
+        ;
     }
 }

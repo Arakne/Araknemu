@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.handler.account;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
+import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountCharacter;
@@ -31,7 +32,10 @@ class ListCharactersTest extends GameBaseCase {
         );
 
         login();
-        dataSet.use(Player.class);
+        dataSet
+            .use(Player.class)
+            .use(PlayerItem.class)
+        ;
     }
 
     @Test

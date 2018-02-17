@@ -2,6 +2,8 @@ package fr.quatrevieux.araknemu.game.player.inventory;
 
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
+import fr.quatrevieux.araknemu.game.player.inventory.accessory.InventoryAccessories;
+import fr.quatrevieux.araknemu.game.world.creature.accessory.Accessories;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.*;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.inventory.ItemEntry;
@@ -10,6 +12,7 @@ import fr.quatrevieux.araknemu.game.world.item.inventory.SimpleItemStorage;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.MoveException;
+import fr.quatrevieux.araknemu.game.world.item.type.Equipment;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -24,6 +27,8 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry> {
     final private ItemStorage<InventoryEntry> storage;
     final private InventorySlots slots;
 
+    final private Accessories accessories;
+
     public PlayerInventory(Dispatcher dispatcher, Player player, Collection<InventoryService.LoadedItem> items) {
         this.dispatcher = dispatcher;
         this.player = player;
@@ -37,7 +42,7 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry> {
                 .collect(Collectors.toList())
         );
 
-        slots = new InventorySlots();
+        slots = new InventorySlots(dispatcher);
 
         for (InventoryEntry entry : storage) {
             try {
@@ -46,6 +51,8 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry> {
                 entry.entity().setPosition(ItemEntry.DEFAULT_POSITION);
             }
         }
+
+        accessories = new InventoryAccessories(slots);
     }
 
     @Override
@@ -62,7 +69,7 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry> {
         }
 
         InventoryEntry entry = storage.add(item, quantity, position);
-        target.uncheckedSet(entry);
+        target.set(entry);
 
         return entry;
     }
@@ -80,9 +87,23 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry> {
     }
 
     /**
+     * Get current player equipments
+     */
+    public Collection<Equipment> equipments() {
+        return slots.equipments();
+    }
+
+    /**
+     * Get the player accessories
+     */
+    public Accessories accessories() {
+        return accessories;
+    }
+
+    /**
      * Dispatch an event to the inventory
      */
-    void dispatch(Object event) {
+    public void dispatch(Object event) {
         dispatcher.dispatch(event);
     }
 

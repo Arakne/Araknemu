@@ -10,7 +10,9 @@ import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.common.Disconnected;
 import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
+import fr.quatrevieux.araknemu.game.event.listener.player.AddExplorationListeners;
 import fr.quatrevieux.araknemu.game.event.listener.player.SavePlayer;
+import fr.quatrevieux.araknemu.game.event.listener.player.SendStats;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
@@ -64,21 +66,20 @@ final public class PlayerService {
             )
         );
 
-        ListenerAggregate dispatcher = new DefaultListenerAggregate();
-
         GamePlayer gamePlayer = new GamePlayer(
             session.account(),
             player,
             raceRepository.get(player.race()),
             session,
             this,
-            dispatcher,
-            inventoryService.load(player, dispatcher)
+            inventoryService.load(player, session)
         );
 
-        dispatcher.add(Disconnected.class, e -> logout(gamePlayer));
+        gamePlayer.dispatcher().add(Disconnected.class, e -> logout(gamePlayer));
+        gamePlayer.dispatcher().add(new SendStats(gamePlayer));
+        gamePlayer.dispatcher().add(new AddExplorationListeners());
         this.dispatcher.dispatch(new PlayerLoaded(gamePlayer));
-        dispatcher.add(new SavePlayer(gamePlayer)); // After all events
+        gamePlayer.dispatcher().add(new SavePlayer(gamePlayer)); // After all events
 
         login(gamePlayer);
 

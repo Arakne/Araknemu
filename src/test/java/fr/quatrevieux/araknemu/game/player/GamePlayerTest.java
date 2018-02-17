@@ -14,8 +14,6 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
-import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
@@ -48,7 +46,6 @@ class GamePlayerTest extends GameBaseCase {
         characteristics.set(Characteristic.VITALITY, 50);
 
         entity = dataSet.push(new Player(5, 2, 1, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1), 50, characteristics, new Position(10300, 308), EnumSet.allOf(ChannelType.class)));
-        ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
         player = new GamePlayer(
             new GameAccount(
@@ -60,8 +57,7 @@ class GamePlayerTest extends GameBaseCase {
             dataSet.refresh(new PlayerRace(Race.CRA)),
             session,
             container.get(PlayerService.class),
-            dispatcher,
-            container.get(InventoryService.class).load(entity, dispatcher)
+            container.get(InventoryService.class).load(entity, session)
         );
     }
 

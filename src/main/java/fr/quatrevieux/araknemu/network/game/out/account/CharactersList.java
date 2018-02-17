@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.game.player.PlayableCharacter;
+import fr.quatrevieux.araknemu.game.world.creature.accessory.Accessories;
 
 import java.util.Collection;
 
@@ -64,6 +65,13 @@ final public class CharactersList {
         @Override
         public PlayableCharacter.Printer server(int id) {
             parts[9] = id;
+
+            return this;
+        }
+
+        @Override
+        public PlayableCharacter.Printer accessories(Accessories accessories) {
+            parts[7] = accessories;
 
             return this;
         }

@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
@@ -10,8 +11,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -180,5 +180,35 @@ class PlayerItemRepositoryTest extends GameBaseCase {
         Collection<PlayerItem> items = repository.byPlayer(new Player(1));
 
         assertCount(2, items);
+    }
+
+    @Test
+    void forCharacterList() throws ContainerException {
+        repository.add(new PlayerItem(1, 1, 12, new ArrayList<>(), 1, 0));
+        repository.add(new PlayerItem(1, 2, 23, new ArrayList<>(), 1, 1));
+        repository.add(new PlayerItem(1, 3, 45, new ArrayList<>(), 1, 6));
+        repository.add(new PlayerItem(1, 4, 45, new ArrayList<>(), 1, -1));
+        repository.add(new PlayerItem(2, 5, 45, new ArrayList<>(), 1, 1));
+        repository.add(new PlayerItem(2, 6, 45, new ArrayList<>(), 1, 6));
+        repository.add(new PlayerItem(3, 7, 45, new ArrayList<>(), 1, 0));
+        repository.add(new PlayerItem(4, 8, 45, new ArrayList<>(), 1, 0));
+
+        dataSet.pushPlayer("One", 1, 2);
+        dataSet.pushPlayer("Two", 1, 2);
+        dataSet.pushPlayer("BadServer", 1, 1);
+        dataSet.pushPlayer("BadAccount", 2, 2);
+
+        Map<Integer, List<PlayerItem>> result = repository.forCharacterList(2, 1, new int[] {0, 1, 6});
+
+        assertEquals(2, result.size());
+
+        assertCount(3, result.get(1));
+        assertEquals(1, result.get(1).get(0).entryId());
+        assertEquals(2, result.get(1).get(1).entryId());
+        assertEquals(3, result.get(1).get(2).entryId());
+
+        assertCount(2, result.get(2));
+        assertEquals(5, result.get(2).get(0).entryId());
+        assertEquals(6, result.get(2).get(1).entryId());
     }
 }

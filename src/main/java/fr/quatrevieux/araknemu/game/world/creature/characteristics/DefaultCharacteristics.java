@@ -21,9 +21,17 @@ final public class DefaultCharacteristics implements MutableCharacteristics {
         map.put(characteristic, value);
     }
 
+    @Override
+    public void add(Characteristic characteristic, int value) {
+        map.put(characteristic, map.getOrDefault(characteristic, 0) + value);
+    }
 
     @Override
     public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
         if (obj instanceof Characteristics) {
             return equals((Characteristics) obj);
         }

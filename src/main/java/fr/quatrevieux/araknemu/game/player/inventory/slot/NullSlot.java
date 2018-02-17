@@ -36,4 +36,9 @@ final public class NullSlot implements InventorySlot {
     public void set(InventoryEntry entry) throws InventoryException {
         throw new InventoryException("Null slot");
     }
+
+    @Override
+    public boolean hasEquipment() {
+        return false;
+    }
 }

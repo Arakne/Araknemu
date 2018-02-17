@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.network.game;
 
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.adapter.Channel;
@@ -9,7 +10,7 @@ import fr.quatrevieux.araknemu.network.adapter.Session;
 /**
  * Session wrapper for game server
  */
-final public class GameSession implements Session {
+final public class GameSession implements Session, Dispatcher {
     final private Channel channel;
 
     private GameAccount account;
@@ -101,5 +102,16 @@ final public class GameSession implements Session {
      */
     public void setExploration(ExplorationPlayer exploration) {
         this.exploration = exploration;
+    }
+
+    @Override
+    public void dispatch(Object event) {
+        if (player != null) {
+            player.dispatcher().dispatch(event);
+        }
+
+        if (exploration != null) {
+            exploration.dispatcher().dispatch(event);
+        }
     }
 }

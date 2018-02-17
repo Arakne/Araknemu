@@ -1,10 +1,16 @@
 package fr.quatrevieux.araknemu.game.player;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.game.event.Dispatcher;
+import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.event.common.CharacteristicsChanged;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,6 +18,8 @@ class BaseCharacteristicsTest {
     private MutableCharacteristics raceStats;
     private MutableCharacteristics playerStats;
     private BaseCharacteristics baseCharacteristics;
+
+    private ListenerAggregate dispatcher;
 
     @BeforeEach
     void setUp() {
@@ -30,6 +38,7 @@ class BaseCharacteristicsTest {
         playerStats.set(Characteristic.ACTION_POINT, 2);
 
         baseCharacteristics = new BaseCharacteristics(
+            dispatcher = new DefaultListenerAggregate(),
             raceStats,
             playerStats
         );
@@ -49,5 +58,16 @@ class BaseCharacteristicsTest {
 
         assertEquals(50, baseCharacteristics.get(Characteristic.INTELLIGENCE));
         assertEquals(50, playerStats.get(Characteristic.INTELLIGENCE));
+    }
+
+    @Test
+    void add() {
+        AtomicReference<CharacteristicsChanged> ref = new AtomicReference<>();
+        dispatcher.add(CharacteristicsChanged.class, ref::set);
+
+        baseCharacteristics.add(Characteristic.STRENGTH, 10);
+
+        assertNotNull(ref.get());
+        assertEquals(160, baseCharacteristics.get(Characteristic.STRENGTH));
     }
 }

@@ -9,11 +9,7 @@ import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.event.listener.player.inventory.SendItemData;
-import fr.quatrevieux.araknemu.game.event.listener.player.inventory.SendItemPosition;
-import fr.quatrevieux.araknemu.game.event.listener.player.inventory.SendItemQuantity;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
@@ -29,30 +25,39 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
     final private PlayerRace race;
     final private PlayerCharacteristics characteristics;
     final private Set<ChannelType> channels;
-    final private ListenerAggregate dispatcher;
     final private PlayerInventory inventory;
 
-    public GamePlayer(GameAccount account, Player entity, PlayerRace race, GameSession session, PlayerService service, ListenerAggregate dispatcher, PlayerInventory inventory) {
+    final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
+
+    public GamePlayer(GameAccount account, Player entity, PlayerRace race, GameSession session, PlayerService service, PlayerInventory inventory) {
         super(account, entity);
 
         this.race = race;
         this.session = session;
         this.service = service;
-        this.dispatcher = dispatcher;
         this.channels = new ChannelSet(entity.channels(), dispatcher);
         this.inventory = inventory;
 
         characteristics = new PlayerCharacteristics(
             new BaseCharacteristics(
+                dispatcher,
                 race.baseStats(),
                 entity.stats()
-            )
+            ),
+            inventory,
+            dispatcher
         );
     }
 
     @Override
+    public void print(Printer printer) {
+        super.print(printer);
+        printer.accessories(inventory.accessories());
+    }
+
+    @Override
     public void dispatch(Object event) {
-        dispatcher.dispatch(event);
+        session.dispatch(event);
     }
 
     public ListenerAggregate dispatcher() {

@@ -7,6 +7,8 @@ import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
+import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
+import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
@@ -17,10 +19,13 @@ import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.common.PlayerDeleted;
 import fr.quatrevieux.araknemu.game.event.manage.CharacterCreationStarted;
+import fr.quatrevieux.araknemu.game.world.creature.accessory.AccessoryType;
+import fr.quatrevieux.araknemu.game.world.creature.accessory.EmptyAccessories;
 import fr.quatrevieux.araknemu.network.game.out.account.CharacterDeleted;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -39,12 +44,14 @@ class CharactersServiceTest extends GameBaseCase {
             repository = container.get(PlayerRepository.class),
             container.get(PlayerConstraints.class),
             container.get(PlayerRaceRepository.class),
-            container.get(Dispatcher.class)
+            container.get(Dispatcher.class),
+            container.get(PlayerItemRepository.class)
         );
 
         dataSet
             .pushRaces()
             .use(Player.class)
+            .use(PlayerItem.class)
         ;
     }
 
@@ -70,6 +77,33 @@ class CharactersServiceTest extends GameBaseCase {
 
         assertSame(account, characters.get(0).account());
         assertSame(account, characters.get(1).account());
+    }
+
+    @Test
+    void listWithItems() throws ContainerException, SQLException {
+        Player first = dataSet.push(Player.forCreation(1, 1, "first", Race.ECAFLIP, Sex.MALE, new Colors(-1, -1, -1)));
+        Player second = dataSet.push(Player.forCreation(1, 1, "second", Race.FECA, Sex.MALE, new Colors(-1, -1, -1)));
+
+        dataSet.push(new PlayerItem(first.id(), 1, 12, null, 1, 1));
+        dataSet.push(new PlayerItem(first.id(), 2, 23, null, 1, 6));
+
+        GameAccount account = new GameAccount(
+            new Account(1),
+            container.get(AccountService.class),
+            1
+        );
+
+        List<AccountCharacter> characters = service.list(account);
+
+        assertEquals(2, characters.size());
+
+        assertEquals(first.id(), characters.get(0).id());
+        assertEquals(second.id(), characters.get(1).id());
+
+        assertInstanceOf(CharacterAccessories.class, characters.get(0).accessories());
+        assertEquals(12, characters.get(0).accessories().get(AccessoryType.WEAPON).appearance());
+        assertEquals(23, characters.get(0).accessories().get(AccessoryType.HELMET).appearance());
+        assertInstanceOf(EmptyAccessories.class, characters.get(1).accessories());
     }
 
     @Test

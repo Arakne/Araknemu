@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.world.item.type;
 
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import fr.quatrevieux.araknemu.game.world.item.effect.CharacteristicEffect;
 import fr.quatrevieux.araknemu.game.world.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.world.item.effect.SpecialEffect;
@@ -33,6 +34,15 @@ abstract public class Equipment extends BaseItem {
      */
     public List<CharacteristicEffect> characteristics() {
         return characteristics;
+    }
+
+    /**
+     * Apply equipment effect to the characteristics
+     */
+    public void apply(MutableCharacteristics characteristics) {
+        for (CharacteristicEffect effect : this.characteristics) {
+            characteristics.add(effect.characteristic(), effect.boost());
+        }
     }
 
     @Override

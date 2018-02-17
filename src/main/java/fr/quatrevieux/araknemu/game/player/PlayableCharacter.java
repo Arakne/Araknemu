@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.game.world.creature.accessory.Accessories;
 
 /**
  * Base interface for playable characters
@@ -21,6 +22,7 @@ public interface PlayableCharacter {
         public Printer id(int id);
         public Printer gfxID(int gfxID);
         public Printer server(int id);
+        public Printer accessories(Accessories accessories);
     }
 
     /**

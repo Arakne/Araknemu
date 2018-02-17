@@ -1,9 +1,16 @@
 package fr.quatrevieux.araknemu.game.player.inventory.slot;
 
+import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,7 +22,7 @@ class InventorySlotsTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        slots = new InventorySlots();
+        slots = new InventorySlots(new DefaultListenerAggregate());
     }
 
     @Test
@@ -42,5 +49,15 @@ class InventorySlotsTest extends GameBaseCase {
     void getInvalid() {
         assertThrows(InventoryException.class, () -> slots.get(-15));
         assertThrows(InventoryException.class, () -> slots.get(123));
+    }
+
+    @Test
+    void equipments() throws SQLException, ContainerException, InventoryException {
+        dataSet.pushItemTemplates();
+
+        slots.get(0).uncheckedSet(new InventoryEntry(null, new PlayerItem(0, 0, 2425, null, 1, 0), container.get(ItemService.class).create(2425)));
+        slots.get(1).uncheckedSet(new InventoryEntry(null, new PlayerItem(0, 0, 2416, null, 1, 1), container.get(ItemService.class).create(2416)));
+
+        assertCount(2, slots.equipments());
     }
 }

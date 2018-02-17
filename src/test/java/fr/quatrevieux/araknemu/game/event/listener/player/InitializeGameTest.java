@@ -38,10 +38,9 @@ class InitializeGameTest extends GameBaseCase {
 
     @Test
     void onStartExploration() throws SQLException, ContainerException {
-        listener.on(new StartExploration());
+        listener.on(new StartExploration(player));
 
         requestStack.assertAll(
-            new GameCreated(CreateGameRequest.Type.EXPLORATION),
             new Stats(player),
             Error.welcome()
         );

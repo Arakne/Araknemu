@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.game.event.exploration.MapLoaded;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.PlayerSprite;
+import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,7 @@ class ExplorationPlayerTest extends GameBaseCase {
 
         dataSet.pushMaps();
         player = new ExplorationPlayer(gamePlayer());
+        session.setExploration(player);
     }
 
     @Test
@@ -145,5 +147,10 @@ class ExplorationPlayerTest extends GameBaseCase {
         assertSame(map, ref1.get().map());
         assertSame(map, ref2.get().map());
         assertEquals(new Position(10300, 85), player.position());
+    }
+
+    @Test
+    void inventory() {
+        assertInstanceOf(PlayerInventory.class, player.inventory());
     }
 }

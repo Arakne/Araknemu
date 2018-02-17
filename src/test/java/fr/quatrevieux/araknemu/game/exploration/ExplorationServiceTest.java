@@ -5,9 +5,7 @@ import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.listener.player.InitializeGame;
 import fr.quatrevieux.araknemu.game.event.listener.player.SendMapData;
-import fr.quatrevieux.araknemu.game.event.listener.map.SendNewSprite;
 import fr.quatrevieux.araknemu.game.event.listener.player.StopExploration;
-import fr.quatrevieux.araknemu.game.exploration.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.action.factory.ExplorationActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
@@ -42,24 +40,14 @@ class ExplorationServiceTest extends GameBaseCase {
     }
 
     @Test
-    void start() throws SQLException, ContainerException {
+    void create() throws SQLException, ContainerException {
         GamePlayer player = gamePlayer();
 
-        ExplorationPlayer explorationPlayer = service.start(player);
+        ExplorationPlayer explorationPlayer = service.create(player);
 
         assertTrue(explorationPlayer.dispatcher().has(InitializeGame.class));
         assertTrue(explorationPlayer.dispatcher().has(SendMapData.class));
         assertTrue(explorationPlayer.dispatcher().has(StopExploration.class));
-
-        assertNotNull(explorationPlayer.map());
-        assertEquals(10540, explorationPlayer.map().id());
-
-        requestStack.assertAll(
-            new GameCreated(CreateGameRequest.Type.EXPLORATION),
-            new Stats(gamePlayer()),
-            new MapData(explorationPlayer.map()),
-            Error.welcome()
-        );
     }
 
     @Test

@@ -20,7 +20,9 @@ import fr.quatrevieux.araknemu.game.event.Listener;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.common.Disconnected;
 import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
+import fr.quatrevieux.araknemu.game.event.listener.player.AddExplorationListeners;
 import fr.quatrevieux.araknemu.game.event.listener.player.SavePlayer;
+import fr.quatrevieux.araknemu.game.event.listener.player.SendStats;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
@@ -71,6 +73,8 @@ class PlayerServiceTest extends GameBaseCase {
         assertEquals(id, player.id());
 
         assertTrue(player.dispatcher().has(SavePlayer.class));
+        assertTrue(player.dispatcher().has(SendStats.class));
+        assertTrue(player.dispatcher().has(AddExplorationListeners.class));
     }
 
     @Test
@@ -123,6 +127,7 @@ class PlayerServiceTest extends GameBaseCase {
         int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null)).id();
 
         GamePlayer player = service.load(session, id);
+        session.setPlayer(player);
 
         player.dispatch(new Disconnected());
 
@@ -163,6 +168,7 @@ class PlayerServiceTest extends GameBaseCase {
         GameSession session1 = new GameSession(new DummyChannel());
         session1.attach(new GameAccount(new Account(1), container.get(AccountService.class), 2));
         GamePlayer player = service.load(session1, dataSet.pushPlayer("Bob", 1, 2).id());
+        session1.setPlayer(player);
 
         assertTrue(service.isOnline("bob"));
 

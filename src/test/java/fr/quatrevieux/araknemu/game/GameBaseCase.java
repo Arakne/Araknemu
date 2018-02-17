@@ -39,20 +39,18 @@ import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.event.exploration.StartExploration;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
-import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
-import fr.quatrevieux.araknemu.network.adapter.Channel;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import org.apache.mina.core.filterchain.IoFilterAdapter;
 import org.apache.mina.core.service.IoHandler;
-import org.apache.mina.core.session.DummySession;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.core.write.WriteRequest;
 import org.ini4j.Ini;
@@ -65,7 +63,6 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.Stack;
 
 public class GameBaseCase extends DatabaseTestCase {
     static public class SendingRequestStack extends IoFilterAdapter {
@@ -227,7 +224,6 @@ public class GameBaseCase extends DatabaseTestCase {
         characteristics.set(Characteristic.INTELLIGENCE, 150);
 
         Player player = dataSet.push(new Player(-1, session.account().id(), session.account().serverId(), "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 50, characteristics, new Position(10540, 200), EnumSet.allOf(ChannelType.class)));
-        ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
         if (!load) {
             session.setPlayer(
@@ -237,8 +233,7 @@ public class GameBaseCase extends DatabaseTestCase {
                     dataSet.repository(PlayerRace.class).get(new PlayerRace(Race.FECA)),
                     session,
                     container.get(PlayerService.class),
-                    dispatcher,
-                    container.get(InventoryService.class).load(player, dispatcher)
+                    container.get(InventoryService.class).load(player, session)
                 )
             );
         } else {
@@ -267,9 +262,10 @@ public class GameBaseCase extends DatabaseTestCase {
 
         dataSet.pushMaps();
 
-        ExplorationPlayer explorationPlayer = container.get(ExplorationService.class).start(player);
+        ExplorationPlayer explorationPlayer = container.get(ExplorationService.class).create(player);
 
         session.setExploration(explorationPlayer);
+        explorationPlayer.dispatch(new StartExploration(explorationPlayer));
 
         return explorationPlayer;
     }
@@ -294,12 +290,25 @@ public class GameBaseCase extends DatabaseTestCase {
     }
 
     public GamePlayer makeSimpleGamePlayer(int id) throws ContainerException {
+        return makeSimpleGamePlayer(id, new GameSession(new DummyChannel()));
+    }
+
+    public GameSession makeSimpleExplorationSession(int id) throws ContainerException {
+        GameSession session = new GameSession(new DummyChannel());
+        GamePlayer gp = makeSimpleGamePlayer(id, session);
+
+        ExplorationPlayer ep = new ExplorationPlayer(gp);
+        session.setExploration(ep);
+
+        return session;
+    }
+
+    public GamePlayer makeSimpleGamePlayer(int id, GameSession session) throws ContainerException {
         dataSet.use(PlayerItem.class);
 
-        ListenerAggregate dispatcher = new DefaultListenerAggregate();
         Player player = dataSet.createPlayer(id);
 
-        return new GamePlayer(
+        GamePlayer gp = new GamePlayer(
             new GameAccount(
                 new Account(id),
                 container.get(AccountService.class),
@@ -307,10 +316,13 @@ public class GameBaseCase extends DatabaseTestCase {
             ),
             player,
             new PlayerRace(Race.FECA),
-            new GameSession(new DummyChannel()),
+            session,
             container.get(PlayerService.class),
-            dispatcher,
-            container.get(InventoryService.class).load(player, dispatcher)
+            container.get(InventoryService.class).load(player, session)
         );
+
+        session.setPlayer(gp);
+
+        return gp;
     }
 }

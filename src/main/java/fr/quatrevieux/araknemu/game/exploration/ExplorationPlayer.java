@@ -12,6 +12,7 @@ import fr.quatrevieux.araknemu.game.event.exploration.MapLoaded;
 import fr.quatrevieux.araknemu.game.exploration.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.player.*;
+import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import fr.quatrevieux.araknemu.game.world.creature.Explorer;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
@@ -69,7 +70,6 @@ final public class ExplorationPlayer implements PlayableCharacter, Sender, Creat
 
     @Override
     public void dispatch(Object event) {
-        dispatcher.dispatch(event);
         player.dispatch(event);
     }
 
@@ -140,9 +140,16 @@ final public class ExplorationPlayer implements PlayableCharacter, Sender, Creat
     }
 
     /**
+     * Get the inventory
+     */
+    public PlayerInventory inventory() {
+        return player.inventory();
+    }
+
+    /**
      * Get the dispatcher
      */
-    ListenerAggregate dispatcher() {
+    public ListenerAggregate dispatcher() {
         return dispatcher;
     }
 

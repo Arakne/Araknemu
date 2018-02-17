@@ -1,28 +1,41 @@
 package fr.quatrevieux.araknemu.game.player.inventory.slot;
 
+import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.world.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.world.item.type.Equipment;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * All inventory slots
  */
 final public class InventorySlots {
-    final private InventorySlot defaultSlot = new DefaultSlot();
-    final private InventorySlot[] slots = new InventorySlot[48];
+    final private Dispatcher dispatcher;
 
-    public InventorySlots() {
-        add(new AmuletSlot());
-        add(new WeaponSlot());
-        add(new RingSlot(RingSlot.RING1));
-        add(new RingSlot(RingSlot.RING2));
-        add(new BeltSlot());
-        add(new BootsSlot());
-        add(new HelmetSlot());
-        add(new MantleSlot());
+    final private InventorySlot defaultSlot = new DefaultSlot();
+    final private InventorySlot[] slots = new InventorySlot[49];
+
+    public InventorySlots(Dispatcher dispatcher) {
+        this.dispatcher = dispatcher;
+
+        add(new AmuletSlot(dispatcher));
+        add(new WeaponSlot(dispatcher));
+        add(new RingSlot(dispatcher, RingSlot.RING1));
+        add(new RingSlot(dispatcher, RingSlot.RING2));
+        add(new BeltSlot(dispatcher));
+        add(new BootsSlot(dispatcher));
+        add(new HelmetSlot(dispatcher));
+        add(new MantleSlot(dispatcher));
         add(new NullSlot(8)); // pet
 
         for (int id : DofusSlot.SLOT_IDS) {
-            add(new DofusSlot(id));
+            add(new DofusSlot(dispatcher, id));
+        }
+
+        for (int i = 15; i < slots.length; ++i) {
+            add(new NullSlot(i));
         }
     }
 
@@ -39,6 +52,21 @@ final public class InventorySlots {
         }
 
         return slots[id];
+    }
+
+    /**
+     * Get current equipments
+     */
+    public Collection<Equipment> equipments() {
+        Collection<Equipment> equipments = new ArrayList<>();
+
+        for (InventorySlot slot : slots) {
+            if (slot.hasEquipment()) {
+                equipments.add(slot.equipment());
+            }
+        }
+
+        return equipments;
     }
 
     private void add(InventorySlot slot) {

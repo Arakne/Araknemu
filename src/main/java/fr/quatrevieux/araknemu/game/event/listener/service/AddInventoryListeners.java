@@ -27,6 +27,8 @@ final public class AddInventoryListeners implements Listener<PlayerLoaded> {
         dispatcher.add(new SaveNewItem(repository));
         dispatcher.add(new SaveItemPosition(repository));
         dispatcher.add(new SaveItemQuantity(repository));
+
+        dispatcher.add(new UpdateStuffStats(event.player()));
     }
 
     @Override

@@ -36,6 +36,13 @@ class DefaultCharacteristicsTest {
     }
 
     @Test
+    void equalsSameInstance() {
+        Characteristics c = new DefaultCharacteristics();
+
+        assertEquals(c, c);
+    }
+
+    @Test
     void equalsNotSameValue() {
         DefaultCharacteristics c1 = new DefaultCharacteristics();
         c1.set(Characteristic.ACTION_POINT, 3);
@@ -112,5 +119,24 @@ class DefaultCharacteristicsTest {
             c1.hashCode(),
             c2.hashCode()
         );
+    }
+
+    @Test
+    void addFromNotSetValue() {
+        DefaultCharacteristics c = new DefaultCharacteristics();
+
+        c.add(Characteristic.INTELLIGENCE, 20);
+
+        assertEquals(20, c.get(Characteristic.INTELLIGENCE));
+    }
+
+    @Test
+    void addFromSetValue() {
+        DefaultCharacteristics c = new DefaultCharacteristics();
+        c.set(Characteristic.INTELLIGENCE, 50);
+
+        c.add(Characteristic.INTELLIGENCE, 20);
+
+        assertEquals(70, c.get(Characteristic.INTELLIGENCE));
     }
 }

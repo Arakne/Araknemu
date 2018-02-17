@@ -5,10 +5,10 @@ import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
-import fr.quatrevieux.araknemu.game.admin.AdminLogger;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayableCharacter;
+import fr.quatrevieux.araknemu.game.world.creature.accessory.Accessories;
 
 import java.util.List;
 
@@ -94,6 +94,11 @@ final public class Info extends AbstractCommand {
                 public PlayableCharacter.Printer server(int id) {
                     performer.info("Server: {}", id);
 
+                    return this;
+                }
+
+                @Override
+                public PlayableCharacter.Printer accessories(Accessories accessories) {
                     return this;
                 }
             }

@@ -4,14 +4,19 @@ import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.data.living.constraint.EntityConstraint;
 import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
+import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
+import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.account.exception.CharacterCreationException;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.common.PlayerDeleted;
 import fr.quatrevieux.araknemu.game.event.manage.CharacterCreationStarted;
+import fr.quatrevieux.araknemu.game.world.creature.accessory.AccessoryType;
+import fr.quatrevieux.araknemu.game.world.creature.accessory.EmptyAccessories;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -22,12 +27,14 @@ final public class CharactersService {
     final private EntityConstraint<Player, PlayerConstraints.Error> constraint;
     final private PlayerRaceRepository playerRaceRepository;
     final private Dispatcher dispatcher;
+    final private PlayerItemRepository itemRepository;
 
-    public CharactersService(PlayerRepository repository, EntityConstraint<Player, PlayerConstraints.Error> constraint, PlayerRaceRepository playerRaceRepository, Dispatcher dispatcher) {
+    public CharactersService(PlayerRepository repository, EntityConstraint<Player, PlayerConstraints.Error> constraint, PlayerRaceRepository playerRaceRepository, Dispatcher dispatcher, PlayerItemRepository itemRepository) {
         this.repository = repository;
         this.constraint = constraint;
         this.playerRaceRepository = playerRaceRepository;
         this.dispatcher = dispatcher;
+        this.itemRepository = itemRepository;
     }
 
     /**
@@ -65,9 +72,21 @@ final public class CharactersService {
      * @param account The account
      */
     public List<AccountCharacter> list(GameAccount account) {
+        Map<Integer, List<PlayerItem>> items = itemRepository.forCharacterList(
+            account.serverId(),
+            account.id(),
+            AccessoryType.slots()
+        );
+
         return repository.findByAccount(account.id(), account.serverId())
             .stream()
-            .map(player -> new AccountCharacter(account, player))
+            .map(player -> new AccountCharacter(
+                account,
+                player,
+                items.containsKey(player.id())
+                    ? new CharacterAccessories(items.get(player.id()))
+                    : new EmptyAccessories()
+            ))
             .collect(Collectors.toList())
         ;
     }

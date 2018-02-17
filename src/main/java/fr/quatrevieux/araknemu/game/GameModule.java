@@ -176,7 +176,8 @@ final public class GameModule implements ContainerModule {
                 container.get(PlayerRepository.class),
                 container.get(PlayerConstraints.class),
                 container.get(PlayerRaceRepository.class),
-                container.get(fr.quatrevieux.araknemu.game.event.Dispatcher.class)
+                container.get(fr.quatrevieux.araknemu.game.event.Dispatcher.class),
+                container.get(PlayerItemRepository.class)
             )
         );
 

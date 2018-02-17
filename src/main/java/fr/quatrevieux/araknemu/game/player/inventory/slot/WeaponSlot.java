@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.game.player.inventory.slot;
 
+import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.ItemClassConstraint;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SingleItemConstraint;
@@ -11,38 +12,16 @@ import fr.quatrevieux.araknemu.game.world.item.type.Weapon;
 /**
  * Slot for weapons
  */
-final public class WeaponSlot implements InventorySlot {
-    final private InventorySlot slot;
+final public class WeaponSlot extends AbstractEquipmentSlot {
+    final static public int SLOT_ID = 1;
 
-    public WeaponSlot() {
-        slot = new SimpleSlot(1, new SlotConstraint[] {
-            new SingleItemConstraint(),
-            new ItemClassConstraint(Weapon.class)
-        });
-    }
-
-    @Override
-    public int id() {
-        return slot.id();
-    }
-
-    @Override
-    public InventoryEntry entry() {
-        return slot.entry();
-    }
-
-    @Override
-    public void set(InventoryEntry entry) throws InventoryException {
-        slot.set(entry);
-    }
-
-    @Override
-    public void uncheckedSet(InventoryEntry entry) {
-        slot.uncheckedSet(entry);
-    }
-
-    @Override
-    public boolean check(Item item, int quantity) {
-        return slot.check(item, quantity);
+    public WeaponSlot(Dispatcher dispatcher) {
+        super(
+            dispatcher,
+            new SimpleSlot(SLOT_ID, new SlotConstraint[] {
+                new SingleItemConstraint(),
+                new ItemClassConstraint(Weapon.class)
+            })
+        );
     }
 }

@@ -1,10 +1,14 @@
 package fr.quatrevieux.araknemu.game.player.inventory;
 
+import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.inventory.ObjectAdded;
+import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.player.inventory.accessory.InventoryAccessories;
+import fr.quatrevieux.araknemu.game.world.creature.accessory.AccessoryType;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.Type;
 import fr.quatrevieux.araknemu.game.world.item.inventory.ItemEntry;
@@ -15,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.sql.SQLException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -98,5 +103,37 @@ class PlayerInventoryTest extends GameBaseCase {
 
         assertSame(i1, inventory.get(2).item());
         assertSame(i2, inventory.get(5).item());
+    }
+
+    @Test
+    void equipmentsEmpty() {
+        assertCount(0, inventory.equipments());
+    }
+
+    @Test
+    void equipments() throws SQLException, ContainerException, InventoryException {
+        dataSet.pushItemTemplates();
+
+        inventory.add(container.get(ItemService.class).create(2425), 1, 0);
+        inventory.add(container.get(ItemService.class).create(2416), 1, 1);
+        inventory.add(container.get(ItemService.class).create(2414), 1, -1);
+
+        assertCount(2, inventory.equipments());
+
+        assertContains(inventory.get(1).item(), inventory.equipments());
+        assertContains(inventory.get(2).item(), inventory.equipments());
+    }
+
+    @Test
+    void accessories() throws SQLException, ContainerException, InventoryException {
+        dataSet.pushItemTemplates();
+
+        inventory.add(container.get(ItemService.class).create(2416), 1, 1);
+        inventory.add(container.get(ItemService.class).create(2411), 1, 6);
+
+        assertInstanceOf(InventoryAccessories.class, inventory.accessories());
+
+        assertEquals(2416, inventory.accessories().get(AccessoryType.WEAPON).appearance());
+        assertEquals(2411, inventory.accessories().get(AccessoryType.HELMET).appearance());
     }
 }

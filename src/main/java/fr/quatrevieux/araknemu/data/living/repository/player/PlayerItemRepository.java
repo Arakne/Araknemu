@@ -6,6 +6,8 @@ import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Repository for {@link PlayerItem}
@@ -17,6 +19,17 @@ public interface PlayerItemRepository extends MutableRepository<PlayerItem> {
      * @param player The player to load
      */
     public Collection<PlayerItem> byPlayer(Player player);
+
+    /**
+     * Get list of equiped items for all players from an account
+     *
+     * @param serverId The server to load
+     * @param accountId The account
+     * @param positions The equiped items positions
+     *
+     * @return List of items by player id
+     */
+    public Map<Integer, List<PlayerItem>> forCharacterList(int serverId, int accountId, int[] positions);
 
     /**
      * Update the item
