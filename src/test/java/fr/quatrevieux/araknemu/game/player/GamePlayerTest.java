@@ -45,7 +45,7 @@ class GamePlayerTest extends GameBaseCase {
         characteristics.set(Characteristic.INTELLIGENCE, 150);
         characteristics.set(Characteristic.VITALITY, 50);
 
-        entity = dataSet.push(new Player(5, 2, 1, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1), 50, characteristics, new Position(10300, 308), EnumSet.allOf(ChannelType.class)));
+        entity = dataSet.push(new Player(5, 2, 1, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1), 50, characteristics, new Position(10300, 308), EnumSet.allOf(ChannelType.class), 0, 0));
 
         player = new GamePlayer(
             new GameAccount(

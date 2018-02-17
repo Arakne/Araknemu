@@ -45,7 +45,9 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
                 entity.stats()
             ),
             inventory,
-            dispatcher
+            dispatcher,
+            entity,
+            race
         );
     }
 

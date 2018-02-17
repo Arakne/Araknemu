@@ -45,7 +45,9 @@ final class PlayerRepository implements fr.quatrevieux.araknemu.data.living.repo
                     rs.getInt("MAP_ID"),
                     rs.getInt("CELL_ID")
                 ),
-                channelsTransformer.unserialize(rs.getString("CHANNELS"))
+                channelsTransformer.unserialize(rs.getString("CHANNELS")),
+                rs.getInt("BOOST_POINTS"),
+                rs.getInt("SPELL_POINTS")
             );
         }
 
@@ -89,6 +91,8 @@ final class PlayerRepository implements fr.quatrevieux.araknemu.data.living.repo
                     "MAP_ID INTEGER," +
                     "CELL_ID INTEGER," +
                     "CHANNELS VARCHAR(16)," +
+                    "BOOST_POINTS INTEGER," +
+                    "SPELL_POINTS INTEGER," +
                     "UNIQUE (PLAYER_NAME, SERVER_ID)" +
                 ")"
             );
@@ -112,8 +116,8 @@ final class PlayerRepository implements fr.quatrevieux.araknemu.data.living.repo
     public Player add(Player entity) throws RepositoryException {
         return utils.update(
             "INSERT INTO PLAYER " +
-                "(ACCOUNT_ID, SERVER_ID, PLAYER_NAME, RACE, SEX, COLOR1, COLOR2, COLOR3, PLAYER_LEVEL, PLAYER_STATS, MAP_ID, CELL_ID, CHANNELS) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "(ACCOUNT_ID, SERVER_ID, PLAYER_NAME, RACE, SEX, COLOR1, COLOR2, COLOR3, PLAYER_LEVEL, PLAYER_STATS, MAP_ID, CELL_ID, CHANNELS, BOOST_POINTS, SPELL_POINTS) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             stmt -> {
                 stmt.setInt(1,     entity.accountId());
                 stmt.setInt(2,     entity.serverId());
@@ -128,6 +132,8 @@ final class PlayerRepository implements fr.quatrevieux.araknemu.data.living.repo
                 stmt.setInt(11,    entity.position().map());
                 stmt.setInt(12,    entity.position().cell());
                 stmt.setString(13, channelsTransformer.serialize(entity.channels()));
+                stmt.setInt(14,    entity.boostPoints());
+                stmt.setInt(15,    entity.spellPoints());
             },
             entity
         );
@@ -234,7 +240,7 @@ final class PlayerRepository implements fr.quatrevieux.araknemu.data.living.repo
     public void save(Player player) {
         int rows = utils.update(
             "UPDATE PLAYER SET " +
-                "PLAYER_LEVEL = ?, PLAYER_STATS = ?, MAP_ID = ?, CELL_ID = ?, CHANNELS = ? " +
+                "PLAYER_LEVEL = ?, PLAYER_STATS = ?, MAP_ID = ?, CELL_ID = ?, CHANNELS = ?, BOOST_POINTS = ?, SPELL_POINTS = ? " +
                 "WHERE PLAYER_ID = ?",
             stmt -> {
                 stmt.setInt(1,    player.level());
@@ -242,7 +248,9 @@ final class PlayerRepository implements fr.quatrevieux.araknemu.data.living.repo
                 stmt.setInt(3,    player.position().map());
                 stmt.setInt(4,    player.position().cell());
                 stmt.setString(5, channelsTransformer.serialize(player.channels()));
-                stmt.setInt(6,    player.id());
+                stmt.setInt(6,    player.boostPoints());
+                stmt.setInt(7,    player.spellPoints());
+                stmt.setInt(8,    player.id());
             }
         );
 

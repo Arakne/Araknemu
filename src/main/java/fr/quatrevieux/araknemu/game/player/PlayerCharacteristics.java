@@ -1,6 +1,9 @@
 package fr.quatrevieux.araknemu.game.player;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
+import fr.quatrevieux.araknemu.data.value.BoostStatsData;
+import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.common.CharacteristicsChanged;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
@@ -19,13 +22,17 @@ final public class PlayerCharacteristics implements MutableCharacteristics {
     final private MutableCharacteristics base;
     final private PlayerInventory inventory;
     final private Dispatcher dispatcher;
+    final private Player player;
+    final private PlayerRace race;
 
     private Characteristics stuff;
 
-    public PlayerCharacteristics(MutableCharacteristics base, PlayerInventory inventory, Dispatcher dispatcher) {
+    public PlayerCharacteristics(MutableCharacteristics base, PlayerInventory inventory, Dispatcher dispatcher, Player player, PlayerRace race) {
         this.base = base;
         this.inventory = inventory;
         this.dispatcher = dispatcher;
+        this.player = player;
+        this.race = race;
 
         this.stuff = computeStuffStats();
     }
@@ -71,6 +78,40 @@ final public class PlayerCharacteristics implements MutableCharacteristics {
      */
     public Characteristics boost() {
         return new DefaultCharacteristics();
+    }
+
+    /**
+     * Boost a characteristic
+     */
+    public void boostCharacteristic(Characteristic characteristic) {
+        BoostStatsData.Interval interval = race.boostStats().get(
+            characteristic,
+            base.get(characteristic)
+        );
+
+        int points = player.boostPoints() - interval.cost();
+
+        if (points < 0) {
+            throw new IllegalArgumentException("Not enough points for boost stats");
+        }
+
+        player.setBoostPoints(points);
+        base.add(characteristic, interval.boost());
+    }
+
+    /**
+     * Get the available boost points
+     */
+    public int boostPoints() {
+        return player.boostPoints();
+    }
+
+    /**
+     * @todo DO NOT USE : temporary method !
+     */
+    @Deprecated
+    public void setBoostPoints(int points) {
+        player.setBoostPoints(points);
     }
 
     /**

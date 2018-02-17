@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.transformer.ImmutableCharacteristicsTransformer;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
+import fr.quatrevieux.araknemu.data.world.transformer.BoostStatsDataTransformer;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +26,8 @@ class PlayerRaceRepositoryTest extends GameBaseCase {
 
         repository = new PlayerRaceRepository(
             app.database().get("game"),
-            new ImmutableCharacteristicsTransformer()
+            new ImmutableCharacteristicsTransformer(),
+            new BoostStatsDataTransformer()
         );
     }
 
@@ -43,6 +45,7 @@ class PlayerRaceRepositoryTest extends GameBaseCase {
         assertTrue(race.baseStats() instanceof DefaultCharacteristics);
         assertEquals(6, race.baseStats().get(Characteristic.ACTION_POINT));
         assertEquals(new Position(10300, 320), race.startPosition());
+        assertEquals(2, race.boostStats().get(Characteristic.STRENGTH, 15).cost());
     }
 
     @Test

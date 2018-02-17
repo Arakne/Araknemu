@@ -40,7 +40,7 @@ class CharacteristicsTransformerTest {
         characteristics.set(Characteristic.MAX_SUMMONED_CREATURES, 0);
         characteristics.set(Characteristic.MAX_SUMMONED_CREATURES, 3);
 
-        assertEquals("9:2to;j:3;", transformer.serialize(characteristics));
+        assertEquals("7:2to;h:3;", transformer.serialize(characteristics));
     }
 
     @Test
@@ -49,7 +49,7 @@ class CharacteristicsTransformerTest {
 
         characteristics.set(Characteristic.STRENGTH, 200);
 
-        assertEquals("c:68;", transformer.serialize(characteristics));
+        assertEquals("a:68;", transformer.serialize(characteristics));
     }
 
     @Test
@@ -58,7 +58,7 @@ class CharacteristicsTransformerTest {
 
         characteristics.set(Characteristic.STRENGTH, -200);
 
-        assertEquals("c:-68;", transformer.serialize(characteristics));
+        assertEquals("a:-68;", transformer.serialize(characteristics));
     }
 
     @Test
@@ -82,7 +82,7 @@ class CharacteristicsTransformerTest {
 
         characteristics.set(Characteristic.STRENGTH, -200);
 
-        assertEquals(characteristics, transformer.unserialize("c:-68"));
+        assertEquals(characteristics, transformer.unserialize("a:-68"));
     }
 
     @Test
@@ -117,10 +117,10 @@ class CharacteristicsTransformerTest {
         characteristics.set(Characteristic.MAX_SUMMONED_CREATURES, 1);
         characteristics.set(Characteristic.INITIATIVE, 1);
 
-        assertEquals("8:1;9:34;a:6;b:3;j:1;", transformer.serialize(characteristics));
+        assertEquals("6:1;7:34;8:6;9:3;h:1;", transformer.serialize(characteristics));
 
         characteristics.set(Characteristic.DISCERNMENT, 120);
 
-        assertEquals("8:1;9:3o;a:6;b:3;j:1;", transformer.serialize(characteristics));
+        assertEquals("6:1;7:3o;8:6;9:3;h:1;", transformer.serialize(characteristics));
     }
 }

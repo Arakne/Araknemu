@@ -1,8 +1,5 @@
 package fr.quatrevieux.araknemu.data.constant;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * List of characteristics
  */
@@ -52,25 +49,17 @@ public enum Characteristic {
     RESISTANCE_PVP_FIRE,
     RESISTANCE_PERCENT_PVP_FIRE;
 
-    final static private Map<Integer, Characteristic> characteristicsById = new HashMap<>();
-
-    static  {
-        for (Characteristic characteristic : values()) {
-            characteristicsById.put(characteristic.id(), characteristic);
-        }
-    }
-
     /**
      * Get the characteristic race
      */
     public int id() {
-        return ordinal() + 8;
+        return ordinal() + 6;
     }
 
     /**
      * Get characteristic by its race
      */
     static public Characteristic fromId(int id) {
-        return characteristicsById.get(id);
+        return values()[id - 6];
     }
 }

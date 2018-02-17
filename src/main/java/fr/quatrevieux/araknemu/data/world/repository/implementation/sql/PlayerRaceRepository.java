@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
+import fr.quatrevieux.araknemu.data.value.BoostStatsData;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
@@ -17,19 +18,14 @@ import java.sql.SQLException;
  * SQL implementation of the repository
  */
 final class PlayerRaceRepository implements fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository {
-    private static class Loader implements RepositoryUtils.Loader<PlayerRace> {
-        final private Transformer<Characteristics> characteristicsTransformer;
-
-        public Loader(Transformer<Characteristics> characteristicsTransformer) {
-            this.characteristicsTransformer = characteristicsTransformer;
-        }
-
+    private class Loader implements RepositoryUtils.Loader<PlayerRace> {
         @Override
         public PlayerRace create(ResultSet rs) throws SQLException {
             return new PlayerRace(
                 Race.byId(rs.getInt("RACE_ID")),
                 rs.getString("RACE_NAME"),
                 characteristicsTransformer.unserialize(rs.getString("RACE_STATS")),
+                boostStatsDataTransformer.unserialize(rs.getString("STATS_BOOST")),
                 new Position(
                     rs.getInt("MAP_ID"),
                     rs.getInt("CELL_ID")
@@ -45,12 +41,15 @@ final class PlayerRaceRepository implements fr.quatrevieux.araknemu.data.world.r
 
     final private ConnectionPoolUtils pool;
     final private RepositoryUtils<PlayerRace> utils;
+    final private Transformer<Characteristics> characteristicsTransformer;
+    final private Transformer<BoostStatsData> boostStatsDataTransformer;
 
-    public PlayerRaceRepository(ConnectionPool connection, Transformer<Characteristics> characteristicsTransformer) {
+    public PlayerRaceRepository(ConnectionPool connection, Transformer<Characteristics> characteristicsTransformer, Transformer<BoostStatsData> boostStatsDataTransformer) {
+        this.characteristicsTransformer = characteristicsTransformer;
+        this.boostStatsDataTransformer = boostStatsDataTransformer;
+
         pool = new ConnectionPoolUtils(connection);
-        utils = new RepositoryUtils<>(pool, new Loader(
-            characteristicsTransformer
-        ));
+        utils = new RepositoryUtils<>(pool, new Loader());
     }
 
     @Override
@@ -61,6 +60,7 @@ final class PlayerRaceRepository implements fr.quatrevieux.araknemu.data.world.r
                     "RACE_ID INTEGER PRIMARY KEY," +
                     "RACE_NAME VARCHAR(32)," +
                     "RACE_STATS TEXT," +
+                    "STATS_BOOST VARCHAR(255)," +
                     "MAP_ID INTEGER," +
                     "CELL_ID INTEGER" +
                 ")"

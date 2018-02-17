@@ -42,6 +42,7 @@ class GameParserLoaderTest {
         assertContainsInstance(AskRandomName.Parser.class, parsers);
         assertContainsInstance(AdminCommand.Parser.class, parsers);
         assertContainsInstance(ObjectMoveRequest.Parser.class, parsers);
+        assertContainsInstance(AskBoost.Parser.class, parsers);
     }
 
     public void assertContainsInstance(Class type, Collection collection) {

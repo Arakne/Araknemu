@@ -45,7 +45,8 @@ final public class GameParserLoader implements ParserLoader {
             new SubscribeChannels.Parser(),
             new AskRandomName.Parser(),
             new AdminCommand.Parser(),
-            new ObjectMoveRequest.Parser()
+            new ObjectMoveRequest.Parser(),
+            new AskBoost.Parser()
         );
     }
 }

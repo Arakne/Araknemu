@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.handler.EnsurePlaying;
+import fr.quatrevieux.araknemu.game.handler.account.BoostCharacteristic;
 import fr.quatrevieux.araknemu.game.handler.chat.SaveSubscription;
 import fr.quatrevieux.araknemu.game.handler.chat.SendMessage;
 import fr.quatrevieux.araknemu.game.handler.game.CreateGame;
@@ -30,7 +31,8 @@ final public class PlayingLoader extends AbstractLoader {
                 container.get(ChatService.class)
             ),
             new SaveSubscription(),
-            new MoveObject()
+            new MoveObject(),
+            new BoostCharacteristic()
         };
     }
 }

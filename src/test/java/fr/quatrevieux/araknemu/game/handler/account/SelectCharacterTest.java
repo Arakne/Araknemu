@@ -64,7 +64,7 @@ class SelectCharacterTest extends GameBaseCase {
     void handleWillSendChatChannels() throws Exception {
         container.get(ChatService.class).preload(NOPLogger.NOP_LOGGER);
 
-        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null, new Position(10300, 123), EnumSet.of(ChannelType.INFO, ChannelType.PRIVATE))).id();
+        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null, new Position(10300, 123), EnumSet.of(ChannelType.INFO, ChannelType.PRIVATE), 0, 0)).id();
 
         handler.handle(session, new ChoosePlayingCharacter(id));
 

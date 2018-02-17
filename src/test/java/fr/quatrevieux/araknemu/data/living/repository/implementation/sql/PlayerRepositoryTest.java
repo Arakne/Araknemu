@@ -173,6 +173,16 @@ class PlayerRepositoryTest extends DatabaseTestCase {
     }
 
     @Test
+    void insertWithPoints() {
+        Player player = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(123, 456), EnumSet.noneOf(ChannelType.class), 10, 15));
+
+        player = repository.get(player);
+
+        assertEquals(10, player.boostPoints());
+        assertEquals(15, player.spellPoints());
+    }
+
+    @Test
     void allServersCharactersCount() {
         repository.add(Player.forCreation(1, 1, "bob", Race.CRA, Sex.FEMALE, new Colors(-1, -1, -1)));
         repository.add(Player.forCreation(1, 1, "cc", Race.CRA, Sex.FEMALE, new Colors(-1, -1, -1)));
@@ -204,6 +214,7 @@ class PlayerRepositoryTest extends DatabaseTestCase {
         player.setPosition(new Position(1234, 56));
         player.stats().set(Characteristic.ACTION_POINT, 12);
         player.channels().add(ChannelType.INFO);
+        player.setBoostPoints(15);
 
         repository.save(player);
 
@@ -212,5 +223,6 @@ class PlayerRepositoryTest extends DatabaseTestCase {
         assertEquals(new Position(1234, 56), savedPlayer.position());
         assertEquals(12, savedPlayer.stats().get(Characteristic.ACTION_POINT));
         assertEquals(EnumSet.of(ChannelType.INFO), player.channels());
+        assertEquals(15, savedPlayer.boostPoints());
     }
 }

@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.data.world.entity.character;
 
 import fr.quatrevieux.araknemu.data.constant.Race;
+import fr.quatrevieux.araknemu.data.value.BoostStatsData;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 
@@ -11,17 +12,19 @@ final public class PlayerRace {
     final private Race race;
     final private String name;
     final private Characteristics baseStats;
+    final private BoostStatsData boostStats;
     final private Position startPosition;
 
-    public PlayerRace(Race race, String name, Characteristics baseStats, Position startPosition) {
+    public PlayerRace(Race race, String name, Characteristics baseStats, BoostStatsData boostStats, Position startPosition) {
         this.race = race;
         this.name = name;
         this.baseStats = baseStats;
+        this.boostStats = boostStats;
         this.startPosition = startPosition;
     }
 
     public PlayerRace(Race race) {
-        this(race, null, null, null);
+        this(race, null, null, null, null);
     }
 
     public Race race() {
@@ -34,6 +37,10 @@ final public class PlayerRace {
 
     public Characteristics baseStats() {
         return baseStats;
+    }
+
+    public BoostStatsData boostStats() {
+        return boostStats;
     }
 
     public Position startPosition() {

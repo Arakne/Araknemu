@@ -22,7 +22,7 @@ final public class Stats {
         sb
             .append("0,0,110").append('|') // XP,XPLow,XPHigh
             .append("1000|") // Kamas
-            .append("15|") // Boot points
+            .append(player.characteristics().boostPoints()).append("|")
             .append("10|") // Spell points
             .append('|') // Align
             .append("100,150|") // Life point, LPMax

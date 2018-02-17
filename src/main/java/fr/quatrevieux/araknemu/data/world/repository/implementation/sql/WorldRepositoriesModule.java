@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.transformer.ImmutableCharacteristicsTransformer;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.local.ItemTemplateRepositoryCache;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.local.PlayerRaceRepositoryCache;
+import fr.quatrevieux.araknemu.data.world.transformer.BoostStatsDataTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.ItemEffectsTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.MapCellTransformer;
 
@@ -26,7 +27,8 @@ final public class WorldRepositoriesModule implements ContainerModule {
             container -> new PlayerRaceRepositoryCache(
                 new PlayerRaceRepository(
                     connection,
-                    container.get(ImmutableCharacteristicsTransformer.class)
+                    container.get(ImmutableCharacteristicsTransformer.class),
+                    container.get(BoostStatsDataTransformer.class)
                 )
             )
         );
@@ -67,6 +69,11 @@ final public class WorldRepositoriesModule implements ContainerModule {
         configurator.persist(
             ItemEffectsTransformer.class,
             container -> new ItemEffectsTransformer()
+        );
+
+        configurator.persist(
+            BoostStatsDataTransformer.class,
+            container -> new BoostStatsDataTransformer()
         );
     }
 }

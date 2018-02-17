@@ -26,8 +26,10 @@ final public class Player {
     private MutableCharacteristics stats;
     private Position position;
     private Set<ChannelType> channels;
+    private int boostPoints;
+    private int spellPoints;
 
-    public Player(int id, int accountId, int serverId, String name, Race race, Sex sex, Colors colors, int level, MutableCharacteristics stats, Position position, Set<ChannelType> channels) {
+    public Player(int id, int accountId, int serverId, String name, Race race, Sex sex, Colors colors, int level, MutableCharacteristics stats, Position position, Set<ChannelType> channels, int boostPoints, int spellPoints) {
         this.id = id;
         this.accountId = accountId;
         this.serverId = serverId;
@@ -39,14 +41,16 @@ final public class Player {
         this.stats = stats;
         this.position = position;
         this.channels = channels;
+        this.boostPoints = boostPoints;
+        this.spellPoints = spellPoints;
     }
 
     public Player(int id, int accountId, int serverId, String name, Race race, Sex sex, Colors colors, int level, MutableCharacteristics characteristics) {
-        this(id, accountId, serverId, name, race, sex, colors, level, characteristics, new Position(0, 0), EnumSet.noneOf(ChannelType.class));
+        this(id, accountId, serverId, name, race, sex, colors, level, characteristics, new Position(0, 0), EnumSet.noneOf(ChannelType.class), 0, 0);
     }
 
     public Player(int id, int accountId, int serverId, String name, Race race, Sex sex, Colors colors) {
-        this(id, accountId, serverId, name, race, sex, colors, 1, new DefaultCharacteristics(), new Position(0, 0), EnumSet.noneOf(ChannelType.class));
+        this(id, accountId, serverId, name, race, sex, colors, 1, new DefaultCharacteristics(), new Position(0, 0), EnumSet.noneOf(ChannelType.class), 0, 0);
     }
 
     public Player(int id) {
@@ -109,6 +113,18 @@ final public class Player {
         this.channels = channels;
     }
 
+    public int boostPoints() {
+        return boostPoints;
+    }
+
+    public void setBoostPoints(int boostPoints) {
+        this.boostPoints = boostPoints;
+    }
+
+    public int spellPoints() {
+        return spellPoints;
+    }
+
     /**
      * Create a new player with new race
      *
@@ -126,7 +142,9 @@ final public class Player {
             level,
             stats,
             position,
-            channels
+            channels,
+            boostPoints,
+            spellPoints
         );
     }
 
@@ -144,6 +162,6 @@ final public class Player {
      * @see fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository#getForGame(Player)
      */
     static public Player forGame(int playerId, int accountId, int serverId) {
-        return new Player(playerId, accountId, serverId, null, null, null, null, 1, null, null, null);
+        return new Player(playerId, accountId, serverId, null, null, null, null, 1, null, null, null, 0, 0);
     }
 }

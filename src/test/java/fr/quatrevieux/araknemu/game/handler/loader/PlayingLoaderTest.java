@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.handler.EnsurePlaying;
+import fr.quatrevieux.araknemu.network.game.in.account.AskBoost;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import fr.quatrevieux.araknemu.network.game.in.chat.SubscribeChannels;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
@@ -31,5 +32,6 @@ class PlayingLoaderTest extends LoaderTestCase {
         assertHandlePacket(Message.class, handlers);
         assertHandlePacket(SubscribeChannels.class, handlers);
         assertHandlePacket(ObjectMoveRequest.class, handlers);
+        assertHandlePacket(AskBoost.class, handlers);
     }
 }
