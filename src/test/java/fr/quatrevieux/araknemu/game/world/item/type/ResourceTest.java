@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.world.item.Type;
 import fr.quatrevieux.araknemu.game.world.item.effect.SpecialEffect;
+import fr.quatrevieux.araknemu.game.world.item.effect.special.NullEffectHandler;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -19,14 +20,14 @@ class ResourceTest extends GameBaseCase {
         Resource resource = new Resource(
             template,
             Arrays.asList(
-                new SpecialEffect(Effect.NULL1, new int[] {0, 0, 0}, "")
+                new SpecialEffect(NullEffectHandler.INSTANCE, Effect.NULL1, new int[] {0, 0, 0}, "")
             )
         );
 
         assertSame(template, resource.template());
         assertIterableEquals(
             Arrays.asList(
-                new SpecialEffect(Effect.NULL1, new int[] {0, 0, 0}, "")
+                new SpecialEffect(NullEffectHandler.INSTANCE, Effect.NULL1, new int[] {0, 0, 0}, "")
             ),
             resource.specials()
         );
@@ -38,13 +39,13 @@ class ResourceTest extends GameBaseCase {
         Resource resource = new Resource(
             template,
             Arrays.asList(
-                new SpecialEffect(Effect.NULL1, new int[] {0, 0, 0}, "")
+                new SpecialEffect(NullEffectHandler.INSTANCE, Effect.NULL1, new int[] {0, 0, 0}, "")
             )
         );
 
         assertIterableEquals(
             Arrays.asList(
-                new SpecialEffect(Effect.NULL1, new int[] {0, 0, 0}, "")
+                new SpecialEffect(NullEffectHandler.INSTANCE, Effect.NULL1, new int[] {0, 0, 0}, "")
             ),
             resource.effects()
         );
@@ -56,7 +57,7 @@ class ResourceTest extends GameBaseCase {
         Resource resource = new Resource(
             template,
             Arrays.asList(
-                new SpecialEffect(Effect.NULL1, new int[] {0, 0, 0}, "")
+                new SpecialEffect(NullEffectHandler.INSTANCE, Effect.NULL1, new int[] {0, 0, 0}, "")
             )
         );
 
@@ -74,7 +75,7 @@ class ResourceTest extends GameBaseCase {
     @Test
     void equalsBadStats() {
         assertNotEquals(
-            new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), Arrays.asList(new SpecialEffect(Effect.NULL1, new int[] {0, 0, 0}, ""))),
+            new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), Arrays.asList(new SpecialEffect(NullEffectHandler.INSTANCE, Effect.NULL1, new int[] {0, 0, 0}, ""))),
             new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>())
         );
     }

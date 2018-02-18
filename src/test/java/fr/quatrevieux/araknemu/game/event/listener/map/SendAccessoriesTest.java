@@ -33,7 +33,7 @@ class SendAccessoriesTest extends GameBaseCase {
         listener.on(
             new EquipmentChanged(
                 new InventoryEntry(null, new PlayerItem(1, 1, 1, null, 1, 0), null),
-                -1
+                -1, true
             )
         );
 
@@ -45,7 +45,7 @@ class SendAccessoriesTest extends GameBaseCase {
         listener.on(
             new EquipmentChanged(
                 new InventoryEntry(null, new PlayerItem(1, 1, 1, null, 1, 1), null),
-                -1
+                -1, true
             )
         );
 
@@ -62,7 +62,7 @@ class SendAccessoriesTest extends GameBaseCase {
         listener.on(
             new EquipmentChanged(
                 new InventoryEntry(null, new PlayerItem(1, 1, 1, null, 1, -1), null),
-                1
+                1, true
             )
         );
 

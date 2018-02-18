@@ -24,19 +24,12 @@ final public class ResourceFactory implements ItemFactory {
 
     @Override
     public Item create(ItemTemplate template, boolean maximize) {
-        return retrieve(template, template.effects());
+        return create(template, template.effects(), maximize);
     }
 
     @Override
     public Item retrieve(ItemTemplate template, List<ItemTemplateEffectEntry> effects) {
-        return new Resource(
-            template,
-            effects
-                .stream()
-                .filter(entry -> entry.effect().type() == Effect.Type.SPECIAL)
-                .map(mapping::create)
-                .collect(Collectors.toList())
-        );
+        return create(template, effects, false);
     }
 
     @Override
@@ -95,5 +88,16 @@ final public class ResourceFactory implements ItemFactory {
             Type.GELEE,
             Type.COQUILLE,
         };
+    }
+
+    private Item create(ItemTemplate template, List<ItemTemplateEffectEntry> effects, boolean maximize) {
+        return new Resource(
+            template,
+            effects
+                .stream()
+                .filter(entry -> entry.effect().type() == Effect.Type.SPECIAL)
+                .map(entry -> mapping.create(entry, maximize))
+                .collect(Collectors.toList())
+        );
     }
 }

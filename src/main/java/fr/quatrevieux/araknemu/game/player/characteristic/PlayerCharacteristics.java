@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.player;
+package fr.quatrevieux.araknemu.game.player.characteristic;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
@@ -6,50 +6,48 @@ import fr.quatrevieux.araknemu.data.value.BoostStatsData;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.common.CharacteristicsChanged;
-import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
+import fr.quatrevieux.araknemu.game.world.item.effect.SpecialEffect;
 import fr.quatrevieux.araknemu.game.world.item.type.Equipment;
 
 /**
  * Characteristic map for player
  * This class will handle aggregation of stats, and computed stats
- *
- * @todo Remove MutableCharacteristics implements
  */
-final public class PlayerCharacteristics implements MutableCharacteristics {
+final public class PlayerCharacteristics implements Characteristics {
     final private MutableCharacteristics base;
-    final private PlayerInventory inventory;
     final private Dispatcher dispatcher;
-    final private Player player;
+    final private Player entity;
     final private PlayerRace race;
+    final private GamePlayer player;
+
+    final private SpecialEffects specials = new SpecialEffects();
 
     private Characteristics stuff;
+    private int life;
 
-    public PlayerCharacteristics(MutableCharacteristics base, PlayerInventory inventory, Dispatcher dispatcher, Player player, PlayerRace race) {
-        this.base = base;
-        this.inventory = inventory;
+    public PlayerCharacteristics(Dispatcher dispatcher, GamePlayer player, Player entity) {
         this.dispatcher = dispatcher;
         this.player = player;
-        this.race = race;
+        this.entity = entity;
+        this.race = player.race();
+
+        this.base = new BaseCharacteristics(
+            dispatcher,
+            race.baseStats(),
+            entity.stats()
+        );
 
         this.stuff = computeStuffStats();
+        this.life = maxLife();
     }
 
     @Override
     public int get(Characteristic characteristic) {
         return base.get(characteristic) + stuff.get(characteristic);
-    }
-
-    @Override
-    public void set(Characteristic characteristic, int value) {
-        base.set(characteristic, value);
-    }
-
-    @Override
-    public void add(Characteristic characteristic, int value) {
-        base.add(characteristic, value);
     }
 
     /**
@@ -81,6 +79,13 @@ final public class PlayerCharacteristics implements MutableCharacteristics {
     }
 
     /**
+     * Get the current special effects
+     */
+    public SpecialEffects specials() {
+        return specials;
+    }
+
+    /**
      * Boost a characteristic
      */
     public void boostCharacteristic(Characteristic characteristic) {
@@ -89,13 +94,13 @@ final public class PlayerCharacteristics implements MutableCharacteristics {
             base.get(characteristic)
         );
 
-        int points = player.boostPoints() - interval.cost();
+        int points = entity.boostPoints() - interval.cost();
 
         if (points < 0) {
             throw new IllegalArgumentException("Not enough points for boost stats");
         }
 
-        player.setBoostPoints(points);
+        entity.setBoostPoints(points);
         base.add(characteristic, interval.boost());
     }
 
@@ -103,7 +108,7 @@ final public class PlayerCharacteristics implements MutableCharacteristics {
      * Get the available boost points
      */
     public int boostPoints() {
-        return player.boostPoints();
+        return entity.boostPoints();
     }
 
     /**
@@ -111,7 +116,54 @@ final public class PlayerCharacteristics implements MutableCharacteristics {
      */
     @Deprecated
     public void setBoostPoints(int points) {
-        player.setBoostPoints(points);
+        entity.setBoostPoints(points);
+    }
+
+    /**
+     * Get the maximal life points
+     */
+    public int maxLife() {
+        return race.startLife()
+            + (entity.level() - 1) * race.perLevelLife()
+            + get(Characteristic.VITALITY)
+        ;
+    }
+
+    /**
+     * Get the current life points
+     */
+    public int life() {
+        return life;
+    }
+
+    /**
+     * Get the current player initiative
+     */
+    public int initiative() {
+        final int maxLife = maxLife();
+        final int curLife = life();
+
+        int base = maxLife / (4 * race.boostStats().get(Characteristic.VITALITY, 0).boost());
+
+        base += get(Characteristic.STRENGTH);
+        base += get(Characteristic.LUCK);
+        base += get(Characteristic.AGILITY);
+        base += get(Characteristic.INTELLIGENCE);
+        base += specials.get(SpecialEffects.Type.INITIATIVE);
+
+        int init = base * curLife / maxLife;
+
+        return init < 1 ? 1 : init;
+    }
+
+    /**
+     * Get the current player discernment
+     */
+    public int discernment() {
+        return race.startDiscernment()
+            + get(Characteristic.LUCK) / 10
+            + specials.get(SpecialEffects.Type.DISCERNMENT)
+        ;
     }
 
     /**
@@ -124,12 +176,25 @@ final public class PlayerCharacteristics implements MutableCharacteristics {
     }
 
     /**
+     * Rebuild the special effects
+     */
+    public void rebuildSpecialEffects() {
+        specials.clear();
+
+        for (Equipment equipment : player.inventory().equipments()) {
+            for (SpecialEffect effect : equipment.specials()) {
+                effect.apply(player);
+            }
+        }
+    }
+
+    /**
      * Compute the stuff stats
      */
     private Characteristics computeStuffStats() {
         MutableCharacteristics characteristics = new DefaultCharacteristics();
 
-        for (Equipment equipment : inventory.equipments()) {
+        for (Equipment equipment : player.inventory().equipments()) {
             equipment.apply(characteristics);
         }
 

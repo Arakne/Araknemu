@@ -32,7 +32,7 @@ abstract public class AbstractEquipmentSlot implements InventorySlot {
     public void set(InventoryEntry entry) throws InventoryException {
         slot.set(entry);
 
-        dispatcher.dispatch(new EquipmentChanged(entry, id()));
+        dispatcher.dispatch(new EquipmentChanged(entry, id(), true));
     }
 
     @Override
@@ -40,7 +40,7 @@ abstract public class AbstractEquipmentSlot implements InventorySlot {
         InventoryEntry entry = entry();
         slot.unset();
 
-        dispatcher.dispatch(new EquipmentChanged(entry, id()));
+        dispatcher.dispatch(new EquipmentChanged(entry, id(), false));
     }
 
     @Override

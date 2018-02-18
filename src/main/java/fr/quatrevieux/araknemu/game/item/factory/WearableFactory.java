@@ -57,7 +57,7 @@ final public class WearableFactory implements ItemFactory {
             effects
                 .stream()
                 .filter(entry -> entry.effect().type() == Effect.Type.SPECIAL)
-                .map(specialMapping::create)
+                .map(entry -> specialMapping.create(entry, maximize))
                 .collect(Collectors.toList())
         );
     }

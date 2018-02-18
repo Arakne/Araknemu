@@ -1,5 +1,7 @@
 package fr.quatrevieux.araknemu.game.player;
 
+import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
+
 /**
  * @todo rename ?
  */

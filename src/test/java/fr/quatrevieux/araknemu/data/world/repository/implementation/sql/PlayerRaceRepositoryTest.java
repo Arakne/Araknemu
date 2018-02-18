@@ -46,6 +46,10 @@ class PlayerRaceRepositoryTest extends GameBaseCase {
         assertEquals(6, race.baseStats().get(Characteristic.ACTION_POINT));
         assertEquals(new Position(10300, 320), race.startPosition());
         assertEquals(2, race.boostStats().get(Characteristic.STRENGTH, 15).cost());
+        assertEquals(100, race.startDiscernment());
+        assertEquals(1000, race.startPods());
+        assertEquals(50, race.startLife());
+        assertEquals(5, race.perLevelLife());
     }
 
     @Test

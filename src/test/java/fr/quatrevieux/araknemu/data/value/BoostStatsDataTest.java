@@ -12,7 +12,7 @@ class BoostStatsDataTest {
     void getBadCharacteristic() {
         BoostStatsData boost = new BoostStatsData(new HashMap<>());
 
-        assertThrows(NoSuchElementException.class, () -> boost.get(Characteristic.DISCERNMENT, 10));
+        assertThrows(NoSuchElementException.class, () -> boost.get(Characteristic.MAX_SUMMONED_CREATURES, 10));
     }
 
     @Test

@@ -65,12 +65,18 @@ class WearableFactoryTest extends GameBaseCase {
 
     @Test
     void createMaxStats() {
-        ItemTemplate template = new ItemTemplate(2425, Type.AMULETTE, "Amulette du Bouftou", 3, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 10, 0, "1d10+0"), new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 10, 0, "1d10+0")), 10, "", 1, "", 550);
+        ItemTemplate template = new ItemTemplate(2425, Type.AMULETTE, "Amulette du Bouftou", 3,
+            Arrays.asList(
+                new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 10, 0, "1d10+0"),
+                new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 10, 0, "1d10+0"),
+                new ItemTemplateEffectEntry(Effect.ADD_PODS, 0, 200, 0, "")
+            ), 10, "", 1, "", 550
+        );
 
         Item item = factory.create(template, true);
 
         assertInstanceOf(Wearable.class, item);
-        assertCount(2, item.effects());
+        assertCount(3, item.effects());
         assertSame(template, item.template());
 
         Wearable wearable = (Wearable) item;
@@ -80,6 +86,9 @@ class WearableFactoryTest extends GameBaseCase {
         assertEquals(10, wearable.characteristics().get(0).value());
         assertEquals(Effect.ADD_STRENGTH, wearable.characteristics().get(1).effect());
         assertEquals(10, wearable.characteristics().get(1).value());
+
+        assertCount(1, item.specials());
+        assertEquals(200, item.specials().get(0).arguments()[0]);
     }
 
     @Test

@@ -9,6 +9,7 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharac
 import fr.quatrevieux.araknemu.game.world.item.Type;
 import fr.quatrevieux.araknemu.game.world.item.effect.CharacteristicEffect;
 import fr.quatrevieux.araknemu.game.world.item.effect.SpecialEffect;
+import fr.quatrevieux.araknemu.game.world.item.effect.special.NullEffectHandler;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -77,13 +78,13 @@ class WearableTest {
         Wearable wearable = new Wearable(
             new ItemTemplate(39, Type.AMULETTE, "Petite Amulette du Hibou", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "0d0+2")), 4, "", 0, "", 100),
             Arrays.asList(new CharacteristicEffect(Effect.ADD_INTELLIGENCE, 2, +1, Characteristic.INTELLIGENCE)),
-            Arrays.asList(new SpecialEffect(Effect.NULL1, new int[] {0, 0, 0}, ""))
+            Arrays.asList(new SpecialEffect(NullEffectHandler.INSTANCE, Effect.NULL1, new int[] {0, 0, 0}, ""))
         );
 
         assertEquals(
             Arrays.asList(
                 new CharacteristicEffect(Effect.ADD_INTELLIGENCE, 2, +1, Characteristic.INTELLIGENCE),
-                new SpecialEffect(Effect.NULL1, new int[] {0, 0, 0}, "")
+                new SpecialEffect(NullEffectHandler.INSTANCE, Effect.NULL1, new int[] {0, 0, 0}, "")
             ),
             wearable.effects()
         );
@@ -94,7 +95,7 @@ class WearableTest {
         Wearable wearable = new Wearable(
             new ItemTemplate(39, Type.AMULETTE, "Petite Amulette du Hibou", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "0d0+2")), 4, "", 0, "", 100),
             Arrays.asList(new CharacteristicEffect(Effect.ADD_INTELLIGENCE, 2, +1, Characteristic.INTELLIGENCE)),
-            Arrays.asList(new SpecialEffect(Effect.NULL1, new int[] {0, 0, 0}, ""))
+            Arrays.asList(new SpecialEffect(NullEffectHandler.INSTANCE, Effect.NULL1, new int[] {0, 0, 0}, ""))
         );
 
         MutableCharacteristics characteristics = new DefaultCharacteristics();

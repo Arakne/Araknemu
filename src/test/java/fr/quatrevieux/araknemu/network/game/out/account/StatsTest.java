@@ -1,7 +1,9 @@
 package fr.quatrevieux.araknemu.network.game.out.account;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -13,10 +15,29 @@ class StatsTest extends GameBaseCase {
 
         GamePlayer player = makeOtherPlayer();
 
-        player.characteristics().setBoostPoints(12);
+        player.characteristics().setBoostPoints(13);
 
         assertEquals(
-            "As0,0,110|1000|12|10||100,150|0,10000|1|100|6,0,0,0|3,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|1,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|",
+            "As0,0,110|1000|13|10||50,50|0,10000|12|100|6,0,0,0|3,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|1,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|",
+            new Stats(player).toString()
+        );
+    }
+
+    @Test
+    void generateWithStuffStatsAndSpecials() throws Exception {
+        dataSet.pushRaces();
+        dataSet.pushItemTemplates();
+
+        GamePlayer player = makeOtherPlayer();
+
+        player.characteristics().setBoostPoints(13);
+        player.inventory().add(container.get(ItemService.class).create(2425, true), 1, 0);
+        player.inventory().add(container.get(ItemService.class).create(2414, true), 1, 7);
+        player.characteristics().rebuildSpecialEffects();
+        player.characteristics().rebuildStuffStats();
+
+        assertEquals(
+            "As0,0,110|1000|13|10||50,98|0,10000|175|100|6,0,0,0|3,0,0,0|0,10,0,0|0,48,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,10,0,0|0,0,0,0|1,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|",
             new Stats(player).toString()
         );
     }

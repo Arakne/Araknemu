@@ -25,23 +25,19 @@ final public class Stats {
             .append(player.characteristics().boostPoints()).append("|")
             .append("10|") // Spell points
             .append('|') // Align
-            .append("100,150|") // Life point, LPMax
+            .append(player.characteristics().life()).append(',').append(player.characteristics().maxLife()).append('|')
             .append("0,10000|") // Energy, Energy Max
+            .append(player.characteristics().initiative()).append('|')
+            .append(player.characteristics().discernment()).append('|')
         ;
 
         for (Characteristic characteristic : Characteristic.values()) {
-            sb.append(player.characteristics().base().get(characteristic));
-
-            if (characteristic.ordinal() >= Characteristic.ACTION_POINT.ordinal()) {
-                sb
-                    .append(',')
-                    .append(player.characteristics().stuff().get(characteristic)).append(',')
-                    .append(player.characteristics().feats().get(characteristic)).append(',')
-                    .append(player.characteristics().boost().get(characteristic))
-                ;
-            }
-
-            sb.append('|');
+            sb
+                .append(player.characteristics().base().get(characteristic)).append(',')
+                .append(player.characteristics().stuff().get(characteristic)).append(',')
+                .append(player.characteristics().feats().get(characteristic)).append(',')
+                .append(player.characteristics().boost().get(characteristic)).append('|')
+            ;
         }
 
         return sb.toString();

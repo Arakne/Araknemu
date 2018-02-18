@@ -42,7 +42,7 @@ class GameSessionTest extends GameBaseCase {
     }
 
     @Test
-    void player() throws ContainerException {
+    void player() throws ContainerException, SQLException {
         GameSession session = new GameSession(new DummyChannel());
 
         GamePlayer player = makeSimpleGamePlayer(10);
@@ -64,7 +64,7 @@ class GameSessionTest extends GameBaseCase {
     }
 
     @Test
-    void dispatchWithPlayer() throws ContainerException {
+    void dispatchWithPlayer() throws ContainerException, SQLException {
         GameSession session = new GameSession(new DummyChannel());
         GamePlayer player = makeSimpleGamePlayer(10);
         session.setPlayer(player);

@@ -2,12 +2,14 @@ package fr.quatrevieux.araknemu.game.player;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
-import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.common.CharacteristicsChanged;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.player.characteristic.BaseCharacteristics;
+import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
+import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
@@ -30,22 +32,18 @@ class PlayerCharacteristicsTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
+        base = MutableCharacteristics.class.cast(gamePlayer(true).characteristics().base());
+
         characteristics = new PlayerCharacteristics(
-            base = new BaseCharacteristics(
-                dispatcher = new DefaultListenerAggregate(),
-                gamePlayer().race().baseStats(),
-                gamePlayer().entity.stats()
-            ),
-            gamePlayer(true).inventory(),
-            dispatcher,
-            gamePlayer().entity,
-            gamePlayer().race()
+            dispatcher = new DefaultListenerAggregate(),
+            gamePlayer(),
+            gamePlayer().entity
         );
     }
 
     @Test
     void defaults() {
-        assertSame(base, characteristics.base());
+        assertInstanceOf(BaseCharacteristics.class, characteristics.base());
         assertEquals(new DefaultCharacteristics(), characteristics.boost());
         assertEquals(new DefaultCharacteristics(), characteristics.feats());
         assertEquals(new DefaultCharacteristics(), characteristics.stuff());
@@ -120,5 +118,52 @@ class PlayerCharacteristicsTest extends GameBaseCase {
     @Test
     void boostCharacteristicBadStats() throws SQLException, ContainerException {
         assertThrows(NoSuchElementException.class, () -> characteristics.boostCharacteristic(Characteristic.ACTION_POINT));
+    }
+
+    @Test
+    void maxLifeSimple() {
+        assertEquals(295, characteristics.maxLife());
+    }
+
+    @Test
+    void maxLifeWithStuffAndBaseVitality() throws SQLException, ContainerException, InventoryException {
+        dataSet.pushItemTemplates();
+
+        gamePlayer().entity.stats().set(Characteristic.VITALITY, 50);
+        gamePlayer().inventory().add(
+            container.get(ItemService.class).create(2419, true),
+            1, 2
+        );
+        characteristics.rebuildStuffStats();
+
+        assertEquals(373, characteristics.maxLife());
+    }
+
+    @Test
+    void initiative() {
+        characteristics.specials().add(SpecialEffects.Type.INITIATIVE, 200);
+
+        assertEquals(473, characteristics.initiative());
+    }
+
+    @Test
+    void discernment() throws SQLException, ContainerException {
+        characteristics.specials().add(SpecialEffects.Type.DISCERNMENT, 15);
+        gamePlayer().entity.stats().set(Characteristic.LUCK, 120);
+
+        assertEquals(127, characteristics.discernment());
+    }
+
+    @Test
+    void rebuildSpecialEffects() throws SQLException, ContainerException, InventoryException {
+        dataSet.pushItemTemplates();
+
+        gamePlayer().entity.stats().set(Characteristic.VITALITY, 50);
+        gamePlayer().inventory().add(container.get(ItemService.class).create(2414, true), 1, 7);
+        gamePlayer().inventory().add(container.get(ItemService.class).create(2428, true), 1, 3);
+        gamePlayer().characteristics().rebuildSpecialEffects();
+
+        assertEquals(500, gamePlayer().characteristics().specials().get(SpecialEffects.Type.PODS));
+        assertEquals(300, gamePlayer().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
     }
 }

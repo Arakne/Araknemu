@@ -82,7 +82,7 @@ class StopSessionTest extends GameBaseCase {
         GamePlayer player = gamePlayer(true);
 
         player.setPosition(new Position(1234, 56));
-        player.characteristics().set(Characteristic.ACTION_POINT, 12);
+        player.characteristics().setBoostPoints(12);
 
         int playerid = gamePlayer().id();
 
@@ -91,6 +91,6 @@ class StopSessionTest extends GameBaseCase {
         Player savedPlayer = container.get(PlayerRepository.class).get(new Player(playerid));
 
         assertEquals(new Position(1234, 56), savedPlayer.position());
-        assertEquals(12, savedPlayer.stats().get(Characteristic.ACTION_POINT));
+        assertEquals(12, savedPlayer.boostPoints());
     }
 }

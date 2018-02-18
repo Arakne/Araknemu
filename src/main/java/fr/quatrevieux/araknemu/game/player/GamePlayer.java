@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
@@ -38,17 +39,9 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
         this.channels = new ChannelSet(entity.channels(), dispatcher);
         this.inventory = inventory;
 
-        characteristics = new PlayerCharacteristics(
-            new BaseCharacteristics(
-                dispatcher,
-                race.baseStats(),
-                entity.stats()
-            ),
-            inventory,
-            dispatcher,
-            entity,
-            race
-        );
+        characteristics = new PlayerCharacteristics(dispatcher, this, entity);
+
+        characteristics.rebuildSpecialEffects();
     }
 
     @Override

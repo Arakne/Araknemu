@@ -4,8 +4,6 @@ package fr.quatrevieux.araknemu.data.constant;
  * List of characteristics
  */
 public enum Characteristic {
-    INITIATIVE,
-    DISCERNMENT,
     ACTION_POINT,
     MOVEMENT_POINT,
     STRENGTH,
@@ -53,13 +51,13 @@ public enum Characteristic {
      * Get the characteristic race
      */
     public int id() {
-        return ordinal() + 6;
+        return ordinal() + 8;
     }
 
     /**
      * Get characteristic by its race
      */
     static public Characteristic fromId(int id) {
-        return values()[id - 6];
+        return values()[id - 8];
     }
 }

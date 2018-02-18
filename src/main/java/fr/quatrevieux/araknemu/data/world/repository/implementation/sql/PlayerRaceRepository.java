@@ -25,6 +25,10 @@ final class PlayerRaceRepository implements fr.quatrevieux.araknemu.data.world.r
                 Race.byId(rs.getInt("RACE_ID")),
                 rs.getString("RACE_NAME"),
                 characteristicsTransformer.unserialize(rs.getString("RACE_STATS")),
+                rs.getInt("START_DISCERNMENT"),
+                rs.getInt("START_PODS"),
+                rs.getInt("START_LIFE"),
+                rs.getInt("PER_LEVEL_LIFE"),
                 boostStatsDataTransformer.unserialize(rs.getString("STATS_BOOST")),
                 new Position(
                     rs.getInt("MAP_ID"),
@@ -60,6 +64,10 @@ final class PlayerRaceRepository implements fr.quatrevieux.araknemu.data.world.r
                     "RACE_ID INTEGER PRIMARY KEY," +
                     "RACE_NAME VARCHAR(32)," +
                     "RACE_STATS TEXT," +
+                    "START_DISCERNMENT INTEGER," +
+                    "START_PODS INTEGER," +
+                    "START_LIFE INTEGER," +
+                    "PER_LEVEL_LIFE INTEGER," +
                     "STATS_BOOST VARCHAR(255)," +
                     "MAP_ID INTEGER," +
                     "CELL_ID INTEGER" +

@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.player;
+package fr.quatrevieux.araknemu.game.player.characteristic;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;

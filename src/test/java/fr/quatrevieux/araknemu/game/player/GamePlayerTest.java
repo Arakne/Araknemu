@@ -71,7 +71,7 @@ class GamePlayerTest extends GameBaseCase {
     @Test
     void characteristics() {
         assertEquals(150, player.characteristics().get(Characteristic.INTELLIGENCE));
-        assertEquals(1, player.characteristics().get(Characteristic.INITIATIVE));
+        assertEquals(3, player.characteristics().get(Characteristic.MOVEMENT_POINT));
         assertEquals(6, player.characteristics().get(Characteristic.ACTION_POINT));
     }
 
@@ -111,7 +111,7 @@ class GamePlayerTest extends GameBaseCase {
             new Position(7894, 12)
         );
 
-        player.characteristics().set(Characteristic.AGILITY, 123);
+        player.entity.stats().set(Characteristic.AGILITY, 123);
 
         player.save();
 

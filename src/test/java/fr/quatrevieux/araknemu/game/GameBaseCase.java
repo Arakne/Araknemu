@@ -289,11 +289,11 @@ public class GameBaseCase extends DatabaseTestCase {
         );
     }
 
-    public GamePlayer makeSimpleGamePlayer(int id) throws ContainerException {
+    public GamePlayer makeSimpleGamePlayer(int id) throws ContainerException, SQLException {
         return makeSimpleGamePlayer(id, new GameSession(new DummyChannel()));
     }
 
-    public GameSession makeSimpleExplorationSession(int id) throws ContainerException {
+    public GameSession makeSimpleExplorationSession(int id) throws ContainerException, SQLException {
         GameSession session = new GameSession(new DummyChannel());
         GamePlayer gp = makeSimpleGamePlayer(id, session);
 
@@ -303,8 +303,9 @@ public class GameBaseCase extends DatabaseTestCase {
         return session;
     }
 
-    public GamePlayer makeSimpleGamePlayer(int id, GameSession session) throws ContainerException {
+    public GamePlayer makeSimpleGamePlayer(int id, GameSession session) throws ContainerException, SQLException {
         dataSet.use(PlayerItem.class);
+        dataSet.pushRaces();
 
         Player player = dataSet.createPlayer(id);
 
@@ -315,7 +316,7 @@ public class GameBaseCase extends DatabaseTestCase {
                 2
             ),
             player,
-            new PlayerRace(Race.FECA),
+            dataSet.refresh(new PlayerRace(Race.FECA)),
             session,
             container.get(PlayerService.class),
             container.get(InventoryService.class).load(player, session)

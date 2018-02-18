@@ -12,9 +12,9 @@ class DefaultCharacteristicsTest {
     void getSet() {
         DefaultCharacteristics characteristics = new DefaultCharacteristics();
 
-        characteristics.set(Characteristic.DISCERNMENT, 5);
+        characteristics.set(Characteristic.INTELLIGENCE, 5);
 
-        assertEquals(5, characteristics.get(Characteristic.DISCERNMENT));
+        assertEquals(5, characteristics.get(Characteristic.INTELLIGENCE));
     }
 
     @Test

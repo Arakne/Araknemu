@@ -59,10 +59,6 @@ final public class EffectToCharacteristicMapping {
         set(Effect.SUB_ACTION_POINTS,    -1, Characteristic.ACTION_POINT);
         set(Effect.SUB_MOVEMENT_POINTS,  -1, Characteristic.MOVEMENT_POINT);
         set(Effect.SUB_CRITICAL_HIT,     -1, Characteristic.CRITICAL_BONUS);
-        set(Effect.ADD_INITIATIVE,       +1, Characteristic.INITIATIVE);
-        set(Effect.SUB_INITIATIVE,       -1, Characteristic.INITIATIVE);
-        set(Effect.ADD_DISCERNMENT,      +1, Characteristic.DISCERNMENT);
-        set(Effect.SUB_DISCERNMENT,      -1, Characteristic.DISCERNMENT);
         set(Effect.ADD_HEAL_POINTS,      +1, Characteristic.HEALTH_BOOST);
         set(Effect.SUB_HEAL_POINTS,      -1, Characteristic.HEALTH_BOOST);
         set(Effect.ADD_SUMMONS,          +1, Characteristic.MAX_SUMMONED_CREATURES);

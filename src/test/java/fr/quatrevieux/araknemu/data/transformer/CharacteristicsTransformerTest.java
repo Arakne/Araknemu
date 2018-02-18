@@ -20,7 +20,6 @@ class CharacteristicsTransformerTest {
     void serializeSameValue() {
         DefaultCharacteristics characteristics = new DefaultCharacteristics();
 
-        characteristics.set(Characteristic.DISCERNMENT, 3000);
         characteristics.set(Characteristic.RESISTANCE_ACTION_POINT, 24);
         characteristics.set(Characteristic.MAX_SUMMONED_CREATURES, 3);
         characteristics.set(Characteristic.MAX_SUMMONED_CREATURES, 3);
@@ -35,12 +34,12 @@ class CharacteristicsTransformerTest {
     void serializeIgnoreNull() {
         DefaultCharacteristics characteristics = new DefaultCharacteristics();
 
-        characteristics.set(Characteristic.DISCERNMENT, 3000);
+        characteristics.set(Characteristic.STRENGTH, 3000);
         characteristics.set(Characteristic.RESISTANCE_ACTION_POINT, 0);
         characteristics.set(Characteristic.MAX_SUMMONED_CREATURES, 0);
         characteristics.set(Characteristic.MAX_SUMMONED_CREATURES, 3);
 
-        assertEquals("7:2to;h:3;", transformer.serialize(characteristics));
+        assertEquals("a:2to;h:3;", transformer.serialize(characteristics));
     }
 
     @Test
@@ -94,7 +93,6 @@ class CharacteristicsTransformerTest {
     void functional() {
         DefaultCharacteristics characteristics = new DefaultCharacteristics();
 
-        characteristics.set(Characteristic.DISCERNMENT, 3000);
         characteristics.set(Characteristic.RESISTANCE_ACTION_POINT, 24);
         characteristics.set(Characteristic.MAX_SUMMONED_CREATURES, 3);
         characteristics.set(Characteristic.MAX_SUMMONED_CREATURES, 3);
@@ -113,14 +111,12 @@ class CharacteristicsTransformerTest {
 
         characteristics.set(Characteristic.ACTION_POINT, 6);
         characteristics.set(Characteristic.MOVEMENT_POINT, 3);
-        characteristics.set(Characteristic.DISCERNMENT, 100);
         characteristics.set(Characteristic.MAX_SUMMONED_CREATURES, 1);
-        characteristics.set(Characteristic.INITIATIVE, 1);
 
-        assertEquals("6:1;7:34;8:6;9:3;h:1;", transformer.serialize(characteristics));
+        assertEquals("8:6;9:3;h:1;", transformer.serialize(characteristics));
 
-        characteristics.set(Characteristic.DISCERNMENT, 120);
+        characteristics.set(Characteristic.MAX_SUMMONED_CREATURES, 3);
 
-        assertEquals("6:1;7:3o;8:6;9:3;h:1;", transformer.serialize(characteristics));
+        assertEquals("8:6;9:3;h:3;", transformer.serialize(characteristics));
     }
 }

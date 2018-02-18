@@ -1,10 +1,14 @@
 package fr.quatrevieux.araknemu.game.event.listener.player.inventory;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.common.CharacteristicsChanged;
 import fr.quatrevieux.araknemu.game.event.inventory.EquipmentChanged;
+import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
+import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.world.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +28,7 @@ class UpdateStuffStatsTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
+        dataSet.pushItemTemplates();
         listener = new UpdateStuffStats(gamePlayer(true));
 
         requestStack.clear();
@@ -37,7 +42,14 @@ class UpdateStuffStatsTest extends GameBaseCase {
         player.dispatcher().add(CharacteristicsChanged.class, ref::set);
 
         listener.on(
-            new EquipmentChanged(Mockito.mock(ItemEntry.class), 0)
+            new EquipmentChanged(
+                new InventoryEntry(
+                    null,
+                    new PlayerItem(1, 1, 2425, null, 1, -1),
+                    container.get(ItemService.class).create(2425, true)
+                ),
+                0, true
+            )
         );
 
         assertNotNull(ref.get());
@@ -45,5 +57,43 @@ class UpdateStuffStatsTest extends GameBaseCase {
         requestStack.assertLast(
             new Stats(player)
         );
+    }
+
+    @Test
+    void onEquipmentChangedWithSpecialEffect() throws SQLException, ContainerException {
+        GamePlayer player = gamePlayer();
+
+        listener.on(
+            new EquipmentChanged(
+                new InventoryEntry(
+                    null,
+                    new PlayerItem(1, 1, 2425, null, 1, -1),
+                    container.get(ItemService.class).create(2428, true)
+                ),
+                3, true
+            )
+        );
+
+        assertEquals(500, player.characteristics().specials().get(SpecialEffects.Type.PODS));
+    }
+
+    @Test
+    void onEquipmentChangedWithUnequipSpecialEffect() throws SQLException, ContainerException {
+        GamePlayer player = gamePlayer();
+
+        player.characteristics().specials().add(SpecialEffects.Type.PODS, 500);
+
+        listener.on(
+            new EquipmentChanged(
+                new InventoryEntry(
+                    null,
+                    new PlayerItem(1, 1, 2425, null, 1, -1),
+                    container.get(ItemService.class).create(2428, true)
+                ),
+                3, false
+            )
+        );
+
+        assertEquals(0, player.characteristics().specials().get(SpecialEffects.Type.PODS));
     }
 }
