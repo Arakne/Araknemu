@@ -33,7 +33,12 @@ final public class NullSlot implements InventorySlot {
     public void uncheckedSet(InventoryEntry entry) {}
 
     @Override
-    public void set(InventoryEntry entry) throws InventoryException {
+    public InventoryEntry set(InventoryEntry entry) throws InventoryException {
+        throw new InventoryException("Null slot");
+    }
+
+    @Override
+    public InventoryEntry set(Item item, int quantity) throws InventoryException {
         throw new InventoryException("Null slot");
     }
 

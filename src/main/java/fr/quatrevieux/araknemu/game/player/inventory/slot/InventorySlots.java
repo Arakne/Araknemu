@@ -1,7 +1,9 @@
 package fr.quatrevieux.araknemu.game.player.inventory.slot;
 
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
+import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.world.item.inventory.ItemEntry;
+import fr.quatrevieux.araknemu.game.world.item.inventory.ItemStorage;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.world.item.type.Equipment;
 
@@ -13,25 +15,28 @@ import java.util.Collection;
  */
 final public class InventorySlots {
     final private Dispatcher dispatcher;
+    final private ItemStorage<InventoryEntry> storage;
 
-    final private InventorySlot defaultSlot = new DefaultSlot();
+    final private InventorySlot defaultSlot;
     final private InventorySlot[] slots = new InventorySlot[49];
 
-    public InventorySlots(Dispatcher dispatcher) {
-        this.dispatcher = dispatcher;
+    public InventorySlots(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage) {
+        this.dispatcher  = dispatcher;
+        this.storage     = storage;
+        this.defaultSlot = new DefaultSlot(storage);
 
-        add(new AmuletSlot(dispatcher));
-        add(new WeaponSlot(dispatcher));
-        add(new RingSlot(dispatcher, RingSlot.RING1));
-        add(new RingSlot(dispatcher, RingSlot.RING2));
-        add(new BeltSlot(dispatcher));
-        add(new BootsSlot(dispatcher));
-        add(new HelmetSlot(dispatcher));
-        add(new MantleSlot(dispatcher));
+        add(new AmuletSlot(dispatcher, storage));
+        add(new WeaponSlot(dispatcher, storage));
+        add(new RingSlot(dispatcher, storage, RingSlot.RING1));
+        add(new RingSlot(dispatcher, storage, RingSlot.RING2));
+        add(new BeltSlot(dispatcher, storage));
+        add(new BootsSlot(dispatcher, storage));
+        add(new HelmetSlot(dispatcher, storage));
+        add(new MantleSlot(dispatcher, storage));
         add(new NullSlot(8)); // pet
 
         for (int id : DofusSlot.SLOT_IDS) {
-            add(new DofusSlot(dispatcher, id));
+            add(new DofusSlot(dispatcher, storage, id));
         }
 
         for (int i = 15; i < slots.length; ++i) {

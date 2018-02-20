@@ -30,14 +30,17 @@ public interface InventorySlot {
 
     /**
      * Set an entry to the slot
+     *
+     * This method will be called after a {@link InventoryEntry#move(int, int)}
      */
-    default public void set(InventoryEntry entry) throws InventoryException {
-        if (!check(entry.item(), entry.quantity())) {
-            throw new MoveException("Cannot move to this slot");
-        }
+    public InventoryEntry set(InventoryEntry entry) throws InventoryException;
 
-        uncheckedSet(entry);
-    }
+    /**
+     * Set a new item to the slot
+     *
+     * This method will be called after an {@link fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory#add(Item)}
+     */
+    public InventoryEntry set(Item item, int quantity) throws InventoryException;
 
     /**
      * Set the entry to the slot without do any checks

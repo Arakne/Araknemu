@@ -29,10 +29,21 @@ abstract public class AbstractEquipmentSlot implements InventorySlot {
     }
 
     @Override
-    public void set(InventoryEntry entry) throws InventoryException {
-        slot.set(entry);
+    public InventoryEntry set(InventoryEntry entry) throws InventoryException {
+        InventoryEntry newEntry = slot.set(entry);
 
         dispatcher.dispatch(new EquipmentChanged(entry, id(), true));
+
+        return newEntry;
+    }
+
+    @Override
+    public InventoryEntry set(Item item, int quantity) throws InventoryException {
+        InventoryEntry entry = slot.set(item, quantity);
+
+        dispatcher.dispatch(new EquipmentChanged(entry, id(), true));
+
+        return entry;
     }
 
     @Override

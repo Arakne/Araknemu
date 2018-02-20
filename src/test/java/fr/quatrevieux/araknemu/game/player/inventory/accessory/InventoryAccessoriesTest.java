@@ -9,8 +9,11 @@ import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.Accessory;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.AccessoryType;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.NullAccessory;
+import fr.quatrevieux.araknemu.game.world.item.inventory.ItemStorage;
+import fr.quatrevieux.araknemu.game.world.item.inventory.SimpleItemStorage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,7 +27,13 @@ class InventoryAccessoriesTest extends GameBaseCase {
 
         dataSet.pushItemTemplates();
 
-        InventorySlots slots = new InventorySlots(new DefaultListenerAggregate());
+        InventorySlots slots = new InventorySlots(
+            new DefaultListenerAggregate(),
+            new SimpleItemStorage<>(
+                new DefaultListenerAggregate(),
+                (id, item, quantity, position) -> new InventoryEntry(null, new PlayerItem(1, id, item.template().id(), null, quantity, position), item)
+            )
+        );
 
         slots.get(1).uncheckedSet(new InventoryEntry(null, new PlayerItem(0, 0, 2416, null, 1, 1), container.get(ItemService.class).create(2416)));
         slots.get(6).uncheckedSet(new InventoryEntry(null, new PlayerItem(0, 0, 2411, null, 1, 0), container.get(ItemService.class).create(2411)));

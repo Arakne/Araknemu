@@ -11,6 +11,7 @@ import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionCancel;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
 import fr.quatrevieux.araknemu.network.game.in.info.ScreenInfo;
+import fr.quatrevieux.araknemu.network.game.in.object.ObjectDeleteRequest;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectMoveRequest;
 import fr.quatrevieux.araknemu.network.in.ParserLoader;
 import fr.quatrevieux.araknemu.network.in.SinglePacketParser;
@@ -46,7 +47,8 @@ final public class GameParserLoader implements ParserLoader {
             new AskRandomName.Parser(),
             new AdminCommand.Parser(),
             new ObjectMoveRequest.Parser(),
-            new AskBoost.Parser()
+            new AskBoost.Parser(),
+            new ObjectDeleteRequest.Parser()
         );
     }
 }

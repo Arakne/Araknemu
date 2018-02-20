@@ -44,4 +44,13 @@ final public class Weapon extends Equipment {
 
         return weaponEffects.equals(weapon.weaponEffects);
     }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+
+        result = 31 * result + weaponEffects.hashCode();
+
+        return result;
+    }
 }

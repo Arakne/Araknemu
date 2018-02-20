@@ -48,4 +48,28 @@ public interface ItemStorage<E extends ItemEntry> extends Iterable<E> {
      * @return The related entry
      */
     public E add(Item item, int quantity, int position) throws InventoryException;
+
+    /**
+     * Delete an entry from the storage
+     *
+     * @param entry The entry to delete
+     *
+     * @return The deleted entry. Should be same as argument
+     *
+     * @throws ItemNotFoundException If the entry cannot be found on the storage
+     */
+    default public E delete(E entry) throws InventoryException {
+        return delete(entry.id());
+    }
+
+    /**
+     * Delete an entry from the storage
+     *
+     * @param id The entry id to delete
+     *
+     * @return The deleted entry
+     *
+     * @throws ItemNotFoundException If the entry cannot be found on the storage
+     */
+    public E delete(int id) throws InventoryException;
 }

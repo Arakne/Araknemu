@@ -6,9 +6,11 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import fr.quatrevieux.araknemu.game.world.item.inventory.ItemStorage;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.ArrayList;
 
@@ -24,7 +26,7 @@ class DofusSlotTest extends GameBaseCase {
 
         dataSet.pushItemTemplates();
 
-        slot = new DofusSlot(new DefaultListenerAggregate(), DofusSlot.SLOT_IDS[0]);
+        slot = new DofusSlot(new DefaultListenerAggregate(), Mockito.mock(ItemStorage.class), DofusSlot.SLOT_IDS[0]);
     }
 
     @Test

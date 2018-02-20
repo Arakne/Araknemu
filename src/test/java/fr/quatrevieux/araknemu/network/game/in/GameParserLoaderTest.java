@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionCancel;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
+import fr.quatrevieux.araknemu.network.game.in.object.ObjectDeleteRequest;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectMoveRequest;
 import fr.quatrevieux.araknemu.network.in.ParserLoader;
 import fr.quatrevieux.araknemu.network.in.SinglePacketParser;
@@ -43,6 +44,7 @@ class GameParserLoaderTest {
         assertContainsInstance(AdminCommand.Parser.class, parsers);
         assertContainsInstance(ObjectMoveRequest.Parser.class, parsers);
         assertContainsInstance(AskBoost.Parser.class, parsers);
+        assertContainsInstance(ObjectDeleteRequest.Parser.class, parsers);
     }
 
     public void assertContainsInstance(Class type, Collection collection) {

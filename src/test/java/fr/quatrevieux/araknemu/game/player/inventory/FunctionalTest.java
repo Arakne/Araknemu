@@ -4,16 +4,15 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.inventory.EquipmentChanged;
+import fr.quatrevieux.araknemu.game.event.inventory.ObjectQuantityChanged;
 import fr.quatrevieux.araknemu.game.event.listener.player.SendStats;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.AmuletSlot;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.HelmetSlot;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
-import fr.quatrevieux.araknemu.network.game.out.object.AddItem;
-import fr.quatrevieux.araknemu.network.game.out.object.ItemPosition;
-import fr.quatrevieux.araknemu.network.game.out.object.ItemQuantity;
-import fr.quatrevieux.araknemu.network.game.out.object.SpriteAccessories;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
+import fr.quatrevieux.araknemu.network.game.out.object.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -223,5 +222,127 @@ public class FunctionalTest extends GameBaseCase {
         requestStack.assertAll(
             new ItemPosition(entry)
         );
+    }
+
+    @Test
+    void addBadPosition() {
+        assertThrows(InventoryException.class, () -> inventory.add(itemService.create(2425), 1, 6), "Cannot add this item to this slot");
+    }
+
+    @Test
+    void deleteSimpleItem() throws InventoryException {
+        InventoryEntry entry = inventory.add(itemService.create(2425));
+        requestStack.clear();
+
+        inventory.delete(entry);
+
+        assertThrows(ItemNotFoundException.class, () -> inventory.get(entry.id()));
+        requestStack.assertAll(
+            new DestroyItem(entry)
+        );
+    }
+
+    @Test
+    void deleteEquipedItem() throws InventoryException, SQLException, ContainerException {
+        InventoryEntry entry = inventory.add(itemService.create(2425), 1, 0);
+        requestStack.clear();
+
+
+        AtomicReference<EquipmentChanged> ref = new AtomicReference<>();
+        gamePlayer().dispatcher().add(EquipmentChanged.class, ref::set);
+
+        inventory.delete(entry);
+
+        requestStack.assertAll(new DestroyItem(entry));
+
+        assertSame(entry, ref.get().entry());
+        assertFalse(ref.get().equiped());
+        assertEquals(0, ref.get().slot());
+    }
+
+    @Test
+    void deleteAccessory() throws InventoryException, SQLException, ContainerException {
+        explorationPlayer();
+
+        InventoryEntry entry = inventory.add(itemService.create(2411), 1, 6);
+        requestStack.clear();
+
+        inventory.delete(entry);
+
+        requestStack.assertAll(
+            new SpriteAccessories(gamePlayer().id(), inventory.accessories()),
+            new DestroyItem(entry)
+        );
+    }
+
+    @Test
+    void removeItem() throws InventoryException {
+        InventoryEntry entry = inventory.add(itemService.create(2411), 10, -1);
+        requestStack.clear();
+
+        entry.remove(3);
+
+        assertEquals(7, entry.quantity());
+
+        requestStack.assertLast(
+            new ItemQuantity(entry)
+        );
+    }
+
+    @Test
+    void removeEntry() throws InventoryException {
+        InventoryEntry entry = inventory.add(itemService.create(2411), 10, -1);
+        requestStack.clear();
+
+        entry.remove(10);
+
+        assertEquals(0, entry.quantity());
+
+        requestStack.assertLast(
+            new DestroyItem(entry)
+        );
+    }
+
+    @Test
+    void addWillStack() throws InventoryException {
+        InventoryEntry entry = inventory.add(itemService.create(2411, true));
+        requestStack.clear();
+
+        assertSame(entry, inventory.add(itemService.create(2411, true)));
+        assertEquals(2, entry.quantity());
+
+        requestStack.assertLast(
+            new ItemQuantity(entry)
+        );
+    }
+
+    @Test
+    void moveAndStack() throws InventoryException {
+        InventoryEntry entry = inventory.add(itemService.create(2425, true));
+        InventoryEntry entry2 = inventory.add(itemService.create(2425, true), 1, 0);
+        assertNotSame(entry, entry2);
+        requestStack.clear();
+
+        entry2.move(-1, 1);
+
+        assertEquals(2, entry.quantity());
+        assertEquals(-1, entry.position());
+
+        requestStack.assertAll(
+            new DestroyItem(entry2),
+            new ItemQuantity(entry)
+        );
+    }
+
+    @Test
+    void moveItemWillIndexingForStacking() throws InventoryException {
+        InventoryEntry entry = inventory.add(itemService.create(2425, true), 1, 0);
+        entry.move(-1, 1);
+        requestStack.clear();
+
+        assertSame(entry, inventory.add(itemService.create(2425, true)));
+
+        assertEquals(2, entry.quantity());
+        assertEquals(-1, entry.position());
     }
 }

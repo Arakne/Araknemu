@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SingleItemC
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SlotConstraint;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.Type;
+import fr.quatrevieux.araknemu.game.world.item.inventory.ItemStorage;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.world.item.type.Wearable;
 
@@ -17,14 +18,18 @@ import fr.quatrevieux.araknemu.game.world.item.type.Wearable;
 final public class MantleSlot extends AbstractEquipmentSlot {
     final static public int SLOT_ID = 7;
 
-    public MantleSlot(Dispatcher dispatcher) {
+    public MantleSlot(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage) {
         super(
             dispatcher,
-            new SimpleSlot(SLOT_ID, new SlotConstraint[] {
-                new SingleItemConstraint(),
-                new ItemClassConstraint(Wearable.class),
-                new ItemTypeSetConstraint(Type.CAPE, Type.SAC_DOS)
-            })
+            new SimpleSlot(
+                SLOT_ID,
+                new SlotConstraint[] {
+                    new SingleItemConstraint(),
+                    new ItemClassConstraint(Wearable.class),
+                    new ItemTypeSetConstraint(Type.CAPE, Type.SAC_DOS)
+                },
+                storage
+            )
         );
     }
 }

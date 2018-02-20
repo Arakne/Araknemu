@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.world.item.inventory;
 
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.inventory.ObjectAdded;
+import fr.quatrevieux.araknemu.game.event.inventory.ObjectDeleted;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
 
@@ -57,6 +58,19 @@ final public class SimpleItemStorage<E extends ItemEntry> implements ItemStorage
 
         push(entry);
         dispatcher.dispatch(new ObjectAdded(entry));
+
+        return entry;
+    }
+
+    @Override
+    public E delete(int id) throws ItemNotFoundException {
+        if (!items.containsKey(id)) {
+            throw new ItemNotFoundException(id);
+        }
+
+        E entry = items.remove(id);
+
+        dispatcher.dispatch(new ObjectDeleted(entry));
 
         return entry;
     }

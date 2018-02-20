@@ -23,10 +23,12 @@ final public class AddInventoryListeners implements Listener<PlayerLoaded> {
         dispatcher.add(new SendItemData(event.player()));
         dispatcher.add(new SendItemPosition(event.player()));
         dispatcher.add(new SendItemQuantity(event.player()));
+        dispatcher.add(new SendItemDeleted(event.player()));
 
         dispatcher.add(new SaveNewItem(repository));
         dispatcher.add(new SaveItemPosition(repository));
         dispatcher.add(new SaveItemQuantity(repository));
+        dispatcher.add(new SaveDeletedItem(repository));
 
         dispatcher.add(new UpdateStuffStats(event.player()));
     }

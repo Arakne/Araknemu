@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.network.game.in.account.AskBoost;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import fr.quatrevieux.araknemu.network.game.in.chat.SubscribeChannels;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
+import fr.quatrevieux.araknemu.network.game.in.object.ObjectDeleteRequest;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectMoveRequest;
 import fr.quatrevieux.araknemu.network.in.PacketHandler;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,5 +34,6 @@ class PlayingLoaderTest extends LoaderTestCase {
         assertHandlePacket(SubscribeChannels.class, handlers);
         assertHandlePacket(ObjectMoveRequest.class, handlers);
         assertHandlePacket(AskBoost.class, handlers);
+        assertHandlePacket(ObjectDeleteRequest.class, handlers);
     }
 }

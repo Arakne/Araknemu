@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.game.handler.chat.SaveSubscription;
 import fr.quatrevieux.araknemu.game.handler.chat.SendMessage;
 import fr.quatrevieux.araknemu.game.handler.game.CreateGame;
 import fr.quatrevieux.araknemu.game.handler.object.MoveObject;
+import fr.quatrevieux.araknemu.game.handler.object.RemoveObject;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.in.PacketHandler;
 
@@ -32,7 +33,8 @@ final public class PlayingLoader extends AbstractLoader {
             ),
             new SaveSubscription(),
             new MoveObject(),
-            new BoostCharacteristic()
+            new BoostCharacteristic(),
+            new RemoveObject()
         };
     }
 }

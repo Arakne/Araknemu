@@ -5,7 +5,9 @@ import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
+import fr.quatrevieux.araknemu.game.event.inventory.EquipmentChanged;
 import fr.quatrevieux.araknemu.game.event.inventory.ObjectAdded;
+import fr.quatrevieux.araknemu.game.event.inventory.ObjectDeleted;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.inventory.accessory.InventoryAccessories;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.AccessoryType;
@@ -71,12 +73,14 @@ class PlayerInventoryTest extends GameBaseCase {
 
     @Test
     void iterator() throws InventoryException {
-        Item item = new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
+        Item item1 = new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
+        Item item2 = new Resource(new ItemTemplate(285, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
+        Item item3 = new Resource(new ItemTemplate(288, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
 
         List<InventoryEntry> entries = Arrays.asList(
-            inventory.add(item, 5),
-            inventory.add(item, 5),
-            inventory.add(item, 5)
+            inventory.add(item1, 5),
+            inventory.add(item2, 5),
+            inventory.add(item3, 5)
         );
 
         assertIterableEquals(entries, inventory);
@@ -135,5 +139,30 @@ class PlayerInventoryTest extends GameBaseCase {
 
         assertEquals(2416, inventory.accessories().get(AccessoryType.WEAPON).appearance());
         assertEquals(2411, inventory.accessories().get(AccessoryType.HELMET).appearance());
+    }
+
+    @Test
+    void deleteWillRemoveFromSlotAndStorage() throws SQLException, ContainerException, InventoryException {
+        dataSet.pushItemTemplates();
+
+        InventoryEntry entry = inventory.add(container.get(ItemService.class).create(2416), 1, 1);
+
+        assertSame(entry, inventory.delete(entry));
+
+        Mockito.verify(dispatcher, Mockito.atLeastOnce()).dispatch(Mockito.any(EquipmentChanged.class));
+        Mockito.verify(dispatcher, Mockito.atLeastOnce()).dispatch(Mockito.any(ObjectDeleted.class));
+    }
+
+    @Test
+    void addSameItemWillStack() throws InventoryException {
+        Item item = new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
+
+        InventoryEntry entry = inventory.add(item, 5);
+
+        assertSame(entry, inventory.add(item, 3));
+        assertSame(entry, inventory.add(item, 12));
+
+        assertEquals(20, entry.quantity());
+        assertIterableEquals(Collections.singletonList(entry), inventory);
     }
 }

@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.ItemClassCo
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SingleItemConstraint;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SlotConstraint;
 import fr.quatrevieux.araknemu.game.world.item.Item;
+import fr.quatrevieux.araknemu.game.world.item.inventory.ItemStorage;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.world.item.type.Weapon;
 
@@ -15,13 +16,17 @@ import fr.quatrevieux.araknemu.game.world.item.type.Weapon;
 final public class WeaponSlot extends AbstractEquipmentSlot {
     final static public int SLOT_ID = 1;
 
-    public WeaponSlot(Dispatcher dispatcher) {
+    public WeaponSlot(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage) {
         super(
             dispatcher,
-            new SimpleSlot(SLOT_ID, new SlotConstraint[] {
-                new SingleItemConstraint(),
-                new ItemClassConstraint(Weapon.class)
-            })
+            new SimpleSlot(
+                SLOT_ID,
+                new SlotConstraint[] {
+                    new SingleItemConstraint(),
+                    new ItemClassConstraint(Weapon.class)
+                },
+                storage
+            )
         );
     }
 }

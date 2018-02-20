@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.Listener;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.inventory.ObjectAdded;
+import fr.quatrevieux.araknemu.game.event.inventory.ObjectDeleted;
 import fr.quatrevieux.araknemu.game.event.inventory.ObjectMoved;
 import fr.quatrevieux.araknemu.game.event.inventory.ObjectQuantityChanged;
 import fr.quatrevieux.araknemu.game.item.ItemService;
@@ -14,6 +15,7 @@ import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.Type;
 import fr.quatrevieux.araknemu.game.world.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
 import fr.quatrevieux.araknemu.game.world.item.type.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -156,5 +158,55 @@ class InventoryEntryTest extends GameBaseCase {
 
         assertEquals(9, entry.quantity());
         assertSame(entry, ref.get().entry());
+    }
+
+    @Test
+    void removeNegativeQuantity() throws InventoryException {
+        InventoryEntry entry = inventory.add(
+            new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>()),
+            12
+        );
+
+        AtomicReference<ObjectQuantityChanged> ref = new AtomicReference<>();
+        dispatcher.add(ObjectQuantityChanged.class, ref::set);
+
+        assertThrows(InventoryException.class, () -> entry.remove(-3));
+
+        assertEquals(12, entry.quantity());
+        assertNull(ref.get());
+    }
+
+    @Test
+    void removeTooHighQuantity() throws InventoryException {
+        InventoryEntry entry = inventory.add(
+            new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>()),
+            12
+        );
+
+        AtomicReference<ObjectQuantityChanged> ref = new AtomicReference<>();
+        dispatcher.add(ObjectQuantityChanged.class, ref::set);
+
+        assertThrows(InventoryException.class, () -> entry.remove(25));
+
+        assertEquals(12, entry.quantity());
+        assertNull(ref.get());
+    }
+
+    @Test
+    void removeAll() throws InventoryException {
+        InventoryEntry entry = inventory.add(
+            new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>()),
+            12
+        );
+
+        AtomicReference<ObjectDeleted> ref = new AtomicReference<>();
+        dispatcher.add(ObjectDeleted.class, ref::set);
+
+        entry.remove(12);
+
+        assertEquals(0, entry.quantity());
+        assertSame(entry, ref.get().entry());
+
+        assertThrows(ItemNotFoundException.class, () -> inventory.get(entry.id()));
     }
 }

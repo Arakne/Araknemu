@@ -6,11 +6,13 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import fr.quatrevieux.araknemu.game.world.item.inventory.SimpleItemStorage;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,7 +24,14 @@ class InventorySlotsTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        slots = new InventorySlots(new DefaultListenerAggregate());
+        slots = new InventorySlots(
+            new DefaultListenerAggregate(),
+            new SimpleItemStorage<>(
+                new DefaultListenerAggregate(),
+                null,
+                Collections.emptyList()
+            )
+        );
     }
 
     @Test

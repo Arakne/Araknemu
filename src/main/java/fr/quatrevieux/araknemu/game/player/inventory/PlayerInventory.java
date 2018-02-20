@@ -42,7 +42,7 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry> {
                 .collect(Collectors.toList())
         );
 
-        slots = new InventorySlots(dispatcher);
+        slots = new InventorySlots(dispatcher, storage);
 
         for (InventoryEntry entry : storage) {
             try {
@@ -68,10 +68,16 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry> {
             throw new InventoryException("Cannot add this item to this slot");
         }
 
-        InventoryEntry entry = storage.add(item, quantity, position);
-        target.set(entry);
+        return target.set(item, quantity);
+    }
 
-        return entry;
+    @Override
+    public InventoryEntry delete(int id) throws InventoryException {
+        InventoryEntry entry = get(id);
+
+        slots.get(entry.position()).unset();
+
+        return storage.delete(id);
     }
 
     @Override
@@ -112,8 +118,11 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry> {
      *
      * @param entry The entry to move
      * @param position The new position
+     *
+     * @return true if the entry change position
+     *         false if the entry is detroyed (like stacking or eat)
      */
-    void move(InventoryEntry entry, int position) throws InventoryException {
+    boolean move(InventoryEntry entry, int position) throws InventoryException {
         InventorySlot target = slots.get(position);
 
         if (!target.check(entry.item(), entry.quantity())) {
@@ -121,6 +130,6 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry> {
         }
 
         slots.get(entry.position()).unset();
-        target.set(entry);
+        return entry == target.set(entry);
     }
 }

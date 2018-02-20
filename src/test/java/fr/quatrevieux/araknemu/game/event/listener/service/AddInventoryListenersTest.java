@@ -38,5 +38,7 @@ class AddInventoryListenersTest extends GameBaseCase {
         assertTrue(gamePlayer().dispatcher().has(SaveItemPosition.class));
         assertTrue(gamePlayer().dispatcher().has(SaveItemQuantity.class));
         assertTrue(gamePlayer().dispatcher().has(UpdateStuffStats.class));
+        assertTrue(gamePlayer().dispatcher().has(SaveDeletedItem.class));
+        assertTrue(gamePlayer().dispatcher().has(SendItemDeleted.class));
     }
 }

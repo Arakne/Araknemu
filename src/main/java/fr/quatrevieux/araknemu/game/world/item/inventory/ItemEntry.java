@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.world.item.inventory;
 
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.world.item.Item;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 
 import java.util.List;
 
@@ -51,7 +52,7 @@ public interface ItemEntry {
     /**
      * Remove the quantity to the entry
      */
-    public void remove(int quantity);
+    public void remove(int quantity) throws InventoryException;
 
     /**
      * Export the item effects

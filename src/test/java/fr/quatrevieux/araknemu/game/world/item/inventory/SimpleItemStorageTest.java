@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.inventory.ObjectAdded;
+import fr.quatrevieux.araknemu.game.event.inventory.ObjectDeleted;
 import fr.quatrevieux.araknemu.game.event.inventory.ObjectQuantityChanged;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.Type;
@@ -164,5 +165,76 @@ class SimpleItemStorageTest extends TestCase {
         assertSame(entries.get(2), storage.get(12));
 
         assertEquals(13, storage.add(Mockito.mock(Item.class)).id());
+    }
+
+    @Test
+    void deleteNotFound() {
+        SimpleItemStorage<Entry> storage = new SimpleItemStorage<>(
+            dispatcher,
+            Entry::new,
+            new ArrayList<>()
+        );
+
+        assertThrows(ItemNotFoundException.class, () -> storage.delete(5));
+    }
+
+    @Test
+    void deleteByIdSuccess() throws InventoryException {
+        List<Entry> entries = Arrays.asList(
+            new Entry(5, Mockito.mock(Item.class), 2, -1),
+            new Entry(9, Mockito.mock(Item.class), 1, -1),
+            new Entry(12, Mockito.mock(Item.class), 1, 0)
+        );
+
+        SimpleItemStorage<Entry> storage = new SimpleItemStorage<>(
+            dispatcher,
+            Entry::new,
+            entries
+        );
+
+        assertSame(entries.get(1), storage.delete(9));
+        assertIterableEquals(
+            Arrays.asList(entries.get(0), entries.get(2)),
+            storage
+        );
+    }
+
+    @Test
+    void deleteByEntrySuccess() throws InventoryException {
+        List<Entry> entries = Arrays.asList(
+            new Entry(5, Mockito.mock(Item.class), 2, -1),
+            new Entry(9, Mockito.mock(Item.class), 1, -1),
+            new Entry(12, Mockito.mock(Item.class), 1, 0)
+        );
+
+        SimpleItemStorage<Entry> storage = new SimpleItemStorage<>(
+            dispatcher,
+            Entry::new,
+            entries
+        );
+
+        assertSame(entries.get(1), storage.delete(entries.get(1)));
+        assertIterableEquals(
+            Arrays.asList(entries.get(0), entries.get(2)),
+            storage
+        );
+    }
+
+    @Test
+    void deleteWillTriggerEvent() throws InventoryException {
+        List<Entry> entries = Arrays.asList(
+            new Entry(5, Mockito.mock(Item.class), 2, -1),
+            new Entry(9, Mockito.mock(Item.class), 1, -1),
+            new Entry(12, Mockito.mock(Item.class), 1, 0)
+        );
+
+        SimpleItemStorage<Entry> storage = new SimpleItemStorage<>(
+            dispatcher,
+            Entry::new,
+            entries
+        );
+
+        assertSame(entries.get(1), storage.delete(9));
+        Mockito.verify(dispatcher).dispatch(Mockito.any(ObjectDeleted.class));
     }
 }

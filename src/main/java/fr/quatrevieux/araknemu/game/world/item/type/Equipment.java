@@ -55,4 +55,13 @@ abstract public class Equipment extends BaseItem {
 
         return characteristics.equals(equipment.characteristics);
     }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+
+        result = 31 * result + characteristics.hashCode();
+
+        return result;
+    }
 }

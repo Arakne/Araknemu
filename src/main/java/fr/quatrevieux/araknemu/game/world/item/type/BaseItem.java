@@ -46,4 +46,13 @@ abstract public class BaseItem implements Item {
             && specials.equals(item.specials)
         ;
     }
+
+    @Override
+    public int hashCode() {
+        int result = template.hashCode();
+
+        result = 31 * result + specials.hashCode();
+
+        return result;
+    }
 }

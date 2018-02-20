@@ -62,7 +62,17 @@ final public class InventoryEntry implements ItemEntry {
     }
 
     @Override
-    public void remove(int quantity) {
+    public void remove(int quantity) throws InventoryException {
+        if (quantity > quantity() || quantity <= 0) {
+            throw new InventoryException("Invalid quantity given");
+        }
+
+        if (quantity == quantity()) {
+            entity.setQuantity(0);
+            inventory.delete(this);
+            return;
+        }
+
         changeQuantity(quantity() - quantity);
     }
 
@@ -78,8 +88,10 @@ final public class InventoryEntry implements ItemEntry {
         }
 
         if (quantity == quantity()) {
-            inventory.move(this, position);
-            changePosition(position);
+            if (inventory.move(this, position)) {
+                changePosition(position);
+            }
+
             return;
         }
 
