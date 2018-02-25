@@ -8,7 +8,7 @@ import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SingleItemC
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SlotConstraint;
 import fr.quatrevieux.araknemu.game.world.item.Type;
 import fr.quatrevieux.araknemu.game.world.item.inventory.ItemStorage;
-import fr.quatrevieux.araknemu.game.world.item.type.Wearable;
+import fr.quatrevieux.araknemu.game.item.type.Wearable;
 
 /**
  * Base slot class for wearable

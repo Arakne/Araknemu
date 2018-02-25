@@ -5,7 +5,7 @@ import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.world.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.game.world.item.inventory.ItemStorage;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
-import fr.quatrevieux.araknemu.game.world.item.type.Equipment;
+import fr.quatrevieux.araknemu.game.item.type.Equipment;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +18,7 @@ final public class InventorySlots {
     final private ItemStorage<InventoryEntry> storage;
 
     final private InventorySlot defaultSlot;
-    final private InventorySlot[] slots = new InventorySlot[49];
+    final private InventorySlot[] slots = new InventorySlot[58];
 
     public InventorySlots(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage) {
         this.dispatcher  = dispatcher;
@@ -39,8 +39,12 @@ final public class InventorySlots {
             add(new DofusSlot(dispatcher, storage, id));
         }
 
-        for (int i = 15; i < slots.length; ++i) {
-            add(new NullSlot(i));
+        for (int i = 15; i < UsableSlot.SLOT_ID_START; ++i) {
+            add(new NullSlot(i)); // Add null slot for all unhandled slots
+        }
+
+        for (int i = UsableSlot.SLOT_ID_START; i <= UsableSlot.SLOT_ID_END; ++i) {
+            add(new UsableSlot(storage, i));
         }
     }
 

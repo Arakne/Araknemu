@@ -5,14 +5,10 @@ import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
-import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
-import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.common.Disconnected;
 import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
-import fr.quatrevieux.araknemu.game.event.listener.player.AddExplorationListeners;
-import fr.quatrevieux.araknemu.game.event.listener.player.SavePlayer;
-import fr.quatrevieux.araknemu.game.event.listener.player.SendStats;
+import fr.quatrevieux.araknemu.game.event.listener.player.*;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
@@ -76,6 +72,8 @@ final public class PlayerService {
         );
 
         gamePlayer.dispatcher().add(Disconnected.class, e -> logout(gamePlayer));
+        gamePlayer.dispatcher().add(new ComputeLifePoints(gamePlayer));
+        gamePlayer.dispatcher().add(new SendLifeChanged(gamePlayer));
         gamePlayer.dispatcher().add(new SendStats(gamePlayer));
         gamePlayer.dispatcher().add(new AddExplorationListeners());
         this.dispatcher.dispatch(new PlayerLoaded(gamePlayer));

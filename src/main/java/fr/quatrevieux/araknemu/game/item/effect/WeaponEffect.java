@@ -1,0 +1,78 @@
+package fr.quatrevieux.araknemu.game.item.effect;
+
+import fr.quatrevieux.araknemu.data.constant.Effect;
+import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
+
+/**
+ * Effect for weapon items
+ */
+final public class WeaponEffect implements ItemEffect {
+    final private Effect effect;
+    final private int min;
+    final private int max;
+    final private int extra;
+
+    public WeaponEffect(Effect effect, int min, int max, int extra) {
+        this.effect = effect;
+        this.min = min;
+        this.max = max;
+        this.extra = extra;
+    }
+
+    @Override
+    public Effect effect() {
+        return effect;
+    }
+
+    @Override
+    public ItemTemplateEffectEntry toTemplate() {
+        return new ItemTemplateEffectEntry(effect, min, max, extra, "1d" + (max - min + 1) + "+" + (min - 1));
+    }
+
+    public int min() {
+        return min;
+    }
+
+    public int max() {
+        return max;
+    }
+
+    public int extra() {
+        return extra;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (getClass() != o.getClass()) {
+            return false;
+        }
+
+        WeaponEffect that = (WeaponEffect) o;
+
+        return min == that.min
+            && max == that.max
+            && extra == that.extra
+            && effect == that.effect
+        ;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = effect.hashCode();
+
+        result = 31 * result + min;
+        result = 31 * result + max;
+        result = 31 * result + extra;
+
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "WeaponEffect{" + effect + ":" + min + ", " + max + ", " + extra + '}';
+    }
+}

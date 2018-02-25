@@ -1,8 +1,8 @@
 package fr.quatrevieux.araknemu.game.world.item;
 
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
-import fr.quatrevieux.araknemu.game.world.item.effect.ItemEffect;
-import fr.quatrevieux.araknemu.game.world.item.effect.SpecialEffect;
+import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
+import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 
 import java.util.List;
 

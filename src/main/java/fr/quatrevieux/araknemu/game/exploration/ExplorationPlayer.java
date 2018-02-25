@@ -12,6 +12,7 @@ import fr.quatrevieux.araknemu.game.event.exploration.MapLoaded;
 import fr.quatrevieux.araknemu.game.exploration.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.player.*;
+import fr.quatrevieux.araknemu.game.player.characteristic.Life;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
@@ -52,6 +53,11 @@ final public class ExplorationPlayer implements PlayableCharacter, Sender, Creat
     @Override
     public PlayerCharacteristics characteristics() {
         return player.characteristics();
+    }
+
+    @Override
+    public Life life() {
+        return player.life();
     }
 
     @Override

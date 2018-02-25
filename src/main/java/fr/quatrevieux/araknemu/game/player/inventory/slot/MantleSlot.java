@@ -6,11 +6,9 @@ import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.ItemClassCo
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.ItemTypeSetConstraint;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SingleItemConstraint;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SlotConstraint;
-import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.Type;
 import fr.quatrevieux.araknemu.game.world.item.inventory.ItemStorage;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
-import fr.quatrevieux.araknemu.game.world.item.type.Wearable;
+import fr.quatrevieux.araknemu.game.item.type.Wearable;
 
 /**
  * Slot for mantle

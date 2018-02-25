@@ -46,6 +46,8 @@ final public class PlayerContext implements Context {
         return new SimpleContext(accountContext)
             .add(new Info(player))
             .add(new GetItem(player, itemService))
+            .add(new SetLife(player))
+            .add(new AddStats(player))
             .add("account", accountContext)
         ;
     }

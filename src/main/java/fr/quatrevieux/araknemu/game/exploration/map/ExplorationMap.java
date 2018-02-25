@@ -140,6 +140,17 @@ final public class ExplorationMap implements Dispatcher {
     }
 
     /**
+     * Get the player by its id
+     *
+     * @param id The player id
+     *
+     * @return The player or null
+     */
+    public ExplorationPlayer getPlayer(int id) {
+        return players.get(id);
+    }
+
+    /**
      * Get the map decoder
      */
     public Decoder decoder() {

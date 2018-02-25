@@ -1,9 +1,6 @@
 package fr.quatrevieux.araknemu.game.event;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Default implementation for dispatcher, using maps
@@ -28,7 +25,7 @@ final public class DefaultListenerAggregate implements ListenerAggregate {
     @Override
     public void add(Listener listener) {
         if (!events.containsKey(listener.event())) {
-            events.put(listener.event(), new HashSet<>());
+            events.put(listener.event(), new LinkedHashSet<>());
         }
 
         listeners.put(listener.getClass(), listener);

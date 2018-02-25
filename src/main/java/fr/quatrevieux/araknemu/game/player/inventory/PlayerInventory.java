@@ -12,7 +12,7 @@ import fr.quatrevieux.araknemu.game.world.item.inventory.SimpleItemStorage;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.MoveException;
-import fr.quatrevieux.araknemu.game.world.item.type.Equipment;
+import fr.quatrevieux.araknemu.game.item.type.Equipment;
 
 import java.util.Collection;
 import java.util.Iterator;

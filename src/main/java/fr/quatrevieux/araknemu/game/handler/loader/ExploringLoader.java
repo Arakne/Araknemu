@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.game.handler.game.CancelGameAction;
 import fr.quatrevieux.araknemu.game.handler.game.EndGameAction;
 import fr.quatrevieux.araknemu.game.handler.game.LoadExtraInfo;
 import fr.quatrevieux.araknemu.game.handler.game.ValidateGameAction;
+import fr.quatrevieux.araknemu.game.handler.object.UseObject;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.in.PacketHandler;
 
@@ -27,7 +28,8 @@ final public class ExploringLoader extends AbstractLoader {
                 container.get(ExplorationService.class)
             ),
             new EndGameAction(),
-            new CancelGameAction()
+            new CancelGameAction(),
+            new UseObject()
         };
     }
 }

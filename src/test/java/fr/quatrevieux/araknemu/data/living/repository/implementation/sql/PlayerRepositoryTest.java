@@ -174,12 +174,13 @@ class PlayerRepositoryTest extends DatabaseTestCase {
 
     @Test
     void insertWithPoints() {
-        Player player = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(123, 456), EnumSet.noneOf(ChannelType.class), 10, 15));
+        Player player = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(123, 456), EnumSet.noneOf(ChannelType.class), 10, 15, 75));
 
         player = repository.get(player);
 
         assertEquals(10, player.boostPoints());
         assertEquals(15, player.spellPoints());
+        assertEquals(75, player.life());
     }
 
     @Test
@@ -215,6 +216,7 @@ class PlayerRepositoryTest extends DatabaseTestCase {
         player.stats().set(Characteristic.ACTION_POINT, 12);
         player.channels().add(ChannelType.INFO);
         player.setBoostPoints(15);
+        player.setLife(36);
 
         repository.save(player);
 
@@ -224,5 +226,6 @@ class PlayerRepositoryTest extends DatabaseTestCase {
         assertEquals(12, savedPlayer.stats().get(Characteristic.ACTION_POINT));
         assertEquals(EnumSet.of(ChannelType.INFO), player.channels());
         assertEquals(15, savedPlayer.boostPoints());
+        assertEquals(36, savedPlayer.life());
     }
 }

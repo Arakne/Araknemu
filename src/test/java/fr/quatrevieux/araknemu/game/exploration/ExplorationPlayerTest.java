@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.game.event.exploration.MapLoaded;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.PlayerSprite;
+import fr.quatrevieux.araknemu.game.player.characteristic.Life;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import org.junit.jupiter.api.BeforeEach;
@@ -152,5 +153,10 @@ class ExplorationPlayerTest extends GameBaseCase {
     @Test
     void inventory() {
         assertInstanceOf(PlayerInventory.class, player.inventory());
+    }
+
+    @Test
+    void life() {
+        assertInstanceOf(Life.class, player.life());
     }
 }

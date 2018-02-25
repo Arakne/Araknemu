@@ -1,5 +1,7 @@
 package fr.quatrevieux.araknemu.network.game.out.info;
 
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
+
 /**
  * Information messages
  */
@@ -23,5 +25,39 @@ final public class Information extends InformationMessage {
      */
     static public Information chatFlood(int remainingSeconds) {
         return new Information(115, remainingSeconds);
+    }
+
+    /**
+     * Add life points message
+     *
+     * @param value The recovered life points
+     */
+    static public Information heal(int value) {
+        return new Information(1, value);
+    }
+
+    /**
+     * Send message for characteristic boost
+     *
+     * @param characteristic The boosted characteristic
+     * @param value The boost value
+     */
+    static public Information characteristicBoosted(Characteristic characteristic, int value) {
+        switch (characteristic) {
+            case WISDOM:
+                return new Information(9, value);
+            case STRENGTH:
+                return new Information(10, value);
+            case LUCK:
+                return new Information(11, value);
+            case AGILITY:
+                return new Information(12, value);
+            case VITALITY:
+                return new Information(13, value);
+            case INTELLIGENCE:
+                return new Information(14, value);
+        }
+
+        return null;
     }
 }

@@ -131,4 +131,18 @@ class ExplorationMapTest extends GameBaseCase {
         assertTrue(map.players().contains(explorationPlayer()));
         assertFalse(map.players().contains(other));
     }
+
+    @Test
+    void getPlayerNotFound() throws SQLException, ContainerException {
+        ExplorationMap map = explorationPlayer().map();
+
+        assertNull(map.getPlayer(-5));
+    }
+
+    @Test
+    void getPlayerFound() throws SQLException, ContainerException {
+        ExplorationMap map = explorationPlayer().map();
+
+        assertSame(explorationPlayer(), map.getPlayer(explorationPlayer().id()));
+    }
 }

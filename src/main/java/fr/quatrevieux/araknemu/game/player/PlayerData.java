@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.game.player;
 
+import fr.quatrevieux.araknemu.game.player.characteristic.Life;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
 
 /**
@@ -10,4 +11,9 @@ public interface PlayerData {
      * Get the player characteristics
      */
     public PlayerCharacteristics characteristics();
+
+    /**
+     * Get the player life
+     */
+    public Life life();
 }

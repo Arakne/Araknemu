@@ -52,6 +52,30 @@ class InventorySlotsTest extends GameBaseCase {
         assertInstanceOf(DofusSlot.class, slots.get(12));
         assertInstanceOf(DofusSlot.class, slots.get(13));
         assertInstanceOf(DofusSlot.class, slots.get(14));
+
+        assertInstanceOf(UsableSlot.class, slots.get(35));
+        assertInstanceOf(UsableSlot.class, slots.get(36));
+        assertInstanceOf(UsableSlot.class, slots.get(37));
+        assertInstanceOf(UsableSlot.class, slots.get(38));
+        assertInstanceOf(UsableSlot.class, slots.get(39));
+        assertInstanceOf(UsableSlot.class, slots.get(40));
+        assertInstanceOf(UsableSlot.class, slots.get(41));
+        assertInstanceOf(UsableSlot.class, slots.get(42));
+        assertInstanceOf(UsableSlot.class, slots.get(43));
+        assertInstanceOf(UsableSlot.class, slots.get(44));
+        assertInstanceOf(UsableSlot.class, slots.get(45));
+        assertInstanceOf(UsableSlot.class, slots.get(46));
+        assertInstanceOf(UsableSlot.class, slots.get(47));
+        assertInstanceOf(UsableSlot.class, slots.get(48));
+        assertInstanceOf(UsableSlot.class, slots.get(49));
+        assertInstanceOf(UsableSlot.class, slots.get(50));
+        assertInstanceOf(UsableSlot.class, slots.get(51));
+        assertInstanceOf(UsableSlot.class, slots.get(52));
+        assertInstanceOf(UsableSlot.class, slots.get(53));
+        assertInstanceOf(UsableSlot.class, slots.get(54));
+        assertInstanceOf(UsableSlot.class, slots.get(55));
+        assertInstanceOf(UsableSlot.class, slots.get(56));
+        assertInstanceOf(UsableSlot.class, slots.get(57));
     }
 
     @Test

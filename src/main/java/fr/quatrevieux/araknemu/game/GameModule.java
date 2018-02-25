@@ -39,9 +39,10 @@ import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.factory.*;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
-import fr.quatrevieux.araknemu.game.world.item.effect.mapping.EffectToCharacteristicMapping;
-import fr.quatrevieux.araknemu.game.world.item.effect.mapping.EffectToSpecialMapping;
-import fr.quatrevieux.araknemu.game.world.item.effect.mapping.EffectToWeaponMapping;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToCharacteristicMapping;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToUseMapping;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToWeaponMapping;
 import fr.quatrevieux.araknemu.network.adapter.Server;
 import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
 import fr.quatrevieux.araknemu.network.adapter.netty.NettyServer;
@@ -348,6 +349,11 @@ final public class GameModule implements ContainerModule {
         );
 
         configurator.persist(
+            EffectToUseMapping.class,
+            container -> new EffectToUseMapping()
+        );
+
+        configurator.persist(
             ItemFactory.class,
             container -> new DefaultItemFactory(
                 new ResourceFactory(
@@ -360,6 +366,10 @@ final public class GameModule implements ContainerModule {
                 ),
                 new WearableFactory(
                     container.get(EffectToCharacteristicMapping.class),
+                    container.get(EffectToSpecialMapping.class)
+                ),
+                new UsableFactory(
+                    container.get(EffectToUseMapping.class),
                     container.get(EffectToSpecialMapping.class)
                 )
             )

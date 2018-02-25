@@ -10,8 +10,8 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
-import fr.quatrevieux.araknemu.game.world.item.effect.SpecialEffect;
-import fr.quatrevieux.araknemu.game.world.item.type.Equipment;
+import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
+import fr.quatrevieux.araknemu.game.item.type.Equipment;
 
 /**
  * Characteristic map for player
@@ -27,7 +27,6 @@ final public class PlayerCharacteristics implements Characteristics {
     final private SpecialEffects specials = new SpecialEffects();
 
     private Characteristics stuff;
-    private int life;
 
     public PlayerCharacteristics(Dispatcher dispatcher, GamePlayer player, Player entity) {
         this.dispatcher = dispatcher;
@@ -42,7 +41,6 @@ final public class PlayerCharacteristics implements Characteristics {
         );
 
         this.stuff = computeStuffStats();
-        this.life = maxLife();
     }
 
     @Override
@@ -53,7 +51,7 @@ final public class PlayerCharacteristics implements Characteristics {
     /**
      * Get the player base stats (i.e. boosted stats + race stats)
      */
-    public Characteristics base() {
+    public MutableCharacteristics base() {
         return base;
     }
 
@@ -120,30 +118,10 @@ final public class PlayerCharacteristics implements Characteristics {
     }
 
     /**
-     * Get the maximal life points
-     */
-    public int maxLife() {
-        return race.startLife()
-            + (entity.level() - 1) * race.perLevelLife()
-            + get(Characteristic.VITALITY)
-        ;
-    }
-
-    /**
-     * Get the current life points
-     */
-    public int life() {
-        return life;
-    }
-
-    /**
      * Get the current player initiative
      */
     public int initiative() {
-        final int maxLife = maxLife();
-        final int curLife = life();
-
-        int base = maxLife / (4 * race.boostStats().get(Characteristic.VITALITY, 0).boost());
+        int base = player.life().max() / (4 * race.boostStats().get(Characteristic.VITALITY, 0).boost());
 
         base += get(Characteristic.STRENGTH);
         base += get(Characteristic.LUCK);
@@ -151,7 +129,7 @@ final public class PlayerCharacteristics implements Characteristics {
         base += get(Characteristic.INTELLIGENCE);
         base += specials.get(SpecialEffects.Type.INITIATIVE);
 
-        int init = base * curLife / maxLife;
+        int init = base * player.life().current() / player.life().max();
 
         return init < 1 ? 1 : init;
     }

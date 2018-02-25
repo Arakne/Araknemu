@@ -28,8 +28,9 @@ final public class Player {
     private Set<ChannelType> channels;
     private int boostPoints;
     private int spellPoints;
+    private int life;
 
-    public Player(int id, int accountId, int serverId, String name, Race race, Sex sex, Colors colors, int level, MutableCharacteristics stats, Position position, Set<ChannelType> channels, int boostPoints, int spellPoints) {
+    public Player(int id, int accountId, int serverId, String name, Race race, Sex sex, Colors colors, int level, MutableCharacteristics stats, Position position, Set<ChannelType> channels, int boostPoints, int spellPoints, int life) {
         this.id = id;
         this.accountId = accountId;
         this.serverId = serverId;
@@ -43,14 +44,15 @@ final public class Player {
         this.channels = channels;
         this.boostPoints = boostPoints;
         this.spellPoints = spellPoints;
+        this.life = life;
     }
 
     public Player(int id, int accountId, int serverId, String name, Race race, Sex sex, Colors colors, int level, MutableCharacteristics characteristics) {
-        this(id, accountId, serverId, name, race, sex, colors, level, characteristics, new Position(0, 0), EnumSet.noneOf(ChannelType.class), 0, 0);
+        this(id, accountId, serverId, name, race, sex, colors, level, characteristics, new Position(0, 0), EnumSet.noneOf(ChannelType.class), 0, 0, -1);
     }
 
     public Player(int id, int accountId, int serverId, String name, Race race, Sex sex, Colors colors) {
-        this(id, accountId, serverId, name, race, sex, colors, 1, new DefaultCharacteristics(), new Position(0, 0), EnumSet.noneOf(ChannelType.class), 0, 0);
+        this(id, accountId, serverId, name, race, sex, colors, 1, new DefaultCharacteristics(), new Position(0, 0), EnumSet.noneOf(ChannelType.class), 0, 0, -1);
     }
 
     public Player(int id) {
@@ -125,6 +127,14 @@ final public class Player {
         return spellPoints;
     }
 
+    public int life() {
+        return life;
+    }
+
+    public void setLife(int life) {
+        this.life = life;
+    }
+
     /**
      * Create a new player with new race
      *
@@ -144,7 +154,8 @@ final public class Player {
             position,
             channels,
             boostPoints,
-            spellPoints
+            spellPoints,
+            life
         );
     }
 
@@ -162,6 +173,6 @@ final public class Player {
      * @see fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository#getForGame(Player)
      */
     static public Player forGame(int playerId, int accountId, int serverId) {
-        return new Player(playerId, accountId, serverId, null, null, null, null, 1, null, null, null, 0, 0);
+        return new Player(playerId, accountId, serverId, null, null, null, null, 1, null, null, null, 0, 0, -1);
     }
 }

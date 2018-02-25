@@ -12,6 +12,7 @@ import fr.quatrevieux.araknemu.game.player.inventory.slot.HelmetSlot;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.MoveException;
 import fr.quatrevieux.araknemu.network.game.out.object.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -343,6 +344,34 @@ public class FunctionalTest extends GameBaseCase {
         assertSame(entry, inventory.add(itemService.create(2425, true)));
 
         assertEquals(2, entry.quantity());
+        assertEquals(-1, entry.position());
+    }
+
+    @Test
+    void moveToUseBar() throws SQLException, ContainerException, InventoryException {
+        dataSet.pushUsableItems();
+
+        InventoryEntry entry = inventory.add(itemService.create(468, true), 100, -1);
+        entry.move(41, 50);
+
+        assertEquals(50, entry.quantity());
+        assertEquals(-1, entry.position());
+
+        InventoryEntry newEntry = inventory.get(2);
+
+        assertEquals(50, newEntry.quantity());
+        assertEquals(41, newEntry.position());
+    }
+
+    @Test
+    void moveToUseBarNotUsable() throws SQLException, ContainerException, InventoryException {
+        dataSet.pushUsableItems();
+
+        InventoryEntry entry = inventory.add(itemService.create(2425, true), 10, -1);
+
+        assertThrows(InventoryException.class, () -> entry.move(41, 1));
+
+        assertEquals(10, entry.quantity());
         assertEquals(-1, entry.position());
     }
 }

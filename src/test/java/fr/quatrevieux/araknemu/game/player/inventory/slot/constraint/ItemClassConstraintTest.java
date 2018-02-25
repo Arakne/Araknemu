@@ -5,8 +5,8 @@ import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.world.item.Type;
-import fr.quatrevieux.araknemu.game.world.item.type.Resource;
-import fr.quatrevieux.araknemu.game.world.item.type.Wearable;
+import fr.quatrevieux.araknemu.game.item.type.Resource;
+import fr.quatrevieux.araknemu.game.item.type.Wearable;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionCancel;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
+import fr.quatrevieux.araknemu.network.game.in.object.ObjectUseRequest;
 import fr.quatrevieux.araknemu.network.in.PacketHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,5 +32,6 @@ class ExploringLoaderTest extends LoaderTestCase {
         assertHandlePacket(GameActionRequest.class, handlers);
         assertHandlePacket(GameActionAcknowledge.class, handlers);
         assertHandlePacket(GameActionCancel.class, handlers);
+        assertHandlePacket(ObjectUseRequest.class, handlers);
     }
 }

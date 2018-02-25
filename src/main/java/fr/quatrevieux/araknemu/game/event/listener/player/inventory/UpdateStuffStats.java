@@ -3,7 +3,7 @@ package fr.quatrevieux.araknemu.game.event.listener.player.inventory;
 import fr.quatrevieux.araknemu.game.event.Listener;
 import fr.quatrevieux.araknemu.game.event.inventory.EquipmentChanged;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.game.world.item.effect.SpecialEffect;
+import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 
 /**
  * Rebuild the stuff stats

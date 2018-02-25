@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.player.characteristic.Life;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.network.game.GameSession;
@@ -27,6 +28,7 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
     final private PlayerCharacteristics characteristics;
     final private Set<ChannelType> channels;
     final private PlayerInventory inventory;
+    final private Life life;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
@@ -40,8 +42,9 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
         this.inventory = inventory;
 
         characteristics = new PlayerCharacteristics(dispatcher, this, entity);
-
         characteristics.rebuildSpecialEffects();
+
+        life = new Life(this, entity);
     }
 
     @Override
@@ -132,5 +135,10 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
 
     public PlayerInventory inventory() {
         return inventory;
+    }
+
+    @Override
+    public Life life() {
+        return life;
     }
 }

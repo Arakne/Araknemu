@@ -25,7 +25,7 @@ final public class Stats {
             .append(player.characteristics().boostPoints()).append("|")
             .append("10|") // Spell points
             .append('|') // Align
-            .append(player.characteristics().life()).append(',').append(player.characteristics().maxLife()).append('|')
+            .append(player.life().current()).append(',').append(player.life().max()).append('|')
             .append("0,10000|") // Energy, Energy Max
             .append(player.characteristics().initiative()).append('|')
             .append(player.characteristics().discernment()).append('|')

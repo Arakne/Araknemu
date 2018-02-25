@@ -5,10 +5,10 @@ import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.Type;
-import fr.quatrevieux.araknemu.game.world.item.effect.mapping.EffectToCharacteristicMapping;
-import fr.quatrevieux.araknemu.game.world.item.effect.mapping.EffectToSpecialMapping;
-import fr.quatrevieux.araknemu.game.world.item.effect.mapping.EffectToWeaponMapping;
-import fr.quatrevieux.araknemu.game.world.item.type.Weapon;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToCharacteristicMapping;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToWeaponMapping;
+import fr.quatrevieux.araknemu.game.item.type.Weapon;
 
 import java.util.List;
 import java.util.stream.Collectors;

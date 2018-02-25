@@ -20,9 +20,7 @@ import fr.quatrevieux.araknemu.game.event.Listener;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.common.Disconnected;
 import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
-import fr.quatrevieux.araknemu.game.event.listener.player.AddExplorationListeners;
-import fr.quatrevieux.araknemu.game.event.listener.player.SavePlayer;
-import fr.quatrevieux.araknemu.game.event.listener.player.SendStats;
+import fr.quatrevieux.araknemu.game.event.listener.player.*;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
@@ -75,6 +73,8 @@ class PlayerServiceTest extends GameBaseCase {
         assertTrue(player.dispatcher().has(SavePlayer.class));
         assertTrue(player.dispatcher().has(SendStats.class));
         assertTrue(player.dispatcher().has(AddExplorationListeners.class));
+        assertTrue(player.dispatcher().has(ComputeLifePoints.class));
+        assertTrue(player.dispatcher().has(SendLifeChanged.class));
     }
 
     @Test

@@ -3,8 +3,7 @@ package fr.quatrevieux.araknemu.game.player.inventory.slot;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.MoveException;
-import fr.quatrevieux.araknemu.game.world.item.type.Equipment;
+import fr.quatrevieux.araknemu.game.item.type.Equipment;
 
 /**
  * Slot for player inventory
