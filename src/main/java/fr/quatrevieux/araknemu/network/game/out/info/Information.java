@@ -28,6 +28,13 @@ final public class Information extends InformationMessage {
     }
 
     /**
+     * An item cannot be posted to the channel
+     */
+    static public Information cannotPostItemOnChannel() {
+        return new Information(114);
+    }
+
+    /**
      * Add life points message
      *
      * @param value The recovered life points

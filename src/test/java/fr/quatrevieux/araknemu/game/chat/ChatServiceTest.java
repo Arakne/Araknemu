@@ -4,11 +4,14 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.chat.channel.Channel;
+import fr.quatrevieux.araknemu.game.chat.channel.FloodGuardChannel;
+import fr.quatrevieux.araknemu.game.chat.channel.GlobalChannel;
 import fr.quatrevieux.araknemu.game.chat.channel.MapChannel;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.listener.player.chat.MessageReceived;
 import fr.quatrevieux.araknemu.game.event.listener.service.AddChatChannels;
 import fr.quatrevieux.araknemu.game.event.listener.service.RegisterChatListeners;
+import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import fr.quatrevieux.araknemu.network.game.out.chat.MessageSent;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +34,8 @@ class ChatServiceTest extends GameBaseCase {
             container.get(ListenerAggregate.class),
             container.get(GameConfiguration.class).chat(),
             new Channel[] {
-                new MapChannel()
+                new MapChannel(),
+                new GlobalChannel(ChannelType.TRADE, container.get(PlayerService.class))
             }
         );
     }
@@ -53,7 +57,7 @@ class ChatServiceTest extends GameBaseCase {
 
         service.send(
             gamePlayer(),
-            new Message(ChannelType.MESSAGES, null, "My message", "")
+            new Message(ChannelType.MESSAGES, "", "My message", "")
         );
 
         requestStack.assertLast(
@@ -62,6 +66,33 @@ class ChatServiceTest extends GameBaseCase {
                 ChannelType.MESSAGES,
                 "My message",
                 ""
+            )
+        );
+    }
+
+    @Test
+    void sendSyntaxError() throws SQLException, ContainerException, ChatException {
+        explorationPlayer();
+
+        assertThrows(ChatException.class, () -> service.send(gamePlayer(), new Message(ChannelType.MESSAGES, "", "°0", "1234")));
+        assertThrows(ChatException.class, () -> service.send(gamePlayer(), new Message(ChannelType.MESSAGES, "", "message", "2443!76#12#0#0#0d0+18,7e#1b#0#0#0d0+27")));
+        assertThrows(ChatException.class, () -> service.send(gamePlayer(), new Message(ChannelType.MESSAGES, "", "°0", "aaa!zzz")));
+        assertThrows(ChatException.class, () -> service.send(gamePlayer(), new Message(ChannelType.MESSAGES, "", "°0", "123!45#10")));
+    }
+
+    @Test
+    void sendWithItemSuccess() throws SQLException, ContainerException, ChatException {
+        gamePlayer(true).dispatcher().add(new MessageReceived(
+            gamePlayer()
+        ));
+        service.send(gamePlayer(), new Message(ChannelType.TRADE, "", "Hello °0", "2443!76#12#0#0#0d0+18,7e#1b#0#0#0d0+27"));
+
+        requestStack.assertLast(
+            new MessageSent(
+                gamePlayer(),
+                ChannelType.TRADE,
+                "Hello °0",
+                "2443!76#12#0#0#0d0+18,7e#1b#0#0#0d0+27"
             )
         );
     }

@@ -33,4 +33,12 @@ class InformationTest {
 
         assertNull(Information.characteristicBoosted(Characteristic.FIXED_DAMAGE, 10));
     }
+
+    @Test
+    void cannotPostItemOnChannel() {
+        assertEquals(
+            "Im0114;",
+            Information.cannotPostItemOnChannel().toString()
+        );
+    }
 }

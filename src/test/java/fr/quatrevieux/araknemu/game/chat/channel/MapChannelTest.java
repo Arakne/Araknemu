@@ -17,6 +17,7 @@ import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
+import fr.quatrevieux.araknemu.network.game.out.info.Information;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -70,5 +71,15 @@ class MapChannelTest extends GameBaseCase {
         Mockito.verify(l1).on(Mockito.any(BroadcastedMessage.class));
         Mockito.verify(l2).on(Mockito.any(BroadcastedMessage.class));
         Mockito.verify(l3).on(Mockito.any(BroadcastedMessage.class));
+    }
+
+    @Test
+    void sendItem() throws SQLException, ContainerException {
+        channel.send(
+            gamePlayer(),
+            new Message(ChannelType.MESSAGES, null, "hello °0", "2443!76#12#0#0#0d0+18,7e#1b#0#0#0d0+27")
+        );
+
+        requestStack.assertLast(Information.cannotPostItemOnChannel());
     }
 }

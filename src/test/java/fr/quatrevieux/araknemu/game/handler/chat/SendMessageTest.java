@@ -103,4 +103,26 @@ class SendMessageTest extends GameBaseCase {
             );
         }
     }
+
+    @Test
+    void handleSyntaxError() throws Exception {
+        explorationPlayer();
+
+        try {
+            handler.handle(
+                session,
+                new Message(
+                    ChannelType.TRADE,
+                    "",
+                    "°0",
+                    "invalid"
+                )
+            );
+
+            fail("Error packet should be thrown");
+        } catch (ErrorPacket packet) {
+            assertEquals(new SendMessageError(ChatException.Error.SYNTAX_ERROR, "").toString(), packet.packet().toString());
+        }
+    }
+
 }
