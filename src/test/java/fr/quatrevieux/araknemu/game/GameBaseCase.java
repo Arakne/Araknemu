@@ -233,7 +233,7 @@ public class GameBaseCase extends DatabaseTestCase {
                     dataSet.repository(PlayerRace.class).get(new PlayerRace(Race.FECA)),
                     session,
                     container.get(PlayerService.class),
-                    container.get(InventoryService.class).load(player, session)
+                    container.get(InventoryService.class).load(player)
                 )
             );
         } else {
@@ -271,10 +271,14 @@ public class GameBaseCase extends DatabaseTestCase {
     }
 
     public GamePlayer makeOtherPlayer() throws Exception {
+        return makeOtherPlayer(1);
+    }
+
+    public GamePlayer makeOtherPlayer(int level) throws Exception {
         dataSet.pushRaces();
         dataSet.use(PlayerItem.class);
 
-        Player player = dataSet.push(new Player(-1, 5, 2, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, -1));
+        Player player = dataSet.push(new Player(-1, 5, 2, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1), level, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, -1));
         GameSession session = new GameSession(new DummyChannel());
 
         session.attach(new GameAccount(
@@ -319,7 +323,7 @@ public class GameBaseCase extends DatabaseTestCase {
             dataSet.refresh(new PlayerRace(Race.FECA)),
             session,
             container.get(PlayerService.class),
-            container.get(InventoryService.class).load(player, session)
+            container.get(InventoryService.class).load(player)
         );
 
         session.setPlayer(gp);

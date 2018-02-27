@@ -25,8 +25,8 @@ final public class NullSlot implements InventorySlot {
     }
 
     @Override
-    public boolean check(Item item, int quantity) {
-        return false;
+    public void check(Item item, int quantity) throws InventoryException {
+        throw new InventoryException("Null slot");
     }
 
     @Override

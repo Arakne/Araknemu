@@ -25,7 +25,7 @@ public interface InventorySlot {
      * @param item Item to set
      * @param quantity Quantity to set
      */
-    public boolean check(Item item, int quantity);
+    public void check(Item item, int quantity) throws InventoryException;
 
     /**
      * Set an entry to the slot

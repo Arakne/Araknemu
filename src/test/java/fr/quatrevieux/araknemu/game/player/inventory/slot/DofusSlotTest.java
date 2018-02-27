@@ -7,11 +7,13 @@ import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.world.item.inventory.ItemStorage;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.BadLevelException;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,29 +28,36 @@ class DofusSlotTest extends GameBaseCase {
 
         dataSet.pushItemTemplates();
 
-        slot = new DofusSlot(new DefaultListenerAggregate(), Mockito.mock(ItemStorage.class), DofusSlot.SLOT_IDS[0]);
+        slot = new DofusSlot(new DefaultListenerAggregate(), Mockito.mock(ItemStorage.class), gamePlayer(), DofusSlot.SLOT_IDS[0]);
     }
 
     @Test
     void checkBadType() throws ContainerException {
-        assertFalse(slot.check(container.get(ItemService.class).create(2411), 1));
+        assertThrows(InventoryException.class, () -> slot.check(container.get(ItemService.class).create(2411), 1));
     }
 
     @Test
     void checkBadQuantity() throws ContainerException {
-        assertFalse(slot.check(container.get(ItemService.class).create(694), 10));
+        assertThrows(InventoryException.class, () -> slot.check(container.get(ItemService.class).create(694), 10));
     }
 
     @Test
     void checkAlreadySet() throws ContainerException {
         slot.uncheckedSet(new InventoryEntry(null, null, null));
 
-        assertFalse(slot.check(container.get(ItemService.class).create(694), 1));
+        assertThrows(InventoryException.class, () -> slot.check(container.get(ItemService.class).create(694), 1));
     }
 
     @Test
-    void checkSuccess() throws ContainerException {
-        assertTrue(slot.check(container.get(ItemService.class).create(694), 1));
+    void checkBadLevel() throws ContainerException, SQLException {
+        dataSet.pushHighLevelItems();
+
+        assertThrows(BadLevelException.class, () -> slot.check(container.get(ItemService.class).create(111694), 1));
+    }
+
+    @Test
+    void checkSuccess() throws ContainerException, InventoryException {
+        slot.check(container.get(ItemService.class).create(694), 1);
     }
 
     @Test

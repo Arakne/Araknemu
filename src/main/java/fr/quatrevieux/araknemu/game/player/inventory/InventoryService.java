@@ -47,12 +47,9 @@ final public class InventoryService {
      * Load the inventory for the player
      *
      * @param player Player to load
-     * @param dispatcher The event dispatcher for listen inventory events
      */
-    public PlayerInventory load(Player player, Dispatcher dispatcher) {
+    public PlayerInventory load(Player player) {
         return new PlayerInventory(
-            dispatcher,
-            player,
             repository.byPlayer(player)
                 .stream()
                 .map(

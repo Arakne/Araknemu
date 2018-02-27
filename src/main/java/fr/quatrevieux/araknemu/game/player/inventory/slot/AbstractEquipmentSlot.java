@@ -60,8 +60,8 @@ abstract public class AbstractEquipmentSlot implements InventorySlot {
     }
 
     @Override
-    public boolean check(Item item, int quantity) {
-        return slot.check(item, quantity);
+    public void check(Item item, int quantity) throws InventoryException {
+        slot.check(item, quantity);
     }
 
     @Override

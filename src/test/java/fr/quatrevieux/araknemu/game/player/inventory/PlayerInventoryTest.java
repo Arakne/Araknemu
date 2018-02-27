@@ -4,7 +4,8 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.event.Dispatcher;
+import fr.quatrevieux.araknemu.game.event.Listener;
+import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.inventory.EquipmentChanged;
 import fr.quatrevieux.araknemu.game.event.inventory.ObjectAdded;
 import fr.quatrevieux.araknemu.game.event.inventory.ObjectDeleted;
@@ -23,11 +24,12 @@ import org.mockito.Mockito;
 
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerInventoryTest extends GameBaseCase {
-    private Dispatcher dispatcher;
+    private ListenerAggregate dispatcher;
     private PlayerInventory inventory;
 
     @BeforeEach
@@ -35,10 +37,11 @@ class PlayerInventoryTest extends GameBaseCase {
         super.setUp();
 
         inventory = new PlayerInventory(
-            dispatcher = Mockito.mock(Dispatcher.class),
-            dataSet.createPlayer(5),
             Collections.emptyList()
         );
+
+        inventory.attach(gamePlayer(true));
+        dispatcher = gamePlayer().dispatcher();
     }
 
     @Test
@@ -48,9 +51,12 @@ class PlayerInventoryTest extends GameBaseCase {
 
     @Test
     void addWillDispatchEvent() throws InventoryException {
+        AtomicReference<ObjectAdded> ref = new AtomicReference<>();
+        dispatcher.add(ObjectAdded.class, ref::set);
+
         InventoryEntry entry = inventory.add(new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>()));
 
-        Mockito.verify(dispatcher).dispatch(Mockito.argThat(argument -> ObjectAdded.class.cast(argument).entry() == entry));
+        assertSame(entry, ref.get().entry());
     }
 
     @Test
@@ -87,12 +93,10 @@ class PlayerInventoryTest extends GameBaseCase {
     }
 
     @Test
-    void createWithItems() throws ItemNotFoundException {
+    void createWithItems() throws ItemNotFoundException, SQLException, ContainerException {
         Item i1, i2;
 
         inventory = new PlayerInventory(
-            dispatcher = Mockito.mock(Dispatcher.class),
-            dataSet.createPlayer(5),
             Arrays.asList(
                 new InventoryService.LoadedItem(
                     new PlayerItem(1, 2, 5, new ArrayList<>(), 5, -1),
@@ -104,6 +108,8 @@ class PlayerInventoryTest extends GameBaseCase {
                 )
             )
         );
+
+        inventory.attach(gamePlayer());
 
         assertSame(i1, inventory.get(2).item());
         assertSame(i2, inventory.get(5).item());
@@ -145,12 +151,36 @@ class PlayerInventoryTest extends GameBaseCase {
     void deleteWillRemoveFromSlotAndStorage() throws SQLException, ContainerException, InventoryException {
         dataSet.pushItemTemplates();
 
+        AtomicReference<EquipmentChanged> ref1 = new AtomicReference<>();
+        dispatcher.add(new Listener<EquipmentChanged>() {
+            @Override
+            public void on(EquipmentChanged event) {
+                ref1.set(event);
+            }
+
+            @Override
+            public Class<EquipmentChanged> event() {
+                return EquipmentChanged.class;
+            }
+        });
+        AtomicReference<ObjectDeleted> ref2 = new AtomicReference<>();
+        dispatcher.add(new Listener<ObjectDeleted>() {
+            @Override
+            public void on(ObjectDeleted event) {
+                ref2.set(event);
+            }
+
+            @Override
+            public Class<ObjectDeleted> event() {
+                return ObjectDeleted.class;
+            }
+        });
+
         InventoryEntry entry = inventory.add(container.get(ItemService.class).create(2416), 1, 1);
 
         assertSame(entry, inventory.delete(entry));
-
-        Mockito.verify(dispatcher, Mockito.atLeastOnce()).dispatch(Mockito.any(EquipmentChanged.class));
-        Mockito.verify(dispatcher, Mockito.atLeastOnce()).dispatch(Mockito.any(ObjectDeleted.class));
+        assertSame(entry, ref1.get().entry());
+        assertSame(entry, ref2.get().entry());
     }
 
     @Test
@@ -164,5 +194,15 @@ class PlayerInventoryTest extends GameBaseCase {
 
         assertEquals(20, entry.quantity());
         assertIterableEquals(Collections.singletonList(entry), inventory);
+    }
+
+    @Test
+    void owner() throws SQLException, ContainerException {
+        assertSame(gamePlayer(), inventory.owner());
+    }
+
+    @Test
+    void attachAlreadyAttached() {
+        assertThrows(IllegalStateException.class, () -> inventory.attach(makeOtherPlayer()));
     }
 }

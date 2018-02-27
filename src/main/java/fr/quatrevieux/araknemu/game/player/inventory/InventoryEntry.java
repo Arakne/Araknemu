@@ -123,7 +123,7 @@ final public class InventoryEntry implements ItemEntry {
         return new InventoryEntry(
             inventory,
             new PlayerItem(
-                inventory.playerId(),
+                inventory.owner().id(),
                 id,
                 item.template().id(),
                 item.effects().stream().map(ItemEffect::toTemplate).collect(Collectors.toList()),

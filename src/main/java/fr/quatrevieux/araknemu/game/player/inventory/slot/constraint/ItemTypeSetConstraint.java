@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.player.inventory.slot.constraint;
 
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.Type;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -21,7 +22,9 @@ final public class ItemTypeSetConstraint implements SlotConstraint {
     }
 
     @Override
-    public boolean check(Item item, int quantity) {
-        return types.contains(item.template().type());
+    public void check(Item item, int quantity) throws InventoryException {
+        if (!types.contains(item.template().type())) {
+            throw new InventoryException("Bad item type");
+        }
     }
 }

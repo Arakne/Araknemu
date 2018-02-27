@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.world.item.Type;
 import fr.quatrevieux.araknemu.game.item.type.Resource;
 import fr.quatrevieux.araknemu.game.item.type.Wearable;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -18,29 +19,29 @@ class ItemClassConstraintTest extends GameBaseCase {
     private ItemClassConstraint constraint = new ItemClassConstraint(Wearable.class);
 
     @Test
-    void success() {
-        assertTrue(
-            constraint.check(
-                new Wearable(
-                    new ItemTemplate(39, Type.AMULETTE, "Petite Amulette du Hibou", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "0d0+2")), 4, "", 0, "", 100),
-                    new ArrayList<>(),
-                    new ArrayList<>()
-                ),
-                1
-            )
+    void success() throws InventoryException {
+        constraint.check(
+            new Wearable(
+                new ItemTemplate(39, Type.AMULETTE, "Petite Amulette du Hibou", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "0d0+2")), 4, "", 0, "", 100),
+                new ArrayList<>(),
+                new ArrayList<>()
+            ),
+            1
         );
     }
 
     @Test
     void error() {
-        assertFalse(
-            constraint.check(
+        assertThrows(
+            InventoryException.class,
+            () -> constraint.check(
                 new Resource(
                     new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10),
                     new ArrayList<>()
                 ),
                 1
-            )
+            ),
+            "Bad item class"
         );
     }
 }

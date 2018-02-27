@@ -34,25 +34,19 @@ final public class SimpleSlot implements InventorySlot {
     }
 
     @Override
-    public boolean check(Item item, int quantity) {
+    public void check(Item item, int quantity) throws InventoryException {
         if (entry != null) {
-            return false;
+            throw new InventoryException("Slot is full");
         }
 
         for (SlotConstraint constraint : constraints) {
-            if (!constraint.check(item, quantity)) {
-                return false;
-            }
+            constraint.check(item, quantity);
         }
-
-        return true;
     }
 
     @Override
     public InventoryEntry set(InventoryEntry entry) throws InventoryException {
-        if (!check(entry.item(), entry.quantity())) {
-            throw new MoveException("Cannot move to this slot");
-        }
+        check(entry.item(), entry.quantity());
 
         uncheckedSet(entry);
 
@@ -61,9 +55,7 @@ final public class SimpleSlot implements InventorySlot {
 
     @Override
     public InventoryEntry set(Item item, int quantity) throws InventoryException {
-        if (!check(item, quantity)) {
-            throw new InventoryException("Cannot set to this slot");
-        }
+        check(item, quantity);
 
         InventoryEntry entry = storage.add(item, quantity, id);
 

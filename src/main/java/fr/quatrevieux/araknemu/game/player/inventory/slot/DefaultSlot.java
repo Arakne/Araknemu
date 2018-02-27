@@ -30,9 +30,7 @@ final public class DefaultSlot implements InventorySlot {
     }
 
     @Override
-    public boolean check(Item item, int quantity) {
-        return true;
-    }
+    public void check(Item item, int quantity) {}
 
     @Override
     public InventoryEntry set(InventoryEntry entry) throws InventoryException {

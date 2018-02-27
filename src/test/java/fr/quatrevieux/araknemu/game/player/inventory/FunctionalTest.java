@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.AmuletSlot;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.HelmetSlot;
 import fr.quatrevieux.araknemu.game.world.item.Item;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.BadLevelException;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.MoveException;
@@ -177,6 +178,18 @@ public class FunctionalTest extends GameBaseCase {
 
         assertEquals(10, gamePlayer().characteristics().stuff().get(Characteristic.INTELLIGENCE));
         assertEquals(10, gamePlayer().characteristics().stuff().get(Characteristic.STRENGTH));
+    }
+
+    @Test
+    void equipItemBadLevel() throws InventoryException, SQLException, ContainerException {
+        dataSet.pushHighLevelItems();
+
+        InventoryEntry entry = inventory.add(itemService.create(112425, true));
+        requestStack.clear();
+
+        assertThrows(BadLevelException.class, () -> entry.move(0, 1));
+
+        assertEquals(-1, entry.position());
     }
 
     @Test

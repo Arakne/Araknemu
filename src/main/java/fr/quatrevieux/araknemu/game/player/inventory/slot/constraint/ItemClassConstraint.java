@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.player.inventory.slot.constraint;
 
 import fr.quatrevieux.araknemu.game.world.item.Item;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 
 /**
  * Check for the item class
@@ -13,7 +14,9 @@ final public class ItemClassConstraint implements SlotConstraint {
     }
 
     @Override
-    public boolean check(Item item, int quantity) {
-        return type.isInstance(item);
+    public void check(Item item, int quantity) throws InventoryException {
+        if (!type.isInstance(item)) {
+            throw new InventoryException("Bad item class");
+        }
     }
 }

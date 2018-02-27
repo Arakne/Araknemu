@@ -201,6 +201,19 @@ public class GameDataSet extends TestingDataSet {
         return this;
     }
 
+    public GameDataSet pushHighLevelItems() throws SQLException, ContainerException {
+        pushItemTemplate(new ItemTemplate(112411, Type.COIFFE, "Coiffe du Bouftou", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 40, 0, "1d40+0"), new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 40, 0, "1d40+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(112414, Type.CAPE, "Cape Bouffante", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INITIATIVE, 1, 300, 0, "1d300+0"), new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 48, 0, "1d48+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(112416, Type.MARTEAU, "Marteau du Bouftou", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_EARTH, 4, 8, 0, "1d5+3"), new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_FIRE, 4, 8, 0, "1d5+3"), new ItemTemplateEffectEntry(Effect.ADD_SUMMONS, 1, 0, 0, "0d0+1")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(112419, Type.ANNEAU, "Anneau de Bouze le Clerc", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 28, 0, "1d28+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(112422, Type.BOTTES, "Boufbottes", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_DAMAGE_PERCENT, 1, 15, 0, "1d15+0"), new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 33, 0, "1d33+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(112425, Type.AMULETTE, "Amulette du Bouftou", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 10, 0, "1d10+0"), new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 10, 0, "1d10+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(112428, Type.CEINTURE, "Amulette du Bouftou", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_PODS, 1, 500, 0, "1d500+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(111694, Type.DOFUS, "Dofus Pourpre", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_DAMAGE_PERCENT, 26, 50, 0, "1d25+25")), 1, "", 0, "", 10));
+
+        return this;
+    }
+
     public GameDataSet pushUsableItems() throws SQLException, ContainerException {
         pushItemTemplate(new ItemTemplate(283, Type.POTION, "Fiole de Soin", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_LIFE, 31, 60, 0, "1d30+30")), 1, "", 0, "", 10));
         pushItemTemplate(new ItemTemplate(468, Type.PAIN, "Pain d'Amakna", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_LIFE, 10, 0, 0, "0d0+10")), 1, "", 0, "", 1));

@@ -68,7 +68,7 @@ final public class PlayerService {
             raceRepository.get(player.race()),
             session,
             this,
-            inventoryService.load(player, session)
+            inventoryService.load(player)
         );
 
         gamePlayer.dispatcher().add(Disconnected.class, e -> logout(gamePlayer));

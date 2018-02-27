@@ -36,11 +36,10 @@ class InventoryEntryTest extends GameBaseCase {
 
         dataSet.pushItemTemplates();
 
-        inventory = new PlayerInventory(
-            dispatcher = new DefaultListenerAggregate(),
-            dataSet.createPlayer(5),
-            Collections.emptyList()
-        );
+        inventory = new PlayerInventory(Collections.emptyList());
+
+        inventory.attach(gamePlayer(true));
+        dispatcher = gamePlayer().dispatcher();
     }
 
     @Test

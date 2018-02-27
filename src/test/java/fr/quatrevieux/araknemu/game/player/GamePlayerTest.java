@@ -58,7 +58,7 @@ class GamePlayerTest extends GameBaseCase {
             dataSet.refresh(new PlayerRace(Race.CRA)),
             session,
             container.get(PlayerService.class),
-            container.get(InventoryService.class).load(entity, session)
+            container.get(InventoryService.class).load(entity)
         );
     }
 

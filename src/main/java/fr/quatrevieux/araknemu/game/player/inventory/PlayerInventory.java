@@ -1,18 +1,17 @@
 package fr.quatrevieux.araknemu.game.player.inventory;
 
-import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
+import fr.quatrevieux.araknemu.game.item.type.Equipment;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.accessory.InventoryAccessories;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlot;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.Accessories;
-import fr.quatrevieux.araknemu.game.player.inventory.slot.*;
 import fr.quatrevieux.araknemu.game.world.item.Item;
-import fr.quatrevieux.araknemu.game.world.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.game.world.item.inventory.ItemStorage;
 import fr.quatrevieux.araknemu.game.world.item.inventory.SimpleItemStorage;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.MoveException;
-import fr.quatrevieux.araknemu.game.item.type.Equipment;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -21,20 +20,16 @@ import java.util.stream.Collectors;
 /**
  * Inventory for player
  */
-final public class PlayerInventory implements ItemStorage<InventoryEntry> {
-    final private Player player;
-    final private Dispatcher dispatcher;
+final public class PlayerInventory implements ItemStorage<InventoryEntry>, Dispatcher {
     final private ItemStorage<InventoryEntry> storage;
     final private InventorySlots slots;
-
     final private Accessories accessories;
 
-    public PlayerInventory(Dispatcher dispatcher, Player player, Collection<InventoryService.LoadedItem> items) {
-        this.dispatcher = dispatcher;
-        this.player = player;
+    private GamePlayer owner;
 
+    public PlayerInventory(Collection<InventoryService.LoadedItem> items) {
         this.storage = new SimpleItemStorage<>(
-            dispatcher,
+            this,
             (id, item, quantity, position) -> InventoryEntry.create(this, id, item, quantity, position),
             items
                 .stream()
@@ -42,16 +37,7 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry> {
                 .collect(Collectors.toList())
         );
 
-        slots = new InventorySlots(dispatcher, storage);
-
-        for (InventoryEntry entry : storage) {
-            try {
-                slots.get(entry.position()).uncheckedSet(entry);
-            } catch (InventoryException e) {
-                entry.entity().setPosition(ItemEntry.DEFAULT_POSITION);
-            }
-        }
-
+        slots = new InventorySlots(this, storage);
         accessories = new InventoryAccessories(slots);
     }
 
@@ -64,9 +50,7 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry> {
     public InventoryEntry add(Item item, int quantity, int position) throws InventoryException {
         InventorySlot target = slots.get(position);
 
-        if (!target.check(item, quantity)) {
-            throw new InventoryException("Cannot add this item to this slot");
-        }
+        target.check(item, quantity);
 
         return target.set(item, quantity);
     }
@@ -85,11 +69,30 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry> {
         return storage.iterator();
     }
 
+    @Override
+    public void dispatch(Object event) {
+        owner.dispatch(event);
+    }
+
     /**
-     * Get the player id
+     * Get the inventory owner
      */
-    public int playerId() {
-        return player.id();
+    public GamePlayer owner() {
+        return owner;
+    }
+
+    /**
+     * Attach the inventory to its owner
+     */
+    public PlayerInventory attach(GamePlayer owner) {
+        if (this.owner != null) {
+            throw new IllegalStateException("Owner already set");
+        }
+
+        this.owner = owner;
+        slots.init(owner);
+
+        return this;
     }
 
     /**
@@ -107,13 +110,6 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry> {
     }
 
     /**
-     * Dispatch an event to the inventory
-     */
-    public void dispatch(Object event) {
-        dispatcher.dispatch(event);
-    }
-
-    /**
      * Move the entry to a new position
      *
      * @param entry The entry to move
@@ -125,9 +121,7 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry> {
     boolean move(InventoryEntry entry, int position) throws InventoryException {
         InventorySlot target = slots.get(position);
 
-        if (!target.check(entry.item(), entry.quantity())) {
-            throw new MoveException("Cannot move to this slot");
-        }
+        target.check(entry.item(), entry.quantity());
 
         slots.get(entry.position()).unset();
         return entry == target.set(entry);

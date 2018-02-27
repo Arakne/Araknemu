@@ -32,6 +32,8 @@ class InventorySlotsTest extends GameBaseCase {
                 Collections.emptyList()
             )
         );
+
+        slots.init(gamePlayer());
     }
 
     @Test

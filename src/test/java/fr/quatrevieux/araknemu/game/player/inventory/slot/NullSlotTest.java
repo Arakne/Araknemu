@@ -30,7 +30,7 @@ class NullSlotTest extends GameBaseCase {
 
     @Test
     void check() {
-        assertFalse(slot.check(null, 1));
+        assertThrows(InventoryException.class, () -> slot.check(null, 1));
     }
 
     @Test

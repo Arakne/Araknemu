@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.player.inventory.slot.constraint;
 
 import fr.quatrevieux.araknemu.game.world.item.Item;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -10,12 +11,12 @@ class SingleItemConstraintTest {
     private SingleItemConstraint constraint = new SingleItemConstraint();
 
     @Test
-    void success() {
-        assertTrue(constraint.check(Mockito.mock(Item.class), 1));
+    void success() throws InventoryException {
+        constraint.check(Mockito.mock(Item.class), 1);
     }
 
     @Test
     void fail() {
-        assertFalse(constraint.check(Mockito.mock(Item.class), 2));
+        assertThrows(InventoryException.class, () -> constraint.check(Mockito.mock(Item.class), 2), "Invalid quantity");
     }
 }

@@ -49,7 +49,7 @@ class DefaultSlotTest extends GameBaseCase {
     void getters() {
         assertNull(slot.entry());
         assertEquals(-1, slot.id());
-        assertTrue(slot.check(null, 1));
+        slot.check(null, 1);
     }
 
     @Test

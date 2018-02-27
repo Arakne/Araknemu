@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.world.item.Type;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,13 +24,13 @@ class ItemTypeSetConstraintTest extends GameBaseCase {
     }
 
     @Test
-    void success() throws ContainerException {
-        assertTrue(constraint.check(container.get(ItemService.class).create(40), 1));
-        assertTrue(constraint.check(container.get(ItemService.class).create(39), 1));
+    void success() throws ContainerException, InventoryException {
+        constraint.check(container.get(ItemService.class).create(40), 1);
+        constraint.check(container.get(ItemService.class).create(39), 1);
     }
 
     @Test
     void fail() throws ContainerException {
-        assertFalse(constraint.check(container.get(ItemService.class).create(284), 1));
+        assertThrows(InventoryException.class, () -> constraint.check(container.get(ItemService.class).create(284), 1), "Bad item type");
     }
 }

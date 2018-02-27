@@ -3,14 +3,17 @@ package fr.quatrevieux.araknemu.game.handler.object;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.MantleSlot;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectMoveRequest;
+import fr.quatrevieux.araknemu.network.game.out.object.AddItemError;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * @todo test errors
+ *
  */
 class MoveObjectTest extends GameBaseCase {
     private MoveObject handler;
@@ -55,5 +58,18 @@ class MoveObjectTest extends GameBaseCase {
 
         assertEquals(-1, gamePlayer().inventory().get(1).position());
         assertEquals(1, gamePlayer().inventory().get(1).quantity());
+    }
+
+    @Test
+    void handleErrorTooLowLevel() throws Exception {
+        dataSet.pushHighLevelItems();
+
+        InventoryEntry entry = gamePlayer().inventory().add(itemService.create(112414));
+
+        handler.handle(session, new ObjectMoveRequest(entry.id(), MantleSlot.SLOT_ID, 1));
+
+        requestStack.assertLast(
+            new AddItemError(AddItemError.Error.TOO_LOW_LEVEL)
+        );
     }
 }

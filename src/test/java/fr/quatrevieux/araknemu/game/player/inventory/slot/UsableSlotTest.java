@@ -33,19 +33,19 @@ class UsableSlotTest extends GameBaseCase {
 
     @Test
     void checkBadClass() throws ContainerException {
-        assertFalse(slot.check(container.get(ItemService.class).create(2425), 1));
+        assertThrows(InventoryException.class, () -> slot.check(container.get(ItemService.class).create(2425), 1));
     }
 
     @Test
     void checkAlreadySet() throws ContainerException {
         slot.uncheckedSet(new InventoryEntry(null, null, null));
 
-        assertFalse(slot.check(container.get(ItemService.class).create(800), 10));
+        assertThrows(InventoryException.class, () -> slot.check(container.get(ItemService.class).create(800), 10));
     }
 
     @Test
-    void checkSuccess() throws ContainerException {
-        assertTrue(slot.check(container.get(ItemService.class).create(468), 100));
+    void checkSuccess() throws ContainerException, InventoryException {
+        slot.check(container.get(ItemService.class).create(468), 100);
     }
 
     @Test

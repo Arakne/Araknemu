@@ -39,7 +39,7 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
         this.session = session;
         this.service = service;
         this.channels = new ChannelSet(entity.channels(), dispatcher);
-        this.inventory = inventory;
+        this.inventory = inventory.attach(this);
 
         characteristics = new PlayerCharacteristics(dispatcher, this, entity);
         characteristics.rebuildSpecialEffects();
@@ -140,5 +140,12 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
     @Override
     public Life life() {
         return life;
+    }
+
+    /**
+     * Get the player level
+     */
+    public int level() {
+        return entity.level();
     }
 }

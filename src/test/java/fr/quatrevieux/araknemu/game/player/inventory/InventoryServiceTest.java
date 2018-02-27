@@ -38,10 +38,7 @@ class InventoryServiceTest extends GameBaseCase {
 
     @Test
     void loadEmptyInventory() {
-        PlayerInventory inventory = service.load(
-            new Player(5),
-            new DefaultListenerAggregate()
-        );
+        PlayerInventory inventory = service.load(new Player(5));
 
         assertFalse(inventory.iterator().hasNext());
     }
@@ -54,10 +51,7 @@ class InventoryServiceTest extends GameBaseCase {
         repository.add(new PlayerItem(5, 8, 40, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")), 1, 1));
         repository.add(new PlayerItem(5, 32, 284, new ArrayList<>(), 10, -1));
 
-        PlayerInventory inventory = service.load(
-            player,
-            new DefaultListenerAggregate()
-        );
+        PlayerInventory inventory = service.load(player);
 
         assertEquals(39, inventory.get(3).templateId());
         assertEquals(40, inventory.get(8).templateId());
