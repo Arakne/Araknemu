@@ -1,9 +1,12 @@
 package fr.quatrevieux.araknemu.game.item.factory;
 
+import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.item.GameItemSet;
+import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.Type;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToCharacteristicMapping;
@@ -24,6 +27,8 @@ class WearableFactoryTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
+        dataSet.pushItemSets();
+
         factory = new WearableFactory(
             new EffectToCharacteristicMapping(),
             new EffectToSpecialMapping()
@@ -32,7 +37,7 @@ class WearableFactoryTest extends GameBaseCase {
 
     @Test
     void createSimple() {
-        Item item = factory.create(new ItemTemplate(39, Type.AMULETTE, "Petite Amulette du Hibou", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "0d0+2")), 4, "", 0, "", 100), true);
+        Item item = factory.create(new ItemTemplate(39, Type.AMULETTE, "Petite Amulette du Hibou", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "0d0+2")), 4, "", 0, "", 100), null, true);
 
         assertInstanceOf(Wearable.class, item);
         assertCount(1, item.effects());
@@ -45,14 +50,16 @@ class WearableFactoryTest extends GameBaseCase {
     }
 
     @Test
-    void createRandomStats() {
+    void createRandomStats() throws ContainerException {
         ItemTemplate template = new ItemTemplate(2425, Type.AMULETTE, "Amulette du Bouftou", 3, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 10, 0, "1d10+0"), new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 10, 0, "1d10+0")), 10, "", 1, "", 550);
+        GameItemSet set = container.get(ItemService.class).itemSet(1);
 
-        Item item = factory.create(template, false);
+        Item item = factory.create(template, set, false);
 
         assertInstanceOf(Wearable.class, item);
         assertCount(2, item.effects());
         assertSame(template, item.template());
+        assertSame(set, item.set().get());
 
         Wearable wearable = (Wearable) item;
 
@@ -64,7 +71,7 @@ class WearableFactoryTest extends GameBaseCase {
     }
 
     @Test
-    void createMaxStats() {
+    void createMaxStats() throws ContainerException {
         ItemTemplate template = new ItemTemplate(2425, Type.AMULETTE, "Amulette du Bouftou", 3,
             Arrays.asList(
                 new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 10, 0, "1d10+0"),
@@ -73,11 +80,14 @@ class WearableFactoryTest extends GameBaseCase {
             ), 10, "", 1, "", 550
         );
 
-        Item item = factory.create(template, true);
+        GameItemSet set = container.get(ItemService.class).itemSet(1);
+
+        Item item = factory.create(template, set, true);
 
         assertInstanceOf(Wearable.class, item);
         assertCount(3, item.effects());
         assertSame(template, item.template());
+        assertSame(set, item.set().get());
 
         Wearable wearable = (Wearable) item;
 
@@ -99,7 +109,7 @@ class WearableFactoryTest extends GameBaseCase {
             new ItemTemplateEffectEntry(Effect.NULL1, 0, 0, 0, "")
         ), 10, "", 1, "", 550);
 
-        Item item = factory.create(template, true);
+        Item item = factory.create(template, null, true);
 
         assertInstanceOf(Wearable.class, item);
         assertCount(3, item.effects());
@@ -113,9 +123,12 @@ class WearableFactoryTest extends GameBaseCase {
     }
 
     @Test
-    void retrieve() {
+    void retrieve() throws ContainerException {
+        GameItemSet set = container.get(ItemService.class).itemSet(1);
+
         Item item = factory.retrieve(
             new ItemTemplate(39, Type.AMULETTE, "Petite Amulette du Hibou", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "0d0+2")), 4, "", 0, "", 100),
+            set,
             Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 20, 0, 0, ""))
         );
 
@@ -127,5 +140,6 @@ class WearableFactoryTest extends GameBaseCase {
         assertCount(1, wearable.characteristics());
         assertEquals(Effect.ADD_INTELLIGENCE, wearable.characteristics().get(0).effect());
         assertEquals(20, wearable.characteristics().get(0).value());
+        assertSame(set, item.set().get());
     }
 }

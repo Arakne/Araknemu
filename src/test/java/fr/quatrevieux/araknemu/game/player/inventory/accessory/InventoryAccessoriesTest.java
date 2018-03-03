@@ -25,7 +25,10 @@ class InventoryAccessoriesTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushItemTemplates();
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
 
         InventorySlots slots = new InventorySlots(
             new DefaultListenerAggregate(),

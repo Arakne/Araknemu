@@ -30,7 +30,10 @@ class MoveObjectTest extends GameBaseCase {
 
         gamePlayer();
 
-        dataSet.pushItemTemplates();
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
         dataSet.use(PlayerItem.class);
 
         gamePlayer().inventory().add(

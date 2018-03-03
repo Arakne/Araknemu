@@ -5,6 +5,8 @@ import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepositor
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.event.listener.player.inventory.*;
+import fr.quatrevieux.araknemu.game.event.listener.player.inventory.itemset.InitializeItemSets;
+import fr.quatrevieux.araknemu.game.event.listener.player.inventory.itemset.SendItemSetChange;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,5 +42,7 @@ class AddInventoryListenersTest extends GameBaseCase {
         assertTrue(gamePlayer().dispatcher().has(UpdateStuffStats.class));
         assertTrue(gamePlayer().dispatcher().has(SaveDeletedItem.class));
         assertTrue(gamePlayer().dispatcher().has(SendItemDeleted.class));
+        assertTrue(gamePlayer().dispatcher().has(SendItemSetChange.class));
+        assertTrue(gamePlayer().dispatcher().has(InitializeItemSets.class));
     }
 }

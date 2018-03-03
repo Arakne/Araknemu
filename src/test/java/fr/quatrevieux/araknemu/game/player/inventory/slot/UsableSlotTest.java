@@ -33,7 +33,7 @@ class UsableSlotTest extends GameBaseCase {
 
     @Test
     void checkBadClass() throws ContainerException {
-        assertThrows(InventoryException.class, () -> slot.check(container.get(ItemService.class).create(2425), 1));
+        assertThrows(InventoryException.class, () -> slot.check(container.get(ItemService.class).create(39), 1));
     }
 
     @Test
@@ -51,7 +51,7 @@ class UsableSlotTest extends GameBaseCase {
     @Test
     void setFail() {
         assertThrows(InventoryException.class, () -> slot.set(
-            new InventoryEntry(null, new PlayerItem(1, 1, 2425, new ArrayList<>(), 1, -1), container.get(ItemService.class).create(2425)
+            new InventoryEntry(null, new PlayerItem(1, 1, 39, new ArrayList<>(), 1, -1), container.get(ItemService.class).create(39)
         )));
 
         assertNull(slot.entry());

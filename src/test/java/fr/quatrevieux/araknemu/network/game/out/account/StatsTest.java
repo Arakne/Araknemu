@@ -40,6 +40,7 @@ class StatsTest extends GameBaseCase {
     void generateWithStuffStatsAndSpecials() throws Exception {
         dataSet.pushRaces();
         dataSet.pushItemTemplates();
+        dataSet.pushItemSets();
 
         GamePlayer player = makeOtherPlayer(10);
 

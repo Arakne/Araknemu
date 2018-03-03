@@ -22,6 +22,7 @@ class EquipmentLevelConstraintTest extends GameBaseCase {
         dataSet
             .pushItemTemplates()
             .pushHighLevelItems()
+            .pushItemSets()
         ;
 
         constraint = new EquipmentLevelConstraint(gamePlayer());

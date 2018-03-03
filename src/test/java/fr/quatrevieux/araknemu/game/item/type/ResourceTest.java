@@ -31,6 +31,8 @@ class ResourceTest extends GameBaseCase {
             ),
             resource.specials()
         );
+
+        assertFalse(resource.set().isPresent());
     }
 
     @Test

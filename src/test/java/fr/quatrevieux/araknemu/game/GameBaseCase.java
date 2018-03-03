@@ -26,12 +26,14 @@ import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
+import fr.quatrevieux.araknemu.data.world.entity.item.ItemSet;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.sql.WorldRepositoriesModule;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
+import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
@@ -113,6 +115,16 @@ public class GameBaseCase extends DatabaseTestCase {
 
             Assertions.fail("Cannot find packet of type" + type.getSimpleName());
         }
+
+        public void assertOne(Object packet) {
+            for (Object message : channel.getMessages()) {
+                if (message.toString().equals(packet.toString())) {
+                    return;
+                }
+            }
+
+            Assertions.fail("Cannot find packet " + packet);
+        }
     }
 
     static public class ConnectorModule implements ContainerModule {
@@ -179,6 +191,7 @@ public class GameBaseCase extends DatabaseTestCase {
             .declare(SubArea.class, SubAreaRepository.class)
             .declare(ItemTemplate.class, ItemTemplateRepository.class)
             .declare(PlayerItem.class, PlayerItemRepository.class)
+            .declare(ItemSet.class, ItemSetRepository.class)
         ;
     }
 

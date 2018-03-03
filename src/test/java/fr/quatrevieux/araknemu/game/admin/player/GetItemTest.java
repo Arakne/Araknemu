@@ -23,7 +23,10 @@ class GetItemTest extends CommandTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushItemTemplates();
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
 
         command = new GetItem(
             gamePlayer(),

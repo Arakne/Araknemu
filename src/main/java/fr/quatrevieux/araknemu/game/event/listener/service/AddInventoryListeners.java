@@ -5,6 +5,8 @@ import fr.quatrevieux.araknemu.game.event.Listener;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.event.listener.player.inventory.*;
+import fr.quatrevieux.araknemu.game.event.listener.player.inventory.itemset.InitializeItemSets;
+import fr.quatrevieux.araknemu.game.event.listener.player.inventory.itemset.SendItemSetChange;
 
 /**
  * Add listener for inventory events
@@ -31,6 +33,9 @@ final public class AddInventoryListeners implements Listener<PlayerLoaded> {
         dispatcher.add(new SaveDeletedItem(repository));
 
         dispatcher.add(new UpdateStuffStats(event.player()));
+
+        dispatcher.add(new InitializeItemSets(event.player()));
+        dispatcher.add(new SendItemSetChange(event.player()));
     }
 
     @Override

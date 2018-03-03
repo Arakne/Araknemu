@@ -17,8 +17,10 @@ import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
+import fr.quatrevieux.araknemu.data.world.entity.item.ItemSet;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.transformer.ItemEffectsTransformer;
+import fr.quatrevieux.araknemu.data.world.transformer.ItemSetBonusTransformer;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.item.Type;
@@ -26,6 +28,7 @@ import fr.quatrevieux.araknemu.game.world.item.Type;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumSet;
 
 public class GameDataSet extends TestingDataSet {
@@ -198,6 +201,8 @@ public class GameDataSet extends TestingDataSet {
         pushItemTemplate(new ItemTemplate(2425, Type.AMULETTE, "Amulette du Bouftou", 3, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 10, 0, "1d10+0"), new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 10, 0, "1d10+0")), 10, "", 1, "", 550));
         pushItemTemplate(new ItemTemplate(2428, Type.CEINTURE, "Amulette du Bouftou", 20, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_PODS, 1, 500, 0, "1d500+0")), 10, "", 1, "", 550));
 
+        pushItemTemplate(new ItemTemplate(2641, Type.COIFFE, "Toady", 30, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_AGILITY, 11, 60, 0, "1d50+10")), 10, "", 7, "", 2700));
+
         return this;
     }
 
@@ -219,6 +224,74 @@ public class GameDataSet extends TestingDataSet {
         pushItemTemplate(new ItemTemplate(468, Type.PAIN, "Pain d'Amakna", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_LIFE, 10, 0, 0, "0d0+10")), 1, "", 0, "", 1));
         pushItemTemplate(new ItemTemplate(800, Type.PARCHEMIN_CARAC, "Grand Parchemin d'Agilité ", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_CHARACT_AGILITY, 1, 0, 0, "")), 1, "", 0, "", 40000));
         pushItemTemplate(new ItemTemplate(2240, Type.FEE_ARTIFICE, "Petite Fée d'Artifice Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.FIREWORK, 1, 0, 2900, "")), 1, "", 0, "", 350));
+
+        return this;
+    }
+
+    public ItemSet pushItemSet(ItemSet itemSet) throws ContainerException, SQLException {
+        use(ItemSet.class);
+
+        connection.prepare(
+            "INSERT INTO ITEM_SET (ITEM_SET_ID, ITEM_SET_NAME, ITEM_SET_BONUS) VALUES (?, ?, ?)",
+            stmt -> {
+                stmt.setInt(1, itemSet.id());
+                stmt.setString(2, itemSet.name());
+                stmt.setString(3, new ItemSetBonusTransformer().serialize(itemSet.bonus()));
+
+                return stmt.executeUpdate();
+            }
+        );
+
+        return itemSet;
+    }
+
+    public GameDataSet pushItemSets() throws SQLException, ContainerException {
+        pushItemSet(new ItemSet(
+            1, "Panoplie du Bouftou",
+            Arrays.asList(
+                Arrays.asList(
+                    new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 5, 0, 0, ""),
+                    new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 5, 0, 0, "")
+                ),
+                Arrays.asList(
+                    new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 10, 0, 0, ""),
+                    new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 10, 0, 0, "")
+                ),
+                Arrays.asList(
+                    new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 10, 0, 0, ""),
+                    new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 10, 0, 0, ""),
+                    new ItemTemplateEffectEntry(Effect.ADD_DAMAGE, 2, 0, 0, "")
+                ),
+                Arrays.asList(
+                    new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 30, 0, 0, ""),
+                    new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 30, 0, 0, ""),
+                    new ItemTemplateEffectEntry(Effect.ADD_DAMAGE, 4, 0, 0, "")
+                ),
+                Arrays.asList(
+                    new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 40, 0, 0, ""),
+                    new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 40, 0, 0, ""),
+                    new ItemTemplateEffectEntry(Effect.ADD_DAMAGE, 4, 0, 0, "")
+                ),
+                Arrays.asList(
+                    new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 30, 0, 0, ""),
+                    new ItemTemplateEffectEntry(Effect.ADD_WISDOM, 20, 0, 0, ""),
+                    new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 50, 0, 0, ""),
+                    new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 50, 0, 0, ""),
+                    new ItemTemplateEffectEntry(Effect.ADD_ACTION_POINTS, 1, 0, 0, ""),
+                    new ItemTemplateEffectEntry(Effect.ADD_DAMAGE, 5, 0, 0, "")
+                )
+            )
+        ));
+
+        pushItemSet(new ItemSet(
+            7, "Panoplie de Toady",
+            Arrays.asList(
+                Arrays.asList(
+                    new ItemTemplateEffectEntry(Effect.ADD_AGILITY, 50, 0, 0, ""),
+                    new ItemTemplateEffectEntry(Effect.ADD_DAMAGE, 5, 0, 0, "")
+                )
+            )
+        ));
 
         return this;
     }

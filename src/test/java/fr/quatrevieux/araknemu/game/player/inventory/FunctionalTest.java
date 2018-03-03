@@ -2,11 +2,13 @@ package fr.quatrevieux.araknemu.game.player.inventory;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.inventory.EquipmentChanged;
 import fr.quatrevieux.araknemu.game.event.inventory.ObjectQuantityChanged;
 import fr.quatrevieux.araknemu.game.event.listener.player.SendStats;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.player.inventory.itemset.PlayerItemSet;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.AmuletSlot;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.HelmetSlot;
 import fr.quatrevieux.araknemu.game.world.item.Item;
@@ -34,7 +36,10 @@ public class FunctionalTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushItemTemplates();
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
 
         itemService = container.get(ItemService.class);
         inventory = gamePlayer(true).inventory();
@@ -144,7 +149,7 @@ public class FunctionalTest extends GameBaseCase {
 
     @Test
     void moveSuccessFromStackedItem() throws InventoryException {
-        InventoryEntry entry = inventory.add(itemService.create(2425), 10);
+        InventoryEntry entry = inventory.add(itemService.create(39), 10);
         requestStack.clear();
 
         entry.move(0, 1);
@@ -219,6 +224,7 @@ public class FunctionalTest extends GameBaseCase {
         entry.move(HelmetSlot.SLOT_ID, 1);
 
         requestStack.assertAll(
+            new UpdateItemSet(inventory.itemSets().get(entry.item().set().get())),
             new SpriteAccessories(gamePlayer().id(), inventory.accessories()),
             new ItemPosition(entry)
         );
@@ -228,7 +234,7 @@ public class FunctionalTest extends GameBaseCase {
     void equipNotAccessoryItemOnExploration() throws InventoryException, SQLException, ContainerException {
         explorationPlayer();
 
-        InventoryEntry entry = inventory.add(itemService.create(2425));
+        InventoryEntry entry = inventory.add(itemService.create(39));
         requestStack.clear();
 
         entry.move(AmuletSlot.SLOT_ID, 1);
@@ -267,7 +273,10 @@ public class FunctionalTest extends GameBaseCase {
 
         inventory.delete(entry);
 
-        requestStack.assertAll(new DestroyItem(entry));
+        requestStack.assertAll(
+            new UpdateItemSet(inventory.itemSets().get(entry.item().set().get())),
+            new DestroyItem(entry)
+        );
 
         assertSame(entry, ref.get().entry());
         assertFalse(ref.get().equiped());
@@ -284,6 +293,7 @@ public class FunctionalTest extends GameBaseCase {
         inventory.delete(entry);
 
         requestStack.assertAll(
+            new UpdateItemSet(inventory.itemSets().get(entry.item().set().get())),
             new SpriteAccessories(gamePlayer().id(), inventory.accessories()),
             new DestroyItem(entry)
         );
@@ -343,6 +353,7 @@ public class FunctionalTest extends GameBaseCase {
         assertEquals(-1, entry.position());
 
         requestStack.assertAll(
+            new UpdateItemSet(inventory.itemSets().get(entry2.item().set().get())),
             new DestroyItem(entry2),
             new ItemQuantity(entry)
         );
@@ -386,5 +397,47 @@ public class FunctionalTest extends GameBaseCase {
 
         assertEquals(10, entry.quantity());
         assertEquals(-1, entry.position());
+    }
+
+    @Test
+    void equipWithItemSetAlreadySet() throws InventoryException {
+        inventory.add(itemService.create(2411), 1, HelmetSlot.SLOT_ID);
+        InventoryEntry entry = inventory.add(itemService.create(2425, true));
+        requestStack.clear();
+
+        entry.move(0, 1);
+
+        // @todo check stats
+
+        PlayerItemSet itemSet = inventory.itemSets().get(entry.item().set().get());
+
+        assertCount(2, itemSet.items());
+        assertCount(2, itemSet.bonus().characteristics());
+        assertEquals(Effect.ADD_STRENGTH, itemSet.bonus().characteristics().get(0).effect());
+        assertEquals(Effect.ADD_INTELLIGENCE, itemSet.bonus().characteristics().get(1).effect());
+
+        requestStack.assertOne(
+            new UpdateItemSet(itemSet)
+        );
+    }
+
+    @Test
+    void unequipWillRemoveItemSet() throws InventoryException {
+        InventoryEntry entry = inventory.add(itemService.create(2425, true), 1, AmuletSlot.SLOT_ID);
+        requestStack.clear();
+
+        entry.move(-1, 1);
+
+        // @todo check stats
+
+        PlayerItemSet itemSet = inventory.itemSets().get(entry.item().set().get());
+
+        assertCount(0, itemSet.items());
+        assertCount(0, itemSet.bonus().characteristics());
+        assertTrue(itemSet.isEmpty());
+
+        requestStack.assertOne(
+            new UpdateItemSet(itemSet)
+        );
     }
 }

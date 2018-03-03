@@ -37,6 +37,7 @@ class UsableFactoryTest extends GameBaseCase {
     void create() {
         Item item = factory.create(
             new ItemTemplate(283, Type.POTION, "Fiole de Soin", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_LIFE, 31, 60, 0, "1d30+30")), 1, "", 0, "", 10),
+            null,
             false
         );
 
@@ -49,6 +50,7 @@ class UsableFactoryTest extends GameBaseCase {
     void retrieve() {
         Item item = factory.retrieve(
             new ItemTemplate(283, Type.POTION, "Fiole de Soin", 10, new ArrayList<>(), 1, "", 0, "", 10),
+            null,
             Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_LIFE, 31, 60, 0, "1d30+30"))
         );
 

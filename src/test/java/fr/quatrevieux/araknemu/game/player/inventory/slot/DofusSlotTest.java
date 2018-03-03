@@ -33,7 +33,7 @@ class DofusSlotTest extends GameBaseCase {
 
     @Test
     void checkBadType() throws ContainerException {
-        assertThrows(InventoryException.class, () -> slot.check(container.get(ItemService.class).create(2411), 1));
+        assertThrows(InventoryException.class, () -> slot.check(container.get(ItemService.class).create(39), 1));
     }
 
     @Test
@@ -63,7 +63,7 @@ class DofusSlotTest extends GameBaseCase {
     @Test
     void setFail() {
         assertThrows(InventoryException.class, () -> slot.set(
-            new InventoryEntry(null, new PlayerItem(1, 1, 2411, new ArrayList<>(), 1, -1), container.get(ItemService.class).create(2411)
+            new InventoryEntry(null, new PlayerItem(1, 1, 39, new ArrayList<>(), 1, -1), container.get(ItemService.class).create(39)
         )));
 
         assertNull(slot.entry());

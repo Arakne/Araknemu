@@ -1,27 +1,36 @@
 package fr.quatrevieux.araknemu.game.item.type;
 
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
+import fr.quatrevieux.araknemu.game.item.GameItemSet;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Base item class
  */
 abstract public class BaseItem implements Item {
     final private ItemTemplate template;
+    final private GameItemSet set;
     final private List<SpecialEffect> specials;
 
-    public BaseItem(ItemTemplate template, List<SpecialEffect> specials) {
+    public BaseItem(ItemTemplate template, GameItemSet set, List<SpecialEffect> specials) {
         this.template = template;
+        this.set = set;
         this.specials = specials;
     }
 
     @Override
     public ItemTemplate template() {
         return template;
+    }
+
+    @Override
+    public Optional<GameItemSet> set() {
+        return Optional.ofNullable(set);
     }
 
     @Override

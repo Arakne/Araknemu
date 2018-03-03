@@ -12,7 +12,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class AddSpritesTest extends GameBaseCase {
     @Test
     void generateWithPlayer() throws Exception {
-        dataSet.pushItemTemplates();
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
 
         ExplorationPlayer p1 = explorationPlayer();
         ExplorationPlayer p2 = new ExplorationPlayer(makeOtherPlayer());

@@ -32,7 +32,10 @@ class AbstractEquipmentSlotTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushItemTemplates();
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
 
         storage = Mockito.mock(ItemStorage.class);
         slot = new AbstractEquipmentSlot(dispatcher = new DefaultListenerAggregate(), new SimpleSlot(1, new SlotConstraint[]{}, storage)) {

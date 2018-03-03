@@ -23,6 +23,7 @@ class ItemClassConstraintTest extends GameBaseCase {
         constraint.check(
             new Wearable(
                 new ItemTemplate(39, Type.AMULETTE, "Petite Amulette du Hibou", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "0d0+2")), 4, "", 0, "", 100),
+                null,
                 new ArrayList<>(),
                 new ArrayList<>()
             ),

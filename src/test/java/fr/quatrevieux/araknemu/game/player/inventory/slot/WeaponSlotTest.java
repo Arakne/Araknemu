@@ -26,7 +26,10 @@ class WeaponSlotTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushItemTemplates();
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
 
         slot = new WeaponSlot(new DefaultListenerAggregate(), Mockito.mock(ItemStorage.class), gamePlayer());
     }

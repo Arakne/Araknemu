@@ -10,6 +10,6 @@ import java.util.List;
  */
 final public class Resource extends BaseItem {
     public Resource(ItemTemplate template, List<SpecialEffect> specials) {
-        super(template, specials);
+        super(template, null, specials);
     }
 }

@@ -1,8 +1,10 @@
 package fr.quatrevieux.araknemu.game.player.inventory;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
+import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.Listener;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
@@ -11,6 +13,7 @@ import fr.quatrevieux.araknemu.game.event.inventory.ObjectAdded;
 import fr.quatrevieux.araknemu.game.event.inventory.ObjectDeleted;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.inventory.accessory.InventoryAccessories;
+import fr.quatrevieux.araknemu.game.player.inventory.itemset.PlayerItemSet;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.AccessoryType;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.Type;
@@ -122,7 +125,10 @@ class PlayerInventoryTest extends GameBaseCase {
 
     @Test
     void equipments() throws SQLException, ContainerException, InventoryException {
-        dataSet.pushItemTemplates();
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
 
         inventory.add(container.get(ItemService.class).create(2425), 1, 0);
         inventory.add(container.get(ItemService.class).create(2416), 1, 1);
@@ -136,7 +142,10 @@ class PlayerInventoryTest extends GameBaseCase {
 
     @Test
     void accessories() throws SQLException, ContainerException, InventoryException {
-        dataSet.pushItemTemplates();
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
 
         inventory.add(container.get(ItemService.class).create(2416), 1, 1);
         inventory.add(container.get(ItemService.class).create(2411), 1, 6);
@@ -149,7 +158,10 @@ class PlayerInventoryTest extends GameBaseCase {
 
     @Test
     void deleteWillRemoveFromSlotAndStorage() throws SQLException, ContainerException, InventoryException {
-        dataSet.pushItemTemplates();
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
 
         AtomicReference<EquipmentChanged> ref1 = new AtomicReference<>();
         dispatcher.add(new Listener<EquipmentChanged>() {
@@ -204,5 +216,34 @@ class PlayerInventoryTest extends GameBaseCase {
     @Test
     void attachAlreadyAttached() {
         assertThrows(IllegalStateException.class, () -> inventory.attach(makeOtherPlayer()));
+    }
+
+    @Test
+    void itemSetEmpty() {
+        assertCount(0, inventory.itemSets().all());
+    }
+
+    @Test
+    void itemSetNotEmpty() throws ContainerException, InventoryException, SQLException {
+        dataSet.pushItemTemplates().pushItemSets();
+
+        inventory.add(container.get(ItemService.class).create(2425), 1, 0);
+        inventory.add(container.get(ItemService.class).create(2411), 1, 6);
+
+        assertCount(1, inventory.itemSets().all());
+
+        PlayerItemSet itemSet = inventory.itemSets().get(
+            container.get(ItemService.class).itemSet(1)
+        );
+
+        assertCount(2, itemSet.items());
+        assertContains(container.get(ItemTemplateRepository.class).get(2425), itemSet.items());
+        assertContains(container.get(ItemTemplateRepository.class).get(2411), itemSet.items());
+
+        assertCount(2, itemSet.bonus().characteristics());
+        assertEquals(Effect.ADD_STRENGTH, itemSet.bonus().characteristics().get(0).effect());
+        assertEquals(5, itemSet.bonus().characteristics().get(0).value());
+        assertEquals(Effect.ADD_INTELLIGENCE, itemSet.bonus().characteristics().get(1).effect());
+        assertEquals(5, itemSet.bonus().characteristics().get(1).value());
     }
 }

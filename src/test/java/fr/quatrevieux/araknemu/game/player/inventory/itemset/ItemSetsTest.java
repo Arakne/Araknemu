@@ -1,0 +1,108 @@
+package fr.quatrevieux.araknemu.game.player.inventory.itemset;
+
+import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.data.constant.Effect;
+import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class ItemSetsTest extends GameBaseCase {
+    private ItemSets itemSets;
+    private ItemService service;
+
+    @Override
+    @BeforeEach
+    public void setUp() throws Exception {
+        super.setUp();
+
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
+
+        service = container.get(ItemService.class);
+
+        itemSets = new ItemSets(
+            gamePlayer(true).inventory()
+        );
+    }
+
+    @Test
+    void getNotPresent() {
+        PlayerItemSet itemSet = itemSets.get(
+            service.itemSet(1)
+        );
+
+        assertEquals(1, itemSet.id());
+        assertTrue(itemSet.isEmpty());
+        assertCount(0, itemSet.bonus().characteristics());
+        assertCount(0, itemSet.bonus().specials());
+        assertCount(0, itemSet.bonus().effects());
+        assertCount(0, itemSet.items());
+    }
+
+    @Test
+    void getPresent() throws SQLException, ContainerException, InventoryException {
+        InventoryEntry entry1 = gamePlayer().inventory().add(service.create(2425), 1, 0);
+        InventoryEntry entry2 = gamePlayer().inventory().add(service.create(2411), 1, 6);
+        InventoryEntry entry3 = gamePlayer().inventory().add(service.create(2414), 1, 7);
+
+        PlayerItemSet itemSet = itemSets.get(
+            service.itemSet(1)
+        );
+
+        assertEquals(1, itemSet.id());
+        assertFalse(itemSet.isEmpty());
+        assertCount(2, itemSet.bonus().characteristics());
+        assertCount(0, itemSet.bonus().specials());
+        assertCount(2, itemSet.bonus().effects());
+        assertCount(3, itemSet.items());
+
+        assertContainsAll(
+            itemSet.items(),
+            entry1.item().template(),
+            entry2.item().template(),
+            entry3.item().template()
+        );
+
+        assertEquals(Effect.ADD_STRENGTH, itemSet.bonus().characteristics().get(0).effect());
+        assertEquals(10, itemSet.bonus().characteristics().get(0).value());
+        assertEquals(Effect.ADD_INTELLIGENCE, itemSet.bonus().characteristics().get(1).effect());
+        assertEquals(10, itemSet.bonus().characteristics().get(1).value());
+    }
+
+    @Test
+    void all() throws SQLException, ContainerException, InventoryException {
+        InventoryEntry entry1 = gamePlayer().inventory().add(service.create(2425), 1, 0);
+        InventoryEntry entry2 = gamePlayer().inventory().add(service.create(2414), 1, 7);
+        InventoryEntry entry3 = gamePlayer().inventory().add(service.create(2641), 1, 6);
+        gamePlayer().inventory().add(service.create(40), 1, 1);
+
+        List<PlayerItemSet> sets = new ArrayList<>(itemSets.all());
+
+        assertCount(2, sets);
+
+        assertEquals(1, sets.get(0).id());
+        assertContainsAll(
+            sets.get(0).items(),
+            entry1.item().template(),
+            entry2.item().template()
+        );
+
+        assertEquals(7, sets.get(1).id());
+        assertContainsAll(
+            sets.get(1).items(),
+            entry3.item().template()
+        );
+    }
+}

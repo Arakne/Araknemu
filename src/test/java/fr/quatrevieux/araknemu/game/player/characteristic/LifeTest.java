@@ -43,7 +43,10 @@ class LifeTest extends GameBaseCase {
 
     @Test
     void maxLifeWithStuffAndBaseVitality() throws SQLException, ContainerException, InventoryException {
-        dataSet.pushItemTemplates();
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
 
         player.characteristics().base().set(Characteristic.VITALITY, 50);
         player.inventory().add(

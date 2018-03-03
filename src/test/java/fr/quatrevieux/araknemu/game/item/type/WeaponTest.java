@@ -20,6 +20,7 @@ class WeaponTest extends TestCase {
     void getters() {
         Weapon weapon = new Weapon(
             new ItemTemplate(40, Type.EPEE, "Petite Epée de Boisaille", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")), 20, "CS>4", 0, "4;1;1;50;30;5;0", 200),
+            null,
             Arrays.asList(new WeaponEffect(Effect.INFLICT_DAMAGE_NEUTRAL, 10, 15, 0)),
             Arrays.asList(new CharacteristicEffect(Effect.ADD_INTELLIGENCE, 2, +1, Characteristic.INTELLIGENCE)),
             new ArrayList<>()
@@ -28,12 +29,14 @@ class WeaponTest extends TestCase {
         assertEquals(40, weapon.template().id());
         assertEquals(Arrays.asList(new WeaponEffect(Effect.INFLICT_DAMAGE_NEUTRAL, 10, 15, 0)), weapon.weaponEffects());
         assertEquals(Arrays.asList(new CharacteristicEffect(Effect.ADD_INTELLIGENCE, 2, +1, Characteristic.INTELLIGENCE)), weapon.characteristics());
+        assertFalse(weapon.set().isPresent());
     }
 
     @Test
     void effects() {
         Weapon weapon = new Weapon(
             new ItemTemplate(40, Type.EPEE, "Petite Epée de Boisaille", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")), 20, "CS>4", 0, "4;1;1;50;30;5;0", 200),
+            null,
             Arrays.asList(new WeaponEffect(Effect.INFLICT_DAMAGE_NEUTRAL, 10, 15, 0)),
             Arrays.asList(new CharacteristicEffect(Effect.ADD_INTELLIGENCE, 2, +1, Characteristic.INTELLIGENCE)),
             new ArrayList<>()
@@ -53,6 +56,7 @@ class WeaponTest extends TestCase {
         assertNotEquals(
             new Weapon(
                 new ItemTemplate(40, Type.EPEE, "Petite Epée de Boisaille", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")), 20, "CS>4", 0, "4;1;1;50;30;5;0", 200),
+                null,
                 Arrays.asList(new WeaponEffect(Effect.INFLICT_DAMAGE_NEUTRAL, 10, 15, 0)),
                 Arrays.asList(new CharacteristicEffect(Effect.ADD_INTELLIGENCE, 2, +1, Characteristic.INTELLIGENCE)),
                 new ArrayList<>()
@@ -66,12 +70,14 @@ class WeaponTest extends TestCase {
         assertNotEquals(
             new Weapon(
                 new ItemTemplate(40, Type.EPEE, "Petite Epée de Boisaille", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")), 20, "CS>4", 0, "4;1;1;50;30;5;0", 200),
+                null,
                 Arrays.asList(new WeaponEffect(Effect.INFLICT_DAMAGE_NEUTRAL, 10, 15, 0)),
                 new ArrayList<>(),
                 new ArrayList<>()
             ),
             new Weapon(
                 new ItemTemplate(40, Type.EPEE, "Petite Epée de Boisaille", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")), 20, "CS>4", 0, "4;1;1;50;30;5;0", 200),
+                null,
                 Arrays.asList(new WeaponEffect(Effect.INFLICT_DAMAGE_EARTH, 10, 15, 0)),
                 new ArrayList<>(),
                 new ArrayList<>()
@@ -84,12 +90,14 @@ class WeaponTest extends TestCase {
         assertEquals(
             new Weapon(
                 new ItemTemplate(40, Type.EPEE, "Petite Epée de Boisaille", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")), 20, "CS>4", 0, "4;1;1;50;30;5;0", 200),
+                null,
                 Arrays.asList(new WeaponEffect(Effect.INFLICT_DAMAGE_NEUTRAL, 10, 15, 0)),
                 new ArrayList<>(),
                 new ArrayList<>()
             ),
             new Weapon(
                 new ItemTemplate(40, Type.EPEE, "Petite Epée de Boisaille", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")), 20, "CS>4", 0, "4;1;1;50;30;5;0", 200),
+                null,
                 Arrays.asList(new WeaponEffect(Effect.INFLICT_DAMAGE_NEUTRAL, 10, 15, 0)),
                 new ArrayList<>(),
                 new ArrayList<>()

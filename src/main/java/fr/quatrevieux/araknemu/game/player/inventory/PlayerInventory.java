@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.item.type.Equipment;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.accessory.InventoryAccessories;
+import fr.quatrevieux.araknemu.game.player.inventory.itemset.ItemSets;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlot;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.Accessories;
@@ -24,6 +25,7 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry>, Dispa
     final private ItemStorage<InventoryEntry> storage;
     final private InventorySlots slots;
     final private Accessories accessories;
+    final private ItemSets itemSets;
 
     private GamePlayer owner;
 
@@ -39,6 +41,7 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry>, Dispa
 
         slots = new InventorySlots(this, storage);
         accessories = new InventoryAccessories(slots);
+        itemSets = new ItemSets(this);
     }
 
     @Override
@@ -107,6 +110,13 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry>, Dispa
      */
     public Accessories accessories() {
         return accessories;
+    }
+
+    /**
+     * Get the player item sets
+     */
+    public ItemSets itemSets() {
+        return itemSets;
     }
 
     /**

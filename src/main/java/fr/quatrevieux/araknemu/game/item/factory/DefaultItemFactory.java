@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.item.factory;
 
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
+import fr.quatrevieux.araknemu.game.item.GameItemSet;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.Type;
 
@@ -25,21 +26,21 @@ final public class DefaultItemFactory implements ItemFactory {
     }
 
     @Override
-    public Item create(ItemTemplate template, boolean maximize) {
+    public Item create(ItemTemplate template, GameItemSet set, boolean maximize) {
         if (!factories.containsKey(template.type())) {
             throw new NoSuchElementException("Invalid type " + template.type());
         }
 
-        return factories.get(template.type()).create(template, maximize);
+        return factories.get(template.type()).create(template, set, maximize);
     }
 
     @Override
-    public Item retrieve(ItemTemplate template, List<ItemTemplateEffectEntry> effects) {
+    public Item retrieve(ItemTemplate template, GameItemSet set, List<ItemTemplateEffectEntry> effects) {
         if (!factories.containsKey(template.type())) {
             throw new NoSuchElementException("Invalid type " + template.type());
         }
 
-        return factories.get(template.type()).retrieve(template, effects);
+        return factories.get(template.type()).retrieve(template, set, effects);
     }
 
     @Override

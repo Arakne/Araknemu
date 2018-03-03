@@ -16,7 +16,7 @@ final public class UsableItem extends BaseItem {
     final private List<UseEffect> useEffects;
 
     public UsableItem(ItemTemplate template, List<UseEffect> useEffects, List<SpecialEffect> specials) {
-        super(template, specials);
+        super(template, null, specials);
 
         this.useEffects = useEffects;
     }

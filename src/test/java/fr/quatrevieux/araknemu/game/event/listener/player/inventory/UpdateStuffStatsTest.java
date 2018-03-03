@@ -28,7 +28,10 @@ class UpdateStuffStatsTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushItemTemplates();
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
         listener = new UpdateStuffStats(gamePlayer(true));
 
         requestStack.clear();

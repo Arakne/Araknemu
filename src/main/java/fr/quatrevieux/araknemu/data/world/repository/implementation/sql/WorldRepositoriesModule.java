@@ -4,10 +4,12 @@ import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.transformer.ImmutableCharacteristicsTransformer;
+import fr.quatrevieux.araknemu.data.world.repository.implementation.local.ItemSetRepositoryCache;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.local.ItemTemplateRepositoryCache;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.local.PlayerRaceRepositoryCache;
 import fr.quatrevieux.araknemu.data.world.transformer.BoostStatsDataTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.ItemEffectsTransformer;
+import fr.quatrevieux.araknemu.data.world.transformer.ItemSetBonusTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.MapCellTransformer;
 
 /**
@@ -57,6 +59,16 @@ final public class WorldRepositoriesModule implements ContainerModule {
         );
 
         configurator.persist(
+            fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository.class,
+            container -> new ItemSetRepositoryCache(
+                    new ItemSetRepository(
+                    connection,
+                    container.get(ItemSetBonusTransformer.class)
+                )
+            )
+        );
+
+        configurator.persist(
             ImmutableCharacteristicsTransformer.class,
             container -> new ImmutableCharacteristicsTransformer()
         );
@@ -74,6 +86,11 @@ final public class WorldRepositoriesModule implements ContainerModule {
         configurator.persist(
             BoostStatsDataTransformer.class,
             container -> new BoostStatsDataTransformer()
+        );
+
+        configurator.persist(
+            ItemSetBonusTransformer.class,
+            container -> new ItemSetBonusTransformer()
         );
     }
 }

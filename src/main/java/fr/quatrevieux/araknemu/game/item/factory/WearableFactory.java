@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.item.factory;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
+import fr.quatrevieux.araknemu.game.item.GameItemSet;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.Type;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToCharacteristicMapping;
@@ -25,13 +26,13 @@ final public class WearableFactory implements ItemFactory {
     }
 
     @Override
-    public Item create(ItemTemplate template, boolean maximize) {
-        return create(template, template.effects(), maximize);
+    public Item create(ItemTemplate template, GameItemSet set, boolean maximize) {
+        return create(template, set, template.effects(), maximize);
     }
 
     @Override
-    public Item retrieve(ItemTemplate template, List<ItemTemplateEffectEntry> effects) {
-        return create(template, effects, false);
+    public Item retrieve(ItemTemplate template, GameItemSet set, List<ItemTemplateEffectEntry> effects) {
+        return create(template, set, effects, false);
     }
 
     @Override
@@ -42,9 +43,10 @@ final public class WearableFactory implements ItemFactory {
         };
     }
 
-    private Item create(ItemTemplate template, List<ItemTemplateEffectEntry> effects, boolean maximize) {
+    private Item create(ItemTemplate template, GameItemSet set, List<ItemTemplateEffectEntry> effects, boolean maximize) {
         return new Wearable(
             template,
+            set,
             effects
                 .stream()
                 .filter(entry -> entry.effect().type() == Effect.Type.CHARACTERISTIC)

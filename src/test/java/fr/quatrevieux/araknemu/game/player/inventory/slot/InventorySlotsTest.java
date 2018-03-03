@@ -88,7 +88,10 @@ class InventorySlotsTest extends GameBaseCase {
 
     @Test
     void equipments() throws SQLException, ContainerException, InventoryException {
-        dataSet.pushItemTemplates();
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
 
         slots.get(0).uncheckedSet(new InventoryEntry(null, new PlayerItem(0, 0, 2425, null, 1, 0), container.get(ItemService.class).create(2425)));
         slots.get(1).uncheckedSet(new InventoryEntry(null, new PlayerItem(0, 0, 2416, null, 1, 1), container.get(ItemService.class).create(2416)));

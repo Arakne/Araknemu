@@ -1,10 +1,12 @@
 package fr.quatrevieux.araknemu.game.world.item;
 
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
+import fr.quatrevieux.araknemu.game.item.GameItemSet;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Base type for items
@@ -14,6 +16,11 @@ public interface Item {
      * Get the template for the current item
      */
     public ItemTemplate template();
+
+    /**
+     * Get the related item set
+     */
+    public Optional<GameItemSet> set();
 
     /**
      * Get all item effects

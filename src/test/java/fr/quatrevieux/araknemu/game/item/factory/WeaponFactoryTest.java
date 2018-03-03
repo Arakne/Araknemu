@@ -40,7 +40,7 @@ class WeaponFactoryTest extends GameBaseCase {
                     new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")
                 ),
                 20, "CS>4", 0, "4;1;1;50;30;5;0", 200
-            ), false
+            ), null, false
         );
 
         assertInstanceOf(Weapon.class, item);
@@ -63,7 +63,7 @@ class WeaponFactoryTest extends GameBaseCase {
                     new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 10, 0, "")
                 ),
                 20, "CS>4", 0, "4;1;1;50;30;5;0", 200
-            ), false
+            ), null, false
         );
 
         assertInstanceOf(Weapon.class, item);
@@ -86,7 +86,7 @@ class WeaponFactoryTest extends GameBaseCase {
                     new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 10, 0, "")
                 ),
                 20, "CS>4", 0, "4;1;1;50;30;5;0", 200
-            ), true
+            ), null, true
         );
 
         assertInstanceOf(Weapon.class, item);
@@ -108,7 +108,7 @@ class WeaponFactoryTest extends GameBaseCase {
                     new ItemTemplateEffectEntry(Effect.NULL1, 0, 0, 0, "")
                 ),
                 20, "CS>4", 0, "4;1;1;50;30;5;0", 200
-            ), true
+            ), null, true
         );
 
         assertInstanceOf(Weapon.class, item);
@@ -129,6 +129,7 @@ class WeaponFactoryTest extends GameBaseCase {
                 ),
                 20, "CS>4", 0, "4;1;1;50;30;5;0", 200
             ),
+            null,
             Arrays.asList(
                 new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0"),
                 new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 20, 0, 0, "")

@@ -11,6 +11,7 @@ import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
+import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
@@ -307,7 +308,10 @@ final public class GameModule implements ContainerModule {
             ItemService.class,
             container -> new ItemService(
                 container.get(ItemTemplateRepository.class),
-                container.get(ItemFactory.class)
+                container.get(ItemFactory.class),
+                container.get(ItemSetRepository.class),
+                container.get(EffectToCharacteristicMapping.class),
+                container.get(EffectToSpecialMapping.class)
             )
         );
 

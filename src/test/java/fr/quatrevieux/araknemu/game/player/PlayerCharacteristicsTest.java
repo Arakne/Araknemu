@@ -58,7 +58,10 @@ class PlayerCharacteristicsTest extends GameBaseCase {
 
     @Test
     void rebuildStuffStats() throws SQLException, ContainerException, InventoryException {
-        dataSet.pushItemTemplates();
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
 
         gamePlayer().inventory().add(container.get(ItemService.class).create(2425, true), 1, 0);
         gamePlayer().inventory().add(container.get(ItemService.class).create(2411, true), 1, 6);
@@ -75,7 +78,10 @@ class PlayerCharacteristicsTest extends GameBaseCase {
 
     @Test
     void getFromBaseAndStuff() throws SQLException, ContainerException, InventoryException {
-        dataSet.pushItemTemplates();
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
 
         gamePlayer().inventory().add(container.get(ItemService.class).create(2425, true), 1, 0);
         gamePlayer().inventory().add(container.get(ItemService.class).create(2411, true), 1, 6);
@@ -119,25 +125,6 @@ class PlayerCharacteristicsTest extends GameBaseCase {
     void boostCharacteristicBadStats() throws SQLException, ContainerException {
         assertThrows(NoSuchElementException.class, () -> characteristics.boostCharacteristic(Characteristic.ACTION_POINT));
     }
-//
-//    @Test
-//    void maxLifeSimple() {
-//        assertEquals(295, characteristics.maxLife());
-//    }
-//
-//    @Test
-//    void maxLifeWithStuffAndBaseVitality() throws SQLException, ContainerException, InventoryException {
-//        dataSet.pushItemTemplates();
-//
-//        gamePlayer().entity.stats().set(Characteristic.VITALITY, 50);
-//        gamePlayer().inventory().add(
-//            container.get(ItemService.class).create(2419, true),
-//            1, 2
-//        );
-//        characteristics.rebuildStuffStats();
-//
-//        assertEquals(373, characteristics.maxLife());
-//    }
 
     @Test
     void initiative() {
@@ -156,7 +143,10 @@ class PlayerCharacteristicsTest extends GameBaseCase {
 
     @Test
     void rebuildSpecialEffects() throws SQLException, ContainerException, InventoryException {
-        dataSet.pushItemTemplates();
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
 
         gamePlayer().entity.stats().set(Characteristic.VITALITY, 50);
         gamePlayer().inventory().add(container.get(ItemService.class).create(2414, true), 1, 7);

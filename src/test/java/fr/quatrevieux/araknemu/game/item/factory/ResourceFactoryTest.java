@@ -32,7 +32,7 @@ class ResourceFactoryTest extends GameBaseCase {
     @Test
     void createSimple() {
         ItemTemplate template = new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10);
-        Item item = factory.create(template, false);
+        Item item = factory.create(template, null, false);
 
         assertInstanceOf(Resource.class, item);
         assertSame(template, item.template());
@@ -42,7 +42,7 @@ class ResourceFactoryTest extends GameBaseCase {
     @Test
     void createWillFilterNonSpecialEffects() {
         ItemTemplate template = new ItemTemplate(284, Type.POUDRE, "Sel", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_FIRE, 1, 2, 0, "")), 1, "", 0, "", 10);
-        Item item = factory.create(template, false);
+        Item item = factory.create(template, null, false);
 
         assertInstanceOf(Resource.class, item);
         assertSame(template, item.template());
@@ -52,7 +52,7 @@ class ResourceFactoryTest extends GameBaseCase {
     @Test
     void createWithSpecialEffect() {
         ItemTemplate template = new ItemTemplate(284, Type.POUDRE, "Sel", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.NULL1, 0, 0, 0, "test")), 1, "", 0, "", 10);
-        Item item = factory.create(template, false);
+        Item item = factory.create(template, null, false);
 
         assertInstanceOf(Resource.class, item);
         assertSame(template, item.template());
@@ -65,7 +65,7 @@ class ResourceFactoryTest extends GameBaseCase {
     @Test
     void retrieveWithSpecialEffect() {
         ItemTemplate template = new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10);
-        Item item = factory.retrieve(template, Arrays.asList(new ItemTemplateEffectEntry(Effect.NULL1, 0, 0, 0, "test")));
+        Item item = factory.retrieve(template, null, Arrays.asList(new ItemTemplateEffectEntry(Effect.NULL1, 0, 0, 0, "test")));
 
         assertInstanceOf(Resource.class, item);
         assertSame(template, item.template());

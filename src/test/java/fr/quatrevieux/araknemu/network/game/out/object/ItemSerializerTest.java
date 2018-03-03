@@ -27,6 +27,7 @@ class ItemSerializerTest {
                     new PlayerItem(1, 12, 39, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "0d0+2")), 5, 0),
                     new Wearable(
                         new ItemTemplate(39, Type.AMULETTE, "Petite Amulette du Hibou", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "0d0+2")), 4, "", 0, "", 100),
+                        null,
                         Arrays.asList(new CharacteristicEffect(Effect.ADD_INTELLIGENCE, 2, 1, Characteristic.INTELLIGENCE)),
                         new ArrayList<>()
                     )
