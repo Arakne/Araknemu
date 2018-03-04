@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.item.GameItemSet;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.Type;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToCharacteristicMapping;
@@ -29,10 +30,7 @@ class WearableFactoryTest extends GameBaseCase {
 
         dataSet.pushItemSets();
 
-        factory = new WearableFactory(
-            new EffectToCharacteristicMapping(),
-            new EffectToSpecialMapping()
-        );
+        factory = new WearableFactory(container.get(EffectMappers.class));
     }
 
     @Test

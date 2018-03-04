@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToUseMapping;
 import fr.quatrevieux.araknemu.game.item.effect.use.AddLifeEffect;
@@ -27,10 +28,7 @@ class UsableFactoryTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        factory = new UsableFactory(
-            new EffectToUseMapping(),
-            new EffectToSpecialMapping()
-        );
+        factory = new UsableFactory(container.get(EffectMappers.class));
     }
 
     @Test

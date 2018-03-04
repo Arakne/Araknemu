@@ -1,14 +1,14 @@
 package fr.quatrevieux.araknemu.game.item;
 
-import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemSet;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToCharacteristicMapping;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
+import fr.quatrevieux.araknemu.game.item.effect.CharacteristicEffect;
+import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
 import fr.quatrevieux.araknemu.game.item.factory.ItemFactory;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import org.slf4j.Logger;
@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.stream.Collectors;
 
 /**
  * Service for handle items
@@ -26,19 +25,15 @@ final public class ItemService implements PreloadableService {
     final private ItemTemplateRepository repository;
     final private ItemFactory factory;
     final private ItemSetRepository itemSetRepository;
-
-    final private EffectToCharacteristicMapping characteristicMapping;
-    final private EffectToSpecialMapping specialMapping;
+    final private EffectMappers mappers;
 
     final private ConcurrentMap<Integer, GameItemSet> itemSetsById = new ConcurrentHashMap<>();
 
-    public ItemService(ItemTemplateRepository repository, ItemFactory factory, ItemSetRepository itemSetRepository, EffectToCharacteristicMapping characteristicMapping, EffectToSpecialMapping specialMapping) {
+    public ItemService(ItemTemplateRepository repository, ItemFactory factory, ItemSetRepository itemSetRepository, EffectMappers mappers) {
         this.repository = repository;
         this.factory = factory;
         this.itemSetRepository = itemSetRepository;
-
-        this.characteristicMapping = characteristicMapping;
-        this.specialMapping = specialMapping;
+        this.mappers = mappers;
     }
 
     @Override
@@ -116,15 +111,8 @@ final public class ItemService implements PreloadableService {
             bonuses.add(
                 new GameItemSet.Bonus(
                     effects,
-                    effects.stream()
-                        .filter(entry -> entry.effect().type() == Effect.Type.CHARACTERISTIC)
-                        .map(e -> characteristicMapping.create(e.effect(), e.min()))
-                        .collect(Collectors.toList())
-                    ,
-                    effects.stream()
-                        .filter(entry -> entry.effect().type() == Effect.Type.SPECIAL)
-                        .map(e -> specialMapping.create(e, false))
-                        .collect(Collectors.toList())
+                    mappers.get(CharacteristicEffect.class).create(effects),
+                    mappers.get(SpecialEffect.class).create(effects)
                 )
             );
         }

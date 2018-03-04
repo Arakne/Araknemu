@@ -1,28 +1,25 @@
 package fr.quatrevieux.araknemu.game.item.factory;
 
-import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.item.GameItemSet;
+import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
+import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
+import fr.quatrevieux.araknemu.game.item.type.UsableItem;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.Type;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToUseMapping;
-import fr.quatrevieux.araknemu.game.item.type.UsableItem;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Factory for usable items.
  */
 final public class UsableFactory implements ItemFactory {
-    final private EffectToUseMapping useMapping;
-    final private EffectToSpecialMapping specialMapping;
+    final private EffectMappers mappers;
 
-    public UsableFactory(EffectToUseMapping useMapping, EffectToSpecialMapping specialMapping) {
-        this.useMapping = useMapping;
-        this.specialMapping = specialMapping;
+    public UsableFactory(EffectMappers mappers) {
+        this.mappers = mappers;
     }
 
     @Override
@@ -64,16 +61,8 @@ final public class UsableFactory implements ItemFactory {
     private Item create(ItemTemplate template, List<ItemTemplateEffectEntry> effects, boolean maximize) {
         return new UsableItem(
             template,
-            effects
-                .stream()
-                .filter(entry -> entry.effect().type() == Effect.Type.USE)
-                .map(useMapping::create)
-                .collect(Collectors.toList()),
-            effects
-                .stream()
-                .filter(entry -> entry.effect().type() == Effect.Type.SPECIAL)
-                .map(entry -> specialMapping.create(entry, maximize))
-                .collect(Collectors.toList())
+            mappers.get(UseEffect.class).create(effects),
+            mappers.get(SpecialEffect.class).create(effects, true)
         );
     }
 }

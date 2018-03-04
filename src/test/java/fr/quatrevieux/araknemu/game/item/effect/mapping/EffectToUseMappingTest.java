@@ -3,9 +3,13 @@ package fr.quatrevieux.araknemu.game.item.effect.mapping;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,5 +38,19 @@ class EffectToUseMappingTest extends GameBaseCase {
 
         assertEquals(Effect.ADD_CHARACT_AGILITY, effect.effect());
         assertArrayEquals(new int[] {1, 2, 0}, effect.arguments());
+    }
+
+    @Test
+    void createFromList() {
+        List<UseEffect> effects = mapping.create(
+            Arrays.asList(
+                new ItemTemplateEffectEntry(Effect.ADD_LIFE, 10, 100, 0, ""),
+                new ItemTemplateEffectEntry(Effect.SUB_INITIATIVE, 32, 0, 0, "")
+            )
+        );
+
+        assertCount(1, effects);
+        assertEquals(Effect.ADD_LIFE, effects.get(0).effect());
+        assertArrayEquals(new int[] {10, 100, 0}, effects.get(0).arguments());
     }
 }

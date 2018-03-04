@@ -7,6 +7,8 @@ import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.item.effect.CharacteristicEffect;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -92,5 +94,56 @@ class EffectToCharacteristicMappingTest extends TestCase {
 
         assertEquals(Effect.SUB_AGILITY, effect.effect());
         assertEquals(-10, effect.boost());
+    }
+
+    @Test
+    void createFromListMaximize() {
+        List<CharacteristicEffect> effects = mapping.create(
+            Arrays.asList(
+                new ItemTemplateEffectEntry(Effect.SUB_AGILITY, 10, 100, 0, ""),
+                new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 10, 100, 0, ""),
+                new ItemTemplateEffectEntry(Effect.ADD_PODS, 10, 100, 0, "")
+            ),
+            true
+        );
+
+        assertCount(2, effects);
+        assertEquals(Characteristic.AGILITY, effects.get(0).characteristic());
+        assertEquals(-10, effects.get(0).boost());
+        assertEquals(Characteristic.INTELLIGENCE, effects.get(1).characteristic());
+        assertEquals(100, effects.get(1).boost());
+    }
+
+    @Test
+    void createFromListRandom() {
+        List<CharacteristicEffect> effects = mapping.create(
+            Arrays.asList(
+                new ItemTemplateEffectEntry(Effect.SUB_AGILITY, 10, 100, 0, ""),
+                new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 10, 100, 0, ""),
+                new ItemTemplateEffectEntry(Effect.ADD_PODS, 10, 100, 0, "")
+            )
+        );
+
+        assertCount(2, effects);
+        assertEquals(Characteristic.AGILITY, effects.get(0).characteristic());
+        assertBetween(-100, -10, effects.get(0).boost());
+        assertEquals(Characteristic.INTELLIGENCE, effects.get(1).characteristic());
+        assertBetween(10, 100, effects.get(1).boost());
+    }
+
+    @Test
+    void createFromListFixed() {
+        List<CharacteristicEffect> effects = mapping.create(
+            Arrays.asList(
+                new ItemTemplateEffectEntry(Effect.SUB_AGILITY, 10, 0, 0, ""),
+                new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 10, 0, 0, "")
+            )
+        );
+
+        assertCount(2, effects);
+        assertEquals(Characteristic.AGILITY, effects.get(0).characteristic());
+        assertEquals(-10, effects.get(0).boost());
+        assertEquals(Characteristic.INTELLIGENCE, effects.get(1).characteristic());
+        assertEquals(10, effects.get(1).boost());
     }
 }

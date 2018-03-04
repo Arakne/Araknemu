@@ -10,12 +10,14 @@ import fr.quatrevieux.araknemu.game.item.effect.special.SpecialEffectHandler;
 import fr.quatrevieux.araknemu.game.item.effect.special.SubSpecialEffect;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Map item effect to special effect
  */
-final public class EffectToSpecialMapping {
+final public class EffectToSpecialMapping implements EffectMapper<SpecialEffect> {
     final private Map<Effect, SpecialEffectHandler> handlers = new EnumMap<>(Effect.class);
 
     public EffectToSpecialMapping() {
@@ -28,10 +30,23 @@ final public class EffectToSpecialMapping {
         handlers.put(Effect.SUB_INITIATIVE,  new SubSpecialEffect(SpecialEffects.Type.INITIATIVE));
     }
 
-    /**
-     * Create the special effect from template
-     */
+    @Override
     public SpecialEffect create(ItemTemplateEffectEntry entry, boolean maximize) {
         return handlers.getOrDefault(entry.effect(), NullEffectHandler.INSTANCE).create(entry, maximize);
+    }
+
+    @Override
+    public List<SpecialEffect> create(List<ItemTemplateEffectEntry> effects, boolean maximize) {
+        return effects
+            .stream()
+            .filter(effect -> effect.effect().type() == Effect.Type.SPECIAL)
+            .map(effect -> create(effect, maximize))
+            .collect(Collectors.toList())
+        ;
+    }
+
+    @Override
+    public Class<SpecialEffect> type() {
+        return SpecialEffect.class;
     }
 }

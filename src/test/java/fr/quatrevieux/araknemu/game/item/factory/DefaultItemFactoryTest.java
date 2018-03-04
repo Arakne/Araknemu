@@ -1,9 +1,11 @@
 package fr.quatrevieux.araknemu.game.item.factory;
 
+import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.Type;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
@@ -26,11 +28,9 @@ class DefaultItemFactoryTest extends GameBaseCase {
     }
 
     @Test
-    void createSuccess() {
+    void createSuccess() throws ContainerException {
         DefaultItemFactory factory = new DefaultItemFactory(
-            new ResourceFactory(
-                new EffectToSpecialMapping()
-            )
+            new ResourceFactory(container.get(EffectMappers.class))
         );
 
         ItemTemplate template = new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10);
@@ -42,11 +42,9 @@ class DefaultItemFactoryTest extends GameBaseCase {
     }
 
     @Test
-    void retrieveSuccess() {
+    void retrieveSuccess() throws ContainerException {
         DefaultItemFactory factory = new DefaultItemFactory(
-            new ResourceFactory(
-                new EffectToSpecialMapping()
-            )
+            new ResourceFactory(container.get(EffectMappers.class))
         );
 
         ItemTemplate template = new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10);

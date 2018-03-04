@@ -5,15 +5,13 @@ import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.item.effect.CharacteristicEffect;
 
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Map item effect to characteristic
  */
-final public class EffectToCharacteristicMapping {
+final public class EffectToCharacteristicMapping implements EffectMapper<CharacteristicEffect> {
     static private class MappedCharacteristic {
         final private int multiplier;
         final private Characteristic characteristic;
@@ -104,6 +102,26 @@ final public class EffectToCharacteristicMapping {
 
         set(Effect.ADD_TRAP_DAMAGE,         +1, Characteristic.TRAP_BOOST);
         set(Effect.ADD_TRAP_PERCENT_DAMAGE, +1, Characteristic.PERCENT_TRAP_BOOST);
+    }
+
+    @Override
+    public CharacteristicEffect create(ItemTemplateEffectEntry effect, boolean maximize) {
+        return maximize ? createMaximize(effect) : createRandom(effect);
+    }
+
+    @Override
+    public List<CharacteristicEffect> create(List<ItemTemplateEffectEntry> effects, boolean maximize) {
+        return effects
+            .stream()
+            .filter(effect -> effect.effect().type() == Effect.Type.CHARACTERISTIC)
+            .map(effect -> create(effect, maximize))
+            .collect(Collectors.toList())
+        ;
+    }
+
+    @Override
+    public Class<CharacteristicEffect> type() {
+        return CharacteristicEffect.class;
     }
 
     /**

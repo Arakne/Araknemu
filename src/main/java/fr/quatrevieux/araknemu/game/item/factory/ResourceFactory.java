@@ -1,26 +1,25 @@
 package fr.quatrevieux.araknemu.game.item.factory;
 
-import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.item.GameItemSet;
+import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
+import fr.quatrevieux.araknemu.game.item.type.Resource;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.Type;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
-import fr.quatrevieux.araknemu.game.item.type.Resource;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Factory for resources.
  * Will be used as default factory
  */
 final public class ResourceFactory implements ItemFactory {
-    final private EffectToSpecialMapping mapping;
+    final private EffectMappers mappers;
 
-    public ResourceFactory(EffectToSpecialMapping mapping) {
-        this.mapping = mapping;
+    public ResourceFactory(EffectMappers mappers) {
+        this.mappers = mappers;
     }
 
     @Override
@@ -94,11 +93,7 @@ final public class ResourceFactory implements ItemFactory {
     private Item create(ItemTemplate template, List<ItemTemplateEffectEntry> effects, boolean maximize) {
         return new Resource(
             template,
-            effects
-                .stream()
-                .filter(entry -> entry.effect().type() == Effect.Type.SPECIAL)
-                .map(entry -> mapping.create(entry, maximize))
-                .collect(Collectors.toList())
+            mappers.get(SpecialEffect.class).create(effects, maximize)
         );
     }
 }

@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToCharacteristicMapping;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
 import fr.quatrevieux.araknemu.game.item.factory.ItemFactory;
@@ -38,8 +39,7 @@ class ItemServiceTest extends GameBaseCase {
             container.get(ItemTemplateRepository.class),
             container.get(ItemFactory.class),
             container.get(ItemSetRepository.class),
-            container.get(EffectToCharacteristicMapping.class),
-            container.get(EffectToSpecialMapping.class)
+            container.get(EffectMappers.class)
         );
     }
 

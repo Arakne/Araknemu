@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.Type;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToCharacteristicMapping;
@@ -25,11 +26,7 @@ class WeaponFactoryTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        factory = new WeaponFactory(
-            new EffectToWeaponMapping(),
-            new EffectToCharacteristicMapping(),
-            new EffectToSpecialMapping()
-        );
+        factory = new WeaponFactory(container.get(EffectMappers.class));
     }
 
     @Test

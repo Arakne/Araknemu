@@ -37,13 +37,10 @@ import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.handler.loader.*;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.*;
 import fr.quatrevieux.araknemu.game.item.factory.*;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToCharacteristicMapping;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToUseMapping;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToWeaponMapping;
 import fr.quatrevieux.araknemu.network.adapter.Server;
 import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
 import fr.quatrevieux.araknemu.network.adapter.netty.NettyServer;
@@ -310,8 +307,7 @@ final public class GameModule implements ContainerModule {
                 container.get(ItemTemplateRepository.class),
                 container.get(ItemFactory.class),
                 container.get(ItemSetRepository.class),
-                container.get(EffectToCharacteristicMapping.class),
-                container.get(EffectToSpecialMapping.class)
+                container.get(EffectMappers.class)
             )
         );
 
@@ -338,44 +334,22 @@ final public class GameModule implements ContainerModule {
         );
 
         configurator.persist(
-            EffectToCharacteristicMapping.class,
-            container -> new EffectToCharacteristicMapping()
-        );
-
-        configurator.persist(
-            EffectToSpecialMapping.class,
-            container -> new EffectToSpecialMapping()
-        );
-
-        configurator.persist(
-            EffectToWeaponMapping.class,
-            container -> new EffectToWeaponMapping()
-        );
-
-        configurator.persist(
-            EffectToUseMapping.class,
-            container -> new EffectToUseMapping()
+            EffectMappers.class,
+            container -> new EffectMappers(
+                new EffectToSpecialMapping(),
+                new EffectToWeaponMapping(),
+                new EffectToCharacteristicMapping(),
+                new EffectToUseMapping()
+            )
         );
 
         configurator.persist(
             ItemFactory.class,
             container -> new DefaultItemFactory(
-                new ResourceFactory(
-                    container.get(EffectToSpecialMapping.class)
-                ),
-                new WeaponFactory(
-                    container.get(EffectToWeaponMapping.class),
-                    container.get(EffectToCharacteristicMapping.class),
-                    container.get(EffectToSpecialMapping.class)
-                ),
-                new WearableFactory(
-                    container.get(EffectToCharacteristicMapping.class),
-                    container.get(EffectToSpecialMapping.class)
-                ),
-                new UsableFactory(
-                    container.get(EffectToUseMapping.class),
-                    container.get(EffectToSpecialMapping.class)
-                )
+                new ResourceFactory(container.get(EffectMappers.class)),
+                new WeaponFactory(container.get(EffectMappers.class)),
+                new WearableFactory(container.get(EffectMappers.class)),
+                new UsableFactory(container.get(EffectMappers.class))
             )
         );
     }
