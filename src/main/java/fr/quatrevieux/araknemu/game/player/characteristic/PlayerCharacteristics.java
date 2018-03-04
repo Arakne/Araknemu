@@ -164,6 +164,8 @@ final public class PlayerCharacteristics implements Characteristics {
                 effect.apply(player);
             }
         }
+
+        player.inventory().itemSets().applySpecials(player);
     }
 
     /**
@@ -175,6 +177,8 @@ final public class PlayerCharacteristics implements Characteristics {
         for (Equipment equipment : player.inventory().equipments()) {
             equipment.apply(characteristics);
         }
+
+        player.inventory().itemSets().apply(characteristics);
 
         return characteristics;
     }

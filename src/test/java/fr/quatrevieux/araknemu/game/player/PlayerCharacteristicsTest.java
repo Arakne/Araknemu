@@ -10,6 +10,8 @@ import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.characteristic.BaseCharacteristics;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
 import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.BeltSlot;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.BootsSlot;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
@@ -72,8 +74,55 @@ class PlayerCharacteristicsTest extends GameBaseCase {
         characteristics.rebuildStuffStats();
 
         assertNotNull(ref.get());
-        assertEquals(50, characteristics.stuff().get(Characteristic.INTELLIGENCE));
-        assertEquals(50, characteristics.stuff().get(Characteristic.STRENGTH));
+        assertEquals(55, characteristics.stuff().get(Characteristic.INTELLIGENCE));
+        assertEquals(55, characteristics.stuff().get(Characteristic.STRENGTH));
+    }
+
+    @Test
+    void rebuildStuffStatsWithFullItemSet() throws SQLException, ContainerException, InventoryException {
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
+
+        gamePlayer().inventory().add(container.get(ItemService.class).create(2411, true), 1, 6);
+        gamePlayer().inventory().add(container.get(ItemService.class).create(2414, true), 1, 7);
+        gamePlayer().inventory().add(container.get(ItemService.class).create(2416, true), 1, 1);
+        gamePlayer().inventory().add(container.get(ItemService.class).create(2419, true), 1, 2);
+        gamePlayer().inventory().add(container.get(ItemService.class).create(2422, true), 1, 5);
+        gamePlayer().inventory().add(container.get(ItemService.class).create(2425, true), 1, 0);
+        gamePlayer().inventory().add(container.get(ItemService.class).create(2428, true), 1, 3);
+
+        characteristics.rebuildStuffStats();
+
+        assertEquals(100, gamePlayer().characteristics().stuff().get(Characteristic.STRENGTH));
+        assertEquals(100, gamePlayer().characteristics().stuff().get(Characteristic.INTELLIGENCE));
+        assertEquals(20, gamePlayer().characteristics().stuff().get(Characteristic.WISDOM));
+        assertEquals(139, gamePlayer().characteristics().stuff().get(Characteristic.VITALITY));
+        assertEquals(5, gamePlayer().characteristics().stuff().get(Characteristic.FIXED_DAMAGE));
+        assertEquals(15, gamePlayer().characteristics().stuff().get(Characteristic.PERCENT_DAMAGE));
+        assertEquals(1, gamePlayer().characteristics().stuff().get(Characteristic.ACTION_POINT));
+        assertEquals(1, gamePlayer().characteristics().stuff().get(Characteristic.MAX_SUMMONED_CREATURES));
+    }
+
+    @Test
+    void rebuildSpecialEffectsWithItemSetWithSpecialEffects() throws ContainerException, SQLException, InventoryException {
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
+
+        gamePlayer().inventory().add(container.get(ItemService.class).create(8213), 1, 0);
+        gamePlayer().inventory().add(container.get(ItemService.class).create(8219), 1, 2);
+        gamePlayer().inventory().add(container.get(ItemService.class).create(8225), 1, BootsSlot.SLOT_ID);
+        gamePlayer().inventory().add(container.get(ItemService.class).create(8231), 1, 7);
+        gamePlayer().inventory().add(container.get(ItemService.class).create(8237), 1, BeltSlot.SLOT_ID);
+        gamePlayer().inventory().add(container.get(ItemService.class).create(8243), 1, 6);
+
+        gamePlayer().characteristics().specials().clear();
+        characteristics.rebuildSpecialEffects();
+
+        assertEquals(60, gamePlayer().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
     }
 
     @Test
@@ -89,8 +138,8 @@ class PlayerCharacteristicsTest extends GameBaseCase {
         base.set(Characteristic.INTELLIGENCE, 250);
         characteristics.rebuildStuffStats();
 
-        assertEquals(300, characteristics.get(Characteristic.INTELLIGENCE));
-        assertEquals(100, characteristics.get(Characteristic.STRENGTH));
+        assertEquals(305, characteristics.get(Characteristic.INTELLIGENCE));
+        assertEquals(105, characteristics.get(Characteristic.STRENGTH));
     }
 
     @Test

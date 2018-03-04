@@ -1,8 +1,11 @@
 package fr.quatrevieux.araknemu.game.player.inventory.itemset;
 
 import fr.quatrevieux.araknemu.game.item.GameItemSet;
+import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 import fr.quatrevieux.araknemu.game.item.type.Equipment;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 
 import java.util.Collection;
@@ -54,5 +57,23 @@ final public class ItemSets {
         }
 
         return sets.values();
+    }
+
+    /**
+     * Apply item set effects to player characteristics
+     */
+    public void apply(MutableCharacteristics characteristics) {
+        for (PlayerItemSet itemSet : all()) {
+            itemSet.apply(characteristics);
+        }
+    }
+
+    /**
+     * Apply special effects
+     */
+    public void applySpecials(GamePlayer player) {
+        for (PlayerItemSet itemSet : all()) {
+            itemSet.applySpecials(player);
+        }
     }
 }

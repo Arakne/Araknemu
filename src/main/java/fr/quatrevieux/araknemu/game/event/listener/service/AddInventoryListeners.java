@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.game.event.Listener;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.event.listener.player.inventory.*;
+import fr.quatrevieux.araknemu.game.event.listener.player.inventory.itemset.ApplyItemSetSpecialEffects;
 import fr.quatrevieux.araknemu.game.event.listener.player.inventory.itemset.InitializeItemSets;
 import fr.quatrevieux.araknemu.game.event.listener.player.inventory.itemset.SendItemSetChange;
 
@@ -32,10 +33,12 @@ final public class AddInventoryListeners implements Listener<PlayerLoaded> {
         dispatcher.add(new SaveItemQuantity(repository));
         dispatcher.add(new SaveDeletedItem(repository));
 
-        dispatcher.add(new UpdateStuffStats(event.player()));
-
         dispatcher.add(new InitializeItemSets(event.player()));
         dispatcher.add(new SendItemSetChange(event.player()));
+        dispatcher.add(new ApplyItemSetSpecialEffects(event.player()));
+
+        // Must be the last registered listener : the stats will be sent
+        dispatcher.add(new UpdateStuffStats(event.player()));
     }
 
     @Override

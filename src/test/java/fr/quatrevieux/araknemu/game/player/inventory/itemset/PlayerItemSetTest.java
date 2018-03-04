@@ -1,13 +1,20 @@
 package fr.quatrevieux.araknemu.game.player.inventory.itemset;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -68,5 +75,75 @@ class PlayerItemSetTest extends GameBaseCase {
         assertEquals(5, set.bonus().characteristics().get(0).value());
         assertEquals(Effect.ADD_INTELLIGENCE, set.bonus().characteristics().get(1).effect());
         assertEquals(5, set.bonus().characteristics().get(1).value());
+    }
+
+    @Test
+    void apply() throws ContainerException {
+        PlayerItemSet set = new PlayerItemSet(service.itemSet(1));
+
+        set.add(container.get(ItemTemplateRepository.class).get(2411));
+        set.add(container.get(ItemTemplateRepository.class).get(2414));
+
+        MutableCharacteristics characteristics = new DefaultCharacteristics();
+
+        set.apply(characteristics);
+
+        assertEquals(5, characteristics.get(Characteristic.STRENGTH));
+        assertEquals(5, characteristics.get(Characteristic.INTELLIGENCE));
+    }
+
+    @Test
+    void applySpecials() throws ContainerException, SQLException {
+        PlayerItemSet set = new PlayerItemSet(service.itemSet(60));
+
+        set.add(container.get(ItemTemplateRepository.class).get(8213));
+        set.add(container.get(ItemTemplateRepository.class).get(8219));
+        set.add(container.get(ItemTemplateRepository.class).get(8225));
+        set.add(container.get(ItemTemplateRepository.class).get(8231));
+        set.add(container.get(ItemTemplateRepository.class).get(8237));
+        set.add(container.get(ItemTemplateRepository.class).get(8243));
+
+        GamePlayer player = gamePlayer();
+
+        set.applySpecials(player);
+
+        assertEquals(60, player.characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
+    }
+
+    @Test
+    void applyCurrentBonus() throws ContainerException, SQLException {
+        GamePlayer player = gamePlayer();
+        PlayerItemSet set = new PlayerItemSet(service.itemSet(60));
+
+        set.add(container.get(ItemTemplateRepository.class).get(8213));
+        set.add(container.get(ItemTemplateRepository.class).get(8219));
+        set.add(container.get(ItemTemplateRepository.class).get(8225));
+        set.add(container.get(ItemTemplateRepository.class).get(8231));
+        set.add(container.get(ItemTemplateRepository.class).get(8237));
+
+        set.applySpecials(player);
+        assertEquals(30, player.characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
+
+        set.add(container.get(ItemTemplateRepository.class).get(8243));
+        set.applyCurrentBonus(player);
+
+        assertEquals(60, player.characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
+    }
+
+    @Test
+    void relieveLastBonus() throws ContainerException, SQLException {
+        GamePlayer player = gamePlayer();
+        PlayerItemSet set = new PlayerItemSet(service.itemSet(60));
+
+        player.characteristics().specials().add(SpecialEffects.Type.INITIATIVE, 60);
+
+        set.add(container.get(ItemTemplateRepository.class).get(8213));
+        set.add(container.get(ItemTemplateRepository.class).get(8219));
+        set.add(container.get(ItemTemplateRepository.class).get(8225));
+        set.add(container.get(ItemTemplateRepository.class).get(8231));
+        set.add(container.get(ItemTemplateRepository.class).get(8237));
+
+        set.relieveLastBonus(player);
+        assertEquals(30, player.characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
     }
 }

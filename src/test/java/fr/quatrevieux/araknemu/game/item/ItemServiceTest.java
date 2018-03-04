@@ -50,10 +50,10 @@ class ItemServiceTest extends GameBaseCase {
         service.preload(logger);
 
         Mockito.verify(logger).info("Loading item sets...");
-        Mockito.verify(logger).info("Successfully load {} item sets", 2);
+        Mockito.verify(logger).info("Successfully load {} item sets", 3);
 
         Mockito.verify(logger).info("Loading items...");
-        Mockito.verify(logger).info("Successfully load {} items", 12);
+        Mockito.verify(logger).info("Successfully load {} items", 18);
     }
 
     @Test

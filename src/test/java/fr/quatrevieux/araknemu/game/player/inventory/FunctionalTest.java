@@ -8,8 +8,10 @@ import fr.quatrevieux.araknemu.game.event.inventory.EquipmentChanged;
 import fr.quatrevieux.araknemu.game.event.inventory.ObjectQuantityChanged;
 import fr.quatrevieux.araknemu.game.event.listener.player.SendStats;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
 import fr.quatrevieux.araknemu.game.player.inventory.itemset.PlayerItemSet;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.AmuletSlot;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.BootsSlot;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.HelmetSlot;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.BadLevelException;
@@ -400,14 +402,12 @@ public class FunctionalTest extends GameBaseCase {
     }
 
     @Test
-    void equipWithItemSetAlreadySet() throws InventoryException {
-        inventory.add(itemService.create(2411), 1, HelmetSlot.SLOT_ID);
+    void equipWithItemSetAlreadySet() throws InventoryException, SQLException, ContainerException {
+        inventory.add(itemService.create(2411, true), 1, HelmetSlot.SLOT_ID);
         InventoryEntry entry = inventory.add(itemService.create(2425, true));
         requestStack.clear();
 
         entry.move(0, 1);
-
-        // @todo check stats
 
         PlayerItemSet itemSet = inventory.itemSets().get(entry.item().set().get());
 
@@ -415,6 +415,9 @@ public class FunctionalTest extends GameBaseCase {
         assertCount(2, itemSet.bonus().characteristics());
         assertEquals(Effect.ADD_STRENGTH, itemSet.bonus().characteristics().get(0).effect());
         assertEquals(Effect.ADD_INTELLIGENCE, itemSet.bonus().characteristics().get(1).effect());
+
+        assertEquals(55, gamePlayer().characteristics().stuff().get(Characteristic.STRENGTH));
+        assertEquals(55, gamePlayer().characteristics().stuff().get(Characteristic.INTELLIGENCE));
 
         requestStack.assertOne(
             new UpdateItemSet(itemSet)
@@ -428,8 +431,6 @@ public class FunctionalTest extends GameBaseCase {
 
         entry.move(-1, 1);
 
-        // @todo check stats
-
         PlayerItemSet itemSet = inventory.itemSets().get(entry.item().set().get());
 
         assertCount(0, itemSet.items());
@@ -439,5 +440,30 @@ public class FunctionalTest extends GameBaseCase {
         requestStack.assertOne(
             new UpdateItemSet(itemSet)
         );
+    }
+
+    @Test
+    void equipItemSetWillUpdateSpecialEffects() throws ContainerException, InventoryException, SQLException {
+        inventory.add(container.get(ItemService.class).create(8213), 1, 0);
+        inventory.add(container.get(ItemService.class).create(8219), 1, 2);
+        inventory.add(container.get(ItemService.class).create(8225), 1, BootsSlot.SLOT_ID);
+        inventory.add(container.get(ItemService.class).create(8231), 1, 7);
+
+        InventoryEntry entry = inventory.add(container.get(ItemService.class).create(8243), 1, -1);
+        entry.move(6, 1);
+
+        assertEquals(30, gamePlayer().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
+    }
+
+    @Test
+    void unequipItemSetWillUpdateSpecialEffects() throws ContainerException, InventoryException, SQLException {
+        inventory.add(container.get(ItemService.class).create(8213), 1, 0);
+        inventory.add(container.get(ItemService.class).create(8219), 1, 2);
+        inventory.add(container.get(ItemService.class).create(8225), 1, BootsSlot.SLOT_ID);
+        inventory.add(container.get(ItemService.class).create(8231), 1, 7);
+        InventoryEntry entry = inventory.add(container.get(ItemService.class).create(8243), 1, 6);
+        entry.move(-1, 1);
+
+        assertEquals(0, gamePlayer().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
     }
 }

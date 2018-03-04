@@ -60,6 +60,6 @@ class ItemSetRepositoryTest extends GameBaseCase {
     void load() {
         Collection<ItemSet> sets = repository.load();
 
-        assertCount(2, sets);
+        assertCount(3, sets);
     }
 }

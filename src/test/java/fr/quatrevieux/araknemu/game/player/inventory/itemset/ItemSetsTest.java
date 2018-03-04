@@ -1,10 +1,18 @@
 package fr.quatrevieux.araknemu.game.player.inventory.itemset;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Effect;
+import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.BeltSlot;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.BootsSlot;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -104,5 +112,34 @@ class ItemSetsTest extends GameBaseCase {
             sets.get(1).items(),
             entry3.item().template()
         );
+    }
+
+    @Test
+    void apply() throws SQLException, ContainerException, InventoryException {
+        gamePlayer().inventory().add(service.create(2425), 1, 0);
+        gamePlayer().inventory().add(service.create(2414), 1, 7);
+        gamePlayer().inventory().add(service.create(2641), 1, 6);
+
+        MutableCharacteristics characteristics = new DefaultCharacteristics();
+
+        itemSets.apply(characteristics);
+
+        assertEquals(5, characteristics.get(Characteristic.STRENGTH));
+        assertEquals(5, characteristics.get(Characteristic.INTELLIGENCE));
+    }
+
+    @Test
+    void applySpecials() throws SQLException, ContainerException, InventoryException {
+        gamePlayer().inventory().add(service.create(8213), 1, 0);
+        gamePlayer().inventory().add(service.create(8219), 1, 2);
+        gamePlayer().inventory().add(service.create(8225), 1, BootsSlot.SLOT_ID);
+        gamePlayer().inventory().add(service.create(8231), 1, 7);
+        gamePlayer().inventory().add(service.create(8237), 1, BeltSlot.SLOT_ID);
+        gamePlayer().inventory().add(service.create(8243), 1, 6);
+
+        gamePlayer().characteristics().specials().clear();
+        itemSets.applySpecials(gamePlayer());
+
+        assertEquals(60, gamePlayer().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
     }
 }

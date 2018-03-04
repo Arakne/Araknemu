@@ -203,6 +203,13 @@ public class GameDataSet extends TestingDataSet {
 
         pushItemTemplate(new ItemTemplate(2641, Type.COIFFE, "Toady", 30, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_AGILITY, 11, 60, 0, "1d50+10")), 10, "", 7, "", 2700));
 
+        pushItemTemplate(new ItemTemplate(8213, Type.AMULETTE, "Amulette du Piou Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, "0d0+1")), 1, "", 60, "", 1));
+        pushItemTemplate(new ItemTemplate(8219, Type.ANNEAU, "Anneau du Piou Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, "0d0+1")), 1, "", 60, "", 1));
+        pushItemTemplate(new ItemTemplate(8225, Type.BOTTES, "Sandales du Piou Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, "0d0+1")), 1, "", 60, "", 1));
+        pushItemTemplate(new ItemTemplate(8231, Type.CAPE, "Cape du Piou Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, "0d0+1")), 10, "", 60, "", 100));
+        pushItemTemplate(new ItemTemplate(8237, Type.CEINTURE, "Ceinture du Piou Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, "0d0+1")), 1, "", 60, "", 1));
+        pushItemTemplate(new ItemTemplate(8243, Type.COIFFE, "Chapeau du Piou Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, "0d0+1")), 1, "", 60, "", 1));
+
         return this;
     }
 
@@ -287,8 +294,33 @@ public class GameDataSet extends TestingDataSet {
             7, "Panoplie de Toady",
             Arrays.asList(
                 Arrays.asList(
-                    new ItemTemplateEffectEntry(Effect.ADD_AGILITY, 50, 0, 0, ""),
+                    new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, ""),
                     new ItemTemplateEffectEntry(Effect.ADD_DAMAGE, 5, 0, 0, "")
+                )
+            )
+        ));
+
+        pushItemSet(new ItemSet(
+            60, "Panoplie du Piou Rouge",
+            Arrays.asList(
+                Arrays.asList(
+                    new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, "")
+                ),
+                Arrays.asList(
+                    new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "")
+                ),
+                Arrays.asList(
+                    new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 4, 0, 0, "")
+                ),
+                Arrays.asList(
+                    new ItemTemplateEffectEntry(Effect.ADD_INITIATIVE, 30, 0, 0, ""),
+                    new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 8, 0, 0, "")
+                ),
+                Arrays.asList(
+                    new ItemTemplateEffectEntry(Effect.ADD_INITIATIVE, 60, 0, 0, ""),
+                    new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 16, 0, 0, ""),
+                    new ItemTemplateEffectEntry(Effect.ADD_HEAL_POINTS, 1, 0, 0, ""),
+                    new ItemTemplateEffectEntry(Effect.ADD_DAMAGE, 1, 0, 0, "")
                 )
             )
         ));
