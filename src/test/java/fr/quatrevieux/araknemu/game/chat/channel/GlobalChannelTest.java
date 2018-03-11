@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.chat.channel;
 
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
+import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
@@ -35,8 +36,12 @@ class GlobalChannelTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushRaces();
-        dataSet.use(PlayerItem.class);
+        dataSet
+            .pushRaces()
+            .pushSpells()
+            .use(PlayerSpell.class)
+            .use(PlayerItem.class)
+        ;
 
         receivers = new HashSet<>();
 

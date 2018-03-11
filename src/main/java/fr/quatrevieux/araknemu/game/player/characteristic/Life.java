@@ -88,10 +88,7 @@ final public class Life {
     }
 
     private int computeMaxLife() {
-        return player.race().startLife()
-            + (entity.level() - 1) * player.race().perLevelLife()
-            + player.characteristics().get(Characteristic.VITALITY)
-        ;
+        return player.race().life(entity.level()) + player.characteristics().get(Characteristic.VITALITY);
     }
 
     private void init() {

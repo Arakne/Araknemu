@@ -11,6 +11,7 @@ import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceReposit
 import fr.quatrevieux.araknemu.game.account.exception.CharacterCreationException;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.common.PlayerDeleted;
+import fr.quatrevieux.araknemu.game.event.manage.CharacterCreated;
 import fr.quatrevieux.araknemu.game.event.manage.CharacterCreationStarted;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.AccessoryType;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.EmptyAccessories;
@@ -55,12 +56,16 @@ final public class CharactersService {
         try {
             dispatcher.dispatch(new CharacterCreationStarted(character));
 
-            return new AccountCharacter(
+            character = new AccountCharacter(
                 character.account(),
                 repository.add(
                     character.character()
                 )
             );
+
+            dispatcher.dispatch(new CharacterCreated(character));
+
+            return character;
         } catch (RepositoryException e) {
             throw new CharacterCreationException(e);
         }

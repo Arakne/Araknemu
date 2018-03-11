@@ -9,6 +9,8 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collection;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -71,5 +73,19 @@ class PlayerRaceRepositoryCacheTest extends GameBaseCase {
     void hasNotLoaded() {
         assertTrue(repository.has(new PlayerRace(Race.CRA)));
         assertFalse(repository.has(new PlayerRace(Race.NO_CLASS)));
+    }
+
+    @Test
+    void load() {
+        Collection<PlayerRace> races = repository.load();
+
+        assertCount(12, races);
+
+        for (PlayerRace race : races) {
+            assertSame(
+                race,
+                repository.get(race)
+            );
+        }
     }
 }

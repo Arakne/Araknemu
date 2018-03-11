@@ -7,10 +7,7 @@ import fr.quatrevieux.araknemu.data.transformer.ImmutableCharacteristicsTransfor
 import fr.quatrevieux.araknemu.data.world.repository.implementation.local.ItemSetRepositoryCache;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.local.ItemTemplateRepositoryCache;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.local.PlayerRaceRepositoryCache;
-import fr.quatrevieux.araknemu.data.world.transformer.BoostStatsDataTransformer;
-import fr.quatrevieux.araknemu.data.world.transformer.ItemEffectsTransformer;
-import fr.quatrevieux.araknemu.data.world.transformer.ItemSetBonusTransformer;
-import fr.quatrevieux.araknemu.data.world.transformer.MapCellTransformer;
+import fr.quatrevieux.araknemu.data.world.transformer.*;
 
 /**
  * DI module for world repositories
@@ -69,6 +66,14 @@ final public class WorldRepositoriesModule implements ContainerModule {
         );
 
         configurator.persist(
+            fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository.class,
+            container -> new SpellTemplateRepository(
+                connection,
+                container.get(SpellTemplateLevelTransformer.class)
+            )
+        );
+
+        configurator.persist(
             ImmutableCharacteristicsTransformer.class,
             container -> new ImmutableCharacteristicsTransformer()
         );
@@ -91,6 +96,11 @@ final public class WorldRepositoriesModule implements ContainerModule {
         configurator.persist(
             ItemSetBonusTransformer.class,
             container -> new ItemSetBonusTransformer()
+        );
+
+        configurator.persist(
+            SpellTemplateLevelTransformer.class,
+            container -> new SpellTemplateLevelTransformer()
         );
     }
 }

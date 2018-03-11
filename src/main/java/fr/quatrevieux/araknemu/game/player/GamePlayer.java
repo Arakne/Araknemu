@@ -13,6 +13,8 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.player.characteristic.Life;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
+import fr.quatrevieux.araknemu.game.player.race.GamePlayerRace;
+import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 import java.util.Set;
@@ -24,20 +26,22 @@ import java.util.Set;
 final public class GamePlayer extends AbstractCharacter implements Dispatcher, PlayerData {
     final private PlayerService service;
     final private GameSession session;
-    final private PlayerRace race;
+    final private GamePlayerRace race;
     final private PlayerCharacteristics characteristics;
     final private Set<ChannelType> channels;
     final private PlayerInventory inventory;
     final private Life life;
+    final private SpellBook spells;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
-    public GamePlayer(GameAccount account, Player entity, PlayerRace race, GameSession session, PlayerService service, PlayerInventory inventory) {
+    public GamePlayer(GameAccount account, Player entity, GamePlayerRace race, GameSession session, PlayerService service, PlayerInventory inventory, SpellBook spells) {
         super(account, entity);
 
         this.race = race;
         this.session = session;
         this.service = service;
+        this.spells = spells;
         this.channels = new ChannelSet(entity.channels(), dispatcher);
         this.inventory = inventory.attach(this);
 
@@ -91,7 +95,7 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
     /**
      * Get the player race
      */
-    public PlayerRace race() {
+    public GamePlayerRace race() {
         return race;
     }
 
@@ -147,5 +151,9 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
      */
     public int level() {
         return entity.level();
+    }
+
+    public SpellBook spells() {
+        return spells;
     }
 }

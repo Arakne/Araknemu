@@ -8,6 +8,8 @@ import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
+import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
+import fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
@@ -41,6 +43,9 @@ import fr.quatrevieux.araknemu.game.item.effect.mapping.*;
 import fr.quatrevieux.araknemu.game.item.factory.*;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
+import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
+import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
+import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.network.adapter.Server;
 import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
 import fr.quatrevieux.araknemu.network.adapter.netty.NettyServer;
@@ -81,7 +86,10 @@ final public class GameModule implements ContainerModule {
                     container.get(AreaService.class),
                     container.get(ExplorationMapService.class),
                     container.get(ChatService.class),
-                    container.get(ItemService.class)
+                    container.get(ItemService.class),
+                    container.get(SpellService.class),
+                    container.get(PlayerRaceService.class),
+                    container.get(SpellBookService.class)
                 )
             )
         );
@@ -184,10 +192,11 @@ final public class GameModule implements ContainerModule {
             PlayerService.class,
             container -> new PlayerService(
                 container.get(PlayerRepository.class),
-                container.get(PlayerRaceRepository.class),
                 container.get(GameConfiguration.class),
                 container.get(fr.quatrevieux.araknemu.game.event.Dispatcher.class),
-                container.get(InventoryService.class)
+                container.get(InventoryService.class),
+                container.get(PlayerRaceService.class),
+                container.get(SpellBookService.class)
             )
         );
 
@@ -308,6 +317,31 @@ final public class GameModule implements ContainerModule {
                 container.get(ItemFactory.class),
                 container.get(ItemSetRepository.class),
                 container.get(EffectMappers.class)
+            )
+        );
+
+        configurator.persist(
+            SpellService.class,
+            container -> new SpellService(
+                container.get(SpellTemplateRepository.class)
+            )
+        );
+
+        configurator.persist(
+            PlayerRaceService.class,
+            container -> new PlayerRaceService(
+                container.get(PlayerRaceRepository.class),
+                container.get(SpellService.class)
+            )
+        );
+
+        configurator.persist(
+            SpellBookService.class,
+            container -> new SpellBookService(
+                container.get(PlayerSpellRepository.class),
+                container.get(SpellService.class),
+                container.get(PlayerRaceService.class),
+                container.get(ListenerAggregate.class)
             )
         );
 

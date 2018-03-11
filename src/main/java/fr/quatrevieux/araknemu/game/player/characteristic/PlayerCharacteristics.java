@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.common.CharacteristicsChanged;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.race.GamePlayerRace;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
@@ -21,7 +22,7 @@ final public class PlayerCharacteristics implements Characteristics {
     final private MutableCharacteristics base;
     final private Dispatcher dispatcher;
     final private Player entity;
-    final private PlayerRace race;
+    final private GamePlayerRace race;
     final private GamePlayer player;
 
     final private SpecialEffects specials = new SpecialEffects();
@@ -87,7 +88,7 @@ final public class PlayerCharacteristics implements Characteristics {
      * Boost a characteristic
      */
     public void boostCharacteristic(Characteristic characteristic) {
-        BoostStatsData.Interval interval = race.boostStats().get(
+        BoostStatsData.Interval interval = race.boost(
             characteristic,
             base.get(characteristic)
         );
@@ -121,7 +122,7 @@ final public class PlayerCharacteristics implements Characteristics {
      * Get the current player initiative
      */
     public int initiative() {
-        int base = player.life().max() / (4 * race.boostStats().get(Characteristic.VITALITY, 0).boost());
+        int base = race.initiative(player.life().max());
 
         base += get(Characteristic.STRENGTH);
         base += get(Characteristic.LUCK);

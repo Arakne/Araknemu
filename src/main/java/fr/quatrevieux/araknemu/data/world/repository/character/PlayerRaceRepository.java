@@ -5,6 +5,8 @@ import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 
+import java.util.Collection;
+
 /**
  * Read only repository for {@link PlayerRace}
  */
@@ -16,4 +18,9 @@ public interface PlayerRaceRepository extends Repository<PlayerRace> {
      * @throws RepositoryException When an error occurs during retrieving data
      */
     PlayerRace get(Race race) throws RepositoryException;
+
+    /**
+     * Load all player races
+     */
+    public Collection<PlayerRace> load();
 }

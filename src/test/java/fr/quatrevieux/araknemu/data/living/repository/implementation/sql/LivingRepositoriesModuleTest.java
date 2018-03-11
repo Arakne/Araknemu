@@ -24,6 +24,7 @@ class LivingRepositoriesModuleTest extends RealmBaseCase {
         assertInstanceOf(PlayerRepository.class, container.get(fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository.class));
         assertInstanceOf(SubAreaRepository.class, container.get(fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository.class));
         assertInstanceOf(PlayerItemRepository.class, container.get(fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository.class));
+        assertInstanceOf(PlayerSpellRepository.class, container.get(fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository.class));
 
         assertInstanceOf(PermissionsTransformer.class, container.get(PermissionsTransformer.class));
     }

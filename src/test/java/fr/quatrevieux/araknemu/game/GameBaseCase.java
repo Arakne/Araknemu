@@ -8,12 +8,14 @@ import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
 import fr.quatrevieux.araknemu.core.dbal.DatabaseConfiguration;
 import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
+import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
 import fr.quatrevieux.araknemu.core.di.*;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.environment.SubArea;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
+import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
 import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.LivingRepositoriesModule;
 import fr.quatrevieux.araknemu.data.constant.Race;
@@ -22,12 +24,15 @@ import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
+import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
+import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemSet;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
+import fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.sql.WorldRepositoriesModule;
@@ -39,14 +44,15 @@ import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
-import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.exploration.StartExploration;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
+import fr.quatrevieux.araknemu.game.player.race.GamePlayerRace;
+import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
+import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
@@ -192,6 +198,8 @@ public class GameBaseCase extends DatabaseTestCase {
             .declare(ItemTemplate.class, ItemTemplateRepository.class)
             .declare(PlayerItem.class, PlayerItemRepository.class)
             .declare(ItemSet.class, ItemSetRepository.class)
+            .declare(SpellTemplate.class, SpellTemplateRepository.class)
+            .declare(PlayerSpell.class, PlayerSpellRepository.class)
         ;
     }
 
@@ -219,7 +227,10 @@ public class GameBaseCase extends DatabaseTestCase {
     }
 
     public GamePlayer gamePlayer(boolean load) throws ContainerException, SQLException {
-        dataSet.use(PlayerItem.class);
+        dataSet
+            .use(PlayerItem.class)
+            .use(PlayerSpell.class)
+        ;
 
         if (!session.isLogged()) {
             login();
@@ -229,7 +240,10 @@ public class GameBaseCase extends DatabaseTestCase {
             return session.player();
         }
 
-        dataSet.pushRaces();
+        dataSet
+            .pushSpells()
+            .pushRaces()
+        ;
 
         MutableCharacteristics characteristics = new DefaultCharacteristics();
 
@@ -243,10 +257,11 @@ public class GameBaseCase extends DatabaseTestCase {
                 new GamePlayer(
                     session.account(),
                     player,
-                    dataSet.repository(PlayerRace.class).get(new PlayerRace(Race.FECA)),
+                    container.get(PlayerRaceService.class).get(Race.FECA),
                     session,
                     container.get(PlayerService.class),
-                    container.get(InventoryService.class).load(player)
+                    container.get(InventoryService.class).load(player),
+                    container.get(SpellBookService.class).load(player)
                 )
             );
         } else {
@@ -288,8 +303,15 @@ public class GameBaseCase extends DatabaseTestCase {
     }
 
     public GamePlayer makeOtherPlayer(int level) throws Exception {
-        dataSet.pushRaces();
-        dataSet.use(PlayerItem.class);
+        dataSet
+            .pushSpells()
+            .pushRaces()
+        ;
+
+        dataSet
+            .use(PlayerItem.class)
+            .use(PlayerSpell.class)
+        ;
 
         Player player = dataSet.push(new Player(-1, 5, 2, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1), level, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, -1));
         GameSession session = new GameSession(new DummyChannel());
@@ -321,8 +343,12 @@ public class GameBaseCase extends DatabaseTestCase {
     }
 
     public GamePlayer makeSimpleGamePlayer(int id, GameSession session) throws ContainerException, SQLException {
-        dataSet.use(PlayerItem.class);
-        dataSet.pushRaces();
+        dataSet
+            .pushSpells()
+            .pushRaces()
+            .use(PlayerItem.class)
+            .use(PlayerSpell.class)
+        ;
 
         Player player = dataSet.createPlayer(id);
 
@@ -333,10 +359,11 @@ public class GameBaseCase extends DatabaseTestCase {
                 2
             ),
             player,
-            dataSet.refresh(new PlayerRace(Race.FECA)),
+            container.get(PlayerRaceService.class).get(Race.FECA),
             session,
             container.get(PlayerService.class),
-            container.get(InventoryService.class).load(player)
+            container.get(InventoryService.class).load(player),
+            container.get(SpellBookService.class).load(player)
         );
 
         session.setPlayer(gp);

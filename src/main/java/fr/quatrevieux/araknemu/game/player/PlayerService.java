@@ -3,13 +3,14 @@ package fr.quatrevieux.araknemu.game.player;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
-import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.common.Disconnected;
 import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.event.listener.player.*;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
+import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
+import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 import java.util.Collection;
@@ -24,20 +25,22 @@ import java.util.stream.Stream;
  */
 final public class PlayerService {
     final private PlayerRepository repository;
-    final private PlayerRaceRepository raceRepository;
     final private GameConfiguration configuration;
     final private Dispatcher dispatcher;
     final private InventoryService inventoryService;
+    final private PlayerRaceService playerRaceService;
+    final private SpellBookService spellBookService;
 
     final private ConcurrentMap<Integer, GamePlayer> onlinePlayers = new ConcurrentHashMap<>();
     final private ConcurrentMap<String, GamePlayer> playersByName  = new ConcurrentHashMap<>();
 
-    public PlayerService(PlayerRepository repository, PlayerRaceRepository raceRepository, GameConfiguration configuration, Dispatcher dispatcher, InventoryService inventoryService) {
+    public PlayerService(PlayerRepository repository, GameConfiguration configuration, Dispatcher dispatcher, InventoryService inventoryService, PlayerRaceService playerRaceService, SpellBookService spellBookService) {
         this.repository = repository;
-        this.raceRepository = raceRepository;
         this.configuration = configuration;
         this.dispatcher = dispatcher;
         this.inventoryService = inventoryService;
+        this.playerRaceService = playerRaceService;
+        this.spellBookService = spellBookService;
     }
 
     /**
@@ -65,10 +68,11 @@ final public class PlayerService {
         GamePlayer gamePlayer = new GamePlayer(
             session.account(),
             player,
-            raceRepository.get(player.race()),
+            playerRaceService.get(player.race()),
             session,
             this,
-            inventoryService.load(player)
+            inventoryService.load(player),
+            spellBookService.load(player)
         );
 
         gamePlayer.dispatcher().add(Disconnected.class, e -> logout(gamePlayer));

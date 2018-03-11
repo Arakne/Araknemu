@@ -10,9 +10,12 @@ import fr.quatrevieux.araknemu.data.value.BoostStatsData;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * SQL implementation of the repository
@@ -33,7 +36,10 @@ final class PlayerRaceRepository implements fr.quatrevieux.araknemu.data.world.r
                 new Position(
                     rs.getInt("MAP_ID"),
                     rs.getInt("CELL_ID")
-                )
+                ),
+                Arrays.stream(StringUtils.split(rs.getString("RACE_SPELLS"), "|"))
+                    .mapToInt(Integer::parseInt)
+                    .toArray()
             );
         }
 
@@ -69,6 +75,7 @@ final class PlayerRaceRepository implements fr.quatrevieux.araknemu.data.world.r
                     "START_LIFE INTEGER," +
                     "PER_LEVEL_LIFE INTEGER," +
                     "STATS_BOOST VARCHAR(255)," +
+                    "RACE_SPELLS VARCHAR(255)," +
                     "MAP_ID INTEGER," +
                     "CELL_ID INTEGER" +
                 ")"
@@ -106,5 +113,13 @@ final class PlayerRaceRepository implements fr.quatrevieux.araknemu.data.world.r
             "SELECT COUNT(*) FROM PLAYER_RACE WHERE RACE_ID = ?",
             stmt -> stmt.setInt(1, entity.race().ordinal())
         ) > 0;
+    }
+
+    @Override
+    public Collection<PlayerRace> load() {
+        return utils.findAll(
+            "SELECT * FROM PLAYER_RACE",
+            s -> {}
+        );
     }
 }

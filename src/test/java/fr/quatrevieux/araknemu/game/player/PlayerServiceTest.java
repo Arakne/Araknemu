@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
+import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
@@ -23,6 +24,8 @@ import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.event.listener.player.*;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
+import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
+import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,15 +47,20 @@ class PlayerServiceTest extends GameBaseCase {
 
         service = new PlayerService(
             container.get(PlayerRepository.class),
-            container.get(PlayerRaceRepository.class),
             container.get(GameConfiguration.class),
             container.get(Dispatcher.class),
-            container.get(InventoryService.class)
+            container.get(InventoryService.class),
+            container.get(PlayerRaceService.class),
+            container.get(SpellBookService.class)
         );
 
         login();
         dataSet.use(PlayerItem.class);
-        dataSet.pushRaces();
+        dataSet
+            .pushRaces()
+            .pushSpells()
+            .use(PlayerSpell.class)
+        ;
     }
 
     @Test

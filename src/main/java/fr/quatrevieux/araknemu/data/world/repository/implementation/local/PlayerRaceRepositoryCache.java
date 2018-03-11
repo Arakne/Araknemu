@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 
+import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -47,5 +48,17 @@ final public class PlayerRaceRepositoryCache implements PlayerRaceRepository {
     @Override
     public boolean has(PlayerRace entity) throws RepositoryException {
         return races.containsKey(entity.race()) || repository.has(entity);
+    }
+
+
+    @Override
+    public Collection<PlayerRace> load() {
+        Collection<PlayerRace> loaded = repository.load();
+
+        for (PlayerRace race : loaded) {
+            races.put(race.race(), race);
+        }
+
+        return loaded;
     }
 }

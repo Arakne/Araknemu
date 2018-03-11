@@ -18,8 +18,9 @@ final public class PlayerRace {
     final private int perLevelLife;
     final private BoostStatsData boostStats;
     final private Position startPosition;
+    final private int[] spells;
 
-    public PlayerRace(Race race, String name, Characteristics baseStats, int startDiscernment, int startPods, int startLife, int perLevelLife, BoostStatsData boostStats, Position startPosition) {
+    public PlayerRace(Race race, String name, Characteristics baseStats, int startDiscernment, int startPods, int startLife, int perLevelLife, BoostStatsData boostStats, Position startPosition, int[] spells) {
         this.race = race;
         this.name = name;
         this.baseStats = baseStats;
@@ -29,10 +30,11 @@ final public class PlayerRace {
         this.perLevelLife = perLevelLife;
         this.boostStats = boostStats;
         this.startPosition = startPosition;
+        this.spells = spells;
     }
 
     public PlayerRace(Race race) {
-        this(race, null, null, 0, 0, 0, 0, null, null);
+        this(race, null, null, 0, 0, 0, 0, null, null, null);
     }
 
     public Race race() {
@@ -69,5 +71,9 @@ final public class PlayerRace {
 
     public Position startPosition() {
         return startPosition;
+    }
+
+    public int[] spells() {
+        return spells;
     }
 }

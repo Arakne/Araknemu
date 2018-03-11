@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
+import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
@@ -37,8 +38,10 @@ class SelectCharacterTest extends GameBaseCase {
 
         dataSet
             .pushRaces()
+            .pushSpells()
             .use(Player.class)
             .use(PlayerItem.class)
+            .use(PlayerSpell.class)
         ;
     }
 

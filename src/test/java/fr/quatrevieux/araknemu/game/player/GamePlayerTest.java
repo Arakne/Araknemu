@@ -7,9 +7,9 @@ import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
+import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
-import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
@@ -17,6 +17,8 @@ import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.player.characteristic.Life;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
+import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
+import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +40,9 @@ class GamePlayerTest extends GameBaseCase {
         dataSet
             .pushMaps()
             .pushRaces()
+            .pushSpells()
             .use(PlayerItem.class)
+            .use(PlayerSpell.class)
         ;
 
         MutableCharacteristics characteristics = new DefaultCharacteristics();
@@ -55,10 +59,11 @@ class GamePlayerTest extends GameBaseCase {
                 1
             ),
             entity,
-            dataSet.refresh(new PlayerRace(Race.CRA)),
+            container.get(PlayerRaceService.class).get(Race.CRA),
             session,
             container.get(PlayerService.class),
-            container.get(InventoryService.class).load(entity)
+            container.get(InventoryService.class).load(entity),
+            container.get(SpellBookService.class).load(entity)
         );
     }
 

@@ -51,6 +51,11 @@ final public class LivingRepositoriesModule implements ContainerModule {
         );
 
         configurator.persist(
+            fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository.class,
+            container -> new PlayerSpellRepository(connection)
+        );
+
+        configurator.persist(
             MutableCharacteristicsTransformer.class,
             container -> new MutableCharacteristicsTransformer()
         );

@@ -16,8 +16,10 @@ import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceReposit
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.exception.CharacterCreationException;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
+import fr.quatrevieux.araknemu.game.event.Listener;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.common.PlayerDeleted;
+import fr.quatrevieux.araknemu.game.event.manage.CharacterCreated;
 import fr.quatrevieux.araknemu.game.event.manage.CharacterCreationStarted;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.AccessoryType;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.EmptyAccessories;
@@ -111,7 +113,34 @@ class CharactersServiceTest extends GameBaseCase {
         ListenerAggregate dispatcher = container.get(ListenerAggregate.class);
 
         AtomicReference<AccountCharacter> reference = new AtomicReference<>();
-        dispatcher.add(CharacterCreationStarted.class, characterCreationStarted -> reference.set(characterCreationStarted.character()));
+        dispatcher.add(
+            new Listener<CharacterCreationStarted>() {
+                @Override
+                public void on(CharacterCreationStarted event) {
+                    reference.set(event.character());
+                }
+
+                @Override
+                public Class<CharacterCreationStarted> event() {
+                    return CharacterCreationStarted.class;
+                }
+            }
+        );
+
+        AtomicReference<AccountCharacter> ref2 = new AtomicReference<>();
+        dispatcher.add(
+            new Listener<CharacterCreated>() {
+                @Override
+                public void on(CharacterCreated event) {
+                    ref2.set(event.character());
+                }
+
+                @Override
+                public Class<CharacterCreated> event() {
+                    return CharacterCreated.class;
+                }
+            }
+        );
 
         GameAccount account = new GameAccount(
             new Account(5),
@@ -139,6 +168,7 @@ class CharactersServiceTest extends GameBaseCase {
         assertEquals(new Position(10300, 320), db.position());
         assertNotNull(reference.get());
         assertEquals("Bob", reference.get().character().name());
+        assertSame(created, ref2.get());
     }
 
     @Test

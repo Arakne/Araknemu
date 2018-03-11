@@ -12,6 +12,8 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharac
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collection;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerRaceRepositoryTest extends GameBaseCase {
@@ -50,6 +52,7 @@ class PlayerRaceRepositoryTest extends GameBaseCase {
         assertEquals(1000, race.startPods());
         assertEquals(50, race.startLife());
         assertEquals(5, race.perLevelLife());
+        assertArrayEquals(new int[] {3, 6, 17}, race.spells());
     }
 
     @Test
@@ -66,5 +69,12 @@ class PlayerRaceRepositoryTest extends GameBaseCase {
     void has() {
         assertTrue(repository.has(new PlayerRace(Race.FECA)));
         assertFalse(repository.has(new PlayerRace(Race.NO_CLASS)));
+    }
+
+    @Test
+    void load() {
+        Collection<PlayerRace> loaded = repository.load();
+
+        assertCount(12, loaded);
     }
 }
