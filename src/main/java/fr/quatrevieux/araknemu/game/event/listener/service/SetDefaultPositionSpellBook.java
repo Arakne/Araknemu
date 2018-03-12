@@ -24,7 +24,7 @@ final public class SetDefaultPositionSpellBook implements Listener<CharacterCrea
     public void on(CharacterCreated event) {
         Player player = event.character().character();
 
-        char position = 'b';
+        char position = 1;
 
         for (SpellLevels spell : service.get(player.race()).spells()) {
             if (spell.level(1).minPlayerLevel() > player.level()) {

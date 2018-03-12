@@ -38,6 +38,13 @@ final public class Base64 {
     }
 
     /**
+     * Get the base 64 character for the value
+     */
+    static public char chr(int value) {
+        return CHARSET[value];
+    }
+
+    /**
      * Encode an int value to pseudo base 64
      *
      * @param value Value to encode

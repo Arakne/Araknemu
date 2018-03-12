@@ -61,10 +61,10 @@ class SetDefaultPositionSpellBookTest extends GameBaseCase {
         assertCount(3, spells);
 
         assertEquals(3, spells.get(0).spellId());
-        assertEquals('b', spells.get(0).position());
+        assertEquals(1, spells.get(0).position());
         assertEquals(6, spells.get(1).spellId());
-        assertEquals('c', spells.get(1).position());
+        assertEquals(2, spells.get(1).position());
         assertEquals(17, spells.get(2).spellId());
-        assertEquals('d', spells.get(2).position());
+        assertEquals(3, spells.get(2).position());
     }
 }

@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.network.game.out.spell;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookEntry;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
@@ -19,13 +20,14 @@ class SpellListTest extends GameBaseCase {
         dataSet.pushSpells();
 
         SpellBook book = new SpellBook(
+            new DefaultListenerAggregate(),
             Arrays.asList(
                 new SpellBookEntry(
-                    new PlayerSpell(1, 3, true, 5, 'b'),
+                    new PlayerSpell(1, 3, true, 5, 1),
                     container.get(SpellService.class).get(3)
                 ),
                 new SpellBookEntry(
-                    new PlayerSpell(1, 6, true, 2, 'd'),
+                    new PlayerSpell(1, 6, true, 2, 3),
                     container.get(SpellService.class).get(6)
                 )
             )

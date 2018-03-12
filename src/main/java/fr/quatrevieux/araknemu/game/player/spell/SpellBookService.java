@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;
+import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.listener.service.AddSpellListeners;
 import fr.quatrevieux.araknemu.game.event.listener.service.SetDefaultPositionSpellBook;
@@ -34,7 +35,7 @@ final public class SpellBookService implements PreloadableService {
     /**
      * Load the spell book
      */
-    public SpellBook load(Player player) {
+    public SpellBook load(Dispatcher dispatcher, Player player) {
         Map<Integer, SpellBookEntry> entries = repository.byPlayer(player)
             .stream()
             .map(entity -> new SpellBookEntry(entity, service.get(entity.spellId())))
@@ -57,12 +58,12 @@ final public class SpellBookService implements PreloadableService {
             .forEach(entry -> entries.put(entry.spell().id(), entry))
         ;
 
-        return new SpellBook(entries.values());
+        return new SpellBook(dispatcher, entries.values());
     }
 
     @Override
     public void preload(Logger logger) {
-        dispatcher.add(new AddSpellListeners());
+        dispatcher.add(new AddSpellListeners(repository));
         dispatcher.add(new SetDefaultPositionSpellBook(playerRaceService, repository));
     }
 }

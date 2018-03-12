@@ -4,15 +4,15 @@ package fr.quatrevieux.araknemu.data.living.entity.player;
  * Save player spell data
  */
 final public class PlayerSpell {
-    final static public char DEFAULT_POSITION = '_';
+    final static public int DEFAULT_POSITION = 63;
 
     final private int playerId;
     final private int spellId;
     final private boolean classSpell;
     private int level;
-    private char position;
+    private int position;
 
-    public PlayerSpell(int playerId, int spellId, boolean classSpell, int level, char position) {
+    public PlayerSpell(int playerId, int spellId, boolean classSpell, int level, int position) {
         this.playerId = playerId;
         this.spellId = spellId;
         this.classSpell = classSpell;
@@ -40,7 +40,7 @@ final public class PlayerSpell {
         return level;
     }
 
-    public char position() {
+    public int position() {
         return position;
     }
 
@@ -48,7 +48,7 @@ final public class PlayerSpell {
         this.level = level;
     }
 
-    public void setPosition(char position) {
+    public void setPosition(int position) {
         this.position = position;
     }
 }

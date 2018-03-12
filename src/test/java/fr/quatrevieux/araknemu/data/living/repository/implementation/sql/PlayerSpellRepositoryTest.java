@@ -28,13 +28,13 @@ class PlayerSpellRepositoryTest extends GameBaseCase {
 
     @Test
     void getNotFound() {
-        assertThrows(EntityNotFoundException.class, () -> repository.get(new PlayerSpell(123, 0, false, 0, 'e')));
+        assertThrows(EntityNotFoundException.class, () -> repository.get(new PlayerSpell(123, 0, false, 0, 5)));
     }
 
     @Test
     void addAndGet() {
         PlayerSpell spell = repository.add(
-            new PlayerSpell(1, 3, true, 5, 'd')
+            new PlayerSpell(1, 3, true, 5, 3)
         );
 
         spell = repository.get(spell);
@@ -42,28 +42,28 @@ class PlayerSpellRepositoryTest extends GameBaseCase {
         assertEquals(1, spell.playerId());
         assertEquals(3, spell.spellId());
         assertTrue(spell.classSpell());
-        assertEquals('d', spell.position());
+        assertEquals(3, spell.position());
         assertEquals(5, spell.level());
     }
 
     @Test
     void has() {
         PlayerSpell spell = repository.add(
-            new PlayerSpell(1, 3, true, 5, 'd')
+            new PlayerSpell(1, 3, true, 5, 3)
         );
 
         assertTrue(repository.has(spell));
-        assertFalse(repository.has(new PlayerSpell(0, 0, false, 0, 'a')));
+        assertFalse(repository.has(new PlayerSpell(0, 0, false, 0, 0)));
     }
 
     @Test
     void addForReplace() {
         PlayerSpell spell = repository.add(
-            new PlayerSpell(1, 3, true, 1, 'd')
+            new PlayerSpell(1, 3, true, 1, 3)
         );
 
         spell.setLevel(5);
-        spell.setPosition('c');
+        spell.setPosition(4);
 
         repository.add(spell);
 
@@ -73,13 +73,13 @@ class PlayerSpellRepositoryTest extends GameBaseCase {
         assertEquals(3, spell.spellId());
         assertTrue(spell.classSpell());
         assertEquals(5, spell.level());
-        assertEquals('c', spell.position());
+        assertEquals(4, spell.position());
     }
 
     @Test
     void delete() {
         PlayerSpell spell = repository.add(
-            new PlayerSpell(1, 3, true, 1, 'd')
+            new PlayerSpell(1, 3, true, 1, 3)
         );
 
         repository.delete(spell);
@@ -90,15 +90,15 @@ class PlayerSpellRepositoryTest extends GameBaseCase {
     @Test
     void deleteNotFound() {
         assertThrows(EntityNotFoundException.class, () -> repository.delete(
-            new PlayerSpell(1, 3, true, 1, 'd')
+            new PlayerSpell(1, 3, true, 1, 3)
         ));
     }
 
     @Test
     void byPlayer() {
-        repository.add(new PlayerSpell(1, 3, true, 1, 'd'));
-        repository.add(new PlayerSpell(1, 9, true, 1, '_'));
-        repository.add(new PlayerSpell(8, 9, true, 1, '_'));
+        repository.add(new PlayerSpell(1, 3, true, 1, 3));
+        repository.add(new PlayerSpell(1, 9, true, 1, 63));
+        repository.add(new PlayerSpell(8, 9, true, 1, 63));
 
 
         Collection<PlayerSpell> items = repository.byPlayer(new Player(1));

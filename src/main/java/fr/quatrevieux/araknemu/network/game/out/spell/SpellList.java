@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.network.game.out.spell;
 
 import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
+import fr.quatrevieux.araknemu.util.Base64;
 
 import java.util.stream.Collectors;
 
@@ -20,7 +21,7 @@ final public class SpellList {
     public String toString() {
         return "SL" + spells.all()
             .stream()
-            .map(entry -> entry.spell().id() + "~" + entry.spell().level() + "~" + entry.position())
+            .map(entry -> entry.spell().id() + "~" + entry.spell().level() + "~" + Base64.chr(entry.position()))
             .collect(Collectors.joining(";"))
         ;
     }

@@ -72,7 +72,7 @@ final public class PlayerService {
             session,
             this,
             inventoryService.load(player),
-            spellBookService.load(player)
+            spellBookService.load(session, player)
         );
 
         gamePlayer.dispatcher().add(Disconnected.class, e -> logout(gamePlayer));

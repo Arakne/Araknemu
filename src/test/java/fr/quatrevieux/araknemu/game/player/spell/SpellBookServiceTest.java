@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.listener.service.AddSpellListeners;
 import fr.quatrevieux.araknemu.game.event.listener.service.SetDefaultPositionSpellBook;
@@ -53,7 +54,7 @@ class SpellBookServiceTest extends GameBaseCase {
     void loadWithOnlyClassSpell() throws ContainerException {
         Player player = dataSet.pushPlayer("Robert", 1, 2);
 
-        SpellBook spells = service.load(player);
+        SpellBook spells = service.load(new DefaultListenerAggregate(), player);
 
         List<SpellBookEntry> entries = new ArrayList<>(spells.all());
 
@@ -61,26 +62,26 @@ class SpellBookServiceTest extends GameBaseCase {
         assertEquals(17, entries.get(0).spell().id());
         assertEquals(1, entries.get(0).spell().level());
         assertTrue(entries.get(0).classSpell());
-        assertEquals('_', entries.get(0).position());
+        assertEquals(63, entries.get(0).position());
         assertEquals(3, entries.get(1).spell().id());
         assertTrue(entries.get(1).classSpell());
         assertEquals(1, entries.get(1).spell().level());
-        assertEquals('_', entries.get(1).position());
+        assertEquals(63, entries.get(1).position());
         assertEquals(6, entries.get(2).spell().id());
         assertTrue(entries.get(1).classSpell());
         assertEquals(1, entries.get(2).spell().level());
-        assertEquals('_', entries.get(2).position());
+        assertEquals(63, entries.get(2).position());
     }
 
     @Test
     void loadWithClassSpellUpdated() throws ContainerException {
         Player player = dataSet.pushPlayer("Robert", 1, 2);
 
-        dataSet.push(new PlayerSpell(player.id(), 3, true, 5, 'b'));
-        dataSet.push(new PlayerSpell(player.id(), 6, true, 2, 'c'));
-        dataSet.push(new PlayerSpell(player.id(), 17, true, 3, 'd'));
+        dataSet.push(new PlayerSpell(player.id(), 3, true, 5, 1));
+        dataSet.push(new PlayerSpell(player.id(), 6, true, 2, 2));
+        dataSet.push(new PlayerSpell(player.id(), 17, true, 3, 3));
 
-        SpellBook spells = service.load(player);
+        SpellBook spells = service.load(new DefaultListenerAggregate(), player);
 
         List<SpellBookEntry> entries = new ArrayList<>(spells.all());
 
@@ -88,15 +89,15 @@ class SpellBookServiceTest extends GameBaseCase {
 
         assertEquals(17, entries.get(0).spell().id());
         assertEquals(3, entries.get(0).spell().level());
-        assertEquals('d', entries.get(0).position());
+        assertEquals(3, entries.get(0).position());
 
         assertEquals(3, entries.get(1).spell().id());
         assertEquals(5, entries.get(1).spell().level());
-        assertEquals('b', entries.get(1).position());
+        assertEquals(1, entries.get(1).position());
 
         assertEquals(6, entries.get(2).spell().id());
         assertEquals(2, entries.get(2).spell().level());
-        assertEquals('c', entries.get(2).position());
+        assertEquals(2, entries.get(2).position());
     }
 
     @Test
@@ -105,7 +106,7 @@ class SpellBookServiceTest extends GameBaseCase {
 
         dataSet.push(new PlayerSpell(player.id(), 202, false));
 
-        SpellBook spells = service.load(player);
+        SpellBook spells = service.load(new DefaultListenerAggregate(), player);
 
         List<SpellBookEntry> entries = new ArrayList<>(spells.all());
 

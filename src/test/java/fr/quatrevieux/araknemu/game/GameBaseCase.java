@@ -261,7 +261,7 @@ public class GameBaseCase extends DatabaseTestCase {
                     session,
                     container.get(PlayerService.class),
                     container.get(InventoryService.class).load(player),
-                    container.get(SpellBookService.class).load(player)
+                    container.get(SpellBookService.class).load(session, player)
                 )
             );
         } else {
@@ -363,7 +363,7 @@ public class GameBaseCase extends DatabaseTestCase {
             session,
             container.get(PlayerService.class),
             container.get(InventoryService.class).load(player),
-            container.get(SpellBookService.class).load(player)
+            container.get(SpellBookService.class).load(session, player)
         );
 
         session.setPlayer(gp);

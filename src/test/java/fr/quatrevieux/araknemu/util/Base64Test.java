@@ -39,4 +39,11 @@ class Base64Test {
     void encodeWithTooSmallNumberWillKeepLength() {
         assertEquals("aac", Base64.encode(2, 3));
     }
+
+    @Test
+    void chr() {
+        assertEquals('a', Base64.chr(0));
+        assertEquals('_', Base64.chr(63));
+        assertEquals('c', Base64.chr(2));
+    }
 }

@@ -63,7 +63,7 @@ class GamePlayerTest extends GameBaseCase {
             session,
             container.get(PlayerService.class),
             container.get(InventoryService.class).load(entity),
-            container.get(SpellBookService.class).load(entity)
+            container.get(SpellBookService.class).load(session, entity)
         );
     }
 

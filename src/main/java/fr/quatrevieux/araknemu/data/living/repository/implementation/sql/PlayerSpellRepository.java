@@ -24,7 +24,7 @@ final class PlayerSpellRepository implements fr.quatrevieux.araknemu.data.living
                 rs.getInt("SPELL_ID"),
                 rs.getBoolean("CLASS_SPELL"),
                 rs.getInt("SPELL_LEVEL"),
-                rs.getString("SPELL_POSITION").charAt(0)
+                rs.getInt("SPELL_POSITION")
             );
         }
 
@@ -51,7 +51,7 @@ final class PlayerSpellRepository implements fr.quatrevieux.araknemu.data.living
                     "SPELL_ID INTEGER," +
                     "CLASS_SPELL BOOLEAN," +
                     "SPELL_LEVEL TINYINT," +
-                    "SPELL_POSITION CHAR(1)," +
+                    "SPELL_POSITION TINYINT," +
                     "PRIMARY KEY (PLAYER_ID, SPELL_ID)" +
                 ")"
             );
@@ -101,7 +101,7 @@ final class PlayerSpellRepository implements fr.quatrevieux.araknemu.data.living
                 stmt.setInt(2,     entity.spellId());
                 stmt.setBoolean(3, entity.classSpell());
                 stmt.setInt(4,     entity.level());
-                stmt.setString(5,  entity.position() + "");
+                stmt.setInt(5,     entity.position());
             }
         );
 

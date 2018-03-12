@@ -2,12 +2,14 @@ package fr.quatrevieux.araknemu.game.player.spell;
 
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,12 +28,36 @@ class SpellBookTest extends GameBaseCase {
     @Test
     void all() {
         List<SpellBookEntry> entries = Arrays.asList(
-            new SpellBookEntry(new PlayerSpell(1, 3, true, 5, 'd'), service.get(3)),
-            new SpellBookEntry(new PlayerSpell(1, 6, true, 2, 'c'), service.get(6))
+            new SpellBookEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3)),
+            new SpellBookEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6))
         );
 
-        SpellBook book = new SpellBook(entries);
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), entries);
 
         assertContainsAll(book.all(), entries.toArray());
+    }
+
+    @Test
+    void entryNotFound() {
+        List<SpellBookEntry> entries = Arrays.asList(
+            new SpellBookEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3)),
+            new SpellBookEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6))
+        );
+
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), entries);
+
+        assertThrows(NoSuchElementException.class, () -> book.entry(789));
+    }
+
+    @Test
+    void entry() {
+        List<SpellBookEntry> entries = Arrays.asList(
+            new SpellBookEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3)),
+            new SpellBookEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6))
+        );
+
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), entries);
+
+        assertSame(entries.get(0), book.entry(3));
     }
 }
