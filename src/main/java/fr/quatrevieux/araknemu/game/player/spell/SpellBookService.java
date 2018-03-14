@@ -58,7 +58,7 @@ final public class SpellBookService implements PreloadableService {
             .forEach(entry -> entries.put(entry.spell().id(), entry))
         ;
 
-        return new SpellBook(dispatcher, entries.values());
+        return new SpellBook(dispatcher, player, entries.values());
     }
 
     @Override

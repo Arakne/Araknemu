@@ -1,20 +1,28 @@
 package fr.quatrevieux.araknemu.game.player.spell;
 
+import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.event.spell.SpellLearned;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class SpellBookTest extends GameBaseCase {
     private SpellService service;
+    private Player player;
 
     @Override
     @BeforeEach
@@ -23,6 +31,8 @@ class SpellBookTest extends GameBaseCase {
 
         service = container.get(SpellService.class);
         dataSet.pushSpells();
+
+        player = dataSet.createPlayer(1);
     }
 
     @Test
@@ -32,7 +42,7 @@ class SpellBookTest extends GameBaseCase {
             new SpellBookEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6))
         );
 
-        SpellBook book = new SpellBook(new DefaultListenerAggregate(), entries);
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, entries);
 
         assertContainsAll(book.all(), entries.toArray());
     }
@@ -44,7 +54,7 @@ class SpellBookTest extends GameBaseCase {
             new SpellBookEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6))
         );
 
-        SpellBook book = new SpellBook(new DefaultListenerAggregate(), entries);
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, entries);
 
         assertThrows(NoSuchElementException.class, () -> book.entry(789));
     }
@@ -56,8 +66,80 @@ class SpellBookTest extends GameBaseCase {
             new SpellBookEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6))
         );
 
-        SpellBook book = new SpellBook(new DefaultListenerAggregate(), entries);
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, entries);
 
         assertSame(entries.get(0), book.entry(3));
+    }
+
+    @Test
+    void has() {
+        List<SpellBookEntry> entries = Arrays.asList(
+            new SpellBookEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3)),
+            new SpellBookEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6))
+        );
+
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, entries);
+
+        assertTrue(book.has(3));
+        assertTrue(book.has(6));
+        assertFalse(book.has(123));
+    }
+
+    @Test
+    void learnSuccess() {
+        ListenerAggregate dispatcher = new DefaultListenerAggregate();
+        SpellBook book = new SpellBook(dispatcher, player, new ArrayList<>());
+
+        AtomicReference<SpellLearned> ref = new AtomicReference<>();
+        dispatcher.add(SpellLearned.class, ref::set);
+
+        book.learn(service.get(3));
+
+        assertCount(1, book.all());
+        assertEquals(1, book.entry(3).spell().level());
+        assertEquals(63, book.entry(3).position());
+        assertFalse(book.entry(3).classSpell());
+
+        assertEquals(player.id(), book.entry(3).entity().playerId());
+        assertEquals(3, book.entry(3).entity().spellId());
+        assertEquals(1, book.entry(3).entity().level());
+
+        assertSame(book.entry(3), ref.get().entry());
+    }
+
+    @Test
+    void learnFailed() throws SQLException, ContainerException {
+        dataSet.pushHighLevelSpells();
+
+        ListenerAggregate dispatcher = new DefaultListenerAggregate();
+        SpellBook book = new SpellBook(dispatcher, player, new ArrayList<>());
+
+        AtomicReference<SpellLearned> ref = new AtomicReference<>();
+        dispatcher.add(SpellLearned.class, ref::set);
+
+        assertThrows(IllegalArgumentException.class, () -> book.learn(service.get(1908)), "Cannot learn the spell Invocation de Dopeul Iop (1908)");
+        assertNull(ref.get());
+        assertFalse(book.has(1908));
+    }
+
+    @Test
+    void canLearnTooLowLevel() throws SQLException, ContainerException {
+        dataSet.pushHighLevelSpells();
+
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, new ArrayList<>());
+
+        assertFalse(book.canLearn(service.get(1908)));
+    }
+
+    @Test
+    void canLearnAlreadyLearned() throws SQLException, ContainerException {
+        List<SpellBookEntry> entries = Arrays.asList(
+            new SpellBookEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3)),
+            new SpellBookEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6))
+        );
+
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, entries);
+
+        assertFalse(book.canLearn(service.get(3)));
     }
 }

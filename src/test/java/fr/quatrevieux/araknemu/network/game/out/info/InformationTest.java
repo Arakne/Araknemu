@@ -23,6 +23,14 @@ class InformationTest {
     }
 
     @Test
+    void spellLearn() {
+        assertEquals(
+            "Im03;10",
+            Information.spellLearn(10).toString()
+        );
+    }
+
+    @Test
     void characteristicBoosted() {
         assertEquals("Im09;10", Information.characteristicBoosted(Characteristic.WISDOM, 10).toString());
         assertEquals("Im010;10", Information.characteristicBoosted(Characteristic.STRENGTH, 10).toString());

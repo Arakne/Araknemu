@@ -349,4 +349,17 @@ public class GameDataSet extends TestingDataSet {
 
         return this;
     }
+
+    public GameDataSet pushHighLevelSpells() throws SQLException, ContainerException {
+        if (repository(SpellTemplate.class).has(new SpellTemplate(1908, null, 0, null, null, null))) {
+            return this;
+        }
+
+        connection.query(
+            "INSERT INTO `SPELL` (`SPELL_ID`, `SPELL_NAME`, `SPELL_SPRITE`, `SPELL_SPRITE_ARG`, `SPELL_LVL_1`, `SPELL_LVL_2`, `SPELL_LVL_3`, `SPELL_LVL_4`, `SPELL_LVL_5`, `SPELL_LVL_6`, `SPELL_TARGET`) VALUES " +
+            "(1908, 'Invocation de Dopeul Iop', -1, '0,0,0', '181,962,1,,0,0||8|1|1|0|100|false|true|true|false|0|0|0|10|Pa||18;19;3;1;41|200|false', '181,962,2,,0,0||8|1|1|0|100|false|true|true|false|0|0|0|10|Pa||18;19;3;1;41|200|false', '181,962,3,,0,0||8|1|1|0|100|false|true|true|false|0|0|0|10|Pa||18;19;3;1;41|200|false', '181,962,4,,0,0||8|1|1|0|100|false|true|true|false|0|0|0|10|Pa||18;19;3;1;41|200|false', '181,962,5,,0,0||8|1|1|0|100|false|true|true|false|0|0|0|10|Pa||18;19;3;1;41|200|false', '181,962,6,,0,0||8|1|1|0|100|false|true|true|false|0|0|0|10|Pa||18;19;3;1;41|200|false', '')"
+        );
+
+        return this;
+    }
 }

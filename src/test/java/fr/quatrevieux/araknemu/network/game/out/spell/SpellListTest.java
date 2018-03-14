@@ -21,6 +21,7 @@ class SpellListTest extends GameBaseCase {
 
         SpellBook book = new SpellBook(
             new DefaultListenerAggregate(),
+            dataSet.createPlayer(1),
             Arrays.asList(
                 new SpellBookEntry(
                     new PlayerSpell(1, 3, true, 5, 1),

@@ -15,6 +15,7 @@ import fr.quatrevieux.araknemu.game.player.*;
 import fr.quatrevieux.araknemu.game.player.characteristic.Life;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
+import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import fr.quatrevieux.araknemu.game.world.creature.Explorer;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
@@ -165,5 +166,12 @@ final public class ExplorationPlayer implements PlayableCharacter, Sender, Creat
      */
     public ActionQueue actionQueue() {
         return actionQueue;
+    }
+
+    /**
+     * @todo to remove
+     */
+    public SpellBook spells() {
+        return player.spells();
     }
 }

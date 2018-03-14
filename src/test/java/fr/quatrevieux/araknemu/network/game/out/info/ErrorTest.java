@@ -14,4 +14,9 @@ class ErrorTest {
     void cantDoOnServer() {
         assertEquals("Im1226;", Error.cantDoOnServer().toString());
     }
+
+    @Test
+    void cantLearnSpell() {
+        assertEquals("Im17;123", Error.cantLearnSpell(123).toString());
+    }
 }

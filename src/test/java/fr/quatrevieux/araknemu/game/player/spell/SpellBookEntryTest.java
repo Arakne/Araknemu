@@ -42,6 +42,7 @@ class SpellBookEntryTest extends GameBaseCase {
 
         book = new SpellBook(
             dispatcher = new DefaultListenerAggregate(),
+            dataSet.createPlayer(1),
             Arrays.asList(
                 entry,
                 new SpellBookEntry(
@@ -123,6 +124,6 @@ class SpellBookEntryTest extends GameBaseCase {
 
     @Test
     void attachAlreadyAttached() {
-        assertThrows(IllegalStateException.class, () -> entry.attach(new SpellBook(null, new ArrayList<>())));
+        assertThrows(IllegalStateException.class, () -> entry.attach(new SpellBook(null, null, new ArrayList<>())));
     }
 }

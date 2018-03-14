@@ -12,6 +12,9 @@ final public class Error extends InformationMessage {
         this(new Entry(id));
     }
 
+    public Error(int id, Object... arguments) {
+        this(new Entry(id, arguments));
+    }
     /**
      * Get the welcome message
      */
@@ -24,5 +27,14 @@ final public class Error extends InformationMessage {
      */
     static public Error cantDoOnServer() {
         return new Error(226);
+    }
+
+    /**
+     * Cannot learn the spell
+     *
+     * @param spellId The spell
+     */
+    static public Error cantLearnSpell(int spellId) {
+        return new Error(7, spellId);
     }
 }

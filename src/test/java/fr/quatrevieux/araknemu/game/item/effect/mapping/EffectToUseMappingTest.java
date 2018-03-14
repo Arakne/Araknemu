@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
+import fr.quatrevieux.araknemu.game.spell.SpellService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +22,9 @@ class EffectToUseMappingTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        mapping = new EffectToUseMapping();
+        mapping = new EffectToUseMapping(
+            container.get(SpellService.class)
+        );
     }
 
     @Test

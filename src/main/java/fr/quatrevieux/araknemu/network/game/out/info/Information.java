@@ -44,6 +44,15 @@ final public class Information extends InformationMessage {
     }
 
     /**
+     * Message for spell learned
+     *
+     * @param spellId The learned spell id
+     */
+    static public Information spellLearn(int spellId) {
+        return new Information(3, spellId);
+    }
+
+    /**
      * Send message for characteristic boost
      *
      * @param characteristic The boosted characteristic

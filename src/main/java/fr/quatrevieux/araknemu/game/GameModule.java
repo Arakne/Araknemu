@@ -373,7 +373,9 @@ final public class GameModule implements ContainerModule {
                 new EffectToSpecialMapping(),
                 new EffectToWeaponMapping(),
                 new EffectToCharacteristicMapping(),
-                new EffectToUseMapping()
+                new EffectToUseMapping(
+                    container.get(SpellService.class)
+                )
             )
         );
 

@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
 import fr.quatrevieux.araknemu.game.item.effect.use.*;
+import fr.quatrevieux.araknemu.game.spell.SpellService;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 final public class EffectToUseMapping implements EffectMapper<UseEffect> {
     final private Map<Effect, UseEffectHandler> handlers = new EnumMap<>(Effect.class);
 
-    public EffectToUseMapping() {
+    public EffectToUseMapping(SpellService spellService) {
         handlers.put(Effect.ADD_CHARACT_WISDOM,       new AddCharacteristicEffect(Characteristic.WISDOM));
         handlers.put(Effect.ADD_CHARACT_STRENGTH,     new AddCharacteristicEffect(Characteristic.STRENGTH));
         handlers.put(Effect.ADD_CHARACT_LUCK,         new AddCharacteristicEffect(Characteristic.LUCK));
@@ -27,7 +28,8 @@ final public class EffectToUseMapping implements EffectMapper<UseEffect> {
 
         handlers.put(Effect.ADD_LIFE, new AddLifeEffect());
 
-        handlers.put(Effect.FIREWORK, new FireworkEffect());
+        handlers.put(Effect.FIREWORK,    new FireworkEffect());
+        handlers.put(Effect.LEARN_SPELL, new LearnSpellEffect(spellService));
     }
 
     @Override

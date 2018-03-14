@@ -4,7 +4,9 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
+import fr.quatrevieux.araknemu.game.event.listener.player.spell.SaveLearnedSpell;
 import fr.quatrevieux.araknemu.game.event.listener.player.spell.SaveSpellPosition;
+import fr.quatrevieux.araknemu.game.event.listener.player.spell.SendLearnedSpell;
 import fr.quatrevieux.araknemu.game.event.listener.player.spell.SendSpellList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,5 +34,7 @@ class AddSpellListenersTest extends GameBaseCase {
 
         assertTrue(gamePlayer().dispatcher().has(SendSpellList.class));
         assertTrue(gamePlayer().dispatcher().has(SaveSpellPosition.class));
+        assertTrue(gamePlayer().dispatcher().has(SaveLearnedSpell.class));
+        assertTrue(gamePlayer().dispatcher().has(SendLearnedSpell.class));
     }
 }
