@@ -15,6 +15,7 @@ import fr.quatrevieux.araknemu.network.game.in.object.ObjectDeleteRequest;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectMoveRequest;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectUseRequest;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellMove;
+import fr.quatrevieux.araknemu.network.game.in.spell.SpellUpgrade;
 import fr.quatrevieux.araknemu.network.in.ParserLoader;
 import fr.quatrevieux.araknemu.network.in.SinglePacketParser;
 
@@ -52,7 +53,8 @@ final public class GameParserLoader implements ParserLoader {
             new AskBoost.Parser(),
             new ObjectDeleteRequest.Parser(),
             new ObjectUseRequest.Parser(),
-            new SpellMove.Parser()
+            new SpellMove.Parser(),
+            new SpellUpgrade.Parser()
         );
     }
 }

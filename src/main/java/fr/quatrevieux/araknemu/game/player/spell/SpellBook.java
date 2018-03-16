@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.spell.SpellLearned;
+import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellLevels;
 
 import java.util.Collection;
@@ -102,6 +103,21 @@ final public class SpellBook implements Dispatcher {
         dispatch(new SpellLearned(entry));
     }
 
+    /**
+     * Get available spell upgrade points
+     */
+    public int upgradePoints() {
+        return player.spellPoints();
+    }
+
+    /**
+     * @todo DO NOT USE : temporary method !
+     */
+    @Deprecated
+    public void setUpgradePoints(int points) {
+        player.setSpellPoints(points);
+    }
+
     void freePosition(SpellBookEntry entry) {
         if (entry.position() > MAX_POSITION) {
             return;
@@ -120,6 +136,16 @@ final public class SpellBook implements Dispatcher {
         }
 
         entriesByPosition[entry.position() - 1] = entry;
+    }
+
+    void removePointsForUpgrade(Spell spell) {
+        player.setSpellPoints(player.spellPoints() - spell.level() + 1);
+    }
+
+    boolean canUpgrade(Spell spell) {
+        return player.spellPoints() >= spell.level() - 1
+            && player.level() >= spell.minPlayerLevel()
+        ;
     }
 
     private void indexingByPosition() {

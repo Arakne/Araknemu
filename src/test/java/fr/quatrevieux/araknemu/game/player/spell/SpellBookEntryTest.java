@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.spell.SpellMoved;
+import fr.quatrevieux.araknemu.game.event.spell.SpellUpgraded;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellMove;
 import org.junit.jupiter.api.BeforeEach;
@@ -125,5 +126,111 @@ class SpellBookEntryTest extends GameBaseCase {
     @Test
     void attachAlreadyAttached() {
         assertThrows(IllegalStateException.class, () -> entry.attach(new SpellBook(null, null, new ArrayList<>())));
+    }
+
+    @Test
+    void upgradeTooLowLevel() {
+        book.setUpgradePoints(100);
+
+        assertThrows(IllegalStateException.class, () -> entry.upgrade(), "Cannot upgrade spell");
+    }
+
+    @Test
+    void upgradeMaxLevel() {
+        entry = new SpellBookEntry(
+            new PlayerSpell(1, 202, false, 5, 63),
+            service.get(202)
+        ).attach(book);
+
+        assertThrows(IllegalStateException.class, () -> entry.upgrade(), "Maximum spell level reached");
+    }
+
+    @Test
+    void upgradeNotEnoughPoints() {
+        book.setUpgradePoints(0);
+
+        entry = new SpellBookEntry(
+            new PlayerSpell(1, 202, false),
+            service.get(202)
+        ).attach(book);
+
+        assertThrows(IllegalStateException.class, () -> entry.upgrade(), "Cannot upgrade spell");
+    }
+
+    @Test
+    void upgradeSuccessWillDispatchEvent() {
+        book.setUpgradePoints(10);
+
+        AtomicReference<SpellUpgraded> ref = new AtomicReference<>();
+        dispatcher.add(SpellUpgraded.class, ref::set);
+
+        entry = new SpellBookEntry(
+            new PlayerSpell(1, 202, false),
+            service.get(202)
+        ).attach(book);
+
+        entry.upgrade();
+
+        assertSame(entry, ref.get().entry());
+    }
+
+    @Test
+    void upgradeToLevel2() {
+        book.setUpgradePoints(10);
+
+        entry = new SpellBookEntry(
+            new PlayerSpell(1, 202, false, 1, 63),
+            service.get(202)
+        ).attach(book);
+
+        entry.upgrade();
+
+        assertEquals(2, entry.spell().level());
+        assertEquals(9, book.upgradePoints());
+    }
+
+    @Test
+    void upgradeToLevel3() {
+        book.setUpgradePoints(10);
+
+        entry = new SpellBookEntry(
+            new PlayerSpell(1, 202, false, 2, 63),
+            service.get(202)
+        ).attach(book);
+
+        entry.upgrade();
+
+        assertEquals(3, entry.spell().level());
+        assertEquals(8, book.upgradePoints());
+    }
+
+    @Test
+    void upgradeToLevel4() {
+        book.setUpgradePoints(10);
+
+        entry = new SpellBookEntry(
+            new PlayerSpell(1, 202, false, 3, 63),
+            service.get(202)
+        ).attach(book);
+
+        entry.upgrade();
+
+        assertEquals(4, entry.spell().level());
+        assertEquals(7, book.upgradePoints());
+    }
+
+    @Test
+    void upgradeToLevel5() {
+        book.setUpgradePoints(10);
+
+        entry = new SpellBookEntry(
+            new PlayerSpell(1, 202, false, 4, 63),
+            service.get(202)
+        ).attach(book);
+
+        entry.upgrade();
+
+        assertEquals(5, entry.spell().level());
+        assertEquals(6, book.upgradePoints());
     }
 }

@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.player.spell;
 
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.game.event.spell.SpellMoved;
+import fr.quatrevieux.araknemu.game.event.spell.SpellUpgraded;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellLevels;
 
@@ -55,6 +56,27 @@ final public class SpellBookEntry {
         spellBook.indexing(this);
 
         spellBook.dispatch(new SpellMoved(this));
+    }
+
+    /**
+     * Upgrade the spell to the next level
+     */
+    public void upgrade() {
+        if (entity.level() == spell.max()) {
+            throw new IllegalStateException("Maximum spell level reached");
+        }
+
+        int nextLevel = entity.level() + 1;
+        Spell nextSpell = spell.level(nextLevel);
+
+        if (!spellBook.canUpgrade(nextSpell)) {
+            throw new IllegalStateException("Cannot upgrade spell");
+        }
+
+        spellBook.removePointsForUpgrade(nextSpell);
+        entity.setLevel(nextLevel);
+
+        spellBook.dispatch(new SpellUpgraded(this));
     }
 
     /**

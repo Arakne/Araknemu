@@ -14,6 +14,7 @@ import fr.quatrevieux.araknemu.network.game.in.object.ObjectDeleteRequest;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectMoveRequest;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectUseRequest;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellMove;
+import fr.quatrevieux.araknemu.network.game.in.spell.SpellUpgrade;
 import fr.quatrevieux.araknemu.network.in.ParserLoader;
 import fr.quatrevieux.araknemu.network.in.SinglePacketParser;
 import org.junit.jupiter.api.Test;
@@ -49,6 +50,7 @@ class GameParserLoaderTest {
         assertContainsInstance(ObjectDeleteRequest.Parser.class, parsers);
         assertContainsInstance(ObjectUseRequest.Parser.class, parsers);
         assertContainsInstance(SpellMove.Parser.class, parsers);
+        assertContainsInstance(SpellUpgrade.Parser.class, parsers);
     }
 
     public void assertContainsInstance(Class type, Collection collection) {

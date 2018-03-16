@@ -23,7 +23,7 @@ final public class Stats {
             .append("0,0,110").append('|') // XP,XPLow,XPHigh
             .append("1000|") // Kamas
             .append(player.characteristics().boostPoints()).append("|")
-            .append("10|") // Spell points
+            .append(player.spells().upgradePoints()).append("|")
             .append('|') // Align
             .append(player.life().current()).append(',').append(player.life().max()).append('|')
             .append("0,10000|") // Energy, Energy Max

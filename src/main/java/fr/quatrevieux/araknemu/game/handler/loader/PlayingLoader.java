@@ -12,6 +12,7 @@ import fr.quatrevieux.araknemu.game.handler.game.CreateGame;
 import fr.quatrevieux.araknemu.game.handler.object.MoveObject;
 import fr.quatrevieux.araknemu.game.handler.object.RemoveObject;
 import fr.quatrevieux.araknemu.game.handler.spell.MoveSpell;
+import fr.quatrevieux.araknemu.game.handler.spell.UpgradeSpell;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.in.PacketHandler;
 
@@ -36,7 +37,8 @@ final public class PlayingLoader extends AbstractLoader {
             new MoveObject(),
             new BoostCharacteristic(),
             new RemoveObject(),
-            new MoveSpell()
+            new MoveSpell(),
+            new UpgradeSpell()
         };
     }
 }

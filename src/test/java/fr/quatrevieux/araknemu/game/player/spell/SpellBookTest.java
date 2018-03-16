@@ -7,9 +7,11 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.spell.SpellLearned;
+import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -141,5 +143,57 @@ class SpellBookTest extends GameBaseCase {
         SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, entries);
 
         assertFalse(book.canLearn(service.get(3)));
+    }
+
+    @Test
+    void canUpgradeTooHighLevel() {
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, new ArrayList<>());
+        player.setLevel(5);
+        player.setSpellPoints(10);
+
+        Spell spell = Mockito.mock(Spell.class);
+        Mockito.when(spell.minPlayerLevel()).thenReturn(6);
+        Mockito.when(spell.level()).thenReturn(1);
+
+        assertFalse(book.canUpgrade(spell));
+    }
+
+    @Test
+    void canUpgradeNoEnoughPoints() {
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, new ArrayList<>());
+        player.setLevel(5);
+        player.setSpellPoints(2);
+
+        Spell spell = Mockito.mock(Spell.class);
+        Mockito.when(spell.minPlayerLevel()).thenReturn(1);
+        Mockito.when(spell.level()).thenReturn(4);
+
+        assertFalse(book.canUpgrade(spell));
+    }
+
+    @Test
+    void canUpgradeExactlyGoodPoints() {
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, new ArrayList<>());
+        player.setLevel(5);
+        player.setSpellPoints(4);
+
+        Spell spell = Mockito.mock(Spell.class);
+        Mockito.when(spell.minPlayerLevel()).thenReturn(1);
+        Mockito.when(spell.level()).thenReturn(5);
+
+        assertTrue(book.canUpgrade(spell));
+    }
+
+    @Test
+    void removePointsForUpgrade() {
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, new ArrayList<>());
+        player.setSpellPoints(5);
+
+        Spell spell = Mockito.mock(Spell.class);
+        Mockito.when(spell.level()).thenReturn(5);
+
+        book.removePointsForUpgrade(spell);
+
+        assertEquals(1, book.upgradePoints());
     }
 }

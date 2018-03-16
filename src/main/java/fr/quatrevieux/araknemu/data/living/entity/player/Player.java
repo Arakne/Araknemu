@@ -127,6 +127,10 @@ final public class Player {
         return spellPoints;
     }
 
+    public void setSpellPoints(int spellPoints) {
+        this.spellPoints = spellPoints;
+    }
+
     public int life() {
         return life;
     }
