@@ -20,13 +20,13 @@ final public class Stats {
         StringBuilder sb = new StringBuilder("As");
 
         sb
-            .append("0,0,110").append('|') // XP,XPLow,XPHigh
+            .append(player.level().currentExperience()).append(',').append(player.level().minExperience()).append(',').append(player.level().maxExperience()).append('|')
             .append("1000|") // Kamas
             .append(player.characteristics().boostPoints()).append("|")
             .append(player.spells().upgradePoints()).append("|")
             .append('|') // Align
             .append(player.life().current()).append(',').append(player.life().max()).append('|')
-            .append("0,10000|") // Energy, Energy Max
+            .append("10000,10000|") // Energy, Energy Max
             .append(player.characteristics().initiative()).append('|')
             .append(player.characteristics().discernment()).append('|')
         ;

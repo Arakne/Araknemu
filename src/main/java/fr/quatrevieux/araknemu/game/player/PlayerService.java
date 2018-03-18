@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.common.Disconnected;
 import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.event.listener.player.*;
+import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
@@ -30,17 +31,19 @@ final public class PlayerService {
     final private InventoryService inventoryService;
     final private PlayerRaceService playerRaceService;
     final private SpellBookService spellBookService;
+    final private PlayerExperienceService experienceService;
 
     final private ConcurrentMap<Integer, GamePlayer> onlinePlayers = new ConcurrentHashMap<>();
     final private ConcurrentMap<String, GamePlayer> playersByName  = new ConcurrentHashMap<>();
 
-    public PlayerService(PlayerRepository repository, GameConfiguration configuration, Dispatcher dispatcher, InventoryService inventoryService, PlayerRaceService playerRaceService, SpellBookService spellBookService) {
+    public PlayerService(PlayerRepository repository, GameConfiguration configuration, Dispatcher dispatcher, InventoryService inventoryService, PlayerRaceService playerRaceService, SpellBookService spellBookService, PlayerExperienceService experienceService) {
         this.repository = repository;
         this.configuration = configuration;
         this.dispatcher = dispatcher;
         this.inventoryService = inventoryService;
         this.playerRaceService = playerRaceService;
         this.spellBookService = spellBookService;
+        this.experienceService = experienceService;
     }
 
     /**
@@ -72,7 +75,8 @@ final public class PlayerService {
             session,
             this,
             inventoryService.load(player),
-            spellBookService.load(session, player)
+            spellBookService.load(session, player),
+            experienceService.load(session, player)
         );
 
         gamePlayer.dispatcher().add(Disconnected.class, e -> logout(gamePlayer));

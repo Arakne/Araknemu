@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.player;
 
 import fr.quatrevieux.araknemu.game.player.characteristic.Life;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
+import fr.quatrevieux.araknemu.game.player.experience.PlayerLevel;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
 
 /**
@@ -22,4 +23,9 @@ public interface PlayerData {
      * Get the player spells
      */
     public SpellBook spells();
+
+    /**
+     * Get the player level and experience
+     */
+    public PlayerLevel level();
 }

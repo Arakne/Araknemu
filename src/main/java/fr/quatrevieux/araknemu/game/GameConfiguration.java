@@ -60,6 +60,22 @@ final public class GameConfiguration implements ConfigurationModule {
         public int deleteAnswerLevel() {
             return pool.integer("player.deleteAnswerLevel", 20);
         }
+
+        /**
+         * Get the level up spell points
+         * By default, value is set to 1
+         */
+        public int spellBoostPointsOnLevelUp() {
+            return pool.integer("player.level.spellPoints", 1);
+        }
+
+        /**
+         * Get the level up characteristic points
+         * By default, value is set to 5
+         */
+        public int characteristicPointsOnLevelUp() {
+            return pool.integer("player.level.characteristicPoints", 5);
+        }
     }
 
     final public class ChatConfiguration {

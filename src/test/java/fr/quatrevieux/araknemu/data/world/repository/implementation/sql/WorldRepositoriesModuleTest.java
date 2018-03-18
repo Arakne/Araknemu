@@ -28,6 +28,7 @@ class WorldRepositoriesModuleTest extends GameBaseCase {
         assertInstanceOf(ItemTemplateRepositoryCache.class, container.get(fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository.class));
         assertInstanceOf(ItemSetRepositoryCache.class, container.get(fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository.class));
         assertInstanceOf(SpellTemplateRepository.class, container.get(fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository.class));
+        assertInstanceOf(PlayerExperienceRepository.class, container.get(fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceRepository.class));
     }
 
     public void assertInstanceOf(Class type, Object obj) {

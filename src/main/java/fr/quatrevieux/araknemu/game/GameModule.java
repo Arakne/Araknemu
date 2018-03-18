@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepositor
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
 import fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository;
+import fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceRepository;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
@@ -42,6 +43,7 @@ import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.*;
 import fr.quatrevieux.araknemu.game.item.factory.*;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
+import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
@@ -89,7 +91,8 @@ final public class GameModule implements ContainerModule {
                     container.get(ItemService.class),
                     container.get(SpellService.class),
                     container.get(PlayerRaceService.class),
-                    container.get(SpellBookService.class)
+                    container.get(SpellBookService.class),
+                    container.get(PlayerExperienceService.class)
                 )
             )
         );
@@ -196,7 +199,8 @@ final public class GameModule implements ContainerModule {
                 container.get(fr.quatrevieux.araknemu.game.event.Dispatcher.class),
                 container.get(InventoryService.class),
                 container.get(PlayerRaceService.class),
-                container.get(SpellBookService.class)
+                container.get(SpellBookService.class),
+                container.get(PlayerExperienceService.class)
             )
         );
 
@@ -341,6 +345,15 @@ final public class GameModule implements ContainerModule {
                 container.get(PlayerSpellRepository.class),
                 container.get(SpellService.class),
                 container.get(PlayerRaceService.class),
+                container.get(ListenerAggregate.class)
+            )
+        );
+
+        configurator.persist(
+            PlayerExperienceService.class,
+            container -> new PlayerExperienceService(
+                container.get(PlayerExperienceRepository.class),
+                container.get(GameConfiguration.class).player(),
                 container.get(ListenerAggregate.class)
             )
         );

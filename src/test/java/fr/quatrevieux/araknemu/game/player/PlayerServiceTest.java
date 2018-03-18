@@ -22,6 +22,7 @@ import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.common.Disconnected;
 import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.event.listener.player.*;
+import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
@@ -51,7 +52,8 @@ class PlayerServiceTest extends GameBaseCase {
             container.get(Dispatcher.class),
             container.get(InventoryService.class),
             container.get(PlayerRaceService.class),
-            container.get(SpellBookService.class)
+            container.get(SpellBookService.class),
+            container.get(PlayerExperienceService.class)
         );
 
         login();

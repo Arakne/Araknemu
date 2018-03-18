@@ -28,11 +28,13 @@ import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellReposito
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
+import fr.quatrevieux.araknemu.data.world.entity.character.PlayerExperience;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemSet;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository;
+import fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.sql.WorldRepositoriesModule;
@@ -49,6 +51,7 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
+import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.player.race.GamePlayerRace;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
@@ -66,6 +69,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
+import org.slf4j.helpers.NOPLogger;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -200,6 +204,7 @@ public class GameBaseCase extends DatabaseTestCase {
             .declare(ItemSet.class, ItemSetRepository.class)
             .declare(SpellTemplate.class, SpellTemplateRepository.class)
             .declare(PlayerSpell.class, PlayerSpellRepository.class)
+            .declare(PlayerExperience.class, PlayerExperienceRepository.class)
         ;
     }
 
@@ -243,14 +248,17 @@ public class GameBaseCase extends DatabaseTestCase {
         dataSet
             .pushSpells()
             .pushRaces()
+            .pushExperience()
         ;
+
+        container.get(PlayerExperienceService.class).preload(NOPLogger.NOP_LOGGER);
 
         MutableCharacteristics characteristics = new DefaultCharacteristics();
 
         characteristics.set(Characteristic.STRENGTH, 50);
         characteristics.set(Characteristic.INTELLIGENCE, 150);
 
-        Player player = dataSet.push(new Player(-1, session.account().id(), session.account().serverId(), "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 50, characteristics, new Position(10540, 200), EnumSet.allOf(ChannelType.class), 0, 0, -1));
+        Player player = dataSet.push(new Player(-1, session.account().id(), session.account().serverId(), "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 50, characteristics, new Position(10540, 200), EnumSet.allOf(ChannelType.class), 0, 0, -1, 5481459));
 
         if (!load) {
             session.setPlayer(
@@ -261,7 +269,8 @@ public class GameBaseCase extends DatabaseTestCase {
                     session,
                     container.get(PlayerService.class),
                     container.get(InventoryService.class).load(player),
-                    container.get(SpellBookService.class).load(session, player)
+                    container.get(SpellBookService.class).load(session, player),
+                    container.get(PlayerExperienceService.class).load(session, player)
                 )
             );
         } else {
@@ -306,14 +315,14 @@ public class GameBaseCase extends DatabaseTestCase {
         dataSet
             .pushSpells()
             .pushRaces()
-        ;
-
-        dataSet
+            .pushExperience()
             .use(PlayerItem.class)
             .use(PlayerSpell.class)
         ;
 
-        Player player = dataSet.push(new Player(-1, 5, 2, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1), level, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, -1));
+        container.get(PlayerExperienceService.class).preload(NOPLogger.NOP_LOGGER);
+
+        Player player = dataSet.push(new Player(-1, 5, 2, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1), level, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, -1, 0));
         GameSession session = new GameSession(new DummyChannel());
 
         session.attach(new GameAccount(
@@ -346,9 +355,12 @@ public class GameBaseCase extends DatabaseTestCase {
         dataSet
             .pushSpells()
             .pushRaces()
+            .pushExperience()
             .use(PlayerItem.class)
             .use(PlayerSpell.class)
         ;
+
+        container.get(PlayerExperienceService.class).preload(NOPLogger.NOP_LOGGER);
 
         Player player = dataSet.createPlayer(id);
 
@@ -363,7 +375,8 @@ public class GameBaseCase extends DatabaseTestCase {
             session,
             container.get(PlayerService.class),
             container.get(InventoryService.class).load(player),
-            container.get(SpellBookService.class).load(session, player)
+            container.get(SpellBookService.class).load(session, player),
+            container.get(PlayerExperienceService.class).load(session, player)
         );
 
         session.setPlayer(gp);

@@ -2,7 +2,6 @@ package fr.quatrevieux.araknemu.game.player;
 
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.value.Position;
-import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.chat.ChannelSet;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
@@ -12,6 +11,7 @@ import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.player.characteristic.Life;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
+import fr.quatrevieux.araknemu.game.player.experience.PlayerLevel;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.game.player.race.GamePlayerRace;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
@@ -32,16 +32,18 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
     final private PlayerInventory inventory;
     final private Life life;
     final private SpellBook spells;
+    final private PlayerLevel level;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
-    public GamePlayer(GameAccount account, Player entity, GamePlayerRace race, GameSession session, PlayerService service, PlayerInventory inventory, SpellBook spells) {
+    public GamePlayer(GameAccount account, Player entity, GamePlayerRace race, GameSession session, PlayerService service, PlayerInventory inventory, SpellBook spells, PlayerLevel level) {
         super(account, entity);
 
         this.race = race;
         this.session = session;
         this.service = service;
         this.spells = spells;
+        this.level = level;
         this.channels = new ChannelSet(entity.channels(), dispatcher);
         this.inventory = inventory.attach(this);
 
@@ -149,8 +151,8 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
     /**
      * Get the player level
      */
-    public int level() {
-        return entity.level();
+    public PlayerLevel level() {
+        return level;
     }
 
     public SpellBook spells() {

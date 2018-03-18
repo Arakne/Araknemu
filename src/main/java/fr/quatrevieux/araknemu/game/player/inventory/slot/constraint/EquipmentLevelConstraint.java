@@ -17,7 +17,7 @@ final public class EquipmentLevelConstraint implements SlotConstraint {
 
     @Override
     public void check(Item item, int quantity) throws InventoryException {
-        if (item.template().level() > player.level()) {
+        if (item.template().level() > player.level().level()) {
             throw new BadLevelException(item.template().level());
         }
     }

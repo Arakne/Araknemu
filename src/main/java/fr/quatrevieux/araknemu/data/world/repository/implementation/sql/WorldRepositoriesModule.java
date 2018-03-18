@@ -74,6 +74,11 @@ final public class WorldRepositoriesModule implements ContainerModule {
         );
 
         configurator.persist(
+            fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceRepository.class,
+            container -> new PlayerExperienceRepository(connection)
+        );
+
+        configurator.persist(
             ImmutableCharacteristicsTransformer.class,
             container -> new ImmutableCharacteristicsTransformer()
         );

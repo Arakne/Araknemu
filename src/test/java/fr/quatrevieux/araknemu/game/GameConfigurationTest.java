@@ -35,5 +35,7 @@ class GameConfigurationTest extends GameBaseCase {
         assertEquals(20, configuration.player().deleteAnswerLevel());
         assertEquals(4, configuration.player().minNameGeneratedLength());
         assertEquals(8, configuration.player().maxNameGeneratedLength());
+        assertEquals(1, configuration.player().spellBoostPointsOnLevelUp());
+        assertEquals(5, configuration.player().characteristicPointsOnLevelUp());
     }
 }
