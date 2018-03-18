@@ -9,6 +9,8 @@ import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.spell.SpellLearned;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
+import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
+import fr.quatrevieux.araknemu.game.spell.boost.spell.BoostedSpell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -195,5 +197,34 @@ class SpellBookTest extends GameBaseCase {
         book.removePointsForUpgrade(spell);
 
         assertEquals(1, book.upgradePoints());
+    }
+
+    @Test
+    void getNotBoosted() {
+        List<SpellBookEntry> entries = Arrays.asList(
+            new SpellBookEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3)),
+            new SpellBookEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6))
+        );
+
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, entries);
+
+        assertSame(book.get(3), book.entry(3).spell());
+    }
+
+    @Test
+    void getBoosted() {
+        List<SpellBookEntry> entries = Arrays.asList(
+            new SpellBookEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3)),
+            new SpellBookEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6))
+        );
+
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, entries);
+        book.boosts().boost(3, SpellsBoosts.Modifier.DAMAGE, 50);
+        book.boosts().boost(3, SpellsBoosts.Modifier.AP_COST, 2);
+
+        assertInstanceOf(BoostedSpell.class, book.get(3));
+        assertEquals(57, book.get(3).effects().get(0).min());
+        assertEquals(61, book.get(3).effects().get(0).max());
+        assertEquals(2, book.get(3).apCost());
     }
 }

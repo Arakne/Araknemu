@@ -35,5 +35,7 @@ class AddSpellListenersTest extends GameBaseCase {
         assertTrue(gamePlayer().dispatcher().has(SendLearnedSpell.class));
         assertTrue(gamePlayer().dispatcher().has(SaveUpgradedSpell.class));
         assertTrue(gamePlayer().dispatcher().has(SendUpgradedSpell.class));
+        assertTrue(gamePlayer().dispatcher().has(SendSpellBoost.class));
+        assertTrue(gamePlayer().dispatcher().has(SendAllSpellBoosts.class));
     }
 }

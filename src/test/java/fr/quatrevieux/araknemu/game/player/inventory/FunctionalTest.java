@@ -3,24 +3,30 @@ package fr.quatrevieux.araknemu.game.player.inventory;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Effect;
+import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.inventory.EquipmentChanged;
 import fr.quatrevieux.araknemu.game.event.inventory.ObjectQuantityChanged;
 import fr.quatrevieux.araknemu.game.event.listener.player.SendStats;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.item.type.Wearable;
 import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
 import fr.quatrevieux.araknemu.game.player.inventory.itemset.PlayerItemSet;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.AmuletSlot;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.BootsSlot;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.HelmetSlot;
+import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
+import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.BadLevelException;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.MoveException;
 import fr.quatrevieux.araknemu.network.game.out.object.*;
+import fr.quatrevieux.araknemu.network.game.out.spell.SpellBoost;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -43,6 +49,7 @@ public class FunctionalTest extends GameBaseCase {
             .pushItemSets()
         ;
 
+        container.get(SpellBookService.class).preload(NOPLogger.NOP_LOGGER);
         itemService = container.get(ItemService.class);
         inventory = gamePlayer(true).inventory();
         requestStack.clear();
@@ -465,5 +472,23 @@ public class FunctionalTest extends GameBaseCase {
         entry.move(-1, 1);
 
         assertEquals(0, gamePlayer().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
+    }
+
+
+    @Test
+    void equipSpellModifierItem() throws InventoryException, SQLException, ContainerException {
+        Item item = itemService.retrieve(39, Arrays.asList(
+            new ItemTemplateEffectEntry(Effect.SPELL_ADD_DAMAGE, 3, 0, 15, "")
+        ));
+
+        InventoryEntry entry = inventory.add(item, 1, 0);
+
+        requestStack.assertOne(new SpellBoost(3, SpellsBoosts.Modifier.DAMAGE, 15));
+        assertEquals(15, gamePlayer().spells().boosts().modifiers(3).damage());
+
+        entry.move(-1, 1);
+
+        requestStack.assertOne(new SpellBoost(3, SpellsBoosts.Modifier.DAMAGE, 0));
+        assertEquals(0, gamePlayer().spells().boosts().modifiers(3).damage());
     }
 }

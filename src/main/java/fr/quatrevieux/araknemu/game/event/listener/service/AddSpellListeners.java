@@ -22,8 +22,10 @@ final public class AddSpellListeners implements Listener<PlayerLoaded> {
         event.player().dispatcher().add(new SaveUpgradedSpell(event.player(), repository));
 
         event.player().dispatcher().add(new SendSpellList(event.player()));
+        event.player().dispatcher().add(new SendAllSpellBoosts(event.player()));
         event.player().dispatcher().add(new SendLearnedSpell(event.player()));
         event.player().dispatcher().add(new SendUpgradedSpell(event.player()));
+        event.player().dispatcher().add(new SendSpellBoost(event.player()));
     }
 
     @Override

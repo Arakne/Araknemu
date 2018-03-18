@@ -6,6 +6,10 @@ import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.spell.SpellLearned;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellLevels;
+import fr.quatrevieux.araknemu.game.spell.SpellList;
+import fr.quatrevieux.araknemu.game.spell.boost.DispatcherSpellsBoosts;
+import fr.quatrevieux.araknemu.game.spell.boost.SimpleSpellsBoosts;
+import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
 
 import java.util.Collection;
 import java.util.Map;
@@ -16,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * The player spell book
  */
-final public class SpellBook implements Dispatcher {
+final public class SpellBook implements SpellList, Dispatcher {
     final static public int MAX_POSITION = 24;
 
     final private Dispatcher dispatcher;
@@ -24,11 +28,13 @@ final public class SpellBook implements Dispatcher {
 
     final private Map<Integer, SpellBookEntry> entries;
     final private SpellBookEntry[] entriesByPosition = new SpellBookEntry[MAX_POSITION];
+    final private SpellsBoosts boosts;
 
     public SpellBook(Dispatcher dispatcher, Player player, Collection<SpellBookEntry> entries) {
         this.dispatcher = dispatcher;
         this.player = player;
 
+        this.boosts = new DispatcherSpellsBoosts(new SimpleSpellsBoosts(), dispatcher);
         this.entries = entries
             .stream()
             .map(entry -> entry.attach(this))
@@ -41,6 +47,11 @@ final public class SpellBook implements Dispatcher {
         ;
 
         indexingByPosition();
+    }
+
+    @Override
+    public Spell get(int spellId) {
+        return boosts.get(entry(spellId).spell());
     }
 
     @Override
@@ -116,6 +127,13 @@ final public class SpellBook implements Dispatcher {
     @Deprecated
     public void setUpgradePoints(int points) {
         player.setSpellPoints(points);
+    }
+
+    /**
+     * Get the spells boosts
+     */
+    public SpellsBoosts boosts() {
+        return boosts;
     }
 
     void freePosition(SpellBookEntry entry) {
