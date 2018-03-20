@@ -1,8 +1,10 @@
 package fr.quatrevieux.araknemu.game.player.race;
 
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.spell.SpellLevels;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -69,5 +71,31 @@ class GamePlayerRaceTest extends GameBaseCase {
         assertEquals("Enutrof", race.name());
         assertEquals(120, race.startDiscernment());
         assertEquals(1000, race.startPods());
+    }
+
+    @Test
+    void baseStatsLowLevel() {
+        GamePlayerRace race = service.get(Race.ENUTROF);
+
+        Characteristics characteristics = race.baseStats(1);
+
+        assertEquals(6, characteristics.get(Characteristic.ACTION_POINT));
+        assertEquals(3, characteristics.get(Characteristic.MOVEMENT_POINT));
+        assertEquals(1, characteristics.get(Characteristic.MAX_SUMMONED_CREATURES));
+
+        assertSame(characteristics, race.baseStats(50));
+    }
+
+    @Test
+    void baseStatsHighLevel() {
+        GamePlayerRace race = service.get(Race.ENUTROF);
+
+        Characteristics characteristics = race.baseStats(100);
+
+        assertEquals(7, characteristics.get(Characteristic.ACTION_POINT));
+        assertEquals(3, characteristics.get(Characteristic.MOVEMENT_POINT));
+        assertEquals(1, characteristics.get(Characteristic.MAX_SUMMONED_CREATURES));
+
+        assertSame(characteristics, race.baseStats(150));
     }
 }

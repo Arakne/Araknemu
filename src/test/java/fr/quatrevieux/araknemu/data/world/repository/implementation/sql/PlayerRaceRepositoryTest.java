@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.data.transformer.ImmutableCharacteristicsTransfor
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.transformer.BoostStatsDataTransformer;
+import fr.quatrevieux.araknemu.data.world.transformer.RaceBaseStatsTransformer;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +29,7 @@ class PlayerRaceRepositoryTest extends GameBaseCase {
 
         repository = new PlayerRaceRepository(
             app.database().get("game"),
-            new ImmutableCharacteristicsTransformer(),
+            new RaceBaseStatsTransformer(new ImmutableCharacteristicsTransformer()),
             new BoostStatsDataTransformer()
         );
     }
@@ -44,8 +45,8 @@ class PlayerRaceRepositoryTest extends GameBaseCase {
 
         assertSame(Race.FECA, race.race());
         assertEquals("Feca", race.name());
-        assertTrue(race.baseStats() instanceof DefaultCharacteristics);
-        assertEquals(6, race.baseStats().get(Characteristic.ACTION_POINT));
+        assertContainsOnly(DefaultCharacteristics.class, race.baseStats().values());
+        assertEquals(6, race.baseStats().get(1).get(Characteristic.ACTION_POINT));
         assertEquals(new Position(10300, 320), race.startPosition());
         assertEquals(2, race.boostStats().get(Characteristic.STRENGTH, 15).cost());
         assertEquals(100, race.startDiscernment());

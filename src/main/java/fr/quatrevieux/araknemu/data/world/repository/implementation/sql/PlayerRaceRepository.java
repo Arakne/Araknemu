@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.SortedMap;
 
 /**
  * SQL implementation of the repository
@@ -51,10 +52,10 @@ final class PlayerRaceRepository implements fr.quatrevieux.araknemu.data.world.r
 
     final private ConnectionPoolUtils pool;
     final private RepositoryUtils<PlayerRace> utils;
-    final private Transformer<Characteristics> characteristicsTransformer;
+    final private Transformer<SortedMap<Integer, Characteristics>> characteristicsTransformer;
     final private Transformer<BoostStatsData> boostStatsDataTransformer;
 
-    public PlayerRaceRepository(ConnectionPool connection, Transformer<Characteristics> characteristicsTransformer, Transformer<BoostStatsData> boostStatsDataTransformer) {
+    public PlayerRaceRepository(ConnectionPool connection, Transformer<SortedMap<Integer, Characteristics>> characteristicsTransformer, Transformer<BoostStatsData> boostStatsDataTransformer) {
         this.characteristicsTransformer = characteristicsTransformer;
         this.boostStatsDataTransformer = boostStatsDataTransformer;
 

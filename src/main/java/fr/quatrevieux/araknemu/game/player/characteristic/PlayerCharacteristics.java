@@ -34,12 +34,7 @@ final public class PlayerCharacteristics implements Characteristics {
         this.player = player;
         this.entity = entity;
         this.race = player.race();
-
-        this.base = new BaseCharacteristics(
-            dispatcher,
-            race.baseStats(),
-            entity.stats()
-        );
+        this.base = new BaseCharacteristics(dispatcher, race, entity);
 
         this.stuff = computeStuffStats();
     }

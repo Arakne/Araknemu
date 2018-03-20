@@ -26,7 +26,7 @@ final public class WorldRepositoriesModule implements ContainerModule {
             container -> new PlayerRaceRepositoryCache(
                 new PlayerRaceRepository(
                     connection,
-                    container.get(ImmutableCharacteristicsTransformer.class),
+                    container.get(RaceBaseStatsTransformer.class),
                     container.get(BoostStatsDataTransformer.class)
                 )
             )
@@ -79,8 +79,10 @@ final public class WorldRepositoriesModule implements ContainerModule {
         );
 
         configurator.persist(
-            ImmutableCharacteristicsTransformer.class,
-            container -> new ImmutableCharacteristicsTransformer()
+            RaceBaseStatsTransformer.class,
+            container -> new RaceBaseStatsTransformer(
+                new ImmutableCharacteristicsTransformer()
+            )
         );
 
         configurator.persist(

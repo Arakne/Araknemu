@@ -5,13 +5,15 @@ import fr.quatrevieux.araknemu.data.value.BoostStatsData;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 
+import java.util.SortedMap;
+
 /**
  * Entity for player race
  */
 final public class PlayerRace {
     final private Race race;
     final private String name;
-    final private Characteristics baseStats;
+    final private SortedMap<Integer, Characteristics> baseStats;
     final private int startDiscernment;
     final private int startPods;
     final private int startLife;
@@ -20,7 +22,7 @@ final public class PlayerRace {
     final private Position startPosition;
     final private int[] spells;
 
-    public PlayerRace(Race race, String name, Characteristics baseStats, int startDiscernment, int startPods, int startLife, int perLevelLife, BoostStatsData boostStats, Position startPosition, int[] spells) {
+    public PlayerRace(Race race, String name, SortedMap<Integer, Characteristics> baseStats, int startDiscernment, int startPods, int startLife, int perLevelLife, BoostStatsData boostStats, Position startPosition, int[] spells) {
         this.race = race;
         this.name = name;
         this.baseStats = baseStats;
@@ -45,7 +47,7 @@ final public class PlayerRace {
         return name;
     }
 
-    public Characteristics baseStats() {
+    public SortedMap<Integer, Characteristics> baseStats() {
         return baseStats;
     }
 

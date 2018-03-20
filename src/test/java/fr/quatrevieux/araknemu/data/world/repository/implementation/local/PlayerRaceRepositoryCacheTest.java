@@ -43,7 +43,8 @@ class PlayerRaceRepositoryCacheTest extends GameBaseCase {
         assertEquals(Race.CRA, race.race());
         assertEquals("Cra", race.name());
         assertEquals(10300, race.startPosition().map());
-        assertEquals(6, race.baseStats().get(Characteristic.ACTION_POINT));
+        assertEquals(6, race.baseStats().get(1).get(Characteristic.ACTION_POINT));
+        assertEquals(7, race.baseStats().get(100).get(Characteristic.ACTION_POINT));
     }
 
     @Test

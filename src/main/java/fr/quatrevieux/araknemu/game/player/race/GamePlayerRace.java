@@ -6,6 +6,8 @@ import fr.quatrevieux.araknemu.data.value.BoostStatsData;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.game.spell.SpellLevels;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -59,8 +61,14 @@ final public class GamePlayerRace {
     /**
      * Get the race start stats
      */
-    public Characteristics baseStats() {
-        return entity.baseStats();
+    public Characteristics baseStats(int level) {
+        for (Map.Entry<Integer, Characteristics> entry  : entity.baseStats().entrySet()) {
+            if (entry.getKey() <= level) {
+                return entry.getValue();
+            }
+        }
+
+        throw new IllegalArgumentException("Not handled level " + level + " for race stats " + name());
     }
 
     /**
