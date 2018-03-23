@@ -24,31 +24,29 @@ import java.util.*;
  * ... Wait for end...
  *
  * The action have 2 different types of ending :
- * - {@link Action#end()}  When an action is successfully ended
- * - {@link Action#cancel(String)} When an error occurs during the action, and should be stopped prematurely
+ * - {@link BlockingAction#end()}  When an action is successfully ended
+ * - {@link BlockingAction#cancel(String)} When an error occurs during the action, and should be stopped prematurely
  */
 final public class ActionQueue {
     final private Queue<Action> actions = new ArrayDeque<>();
+
+    private BlockingAction current;
     private byte lastActionId = 0;
 
     /**
      * Check if the queue is not empty
      */
     public boolean isBusy() {
-        return !actions.isEmpty();
+        return current != null;
     }
 
     /**
      * Push the action to the queue, and start it if not busy
      */
     public void push(Action action) throws Exception {
-        action.setId(generateId());
-
         actions.add(action);
 
-        if (actions.size() == 1) {
-            run();
-        }
+        runNextAction();
     }
 
     /**
@@ -57,18 +55,14 @@ final public class ActionQueue {
      * @param actionId The action to end
      */
     public void end(int actionId) throws Exception {
-        Action action = actions.element();
-
-        if (action.id() != actionId) {
+        if (current == null || current.id() != actionId) {
             throw new NoSuchElementException("The action ID do not corresponds");
         }
 
-        action.end();
-        actions.remove();
+        current.end();
+        current = null;
 
-        if (isBusy()) {
-            run();
-        }
+        runNextAction();
     }
 
     /**
@@ -80,15 +74,14 @@ final public class ActionQueue {
      * @throws Exception
      */
     public void cancel(int actionId, String argument) throws Exception {
-        Action current = actions.element();
-
-        if (current.id() != actionId) {
+        if (current == null || current.id() != actionId) {
             throw new NoSuchElementException("The action ID do not corresponds");
         }
 
         try {
-            actions.element().cancel(argument);
+            current.cancel(argument);
         } finally {
+            current = null;
             actions.clear();
         }
     }
@@ -101,19 +94,24 @@ final public class ActionQueue {
     }
 
     /**
-     * Run the current action.
+     * Run the next pending action
      *
      * If an error occurs during the action, it will be removed
      */
-    private void run() throws Exception {
+    private void runNextAction() throws Exception {
         Exception error = null;
 
-        while (isBusy()) {
+        while (this.current == null && !actions.isEmpty()) {
+            Action action = actions.remove();
+
             try {
-                actions.element().start();
-                break;
+                if (action instanceof BlockingAction) {
+                    setCurrent((BlockingAction) action);
+                }
+
+                action.start();
             } catch (Exception e) {
-                actions.remove();
+                this.current = null;
                 error = e;
             }
         }
@@ -121,5 +119,11 @@ final public class ActionQueue {
         if (error != null) {
             throw error;
         }
+    }
+
+    private void setCurrent(BlockingAction current) {
+        current.setId(generateId());
+
+        this.current = current;
     }
 }

@@ -22,7 +22,7 @@ class ActionQueueTest extends GameBaseCase {
 
     @Test
     void pushFirstWillRunAndSetBusy() throws Exception {
-        Action action = Mockito.mock(Action.class);
+        BlockingAction action = Mockito.mock(BlockingAction.class);
 
         queue.push(action);
 
@@ -31,24 +31,24 @@ class ActionQueueTest extends GameBaseCase {
     }
 
     @Test
-    void pushWillSetId() throws Exception {
-        Action a1 = Mockito.mock(Action.class);
-        Action a2 = Mockito.mock(Action.class);
-        Action a3 = Mockito.mock(Action.class);
+    void pushWillSetIdOnTheFirst() throws Exception {
+        BlockingAction a1 = Mockito.mock(BlockingAction.class);
+        BlockingAction a2 = Mockito.mock(BlockingAction.class);
+        BlockingAction a3 = Mockito.mock(BlockingAction.class);
 
         queue.push(a1);
         queue.push(a2);
         queue.push(a3);
 
         Mockito.verify(a1).setId(1);
-        Mockito.verify(a2).setId(2);
-        Mockito.verify(a3).setId(3);
+        Mockito.verify(a2, Mockito.never()).setId(Mockito.anyInt());
+        Mockito.verify(a3, Mockito.never()).setId(Mockito.anyInt());
     }
 
     @Test
-    void pushTwoWillStartOnlyTheFirst() throws Exception {
-        Action a1 = Mockito.mock(Action.class);
-        Action a2 = Mockito.mock(Action.class);
+    void pushTwoWillStartOnlyTheFirstOnBlocking() throws Exception {
+        BlockingAction a1 = Mockito.mock(BlockingAction.class);
+        BlockingAction a2 = Mockito.mock(BlockingAction.class);
 
         queue.push(a1);
         queue.push(a2);
@@ -60,8 +60,8 @@ class ActionQueueTest extends GameBaseCase {
     }
 
     @Test
-    void endWithOneActionWillTerminateTheCurrentActionAndClearTheQueue() throws Exception {
-        Action action = Mockito.mock(Action.class);
+    void endWithOneBlockingActionWillTerminateTheCurrentActionAndClearTheQueue() throws Exception {
+        BlockingAction action = Mockito.mock(BlockingAction.class);
         Mockito.when(action.id()).thenReturn(1);
 
         queue.push(action);
@@ -73,8 +73,8 @@ class ActionQueueTest extends GameBaseCase {
 
     @Test
     void endWithTwoActionWillStartTheNextAction() throws Exception {
-        Action a1 = Mockito.mock(Action.class);
-        Action a2 = Mockito.mock(Action.class);
+        BlockingAction a1 = Mockito.mock(BlockingAction.class);
+        BlockingAction a2 = Mockito.mock(BlockingAction.class);
         Mockito.when(a1.id()).thenReturn(1);
 
         queue.push(a1);
@@ -90,7 +90,7 @@ class ActionQueueTest extends GameBaseCase {
 
     @Test
     void startWithExceptionWillRemoveTheAction() throws Exception {
-        Action action = Mockito.mock(Action.class);
+        BlockingAction action = Mockito.mock(BlockingAction.class);
 
         Mockito.doThrow(new Exception("my error")).when(action).start();
 
@@ -100,9 +100,9 @@ class ActionQueueTest extends GameBaseCase {
 
     @Test
     void startWithExceptionWillExecuteTheNextAction() throws Exception {
-        Action a1 = Mockito.mock(Action.class);
-        Action a2 = Mockito.mock(Action.class);
-        Action a3 = Mockito.mock(Action.class);
+        BlockingAction a1 = Mockito.mock(BlockingAction.class);
+        BlockingAction a2 = Mockito.mock(BlockingAction.class);
+        BlockingAction a3 = Mockito.mock(BlockingAction.class);
         Mockito.when(a1.id()).thenReturn(1);
         Mockito.when(a3.id()).thenReturn(3);
 
@@ -130,7 +130,7 @@ class ActionQueueTest extends GameBaseCase {
 
     @Test
     void endWithBadId() throws Exception {
-        Action a1 = Mockito.mock(Action.class);
+        BlockingAction a1 = Mockito.mock(BlockingAction.class);
         Mockito.when(a1.id()).thenReturn(1);
 
         queue.push(a1);
@@ -145,7 +145,7 @@ class ActionQueueTest extends GameBaseCase {
 
     @Test
     void cancelWithBadId() throws Exception {
-        Action a1 = Mockito.mock(Action.class);
+        BlockingAction a1 = Mockito.mock(BlockingAction.class);
         Mockito.when(a1.id()).thenReturn(1);
 
         queue.push(a1);
@@ -155,9 +155,9 @@ class ActionQueueTest extends GameBaseCase {
 
     @Test
     void cancelWillClearTheQueue() throws Exception {
-        Action a1 = Mockito.mock(Action.class);
-        Action a2 = Mockito.mock(Action.class);
-        Action a3 = Mockito.mock(Action.class);
+        BlockingAction a1 = Mockito.mock(BlockingAction.class);
+        BlockingAction a2 = Mockito.mock(BlockingAction.class);
+        BlockingAction a3 = Mockito.mock(BlockingAction.class);
 
         Mockito.when(a1.id()).thenReturn(1);
 
@@ -168,6 +168,40 @@ class ActionQueueTest extends GameBaseCase {
         queue.cancel(1, "arg");
 
         Mockito.verify(a1).cancel("arg");
+
+        assertFalse(queue.isBusy());
+    }
+
+    @Test
+    void pushNonBlockingActionWillExecuteAll() throws Exception {
+        Action a1 = Mockito.mock(Action.class);
+        Action a2 = Mockito.mock(Action.class);
+        Action a3 = Mockito.mock(Action.class);
+
+        queue.push(a1);
+        queue.push(a2);
+        queue.push(a3);
+
+        Mockito.verify(a1).start();
+        Mockito.verify(a2).start();
+        Mockito.verify(a3).start();
+
+        assertFalse(queue.isBusy());
+    }
+
+    @Test
+    void nonBlockingActionAfterBlockingWillBeExecuteAtEnd() throws Exception {
+        BlockingAction a1 = Mockito.mock(BlockingAction.class);
+        Action a2 = Mockito.mock(Action.class);
+
+        queue.push(a1);
+        Mockito.verify(a1).start();
+
+        queue.push(a2);
+        queue.end(a1.id());
+
+        Mockito.verify(a1).end();
+        Mockito.verify(a2).start();
 
         assertFalse(queue.isBusy());
     }

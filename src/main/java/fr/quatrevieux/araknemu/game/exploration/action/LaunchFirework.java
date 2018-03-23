@@ -6,7 +6,7 @@ import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 /**
  * Launch a firework to the map
  */
-final public class LaunchFirework implements Action {
+final public class LaunchFirework implements BlockingAction {
     final private ExplorationPlayer player;
 
     final private int cell;

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Move the player
  */
-final public class Move implements Action {
+final public class Move implements BlockingAction {
     final private ExplorationPlayer player;
     private List<PathStep> path;
 
