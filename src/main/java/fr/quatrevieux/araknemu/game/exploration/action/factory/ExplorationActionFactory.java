@@ -1,9 +1,7 @@
 package fr.quatrevieux.araknemu.game.exploration.action.factory;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.action.Action;
-import fr.quatrevieux.araknemu.game.exploration.action.ActionType;
-import fr.quatrevieux.araknemu.game.exploration.action.Move;
+import fr.quatrevieux.araknemu.game.exploration.action.*;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
 
@@ -25,6 +23,24 @@ final public class ExplorationActionFactory implements ActionFactory {
                     player.position().cell()
                 )
             )
+        );
+
+        factories.put(
+            ActionType.CHALLENGE,
+            (player, request) -> new AskChallenge(
+                player,
+                player.map().getPlayer(Integer.parseInt(request.arguments()[0]))
+            )
+        );
+
+        factories.put(
+            ActionType.ACCEPT_CHALLENGE,
+            (player, request) -> new AcceptChallenge(player, Integer.parseInt(request.arguments()[0]))
+        );
+
+        factories.put(
+            ActionType.REFUSE_CHALLENGE,
+            (player, request) -> new RefuseChallenge(player, Integer.parseInt(request.arguments()[0]))
         );
     }
 

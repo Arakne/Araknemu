@@ -1,9 +1,8 @@
 package fr.quatrevieux.araknemu.game.exploration.action.factory;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.exploration.action.Action;
-import fr.quatrevieux.araknemu.game.exploration.action.ActionType;
-import fr.quatrevieux.araknemu.game.exploration.action.Move;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.action.*;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,5 +46,38 @@ class ExplorationActionFactoryTest extends GameBaseCase {
         assertEquals(99, move.path().get(1).cell());
         assertEquals(98, move.path().get(2).cell());
         assertEquals(69, move.path().get(3).cell());
+    }
+
+    @Test
+    void createAskChallenge() throws Exception {
+        ExplorationPlayer other = new ExplorationPlayer(makeOtherPlayer());
+
+        explorationPlayer().map().add(other);
+
+        Action action = factory.create(explorationPlayer(), new GameActionRequest(ActionType.CHALLENGE, new String[] {"" + other.id()}));
+
+        assertInstanceOf(AskChallenge.class, action);
+    }
+
+    @Test
+    void createAcceptChallenge() throws Exception {
+        ExplorationPlayer other = new ExplorationPlayer(makeOtherPlayer());
+
+        explorationPlayer().map().add(other);
+
+        Action action = factory.create(explorationPlayer(), new GameActionRequest(ActionType.ACCEPT_CHALLENGE, new String[] {"" + other.id()}));
+
+        assertInstanceOf(AcceptChallenge.class, action);
+    }
+
+    @Test
+    void createRefuseChallenge() throws Exception {
+        ExplorationPlayer other = new ExplorationPlayer(makeOtherPlayer());
+
+        explorationPlayer().map().add(other);
+
+        Action action = factory.create(explorationPlayer(), new GameActionRequest(ActionType.REFUSE_CHALLENGE, new String[] {"" + other.id()}));
+
+        assertInstanceOf(RefuseChallenge.class, action);
     }
 }

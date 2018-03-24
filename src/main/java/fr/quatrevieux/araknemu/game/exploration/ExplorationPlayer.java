@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.game.event.exploration.MapChanged;
 import fr.quatrevieux.araknemu.game.event.exploration.MapLeaved;
 import fr.quatrevieux.araknemu.game.event.exploration.MapLoaded;
 import fr.quatrevieux.araknemu.game.exploration.action.ActionQueue;
+import fr.quatrevieux.araknemu.game.exploration.interaction.InteractionHandler;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.player.*;
 import fr.quatrevieux.araknemu.game.player.characteristic.Life;
@@ -30,6 +31,7 @@ final public class ExplorationPlayer implements PlayableCharacter, Sender, Creat
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
     final private ActionQueue actionQueue = new ActionQueue();
+    final private InteractionHandler interactions = new InteractionHandler();
 
     private ExplorationMap map;
 
@@ -167,6 +169,10 @@ final public class ExplorationPlayer implements PlayableCharacter, Sender, Creat
      */
     public ActionQueue actionQueue() {
         return actionQueue;
+    }
+
+    public InteractionHandler interactions() {
+        return interactions;
     }
 
     /**

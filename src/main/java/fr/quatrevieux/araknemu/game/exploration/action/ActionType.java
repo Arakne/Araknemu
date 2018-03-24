@@ -10,7 +10,11 @@ public enum ActionType {
     NONE(0),
     MOVE(1),
     CHANGE_MAP(2),
-    FIREWORK(228);
+    FIREWORK(228),
+    CHALLENGE(900),
+    ACCEPT_CHALLENGE(901),
+    REFUSE_CHALLENGE(902),
+    JOIN_FIGHT_ERROR(903);
 
     final private int id;
 

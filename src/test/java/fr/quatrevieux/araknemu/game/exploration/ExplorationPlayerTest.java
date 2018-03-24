@@ -159,4 +159,9 @@ class ExplorationPlayerTest extends GameBaseCase {
     void life() {
         assertInstanceOf(Life.class, player.life());
     }
+
+    @Test
+    void interactions() {
+        assertFalse(player.interactions().busy());
+    }
 }
