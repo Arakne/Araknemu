@@ -32,6 +32,10 @@ final public class Move implements BlockingAction {
 
     @Override
     public void cancel(String argument) throws Exception {
+        if (argument == null) {
+            return;
+        }
+
         int cellId = Integer.parseInt(argument);
 
         for (PathStep step : path) {

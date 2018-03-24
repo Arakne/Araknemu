@@ -1,12 +1,13 @@
 package fr.quatrevieux.araknemu.game.exploration.interaction.challenge;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.interaction.Declinable;
 import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
 
 /**
  * Base dialog for challenge invitation
  */
-abstract public class ChallengeDialog implements Interaction {
+abstract public class ChallengeDialog implements Interaction, Declinable {
     final protected ChallengeInvitation invitation;
 
     public ChallengeDialog(ChallengeInvitation invitation) {
@@ -26,6 +27,7 @@ abstract public class ChallengeDialog implements Interaction {
     /**
      * Decline the challenge invitation
      */
+    @Override
     public void decline() {
         invitation.cancel(this);
     }

@@ -205,4 +205,35 @@ class ActionQueueTest extends GameBaseCase {
 
         assertFalse(queue.isBusy());
     }
+
+    @Test
+    void stopWithoutActions() {
+        queue.stop();
+    }
+
+    @Test
+    void stopWithOnlyOneCurrentAction() throws Exception {
+        BlockingAction a1 = Mockito.mock(BlockingAction.class);
+
+        queue.push(a1);
+
+        queue.stop();
+
+        assertFalse(queue.isBusy());
+        Mockito.verify(a1).cancel(null);
+    }
+
+    @Test
+    void stopWithPendingAction() throws Exception {
+        BlockingAction a1 = Mockito.mock(BlockingAction.class);
+        Action a2 = Mockito.mock(Action.class);
+
+        queue.push(a1);
+        queue.push(a2);
+
+        queue.stop();
+
+        assertFalse(queue.isBusy());
+        Mockito.verify(a1).cancel(null);
+    }
 }

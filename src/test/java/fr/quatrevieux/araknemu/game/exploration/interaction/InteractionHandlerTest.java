@@ -68,6 +68,19 @@ class InteractionHandlerTest extends TestCase {
     }
 
     @Test
+    void stopWillStopGameActions() throws Exception {
+        BlockingAction current = Mockito.mock(BlockingAction.class);
+
+        handler.push(current);
+        handler.push(Mockito.mock(BlockingAction.class));
+
+        handler.stop();
+
+        assertFalse(handler.busy());
+        Mockito.verify(current).cancel(null);
+    }
+
+    @Test
     void getNoInteraction() {
         assertThrows(IllegalArgumentException.class, () -> handler.get(Interaction.class));
     }

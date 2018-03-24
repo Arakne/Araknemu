@@ -110,6 +110,34 @@ class MoveTest extends GameBaseCase {
     }
 
     @Test
+    void moveWithCancelNull() throws Exception {
+        Move move = new Move(
+            player,
+            player.map().decoder().decodePath("bftdgl", 279)
+        );
+
+        move.setId(1);
+
+        player.interactions().push(move);
+
+        requestStack.assertLast(
+            new GameActionResponse(
+                1,
+                ActionType.MOVE,
+                gamePlayer().id(),
+                "aexbftdgl"
+            )
+        );
+
+        assertTrue(player.interactions().busy());
+
+        player.interactions().cancel(1, null);
+        assertFalse(player.interactions().busy());
+
+        assertEquals(279, player.position().cell());
+    }
+
+    @Test
     void moveWithCancelNotInPath() throws Exception {
         Move move = new Move(
             player,

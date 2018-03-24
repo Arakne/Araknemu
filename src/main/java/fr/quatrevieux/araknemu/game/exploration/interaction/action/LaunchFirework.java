@@ -23,17 +23,15 @@ final public class LaunchFirework implements BlockingAction {
     }
 
     @Override
-    public void start() throws Exception {
+    public void start() {
         player.map().send(new GameActionResponse(this));
     }
 
     @Override
-    public void cancel(String argument) throws Exception {
-        throw new UnsupportedOperationException();
-    }
+    public void cancel(String argument) {}
 
     @Override
-    public void end() throws Exception {}
+    public void end() {}
 
     @Override
     public int id() {

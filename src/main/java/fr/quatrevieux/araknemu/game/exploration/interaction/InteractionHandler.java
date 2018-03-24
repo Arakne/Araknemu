@@ -21,21 +21,21 @@ final public class InteractionHandler {
 
     /**
      * Check if the player is busy
-     *
-     * @todo Add game actions check
      */
     public boolean busy() {
         return interacting() || gameActions.isBusy();
     }
 
     /**
-     * Stop interaction if player is interacting
+     * Stop all interactions
      */
     public void stop() {
         if (current != null) {
             current.stop();
             current = null;
         }
+
+        gameActions.stop();
     }
 
     /**

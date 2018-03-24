@@ -27,20 +27,17 @@ final public class ChangeMap implements BlockingAction {
     }
 
     @Override
-    public void start() throws Exception {
+    public void start() {
         player.leave();
 
-        // @fixme send packet from game actions ?
         player.send(new GameActionResponse(this));
     }
 
     @Override
-    public void cancel(String argument) throws Exception {
-        throw new UnsupportedOperationException();
-    }
+    public void cancel(String argument) {}
 
     @Override
-    public void end() throws Exception {
+    public void end() {
         player.changeMap(map, cell);
     }
 

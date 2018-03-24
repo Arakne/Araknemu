@@ -3,8 +3,10 @@ package fr.quatrevieux.araknemu.game.event.listener.player;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.common.Disconnected;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.sql.SQLException;
 
@@ -28,5 +30,14 @@ class StopExplorationTest extends GameBaseCase {
         listener.on(new Disconnected());
 
         assertFalse(explorationPlayer().map().players().contains(explorationPlayer()));
+    }
+
+    @Test
+    void onDisconnectWillStopInteractions() throws Exception {
+        explorationPlayer().interactions().push(Mockito.mock(BlockingAction.class));
+
+        listener.on(new Disconnected());
+
+        assertFalse(explorationPlayer().interactions().busy());
     }
 }

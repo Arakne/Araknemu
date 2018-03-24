@@ -87,6 +87,26 @@ final public class ActionQueue {
     }
 
     /**
+     * Remove all pending actions and cancel the current action
+     *
+     * This method MUST not throws exceptions
+     * If a blocking action receive NULL as argument for cancel, no error must be raised
+     */
+    public void stop() {
+        actions.clear();
+
+        if (current != null) {
+            try {
+                current.cancel(null);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            } finally {
+                current = null;
+            }
+        }
+    }
+
+    /**
      * Generate a new action id
      */
     private int generateId() {

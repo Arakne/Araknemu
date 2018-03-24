@@ -17,6 +17,7 @@ final public class StopExploration implements Listener<Disconnected> {
     @Override
     public void on(Disconnected event) {
         player.leave();
+        player.interactions().stop();
     }
 
     @Override

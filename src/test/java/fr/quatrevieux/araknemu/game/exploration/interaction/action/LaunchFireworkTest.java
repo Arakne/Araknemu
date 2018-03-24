@@ -51,7 +51,7 @@ class LaunchFireworkTest extends GameBaseCase {
     }
 
     @Test
-    void start() throws Exception {
+    void start() {
         action.start();
 
         requestStack.assertLast(
@@ -61,6 +61,6 @@ class LaunchFireworkTest extends GameBaseCase {
 
     @Test
     void cancel() {
-        assertThrows(UnsupportedOperationException.class, () -> action.cancel(""));
+        action.cancel(null);
     }
 }
