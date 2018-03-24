@@ -1,18 +1,22 @@
 package fr.quatrevieux.araknemu.game.handler.game;
 
-import fr.quatrevieux.araknemu.data.value.Position;
+import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
-import fr.quatrevieux.araknemu.game.exploration.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
-import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.sql.SQLException;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ValidateGameActionTest extends GameBaseCase {
     private ValidateGameAction handler;
@@ -51,11 +55,29 @@ class ValidateGameActionTest extends GameBaseCase {
             )
         );
 
-        assertTrue(explorationPlayer().actionQueue().isBusy());
+        assertTrue(explorationPlayer().interactions().busy());
     }
 
     @Test
     void handleBadRequest() {
         assertThrows(ErrorPacket.class, () -> handler.handle(session, new GameActionRequest(ActionType.NONE, new String[0])));
+    }
+
+    @Test
+    void handleFailedWhenInteracting() throws SQLException, ContainerException {
+        Interaction interaction = Mockito.mock(Interaction.class);
+        Mockito.when(interaction.start()).thenReturn(interaction);
+        explorationPlayer().interactions().start(interaction);
+
+        assertThrows(
+            ErrorPacket.class,
+            () -> handler.handle(
+                session,
+                new GameActionRequest(
+                    ActionType.MOVE,
+                    new String[] {"bftdgl"}
+                )
+            )
+        );
     }
 }

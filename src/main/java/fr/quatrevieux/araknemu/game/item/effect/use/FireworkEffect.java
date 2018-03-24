@@ -1,7 +1,7 @@
 package fr.quatrevieux.araknemu.game.item.effect.use;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.action.LaunchFirework;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.LaunchFirework;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
 import fr.quatrevieux.araknemu.util.RandomUtil;
 
@@ -19,7 +19,7 @@ final public class FireworkEffect implements UseEffectHandler {
         int size = random.rand(effect.arguments());
 
         try {
-            caster.actionQueue().push(
+            caster.interactions().push(
                 new LaunchFirework(
                     caster,
                     cell,

@@ -6,18 +6,14 @@ import fr.quatrevieux.araknemu.network.in.PacketHandler;
 
 /**
  * End the current game action with success
- *
- * @todo check the action id
  */
 final public class EndGameAction implements PacketHandler<GameSession, GameActionAcknowledge> {
     @Override
     public void handle(GameSession session, GameActionAcknowledge packet) throws Exception {
         session
             .exploration()
-            .actionQueue()
-            .end(
-                packet.actionId()
-            )
+            .interactions()
+            .end(packet.actionId())
         ;
     }
 

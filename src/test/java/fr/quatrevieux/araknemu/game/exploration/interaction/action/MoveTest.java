@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.exploration.action;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
@@ -32,7 +32,7 @@ class MoveTest extends GameBaseCase {
 
         move.setId(1);
 
-        player.actionQueue().push(move);
+        player.interactions().push(move);
 
         requestStack.assertLast(
             new GameActionResponse(
@@ -43,10 +43,10 @@ class MoveTest extends GameBaseCase {
             )
         );
 
-        assertTrue(player.actionQueue().isBusy());
+        assertTrue(player.interactions().busy());
 
-        player.actionQueue().end(1);
-        assertFalse(player.actionQueue().isBusy());
+        player.interactions().end(1);
+        assertFalse(player.interactions().busy());
 
         assertEquals(395, player.position().cell());
     }
@@ -60,7 +60,7 @@ class MoveTest extends GameBaseCase {
 
         move.setId(1);
 
-        player.actionQueue().push(move);
+        player.interactions().push(move);
 
         assertEquals(1, move.id());
         assertEquals(player, move.performer());
@@ -77,8 +77,8 @@ class MoveTest extends GameBaseCase {
 
         move.setId(1);
 
-        assertThrows(Exception.class, () -> player.actionQueue().push(move), "Empty path");
-        assertFalse(player.actionQueue().isBusy());
+        assertThrows(Exception.class, () -> player.interactions().push(move), "Empty path");
+        assertFalse(player.interactions().busy());
     }
 
     @Test
@@ -90,7 +90,7 @@ class MoveTest extends GameBaseCase {
 
         move.setId(1);
 
-        player.actionQueue().push(move);
+        player.interactions().push(move);
 
         requestStack.assertLast(
             new GameActionResponse(
@@ -101,10 +101,10 @@ class MoveTest extends GameBaseCase {
             )
         );
 
-        assertTrue(player.actionQueue().isBusy());
+        assertTrue(player.interactions().busy());
 
-        player.actionQueue().cancel(1, "294");
-        assertFalse(player.actionQueue().isBusy());
+        player.interactions().cancel(1, "294");
+        assertFalse(player.interactions().busy());
 
         assertEquals(294, player.position().cell());
     }
@@ -118,7 +118,7 @@ class MoveTest extends GameBaseCase {
 
         move.setId(1);
 
-        player.actionQueue().push(move);
+        player.interactions().push(move);
 
         requestStack.assertLast(
             new GameActionResponse(
@@ -129,10 +129,10 @@ class MoveTest extends GameBaseCase {
             )
         );
 
-        assertTrue(player.actionQueue().isBusy());
+        assertTrue(player.interactions().busy());
 
-        assertThrows(Exception.class, () -> player.actionQueue().cancel(1, "410"), "Invalid cell");
-        assertFalse(player.actionQueue().isBusy());
+        assertThrows(Exception.class, () -> player.interactions().cancel(1, "410"), "Invalid cell");
+        assertFalse(player.interactions().busy());
 
         assertEquals(279, player.position().cell());
     }

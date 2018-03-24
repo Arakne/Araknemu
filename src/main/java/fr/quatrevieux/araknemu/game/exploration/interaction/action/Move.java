@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.exploration.action;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action;
 
 import fr.quatrevieux.araknemu.game.event.exploration.action.PlayerMoveFinished;
 import fr.quatrevieux.araknemu.game.event.exploration.action.PlayerMoving;

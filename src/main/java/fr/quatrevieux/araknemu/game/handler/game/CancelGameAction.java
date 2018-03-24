@@ -12,7 +12,7 @@ final public class CancelGameAction implements PacketHandler<GameSession, GameAc
     public void handle(GameSession session, GameActionCancel packet) throws Exception {
         session
             .exploration()
-            .actionQueue()
+            .interactions()
             .cancel(
                 packet.actionId(),
                 packet.argument()

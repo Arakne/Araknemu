@@ -1,8 +1,8 @@
 package fr.quatrevieux.araknemu.network.game.out.game.action;
 
-import fr.quatrevieux.araknemu.game.exploration.action.Action;
-import fr.quatrevieux.araknemu.game.exploration.action.ActionType;
-import fr.quatrevieux.araknemu.game.exploration.action.BlockingAction;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
 
 /**
  * Response for a game action

@@ -6,8 +6,8 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.listener.player.InitializeGame;
 import fr.quatrevieux.araknemu.game.event.listener.player.SendMapData;
 import fr.quatrevieux.araknemu.game.event.listener.player.StopExploration;
-import fr.quatrevieux.araknemu.game.exploration.action.ActionType;
-import fr.quatrevieux.araknemu.game.exploration.action.factory.ExplorationActionFactory;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.factory.ExplorationActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
@@ -63,6 +63,6 @@ class ExplorationServiceTest extends GameBaseCase {
             )
         );
 
-        assertTrue(player.actionQueue().isBusy());
+        assertTrue(player.interactions().busy());
     }
 }

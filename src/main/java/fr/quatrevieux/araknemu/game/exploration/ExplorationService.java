@@ -3,7 +3,7 @@ package fr.quatrevieux.araknemu.game.exploration;
 import fr.quatrevieux.araknemu.game.event.listener.player.StopExploration;
 import fr.quatrevieux.araknemu.game.event.listener.player.InitializeGame;
 import fr.quatrevieux.araknemu.game.event.listener.player.SendMapData;
-import fr.quatrevieux.araknemu.game.exploration.action.factory.ActionFactory;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.factory.ActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
@@ -42,7 +42,7 @@ final public class ExplorationService {
      * @throws Exception When cannot perform the action
      */
     public void action(ExplorationPlayer player, GameActionRequest request) throws Exception {
-        player.actionQueue().push(
+        player.interactions().push(
             actionFactory.create(player, request)
         );
     }

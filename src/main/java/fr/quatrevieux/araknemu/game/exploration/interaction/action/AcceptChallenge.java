@@ -1,29 +1,31 @@
-package fr.quatrevieux.araknemu.game.exploration.action;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengeDialog;
+import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengerDialog;
+import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 
 /**
- * Refuse or cancel the challenge invitation
+ * Accept the challenge invitation
  */
-final public class RefuseChallenge implements Action {
+final public class AcceptChallenge implements Action {
     final private ExplorationPlayer player;
     final private int target;
 
-    public RefuseChallenge(ExplorationPlayer player, int target) {
+    public AcceptChallenge(ExplorationPlayer player, int target) {
         this.player = player;
         this.target = target;
     }
 
     @Override
     public void start() {
-        ChallengeDialog dialog = player.interactions().get(ChallengeDialog.class);
+        ChallengerDialog dialog = player.interactions().get(ChallengerDialog.class);
 
         if (dialog.initiator().id() != target) {
             throw new IllegalArgumentException("Invalid challenge target");
         }
 
-        dialog.decline();
+        dialog.accept();
     }
 
     @Override
@@ -33,7 +35,7 @@ final public class RefuseChallenge implements Action {
 
     @Override
     public ActionType type() {
-        return ActionType.REFUSE_CHALLENGE;
+        return ActionType.ACCEPT_CHALLENGE;
     }
 
     @Override

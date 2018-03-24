@@ -4,7 +4,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.exploration.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.MapData;
@@ -44,7 +44,7 @@ class TeleportTest extends GameBaseCase {
             explorationPlayer().position()
         );
 
-        assertFalse(explorationPlayer().actionQueue().isBusy());
+        assertFalse(explorationPlayer().interactions().busy());
 
         requestStack.assertLast(
             new AddSprites(
@@ -60,7 +60,7 @@ class TeleportTest extends GameBaseCase {
             explorationPlayer()
         );
 
-        assertTrue(explorationPlayer().actionQueue().isBusy());
+        assertTrue(explorationPlayer().interactions().busy());
 
         requestStack.assertLast(
             new GameActionResponse(1, ActionType.CHANGE_MAP, explorationPlayer().id(), "")

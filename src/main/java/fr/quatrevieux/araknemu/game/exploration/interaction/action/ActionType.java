@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.exploration.action;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action;
 
 import java.util.HashMap;
 import java.util.Map;

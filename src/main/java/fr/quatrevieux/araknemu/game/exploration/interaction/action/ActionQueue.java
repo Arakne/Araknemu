@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.exploration.action;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action;
 
 import java.util.*;
 
@@ -37,7 +37,7 @@ final public class ActionQueue {
      * Check if the queue is not empty
      */
     public boolean isBusy() {
-        return current != null;
+        return current != null || !actions.isEmpty();
     }
 
     /**

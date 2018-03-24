@@ -4,7 +4,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.exploration.action.PlayerMoveFinished;
-import fr.quatrevieux.araknemu.game.exploration.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.trigger.CellAction;
 import fr.quatrevieux.araknemu.game.exploration.map.trigger.CellActionPerformer;
@@ -56,7 +56,7 @@ class PerformCellActionsTest extends GameBaseCase {
         );
 
         requestStack.assertEmpty();
-        assertFalse(explorationPlayer().actionQueue().isBusy());
+        assertFalse(explorationPlayer().interactions().busy());
     }
 
     @Test
@@ -67,7 +67,7 @@ class PerformCellActionsTest extends GameBaseCase {
             new PlayerMoveFinished(explorationPlayer())
         );
 
-        assertTrue(explorationPlayer().actionQueue().isBusy());
+        assertTrue(explorationPlayer().interactions().busy());
         requestStack.assertLast(
             new GameActionResponse(1, ActionType.CHANGE_MAP, explorationPlayer().id(), "")
         );

@@ -3,7 +3,7 @@ package fr.quatrevieux.araknemu.game.item.effect.use;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,6 +42,6 @@ class FireworkEffectTest extends GameBaseCase {
             new GameActionResponse(1, ActionType.FIREWORK, player.id(), "150,2900,11,8,6")
         );
 
-        assertTrue(player.actionQueue().isBusy());
+        assertTrue(player.interactions().busy());
     }
 }

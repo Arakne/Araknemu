@@ -2,7 +2,7 @@ package fr.quatrevieux.araknemu.game.exploration.map.trigger;
 
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.action.ChangeMap;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ChangeMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +37,7 @@ final public class Teleport implements CellActionPerformer {
             return;
         }
 
-        player.actionQueue().push(
+        player.interactions().push(
             new ChangeMap(player, map, cellId)
         );
     }

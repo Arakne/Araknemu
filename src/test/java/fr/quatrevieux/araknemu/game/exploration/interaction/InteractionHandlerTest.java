@@ -1,6 +1,8 @@
 package fr.quatrevieux.araknemu.game.exploration.interaction;
 
 import fr.quatrevieux.araknemu._test.TestCase;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -26,6 +28,15 @@ class InteractionHandlerTest extends TestCase {
         handler.start(interaction);
 
         assertTrue(handler.interacting());
+        assertTrue(handler.busy());
+    }
+
+    @Test
+    void busyOneBlockingAction() throws Exception {
+        assertFalse(handler.busy());
+
+        handler.push(Mockito.mock(BlockingAction.class));
+
         assertTrue(handler.busy());
     }
 
@@ -94,6 +105,29 @@ class InteractionHandlerTest extends TestCase {
         handler.start(interaction);
 
         assertSame(interaction, handler.remove());
+    }
+
+    @Test
+    void pushBlockingActionWhenInteractingWillRaiseError() {
+        ExtendedInteraction interaction = Mockito.mock(ExtendedInteraction.class);
+        Mockito.when(interaction.start()).thenReturn(interaction);
+
+        handler.start(interaction);
+
+        assertThrows(IllegalStateException.class, () -> handler.push(Mockito.mock(BlockingAction.class)));
+    }
+
+    @Test
+    void pushNonBlockingActionWhenInteractingWillExecuteAction() throws Exception {
+        ExtendedInteraction interaction = Mockito.mock(ExtendedInteraction.class);
+        Mockito.when(interaction.start()).thenReturn(interaction);
+
+        handler.start(interaction);
+
+        Action action = Mockito.mock(Action.class);
+        handler.push(action);
+
+        Mockito.verify(action).start();
     }
 
     interface ExtendedInteraction extends Interaction {}

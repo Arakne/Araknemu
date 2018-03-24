@@ -5,7 +5,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.exploration.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.item.effect.use.AddCharacteristicEffect;
 import fr.quatrevieux.araknemu.game.item.effect.use.FireworkEffect;
 import fr.quatrevieux.araknemu.game.item.effect.use.NullEffectHandler;

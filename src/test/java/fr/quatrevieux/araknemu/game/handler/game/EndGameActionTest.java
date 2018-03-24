@@ -2,7 +2,7 @@ package fr.quatrevieux.araknemu.game.handler.game;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.action.Move;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.Move;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class EndGameActionTest extends GameBaseCase {
 
         ExplorationPlayer player = explorationPlayer();
 
-        player.actionQueue().push(
+        player.interactions().push(
             new Move(
                 player,
                 player.map().decoder().decodePath("bftdgl", 279)
@@ -37,7 +37,7 @@ class EndGameActionTest extends GameBaseCase {
 
         handler.handle(session, new GameActionAcknowledge(1));
 
-        assertFalse(player.actionQueue().isBusy());
+        assertFalse(player.interactions().busy());
         assertEquals(395, player.position().cell());
     }
 }

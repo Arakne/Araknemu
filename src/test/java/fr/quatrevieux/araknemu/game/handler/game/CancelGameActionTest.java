@@ -1,19 +1,14 @@
 package fr.quatrevieux.araknemu.game.handler.game;
 
-import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.action.Move;
-import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
-import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.game.world.map.PathException;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.Move;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionCancel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class CancelGameActionTest extends GameBaseCase {
     private CancelGameAction handler;
@@ -37,11 +32,11 @@ class CancelGameActionTest extends GameBaseCase {
             player.map().decoder().decodePath("bftdgl", 279)
         );
 
-        player.actionQueue().push(move);
+        player.interactions().push(move);
 
         handler.handle(session, new GameActionCancel(1, "294"));
 
-        assertFalse(player.actionQueue().isBusy());
+        assertFalse(player.interactions().busy());
         assertEquals(294, player.position().cell());
     }
 }

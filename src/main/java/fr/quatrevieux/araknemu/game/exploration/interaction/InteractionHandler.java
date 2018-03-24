@@ -1,9 +1,15 @@
 package fr.quatrevieux.araknemu.game.exploration.interaction;
 
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
+
 /**
  * Handle exploration player interactions
  */
 final public class InteractionHandler {
+    final private ActionQueue gameActions = new ActionQueue();
+
     private Interaction current;
 
     /**
@@ -19,7 +25,7 @@ final public class InteractionHandler {
      * @todo Add game actions check
      */
     public boolean busy() {
-        return interacting();
+        return interacting() || gameActions.isBusy();
     }
 
     /**
@@ -68,5 +74,37 @@ final public class InteractionHandler {
         current = null;
 
         return interaction;
+    }
+
+    /**
+     * Push the action to the queue, and start it if not busy
+     */
+    public void push(Action action) throws Exception {
+        if (interacting() && action instanceof BlockingAction) {
+            throw new IllegalStateException("Cannot start blocking action when interacting");
+        }
+
+        gameActions.push(action);
+    }
+
+    /**
+     * End an action which is successfully terminated
+     *
+     * @param actionId The action to end
+     */
+    public void end(int actionId) throws Exception {
+        gameActions.end(actionId);
+    }
+
+    /**
+     * Cancel an action in the queue
+     *
+     * @param actionId Action to cancel
+     * @param argument The cancel argument
+     *
+     * @throws Exception
+     */
+    public void cancel(int actionId, String argument) throws Exception {
+        gameActions.cancel(actionId, argument);
     }
 }

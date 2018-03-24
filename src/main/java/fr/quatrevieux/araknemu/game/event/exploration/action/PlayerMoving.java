@@ -1,7 +1,7 @@
 package fr.quatrevieux.araknemu.game.event.exploration.action;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.action.Move;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.Move;
 
 /**
  * Event dispatched when a player start to move

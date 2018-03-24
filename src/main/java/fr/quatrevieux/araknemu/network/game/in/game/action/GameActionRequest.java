@@ -1,6 +1,6 @@
 package fr.quatrevieux.araknemu.network.game.in.game.action;
 
-import fr.quatrevieux.araknemu.game.exploration.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.network.in.Packet;
 import fr.quatrevieux.araknemu.network.in.ParsePacketException;
 import fr.quatrevieux.araknemu.network.in.SinglePacketParser;

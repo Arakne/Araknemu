@@ -1,8 +1,8 @@
-package fr.quatrevieux.araknemu.game.exploration.action.factory;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action.factory;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.action.*;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.*;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
 import org.junit.jupiter.api.BeforeEach;

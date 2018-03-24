@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.exploration.action;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
@@ -10,9 +10,10 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class RefuseChallengeTest extends GameBaseCase {
+class AcceptChallengeTest extends GameBaseCase {
     private ExplorationPlayer player;
     private ExplorationPlayer other;
 
@@ -29,43 +30,36 @@ class RefuseChallengeTest extends GameBaseCase {
 
     @Test
     void noInvitation() throws SQLException, ContainerException {
-        RefuseChallenge action = new RefuseChallenge(explorationPlayer(), 5);
+        AcceptChallenge action = new AcceptChallenge(explorationPlayer(), 5);
 
         assertThrows(IllegalArgumentException.class, () -> action.start(), "Invalid interaction type");
     }
 
     @Test
     void badTarget() throws Exception {
-        player.interactions().start(
+        other.interactions().start(
             new ChallengeInvitation(other, player)
         );
 
-        RefuseChallenge action = new RefuseChallenge(explorationPlayer(), -5);
+        AcceptChallenge action = new AcceptChallenge(explorationPlayer(), -5);
 
         assertThrows(IllegalArgumentException.class, () -> action.start(), "Invalid challenge target");
     }
 
     @Test
-    void successFromInitiator() throws Exception {
+    void initiatorCannotAccept() throws Exception {
         explorationPlayer().interactions().start(new ChallengeInvitation(player, other));
 
-        RefuseChallenge action = new RefuseChallenge(player, player.id());
+        AcceptChallenge action = new AcceptChallenge(player, player.id());
 
-        action.start();
-
-        assertFalse(player.interactions().interacting());
-        assertFalse(other.interactions().interacting());
-
-        requestStack.assertLast(
-            new GameActionResponse("", ActionType.REFUSE_CHALLENGE, "" + player.id(), new Object[] {"" + other.id()})
-        );
+        assertThrows(IllegalArgumentException.class, () -> action.start());
     }
 
     @Test
     void successFromChallenger() throws Exception {
         other.interactions().start(new ChallengeInvitation(other, player));
 
-        RefuseChallenge action = new RefuseChallenge(player, other.id());
+        AcceptChallenge action = new AcceptChallenge(player, other.id());
 
         action.start();
 
@@ -73,7 +67,7 @@ class RefuseChallengeTest extends GameBaseCase {
         assertFalse(other.interactions().interacting());
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.REFUSE_CHALLENGE, "" + player.id(), new Object[] {"" + other.id()})
+            new GameActionResponse("", ActionType.ACCEPT_CHALLENGE, "" + player.id(), new Object[] {"" + other.id()})
         );
     }
 }
