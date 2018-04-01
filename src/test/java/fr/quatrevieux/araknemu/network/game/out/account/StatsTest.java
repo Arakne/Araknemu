@@ -3,7 +3,6 @@ package fr.quatrevieux.araknemu.network.game.out.account;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -62,7 +61,7 @@ class StatsTest extends GameBaseCase {
         dataSet.pushRaces();
 
         GamePlayer player = makeOtherPlayer();
-        player.level().addExperience(19250);
+        player.experience().add(19250);
         player.life().rebuild();
 
         assertEquals(

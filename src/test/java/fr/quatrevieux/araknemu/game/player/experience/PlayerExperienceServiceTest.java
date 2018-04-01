@@ -61,12 +61,12 @@ class PlayerExperienceServiceTest extends GameBaseCase {
         player.setLevel(25);
         player.setExperience(375698);
 
-        PlayerLevel level = service.load(new DefaultListenerAggregate(), player);
+        GamePlayerExperience level = service.load(new DefaultListenerAggregate(), player);
 
         assertEquals(25, level.level());
-        assertEquals(375698, level.currentExperience());
-        assertEquals(353000, level.minExperience());
-        assertEquals(398500, level.maxExperience());
+        assertEquals(375698, level.current());
+        assertEquals(353000, level.min());
+        assertEquals(398500, level.max());
         assertFalse(level.maxLevelReached());
     }
 

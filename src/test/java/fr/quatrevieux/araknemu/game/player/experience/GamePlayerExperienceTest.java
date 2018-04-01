@@ -19,8 +19,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PlayerLevelTest extends GameBaseCase {
-    private PlayerLevel playerLevel;
+class GamePlayerExperienceTest extends GameBaseCase {
+    private GamePlayerExperience gamePlayerExperience;
     private Player player;
     private ListenerAggregate dispatcher;
 
@@ -36,7 +36,7 @@ class PlayerLevelTest extends GameBaseCase {
         player.setLevel(7);
         player.setExperience(7450);
 
-        playerLevel = new PlayerLevel(
+        gamePlayerExperience = new GamePlayerExperience(
             player,
             container.get(PlayerExperienceService.class),
             dispatcher = new DefaultListenerAggregate()
@@ -45,18 +45,18 @@ class PlayerLevelTest extends GameBaseCase {
 
     @Test
     void values() {
-        assertEquals(7, playerLevel.level());
-        assertEquals(7300, playerLevel.minExperience());
-        assertEquals(7450, playerLevel.currentExperience());
-        assertEquals(10500, playerLevel.maxExperience());
-        assertFalse(playerLevel.maxLevelReached());
+        assertEquals(7, gamePlayerExperience.level());
+        assertEquals(7300, gamePlayerExperience.min());
+        assertEquals(7450, gamePlayerExperience.current());
+        assertEquals(10500, gamePlayerExperience.max());
+        assertFalse(gamePlayerExperience.maxLevelReached());
     }
 
     @Test
     void maxLevelReached() {
         player.setLevel(200);
 
-        assertTrue(playerLevel.maxLevelReached());
+        assertTrue(gamePlayerExperience.maxLevelReached());
     }
 
     @Test
@@ -66,9 +66,9 @@ class PlayerLevelTest extends GameBaseCase {
         AtomicReference<PlayerXpChanged> ref = new AtomicReference<>();
         dispatcher.add(PlayerXpChanged.class, ref::set);
 
-        playerLevel.addExperience(1000);
+        gamePlayerExperience.add(1000);
 
-        assertEquals(8450, playerLevel.currentExperience());
+        assertEquals(8450, gamePlayerExperience.current());
         assertNotNull(ref.get());
     }
 
@@ -77,10 +77,10 @@ class PlayerLevelTest extends GameBaseCase {
         AtomicReference<PlayerXpChanged> ref = new AtomicReference<>();
         dispatcher.add(PlayerXpChanged.class, ref::set);
 
-        playerLevel.addExperience(1000);
+        gamePlayerExperience.add(1000);
 
-        assertEquals(8450, playerLevel.currentExperience());
-        assertEquals(7, playerLevel.level());
+        assertEquals(8450, gamePlayerExperience.current());
+        assertEquals(7, gamePlayerExperience.level());
         assertNotNull(ref.get());
     }
 
@@ -89,12 +89,12 @@ class PlayerLevelTest extends GameBaseCase {
         AtomicReference<PlayerLevelUp> ref = new AtomicReference<>();
         dispatcher.add(PlayerLevelUp.class, ref::set);
 
-        playerLevel.addExperience(4000);
+        gamePlayerExperience.add(4000);
 
-        assertEquals(11450, playerLevel.currentExperience());
-        assertEquals(8, playerLevel.level());
-        assertEquals(10500, playerLevel.minExperience());
-        assertEquals(14500, playerLevel.maxExperience());
+        assertEquals(11450, gamePlayerExperience.current());
+        assertEquals(8, gamePlayerExperience.level());
+        assertEquals(10500, gamePlayerExperience.min());
+        assertEquals(14500, gamePlayerExperience.max());
         assertEquals(1, player.spellPoints());
         assertEquals(5, player.boostPoints());
         assertNotNull(ref.get());
@@ -106,12 +106,12 @@ class PlayerLevelTest extends GameBaseCase {
         AtomicReference<PlayerLevelUp> ref = new AtomicReference<>();
         dispatcher.add(PlayerLevelUp.class, ref::set);
 
-        playerLevel.addExperience(10000);
+        gamePlayerExperience.add(10000);
 
-        assertEquals(17450, playerLevel.currentExperience());
-        assertEquals(9, playerLevel.level());
-        assertEquals(14500, playerLevel.minExperience());
-        assertEquals(19200, playerLevel.maxExperience());
+        assertEquals(17450, gamePlayerExperience.current());
+        assertEquals(9, gamePlayerExperience.level());
+        assertEquals(14500, gamePlayerExperience.min());
+        assertEquals(19200, gamePlayerExperience.max());
         assertEquals(2, player.spellPoints());
         assertEquals(10, player.boostPoints());
         assertNotNull(ref.get());
@@ -126,12 +126,12 @@ class PlayerLevelTest extends GameBaseCase {
         player.setLevel(199);
         player.setExperience(5703616000L);
 
-        playerLevel.addExperience(7407232000L);
+        gamePlayerExperience.add(7407232000L);
 
-        assertEquals(5703616000L + 7407232000L, playerLevel.currentExperience());
-        assertEquals(200, playerLevel.level());
-        assertEquals(7407232000L, playerLevel.minExperience());
-        assertEquals(7407232000L, playerLevel.maxExperience());
+        assertEquals(5703616000L + 7407232000L, gamePlayerExperience.current());
+        assertEquals(200, gamePlayerExperience.level());
+        assertEquals(7407232000L, gamePlayerExperience.min());
+        assertEquals(7407232000L, gamePlayerExperience.max());
         assertEquals(200, ref.get().level());
     }
 
@@ -140,9 +140,9 @@ class PlayerLevelTest extends GameBaseCase {
         GamePlayer player = gamePlayer(true);
         requestStack.clear();
 
-        player.level().addExperience(860000);
+        player.experience().add(860000);
 
-        assertEquals(51, player.level().level());
+        assertEquals(51, player.experience().level());
         assertEquals(5, player.characteristics().boostPoints());
         assertEquals(1, player.spells().upgradePoints());
 
@@ -157,9 +157,9 @@ class PlayerLevelTest extends GameBaseCase {
         GamePlayer player = gamePlayer(true);
         requestStack.clear();
 
-        player.level().addExperience(1000);
+        player.experience().add(1000);
 
-        assertEquals(50, player.level().level());
+        assertEquals(50, player.experience().level());
 
         requestStack.assertAll(
             new Stats(player)

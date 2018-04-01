@@ -14,7 +14,7 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.fight.fighter.PlayerFighter;
 import fr.quatrevieux.araknemu.game.player.characteristic.Life;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
-import fr.quatrevieux.araknemu.game.player.experience.PlayerLevel;
+import fr.quatrevieux.araknemu.game.player.experience.GamePlayerExperience;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.game.player.race.GamePlayerRace;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
@@ -35,18 +35,18 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
     final private PlayerInventory inventory;
     final private Life life;
     final private SpellBook spells;
-    final private PlayerLevel level;
+    final private GamePlayerExperience experience;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
-    public GamePlayer(GameAccount account, Player entity, GamePlayerRace race, GameSession session, PlayerService service, PlayerInventory inventory, SpellBook spells, PlayerLevel level) {
+    public GamePlayer(GameAccount account, Player entity, GamePlayerRace race, GameSession session, PlayerService service, PlayerInventory inventory, SpellBook spells, GamePlayerExperience experience) {
         super(account, entity);
 
         this.race = race;
         this.session = session;
         this.service = service;
         this.spells = spells;
-        this.level = level;
+        this.experience = experience;
         this.channels = new ChannelSet(entity.channels(), dispatcher);
         this.inventory = inventory.attach(this);
 
@@ -191,11 +191,9 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
         return life;
     }
 
-    /**
-     * Get the player level
-     */
-    public PlayerLevel level() {
-        return level;
+    @Override
+    public GamePlayerExperience experience() {
+        return experience;
     }
 
     public SpellBook spells() {

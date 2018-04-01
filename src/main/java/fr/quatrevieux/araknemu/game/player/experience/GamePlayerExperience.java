@@ -8,12 +8,12 @@ import fr.quatrevieux.araknemu.game.event.common.PlayerXpChanged;
 /**
  * Manage the player level and experience
  */
-final public class PlayerLevel {
+final public class GamePlayerExperience {
     final private Player entity;
     final private PlayerExperienceService service;
     final private Dispatcher dispatcher;
 
-    public PlayerLevel(Player entity, PlayerExperienceService service, Dispatcher dispatcher) {
+    public GamePlayerExperience(Player entity, PlayerExperienceService service, Dispatcher dispatcher) {
         this.entity = entity;
         this.service = service;
         this.dispatcher = dispatcher;
@@ -29,21 +29,21 @@ final public class PlayerLevel {
     /**
      * Get the minimal experience for current level
      */
-    public long minExperience() {
+    public long min() {
         return service.byLevel(entity.level()).experience();
     }
 
     /**
      * Get the current player experience
      */
-    public long currentExperience() {
+    public long current() {
         return entity.experience();
     }
 
     /**
      * Get the next level experience
      */
-    public long maxExperience() {
+    public long max() {
         return service.byLevel(entity.level() + 1).experience();
     }
 
@@ -59,7 +59,7 @@ final public class PlayerLevel {
      *
      * @param experience Experience to add
      */
-    public void addExperience(long experience) {
+    public void add(long experience) {
         entity.setExperience(entity.experience() + experience);
 
         if (maxLevelReached()) {

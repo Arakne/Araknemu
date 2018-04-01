@@ -20,7 +20,7 @@ final public class Stats {
         StringBuilder sb = new StringBuilder("As");
 
         sb
-            .append(player.level().currentExperience()).append(',').append(player.level().minExperience()).append(',').append(player.level().maxExperience()).append('|')
+            .append(player.experience().current()).append(',').append(player.experience().min()).append(',').append(player.experience().max()).append('|')
             .append("1000|") // Kamas
             .append(player.characteristics().boostPoints()).append("|")
             .append(player.spells().upgradePoints()).append("|")

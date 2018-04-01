@@ -47,8 +47,8 @@ final public class PlayerExperienceService implements PreloadableService {
      * @param dispatcher The event dispatcher
      * @param player Player to load
      */
-    public PlayerLevel load(Dispatcher dispatcher, Player player) {
-        return new PlayerLevel(player, this, dispatcher);
+    public GamePlayerExperience load(Dispatcher dispatcher, Player player) {
+        return new GamePlayerExperience(player, this, dispatcher);
     }
 
     /**

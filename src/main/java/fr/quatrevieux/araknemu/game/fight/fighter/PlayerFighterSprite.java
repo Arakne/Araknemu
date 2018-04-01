@@ -49,7 +49,7 @@ final public class PlayerFighterSprite implements Sprite {
             fighter.player().race().race().ordinal() + ";" +
             fighter.player().gfxId() + ";" +
             fighter.player().sex().ordinal() + ";" +
-            fighter.player().level().level() + ";" +
+            fighter.player().experience().level() + ";" +
             "0,0,0,0;" + // @todo alignment
             StringUtils.join(fighter.player().colors().toHexArray(), ";") + ";" +
             fighter.player().inventory().accessories() + ";" +
