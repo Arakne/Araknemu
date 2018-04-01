@@ -6,6 +6,8 @@ import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;
+import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.event.listener.service.AddExplorationMapListeners;
 import fr.quatrevieux.araknemu.game.exploration.map.trigger.CellAction;
 import fr.quatrevieux.araknemu.game.exploration.map.trigger.CellActionPerformer;
 import fr.quatrevieux.araknemu.game.exploration.map.trigger.MapTriggers;
@@ -24,12 +26,14 @@ final public class ExplorationMapService implements PreloadableService {
     final private MapTemplateRepository repository;
     final private MapTriggerRepository triggerRepository;
     final private Map<CellAction, CellActionPerformer> actions = new EnumMap<>(CellAction.class);
+    final private ListenerAggregate dispatcher;
 
     final private ConcurrentMap<Integer, ExplorationMap> maps = new ConcurrentHashMap<>();
 
-    public ExplorationMapService(MapTemplateRepository repository, MapTriggerRepository triggerRepository) {
+    public ExplorationMapService(MapTemplateRepository repository, MapTriggerRepository triggerRepository, ListenerAggregate dispatcher) {
         this.repository = repository;
         this.triggerRepository = triggerRepository;
+        this.dispatcher = dispatcher;
     }
 
     /**
@@ -53,6 +57,8 @@ final public class ExplorationMapService implements PreloadableService {
 
     @Override
     public void preload(Logger logger) {
+        dispatcher.add(new AddExplorationMapListeners());
+
         register(new Teleport(this));
 
         logger.info("Loading maps...");

@@ -3,7 +3,8 @@ package fr.quatrevieux.araknemu.game.fight;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.event.listener.service.AddFightListeners;
+import fr.quatrevieux.araknemu.game.event.listener.service.AddFightListenersForExploration;
+import fr.quatrevieux.araknemu.game.event.listener.service.AddFightListenersForPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.builder.FightBuilder;
 import fr.quatrevieux.araknemu.game.fight.builder.FightBuilderFactory;
@@ -37,7 +38,8 @@ final public class FightService implements PreloadableService {
 
     @Override
     public void preload(Logger logger) {
-        dispatcher.add(new AddFightListeners());
+        dispatcher.add(new AddFightListenersForPlayer());
+        dispatcher.add(new AddFightListenersForExploration());
     }
 
     /**

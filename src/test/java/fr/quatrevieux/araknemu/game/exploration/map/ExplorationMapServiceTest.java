@@ -5,6 +5,8 @@ import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.event.listener.service.AddExplorationMapListeners;
 import fr.quatrevieux.araknemu.game.exploration.map.trigger.CellAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +26,8 @@ class ExplorationMapServiceTest extends GameBaseCase {
 
         service = new ExplorationMapService(
             container.get(MapTemplateRepository.class),
-            container.get(MapTriggerRepository.class)
+            container.get(MapTriggerRepository.class),
+            container.get(ListenerAggregate.class)
         );
 
         dataSet.pushMaps();
@@ -44,8 +47,10 @@ class ExplorationMapServiceTest extends GameBaseCase {
     }
 
     @Test
-    void preload() {
+    void preload() throws ContainerException {
         service.preload(NOPLogger.NOP_LOGGER);
+
+        assertTrue(container.get(ListenerAggregate.class).has(AddExplorationMapListeners.class));
     }
 
     @Test

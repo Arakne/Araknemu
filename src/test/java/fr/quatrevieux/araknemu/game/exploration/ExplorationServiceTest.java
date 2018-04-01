@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.exploration;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.listener.player.InitializeGame;
 import fr.quatrevieux.araknemu.game.event.listener.player.SendMapData;
 import fr.quatrevieux.araknemu.game.event.listener.player.StopExploration;
@@ -34,7 +35,8 @@ class ExplorationServiceTest extends GameBaseCase {
 
         service = new ExplorationService(
             container.get(ExplorationMapService.class),
-            container.get(ExplorationActionFactory.class)
+            container.get(ExplorationActionFactory.class),
+            container.get(Dispatcher.class)
         );
 
         dataSet.pushMaps();
@@ -47,9 +49,7 @@ class ExplorationServiceTest extends GameBaseCase {
         ExplorationPlayer explorationPlayer = service.create(player);
 
         assertTrue(explorationPlayer.dispatcher().has(InitializeGame.class));
-        assertTrue(explorationPlayer.dispatcher().has(SendMapData.class));
         assertTrue(explorationPlayer.dispatcher().has(StopExploration.class));
-        assertTrue(explorationPlayer.dispatcher().has(LeaveExplorationForFight.class));
     }
 
     @Test

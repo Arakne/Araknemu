@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepositor
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.listener.service.AddInventoryListeners;
+import fr.quatrevieux.araknemu.game.event.listener.service.AddInventoryListenersForExploration;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 
@@ -41,6 +42,7 @@ final public class InventoryService {
         this.service = service;
 
         dispatcher.add(new AddInventoryListeners(repository));
+        dispatcher.add(new AddInventoryListenersForExploration());
     }
 
     /**

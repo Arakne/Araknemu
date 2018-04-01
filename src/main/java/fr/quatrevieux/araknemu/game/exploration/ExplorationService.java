@@ -1,5 +1,7 @@
 package fr.quatrevieux.araknemu.game.exploration;
 
+import fr.quatrevieux.araknemu.game.event.Dispatcher;
+import fr.quatrevieux.araknemu.game.event.exploration.ExplorationPlayerCreated;
 import fr.quatrevieux.araknemu.game.event.listener.player.exploration.LeaveExplorationForFight;
 import fr.quatrevieux.araknemu.game.event.listener.player.StopExploration;
 import fr.quatrevieux.araknemu.game.event.listener.player.InitializeGame;
@@ -15,10 +17,12 @@ import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
 final public class ExplorationService {
     final private ExplorationMapService mapService;
     final private ActionFactory actionFactory;
+    final private Dispatcher dispatcher;
 
-    public ExplorationService(ExplorationMapService mapService, ActionFactory actionFactory) {
+    public ExplorationService(ExplorationMapService mapService, ActionFactory actionFactory, Dispatcher dispatcher) {
         this.mapService = mapService;
         this.actionFactory = actionFactory;
+        this.dispatcher = dispatcher;
     }
 
     /**
@@ -28,9 +32,9 @@ final public class ExplorationService {
         ExplorationPlayer exploration = new ExplorationPlayer(player);
 
         exploration.dispatcher().add(new InitializeGame(exploration, mapService));
-        exploration.dispatcher().add(new SendMapData(exploration));
         exploration.dispatcher().add(new StopExploration(exploration));
-        exploration.dispatcher().add(new LeaveExplorationForFight(exploration));
+
+        dispatcher.dispatch(new ExplorationPlayerCreated(exploration));
 
         return exploration;
     }

@@ -211,7 +211,8 @@ final public class GameModule implements ContainerModule {
             ExplorationService.class,
             container -> new ExplorationService(
                 container.get(ExplorationMapService.class),
-                container.get(ExplorationActionFactory.class)
+                container.get(ExplorationActionFactory.class),
+                container.get(fr.quatrevieux.araknemu.game.event.Dispatcher.class)
             )
         );
 
@@ -219,7 +220,8 @@ final public class GameModule implements ContainerModule {
             ExplorationMapService.class,
             container -> new ExplorationMapService(
                 container.get(MapTemplateRepository.class),
-                container.get(MapTriggerRepository.class)
+                container.get(MapTriggerRepository.class),
+                container.get(ListenerAggregate.class)
             )
         );
 

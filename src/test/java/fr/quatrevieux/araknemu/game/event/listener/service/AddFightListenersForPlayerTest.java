@@ -11,15 +11,15 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AddFightListenersTest extends GameBaseCase {
-    private AddFightListeners listener;
+class AddFightListenersForPlayerTest extends GameBaseCase {
+    private AddFightListenersForPlayer listener;
 
     @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
-        listener = new AddFightListeners();
+        listener = new AddFightListenersForPlayer();
     }
 
     @Test

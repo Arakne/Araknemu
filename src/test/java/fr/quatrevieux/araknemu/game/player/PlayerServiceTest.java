@@ -11,7 +11,6 @@ import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
-import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.account.AccountService;
@@ -22,9 +21,9 @@ import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.common.Disconnected;
 import fr.quatrevieux.araknemu.game.event.common.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.event.listener.player.*;
+import fr.quatrevieux.araknemu.game.event.listener.service.AddInventoryListenersForExploration;
 import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
-import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
@@ -82,7 +81,7 @@ class PlayerServiceTest extends GameBaseCase {
 
         assertTrue(player.dispatcher().has(SavePlayer.class));
         assertTrue(player.dispatcher().has(SendStats.class));
-        assertTrue(player.dispatcher().has(AddExplorationListeners.class));
+        assertTrue(player.dispatcher().has(AddInventoryListenersForExploration.class));
         assertTrue(player.dispatcher().has(ComputeLifePoints.class));
         assertTrue(player.dispatcher().has(SendLifeChanged.class));
     }

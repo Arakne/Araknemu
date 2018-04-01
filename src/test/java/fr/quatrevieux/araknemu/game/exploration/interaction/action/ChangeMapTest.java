@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.network.game.out.game.MapData;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.helpers.NOPLogger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,6 +24,7 @@ class ChangeMapTest extends GameBaseCase {
         super.setUp();
 
         dataSet.pushMaps();
+        container.get(ExplorationMapService.class).preload(NOPLogger.NOP_LOGGER);
 
         player = explorationPlayer();
         map = container.get(ExplorationMapService.class).load(10540);
