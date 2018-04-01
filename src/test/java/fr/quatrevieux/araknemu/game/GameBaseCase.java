@@ -72,6 +72,7 @@ import org.mockito.Mockito;
 import org.slf4j.helpers.NOPLogger;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -294,7 +295,7 @@ public class GameBaseCase extends DatabaseTestCase {
             return session.exploration();
         }
 
-        GamePlayer player = gamePlayer();
+        GamePlayer player = gamePlayer(true);
         player.setPosition(new Position(10300, 279));
 
         dataSet.pushMaps();
@@ -331,10 +332,26 @@ public class GameBaseCase extends DatabaseTestCase {
             2
         ));
 
-        return container.get(PlayerService.class).load(
+        GamePlayer gp =  container.get(PlayerService.class).load(
             session,
             player.id()
         );
+
+        session.setPlayer(gp);
+
+        return gp;
+    }
+
+    public ExplorationPlayer makeOtherExplorationPlayer() throws Exception {
+        GamePlayer player = makeOtherPlayer();
+        ExplorationPlayer explorationPlayer = container.get(ExplorationService.class).create(player);
+
+        Field sessionField = GamePlayer.class.getDeclaredField("session");
+        sessionField.setAccessible(true);
+
+        GameSession.class.cast(sessionField.get(player)).setExploration(explorationPlayer);
+
+        return explorationPlayer;
     }
 
     public GamePlayer makeSimpleGamePlayer(int id) throws ContainerException, SQLException {

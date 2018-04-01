@@ -2,7 +2,6 @@ package fr.quatrevieux.araknemu.game.exploration.map;
 
 import fr.quatrevieux.araknemu.data.value.Dimensions;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
-import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
@@ -11,7 +10,6 @@ import fr.quatrevieux.araknemu.game.event.exploration.SpriteRemoveFromMap;
 import fr.quatrevieux.araknemu.game.event.listener.map.*;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.trigger.MapTriggers;
-import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.map.Decoder;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
@@ -171,6 +169,13 @@ final public class ExplorationMap implements Dispatcher {
         for (Sender player : players.values()) {
             player.send(str);
         }
+    }
+
+    /**
+     * Can launch a fight on the map ?
+     */
+    public boolean canLaunchFight() {
+        return template.fightPlaces().length >= 2;
     }
 
     ListenerAggregate dispatcher() {

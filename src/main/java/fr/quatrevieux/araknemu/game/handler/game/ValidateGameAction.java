@@ -23,9 +23,7 @@ final public class ValidateGameAction implements PacketHandler<GameSession, Game
         try {
             service.action(session.exploration(), packet);
         } catch (Exception e) {
-            throw new ErrorPacket(
-                new GameActionResponse(0, ActionType.NONE, 0)
-            );
+            throw new ErrorPacket(new GameActionResponse(0, ActionType.NONE, 0), e);
         }
     }
 

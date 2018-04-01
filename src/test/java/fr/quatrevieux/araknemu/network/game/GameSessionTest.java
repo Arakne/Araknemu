@@ -14,6 +14,8 @@ import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.common.CharacteristicsChanged;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayerFighter;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
@@ -61,6 +63,18 @@ class GameSessionTest extends GameBaseCase {
         session.setExploration(player);
 
         assertSame(player, session.exploration());
+    }
+
+    @Test
+    void fighter() throws SQLException, ContainerException {
+        GameSession session = new GameSession(new DummyChannel());
+
+        assertNull(session.fighter());
+
+        PlayerFighter fighter = new PlayerFighter(gamePlayer());
+        session.setFighter(fighter);
+
+        assertSame(fighter, session.fighter());
     }
 
     @Test

@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.event.listener.player.InitializeGame;
 import fr.quatrevieux.araknemu.game.event.listener.player.SendMapData;
 import fr.quatrevieux.araknemu.game.event.listener.player.StopExploration;
+import fr.quatrevieux.araknemu.game.event.listener.player.exploration.LeaveExplorationForFight;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.factory.ExplorationActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
@@ -48,6 +49,7 @@ class ExplorationServiceTest extends GameBaseCase {
         assertTrue(explorationPlayer.dispatcher().has(InitializeGame.class));
         assertTrue(explorationPlayer.dispatcher().has(SendMapData.class));
         assertTrue(explorationPlayer.dispatcher().has(StopExploration.class));
+        assertTrue(explorationPlayer.dispatcher().has(LeaveExplorationForFight.class));
     }
 
     @Test

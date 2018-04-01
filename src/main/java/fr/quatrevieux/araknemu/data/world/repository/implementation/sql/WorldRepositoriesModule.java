@@ -36,7 +36,8 @@ final public class WorldRepositoriesModule implements ContainerModule {
             fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository.class,
             container -> new MapTemplateRepository(
                 connection,
-                container.get(MapCellTransformer.class)
+                container.get(MapCellTransformer.class),
+                container.get(FightPlacesTransformer.class)
             )
         );
 
@@ -108,6 +109,11 @@ final public class WorldRepositoriesModule implements ContainerModule {
         configurator.persist(
             SpellTemplateLevelTransformer.class,
             container -> new SpellTemplateLevelTransformer()
+        );
+
+        configurator.persist(
+            FightPlacesTransformer.class,
+            container -> new FightPlacesTransformer()
         );
     }
 }

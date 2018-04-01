@@ -19,6 +19,7 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.factory.ExplorationActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.*;
 import fr.quatrevieux.araknemu.game.item.factory.DefaultItemFactory;
@@ -79,6 +80,7 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(SpellBookService.class, container.get(SpellBookService.class));
         assertInstanceOf(PlayerRaceService.class, container.get(PlayerRaceService.class));
         assertInstanceOf(PlayerExperienceService.class, container.get(PlayerExperienceService.class));
+        assertInstanceOf(FightService.class, container.get(FightService.class));
 
         assertSame(
             container.get(ListenerAggregate.class),

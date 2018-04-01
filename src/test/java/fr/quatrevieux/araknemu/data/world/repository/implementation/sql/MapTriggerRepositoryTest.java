@@ -61,7 +61,7 @@ class MapTriggerRepositoryTest extends GameBaseCase {
         dataSet.pushTrigger(new MapTrigger(2, 457, 123, CellAction.TELEPORT, "741,258", ""));
         dataSet.pushTrigger(new MapTrigger(3, 456, 124, CellAction.TELEPORT, "741,258", ""));
 
-        Collection<MapTrigger> triggers = repository.findByMap(new MapTemplate(456, null, null, null, null));
+        Collection<MapTrigger> triggers = repository.findByMap(new MapTemplate(456, null, null, null, null, null));
 
         assertCount(2, triggers);
     }

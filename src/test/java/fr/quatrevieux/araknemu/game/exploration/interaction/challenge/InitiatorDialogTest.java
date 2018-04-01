@@ -3,6 +3,9 @@ package fr.quatrevieux.araknemu.game.exploration.interaction.challenge;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,9 +27,10 @@ class InitiatorDialogTest extends GameBaseCase {
         initiator = explorationPlayer();
         challenger = new ExplorationPlayer(makeOtherPlayer());
 
+        initiator.join(container.get(ExplorationMapService.class).load(10340));
         challenger.join(initiator.map());
 
-        invitation = new ChallengeInvitation(initiator, challenger);
+        invitation = new ChallengeInvitation(initiator, challenger, container.get(FightService.class).handler(ChallengeBuilder.class));
         initiator.interactions().start(invitation);
 
         dialog = new InitiatorDialog(invitation);

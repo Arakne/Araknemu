@@ -15,6 +15,7 @@ import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayerFighter;
 import fr.quatrevieux.araknemu.game.player.characteristic.Life;
 import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
@@ -100,6 +101,21 @@ class GamePlayerTest extends GameBaseCase {
     }
 
     @Test
+    void stopExploringNotExploring() {
+        assertThrows(IllegalStateException.class, () -> player.stopExploring());
+    }
+
+    @Test
+    void stopExploringSuccess() {
+        session.setExploration(new ExplorationPlayer(player));
+
+        player.stopExploring();
+
+        assertNull(session.exploration());
+        assertFalse(player.isExploring());
+    }
+
+    @Test
     void explorationNotExploring() {
         assertThrows(IllegalStateException.class, () -> player.exploration(), "The current player is not an exploration state");
     }
@@ -111,6 +127,29 @@ class GamePlayerTest extends GameBaseCase {
         );
 
         assertSame(session.exploration(), player.exploration());
+    }
+
+    @Test
+    void isFighting() {
+        assertFalse(player.isFighting());
+
+        player.attachFighter(new PlayerFighter(player));
+
+        assertTrue(player.isFighting());
+    }
+
+    @Test
+    void attachFighter() {
+        PlayerFighter fighter = new PlayerFighter(player);
+        player.attachFighter(fighter);
+
+        assertSame(fighter, session.fighter());
+        assertSame(fighter, session.fighter());
+    }
+
+    @Test
+    void fighterNotInFight() {
+        assertThrows(IllegalStateException.class, () -> player.fighter());
     }
 
     @Test

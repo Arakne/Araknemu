@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.exploration.interaction.action.factory;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.*;
+import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
 
@@ -13,7 +14,7 @@ import java.util.EnumMap;
 final public class ExplorationActionFactory implements ActionFactory {
     final private EnumMap<ActionType, ActionFactory> factories = new EnumMap<>(ActionType.class);
 
-    public ExplorationActionFactory() {
+    public ExplorationActionFactory(FightService fightService) {
         factories.put(
             ActionType.MOVE,
             (player, request) -> new Move(
@@ -29,7 +30,8 @@ final public class ExplorationActionFactory implements ActionFactory {
             ActionType.CHALLENGE,
             (player, request) -> new AskChallenge(
                 player,
-                player.map().getPlayer(Integer.parseInt(request.arguments()[0]))
+                player.map().getPlayer(Integer.parseInt(request.arguments()[0])),
+                fightService
             )
         );
 

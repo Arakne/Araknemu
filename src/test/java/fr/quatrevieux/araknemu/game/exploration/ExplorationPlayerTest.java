@@ -164,4 +164,18 @@ class ExplorationPlayerTest extends GameBaseCase {
     void interactions() {
         assertFalse(player.interactions().busy());
     }
+
+    @Test
+    void player() throws SQLException, ContainerException {
+        assertSame(gamePlayer(), player.player());
+    }
+
+    @Test
+    void stopExploring() {
+        session.setExploration(player);
+
+        player.stopExploring();
+
+        assertNull(session.exploration());
+    }
 }

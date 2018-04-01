@@ -9,7 +9,6 @@ import fr.quatrevieux.araknemu.game.event.exploration.CellChanged;
 import fr.quatrevieux.araknemu.game.event.exploration.MapChanged;
 import fr.quatrevieux.araknemu.game.event.exploration.MapLeaved;
 import fr.quatrevieux.araknemu.game.event.exploration.MapLoaded;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.interaction.InteractionHandler;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.player.*;
@@ -180,5 +179,19 @@ final public class ExplorationPlayer implements PlayableCharacter, Sender, Creat
     @Override
     public PlayerLevel level() {
         return player.level();
+    }
+
+    /**
+     * Get the player data
+     */
+    public GamePlayer player() {
+         return player;
+    }
+
+    /**
+     * Stop the exploration
+     */
+    public void stopExploring() {
+        player.stopExploring();
     }
 }

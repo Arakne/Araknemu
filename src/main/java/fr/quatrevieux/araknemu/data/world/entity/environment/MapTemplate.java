@@ -46,13 +46,15 @@ final public class MapTemplate {
     final private Dimensions dimensions;
     final private String key;
     final private List<Cell> cells;
+    final private List<Integer>[] fightPlaces;
 
-    public MapTemplate(int id, String date, Dimensions dimensions, String key, List<Cell> cells) {
+    public MapTemplate(int id, String date, Dimensions dimensions, String key, List<Cell> cells, List<Integer>[] fightPlaces) {
         this.id = id;
         this.date = date;
         this.dimensions = dimensions;
         this.key = key;
         this.cells = cells;
+        this.fightPlaces = fightPlaces;
     }
 
     public int id() {
@@ -73,5 +75,9 @@ final public class MapTemplate {
 
     public List<Cell> cells() {
         return cells;
+    }
+
+    public List<Integer>[] fightPlaces() {
+        return fightPlaces;
     }
 }

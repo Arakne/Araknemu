@@ -38,6 +38,8 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.factory.ExplorationActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.handler.loader.*;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.*;
@@ -92,7 +94,8 @@ final public class GameModule implements ContainerModule {
                     container.get(SpellService.class),
                     container.get(PlayerRaceService.class),
                     container.get(SpellBookService.class),
-                    container.get(PlayerExperienceService.class)
+                    container.get(PlayerExperienceService.class),
+                    container.get(FightService.class)
                 )
             )
         );
@@ -222,7 +225,9 @@ final public class GameModule implements ContainerModule {
 
         configurator.persist(
             ExplorationActionFactory.class,
-            container -> new ExplorationActionFactory()
+            container -> new ExplorationActionFactory(
+                container.get(FightService.class)
+            )
         );
 
         configurator.persist(
@@ -355,6 +360,17 @@ final public class GameModule implements ContainerModule {
                 container.get(PlayerExperienceRepository.class),
                 container.get(GameConfiguration.class).player(),
                 container.get(ListenerAggregate.class)
+            )
+        );
+
+        configurator.persist(
+            FightService.class,
+            container -> new FightService(
+                container.get(MapTemplateRepository.class),
+                container.get(ListenerAggregate.class),
+                Arrays.asList(
+                    new ChallengeBuilderFactory()
+                )
             )
         );
 

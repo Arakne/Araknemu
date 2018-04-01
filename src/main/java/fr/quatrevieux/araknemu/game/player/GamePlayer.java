@@ -1,6 +1,8 @@
 package fr.quatrevieux.araknemu.game.player;
 
+import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
+import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.chat.ChannelSet;
@@ -9,6 +11,7 @@ import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayerFighter;
 import fr.quatrevieux.araknemu.game.player.characteristic.Life;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
 import fr.quatrevieux.araknemu.game.player.experience.PlayerLevel;
@@ -133,6 +136,46 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
     }
 
     /**
+     * Remove the exploration player
+     */
+    public void stopExploring() {
+        if (!isExploring()) {
+            throw new IllegalStateException("The current player is not an exploration state");
+        }
+
+        session.setExploration(null);
+    }
+
+    /**
+     * Attach a fighter to the player
+     */
+    public void attachFighter(PlayerFighter fighter) {
+        if (isFighting()) {
+            throw new IllegalStateException("The current player is already in fight");
+        }
+
+        session.setFighter(fighter);
+    }
+
+    /**
+     * Get the attached fighter
+     */
+    public PlayerFighter fighter() {
+        if (!isFighting()) {
+            throw new IllegalStateException("The current player is not in fight");
+        }
+
+        return session.fighter();
+    }
+
+    /**
+     * Check if the current player is in fight
+     */
+    public boolean isFighting() {
+        return session.fighter() != null;
+    }
+
+    /**
      * Save the player
      */
     public void save() {
@@ -157,5 +200,28 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
 
     public SpellBook spells() {
         return spells;
+    }
+
+    /**
+     * Get the player GfxId
+     *
+     * @todo refactor
+     */
+    public String gfxId() {
+        return Integer.toString(10 * entity.race().ordinal() + entity.sex().ordinal()) + "^100x100";
+    }
+
+    /**
+     * Get the player sex
+     */
+    public Sex sex() {
+        return entity.sex();
+    }
+
+    /**
+     * Get player colors
+     */
+    public Colors colors() {
+        return entity.colors();
     }
 }

@@ -18,13 +18,7 @@ import java.util.List;
  * Map repository implementation for SQL database
  */
 final class MapTemplateRepository implements fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository {
-    private static class Loader implements RepositoryUtils.Loader<MapTemplate> {
-        final private Transformer<MapTemplate.Cell> cellTransformer;
-
-        public Loader(Transformer<MapTemplate.Cell> cellTransformer) {
-            this.cellTransformer = cellTransformer;
-        }
-
+    private class Loader implements RepositoryUtils.Loader<MapTemplate> {
         @Override
         public MapTemplate create(ResultSet rs) throws SQLException {
             String cellsData = rs.getString("mapData");
@@ -45,7 +39,8 @@ final class MapTemplateRepository implements fr.quatrevieux.araknemu.data.world.
                     rs.getInt("height")
                 ),
                 rs.getString("key"),
-                cells
+                cells,
+                fightPlacesTransformer.unserialize(rs.getString("places"))
             );
         }
 
@@ -57,10 +52,15 @@ final class MapTemplateRepository implements fr.quatrevieux.araknemu.data.world.
 
     final private ConnectionPoolUtils pool;
     final private RepositoryUtils<MapTemplate> utils;
+    final private Transformer<MapTemplate.Cell> cellTransformer;
+    final private Transformer<List<Integer>[]> fightPlacesTransformer;
 
-    public MapTemplateRepository(ConnectionPool pool, Transformer<MapTemplate.Cell> cellTransformer) {
+    public MapTemplateRepository(ConnectionPool pool, Transformer<MapTemplate.Cell> cellTransformer, Transformer<List<Integer>[]> fightPlacesTransformer) {
         this.pool = new ConnectionPoolUtils(pool);
-        utils = new RepositoryUtils<>(this.pool, new Loader(cellTransformer));
+        this.cellTransformer = cellTransformer;
+        this.fightPlacesTransformer = fightPlacesTransformer;
+
+        utils = new RepositoryUtils<>(this.pool, new Loader());
     }
 
     @Override
@@ -73,7 +73,8 @@ final class MapTemplateRepository implements fr.quatrevieux.araknemu.data.world.
                     "width INTEGER," +
                     "height INTEGER," +
                     "key TEXT," +
-                    "mapData TEXT" +
+                    "mapData TEXT," +
+                    "places TEXT" +
                 ")"
             );
         } catch (SQLException e) {

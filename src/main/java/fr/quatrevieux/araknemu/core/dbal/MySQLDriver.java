@@ -29,6 +29,6 @@ final public class MySQLDriver implements Driver {
     }
 
     private String jdbcUrl() {
-        return "jdbc:mysql://" + configuration.host() + "/" + configuration.dbname();
+        return "jdbc:mysql://" + configuration.host() + "/" + configuration.dbname() + "?useLegacyDatetimeCode=false&serverTimezone=UTC";
     }
 }

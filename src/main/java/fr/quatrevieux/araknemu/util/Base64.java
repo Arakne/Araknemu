@@ -62,4 +62,20 @@ final public class Base64 {
 
         return new String(encoded);
     }
+
+    /**
+     * Decode pseudo base64 value to int
+     *
+     * @param encoded The encoded value
+     */
+    static public int decode(String encoded) {
+        int value = 0;
+
+        for (int i = 0; i < encoded.length(); ++i) {
+            value <<= 6;
+            value += ord(encoded.charAt(i));
+        }
+
+        return value;
+    }
 }

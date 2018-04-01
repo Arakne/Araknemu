@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.network.game;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.fight.fighter.PlayerFighter;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.adapter.Channel;
 import fr.quatrevieux.araknemu.network.adapter.Session;
@@ -16,6 +17,7 @@ final public class GameSession implements Session, Dispatcher {
     private GameAccount account;
     private GamePlayer player;
     private ExplorationPlayer exploration;
+    private PlayerFighter fighter;
 
     public GameSession(Channel channel) {
         this.channel = channel;
@@ -104,6 +106,22 @@ final public class GameSession implements Session, Dispatcher {
         this.exploration = exploration;
     }
 
+    /**
+     * Get the fighter
+     *
+     * @return The fighter or null is not fighting
+     */
+    public PlayerFighter fighter() {
+        return fighter;
+    }
+
+    /**
+     * Set the fighter
+     */
+    public void setFighter(PlayerFighter fighter) {
+        this.fighter = fighter;
+    }
+
     @Override
     public void dispatch(Object event) {
         if (player != null) {
@@ -112,6 +130,10 @@ final public class GameSession implements Session, Dispatcher {
 
         if (exploration != null) {
             exploration.dispatcher().dispatch(event);
+        }
+
+        if (fighter != null) {
+            fighter.dispatcher().dispatch(event);
         }
     }
 }

@@ -6,10 +6,13 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.slf4j.helpers.NOPLogger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,9 +29,11 @@ class ChallengeInvitationTest extends GameBaseCase {
         initiator = explorationPlayer();
         challenger = new ExplorationPlayer(makeOtherPlayer());
 
+        initiator.leave();
+        initiator.join(container.get(ExplorationMapService.class).load(10340));
         challenger.join(initiator.map());
 
-        invitation = new ChallengeInvitation(initiator, challenger);
+        invitation = new ChallengeInvitation(initiator, challenger, container.get(FightService.class).handler(ChallengeBuilder.class));
     }
 
     @Test
@@ -73,6 +78,18 @@ class ChallengeInvitationTest extends GameBaseCase {
         challenger.join(
             container.get(ExplorationMapService.class).load(10540)
         );
+
+        assertNull(invitation.start());
+
+        requestStack.assertLast(
+            new GameActionResponse("", ActionType.JOIN_FIGHT_ERROR, "" + initiator.id(), new Object[] {"p"})
+        );
+    }
+
+    @Test
+    void startCannotLaunchFightOnMap() throws ContainerException {
+        initiator.join(container.get(ExplorationMapService.class).load(10300));
+        challenger.join(container.get(ExplorationMapService.class).load(10300));
 
         assertNull(invitation.start());
 

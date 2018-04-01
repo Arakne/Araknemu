@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.admin.debug;
 
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.admin.*;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
@@ -41,6 +42,9 @@ final public class DebugContext implements Context {
     private Context configure() throws ContainerException {
         return new SimpleContext(new NullContext())
             .add(new GenItem(container.get(ItemService.class)))
+            .add(new FightPos(container.get(MapTemplateRepository.class)))
+            .add(new Movement(container.get(MapTemplateRepository.class)))
+            .add(new MapStats(container.get(MapTemplateRepository.class)))
         ;
     }
 }

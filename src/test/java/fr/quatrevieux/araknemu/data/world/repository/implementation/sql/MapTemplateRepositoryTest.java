@@ -3,10 +3,14 @@ package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.data.value.Dimensions;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
+import fr.quatrevieux.araknemu.data.world.transformer.FightPlacesTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.MapCellTransformer;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,7 +24,8 @@ class MapTemplateRepositoryTest extends GameBaseCase {
 
         repository = new MapTemplateRepository(
             app.database().get("game"),
-            new MapCellTransformer()
+            new MapCellTransformer(),
+            new FightPlacesTransformer()
         );
 
         dataSet.pushMaps();
@@ -41,13 +46,24 @@ class MapTemplateRepositoryTest extends GameBaseCase {
     }
 
     @Test
+    void getWithPlaces() {
+        assertArrayEquals(
+            repository.get(10340).fightPlaces(),
+            new List[] {
+                Arrays.asList(55, 83, 114, 127, 128, 170, 171, 183, 185, 198),
+                Arrays.asList(48, 63, 75, 90, 92, 106, 121, 122, 137, 150)
+            }
+        );
+    }
+
+    @Test
     void getNotFound() {
         assertThrows(EntityNotFoundException.class, () -> repository.get(-1));
     }
 
     @Test
     void getByEntity() {
-        MapTemplate map = repository.get(new MapTemplate(10300, null, null, null, null));
+        MapTemplate map = repository.get(new MapTemplate(10300, null, null, null, null, null));
 
         assertEquals(10300, map.id());
         assertEquals(479, map.cells().size());
@@ -55,12 +71,12 @@ class MapTemplateRepositoryTest extends GameBaseCase {
 
     @Test
     void has() {
-        assertFalse(repository.has(new MapTemplate(-1, null, null, null, null)));
-        assertTrue(repository.has(new MapTemplate(10300, null, null, null, null)));
+        assertFalse(repository.has(new MapTemplate(-1, null, null, null, null, null)));
+        assertTrue(repository.has(new MapTemplate(10300, null, null, null, null, null)));
     }
 
     @Test
     void all() {
-        assertEquals(2, repository.all().size());
+        assertEquals(3, repository.all().size());
     }
 }

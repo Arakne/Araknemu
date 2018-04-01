@@ -1,19 +1,18 @@
 package fr.quatrevieux.araknemu.game.exploration.interaction.action;
 
-import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
 import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengerDialog;
 import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.InitiatorDialog;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.sql.SQLException;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AskChallengeTest extends GameBaseCase {
     @Test
@@ -25,7 +24,7 @@ class AskChallengeTest extends GameBaseCase {
         Mockito.when(interaction.start()).thenReturn(interaction);
         other.interactions().start(interaction);
 
-        AskChallenge action = new AskChallenge(current, other);
+        AskChallenge action = new AskChallenge(current, other, container.get(FightService.class));
 
         action.start();
 
@@ -43,7 +42,7 @@ class AskChallengeTest extends GameBaseCase {
             container.get(ExplorationMapService.class).load(10540)
         );
 
-        AskChallenge action = new AskChallenge(current, other);
+        AskChallenge action = new AskChallenge(current, other, container.get(FightService.class));
 
         action.start();
 
@@ -57,9 +56,10 @@ class AskChallengeTest extends GameBaseCase {
         ExplorationPlayer current = explorationPlayer();
         ExplorationPlayer other = new ExplorationPlayer(makeOtherPlayer());
 
+        current.join(container.get(ExplorationMapService.class).load(10340));
         other.join(current.map());
 
-        AskChallenge action = new AskChallenge(current, other);
+        AskChallenge action = new AskChallenge(current, other, container.get(FightService.class));
 
         action.start();
 

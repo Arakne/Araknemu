@@ -4,6 +4,8 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
+import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
+import fr.quatrevieux.araknemu.game.fight.builder.FightHandler;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 
 import java.util.Arrays;
@@ -15,10 +17,12 @@ import java.util.Collection;
 final public class ChallengeInvitation implements Interaction {
     final private ExplorationPlayer initiator;
     final private ExplorationPlayer challenger;
+    final private FightHandler<ChallengeBuilder> fightHandler;
 
-    public ChallengeInvitation(ExplorationPlayer initiator, ExplorationPlayer challenger) {
+    public ChallengeInvitation(ExplorationPlayer initiator, ExplorationPlayer challenger, FightHandler<ChallengeBuilder> fightHandler) {
         this.initiator = initiator;
         this.challenger = challenger;
+        this.fightHandler = fightHandler;
     }
 
     /**
@@ -92,6 +96,14 @@ final public class ChallengeInvitation implements Interaction {
                 new Object[] {dialog.interlocutor().id()}
             )
         );
+
+        fightHandler.start(builder -> {
+            builder
+                .map(initiator.map())
+                .fighter(initiator.player())
+                .fighter(challenger.player())
+            ;
+        });
     }
 
     /**
@@ -114,6 +126,10 @@ final public class ChallengeInvitation implements Interaction {
         }
 
         if (initiator.map() != challenger.map()) {
+            return error(JoinFightError.CANT_BECAUSE_MAP);
+        }
+
+        if (!initiator.map().canLaunchFight()) {
             return error(JoinFightError.CANT_BECAUSE_MAP);
         }
 

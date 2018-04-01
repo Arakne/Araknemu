@@ -46,4 +46,24 @@ class Base64Test {
         assertEquals('_', Base64.chr(63));
         assertEquals('c', Base64.chr(2));
     }
+
+    @Test
+    void decodeWithOneChar() {
+        assertEquals(0, Base64.decode("a"));
+        assertEquals(2, Base64.decode("c"));
+        assertEquals(63, Base64.decode("_"));
+    }
+
+    @Test
+    void decode() {
+        assertEquals(458, Base64.decode("hk"));
+    }
+
+    @Test
+    void decodeEncodeTwoChars() {
+        assertEquals(741, Base64.decode(Base64.encode(741, 2)));
+        assertEquals(951, Base64.decode(Base64.encode(951, 2)));
+        assertEquals(325, Base64.decode(Base64.encode(325, 2)));
+        assertEquals(769, Base64.decode(Base64.encode(769, 2)));
+    }
 }
