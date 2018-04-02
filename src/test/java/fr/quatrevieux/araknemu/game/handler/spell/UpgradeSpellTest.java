@@ -23,8 +23,6 @@ class UpgradeSpellTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        container.get(SpellBookService.class).preload(NOPLogger.NOP_LOGGER);
-
         handler = new UpgradeSpell();
 
         gamePlayer(true);

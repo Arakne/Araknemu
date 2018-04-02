@@ -31,8 +31,7 @@ class InventoryServiceTest extends GameBaseCase {
 
         service = new InventoryService(
             repository = container.get(PlayerItemRepository.class),
-            container.get(ItemService.class),
-            new DefaultListenerAggregate()
+            container.get(ItemService.class)
         );
     }
 

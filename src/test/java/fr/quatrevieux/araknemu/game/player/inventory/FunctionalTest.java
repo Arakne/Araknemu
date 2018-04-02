@@ -46,7 +46,6 @@ public class FunctionalTest extends GameBaseCase {
             .pushItemSets()
         ;
 
-        container.get(SpellBookService.class).preload(NOPLogger.NOP_LOGGER);
         itemService = container.get(ItemService.class);
         inventory = gamePlayer(true).inventory();
         requestStack.clear();

@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.chat;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.chat.channel.Channel;
@@ -30,7 +31,6 @@ class ChatServiceTest extends GameBaseCase {
         super.setUp();
 
         service = new ChatService(
-            container.get(ListenerAggregate.class),
             container.get(GameConfiguration.class).chat(),
             new Channel[] {
                 new MapChannel(),
@@ -40,11 +40,12 @@ class ChatServiceTest extends GameBaseCase {
     }
 
     @Test
-    void preload() throws ContainerException {
-        service.preload(NOPLogger.NOP_LOGGER);
+    void listeners() {
+        ListenerAggregate dispatcher = new DefaultListenerAggregate();
+        dispatcher.register(service);
 
-        assertTrue(container.get(ListenerAggregate.class).has(RegisterChatListeners.class));
-        assertTrue(container.get(ListenerAggregate.class).has(AddChatChannels.class));
+        assertTrue(dispatcher.has(RegisterChatListeners.class));
+        assertTrue(dispatcher.has(AddChatChannels.class));
     }
 
     @Test

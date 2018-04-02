@@ -27,8 +27,7 @@ class PlayerExperienceServiceTest extends GameBaseCase {
 
         service = new PlayerExperienceService(
             container.get(PlayerExperienceRepository.class),
-            container.get(GameConfiguration.class).player(),
-            new DefaultListenerAggregate()
+            container.get(GameConfiguration.class).player()
         );
 
         dataSet.pushExperience();
@@ -37,20 +36,19 @@ class PlayerExperienceServiceTest extends GameBaseCase {
     }
 
     @Test
-    void preload() throws ContainerException {
-        ListenerAggregate dispatcher = new DefaultListenerAggregate();
+    void preload() {
         Logger logger = Mockito.mock(Logger.class);
-
-        service = new PlayerExperienceService(
-            container.get(PlayerExperienceRepository.class),
-            container.get(GameConfiguration.class).player(),
-            dispatcher
-        );
 
         service.preload(logger);
 
         Mockito.verify(logger).info("Loading player experience...");
         Mockito.verify(logger).info("{} player levels loaded", 200);
+    }
+
+    @Test
+    void listeners() {
+        ListenerAggregate dispatcher = new DefaultListenerAggregate();
+        dispatcher.register(service);
 
         assertTrue(dispatcher.has(AddLevelListeners.class));
     }

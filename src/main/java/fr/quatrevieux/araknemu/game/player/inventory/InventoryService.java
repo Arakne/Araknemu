@@ -1,5 +1,7 @@
 package fr.quatrevieux.araknemu.game.player.inventory;
 
+import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
+import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
@@ -14,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * Service for handle player inventory
  */
-final public class InventoryService {
+final public class InventoryService implements EventsSubscriber {
     static class LoadedItem {
         final private PlayerItem entity;
         final private Item item;
@@ -36,12 +38,17 @@ final public class InventoryService {
     final private PlayerItemRepository repository;
     final private ItemService service;
 
-    public InventoryService(PlayerItemRepository repository, ItemService service, ListenerAggregate dispatcher) {
+    public InventoryService(PlayerItemRepository repository, ItemService service) {
         this.repository = repository;
         this.service = service;
+    }
 
-        dispatcher.add(new AddInventoryListeners(repository));
-        dispatcher.add(new AddInventoryListenersForExploration());
+    @Override
+    public Listener[] listeners() {
+        return new Listener[] {
+            new AddInventoryListeners(repository),
+            new AddInventoryListenersForExploration()
+        };
     }
 
     /**

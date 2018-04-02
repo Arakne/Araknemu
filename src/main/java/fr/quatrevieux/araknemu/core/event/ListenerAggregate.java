@@ -48,4 +48,15 @@ public interface ListenerAggregate extends Dispatcher {
             new SimpleListener<>(eventClass, consumer)
         );
     }
+
+    /**
+     * Register an event subscriber
+     *
+     * @param subscriber The event subscriber
+     */
+    public default void register(EventsSubscriber subscriber) {
+        for (Listener listener : subscriber.listeners()) {
+            add(listener);
+        }
+    }
 }

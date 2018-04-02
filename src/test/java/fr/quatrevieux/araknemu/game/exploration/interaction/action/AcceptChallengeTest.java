@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengeI
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
+import fr.quatrevieux.araknemu.network.game.out.fight.JoinFight;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -70,8 +71,7 @@ class AcceptChallengeTest extends GameBaseCase {
         assertFalse(player.interactions().interacting());
         assertFalse(other.interactions().interacting());
 
-        requestStack.assertLast(
-            new GameActionResponse("", ActionType.ACCEPT_CHALLENGE, "" + player.id(), new Object[] {"" + other.id()})
-        );
+        requestStack.assertOne(new GameActionResponse("", ActionType.ACCEPT_CHALLENGE, "" + player.id(), new Object[] {"" + other.id()}));
+        requestStack.assertOne(new JoinFight(player.player().fighter().fight()));
     }
 }

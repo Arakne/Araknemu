@@ -205,6 +205,8 @@ public class GameBaseCase extends DatabaseTestCase {
             .declare(PlayerSpell.class, PlayerSpellRepository.class)
             .declare(PlayerExperience.class, PlayerExperienceRepository.class)
         ;
+
+        container.get(GameService.class).subscribe();
     }
 
     @AfterEach

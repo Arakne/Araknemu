@@ -37,17 +37,17 @@ class SpellBookServiceTest extends GameBaseCase {
         service = new SpellBookService(
             container.get(PlayerSpellRepository.class),
             container.get(SpellService.class),
-            container.get(PlayerRaceService.class),
-            container.get(ListenerAggregate.class)
+            container.get(PlayerRaceService.class)
         );
     }
 
     @Test
-    void preload() throws ContainerException {
-        service.preload(NOPLogger.NOP_LOGGER);
+    void listeners() {
+        ListenerAggregate dispatcher = new DefaultListenerAggregate();
+        dispatcher.register(service);
 
-        assertTrue(container.get(ListenerAggregate.class).has(AddSpellListeners.class));
-        assertTrue(container.get(ListenerAggregate.class).has(SetDefaultPositionSpellBook.class));
+        assertTrue(dispatcher.has(AddSpellListeners.class));
+        assertTrue(dispatcher.has(SetDefaultPositionSpellBook.class));
     }
 
     @Test

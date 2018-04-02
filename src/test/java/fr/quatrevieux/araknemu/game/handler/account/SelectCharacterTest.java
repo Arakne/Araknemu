@@ -60,21 +60,15 @@ class SelectCharacterTest extends GameBaseCase {
 
         handler.handle(session, new ChoosePlayingCharacter(id));
 
-        requestStack.assertLast("ASK|1|Bob|23||0|10|7b|1c8|315|");
+        requestStack.assertOne("ASK|1|Bob|23||0|10|7b|1c8|315|");
     }
 
     @Test
     void handleWillSendChatChannels() throws Exception {
-        container.get(ChatService.class).preload(NOPLogger.NOP_LOGGER);
-
         int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null, new Position(10300, 123), EnumSet.of(ChannelType.INFO, ChannelType.PRIVATE), 0, 0, -1, 0)).id();
 
         handler.handle(session, new ChoosePlayingCharacter(id));
 
-        requestStack.assertLast(
-            new ChannelSubscribed(
-                EnumSet.of(ChannelType.INFO, ChannelType.PRIVATE)
-            )
-        );
+        requestStack.assertOne(new ChannelSubscribed(EnumSet.of(ChannelType.INFO, ChannelType.PRIVATE)));
     }
 }

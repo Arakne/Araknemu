@@ -28,8 +28,6 @@ class ChallengerDialogTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        container.get(FightService.class).preload(NOPLogger.NOP_LOGGER);
-
         initiator = explorationPlayer();
         challenger = makeOtherExplorationPlayer();
 

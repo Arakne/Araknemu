@@ -24,7 +24,6 @@ class ChangeMapTest extends GameBaseCase {
         super.setUp();
 
         dataSet.pushMaps();
-        container.get(ExplorationMapService.class).preload(NOPLogger.NOP_LOGGER);
 
         player = explorationPlayer();
         map = container.get(ExplorationMapService.class).load(10540);

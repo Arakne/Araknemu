@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
+import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.value.Colors;
@@ -25,8 +26,10 @@ import fr.quatrevieux.araknemu.game.world.creature.accessory.AccessoryType;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.EmptyAccessories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.util.collections.Sets;
 
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -51,8 +54,10 @@ class CharactersServiceTest extends GameBaseCase {
 
         dataSet
             .pushRaces()
+            .pushSpells()
             .use(Player.class)
             .use(PlayerItem.class)
+            .use(PlayerSpell.class)
         ;
     }
 
@@ -142,7 +147,7 @@ class CharactersServiceTest extends GameBaseCase {
         );
 
         GameAccount account = new GameAccount(
-            new Account(5),
+            new Account(5, "test", "test", "test"),
             container.get(AccountService.class),
             1
         );

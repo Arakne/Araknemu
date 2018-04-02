@@ -1,16 +1,15 @@
 package fr.quatrevieux.araknemu.game.chat;
 
+import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
+import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.living.transformer.ChannelsTransformer;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
-import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.game.chat.channel.Channel;
-import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.listener.service.AddChatChannels;
 import fr.quatrevieux.araknemu.game.listener.service.RegisterChatListeners;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -18,14 +17,12 @@ import java.util.Map;
 /**
  * Service for handle chat system
  */
-final public class ChatService implements PreloadableService {
-    final private ListenerAggregate dispatcher;
+final public class ChatService implements EventsSubscriber {
     final private GameConfiguration.ChatConfiguration configuration;
 
     final private Map<ChannelType, Channel> channels = new EnumMap<>(ChannelType.class);
 
-    public ChatService(ListenerAggregate dispatcher, GameConfiguration.ChatConfiguration configuration, Channel[] channels) {
-        this.dispatcher = dispatcher;
+    public ChatService(GameConfiguration.ChatConfiguration configuration, Channel[] channels) {
         this.configuration = configuration;
 
         for (Channel channel : channels) {
@@ -33,17 +30,12 @@ final public class ChatService implements PreloadableService {
         }
     }
 
-    /**
-     * Register listeners for ChatService
-     */
     @Override
-    public void preload(Logger logger) {
-        logger.info("Initialize chat...");
-        dispatcher.add(new RegisterChatListeners());
-        dispatcher.add(new AddChatChannels(
-            configuration,
-            new ChannelsTransformer()
-        ));
+    public Listener[] listeners() {
+        return new Listener[] {
+            new RegisterChatListeners(),
+            new AddChatChannels(configuration, new ChannelsTransformer())
+        };
     }
 
     /**

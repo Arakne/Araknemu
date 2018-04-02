@@ -20,8 +20,7 @@ class AreaServiceTest extends GameBaseCase {
         super.setUp();
 
         service = new AreaService(
-            container.get(SubAreaRepository.class),
-            container.get(ListenerAggregate.class)
+            container.get(SubAreaRepository.class)
         );
 
         dataSet.pushSubAreas();

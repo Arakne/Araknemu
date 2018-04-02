@@ -86,13 +86,20 @@ final public class GameModule implements ContainerModule {
                 container.get(RealmConnector.class),
                 container.get(Server.class),
                 container.get(Logger.class),
+                container.get(ListenerAggregate.class),
+                Arrays.asList(
+                    container.get(AreaService.class),
+                    container.get(ExplorationMapService.class),
+                    container.get(ItemService.class),
+                    container.get(SpellService.class),
+                    container.get(PlayerRaceService.class),
+                    container.get(PlayerExperienceService.class)
+                ),
                 Arrays.asList(
                     container.get(AreaService.class),
                     container.get(ExplorationMapService.class),
                     container.get(ChatService.class),
-                    container.get(ItemService.class),
-                    container.get(SpellService.class),
-                    container.get(PlayerRaceService.class),
+                    container.get(InventoryService.class),
                     container.get(SpellBookService.class),
                     container.get(PlayerExperienceService.class),
                     container.get(FightService.class)
@@ -220,8 +227,7 @@ final public class GameModule implements ContainerModule {
             ExplorationMapService.class,
             container -> new ExplorationMapService(
                 container.get(MapTemplateRepository.class),
-                container.get(MapTriggerRepository.class),
-                container.get(ListenerAggregate.class)
+                container.get(MapTriggerRepository.class)
             )
         );
 
@@ -235,7 +241,6 @@ final public class GameModule implements ContainerModule {
         configurator.persist(
             ChatService.class,
             container -> new ChatService(
-                container.get(ListenerAggregate.class),
                 container.get(GameConfiguration.class).chat(),
                 new Channel[] {
                     new MapChannel(),
@@ -273,8 +278,7 @@ final public class GameModule implements ContainerModule {
         configurator.persist(
             AreaService.class,
             container -> new AreaService(
-                container.get(SubAreaRepository.class),
-                container.get(ListenerAggregate.class)
+                container.get(SubAreaRepository.class)
             )
         );
 
@@ -282,8 +286,7 @@ final public class GameModule implements ContainerModule {
             InventoryService.class,
             container -> new InventoryService(
                 container.get(PlayerItemRepository.class),
-                container.get(ItemService.class),
-                container.get(ListenerAggregate.class)
+                container.get(ItemService.class)
             )
         );
 
@@ -351,8 +354,7 @@ final public class GameModule implements ContainerModule {
             container -> new SpellBookService(
                 container.get(PlayerSpellRepository.class),
                 container.get(SpellService.class),
-                container.get(PlayerRaceService.class),
-                container.get(ListenerAggregate.class)
+                container.get(PlayerRaceService.class)
             )
         );
 
@@ -360,8 +362,7 @@ final public class GameModule implements ContainerModule {
             PlayerExperienceService.class,
             container -> new PlayerExperienceService(
                 container.get(PlayerExperienceRepository.class),
-                container.get(GameConfiguration.class).player(),
-                container.get(ListenerAggregate.class)
+                container.get(GameConfiguration.class).player()
             )
         );
 
@@ -369,7 +370,6 @@ final public class GameModule implements ContainerModule {
             FightService.class,
             container -> new FightService(
                 container.get(MapTemplateRepository.class),
-                container.get(ListenerAggregate.class),
                 Arrays.asList(
                     new ChallengeBuilderFactory()
                 )

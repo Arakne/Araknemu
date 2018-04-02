@@ -28,7 +28,6 @@ class PlacementStateTest extends GameBaseCase {
         super.setUp();
 
         dataSet.pushMaps();
-        container.get(FightService.class).preload(NOPLogger.NOP_LOGGER);
 
         fight = new Fight(
             new ChallengeType(),

@@ -29,7 +29,6 @@ class SendMessageTest extends GameBaseCase {
             container.get(ChatService.class)
         );
 
-        container.get(ChatService.class).preload(NOPLogger.NOP_LOGGER);
         container.get(Dispatcher.class).dispatch(
             new PlayerLoaded(gamePlayer())
         );

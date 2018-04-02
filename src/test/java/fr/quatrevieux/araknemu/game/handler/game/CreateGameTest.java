@@ -33,9 +33,6 @@ class CreateGameTest extends GameBaseCase {
 
         dataSet.pushMaps();
 
-        container.get(ExplorationMapService.class).preload(NOPLogger.NOP_LOGGER);
-        container.get(FightService.class).preload(NOPLogger.NOP_LOGGER);
-
         handler = new CreateGame(container.get(ExplorationService.class));
 
         gamePlayer(true);

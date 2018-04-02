@@ -1,5 +1,7 @@
 package fr.quatrevieux.araknemu.game.player.experience;
 
+import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
+import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerExperience;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceRepository;
@@ -16,29 +18,32 @@ import java.util.List;
 /**
  * Handle player experience and levels
  */
-final public class PlayerExperienceService implements PreloadableService {
+final public class PlayerExperienceService implements PreloadableService, EventsSubscriber {
     final private PlayerExperienceRepository repository;
     final private GameConfiguration.PlayerConfiguration configuration;
-    final private ListenerAggregate dispatcher;
 
     final private List<PlayerExperience> levels = new ArrayList<>();
 
-    public PlayerExperienceService(PlayerExperienceRepository repository, GameConfiguration.PlayerConfiguration configuration, ListenerAggregate dispatcher) {
+    public PlayerExperienceService(PlayerExperienceRepository repository, GameConfiguration.PlayerConfiguration configuration) {
         this.repository = repository;
         this.configuration = configuration;
-        this.dispatcher = dispatcher;
     }
 
     @Override
     public void preload(Logger logger) {
-        dispatcher.add(new AddLevelListeners());
-
         logger.info("Loading player experience...");
 
         levels.clear();
         levels.addAll(repository.all());
 
         logger.info("{} player levels loaded", levels.size());
+    }
+
+    @Override
+    public Listener[] listeners() {
+        return new Listener[] {
+            new AddLevelListeners()
+        };
     }
 
     /**

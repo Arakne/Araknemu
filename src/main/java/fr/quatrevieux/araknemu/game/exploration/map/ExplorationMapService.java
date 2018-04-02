@@ -1,6 +1,8 @@
 package fr.quatrevieux.araknemu.game.exploration.map;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
+import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
@@ -22,18 +24,16 @@ import java.util.stream.Collectors;
 /**
  * Service for handle exploration maps
  */
-final public class ExplorationMapService implements PreloadableService {
+final public class ExplorationMapService implements PreloadableService, EventsSubscriber {
     final private MapTemplateRepository repository;
     final private MapTriggerRepository triggerRepository;
     final private Map<CellAction, CellActionPerformer> actions = new EnumMap<>(CellAction.class);
-    final private ListenerAggregate dispatcher;
 
     final private ConcurrentMap<Integer, ExplorationMap> maps = new ConcurrentHashMap<>();
 
-    public ExplorationMapService(MapTemplateRepository repository, MapTriggerRepository triggerRepository, ListenerAggregate dispatcher) {
+    public ExplorationMapService(MapTemplateRepository repository, MapTriggerRepository triggerRepository) {
         this.repository = repository;
         this.triggerRepository = triggerRepository;
-        this.dispatcher = dispatcher;
     }
 
     /**
@@ -57,8 +57,6 @@ final public class ExplorationMapService implements PreloadableService {
 
     @Override
     public void preload(Logger logger) {
-        dispatcher.add(new AddExplorationMapListeners());
-
         register(new Teleport(this));
 
         logger.info("Loading maps...");
@@ -89,6 +87,13 @@ final public class ExplorationMapService implements PreloadableService {
         long time = System.currentTimeMillis() - start;
 
         logger.info(maps.size() + " maps successfully loaded in " + time + "ms");
+    }
+
+    @Override
+    public Listener[] listeners() {
+        return new Listener[] {
+            new AddExplorationMapListeners()
+        };
     }
 
     private void register(CellActionPerformer action) {

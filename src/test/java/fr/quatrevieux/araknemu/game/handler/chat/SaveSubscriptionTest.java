@@ -22,7 +22,6 @@ class SaveSubscriptionTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        container.get(ChatService.class).preload(NOPLogger.NOP_LOGGER);
         gamePlayer(true);
 
         handler = new SaveSubscription();

@@ -2,6 +2,8 @@ package fr.quatrevieux.araknemu.game;
 
 import fr.quatrevieux.araknemu.core.BootException;
 import fr.quatrevieux.araknemu.core.Service;
+import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.network.adapter.Server;
 import fr.quatrevieux.araknemu.realm.host.GameHost;
@@ -16,15 +18,19 @@ final public class GameService implements Service {
     final private GameConfiguration configuration;
     final private RealmConnector connector;
     final private Server server;
+    final private Logger logger;
     final private Collection<PreloadableService> preloadables;
-    private final Logger logger;
+    final private ListenerAggregate dispatcher;
+    final private Collection<EventsSubscriber> subscribers;
 
-    public GameService(GameConfiguration configuration, RealmConnector connector, Server server, Logger logger, Collection<PreloadableService> preloadables) {
+    public GameService(GameConfiguration configuration, RealmConnector connector, Server server, Logger logger, ListenerAggregate dispatcher, Collection<PreloadableService> preloadables, Collection<EventsSubscriber> subscribers) {
         this.configuration = configuration;
         this.connector = connector;
         this.server = server;
-        this.preloadables = preloadables;
         this.logger = logger;
+        this.preloadables = preloadables;
+        this.dispatcher = dispatcher;
+        this.subscribers = subscribers;
     }
 
     @Override
@@ -36,6 +42,8 @@ final public class GameService implements Service {
             configuration.ip(),
             configuration.port()
         );
+
+        subscribe();
 
         for (PreloadableService service : preloadables) {
             service.preload(logger);
@@ -79,5 +87,14 @@ final public class GameService implements Service {
         }
 
         logger.info("Game server {} stopped", configuration.id());
+    }
+
+    /**
+     * Register subscribers
+     */
+    public void subscribe() {
+        for (EventsSubscriber subscriber : subscribers) {
+            dispatcher.register(subscriber);
+        }
     }
 }

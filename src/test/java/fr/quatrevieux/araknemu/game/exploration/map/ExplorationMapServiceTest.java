@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.exploration.map;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
@@ -26,8 +27,7 @@ class ExplorationMapServiceTest extends GameBaseCase {
 
         service = new ExplorationMapService(
             container.get(MapTemplateRepository.class),
-            container.get(MapTriggerRepository.class),
-            container.get(ListenerAggregate.class)
+            container.get(MapTriggerRepository.class)
         );
 
         dataSet.pushMaps();
@@ -47,10 +47,11 @@ class ExplorationMapServiceTest extends GameBaseCase {
     }
 
     @Test
-    void preload() throws ContainerException {
-        service.preload(NOPLogger.NOP_LOGGER);
+    void listeners() {
+        ListenerAggregate dispatcher = new DefaultListenerAggregate();
+        dispatcher.register(service);
 
-        assertTrue(container.get(ListenerAggregate.class).has(AddExplorationMapListeners.class));
+        assertTrue(dispatcher.has(AddExplorationMapListeners.class));
     }
 
     @Test

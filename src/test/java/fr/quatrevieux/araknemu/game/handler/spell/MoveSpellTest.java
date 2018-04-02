@@ -19,7 +19,6 @@ class MoveSpellTest extends GameBaseCase {
         super.setUp();
 
         handler = new MoveSpell();
-        container.get(SpellBookService.class).preload(NOPLogger.NOP_LOGGER);
 
         gamePlayer(true);
     }

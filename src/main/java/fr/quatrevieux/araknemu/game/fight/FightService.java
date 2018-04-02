@@ -1,16 +1,15 @@
 package fr.quatrevieux.araknemu.game.fight;
 
+import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
+import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
-import fr.quatrevieux.araknemu.game.PreloadableService;
-import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.listener.service.AddFightListenersForExploration;
-import fr.quatrevieux.araknemu.game.listener.service.AddFightListenersForPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.builder.FightBuilder;
 import fr.quatrevieux.araknemu.game.fight.builder.FightBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.builder.FightHandler;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
-import org.slf4j.Logger;
+import fr.quatrevieux.araknemu.game.listener.service.AddFightListenersForExploration;
+import fr.quatrevieux.araknemu.game.listener.service.AddFightListenersForPlayer;
 
 import java.util.Collection;
 import java.util.Map;
@@ -20,14 +19,12 @@ import java.util.stream.Collectors;
 /**
  * Service for create fights
  */
-final public class FightService implements PreloadableService {
+final public class FightService implements EventsSubscriber {
     final private MapTemplateRepository mapRepository;
-    final private ListenerAggregate dispatcher;
     final private Map<Class, FightBuilderFactory> builderFactories;
 
-    public FightService(MapTemplateRepository mapRepository, ListenerAggregate dispatcher, Collection<? extends FightBuilderFactory> factories) {
+    public FightService(MapTemplateRepository mapRepository, Collection<? extends FightBuilderFactory> factories) {
         this.mapRepository = mapRepository;
-        this.dispatcher = dispatcher;
         this.builderFactories = factories.stream().collect(
             Collectors.toMap(
                 FightBuilderFactory::type,
@@ -37,9 +34,11 @@ final public class FightService implements PreloadableService {
     }
 
     @Override
-    public void preload(Logger logger) {
-        dispatcher.add(new AddFightListenersForPlayer());
-        dispatcher.add(new AddFightListenersForExploration());
+    public Listener[] listeners() {
+        return new Listener[]{
+            new AddFightListenersForPlayer(),
+            new AddFightListenersForExploration(),
+        };
     }
 
     /**
