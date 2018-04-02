@@ -1,8 +1,8 @@
 package fr.quatrevieux.araknemu.game.fight.fighter;
 
-import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.event.listener.fight.SendFightJoined;
+import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.listener.fight.SendFightJoined;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;

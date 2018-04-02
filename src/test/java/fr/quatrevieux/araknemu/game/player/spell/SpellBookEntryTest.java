@@ -2,19 +2,17 @@ package fr.quatrevieux.araknemu.game.player.spell;
 
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.event.spell.SpellMoved;
-import fr.quatrevieux.araknemu.game.event.spell.SpellUpgraded;
+import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.player.spell.event.SpellMoved;
+import fr.quatrevieux.araknemu.game.player.spell.event.SpellUpgraded;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
-import fr.quatrevieux.araknemu.network.game.in.spell.SpellMove;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Stack;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;

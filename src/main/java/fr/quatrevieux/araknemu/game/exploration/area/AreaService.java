@@ -3,8 +3,8 @@ package fr.quatrevieux.araknemu.game.exploration.area;
 import fr.quatrevieux.araknemu.data.living.entity.environment.SubArea;
 import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;
-import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.event.listener.service.RegisterAreaListeners;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.listener.service.RegisterAreaListeners;
 import org.slf4j.Logger;
 
 import java.util.Collection;

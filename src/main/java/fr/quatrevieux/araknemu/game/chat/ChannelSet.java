@@ -1,8 +1,8 @@
 package fr.quatrevieux.araknemu.game.chat;
 
-import fr.quatrevieux.araknemu.game.event.Dispatcher;
-import fr.quatrevieux.araknemu.game.event.common.ChannelSubscriptionAdded;
-import fr.quatrevieux.araknemu.game.event.common.ChannelSubscriptionRemoved;
+import fr.quatrevieux.araknemu.core.event.Dispatcher;
+import fr.quatrevieux.araknemu.game.chat.event.ChannelSubscriptionAdded;
+import fr.quatrevieux.araknemu.game.chat.event.ChannelSubscriptionRemoved;
 
 import java.util.*;
 

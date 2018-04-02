@@ -1,9 +1,9 @@
 package fr.quatrevieux.araknemu.game.chat;
 
-import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.event.common.ChannelSubscriptionAdded;
-import fr.quatrevieux.araknemu.game.event.common.ChannelSubscriptionRemoved;
+import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.chat.event.ChannelSubscriptionAdded;
+import fr.quatrevieux.araknemu.game.chat.event.ChannelSubscriptionRemoved;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

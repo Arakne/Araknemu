@@ -1,6 +1,6 @@
 package fr.quatrevieux.araknemu.game.handler;
 
-import fr.quatrevieux.araknemu.game.event.common.Disconnected;
+import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.in.PacketHandler;
 import fr.quatrevieux.araknemu.network.in.SessionClosed;

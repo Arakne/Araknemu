@@ -5,7 +5,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
-import fr.quatrevieux.araknemu.game.event.common.Disconnected;
+import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

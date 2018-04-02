@@ -3,10 +3,9 @@ package fr.quatrevieux.araknemu.game.player.inventory;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
-import fr.quatrevieux.araknemu.game.event.Dispatcher;
-import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.event.listener.service.AddInventoryListeners;
-import fr.quatrevieux.araknemu.game.event.listener.service.AddInventoryListenersForExploration;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.listener.service.AddInventoryListeners;
+import fr.quatrevieux.araknemu.game.listener.service.AddInventoryListenersForExploration;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 

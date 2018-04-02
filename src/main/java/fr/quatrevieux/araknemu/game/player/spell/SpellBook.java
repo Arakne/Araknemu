@@ -2,8 +2,8 @@ package fr.quatrevieux.araknemu.game.player.spell;
 
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
-import fr.quatrevieux.araknemu.game.event.Dispatcher;
-import fr.quatrevieux.araknemu.game.event.spell.SpellLearned;
+import fr.quatrevieux.araknemu.core.event.Dispatcher;
+import fr.quatrevieux.araknemu.game.player.spell.event.SpellLearned;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellLevels;
 import fr.quatrevieux.araknemu.game.spell.SpellList;

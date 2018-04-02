@@ -7,7 +7,7 @@ import fr.quatrevieux.araknemu.game.admin.exception.CommandPermissionsException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.admin.exception.ExceptionHandler;
 import fr.quatrevieux.araknemu.game.admin.global.GlobalContext;
-import fr.quatrevieux.araknemu.game.event.listener.admin.RemoveAdminSession;
+import fr.quatrevieux.araknemu.game.listener.admin.RemoveAdminSession;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.out.basic.admin.CommandResult;
 import org.slf4j.helpers.MessageFormatter;

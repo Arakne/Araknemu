@@ -1,7 +1,7 @@
 package fr.quatrevieux.araknemu.game.handler.account;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
-import fr.quatrevieux.araknemu.game.event.common.GameJoined;
+import fr.quatrevieux.araknemu.game.player.event.GameJoined;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.exception.CloseWithPacket;
 import fr.quatrevieux.araknemu.network.game.GameSession;

@@ -1,8 +1,8 @@
 package fr.quatrevieux.araknemu.game.world.item.inventory;
 
-import fr.quatrevieux.araknemu.game.event.Dispatcher;
-import fr.quatrevieux.araknemu.game.event.inventory.ObjectAdded;
-import fr.quatrevieux.araknemu.game.event.inventory.ObjectDeleted;
+import fr.quatrevieux.araknemu.core.event.Dispatcher;
+import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectAdded;
+import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectDeleted;
 import fr.quatrevieux.araknemu.game.world.item.Item;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
 

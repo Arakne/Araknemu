@@ -1,6 +1,6 @@
 package fr.quatrevieux.araknemu.game.player.inventory.slot;
 
-import fr.quatrevieux.araknemu.game.event.Dispatcher;
+import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.world.item.inventory.ItemEntry;

@@ -1,7 +1,7 @@
 package fr.quatrevieux.araknemu.game.exploration.interaction.action;
 
-import fr.quatrevieux.araknemu.game.event.exploration.action.PlayerMoveFinished;
-import fr.quatrevieux.araknemu.game.event.exploration.action.PlayerMoving;
+import fr.quatrevieux.araknemu.game.exploration.interaction.event.PlayerMoveFinished;
+import fr.quatrevieux.araknemu.game.exploration.interaction.event.PlayerMoving;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.world.map.PathStep;
 

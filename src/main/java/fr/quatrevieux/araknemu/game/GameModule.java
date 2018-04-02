@@ -32,8 +32,8 @@ import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.chat.channel.*;
 import fr.quatrevieux.araknemu.game.connector.ConnectorService;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
-import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.factory.ExplorationActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
@@ -189,7 +189,7 @@ final public class GameModule implements ContainerModule {
                 container.get(PlayerRepository.class),
                 container.get(PlayerConstraints.class),
                 container.get(PlayerRaceRepository.class),
-                container.get(fr.quatrevieux.araknemu.game.event.Dispatcher.class),
+                container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class),
                 container.get(PlayerItemRepository.class)
             )
         );
@@ -199,7 +199,7 @@ final public class GameModule implements ContainerModule {
             container -> new PlayerService(
                 container.get(PlayerRepository.class),
                 container.get(GameConfiguration.class),
-                container.get(fr.quatrevieux.araknemu.game.event.Dispatcher.class),
+                container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class),
                 container.get(InventoryService.class),
                 container.get(PlayerRaceService.class),
                 container.get(SpellBookService.class),
@@ -212,7 +212,7 @@ final public class GameModule implements ContainerModule {
             container -> new ExplorationService(
                 container.get(ExplorationMapService.class),
                 container.get(ExplorationActionFactory.class),
-                container.get(fr.quatrevieux.araknemu.game.event.Dispatcher.class)
+                container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class)
             )
         );
 
@@ -293,7 +293,7 @@ final public class GameModule implements ContainerModule {
         );
 
         configurator.factory(
-            fr.quatrevieux.araknemu.game.event.Dispatcher.class,
+            fr.quatrevieux.araknemu.core.event.Dispatcher.class,
             container -> container.get(ListenerAggregate.class)
         );
 

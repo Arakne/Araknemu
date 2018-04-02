@@ -2,7 +2,7 @@ package fr.quatrevieux.araknemu.game.chat.channel;
 
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.chat.ChatException;
-import fr.quatrevieux.araknemu.game.event.common.ConcealedMessage;
+import fr.quatrevieux.araknemu.game.chat.event.ConcealedMessage;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;

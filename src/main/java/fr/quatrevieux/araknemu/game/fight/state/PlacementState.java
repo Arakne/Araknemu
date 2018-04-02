@@ -1,6 +1,6 @@
 package fr.quatrevieux.araknemu.game.fight.state;
 
-import fr.quatrevieux.araknemu.game.event.fight.FightJoined;
+import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 
 /**

@@ -13,8 +13,8 @@ import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
 import fr.quatrevieux.araknemu.game.admin.AdminService;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.connector.ConnectorService;
-import fr.quatrevieux.araknemu.game.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.game.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.factory.ExplorationActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
@@ -84,7 +84,7 @@ class GameModuleTest extends GameBaseCase {
 
         assertSame(
             container.get(ListenerAggregate.class),
-            container.get(fr.quatrevieux.araknemu.game.event.Dispatcher.class)
+            container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class)
         );
     }
 }

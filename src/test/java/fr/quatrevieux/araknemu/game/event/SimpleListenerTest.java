@@ -1,7 +1,8 @@
 package fr.quatrevieux.araknemu.game.event;
 
-import fr.quatrevieux.araknemu.game.event.common.Disconnected;
-import fr.quatrevieux.araknemu.game.event.exploration.MapLoaded;
+import fr.quatrevieux.araknemu.core.event.SimpleListener;
+import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
+import fr.quatrevieux.araknemu.game.exploration.event.MapLoaded;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
