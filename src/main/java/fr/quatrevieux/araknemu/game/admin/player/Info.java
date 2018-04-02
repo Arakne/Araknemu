@@ -40,68 +40,12 @@ final public class Info extends AbstractCommand {
     public void execute(AdminPerformer performer, List<String> arguments) {
         performer.success("Player info : {}", player.name());
         performer.success("==============================");
-
-        player.print(
-            new PlayableCharacter.Printer() {
-                @Override
-                public PlayableCharacter.Printer level(int level) {
-                    performer.info("Level: {}", level);
-
-                    return this;
-                }
-
-                @Override
-                public PlayableCharacter.Printer name(String name) {
-                    performer.info("Name: {}", name);
-
-                    return this;
-                }
-
-                @Override
-                public PlayableCharacter.Printer race(Race race) {
-                    performer.info("Race: {}", race);
-
-                    return this;
-                }
-
-                @Override
-                public PlayableCharacter.Printer sex(Sex sex) {
-                    performer.info("Sex: {}", sex);
-
-                    return this;
-                }
-
-                @Override
-                public PlayableCharacter.Printer colors(Colors colors) {
-                    return this;
-                }
-
-                @Override
-                public PlayableCharacter.Printer id(int id) {
-                    performer.info("ID: {}", id);
-
-                    return this;
-                }
-
-                @Override
-                public PlayableCharacter.Printer gfxID(int gfxID) {
-                    performer.info("GfxID: {}", gfxID);
-
-                    return this;
-                }
-
-                @Override
-                public PlayableCharacter.Printer server(int id) {
-                    performer.info("Server: {}", id);
-
-                    return this;
-                }
-
-                @Override
-                public PlayableCharacter.Printer accessories(Accessories accessories) {
-                    return this;
-                }
-            }
-        );
+        performer.info("ID:    {}", player.id());
+        performer.info("Name:  {}", player.name());
+        performer.info("Level: {}", player.experience().level());
+        performer.info("Race:  {}", player.race().name());
+        performer.info("Sex:   {}", player.spriteInfo().sex());
+        performer.info("GfxID: {}", player.spriteInfo().gfxId());
+        performer.success("==============================");
     }
 }

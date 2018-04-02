@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.fight.fighter;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.player.sprite.SpriteInfo;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import org.apache.commons.lang3.StringUtils;
 
@@ -13,9 +14,11 @@ import org.apache.commons.lang3.StringUtils;
  */
 final public class PlayerFighterSprite implements Sprite {
     final private PlayerFighter fighter;
+    final private SpriteInfo spriteInfo;
 
-    public PlayerFighterSprite(PlayerFighter fighter) {
+    public PlayerFighterSprite(PlayerFighter fighter, SpriteInfo spriteInfo) {
         this.fighter = fighter;
+        this.spriteInfo = spriteInfo;
     }
 
     @Override
@@ -35,7 +38,7 @@ final public class PlayerFighterSprite implements Sprite {
 
     @Override
     public String name() {
-        return fighter.player().name();
+        return spriteInfo.name();
     }
 
     @Override
@@ -46,13 +49,13 @@ final public class PlayerFighterSprite implements Sprite {
             "0;" + // Bonus value, not used on player
             id() + ";" +
             name() + ";" +
-            fighter.player().race().race().ordinal() + ";" +
-            fighter.player().gfxId() + ";" +
-            fighter.player().sex().ordinal() + ";" +
+            spriteInfo.race().ordinal() + ";" +
+            spriteInfo.gfxId() + "^" + spriteInfo.size() + ";" +
+            spriteInfo.sex().ordinal() + ";" +
             fighter.player().experience().level() + ";" +
             "0,0,0,0;" + // @todo alignment
-            StringUtils.join(fighter.player().colors().toHexArray(), ";") + ";" +
-            fighter.player().inventory().accessories() + ";" +
+            StringUtils.join(spriteInfo.colors().toHexArray(), ";") + ";" +
+            spriteInfo.accessories() + ";" +
             fighter.currentLife() + ";" +
             fighter.characteristics().get(Characteristic.ACTION_POINT) + ";" +
             fighter.characteristics().get(Characteristic.MOVEMENT_POINT) + ";" +

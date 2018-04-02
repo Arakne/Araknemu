@@ -1,8 +1,6 @@
 package fr.quatrevieux.araknemu.game.player;
 
-import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
-import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.chat.ChannelSet;
@@ -18,6 +16,9 @@ import fr.quatrevieux.araknemu.game.player.experience.GamePlayerExperience;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.game.player.race.GamePlayerRace;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
+import fr.quatrevieux.araknemu.game.player.sprite.GamePlayerSpriteInfo;
+import fr.quatrevieux.araknemu.game.player.sprite.SpriteInfo;
+import fr.quatrevieux.araknemu.game.world.util.Sender;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 import java.util.Set;
@@ -26,7 +27,9 @@ import java.util.Set;
  * GamePlayer object
  * A player is a logged character, with associated game session
  */
-final public class GamePlayer extends AbstractCharacter implements Dispatcher, PlayerData {
+final public class GamePlayer implements Dispatcher, PlayerData, Sender {
+    final private GameAccount account;
+    final private Player entity;
     final private PlayerService service;
     final private GameSession session;
     final private GamePlayerRace race;
@@ -36,12 +39,13 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
     final private Life life;
     final private SpellBook spells;
     final private GamePlayerExperience experience;
+    final private SpriteInfo spriteInfo;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
     public GamePlayer(GameAccount account, Player entity, GamePlayerRace race, GameSession session, PlayerService service, PlayerInventory inventory, SpellBook spells, GamePlayerExperience experience) {
-        super(account, entity);
-
+        this.account = account;
+        this.entity = entity;
         this.race = race;
         this.session = session;
         this.service = service;
@@ -54,12 +58,15 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
         characteristics.rebuildSpecialEffects();
 
         life = new Life(this, entity);
+        spriteInfo = new GamePlayerSpriteInfo(entity, inventory);
     }
 
-    @Override
-    public void print(Printer printer) {
-        super.print(printer);
-        printer.accessories(inventory.accessories());
+    public int id() {
+        return entity.id();
+    }
+
+    public GameAccount account() {
+        return account;
     }
 
     @Override
@@ -76,9 +83,7 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
         return characteristics;
     }
 
-    /**
-     * Send a packet to the player
-     */
+    @Override
     public void send(Object packet) {
         session.write(packet);
     }
@@ -196,30 +201,19 @@ final public class GamePlayer extends AbstractCharacter implements Dispatcher, P
         return experience;
     }
 
+    @Override
     public SpellBook spells() {
         return spells;
     }
 
     /**
-     * Get the player GfxId
-     *
-     * @todo refactor
+     * Get the player sprite info
      */
-    public String gfxId() {
-        return Integer.toString(10 * entity.race().ordinal() + entity.sex().ordinal()) + "^100x100";
+    public SpriteInfo spriteInfo() {
+        return spriteInfo;
     }
 
-    /**
-     * Get the player sex
-     */
-    public Sex sex() {
-        return entity.sex();
-    }
-
-    /**
-     * Get player colors
-     */
-    public Colors colors() {
-        return entity.colors();
+    Player entity() {
+        return entity;
     }
 }

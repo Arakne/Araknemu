@@ -39,7 +39,7 @@ class PlayerCharacteristicsTest extends GameBaseCase {
         characteristics = new PlayerCharacteristics(
             dispatcher = new DefaultListenerAggregate(),
             gamePlayer(),
-            gamePlayer().entity
+            gamePlayer().entity()
         );
     }
 
@@ -144,7 +144,7 @@ class PlayerCharacteristicsTest extends GameBaseCase {
 
     @Test
     void boostCharacteristicSuccess() throws SQLException, ContainerException {
-        gamePlayer().entity.setBoostPoints(10);
+        gamePlayer().entity().setBoostPoints(10);
 
         AtomicReference<CharacteristicsChanged> ref = new AtomicReference<>();
         dispatcher.add(CharacteristicsChanged.class, ref::set);
@@ -153,12 +153,12 @@ class PlayerCharacteristicsTest extends GameBaseCase {
 
         assertNotNull(ref.get());
         assertEquals(51, characteristics.base().get(Characteristic.STRENGTH));
-        assertEquals(7, gamePlayer().entity.boostPoints());
+        assertEquals(7, gamePlayer().entity().boostPoints());
     }
 
     @Test
     void boostCharacteristicNotEnoughPoints() throws SQLException, ContainerException {
-        gamePlayer().entity.setBoostPoints(1);
+        gamePlayer().entity().setBoostPoints(1);
 
         AtomicReference<CharacteristicsChanged> ref = new AtomicReference<>();
         dispatcher.add(CharacteristicsChanged.class, ref::set);
@@ -167,7 +167,7 @@ class PlayerCharacteristicsTest extends GameBaseCase {
 
         assertNull(ref.get());
         assertEquals(50, characteristics.base().get(Characteristic.STRENGTH));
-        assertEquals(1, gamePlayer().entity.boostPoints());
+        assertEquals(1, gamePlayer().entity().boostPoints());
     }
 
     @Test
@@ -185,7 +185,7 @@ class PlayerCharacteristicsTest extends GameBaseCase {
     @Test
     void discernment() throws SQLException, ContainerException {
         characteristics.specials().add(SpecialEffects.Type.DISCERNMENT, 15);
-        gamePlayer().entity.stats().set(Characteristic.LUCK, 120);
+        gamePlayer().entity().stats().set(Characteristic.LUCK, 120);
 
         assertEquals(127, characteristics.discernment());
     }
@@ -197,7 +197,7 @@ class PlayerCharacteristicsTest extends GameBaseCase {
             .pushItemSets()
         ;
 
-        gamePlayer().entity.stats().set(Characteristic.VITALITY, 50);
+        gamePlayer().entity().stats().set(Characteristic.VITALITY, 50);
         gamePlayer().inventory().add(container.get(ItemService.class).create(2414, true), 1, 7);
         gamePlayer().inventory().add(container.get(ItemService.class).create(2428, true), 1, 3);
         gamePlayer().characteristics().rebuildSpecialEffects();

@@ -17,6 +17,7 @@ import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
 import fr.quatrevieux.araknemu.game.player.experience.GamePlayerExperience;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
+import fr.quatrevieux.araknemu.game.player.sprite.PlayerSprite;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import fr.quatrevieux.araknemu.game.world.creature.Explorer;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
@@ -25,7 +26,7 @@ import fr.quatrevieux.araknemu.game.world.util.Sender;
 /**
  * Player for exploration game session
  */
-final public class ExplorationPlayer implements PlayableCharacter, Sender, Creature, Dispatcher, Explorer, PlayerData {
+final public class ExplorationPlayer implements Sender, Creature, Dispatcher, Explorer, PlayerData {
     final private GamePlayer player;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
@@ -38,16 +39,10 @@ final public class ExplorationPlayer implements PlayableCharacter, Sender, Creat
     }
 
     @Override
-    public void print(Printer printer) {
-        player.print(printer);
-    }
-
-    @Override
     public int id() {
         return player.id();
     }
 
-    @Override
     public GameAccount account() {
         return player.account();
     }
@@ -69,7 +64,7 @@ final public class ExplorationPlayer implements PlayableCharacter, Sender, Creat
 
     @Override
     public Sprite sprite() {
-        return new PlayerSprite(player);
+        return new PlayerSprite(player.spriteInfo(), position());
     }
 
     @Override

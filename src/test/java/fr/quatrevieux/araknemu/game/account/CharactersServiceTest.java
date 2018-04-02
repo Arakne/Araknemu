@@ -106,10 +106,10 @@ class CharactersServiceTest extends GameBaseCase {
         assertEquals(first.id(), characters.get(0).id());
         assertEquals(second.id(), characters.get(1).id());
 
-        assertInstanceOf(CharacterAccessories.class, characters.get(0).accessories());
-        assertEquals(12, characters.get(0).accessories().get(AccessoryType.WEAPON).appearance());
-        assertEquals(23, characters.get(0).accessories().get(AccessoryType.HELMET).appearance());
-        assertInstanceOf(EmptyAccessories.class, characters.get(1).accessories());
+        assertInstanceOf(CharacterAccessories.class, characters.get(0).spriteInfo().accessories());
+        assertEquals(12, characters.get(0).spriteInfo().accessories().get(AccessoryType.WEAPON).appearance());
+        assertEquals(23, characters.get(0).spriteInfo().accessories().get(AccessoryType.HELMET).appearance());
+        assertInstanceOf(EmptyAccessories.class, characters.get(1).spriteInfo().accessories());
     }
 
     @Test

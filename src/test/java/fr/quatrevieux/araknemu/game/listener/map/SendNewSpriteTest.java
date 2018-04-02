@@ -3,7 +3,8 @@ package fr.quatrevieux.araknemu.game.listener.map;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.event.NewSpriteOnMap;
-import fr.quatrevieux.araknemu.game.player.PlayerSprite;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.sprite.PlayerSprite;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +32,7 @@ class SendNewSpriteTest extends GameBaseCase {
 
         listener.on(
             new NewSpriteOnMap(
-                new PlayerSprite(gamePlayer())
+                new PlayerSprite(gamePlayer().spriteInfo(), gamePlayer().position())
             )
         );
 
@@ -40,7 +41,8 @@ class SendNewSpriteTest extends GameBaseCase {
 
     @Test
     void onOtherSprite() throws Exception {
-        Sprite sprite = new PlayerSprite(makeOtherPlayer());
+        GamePlayer player = makeOtherPlayer();
+        Sprite sprite = new PlayerSprite(player.spriteInfo(), player.position());
 
         listener.on(
             new NewSpriteOnMap(sprite)

@@ -9,7 +9,7 @@ import fr.quatrevieux.araknemu.game.exploration.event.MapLeaved;
 import fr.quatrevieux.araknemu.game.exploration.event.MapLoaded;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
-import fr.quatrevieux.araknemu.game.player.PlayerSprite;
+import fr.quatrevieux.araknemu.game.player.sprite.PlayerSprite;
 import fr.quatrevieux.araknemu.game.player.characteristic.Life;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
@@ -38,7 +38,7 @@ class ExplorationPlayerTest extends GameBaseCase {
     @Test
     void sprite() throws SQLException, ContainerException {
         assertEquals(
-            new PlayerSprite(gamePlayer()).toString(),
+            new PlayerSprite(gamePlayer().spriteInfo(), gamePlayer().position()).toString(),
             player.sprite().toString()
         );
     }

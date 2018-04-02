@@ -58,7 +58,7 @@ final public class PlayerFighter implements Fighter, Sender {
 
     @Override
     public Sprite sprite() {
-        return new PlayerFighterSprite(this);
+        return new PlayerFighterSprite(this, player.spriteInfo());
     }
 
     @Override

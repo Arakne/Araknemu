@@ -27,13 +27,13 @@ class InfoTest extends CommandTestCase {
         assertOutput(
             "Player info : Bob",
             "==============================",
-            "Name: Bob",
-            "Race: FECA",
-            "Sex: MALE",
+            "ID:    1",
+            "Name:  Bob",
             "Level: 50",
-            "ID: 1",
+            "Race:  Feca",
+            "Sex:   MALE",
             "GfxID: 10",
-            "Server: 2"
+            "=============================="
         );
     }
 }

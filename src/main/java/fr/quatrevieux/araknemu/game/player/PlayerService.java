@@ -140,7 +140,7 @@ final public class PlayerService {
      * Save the player
      */
     public void save(GamePlayer player) {
-        repository.save(player.entity);
+        repository.save(player.entity());
     }
 
     private void login(GamePlayer player) {

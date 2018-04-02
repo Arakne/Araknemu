@@ -1,8 +1,7 @@
 package fr.quatrevieux.araknemu.game.account;
 
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
-import fr.quatrevieux.araknemu.game.player.AbstractCharacter;
-import fr.quatrevieux.araknemu.game.player.PlayableCharacter;
+import fr.quatrevieux.araknemu.game.player.sprite.SpriteInfo;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.Accessories;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.EmptyAccessories;
 import fr.quatrevieux.araknemu.network.game.in.account.AddCharacterRequest;
@@ -10,12 +9,14 @@ import fr.quatrevieux.araknemu.network.game.in.account.AddCharacterRequest;
 /**
  * Character for game account
  */
-final public class AccountCharacter extends AbstractCharacter {
+final public class AccountCharacter {
+    final private GameAccount account;
+    final private Player entity;
     final private Accessories accessories;
 
-    public AccountCharacter(GameAccount account, Player character, Accessories accessories) {
-        super(account, character);
-
+    public AccountCharacter(GameAccount account, Player entity, Accessories accessories) {
+        this.account = account;
+        this.entity = entity;
         this.accessories = accessories;
     }
 
@@ -23,11 +24,18 @@ final public class AccountCharacter extends AbstractCharacter {
         this(account, character, new EmptyAccessories());
     }
 
-    @Override
-    public void print(Printer printer) {
-        super.print(printer);
+    /**
+     * Get the layer account
+     */
+    public GameAccount account() {
+        return account;
+    }
 
-        printer.accessories(accessories);
+    /**
+     * Get the player id
+     */
+    public int id() {
+        return entity.id();
     }
 
     /**
@@ -45,10 +53,17 @@ final public class AccountCharacter extends AbstractCharacter {
     }
 
     /**
-     * Get the character accessories
+     * Get sprite info for character
      */
-    public Accessories accessories() {
-        return accessories;
+    public SpriteInfo spriteInfo() {
+        return new AccountCharacterSpriteInfo(entity, accessories);
+    }
+
+    /**
+     * Get the player server ID
+     */
+    public int serverId() {
+        return entity.serverId();
     }
 
     /**

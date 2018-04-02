@@ -158,7 +158,7 @@ class GamePlayerTest extends GameBaseCase {
             new Position(7894, 12)
         );
 
-        player.entity.stats().set(Characteristic.AGILITY, 123);
+        player.entity().stats().set(Characteristic.AGILITY, 123);
 
         player.save();
 
@@ -172,7 +172,7 @@ class GamePlayerTest extends GameBaseCase {
         assertEquals(345, player.life().current());
         assertEquals(345, player.life().max());
 
-        player.entity.setLife(10);
+        player.entity().setLife(10);
         assertEquals(10, player.life().current());
     }
 }
