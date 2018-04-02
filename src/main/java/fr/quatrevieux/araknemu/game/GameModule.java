@@ -139,7 +139,8 @@ final public class GameModule implements ContainerModule {
                     new LoggedLoader(),
                     new PlayingLoader(),
                     new ExploringLoader(),
-                    new AdminLoader()
+                    new AdminLoader(),
+                    new FightingLoader()
                 ).load(container)
             )
         );

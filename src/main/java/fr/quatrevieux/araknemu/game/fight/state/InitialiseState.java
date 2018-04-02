@@ -12,11 +12,24 @@ import java.util.List;
  * Initialisation of the fight
  */
 final public class InitialiseState implements FightState {
+    final private boolean randomize;
+
+    public InitialiseState(boolean randomize) {
+        this.randomize = randomize;
+    }
+
+    public InitialiseState() {
+        this(true);
+    }
+
     @Override
     public void start(Fight fight) {
         for (FightTeam team : fight.teams()) {
             List<Integer> cells = new ArrayList<>(team.startPlaces());
-            Collections.shuffle(cells);
+
+            if (randomize) {
+                Collections.shuffle(cells);
+            }
 
             int index = 0;
 

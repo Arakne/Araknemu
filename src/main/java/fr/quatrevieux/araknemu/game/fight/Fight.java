@@ -1,11 +1,15 @@
 package fr.quatrevieux.araknemu.game.fight;
 
+import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.Dispatcher;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.state.*;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
+import fr.quatrevieux.araknemu.game.world.util.Sender;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,11 +17,13 @@ import java.util.stream.Collectors;
 /**
  * Handle fight
  */
-final public class Fight {
+final public class Fight implements Dispatcher, Sender {
     final private FightType type;
     final private FightMap map;
     final private List<FightTeam> teams;
     final private StatesFlow statesFlow;
+
+    final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
     public Fight(FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow) {
         this.type = type;
@@ -100,14 +106,24 @@ final public class Fight {
         return type;
     }
 
-    /**
-     * Send packet to all players
-     */
+    @Override
     public void send(Object packet) {
         String sPacket = packet.toString();
 
         for (FightTeam team : teams) {
             team.send(sPacket);
         }
+    }
+
+    @Override
+    public void dispatch(Object event) {
+        dispatcher.dispatch(event);
+    }
+
+    /**
+     * Get the fight dispatcher
+     */
+    public ListenerAggregate dispatcher() {
+        return dispatcher;
     }
 }
