@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.listener.service;
+package fr.quatrevieux.araknemu.game.listener.player.chat;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
@@ -12,6 +12,7 @@ import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.account.event.CharacterCreationStarted;
+import fr.quatrevieux.araknemu.game.listener.player.chat.AddChatChannels;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

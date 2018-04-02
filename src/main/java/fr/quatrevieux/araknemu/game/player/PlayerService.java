@@ -8,7 +8,6 @@ import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.listener.player.*;
-import fr.quatrevieux.araknemu.game.listener.service.AddInventoryListenersForExploration;
 import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
@@ -84,7 +83,6 @@ final public class PlayerService {
         gamePlayer.dispatcher().add(new ComputeLifePoints(gamePlayer));
         gamePlayer.dispatcher().add(new SendLifeChanged(gamePlayer));
         gamePlayer.dispatcher().add(new SendStats(gamePlayer));
-        gamePlayer.dispatcher().add(new AddInventoryListenersForExploration());
         this.dispatcher.dispatch(new PlayerLoaded(gamePlayer));
         gamePlayer.dispatcher().add(new SavePlayer(gamePlayer)); // After all events
 

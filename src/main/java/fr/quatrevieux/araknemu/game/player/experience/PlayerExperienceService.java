@@ -8,8 +8,9 @@ import fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceR
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
-import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.listener.service.AddLevelListeners;
+import fr.quatrevieux.araknemu.game.listener.player.SendLevelUp;
+import fr.quatrevieux.araknemu.game.listener.player.SendPlayerXp;
+import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -42,7 +43,18 @@ final public class PlayerExperienceService implements PreloadableService, Events
     @Override
     public Listener[] listeners() {
         return new Listener[] {
-            new AddLevelListeners()
+            new Listener<PlayerLoaded>() {
+                @Override
+                public void on(PlayerLoaded event) {
+                    event.player().dispatcher().add(new SendLevelUp(event.player()));
+                    event.player().dispatcher().add(new SendPlayerXp(event.player()));
+                }
+
+                @Override
+                public Class<PlayerLoaded> event() {
+                    return PlayerLoaded.class;
+                }
+            }
         };
     }
 

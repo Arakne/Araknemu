@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.listener.service;
+package fr.quatrevieux.araknemu.game.listener.player.spell;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.game.account.AccountCharacter;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.account.event.CharacterCreated;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SetDefaultPositionSpellBook;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

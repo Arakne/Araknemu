@@ -8,8 +8,8 @@ import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;
-import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.listener.service.AddExplorationMapListeners;
+import fr.quatrevieux.araknemu.game.exploration.event.ExplorationPlayerCreated;
+import fr.quatrevieux.araknemu.game.listener.player.SendMapData;
 import fr.quatrevieux.araknemu.game.exploration.map.trigger.CellAction;
 import fr.quatrevieux.araknemu.game.exploration.map.trigger.CellActionPerformer;
 import fr.quatrevieux.araknemu.game.exploration.map.trigger.MapTriggers;
@@ -92,7 +92,17 @@ final public class ExplorationMapService implements PreloadableService, EventsSu
     @Override
     public Listener[] listeners() {
         return new Listener[] {
-            new AddExplorationMapListeners()
+            new Listener<ExplorationPlayerCreated>() {
+                @Override
+                public void on(ExplorationPlayerCreated event) {
+                    event.player().dispatcher().add(new SendMapData(event.player()));
+                }
+
+                @Override
+                public Class<ExplorationPlayerCreated> event() {
+                    return ExplorationPlayerCreated.class;
+                }
+            }
         };
     }
 

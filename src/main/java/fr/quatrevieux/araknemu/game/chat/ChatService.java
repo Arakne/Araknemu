@@ -2,12 +2,13 @@ package fr.quatrevieux.araknemu.game.chat;
 
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.living.transformer.ChannelsTransformer;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.chat.channel.Channel;
-import fr.quatrevieux.araknemu.game.listener.service.AddChatChannels;
-import fr.quatrevieux.araknemu.game.listener.service.RegisterChatListeners;
+import fr.quatrevieux.araknemu.game.listener.player.chat.*;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import org.apache.commons.lang3.StringUtils;
 
@@ -33,7 +34,23 @@ final public class ChatService implements EventsSubscriber {
     @Override
     public Listener[] listeners() {
         return new Listener[] {
-            new RegisterChatListeners(),
+            new Listener<PlayerLoaded>() {
+                @Override
+                public void on(PlayerLoaded event) {
+                    ListenerAggregate dispatcher = event.player().dispatcher();
+
+                    dispatcher.add(new InitializeChat(event.player()));
+                    dispatcher.add(new MessageReceived(event.player()));
+                    dispatcher.add(new PrivateMessageReceived(event.player()));
+                    dispatcher.add(new SubscriptionAddedAcknowledge(event.player()));
+                    dispatcher.add(new SubscriptionRemovedAcknowledge(event.player()));
+                }
+
+                @Override
+                public Class<PlayerLoaded> event() {
+                    return PlayerLoaded.class;
+                }
+            },
             new AddChatChannels(configuration, new ChannelsTransformer())
         };
     }

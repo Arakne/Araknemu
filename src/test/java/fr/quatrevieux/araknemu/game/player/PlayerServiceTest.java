@@ -21,7 +21,6 @@ import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.listener.player.*;
-import fr.quatrevieux.araknemu.game.listener.service.AddInventoryListenersForExploration;
 import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
@@ -72,7 +71,7 @@ class PlayerServiceTest extends GameBaseCase {
     }
 
     @Test
-    void loadSuccess() throws ContainerException, SQLException {
+    void loadSuccess() throws ContainerException {
         int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null)).id();
 
         GamePlayer player = service.load(session, id);
@@ -81,7 +80,6 @@ class PlayerServiceTest extends GameBaseCase {
 
         assertTrue(player.dispatcher().has(SavePlayer.class));
         assertTrue(player.dispatcher().has(SendStats.class));
-        assertTrue(player.dispatcher().has(AddInventoryListenersForExploration.class));
         assertTrue(player.dispatcher().has(ComputeLifePoints.class));
         assertTrue(player.dispatcher().has(SendLifeChanged.class));
     }

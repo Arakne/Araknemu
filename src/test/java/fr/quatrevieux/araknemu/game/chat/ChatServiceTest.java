@@ -8,15 +8,16 @@ import fr.quatrevieux.araknemu.game.chat.channel.Channel;
 import fr.quatrevieux.araknemu.game.chat.channel.GlobalChannel;
 import fr.quatrevieux.araknemu.game.chat.channel.MapChannel;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.listener.player.chat.InitializeChat;
 import fr.quatrevieux.araknemu.game.listener.player.chat.MessageReceived;
-import fr.quatrevieux.araknemu.game.listener.service.AddChatChannels;
-import fr.quatrevieux.araknemu.game.listener.service.RegisterChatListeners;
+import fr.quatrevieux.araknemu.game.listener.player.chat.AddChatChannels;
+import fr.quatrevieux.araknemu.game.listener.player.chat.PrivateMessageReceived;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
+import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import fr.quatrevieux.araknemu.network.game.out.chat.MessageSent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 
@@ -44,8 +45,19 @@ class ChatServiceTest extends GameBaseCase {
         ListenerAggregate dispatcher = new DefaultListenerAggregate();
         dispatcher.register(service);
 
-        assertTrue(dispatcher.has(RegisterChatListeners.class));
         assertTrue(dispatcher.has(AddChatChannels.class));
+    }
+
+    @Test
+    void playerLoadListener() throws SQLException, ContainerException {
+        ListenerAggregate dispatcher = new DefaultListenerAggregate();
+        dispatcher.register(service);
+
+        dispatcher.dispatch(new PlayerLoaded(gamePlayer()));
+
+        assertTrue(gamePlayer().dispatcher().has(InitializeChat.class));
+        assertTrue(gamePlayer().dispatcher().has(MessageReceived.class));
+        assertTrue(gamePlayer().dispatcher().has(PrivateMessageReceived.class));
     }
 
     @Test

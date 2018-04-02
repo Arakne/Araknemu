@@ -1,5 +1,7 @@
 package fr.quatrevieux.araknemu.game.player.inventory;
 
+import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
@@ -7,11 +9,20 @@ import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepositor
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.event.ExplorationPlayerCreated;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.listener.map.SendAccessories;
+import fr.quatrevieux.araknemu.game.listener.player.inventory.*;
+import fr.quatrevieux.araknemu.game.listener.player.inventory.itemset.ApplyItemSetSpecialEffects;
+import fr.quatrevieux.araknemu.game.listener.player.inventory.itemset.InitializeItemSets;
+import fr.quatrevieux.araknemu.game.listener.player.inventory.itemset.SendItemSetChange;
+import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -55,5 +66,37 @@ class InventoryServiceTest extends GameBaseCase {
         assertEquals(39, inventory.get(3).templateId());
         assertEquals(40, inventory.get(8).templateId());
         assertEquals(284, inventory.get(32).templateId());
+    }
+
+    @Test
+    void playerLoadedListener() throws SQLException, ContainerException {
+        ListenerAggregate dispatcher = new DefaultListenerAggregate();
+        dispatcher.register(service);
+
+        dispatcher.dispatch(new PlayerLoaded(gamePlayer()));
+
+        assertTrue(gamePlayer().dispatcher().has(SendItemData.class));
+        assertTrue(gamePlayer().dispatcher().has(SendItemPosition.class));
+        assertTrue(gamePlayer().dispatcher().has(SendItemQuantity.class));
+        assertTrue(gamePlayer().dispatcher().has(SaveNewItem.class));
+        assertTrue(gamePlayer().dispatcher().has(SaveItemPosition.class));
+        assertTrue(gamePlayer().dispatcher().has(SaveItemQuantity.class));
+        assertTrue(gamePlayer().dispatcher().has(UpdateStuffStats.class));
+        assertTrue(gamePlayer().dispatcher().has(SaveDeletedItem.class));
+        assertTrue(gamePlayer().dispatcher().has(SendItemDeleted.class));
+        assertTrue(gamePlayer().dispatcher().has(SendItemSetChange.class));
+        assertTrue(gamePlayer().dispatcher().has(InitializeItemSets.class));
+        assertTrue(gamePlayer().dispatcher().has(ApplyItemSetSpecialEffects.class));
+    }
+
+    @Test
+    void explorationPlayerCreatedListener() throws Exception {
+        ExplorationPlayer player = new ExplorationPlayer(gamePlayer());
+
+        ListenerAggregate dispatcher = new DefaultListenerAggregate();
+        dispatcher.register(service);
+        dispatcher.dispatch(new ExplorationPlayerCreated(player));
+
+        assertTrue(player.dispatcher().has(SendAccessories.class));
     }
 }

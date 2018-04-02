@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.listener.service;
+package fr.quatrevieux.araknemu.game.listener.player.chat;
 
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.game.GameConfiguration;

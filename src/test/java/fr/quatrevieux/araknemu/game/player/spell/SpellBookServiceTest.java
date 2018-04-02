@@ -7,14 +7,15 @@ import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellReposito
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.listener.service.AddSpellListeners;
-import fr.quatrevieux.araknemu.game.listener.service.SetDefaultPositionSpellBook;
+import fr.quatrevieux.araknemu.game.listener.player.spell.*;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SetDefaultPositionSpellBook;
+import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.helpers.NOPLogger;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,8 +47,24 @@ class SpellBookServiceTest extends GameBaseCase {
         ListenerAggregate dispatcher = new DefaultListenerAggregate();
         dispatcher.register(service);
 
-        assertTrue(dispatcher.has(AddSpellListeners.class));
         assertTrue(dispatcher.has(SetDefaultPositionSpellBook.class));
+    }
+
+    @Test
+    void playerLoadedListener() throws SQLException, ContainerException {
+        ListenerAggregate dispatcher = new DefaultListenerAggregate();
+        dispatcher.register(service);
+
+        dispatcher.dispatch(new PlayerLoaded(gamePlayer()));
+
+        assertTrue(gamePlayer().dispatcher().has(SendSpellList.class));
+        assertTrue(gamePlayer().dispatcher().has(SaveSpellPosition.class));
+        assertTrue(gamePlayer().dispatcher().has(SaveLearnedSpell.class));
+        assertTrue(gamePlayer().dispatcher().has(SendLearnedSpell.class));
+        assertTrue(gamePlayer().dispatcher().has(SaveUpgradedSpell.class));
+        assertTrue(gamePlayer().dispatcher().has(SendUpgradedSpell.class));
+        assertTrue(gamePlayer().dispatcher().has(SendSpellBoost.class));
+        assertTrue(gamePlayer().dispatcher().has(SendAllSpellBoosts.class));
     }
 
     @Test

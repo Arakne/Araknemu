@@ -5,8 +5,8 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.living.entity.environment.SubArea;
 import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;
-import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.listener.service.RegisterAreaListeners;
+import fr.quatrevieux.araknemu.game.listener.player.InitializeAreas;
+import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import org.slf4j.Logger;
 
 import java.util.Collection;
@@ -46,7 +46,17 @@ final public class AreaService implements PreloadableService, EventsSubscriber {
     @Override
     public Listener[] listeners() {
         return new Listener[] {
-            new RegisterAreaListeners(this)
+            new Listener<PlayerLoaded>() {
+                @Override
+                public void on(PlayerLoaded event) {
+                    event.player().dispatcher().add(new InitializeAreas(event.player(), AreaService.this));
+                }
+
+                @Override
+                public Class<PlayerLoaded> event() {
+                    return PlayerLoaded.class;
+                }
+            }
         };
     }
 }

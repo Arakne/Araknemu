@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.listener.service;
+package fr.quatrevieux.araknemu.game.listener.player.spell;
 
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;

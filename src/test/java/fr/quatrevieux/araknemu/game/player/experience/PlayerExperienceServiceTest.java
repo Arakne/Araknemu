@@ -8,12 +8,16 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.listener.service.AddLevelListeners;
+import fr.quatrevieux.araknemu.game.listener.player.SendLevelUp;
+import fr.quatrevieux.araknemu.game.listener.player.SendPlayerXp;
+import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.helpers.NOPLogger;
+
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -46,11 +50,14 @@ class PlayerExperienceServiceTest extends GameBaseCase {
     }
 
     @Test
-    void listeners() {
+    void playerLoadlistener() throws SQLException, ContainerException {
         ListenerAggregate dispatcher = new DefaultListenerAggregate();
         dispatcher.register(service);
 
-        assertTrue(dispatcher.has(AddLevelListeners.class));
+        dispatcher.dispatch(new PlayerLoaded(gamePlayer()));
+
+        assertTrue(gamePlayer().dispatcher().has(SendPlayerXp.class));
+        assertTrue(gamePlayer().dispatcher().has(SendLevelUp.class));
     }
 
     @Test

@@ -6,8 +6,9 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
-import fr.quatrevieux.araknemu.game.listener.service.AddSpellListeners;
-import fr.quatrevieux.araknemu.game.listener.service.SetDefaultPositionSpellBook;
+import fr.quatrevieux.araknemu.game.listener.player.spell.*;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SetDefaultPositionSpellBook;
+import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 
@@ -32,7 +33,25 @@ final public class SpellBookService implements EventsSubscriber {
     @Override
     public Listener[] listeners() {
         return new Listener[] {
-            new AddSpellListeners(repository),
+            new Listener<PlayerLoaded>() {
+                @Override
+                public void on(PlayerLoaded event) {
+                    event.player().dispatcher().add(new SaveSpellPosition(repository));
+                    event.player().dispatcher().add(new SaveLearnedSpell(repository));
+                    event.player().dispatcher().add(new SaveUpgradedSpell(event.player(), repository));
+
+                    event.player().dispatcher().add(new SendSpellList(event.player()));
+                    event.player().dispatcher().add(new SendAllSpellBoosts(event.player()));
+                    event.player().dispatcher().add(new SendLearnedSpell(event.player()));
+                    event.player().dispatcher().add(new SendUpgradedSpell(event.player()));
+                    event.player().dispatcher().add(new SendSpellBoost(event.player()));
+                }
+
+                @Override
+                public Class<PlayerLoaded> event() {
+                    return PlayerLoaded.class;
+                }
+            },
             new SetDefaultPositionSpellBook(playerRaceService, repository)
         };
     }

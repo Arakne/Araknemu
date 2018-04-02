@@ -7,7 +7,9 @@ import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepo
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.listener.service.AddExplorationMapListeners;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.event.ExplorationPlayerCreated;
+import fr.quatrevieux.araknemu.game.listener.player.SendMapData;
 import fr.quatrevieux.araknemu.game.exploration.map.trigger.CellAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,11 +49,14 @@ class ExplorationMapServiceTest extends GameBaseCase {
     }
 
     @Test
-    void listeners() {
+    void listeners() throws SQLException, ContainerException {
         ListenerAggregate dispatcher = new DefaultListenerAggregate();
         dispatcher.register(service);
 
-        assertTrue(dispatcher.has(AddExplorationMapListeners.class));
+        ExplorationPlayer player = new ExplorationPlayer(gamePlayer(true));
+        dispatcher.dispatch(new ExplorationPlayerCreated(player));
+
+        assertTrue(player.dispatcher().has(SendMapData.class));
     }
 
     @Test
