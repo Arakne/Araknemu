@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.fight.fighter;
 
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightJoined;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -22,6 +23,8 @@ final public class PlayerFighter implements Fighter, Sender {
     private FightCell cell;
     private FightTeam team;
     private Fight fight;
+
+    private boolean ready = false;
 
     public PlayerFighter(GamePlayer player) {
         this.player = player;
@@ -108,5 +111,18 @@ final public class PlayerFighter implements Fighter, Sender {
     @Override
     public void setFight(Fight fight) {
         this.fight = fight;
+    }
+
+    @Override
+    public boolean ready() {
+        return ready;
+    }
+
+    /**
+     * Change the ready flag
+     */
+    public void setReady(boolean ready) {
+        this.ready = ready;
+        fight.dispatch(new FighterReadyStateChanged(this));
     }
 }

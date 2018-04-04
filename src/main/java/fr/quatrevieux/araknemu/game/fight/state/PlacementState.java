@@ -10,6 +10,8 @@ import fr.quatrevieux.araknemu.game.fight.exception.FightMapException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFighterPositions;
+import fr.quatrevieux.araknemu.game.listener.fight.SendFighterReadyState;
+import fr.quatrevieux.araknemu.game.listener.fight.StartFightWhenAllReady;
 
 /**
  * Placement before start fight
@@ -17,6 +19,7 @@ import fr.quatrevieux.araknemu.game.listener.fight.SendFighterPositions;
 final public class PlacementState implements FightState, EventsSubscriber {
     private long startTime;
     private Fight fight;
+    private Listener[] listeners;
 
     @Override
     public void start(Fight fight) {
@@ -35,8 +38,14 @@ final public class PlacementState implements FightState, EventsSubscriber {
 
     @Override
     public Listener[] listeners() {
-        return new Listener[] {
-            new SendFighterPositions(fight)
+        if (listeners != null) {
+            return listeners;
+        }
+
+        return listeners = new Listener[] {
+            new SendFighterPositions(fight),
+            new SendFighterReadyState(fight),
+            new StartFightWhenAllReady(fight, this)
         };
     }
 
@@ -54,6 +63,10 @@ final public class PlacementState implements FightState, EventsSubscriber {
      * @param cell The target cell
      */
     synchronized public void changePlace(Fighter fighter, FightCell cell) {
+        if (fighter.ready()) {
+            throw new FightException("The fighter is ready");
+        }
+
         if (!cell.walkable()) {
             throw new FightMapException("Not walkable");
         }
@@ -64,5 +77,17 @@ final public class PlacementState implements FightState, EventsSubscriber {
 
         fighter.move(cell);
         fight.dispatch(new FighterPlaceChanged(fighter));
+    }
+
+    /**
+     * Start the fight
+     */
+    synchronized public void startFight() {
+        if (fight.state() != this) {
+            return;
+        }
+
+        fight.dispatcher().unregister(this);
+        fight.nextState();
     }
 }

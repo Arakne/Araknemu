@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.fight.fighter;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightJoined;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -94,5 +96,34 @@ class PlayerFighterTest extends GameBaseCase {
     @Test
     void dispatcher() {
         assertTrue(fighter.dispatcher().has(SendFightJoined.class));
+    }
+
+    @Test
+    void setReady() {
+        Fight fight = new Fight(new ChallengeType(), map, new ArrayList<>());
+        fighter.setFight(fight);
+
+        AtomicReference<FighterReadyStateChanged> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterReadyStateChanged.class, ref::set);
+
+        fighter.setReady(true);
+        assertTrue(fighter.ready());
+        assertSame(fighter, ref.get().fighter());
+        assertTrue(ref.get().ready());
+    }
+
+    @Test
+    void unsetReady() {
+        Fight fight = new Fight(new ChallengeType(), map, new ArrayList<>());
+        fighter.setFight(fight);
+        fighter.setReady(true);
+
+        AtomicReference<FighterReadyStateChanged> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterReadyStateChanged.class, ref::set);
+
+        fighter.setReady(false);
+        assertFalse(fighter.ready());
+        assertSame(fighter, ref.get().fighter());
+        assertFalse(ref.get().ready());
     }
 }

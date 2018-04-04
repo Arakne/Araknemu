@@ -59,4 +59,15 @@ public interface ListenerAggregate extends Dispatcher {
             add(listener);
         }
     }
+
+    /**
+     * Remove all events of the subscriber
+     *
+     * @param subscriber The event subscriber
+     */
+    public default void unregister(EventsSubscriber subscriber) {
+        for (Listener listener : subscriber.listeners()) {
+            remove(listener.getClass());
+        }
+    }
 }

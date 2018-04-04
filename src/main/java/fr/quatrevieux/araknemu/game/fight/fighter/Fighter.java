@@ -61,4 +61,9 @@ public interface Fighter extends Dispatcher {
      * Set the fight one the fighter
      */
     public void setFight(Fight fight);
+
+    /**
+     * Check if the fighter is ready for fight
+     */
+    public boolean ready();
 }

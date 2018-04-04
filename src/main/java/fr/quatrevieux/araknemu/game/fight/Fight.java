@@ -36,7 +36,8 @@ final public class Fight implements Dispatcher, Sender {
         this(type, map, teams, new StatesFlow(
             new NullState(),
             new InitialiseState(),
-            new PlacementState()
+            new PlacementState(),
+            new ActiveState()
         ));
     }
 
