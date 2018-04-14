@@ -1,6 +1,7 @@
-package fr.quatrevieux.araknemu.game.fight.fighter;
+package fr.quatrevieux.araknemu.game.fight.fighter.player;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.player.sprite.SpriteInfo;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import org.apache.commons.lang3.StringUtils;
@@ -56,7 +57,7 @@ final public class PlayerFighterSprite implements Sprite {
             "0,0,0,0;" + // @todo alignment
             StringUtils.join(spriteInfo.colors().toHexArray(), ";") + ";" +
             spriteInfo.accessories() + ";" +
-            fighter.currentLife() + ";" +
+            fighter.life().current() + ";" +
             fighter.characteristics().get(Characteristic.ACTION_POINT) + ";" +
             fighter.characteristics().get(Characteristic.MOVEMENT_POINT) + ";" +
             fighter.characteristics().get(Characteristic.RESISTANCE_PERCENT_NEUTRAL) + ";" +

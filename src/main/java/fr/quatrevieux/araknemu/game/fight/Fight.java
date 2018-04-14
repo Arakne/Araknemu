@@ -1,17 +1,18 @@
 package fr.quatrevieux.araknemu.game.fight;
 
-import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.core.event.Dispatcher;
-import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.*;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.state.*;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurnList;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 
+import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 /**
@@ -24,6 +25,8 @@ final public class Fight implements Dispatcher, Sender {
     final private StatesFlow statesFlow;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
+    final private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    final private FightTurnList turnList = new FightTurnList(this);
 
     public Fight(FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow) {
         this.type = type;
@@ -107,6 +110,13 @@ final public class Fight implements Dispatcher, Sender {
         return type;
     }
 
+    /**
+     * Get the turn list
+     */
+    public FightTurnList turnList() {
+        return turnList;
+    }
+
     @Override
     public void send(Object packet) {
         String sPacket = packet.toString();
@@ -119,6 +129,25 @@ final public class Fight implements Dispatcher, Sender {
     @Override
     public void dispatch(Object event) {
         dispatcher.dispatch(event);
+    }
+
+    /**
+     * Schedule an action to perform in fight with delay
+     *
+     * @param action Action to execute
+     * @param delay The delay
+     */
+    public ScheduledFuture schedule(Runnable action, Duration delay) {
+        return executor.schedule(action, delay.toMillis(), TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * Execute an action into the fight executor thread
+     *
+     * @param action Action to execute
+     */
+    public void execute(Runnable action) {
+        executor.execute(action);
     }
 
     /**

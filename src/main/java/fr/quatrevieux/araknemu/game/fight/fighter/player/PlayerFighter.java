@@ -1,15 +1,20 @@
-package fr.quatrevieux.araknemu.game.fight.fighter;
+package fr.quatrevieux.araknemu.game.fight.fighter.player;
 
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
+import fr.quatrevieux.araknemu.game.fight.exception.FightException;
+import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightJoined;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
-import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 
 /**
@@ -19,17 +24,27 @@ final public class PlayerFighter implements Fighter, Sender {
     final private GamePlayer player;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
+    final private PlayerFighterCharacteristics characteristics;
+    final private PlayerFighterLife life;
 
     private FightCell cell;
     private FightTeam team;
     private Fight fight;
+    private FightTurn turn;
 
     private boolean ready = false;
 
     public PlayerFighter(GamePlayer player) {
         this.player = player;
+        this.characteristics = new PlayerFighterCharacteristics(player.characteristics());
+        this.life = new PlayerFighterLife(player.life());
 
         dispatcher.add(new SendFightJoined(this));
+    }
+
+    @Override
+    public void init() {
+        life.init();
     }
 
     @Override
@@ -65,18 +80,18 @@ final public class PlayerFighter implements Fighter, Sender {
     }
 
     @Override
-    public int currentLife() {
-        return player.life().current();
+    public FighterLife life() {
+        return life;
     }
 
     @Override
-    public int maxLife() {
-        return player.life().max();
+    public boolean dead() {
+        return life.current() == 0;
     }
 
     @Override
-    public Characteristics characteristics() {
-        return player.characteristics();
+    public FighterCharacteristics characteristics() {
+        return characteristics;
     }
 
     @Override
@@ -116,6 +131,27 @@ final public class PlayerFighter implements Fighter, Sender {
     @Override
     public boolean ready() {
         return ready;
+    }
+
+    @Override
+    public void play(FightTurn turn) {
+        this.turn = turn;
+    }
+
+    @Override
+    public void stop() {
+        turn = null;
+    }
+
+    /**
+     * Get the current fighter turn
+     */
+    public FightTurn turn() {
+        if (turn == null || !turn.active()) {
+            throw new FightException("It's not your turn");
+        }
+
+        return turn;
     }
 
     /**

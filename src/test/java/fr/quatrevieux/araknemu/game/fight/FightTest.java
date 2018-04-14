@@ -3,7 +3,7 @@ package fr.quatrevieux.araknemu.game.fight;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
-import fr.quatrevieux.araknemu.game.fight.fighter.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.state.NullState;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
@@ -13,9 +13,10 @@ import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -77,5 +78,37 @@ class FightTest extends GameBaseCase {
         fight.send("test");
 
         requestStack.assertLast("test");
+    }
+
+    @Test
+    void schedule() throws InterruptedException {
+        AtomicBoolean ab = new AtomicBoolean(false);
+
+        fight.schedule(() -> ab.set(true), Duration.ofMillis(10));
+
+        assertFalse(ab.get());
+
+        Thread.sleep(11);
+        assertTrue(ab.get());
+    }
+
+    @Test
+    void execute() throws InterruptedException {
+        AtomicBoolean ab = new AtomicBoolean(false);
+
+        fight.execute(() -> {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            ab.set(true);
+        });
+
+        assertFalse(ab.get());
+
+        Thread.sleep(11);
+        assertTrue(ab.get());
     }
 }

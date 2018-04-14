@@ -7,7 +7,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.exception.FightMapException;
-import fr.quatrevieux.araknemu.game.fight.fighter.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFighterPositions;
@@ -16,7 +16,6 @@ import fr.quatrevieux.araknemu.game.listener.fight.StartFightWhenAllReady;
 import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.helpers.NOPLogger;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
@@ -95,7 +94,7 @@ class PlacementStateTest extends GameBaseCase {
     }
 
     @Test
-    void changePlaceSuccess() {
+    void changePlaceSuccess() throws InterruptedException {
         state.start(fight);
 
         state.changePlace(fighter, fight.map().get(222));

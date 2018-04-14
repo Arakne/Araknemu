@@ -5,14 +5,19 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 import fr.quatrevieux.araknemu.game.fight.builder.FightHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.state.ActiveState;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.network.game.out.fight.BeginFight;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
 import fr.quatrevieux.araknemu.network.game.out.fight.FighterReadyState;
 import fr.quatrevieux.araknemu.network.game.out.fight.JoinFight;
+import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
+import fr.quatrevieux.araknemu.network.game.out.fight.turn.FinishTurn;
+import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
+import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -99,5 +104,25 @@ public class FunctionalTest extends GameBaseCase {
         fighter1.setReady(true);
         assertInstanceOf(ActiveState.class, fight.state());
         requestStack.assertOne(new BeginFight());
+        requestStack.assertOne(new FighterTurnOrder(fight.turnList()));
+
+        Thread.sleep(210);
+        requestStack.assertOne(new TurnMiddle(fight.fighters()));
+        requestStack.assertOne(new StartTurn(fight.turnList().current().get()));
+        requestStack.clear();
+
+        assertSame(player.fighter(), fight.turnList().current().get().fighter());
+        assertNotNull(player.fighter().turn());
+
+        FightTurn currentTurn = player.fighter().turn();
+        currentTurn.stop();
+
+        requestStack.assertAll(
+            new FinishTurn(currentTurn),
+            new TurnMiddle(fight.fighters()),
+            new StartTurn(currentTurn = fight.turnList().current().get())
+        );
+
+        assertSame(other.fighter(), currentTurn.fighter());
     }
 }

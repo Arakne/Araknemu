@@ -1,7 +1,6 @@
 package fr.quatrevieux.araknemu.game.handler;
 
-import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.fight.fighter.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.handler.fight.ChangeFighterStartPlace;
 import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.game.in.account.AskCharacterList;
@@ -14,7 +13,7 @@ import org.mockito.Mockito;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class EnsureFightingTest extends GameBaseCase {
+class EnsureFightingTest extends FightBaseCase {
     @Test
     void handleNotFighting() {
         PacketHandler inner = Mockito.mock(PacketHandler.class);
@@ -27,11 +26,12 @@ class EnsureFightingTest extends GameBaseCase {
     void handleSuccess() throws Exception {
         PacketHandler inner = Mockito.mock(PacketHandler.class);
         EnsureFighting handler = new EnsureFighting<>(inner);
-        gamePlayer(true).attachFighter(new PlayerFighter(gamePlayer()));
+        createFight();
 
         Packet packet = new AskCharacterList(false);
 
         handler.handle(session, packet);
+        Thread.sleep(1);
 
         Mockito.verify(inner).handle(session, packet);
     }

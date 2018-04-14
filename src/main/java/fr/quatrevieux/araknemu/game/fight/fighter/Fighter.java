@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 
@@ -11,6 +12,11 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristi
  * Base fighter
  */
 public interface Fighter extends Dispatcher {
+    /**
+     * Initialise the fighter when fight started
+     */
+    public void init();
+
     /**
      * Get the fighter ID
      * This value is unique on the fight
@@ -32,15 +38,15 @@ public interface Fighter extends Dispatcher {
      */
     public Sprite sprite();
 
-    // @todo temporary
-    public int currentLife();
-
-    public int maxLife();
+    /**
+     * Get the fighter life
+     */
+    public FighterLife life();
 
     /**
      * Get the fighter total characteristics
      */
-    public Characteristics characteristics();
+    public FighterCharacteristics characteristics();
 
     /**
      * Get the fighter team
@@ -66,4 +72,21 @@ public interface Fighter extends Dispatcher {
      * Check if the fighter is ready for fight
      */
     public boolean ready();
+
+    /**
+     * Check if the player is dead
+     */
+    public boolean dead();
+
+    /**
+     * Start to play the turn
+     *
+     * @param turn The fighter turn
+     */
+    public void play(FightTurn turn);
+
+    /**
+     * Stop the turn
+     */
+    public void stop();
 }

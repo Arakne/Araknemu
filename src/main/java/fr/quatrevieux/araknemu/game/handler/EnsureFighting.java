@@ -1,6 +1,9 @@
 package fr.quatrevieux.araknemu.game.handler;
 
 import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
+import fr.quatrevieux.araknemu.network.exception.CloseSession;
+import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.network.exception.WritePacket;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.in.Packet;
 import fr.quatrevieux.araknemu.network.in.PacketHandler;
@@ -23,7 +26,29 @@ final public class EnsureFighting<P extends Packet> implements PacketHandler<Gam
             throw new CloseImmediately("Not in fight");
         }
 
-        handler.handle(session, packet);
+        session.fighter().fight().execute(
+            () -> {
+                try {
+                    handler.handle(session, packet);
+                    // @todo call session exception handler
+                } catch (Exception e) {
+                    Throwable cause = e;
+
+                    if (e instanceof WritePacket) {
+                        session.write(WritePacket.class.cast(e).packet());
+                        cause = e.getCause();
+                    }
+
+                    if (e instanceof CloseSession) {
+                        session.close();
+                    }
+
+                    if (cause != null) {
+                        throw new RuntimeException("Uncaught exception on fight thread", e);
+                    }
+                }
+            }
+        );
     }
 
     @Override

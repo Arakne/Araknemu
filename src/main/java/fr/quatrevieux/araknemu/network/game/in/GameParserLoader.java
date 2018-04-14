@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import fr.quatrevieux.araknemu.network.game.in.chat.SubscribeChannels;
 import fr.quatrevieux.araknemu.network.game.in.fight.FighterChangePlace;
 import fr.quatrevieux.araknemu.network.game.in.fight.FighterReady;
+import fr.quatrevieux.araknemu.network.game.in.fight.TurnEnd;
 import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionCancel;
@@ -58,7 +59,8 @@ final public class GameParserLoader implements ParserLoader {
             new SpellMove.Parser(),
             new SpellUpgrade.Parser(),
             new FighterChangePlace.Parser(),
-            new FighterReady.Parser()
+            new FighterReady.Parser(),
+            new TurnEnd.Parser()
         );
     }
 }

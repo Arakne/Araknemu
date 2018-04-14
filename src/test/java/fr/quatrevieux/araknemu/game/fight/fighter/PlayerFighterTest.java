@@ -1,8 +1,13 @@
 package fr.quatrevieux.araknemu.game.fight.fighter;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
+import fr.quatrevieux.araknemu.game.fight.exception.FightException;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighterSprite;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightJoined;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
@@ -15,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -125,5 +131,65 @@ class PlayerFighterTest extends GameBaseCase {
         assertFalse(fighter.ready());
         assertSame(fighter, ref.get().fighter());
         assertFalse(ref.get().ready());
+    }
+
+    @Test
+    void turnNotSet() {
+        assertThrows(FightException.class, () -> fighter.turn());
+    }
+
+    @Test
+    void turnNotActive() {
+        Fight fight = new Fight(new ChallengeType(), map, new ArrayList<>());
+        FightTurn turn = new FightTurn(fighter, fight, Duration.ZERO);
+        fighter.play(turn);
+
+        assertThrows(FightException.class, () -> fighter.turn());
+    }
+
+    @Test
+    void playAndStop() {
+        Fight fight = new Fight(new ChallengeType(), map, new ArrayList<>());
+        FightTurn turn = new FightTurn(fighter, fight, Duration.ZERO);
+        turn.start();
+
+        fighter.play(turn);
+
+        assertSame(turn, fighter.turn());
+
+        fighter.stop();
+
+        assertThrows(FightException.class, () -> fighter.turn());
+    }
+
+    @Test
+    void life() throws SQLException, ContainerException {
+        assertEquals(gamePlayer().life().current(), fighter.life().current());
+        assertEquals(gamePlayer().life().max(), fighter.life().max());
+    }
+
+    @Test
+    void lifeAfterInitIsNotSyncWithPlayer() throws SQLException, ContainerException {
+        gamePlayer().life().set(100);
+        assertEquals(100, fighter.life().current());
+        fighter.init();
+
+        gamePlayer().life().set(120);
+        assertEquals(100, fighter.life().current());
+    }
+
+    @Test
+    void dead() throws SQLException, ContainerException {
+        assertFalse(fighter.dead());
+
+        gamePlayer().life().set(0);
+
+        assertTrue(fighter.dead());
+    }
+
+    @Test
+    void characteristics() throws SQLException, ContainerException {
+        assertEquals(gamePlayer().characteristics().initiative(), fighter.characteristics().initiative());
+        assertEquals(gamePlayer().characteristics().get(Characteristic.ACTION_POINT), fighter.characteristics().get(Characteristic.ACTION_POINT));
     }
 }

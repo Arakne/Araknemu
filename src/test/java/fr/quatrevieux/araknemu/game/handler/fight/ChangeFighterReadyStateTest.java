@@ -65,12 +65,13 @@ class ChangeFighterReadyStateTest extends GameBaseCase {
     }
 
     @Test
-    void setReadyAndStartFight() {
+    void setReadyAndStartFight() throws InterruptedException {
         other.fighter().setReady(true);
 
         handler.handle(session, new FighterReady(true));
-        requestStack.assertOne(new BeginFight());
+        Thread.sleep(210);
 
+        requestStack.assertOne(new BeginFight());
         assertInstanceOf(ActiveState.class, fight.state());
     }
 }

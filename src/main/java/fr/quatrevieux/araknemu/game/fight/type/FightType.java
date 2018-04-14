@@ -1,5 +1,7 @@
 package fr.quatrevieux.araknemu.game.fight.type;
 
+import java.time.Duration;
+
 /**
  * Fight type parameters
  */
@@ -28,4 +30,9 @@ public interface FightType {
      * @see FightType#hasPlacementTimeLimit()
      */
     public int placementTime();
+
+    /**
+     * Get the maximum duration of a turn
+     */
+    public Duration turnDuration();
 }
