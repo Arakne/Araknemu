@@ -1,23 +1,21 @@
-package fr.quatrevieux.araknemu.game.world.map;
+package fr.quatrevieux.araknemu.game.world.map.path;
 
-import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
+import fr.quatrevieux.araknemu.game.world.map.Direction;
+import fr.quatrevieux.araknemu.game.world.map.GameMap;
+import fr.quatrevieux.araknemu.game.world.map.MapCell;
 import fr.quatrevieux.araknemu.util.Base64;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Decode map data like paths or directions
- *
- * @todo Use interface instead of exploration map
  */
-final public class Decoder {
-    final private ExplorationMap map;
+final public class Decoder<C extends MapCell> {
+    final private GameMap<C> map;
     final private Map<Direction, Integer> directionTransformationMap = new EnumMap<>(Direction.class);
 
-    public Decoder(ExplorationMap map) {
+    public Decoder(GameMap<C> map) {
         this.map = map;
 
         directionTransformationMap.put(Direction.EAST,       1);
@@ -33,8 +31,8 @@ final public class Decoder {
     /**
      * Get the immediately next cell if we move by the given direction
      */
-    public int nextCellByDirection(int start, Direction direction) {
-        return start + directionTransformationMap.get(direction);
+    public C nextCellByDirection(C start, Direction direction) {
+        return map.get(start.id() + directionTransformationMap.get(direction));
     }
 
     /**
@@ -46,14 +44,14 @@ final public class Decoder {
      *
      * @throws PathException When an invalid path is given
      */
-    public List<PathStep> decodePath(String encoded, int start) throws PathException {
+    public Path<C> decode(String encoded, C start) throws PathException {
         if (encoded.length() % 3 != 0) {
             throw new PathException("Invalid path : bad length");
         }
 
-        List<PathStep> path = new ArrayList<>();
+        Path<C> path = new Path<>(this);
 
-        path.add(new PathStep(start, Direction.EAST));
+        path.add(new PathStep<>(start, Direction.EAST));
 
         for (int i = 0; i < encoded.length(); i += 3) {
             Direction direction = Direction.byChar(encoded.charAt(i));
@@ -65,8 +63,8 @@ final public class Decoder {
 
             expandRectilinearMove(
                 path,
-                path.get(path.size() - 1).cell(),
-                cell,
+                path.target(),
+                map.get(cell),
                 direction
             );
         }
@@ -77,7 +75,7 @@ final public class Decoder {
     /**
      * Encode the computed path
      */
-    public String encodePath(List<PathStep> path) {
+    public String encode(Path<C> path) {
         StringBuilder encoded = new StringBuilder(path.size() * 3);
 
         for (int i = 0; i < path.size(); ++i) {
@@ -92,18 +90,18 @@ final public class Decoder {
                 ++i;
             }
 
-            encoded.append(Base64.encode(path.get(i).cell(), 2));
+            encoded.append(Base64.encode(path.get(i).cell().id(), 2));
         }
 
         return encoded.toString();
     }
 
-    private void expandRectilinearMove(List<PathStep> path, int start, int target, Direction direction) throws PathException {
+    private void expandRectilinearMove(Path<C> path, C start, C target, Direction direction) throws PathException {
         int stepsLimit =  2 * map.dimensions().width() + 1;
 
-        while (start != target) {
+        while (!start.equals(target)) {
             start = nextCellByDirection(start, direction);
-            path.add(new PathStep(start, direction));
+            path.add(new PathStep<>(start, direction));
 
             if (--stepsLimit < 0) {
                 throw new PathException("Invalid path : bad direction");

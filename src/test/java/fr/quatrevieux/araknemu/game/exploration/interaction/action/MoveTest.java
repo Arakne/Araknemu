@@ -2,6 +2,8 @@ package fr.quatrevieux.araknemu.game.exploration.interaction.action;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
+import fr.quatrevieux.araknemu.game.world.map.path.Path;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +29,7 @@ class MoveTest extends GameBaseCase {
     void success() throws Exception {
         Move move = new Move(
             player,
-            player.map().decoder().decodePath("bftdgl", 279)
+            new Decoder<>(player.map()).decode("bftdgl", player.map().get(279))
         );
 
         move.setId(1);
@@ -55,7 +57,7 @@ class MoveTest extends GameBaseCase {
     void data() throws Exception {
         Move move = new Move(
             player,
-            player.map().decoder().decodePath("bftdgl", 279)
+            new Decoder<>(player.map()).decode("bftdgl", player.map().get(279))
         );
 
         move.setId(1);
@@ -72,7 +74,7 @@ class MoveTest extends GameBaseCase {
     void invalidPath() {
         Move move = new Move(
             player,
-            Collections.EMPTY_LIST
+            new Path<>(new Decoder<>(player.map()))
         );
 
         move.setId(1);
@@ -85,7 +87,7 @@ class MoveTest extends GameBaseCase {
     void moveWithCancel() throws Exception {
         Move move = new Move(
             player,
-            player.map().decoder().decodePath("bftdgl", 279)
+            new Decoder<>(player.map()).decode("bftdgl", player.map().get(279))
         );
 
         move.setId(1);
@@ -113,7 +115,7 @@ class MoveTest extends GameBaseCase {
     void moveWithCancelNull() throws Exception {
         Move move = new Move(
             player,
-            player.map().decoder().decodePath("bftdgl", 279)
+            new Decoder<>(player.map()).decode("bftdgl", player.map().get(279))
         );
 
         move.setId(1);
@@ -141,7 +143,7 @@ class MoveTest extends GameBaseCase {
     void moveWithCancelNotInPath() throws Exception {
         Move move = new Move(
             player,
-            player.map().decoder().decodePath("bftdgl", 279)
+            new Decoder<>(player.map()).decode("bftdgl", player.map().get(279))
         );
 
         move.setId(1);

@@ -22,4 +22,17 @@ class DirectionTest {
         assertEquals(Direction.WEST, Direction.EAST.opposite());
         assertEquals(Direction.NORTH, Direction.SOUTH.opposite());
     }
+
+    @Test
+    void restricted() {
+        assertFalse(Direction.WEST.restricted());
+        assertFalse(Direction.NORTH.restricted());
+        assertFalse(Direction.EAST.restricted());
+        assertFalse(Direction.SOUTH.restricted());
+
+        assertTrue(Direction.SOUTH_WEST.restricted());
+        assertTrue(Direction.NORTH_WEST.restricted());
+        assertTrue(Direction.NORTH_EAST.restricted());
+        assertTrue(Direction.SOUTH_EAST.restricted());
+    }
 }

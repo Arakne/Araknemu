@@ -2,9 +2,9 @@ package fr.quatrevieux.araknemu.game.handler.game;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.factory.ActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
@@ -30,7 +30,7 @@ class ValidateGameActionTest extends GameBaseCase {
         dataSet.pushMaps();
 
         handler = new ValidateGameAction(
-            container.get(ExplorationService.class)
+            container.get(ActionFactory.class)
         );
 
         map = explorationPlayer().map();
@@ -41,7 +41,7 @@ class ValidateGameActionTest extends GameBaseCase {
         handler.handle(
             session,
             new GameActionRequest(
-                ActionType.MOVE,
+                ActionType.MOVE.id(),
                 new String[] {"bftdgl"}
             )
         );
@@ -60,7 +60,7 @@ class ValidateGameActionTest extends GameBaseCase {
 
     @Test
     void handleBadRequest() {
-        assertThrows(ErrorPacket.class, () -> handler.handle(session, new GameActionRequest(ActionType.NONE, new String[0])));
+        assertThrows(ErrorPacket.class, () -> handler.handle(session, new GameActionRequest(ActionType.NONE.id(), new String[0])));
     }
 
     @Test
@@ -74,7 +74,7 @@ class ValidateGameActionTest extends GameBaseCase {
             () -> handler.handle(
                 session,
                 new GameActionRequest(
-                    ActionType.MOVE,
+                    ActionType.MOVE.id(),
                     new String[] {"bftdgl"}
                 )
             )

@@ -1,6 +1,5 @@
 package fr.quatrevieux.araknemu.network.game.in.game.action;
 
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.network.in.Packet;
 import fr.quatrevieux.araknemu.network.in.ParsePacketException;
 import fr.quatrevieux.araknemu.network.in.SinglePacketParser;
@@ -16,7 +15,7 @@ final public class GameActionRequest implements Packet {
         @Override
         public GameActionRequest parse(String input) throws ParsePacketException {
             return new GameActionRequest(
-                ActionType.byId(Integer.parseInt(input.substring(0, 3))),
+                Integer.parseInt(input.substring(0, 3)),
                 StringUtils.split(input.substring(3), ";")
             );
         }
@@ -27,15 +26,15 @@ final public class GameActionRequest implements Packet {
         }
     }
 
-    final private ActionType type;
+    final private int type;
     final private String[] arguments;
 
-    public GameActionRequest(ActionType type, String[] arguments) {
+    public GameActionRequest(int type, String[] arguments) {
         this.type = type;
         this.arguments = arguments;
     }
 
-    public ActionType type() {
+    public int type() {
         return type;
     }
 

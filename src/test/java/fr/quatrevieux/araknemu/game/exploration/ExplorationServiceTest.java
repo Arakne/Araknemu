@@ -28,7 +28,6 @@ class ExplorationServiceTest extends GameBaseCase {
 
         service = new ExplorationService(
             container.get(ExplorationMapService.class),
-            container.get(ExplorationActionFactory.class),
             container.get(Dispatcher.class)
         );
 
@@ -43,21 +42,5 @@ class ExplorationServiceTest extends GameBaseCase {
 
         assertTrue(explorationPlayer.dispatcher().has(InitializeGame.class));
         assertTrue(explorationPlayer.dispatcher().has(StopExploration.class));
-    }
-
-    @Test
-    void action() throws Exception {
-        ExplorationPlayer player = explorationPlayer();
-        gamePlayer().setPosition(new Position(10300, 100));
-
-        service.action(
-            player,
-            new GameActionRequest(
-                ActionType.MOVE,
-                new String[] {"ebI"}
-            )
-        );
-
-        assertTrue(player.interactions().busy());
     }
 }

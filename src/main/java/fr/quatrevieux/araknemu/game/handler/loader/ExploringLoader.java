@@ -2,7 +2,7 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
-import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.factory.ActionFactory;
 import fr.quatrevieux.araknemu.game.handler.EnsureExploring;
 import fr.quatrevieux.araknemu.game.handler.game.CancelGameAction;
 import fr.quatrevieux.araknemu.game.handler.game.EndGameAction;
@@ -25,7 +25,7 @@ final public class ExploringLoader extends AbstractLoader {
         return new PacketHandler[] {
             new LoadExtraInfo(),
             new ValidateGameAction(
-                container.get(ExplorationService.class)
+                container.get(ActionFactory.class)
             ),
             new EndGameAction(),
             new CancelGameAction(),

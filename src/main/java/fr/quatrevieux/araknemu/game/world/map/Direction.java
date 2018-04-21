@@ -12,8 +12,6 @@ public enum Direction {
     NORTH_WEST,
     NORTH,
     NORTH_EAST;
-    
-    final static public Direction[] RESTRICTED_DIRECTIONS = new Direction[]{NORTH_EAST, NORTH_WEST, SOUTH_WEST, SOUTH_EAST};
 
     /**
      * Get the char value of the direction
@@ -27,6 +25,16 @@ public enum Direction {
      */
     public Direction opposite(){
         return Direction.values()[(ordinal() + 4) % 8];
+    }
+
+    /**
+     * Does the direction is restricted
+     *
+     * A restricted direction can be used in fight, or by monsters's sprites
+     * Restricted direction do not allow diagonal
+     */
+    public boolean restricted() {
+        return ordinal() % 2 == 1;
     }
 
     /**

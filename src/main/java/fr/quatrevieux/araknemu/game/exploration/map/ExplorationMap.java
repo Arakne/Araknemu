@@ -1,19 +1,21 @@
 package fr.quatrevieux.araknemu.game.exploration.map;
 
-import fr.quatrevieux.araknemu.data.value.Dimensions;
-import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.data.value.Dimensions;
+import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.event.NewSpriteOnMap;
 import fr.quatrevieux.araknemu.game.exploration.map.event.SpriteRemoveFromMap;
-import fr.quatrevieux.araknemu.game.listener.map.*;
-import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.trigger.MapTriggers;
+import fr.quatrevieux.araknemu.game.listener.map.*;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
-import fr.quatrevieux.araknemu.game.world.map.Decoder;
+import fr.quatrevieux.araknemu.game.world.map.GameMap;
+import fr.quatrevieux.araknemu.game.world.map.MapCell;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,19 +27,29 @@ import java.util.stream.Collectors;
  *
  * @todo optimize for inactive cells
  */
-final public class ExplorationMap implements Dispatcher {
-    public class Cell {
+final public class ExplorationMap implements GameMap<ExplorationMap.Cell>, Dispatcher {
+    public class Cell implements MapCell {
+        final private int id;
         final private MapTemplate.Cell template;
 
-        public Cell(MapTemplate.Cell template) {
+        public Cell(int id, MapTemplate.Cell template) {
+            this.id = id;
             this.template = template;
         }
 
-        /**
-         * Can walk on this cell ?
-         */
-        public boolean isWalkable() {
-            return template.active() && template.movement() > 0;
+        @Override
+        public int id() {
+            return id;
+        }
+
+        @Override
+        public boolean walkable() {
+            return template.active() && template.movement() > 1;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof Cell && equals((Cell) obj);
         }
     }
 
@@ -52,14 +64,10 @@ final public class ExplorationMap implements Dispatcher {
         this.template = template;
         this.triggers = triggers;
 
-        cells = template.cells()
-            .stream()
-            .map(Cell::new)
-            .collect(Collectors.toList())
-        ;
+        cells = makeCells(template.cells());
 
         dispatcher.add(new SendNewSprite(this));
-        dispatcher.add(new ValidatePlayerPath(this));
+        dispatcher.add(new ValidatePlayerPath());
         dispatcher.add(new SendPlayerMove(this));
         dispatcher.add(new SendSpriteRemoved(this));
         dispatcher.add(new PerformCellActions(triggers));
@@ -89,7 +97,8 @@ final public class ExplorationMap implements Dispatcher {
         return cells.size();
     }
 
-    public Cell cell(int id) {
+    @Override
+    public Cell get(int id) {
         return cells.get(id);
     }
 
@@ -148,13 +157,6 @@ final public class ExplorationMap implements Dispatcher {
         return players.get(id);
     }
 
-    /**
-     * Get the map decoder
-     */
-    public Decoder decoder() {
-        return new Decoder(this);
-    }
-
     @Override
     public void dispatch(Object event) {
         dispatcher.dispatch(event);
@@ -180,5 +182,15 @@ final public class ExplorationMap implements Dispatcher {
 
     ListenerAggregate dispatcher() {
         return dispatcher;
+    }
+
+    private List<Cell> makeCells(List<MapTemplate.Cell> templateCells) {
+        List<Cell> cells = new ArrayList<>(templateCells.size());
+
+        for (int i = 0; i < templateCells.size(); ++i) {
+            cells.add(new Cell(i, templateCells.get(i)));
+        }
+
+        return cells;
     }
 }

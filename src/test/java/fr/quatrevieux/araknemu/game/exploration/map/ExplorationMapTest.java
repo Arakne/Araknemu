@@ -138,4 +138,13 @@ class ExplorationMapTest extends GameBaseCase {
         assertFalse(container.get(ExplorationMapService.class).load(10300).canLaunchFight());
         assertTrue(container.get(ExplorationMapService.class).load(10340).canLaunchFight());
     }
+
+    @Test
+    void cellEquals() throws SQLException, ContainerException {
+        ExplorationMap map = explorationPlayer().map();
+
+        assertEquals(map.get(123), map.get(123));
+        assertNotEquals(map.get(123), map.get(124));
+        assertNotEquals(map.get(123), new Object());
+    }
 }

@@ -35,6 +35,7 @@ import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.factory.ActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.factory.ExplorationActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
@@ -219,7 +220,6 @@ final public class GameModule implements ContainerModule {
             ExplorationService.class,
             container -> new ExplorationService(
                 container.get(ExplorationMapService.class),
-                container.get(ExplorationActionFactory.class),
                 container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class)
             )
         );
@@ -233,7 +233,7 @@ final public class GameModule implements ContainerModule {
         );
 
         configurator.persist(
-            ExplorationActionFactory.class,
+            ActionFactory.class,
             container -> new ExplorationActionFactory(
                 container.get(FightService.class)
             )

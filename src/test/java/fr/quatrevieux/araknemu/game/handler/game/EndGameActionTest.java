@@ -3,11 +3,10 @@ package fr.quatrevieux.araknemu.game.handler.game;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.Move;
+import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,7 +30,7 @@ class EndGameActionTest extends GameBaseCase {
         player.interactions().push(
             new Move(
                 player,
-                player.map().decoder().decodePath("bftdgl", 279)
+                new Decoder<>(player.map()).decode("bftdgl", player.map().get(279))
             )
         );
 
