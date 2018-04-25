@@ -4,7 +4,6 @@ import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
-import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
@@ -147,7 +146,7 @@ final public class PlayerFighter implements Fighter, Sender {
      * Get the current fighter turn
      */
     public FightTurn turn() {
-        if (turn == null || !turn.active()) {
+        if (turn == null) {
             throw new FightException("It's not your turn");
         }
 

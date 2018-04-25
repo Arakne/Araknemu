@@ -1,12 +1,13 @@
 package fr.quatrevieux.araknemu.game.handler;
 
+import fr.quatrevieux.araknemu.game.GameService;
 import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.exception.CloseSession;
-import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.exception.WritePacket;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.in.Packet;
 import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import org.slf4j.LoggerFactory;
 
 /**
  * Ensure that the session contains a valid fighter
@@ -44,7 +45,7 @@ final public class EnsureFighting<P extends Packet> implements PacketHandler<Gam
                     }
 
                     if (cause != null) {
-                        throw new RuntimeException("Uncaught exception on fight thread", e);
+                        LoggerFactory.getLogger(GameService.class).error("Error during handle packet " + packet.getClass().getSimpleName(), cause);
                     }
                 }
             }

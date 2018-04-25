@@ -50,4 +50,11 @@ class FightMapTest extends GameBaseCase {
         assertEquals(container.get(MapTemplateRepository.class).get(10340).fightPlaces()[0], map.startPlaces(0));
         assertEquals(container.get(MapTemplateRepository.class).get(10340).fightPlaces()[1], map.startPlaces(1));
     }
+
+    @Test
+    void values() {
+        assertEquals(17, map.dimensions().height());
+        assertEquals(15, map.dimensions().width());
+        assertEquals(479, map.size());
+    }
 }

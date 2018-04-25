@@ -11,6 +11,9 @@ import fr.quatrevieux.araknemu.game.listener.fight.SendFightStarted;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.SendFightTurnStarted;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.SendFightTurnStopped;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.SendFightersInformation;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.SendUsedMovementPoints;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightAction;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightActionTerminated;
 import fr.quatrevieux.araknemu.network.game.out.fight.BeginFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
@@ -60,6 +63,9 @@ class ActiveStateTest extends GameBaseCase {
         assertTrue(fight.dispatcher().has(SendFightersInformation.class));
         assertTrue(fight.dispatcher().has(SendFightTurnStarted.class));
         assertTrue(fight.dispatcher().has(SendFightTurnStopped.class));
+        assertTrue(fight.dispatcher().has(SendFightAction.class));
+        assertTrue(fight.dispatcher().has(SendFightActionTerminated.class));
+        assertTrue(fight.dispatcher().has(SendUsedMovementPoints.class));
 
         Thread.sleep(210); // Wait for start turn
 

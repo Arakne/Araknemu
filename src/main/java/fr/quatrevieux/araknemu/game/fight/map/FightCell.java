@@ -1,13 +1,14 @@
 package fr.quatrevieux.araknemu.game.fight.map;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.world.map.MapCell;
 
 import java.util.Optional;
 
 /**
  * Cell for a fight map
  */
-public interface FightCell {
+public interface FightCell extends MapCell {
     /**
      * Get the cell number
      */

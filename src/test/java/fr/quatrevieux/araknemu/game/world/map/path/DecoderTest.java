@@ -29,7 +29,7 @@ class DecoderTest extends GameBaseCase {
     }
 
     @Test
-    void nextCellByDirection() {
+    void nextCellByDirection() throws PathException {
         assertEquals(map.get(101), decoder.nextCellByDirection(map.get(100), Direction.EAST));
         assertEquals(map.get(115), decoder.nextCellByDirection(map.get(100), Direction.SOUTH_EAST));
         assertEquals(map.get(129), decoder.nextCellByDirection(map.get(100), Direction.SOUTH));
@@ -38,6 +38,11 @@ class DecoderTest extends GameBaseCase {
         assertEquals(map.get(85), decoder.nextCellByDirection(map.get(100), Direction.NORTH_WEST));
         assertEquals(map.get(71), decoder.nextCellByDirection(map.get(100), Direction.NORTH));
         assertEquals(map.get(86), decoder.nextCellByDirection(map.get(100), Direction.NORTH_EAST));
+    }
+
+    @Test
+    void nextCellByDirectionOutOfLimit() {
+        assertThrows(PathException.class, () -> decoder.nextCellByDirection(map.get(470), Direction.SOUTH));
     }
 
     @Test

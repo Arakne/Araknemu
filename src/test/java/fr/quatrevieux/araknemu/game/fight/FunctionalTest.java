@@ -5,15 +5,26 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 import fr.quatrevieux.araknemu.game.fight.builder.FightHandler;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.state.ActiveState;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
+import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
+import fr.quatrevieux.araknemu.game.world.map.Direction;
+import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
+import fr.quatrevieux.araknemu.game.world.map.path.Path;
+import fr.quatrevieux.araknemu.game.world.map.path.PathStep;
 import fr.quatrevieux.araknemu.network.game.out.fight.BeginFight;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
 import fr.quatrevieux.araknemu.network.game.out.fight.FighterReadyState;
 import fr.quatrevieux.araknemu.network.game.out.fight.JoinFight;
+import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
+import fr.quatrevieux.araknemu.network.game.out.fight.action.FightAction;
+import fr.quatrevieux.araknemu.network.game.out.fight.action.StartFightAction;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FinishTurn;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
@@ -124,5 +135,58 @@ public class FunctionalTest extends GameBaseCase {
         );
 
         assertSame(other.fighter(), currentTurn.fighter());
+
+        if (currentTurn.fighter() != fighter1) {
+            currentTurn.stop();
+        }
+
+        requestStack.clear();
+
+        Move move = new Move(
+            fighter1.turn(),
+            fighter1,
+            new Path<>(
+                new Decoder<>(fight.map()),
+                Arrays.asList(
+                    new PathStep<>(fight.map().get(185), Direction.EAST),
+                    new PathStep<>(fight.map().get(199), Direction.SOUTH_WEST),
+                    new PathStep<>(fight.map().get(213), Direction.SOUTH_WEST),
+                    new PathStep<>(fight.map().get(198), Direction.NORTH_WEST)
+                )
+            )
+        );
+
+        fighter1.turn().perform(move);
+
+        requestStack.assertOne(
+            new FightAction(
+                new ActionResult() {
+                    @Override
+                    public int action() {
+                        return 1;
+                    }
+
+                    @Override
+                    public Fighter performer() {
+                        return fighter1;
+                    }
+
+                    @Override
+                    public Object[] arguments() {
+                        return new Object[] {"ac5ddvfdg"};
+                    }
+
+                    @Override
+                    public boolean success() {
+                        return true;
+                    }
+                }
+            )
+        );
+
+        fighter1.turn().terminate();
+        requestStack.assertOne(ActionEffect.usedMovementPoints(fighter1, 3));
+        assertEquals(198, fighter1.cell().id());
+        assertEquals(0, fighter1.turn().points().movementPoints());
     }
 }

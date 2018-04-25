@@ -139,15 +139,6 @@ class PlayerFighterTest extends GameBaseCase {
     }
 
     @Test
-    void turnNotActive() {
-        Fight fight = new Fight(new ChallengeType(), map, new ArrayList<>());
-        FightTurn turn = new FightTurn(fighter, fight, Duration.ZERO);
-        fighter.play(turn);
-
-        assertThrows(FightException.class, () -> fighter.turn());
-    }
-
-    @Test
     void playAndStop() {
         Fight fight = new Fight(new ChallengeType(), map, new ArrayList<>());
         FightTurn turn = new FightTurn(fighter, fight, Duration.ZERO);

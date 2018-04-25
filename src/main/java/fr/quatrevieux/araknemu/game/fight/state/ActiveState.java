@@ -11,6 +11,9 @@ import fr.quatrevieux.araknemu.game.listener.fight.SendFightStarted;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.SendFightTurnStarted;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.SendFightTurnStopped;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.SendFightersInformation;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.SendUsedMovementPoints;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightAction;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightActionTerminated;
 
 import java.time.Duration;
 
@@ -52,7 +55,10 @@ final public class ActiveState implements FightState, EventsSubscriber {
             new SendFightStarted(fight),
             new SendFightersInformation(fight),
             new SendFightTurnStarted(fight),
-            new SendFightTurnStopped(fight)
+            new SendFightTurnStopped(fight),
+            new SendFightAction(fight),
+            new SendFightActionTerminated(),
+            new SendUsedMovementPoints(fight)
         };
     }
 

@@ -31,8 +31,14 @@ final public class Decoder<C extends MapCell> {
     /**
      * Get the immediately next cell if we move by the given direction
      */
-    public C nextCellByDirection(C start, Direction direction) {
-        return map.get(start.id() + directionTransformationMap.get(direction));
+    public C nextCellByDirection(C start, Direction direction) throws PathException {
+        int nextId = start.id() + directionTransformationMap.get(direction);
+
+        if (nextId >= map.size()) {
+            throw new PathException("Invalid path : out of limit");
+        }
+
+        return map.get(nextId);
     }
 
     /**

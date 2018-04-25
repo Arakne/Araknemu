@@ -29,8 +29,6 @@ class ExploringLoaderTest extends LoaderTestCase {
         assertContainsOnly(EnsureExploring.class, handlers);
 
         assertHandlePacket(AskExtraInfo.class, handlers);
-        assertHandlePacket(GameActionRequest.class, handlers);
-        assertHandlePacket(GameActionAcknowledge.class, handlers);
         assertHandlePacket(GameActionCancel.class, handlers);
         assertHandlePacket(ObjectUseRequest.class, handlers);
     }

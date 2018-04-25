@@ -210,7 +210,7 @@ public class GameBaseCase extends DatabaseTestCase {
     }
 
     @AfterEach
-    void tearDown() throws ContainerException {
+    public void tearDown() throws ContainerException {
         dataSet.destroy();
     }
 
