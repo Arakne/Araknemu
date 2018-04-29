@@ -5,12 +5,10 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
-import fr.quatrevieux.araknemu.game.exploration.map.trigger.Teleport;
 import fr.quatrevieux.araknemu.network.game.out.game.MapData;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.helpers.NOPLogger;
 
 import static org.junit.jupiter.api.Assertions.*;
 

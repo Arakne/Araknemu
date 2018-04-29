@@ -2,7 +2,7 @@ package fr.quatrevieux.araknemu.game.event;
 
 import fr.quatrevieux.araknemu.core.event.SimpleListener;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
-import fr.quatrevieux.araknemu.game.exploration.event.MapLoaded;
+import fr.quatrevieux.araknemu.game.exploration.event.MapJoined;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -13,9 +13,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class SimpleListenerTest {
     @Test
     void event() {
-        SimpleListener<MapLoaded> listener = new SimpleListener<>(MapLoaded.class, mapLoaded -> {});
+        SimpleListener<MapJoined> listener = new SimpleListener<>(MapJoined.class, mapLoaded -> {});
 
-        assertSame(MapLoaded.class, listener.event());
+        assertSame(MapJoined.class, listener.event());
     }
 
     @Test

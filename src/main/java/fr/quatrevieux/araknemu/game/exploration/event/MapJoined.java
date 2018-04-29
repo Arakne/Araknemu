@@ -3,12 +3,12 @@ package fr.quatrevieux.araknemu.game.exploration.event;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 
 /**
- * Event dispatched when the map is successfully loaded
+ * Event dispatched when the player successfully join a map
  */
-final public class MapLoaded {
+final public class MapJoined {
     final private ExplorationMap map;
 
-    public MapLoaded(ExplorationMap map) {
+    public MapJoined(ExplorationMap map) {
         this.map = map;
     }
 

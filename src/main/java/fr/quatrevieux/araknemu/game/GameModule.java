@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game;
 
 import fr.quatrevieux.araknemu.Araknemu;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
+import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
@@ -39,6 +40,14 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.factory.Actio
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.factory.ExplorationActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoaderAggregate;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.MapTriggerService;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.TriggerLoader;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.ActionFactoryRegistry;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.CellActionFactory;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.teleport.Teleport;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.teleport.TeleportFactory;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.handler.loader.*;
@@ -90,6 +99,7 @@ final public class GameModule implements ContainerModule {
                 container.get(ListenerAggregate.class),
                 Arrays.asList(
                     container.get(AreaService.class),
+                    container.get(MapTriggerService.class),
                     container.get(ExplorationMapService.class),
                     container.get(ItemService.class),
                     container.get(SpellService.class),
@@ -99,6 +109,7 @@ final public class GameModule implements ContainerModule {
                 Arrays.asList(
                     container.get(AreaService.class),
                     container.get(ExplorationMapService.class),
+                    container.get(MapTriggerService.class),
                     container.get(ChatService.class),
                     container.get(InventoryService.class),
                     container.get(SpellBookService.class),
@@ -228,8 +239,37 @@ final public class GameModule implements ContainerModule {
             ExplorationMapService.class,
             container -> new ExplorationMapService(
                 container.get(MapTemplateRepository.class),
-                container.get(MapTriggerRepository.class)
+                container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class),
+                // Use proxy to fix circular reference between ExplorationMapService and MapTriggerService
+                (map, cells) -> {
+                    try {
+                        return container.get(CellLoader.class).load(map, cells);
+                    } catch (ContainerException e) {
+                        throw new Error(e);
+                    }
+                }
             )
+        );
+
+        configurator.persist(
+            CellLoader.class,
+            container -> new CellLoaderAggregate(new CellLoader[] {
+                new TriggerLoader(container.get(MapTriggerService.class))
+            })
+        );
+
+        configurator.persist(
+            MapTriggerService.class,
+            container -> new MapTriggerService(
+                container.get(MapTriggerRepository.class),
+                container.get(CellActionFactory.class)
+            )
+        );
+
+        configurator.persist(
+            CellActionFactory.class,
+            container -> new ActionFactoryRegistry()
+                .register(Teleport.ACTION_ID, new TeleportFactory(container.get(ExplorationMapService.class)))
         );
 
         configurator.persist(

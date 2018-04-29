@@ -4,9 +4,7 @@ import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
-import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
-import fr.quatrevieux.araknemu.game.exploration.map.trigger.CellAction;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,10 +18,9 @@ final class MapTriggerRepository implements fr.quatrevieux.araknemu.data.world.r
         @Override
         public MapTrigger create(ResultSet rs) throws SQLException {
             return new MapTrigger(
-                rs.getInt("TRIGGER_ID"),
                 rs.getInt("MAP_ID"),
                 rs.getInt("CELL_ID"),
-                CellAction.values()[rs.getInt("ACTION")],
+                rs.getInt("ACTION"),
                 rs.getString("ARGUMENTS"),
                 rs.getString("CONDITIONS")
             );
@@ -48,12 +45,12 @@ final class MapTriggerRepository implements fr.quatrevieux.araknemu.data.world.r
         try {
             pool.query(
                 "CREATE TABLE MAP_TRIGGER (" +
-                    "TRIGGER_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "MAP_ID INTEGER," +
                     "CELL_ID INTEGER," +
                     "ACTION INTEGER," +
                     "ARGUMENTS TEXT," +
-                    "CONDITIONS TEST" +
+                    "CONDITIONS TEST," +
+                    "PRIMARY KEY (MAP_ID, CELL_ID)" +
                 ")"
             );
 
@@ -75,24 +72,30 @@ final class MapTriggerRepository implements fr.quatrevieux.araknemu.data.world.r
     @Override
     public MapTrigger get(MapTrigger entity) throws RepositoryException {
         return utils.findOne(
-            "SELECT * FROM MAP_TRIGGER WHERE TRIGGER_ID = ?",
-            stmt -> stmt.setInt(1, entity.id())
+            "SELECT * FROM MAP_TRIGGER WHERE MAP_ID = ? AND CELL_ID = ?",
+            stmt -> {
+                stmt.setInt(1, entity.map());
+                stmt.setInt(2, entity.cell());
+            }
         );
     }
 
     @Override
     public boolean has(MapTrigger entity) throws RepositoryException {
         return utils.aggregate(
-            "SELECT COUNT(*) FROM MAP_TRIGGER WHERE TRIGGER_ID = ?",
-            stmt -> stmt.setInt(1, entity.id())
+            "SELECT COUNT(*) FROM MAP_TRIGGER WHERE MAP_ID = ? AND CELL_ID = ?",
+            stmt -> {
+                stmt.setInt(1, entity.map());
+                stmt.setInt(2, entity.cell());
+            }
         ) > 0;
     }
 
     @Override
-    public Collection<MapTrigger> findByMap(MapTemplate map) {
+    public Collection<MapTrigger> findByMap(int map) {
         return utils.findAll(
             "SELECT * FROM MAP_TRIGGER WHERE MAP_ID = ?",
-            stmt -> stmt.setInt(1, map.id())
+            stmt -> stmt.setInt(1, map)
         );
     }
 

@@ -79,7 +79,7 @@ final public class InteractionHandler {
     /**
      * Push the action to the queue, and start it if not busy
      */
-    public void push(Action action) throws Exception {
+    public void push(Action action) {
         if (interacting() && action instanceof BlockingAction) {
             throw new IllegalStateException("Cannot start blocking action when interacting");
         }
@@ -92,7 +92,7 @@ final public class InteractionHandler {
      *
      * @param actionId The action to end
      */
-    public void end(int actionId) throws Exception {
+    public void end(int actionId) {
         gameActions.end(actionId);
     }
 
@@ -101,10 +101,8 @@ final public class InteractionHandler {
      *
      * @param actionId Action to cancel
      * @param argument The cancel argument
-     *
-     * @throws Exception
      */
-    public void cancel(int actionId, String argument) throws Exception {
+    public void cancel(int actionId, String argument) {
         gameActions.cancel(actionId, argument);
     }
 }

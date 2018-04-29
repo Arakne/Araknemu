@@ -10,12 +10,12 @@ public interface BlockingAction extends Action {
      *
      * @param argument The cancel argument
      */
-    public void cancel(String argument) throws Exception;
+    public void cancel(String argument);
 
     /**
      * End the action normally (i.e. the action is successfully done)
      */
-    public void end() throws Exception;
+    public void end();
 
     /**
      * Get the action id

@@ -3,15 +3,13 @@ package fr.quatrevieux.araknemu.game.exploration.interaction.action;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 
 /**
- * Interface for game action
- *
- * @todo refactor with fight
+ * Interface for exploration game action
  */
 public interface Action {
     /**
      * Start to perform the action
      */
-    public void start() throws Exception;
+    public void start();
 
     /**
      * Get the action performer

@@ -127,14 +127,13 @@ public class GameDataSet extends TestingDataSet {
         use(MapTrigger.class);
 
         connection.prepare(
-            "INSERT INTO MAP_TRIGGER (TRIGGER_ID, MAP_ID, CELL_ID, ACTION, ARGUMENTS, CONDITIONS) VALUES (?, ?, ?, ?, ?, ?)",
+            "INSERT INTO MAP_TRIGGER (MAP_ID, CELL_ID, ACTION, ARGUMENTS, CONDITIONS) VALUES (?, ?, ?, ?, ?)",
             stmt -> {
-                stmt.setInt(1, trigger.id());
-                stmt.setInt(2, trigger.map());
-                stmt.setInt(3, trigger.cell());
-                stmt.setInt(4, trigger.action().ordinal());
-                stmt.setString(5, trigger.arguments());
-                stmt.setString(6, trigger.conditions());
+                stmt.setInt(1, trigger.map());
+                stmt.setInt(2, trigger.cell());
+                stmt.setInt(3, trigger.action());
+                stmt.setString(4, trigger.arguments());
+                stmt.setString(5, trigger.conditions());
 
                 return stmt.executeUpdate();
             }

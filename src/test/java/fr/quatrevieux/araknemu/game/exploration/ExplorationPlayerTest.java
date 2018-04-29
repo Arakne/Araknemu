@@ -6,7 +6,8 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.exploration.event.MapChanged;
 import fr.quatrevieux.araknemu.game.exploration.event.MapLeaved;
-import fr.quatrevieux.araknemu.game.exploration.event.MapLoaded;
+import fr.quatrevieux.araknemu.game.exploration.event.MapJoined;
+import fr.quatrevieux.araknemu.game.exploration.interaction.event.PlayerMoveFinished;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.sprite.PlayerSprite;
@@ -48,15 +49,15 @@ class ExplorationPlayerTest extends GameBaseCase {
         ExplorationMap map = container.get(ExplorationMapService.class).load(10300);
 
         AtomicReference<ExplorationMap> ref = new AtomicReference<>();
-        Listener<MapLoaded> listener = new Listener<MapLoaded>() {
+        Listener<MapJoined> listener = new Listener<MapJoined>() {
             @Override
-            public void on(MapLoaded event) {
+            public void on(MapJoined event) {
                 ref.set(event.map());
             }
 
             @Override
-            public Class<MapLoaded> event() {
-                return MapLoaded.class;
+            public Class<MapJoined> event() {
+                return MapJoined.class;
             }
         };
 
@@ -68,11 +69,20 @@ class ExplorationPlayerTest extends GameBaseCase {
     }
 
     @Test
-    void move() {
-        player.move(123);
+    void move() throws ContainerException {
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10300);
+        player.join(map);
+
+        AtomicReference<PlayerMoveFinished> ref = new AtomicReference<>();
+        map.dispatcher().add(PlayerMoveFinished.class, ref::set);
+
+        player.move(map.get(123));
 
         assertEquals(123, player.cell());
         assertEquals(123, player.position().cell());
+
+        assertEquals(123, ref.get().cell().id());
+        assertSame(player, ref.get().player());
     }
 
     @Test
@@ -121,18 +131,18 @@ class ExplorationPlayerTest extends GameBaseCase {
     void changeMap() throws ContainerException {
         ExplorationMap map = container.get(ExplorationMapService.class).load(10300);
 
-        AtomicReference<MapLoaded> ref1 = new AtomicReference<>();
+        AtomicReference<MapJoined> ref1 = new AtomicReference<>();
         AtomicReference<MapChanged> ref2 = new AtomicReference<>();
 
-        player.dispatcher().add(new Listener<MapLoaded>() {
+        player.dispatcher().add(new Listener<MapJoined>() {
             @Override
-            public void on(MapLoaded event) {
+            public void on(MapJoined event) {
                 ref1.set(event);
             }
 
             @Override
-            public Class<MapLoaded> event() {
-                return MapLoaded.class;
+            public Class<MapJoined> event() {
+                return MapJoined.class;
             }
         });
         player.dispatcher().add(MapChanged.class, ref2::set);

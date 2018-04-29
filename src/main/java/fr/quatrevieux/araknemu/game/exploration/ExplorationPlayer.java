@@ -8,9 +8,11 @@ import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.event.CellChanged;
 import fr.quatrevieux.araknemu.game.exploration.event.MapChanged;
 import fr.quatrevieux.araknemu.game.exploration.event.MapLeaved;
-import fr.quatrevieux.araknemu.game.exploration.event.MapLoaded;
+import fr.quatrevieux.araknemu.game.exploration.event.MapJoined;
 import fr.quatrevieux.araknemu.game.exploration.interaction.InteractionHandler;
+import fr.quatrevieux.araknemu.game.exploration.interaction.event.PlayerMoveFinished;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.player.*;
 import fr.quatrevieux.araknemu.game.player.characteristic.Life;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
@@ -88,10 +90,9 @@ final public class ExplorationPlayer implements Sender, Creature, Dispatcher, Ex
     }
 
     @Override
-    public void move(int cell) {
-        player.setPosition(
-            player.position().newCell(cell)
-        );
+    public void move(ExplorationMapCell cell) {
+        player.setPosition(player.position().newCell(cell.id()));
+        map.dispatch(new PlayerMoveFinished(this, cell));
     }
 
     /**
@@ -101,7 +102,7 @@ final public class ExplorationPlayer implements Sender, Creature, Dispatcher, Ex
         this.map = map;
         map.add(this);
 
-        dispatch(new MapLoaded(map));
+        dispatch(new MapJoined(map));
     }
 
     /**

@@ -43,7 +43,7 @@ final public class ActionQueue {
     /**
      * Push the action to the queue, and start it if not busy
      */
-    public void push(Action action) throws Exception {
+    public void push(Action action) {
         actions.add(action);
 
         runNextAction();
@@ -54,7 +54,7 @@ final public class ActionQueue {
      *
      * @param actionId The action to end
      */
-    public void end(int actionId) throws Exception {
+    public void end(int actionId) {
         if (current == null || current.id() != actionId) {
             throw new NoSuchElementException("The action ID do not corresponds");
         }
@@ -70,10 +70,8 @@ final public class ActionQueue {
      *
      * @param actionId Action to cancel
      * @param argument The cancel argument
-     *
-     * @throws Exception
      */
-    public void cancel(int actionId, String argument) throws Exception {
+    public void cancel(int actionId, String argument) {
         if (current == null || current.id() != actionId) {
             throw new NoSuchElementException("The action ID do not corresponds");
         }
@@ -118,8 +116,8 @@ final public class ActionQueue {
      *
      * If an error occurs during the action, it will be removed
      */
-    private void runNextAction() throws Exception {
-        Exception error = null;
+    private void runNextAction() {
+        RuntimeException error = null;
 
         while (this.current == null && !actions.isEmpty()) {
             Action action = actions.remove();
@@ -130,7 +128,7 @@ final public class ActionQueue {
                 }
 
                 action.start();
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 this.current = null;
                 error = e;
             }

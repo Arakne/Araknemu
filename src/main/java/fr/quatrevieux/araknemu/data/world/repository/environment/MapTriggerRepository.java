@@ -12,8 +12,10 @@ import java.util.Collection;
 public interface MapTriggerRepository extends Repository<MapTrigger> {
     /**
      * Get all triggers from a map
+     *
+     * @param map The map id
      */
-    public Collection<MapTrigger> findByMap(MapTemplate map);
+    public Collection<MapTrigger> findByMap(int map);
 
     /**
      * Get all triggers

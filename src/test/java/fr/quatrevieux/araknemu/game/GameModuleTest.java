@@ -20,6 +20,11 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.factory.Actio
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.factory.ExplorationActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoaderAggregate;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.MapTriggerService;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.ActionFactoryRegistry;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.CellActionFactory;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.*;
@@ -82,6 +87,9 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(PlayerRaceService.class, container.get(PlayerRaceService.class));
         assertInstanceOf(PlayerExperienceService.class, container.get(PlayerExperienceService.class));
         assertInstanceOf(FightService.class, container.get(FightService.class));
+        assertInstanceOf(CellLoaderAggregate.class, container.get(CellLoader.class));
+        assertInstanceOf(MapTriggerService.class, container.get(MapTriggerService.class));
+        assertInstanceOf(ActionFactoryRegistry.class, container.get(CellActionFactory.class));
 
         assertSame(
             container.get(ListenerAggregate.class),

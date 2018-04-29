@@ -6,72 +6,40 @@ import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.value.Dimensions;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.BasicCell;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.event.NewSpriteOnMap;
 import fr.quatrevieux.araknemu.game.exploration.map.event.SpriteRemoveFromMap;
-import fr.quatrevieux.araknemu.game.exploration.map.trigger.MapTriggers;
 import fr.quatrevieux.araknemu.game.listener.map.*;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.map.GameMap;
-import fr.quatrevieux.araknemu.game.world.map.MapCell;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
  * Map object for exploration
- *
- * @todo optimize for inactive cells
  */
-final public class ExplorationMap implements GameMap<ExplorationMap.Cell>, Dispatcher {
-    public class Cell implements MapCell {
-        final private int id;
-        final private MapTemplate.Cell template;
-
-        public Cell(int id, MapTemplate.Cell template) {
-            this.id = id;
-            this.template = template;
-        }
-
-        @Override
-        public int id() {
-            return id;
-        }
-
-        @Override
-        public boolean walkable() {
-            return template.active() && template.movement() > 1;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return obj instanceof Cell && equals((Cell) obj);
-        }
-    }
-
+final public class ExplorationMap implements GameMap<ExplorationMapCell>, Dispatcher {
     final private MapTemplate template;
-    final private MapTriggers triggers;
 
-    final private List<Cell> cells;
+    final private Map<Integer, ExplorationMapCell> cells;
     final private ConcurrentMap<Integer, ExplorationPlayer> players = new ConcurrentHashMap<>();
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
-    public ExplorationMap(MapTemplate template, MapTriggers triggers) {
+    public ExplorationMap(MapTemplate template, CellLoader loader) {
         this.template = template;
-        this.triggers = triggers;
 
-        cells = makeCells(template.cells());
-
-        dispatcher.add(new SendNewSprite(this));
-        dispatcher.add(new ValidatePlayerPath());
-        dispatcher.add(new SendPlayerMove(this));
-        dispatcher.add(new SendSpriteRemoved(this));
-        dispatcher.add(new PerformCellActions(triggers));
-        dispatcher.add(new SendPlayerChangeCell(this));
+        this.cells = loader.load(this, template.cells())
+            .stream()
+            .collect(Collectors.toMap(ExplorationMapCell::id, Function.identity()))
+        ;
     }
 
     public int id() {
@@ -94,12 +62,16 @@ final public class ExplorationMap implements GameMap<ExplorationMap.Cell>, Dispa
      * Get the number of cells of the map
      */
     public int size() {
-        return cells.size();
+        return template.cells().size();
     }
 
     @Override
-    public Cell get(int id) {
-        return cells.get(id);
+    public ExplorationMapCell get(int id) {
+        if (cells.containsKey(id)) {
+            return cells.get(id);
+        }
+
+        return new BasicCell(id, template.cells().get(id));
     }
 
     /**
@@ -180,17 +152,7 @@ final public class ExplorationMap implements GameMap<ExplorationMap.Cell>, Dispa
         return template.fightPlaces().length >= 2;
     }
 
-    ListenerAggregate dispatcher() {
+    public ListenerAggregate dispatcher() {
         return dispatcher;
-    }
-
-    private List<Cell> makeCells(List<MapTemplate.Cell> templateCells) {
-        List<Cell> cells = new ArrayList<>(templateCells.size());
-
-        for (int i = 0; i < templateCells.size(); ++i) {
-            cells.add(new Cell(i, templateCells.get(i)));
-        }
-
-        return cells;
     }
 }

@@ -28,14 +28,7 @@ class SendPlayerChangeCellTest extends GameBaseCase {
 
     @Test
     void onCellChanged() throws SQLException, ContainerException {
-        explorationPlayer().move(123);
-
-        listener.on(
-            new CellChanged(
-                explorationPlayer(),
-                123
-            )
-        );
+        listener.on(new CellChanged(explorationPlayer(), 123));
 
         requestStack.assertLast(
             new AddSprites(

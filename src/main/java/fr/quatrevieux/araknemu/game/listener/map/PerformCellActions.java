@@ -2,21 +2,17 @@ package fr.quatrevieux.araknemu.game.listener.map;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.exploration.interaction.event.PlayerMoveFinished;
-import fr.quatrevieux.araknemu.game.exploration.map.trigger.MapTriggers;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.TriggerCell;
 
 /**
  * Perform cell actions for player move
  */
 final public class PerformCellActions implements Listener<PlayerMoveFinished> {
-    final private MapTriggers triggers;
-
-    public PerformCellActions(MapTriggers triggers) {
-        this.triggers = triggers;
-    }
-
     @Override
     public void on(PlayerMoveFinished event) {
-        triggers.perform(event.player());
+        if (event.cell() instanceof TriggerCell) {
+            TriggerCell.class.cast(event.cell()).onStop(event.player());
+        }
     }
 
     @Override

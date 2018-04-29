@@ -1,24 +1,21 @@
-package fr.quatrevieux.araknemu.game.exploration.map.trigger;
+package fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.teleport;
 
-import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.value.Position;
-import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
-import fr.quatrevieux.araknemu.network.game.out.game.MapData;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TeleportTest extends GameBaseCase {
     private Teleport teleport;
+    private ExplorationMapService service;
 
     @Override
     @BeforeEach
@@ -26,18 +23,13 @@ class TeleportTest extends GameBaseCase {
         super.setUp();
 
         dataSet.pushMaps();
-
-        teleport = new Teleport(
-            container.get(ExplorationMapService.class)
-        );
+        service = container.get(ExplorationMapService.class);
     }
 
     @Test
     void performOnSameMap() throws Exception {
-        teleport.perform(
-            new MapTrigger(1, 10300, 456, CellAction.TELEPORT, "10300,321", ""),
-            explorationPlayer()
-        );
+        teleport = new Teleport(service, 123, new Position(10300, 321));
+        teleport.perform(explorationPlayer());
 
         assertEquals(
             new Position(10300, 321),
@@ -55,10 +47,8 @@ class TeleportTest extends GameBaseCase {
 
     @Test
     void teleportOnOtherMap() throws Exception {
-        teleport.perform(
-            new MapTrigger(1, 10300, 456, CellAction.TELEPORT, "10540,321", ""),
-            explorationPlayer()
-        );
+        teleport = new Teleport(service, 123, new Position(10540, 321));
+        teleport.perform(explorationPlayer());
 
         assertTrue(explorationPlayer().interactions().busy());
 

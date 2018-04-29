@@ -37,7 +37,7 @@ class ExplorationActionFactoryTest extends GameBaseCase {
 
     @Test
     void createMove() throws Exception {
-        explorationPlayer().move(100);
+        explorationPlayer().move(explorationPlayer().map().get(100));
 
         Action action = factory.create(explorationPlayer(), ActionType.MOVE, new String[] {"ebIgbf"});
 
