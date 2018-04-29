@@ -77,8 +77,10 @@ class BoostedSpellTest extends GameBaseCase {
 
         assertEquals(1, spell.effects().get(0).min());
         assertEquals(2, spell.effects().get(0).max());
-        assertEquals(6, spell.effects().get(1).min());
+        assertEquals(0, spell.effects().get(0).boost());
+        assertEquals(1, spell.effects().get(1).min());
         assertEquals(0, spell.effects().get(1).max());
+        assertEquals(5, spell.effects().get(1).boost());
     }
 
     @Test
@@ -89,7 +91,9 @@ class BoostedSpellTest extends GameBaseCase {
 
         assertEquals(2, spell.criticalEffects().get(0).min());
         assertEquals(0, spell.criticalEffects().get(0).max());
-        assertEquals(7, spell.criticalEffects().get(1).min());
+        assertEquals(0, spell.criticalEffects().get(0).boost());
+        assertEquals(2, spell.criticalEffects().get(1).min());
         assertEquals(0, spell.criticalEffects().get(1).max());
+        assertEquals(5, spell.criticalEffects().get(1).boost());
     }
 }

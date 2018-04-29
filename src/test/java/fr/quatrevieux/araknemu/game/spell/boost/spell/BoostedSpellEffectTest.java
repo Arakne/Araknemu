@@ -46,6 +46,7 @@ class BoostedSpellEffectTest extends GameBaseCase {
         assertEquals(123, effect.effect());
         assertEquals(5, effect.min());
         assertEquals(10, effect.max());
+        assertEquals(0, effect.boost());
         assertEquals(0, effect.special());
         assertEquals(5, effect.duration());
         assertEquals(25, effect.probability());
@@ -70,8 +71,9 @@ class BoostedSpellEffectTest extends GameBaseCase {
         map.put(SpellsBoosts.Modifier.HEAL, 10);
 
         assertEquals(95, effect.effect());
-        assertEquals(10, effect.min());
-        assertEquals(15, effect.max());
+        assertEquals(5, effect.min());
+        assertEquals(10, effect.max());
+        assertEquals(5, effect.boost());
     }
 
     @Test
@@ -89,8 +91,9 @@ class BoostedSpellEffectTest extends GameBaseCase {
         map.put(SpellsBoosts.Modifier.HEAL, 10);
 
         assertEquals(95, effect.effect());
-        assertEquals(10, effect.min());
+        assertEquals(5, effect.min());
         assertEquals(0, effect.max());
+        assertEquals(5, effect.boost());
     }
 
     @Test
@@ -108,8 +111,9 @@ class BoostedSpellEffectTest extends GameBaseCase {
         map.put(SpellsBoosts.Modifier.HEAL, 10);
 
         assertEquals(81, effect.effect());
-        assertEquals(15, effect.min());
-        assertEquals(20, effect.max());
+        assertEquals(5, effect.min());
+        assertEquals(10, effect.max());
+        assertEquals(10, effect.boost());
     }
 
     @Test
@@ -127,7 +131,8 @@ class BoostedSpellEffectTest extends GameBaseCase {
         map.put(SpellsBoosts.Modifier.HEAL, 10);
 
         assertEquals(108, effect.effect());
-        assertEquals(15, effect.min());
+        assertEquals(5, effect.min());
         assertEquals(0, effect.max());
+        assertEquals(10, effect.boost());
     }
 }

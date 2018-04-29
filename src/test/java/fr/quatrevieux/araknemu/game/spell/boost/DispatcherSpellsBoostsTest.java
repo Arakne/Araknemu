@@ -77,7 +77,8 @@ class DispatcherSpellsBoostsTest extends GameBaseCase {
         Spell boosted = boosts.get(spell);
 
         assertInstanceOf(BoostedSpell.class, boosted);
-        assertEquals(7, boosted.effects().get(0).min());
+        assertEquals(2, boosted.effects().get(0).min());
+        assertEquals(5, boosted.effects().get(0).boost());
     }
 
     @Test

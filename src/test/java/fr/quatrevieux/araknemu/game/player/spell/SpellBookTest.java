@@ -223,8 +223,9 @@ class SpellBookTest extends GameBaseCase {
         book.boosts().boost(3, SpellsBoosts.Modifier.AP_COST, 2);
 
         assertInstanceOf(BoostedSpell.class, book.get(3));
-        assertEquals(57, book.get(3).effects().get(0).min());
-        assertEquals(61, book.get(3).effects().get(0).max());
+        assertEquals(7, book.get(3).effects().get(0).min());
+        assertEquals(11, book.get(3).effects().get(0).max());
+        assertEquals(50, book.get(3).effects().get(0).boost());
         assertEquals(2, book.get(3).apCost());
     }
 }

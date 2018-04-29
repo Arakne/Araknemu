@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.spell.boost.spell;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.spell.boost.SpellModifiers;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+
 /**
  * Apply spell modifiers on effect
  */
@@ -22,16 +23,25 @@ final public class BoostedSpellEffect implements SpellEffect {
 
     @Override
     public int min() {
-        return applyBoost(effect.min());
+        return effect.min();
     }
 
     @Override
     public int max() {
-        if (effect.max() == 0) {
-            return 0;
+        return effect.max();
+    }
+
+    @Override
+    public int boost() {
+        if (isBoostableDamageEffect()) {
+            return modifiers.damage();
         }
 
-        return applyBoost(effect.max());
+        if (isBoostableHealEffect()) {
+            return modifiers.heal();
+        }
+
+        return 0;
     }
 
     @Override
@@ -62,18 +72,6 @@ final public class BoostedSpellEffect implements SpellEffect {
     @Override
     public int target() {
         return effect.target();
-    }
-
-    private int applyBoost(int base) {
-        if (isBoostableDamageEffect()) {
-            return base + modifiers.damage();
-        }
-
-        if (isBoostableHealEffect()) {
-            return base + modifiers.heal();
-        }
-
-        return base;
     }
 
     private boolean isBoostableDamageEffect() {

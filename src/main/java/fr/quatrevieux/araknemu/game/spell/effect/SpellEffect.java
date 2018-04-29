@@ -24,6 +24,14 @@ public interface SpellEffect {
     public int max();
 
     /**
+     * Get the boost value
+     * The boost value will be added to final effect result (fixed damage / heal)
+     */
+    default public int boost() {
+        return 0;
+    }
+
+    /**
      * Get the special effect value
      * Used by invocation and boost spells
      */

@@ -89,8 +89,9 @@ class SimpleSpellsBoostsTest extends GameBaseCase {
 
         assertInstanceOf(BoostedSpell.class, boosted);
 
-        assertEquals(8, boosted.effects().get(0).min());
-        assertEquals(12, boosted.effects().get(0).max());
+        assertEquals(3, boosted.effects().get(0).min());
+        assertEquals(5, boosted.effects().get(0).boost());
+        assertEquals(7, boosted.effects().get(0).max());
         assertFalse(boosted.constraints().lineOfSight());
     }
 
