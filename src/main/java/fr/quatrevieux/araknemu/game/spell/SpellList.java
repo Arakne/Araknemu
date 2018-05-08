@@ -10,4 +10,11 @@ public interface SpellList {
      * @param spellId The spell id
      */
     public Spell get(int spellId);
+
+    /**
+     * Check if the creature are the spell
+     *
+     * @param spellId ID of the spell to check
+     */
+    public boolean has(int spellId);
 }

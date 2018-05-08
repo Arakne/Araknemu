@@ -13,6 +13,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 
@@ -36,7 +37,7 @@ final public class PlayerFighter implements Fighter, Sender {
     public PlayerFighter(GamePlayer player) {
         this.player = player;
         this.characteristics = new PlayerFighterCharacteristics(player.characteristics());
-        this.life = new PlayerFighterLife(player.life());
+        this.life = new PlayerFighterLife(player.life(), this);
 
         dispatcher.add(new SendFightJoined(this));
     }
@@ -91,6 +92,11 @@ final public class PlayerFighter implements Fighter, Sender {
     @Override
     public FighterCharacteristics characteristics() {
         return characteristics;
+    }
+
+    @Override
+    public SpellList spells() {
+        return player.spells();
     }
 
     @Override

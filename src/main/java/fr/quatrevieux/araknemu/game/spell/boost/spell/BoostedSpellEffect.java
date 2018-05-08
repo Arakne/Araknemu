@@ -75,7 +75,7 @@ final public class BoostedSpellEffect implements SpellEffect {
     }
 
     private boolean isBoostableDamageEffect() {
-        return effect() >= 93 && effect() <= 100;
+        return effect() >= 91 && effect() <= 100;
     }
 
     private boolean isBoostableHealEffect() {

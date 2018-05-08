@@ -13,4 +13,12 @@ public interface FighterLife {
      * Get the maximum life of the fighter
      */
     public int max();
+
+    /**
+     * Change fighter life
+     *
+     * @param caster The caster
+     * @param value The modified value. Positive for heal, negative for damage
+     */
+    public int alter(Fighter caster, int value);
 }

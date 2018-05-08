@@ -20,6 +20,11 @@ public interface FightCell extends MapCell {
     public boolean walkable();
 
     /**
+     * Check if the cell is walkable, ignoring current fighter
+     */
+    public boolean walkableIgnoreFighter();
+
+    /**
      * Check if the cell block line of sight
      */
     public boolean sightBlocking();

@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
+import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 
@@ -47,6 +48,11 @@ public interface Fighter extends Dispatcher {
      * Get the fighter total characteristics
      */
     public FighterCharacteristics characteristics();
+
+    /**
+     * Get the fighter spells
+     */
+    public SpellList spells();
 
     /**
      * Get the fighter team

@@ -19,7 +19,7 @@ final public class SendFightAction implements Listener<FightActionStarted> {
 
     @Override
     public void on(FightActionStarted event) {
-        if (event.action().performer() instanceof Sender) {
+        if (event.result().success() && event.action().performer() instanceof Sender) {
             Sender.class.cast(event.action().performer()).send(new StartFightAction(event.action()));
         }
 

@@ -8,10 +8,9 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.fight.turn.order.FighterOrderStrategy;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightStarted;
-import fr.quatrevieux.araknemu.game.listener.fight.turn.SendFightTurnStarted;
-import fr.quatrevieux.araknemu.game.listener.fight.turn.SendFightTurnStopped;
-import fr.quatrevieux.araknemu.game.listener.fight.turn.SendFightersInformation;
-import fr.quatrevieux.araknemu.game.listener.fight.turn.SendUsedMovementPoints;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterDie;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterLifeChanged;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.*;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightAction;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightActionTerminated;
 
@@ -58,7 +57,10 @@ final public class ActiveState implements FightState, EventsSubscriber {
             new SendFightTurnStopped(fight),
             new SendFightAction(fight),
             new SendFightActionTerminated(),
-            new SendUsedMovementPoints(fight)
+            new SendUsedMovementPoints(fight),
+            new SendUsedActionPoints(fight),
+            new SendFighterLifeChanged(fight),
+            new SendFighterDie(fight)
         };
     }
 

@@ -14,8 +14,10 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.FightAction;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.StartFightAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,5 +59,27 @@ class SendFightActionTest extends FightBaseCase {
         listener.on(new FightActionStarted(move, result));
 
         requestStack.assertAll(new StartFightAction(move), new FightAction(result));
+    }
+
+    @Test
+    void onActionFailed() {
+        Move move = new Move(
+            new FightTurn(player.fighter(), fight, Duration.ofSeconds(30)),
+            player.fighter(),
+            new Path<>(
+                new Decoder<>(fight.map()),
+                new ArrayList<>()
+            )
+        );
+
+        ActionResult result = Mockito.mock(ActionResult.class);
+        Mockito.when(result.success()).thenReturn(false);
+        Mockito.when(result.action()).thenReturn(3);
+        Mockito.when(result.performer()).thenReturn(player.fighter());
+        Mockito.when(result.arguments()).thenReturn(new Object[0]);
+
+        listener.on(new FightActionStarted(move, result));
+
+        requestStack.assertAll(new FightAction(result));
     }
 }

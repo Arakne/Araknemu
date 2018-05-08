@@ -26,6 +26,16 @@ final public class BoostedSpell implements Spell {
     }
 
     @Override
+    public int spriteId() {
+        return spell.spriteId();
+    }
+
+    @Override
+    public String spriteArgs() {
+        return spell.spriteArgs();
+    }
+
+    @Override
     public int level() {
         return spell.level();
     }

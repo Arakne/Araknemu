@@ -11,6 +11,8 @@ final public class RandomUtil {
     /**
      * Get random number into [min, max] interval
      * The interval is inclusive
+     *
+     * If max if lower than min, min is returned
      */
     public int rand(int min, int max) {
         if (max < min) {

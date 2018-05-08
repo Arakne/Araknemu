@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 import fr.quatrevieux.araknemu.game.fight.builder.FightHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -12,7 +13,11 @@ import fr.quatrevieux.araknemu.game.fight.state.ActiveState;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
+import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
+import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastFailed;
+import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastSuccess;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
+import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
 import fr.quatrevieux.araknemu.game.world.map.path.Path;
@@ -24,7 +29,6 @@ import fr.quatrevieux.araknemu.network.game.out.fight.FighterReadyState;
 import fr.quatrevieux.araknemu.network.game.out.fight.JoinFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.FightAction;
-import fr.quatrevieux.araknemu.network.game.out.fight.action.StartFightAction;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FinishTurn;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
@@ -41,6 +45,7 @@ import java.util.Arrays;
  */
 public class FunctionalTest extends GameBaseCase {
     private FightService service;
+    private Fight fight;
 
     @Override
     @BeforeEach
@@ -60,7 +65,7 @@ public class FunctionalTest extends GameBaseCase {
         GamePlayer other = makeOtherPlayer();
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
 
-        Fight fight = handler.start(
+        fight = handler.start(
             builder -> {
                 builder
                     .fighter(player)
@@ -188,5 +193,122 @@ public class FunctionalTest extends GameBaseCase {
         requestStack.assertOne(ActionEffect.usedMovementPoints(fighter1, 3));
         assertEquals(198, fighter1.cell().id());
         assertEquals(0, fighter1.turn().points().movementPoints());
+
+        fight.turnList().current()
+            .filter(turn -> turn.fighter() != player.fighter())
+            .ifPresent(FightTurn::stop)
+        ;
+
+        castNormal(3, other.fighter().cell());
+
+        requestStack.assertLast(
+            new FightAction(
+                new CastSuccess(
+                    player.fighter(),
+                    player.fighter().spells().get(3),
+                    other.fighter().cell(),
+                    false
+                )
+            )
+        );
+
+        player.fighter().turn().terminate();
+
+        assertEquals(1, player.fighter().turn().points().actionPoints());
+        requestStack.assertOne(ActionEffect.usedActionPoints(player.fighter(), 5));
+
+        int damage = other.fighter().life().max() - other.fighter().life().current();
+
+        assertBetween(4, 15, damage);
+        requestStack.assertOne(ActionEffect.alterLifePoints(player.fighter(), other.fighter(), -damage));
+
+        nextTurn();
+
+        castCritical(3, player.fighter().cell());
+        requestStack.assertLast(
+            new FightAction(
+                new CastSuccess(
+                    other.fighter(),
+                    other.fighter().spells().get(3),
+                    player.fighter().cell(),
+                    false
+                )
+            )
+        );
+
+        other.fighter().turn().terminate();
+        requestStack.assertOne(ActionEffect.criticalHitSpell(other.fighter(), other.fighter().spells().get(3)));
+        requestStack.assertOne(ActionEffect.usedActionPoints(other.fighter(), 5));
+        requestStack.assertOne(ActionEffect.alterLifePoints(other.fighter(), player.fighter(), -8));
+        assertEquals(player.fighter().life().max() - 8, player.fighter().life().current());
+
+        nextTurn();
+        requestStack.clear();
+
+        castFailed(3, other.fighter().cell());
+        requestStack.assertAll(
+            new FightAction(new CastFailed(player.fighter(), player.fighter().spells().get(3))),
+            ActionEffect.usedActionPoints(player.fighter(), 5)
+        );
+    }
+
+    private void castNormal(int spellId, FightCell target) {
+        FightTurn currentTurn = fight.turnList().current().get();
+
+        currentTurn.perform(new Cast(
+            currentTurn,
+            currentTurn.fighter(),
+            currentTurn.fighter().spells().get(spellId),
+            target,
+            new SpellConstraintsValidator(currentTurn),
+
+            // Ensure no critical hit / fail
+            new CriticalityStrategy() {
+                public int hitRate(int base) { return 0; }
+                public int failureRate(int base) { return 0; }
+                public boolean hit(int baseRate) { return false; }
+                public boolean failed(int baseRate) { return false; }
+            }
+        ));
+    }
+
+    private void castCritical(int spellId, FightCell target) {
+        FightTurn currentTurn = fight.turnList().current().get();
+
+        currentTurn.perform(new Cast(
+            currentTurn,
+            currentTurn.fighter(),
+            currentTurn.fighter().spells().get(spellId),
+            target,
+            new SpellConstraintsValidator(currentTurn),
+            new CriticalityStrategy() {
+                public int hitRate(int base) { return 0; }
+                public int failureRate(int base) { return 0; }
+                public boolean hit(int baseRate) { return true; }
+                public boolean failed(int baseRate) { return false; }
+            }
+        ));
+    }
+
+    private void castFailed(int spellId, FightCell target) {
+        FightTurn currentTurn = fight.turnList().current().get();
+
+        currentTurn.perform(new Cast(
+            currentTurn,
+            currentTurn.fighter(),
+            currentTurn.fighter().spells().get(spellId),
+            target,
+            new SpellConstraintsValidator(currentTurn),
+            new CriticalityStrategy() {
+                public int hitRate(int base) { return 0; }
+                public int failureRate(int base) { return 0; }
+                public boolean hit(int baseRate) { return false; }
+                public boolean failed(int baseRate) { return true; }
+            }
+        ));
+    }
+
+    private void nextTurn() {
+        fight.turnList().current().ifPresent(FightTurn::stop);
     }
 }

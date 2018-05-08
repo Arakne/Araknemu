@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,5 +37,15 @@ class TurnActionsFactoryTest extends FightBaseCase {
         player.fighter().move(fight.map().get(185));
 
         assertInstanceOf(Move.class, factory.create(ActionType.MOVE, new String[] {"ddvfdg"}));
+    }
+
+    @Test
+    void createCast() throws Exception {
+        assertInstanceOf(Cast.class, factory.create(ActionType.CAST, new String[] {"3", "123"}));
+    }
+
+    @Test
+    void createCastSpellNotFound() throws Exception {
+        assertInstanceOf(Cast.class, factory.create(ActionType.CAST, new String[] {"7458", "123"}));
     }
 }

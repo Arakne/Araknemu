@@ -49,6 +49,11 @@ final public class Move implements Action {
     }
 
     @Override
+    public void failed() {
+
+    }
+
+    @Override
     public Fighter performer() {
         return fighter;
     }

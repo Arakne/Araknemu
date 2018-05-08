@@ -9,6 +9,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
+import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import org.junit.jupiter.api.Test;
 
@@ -100,6 +101,11 @@ class AlternateTeamFighterOrderTest extends TestCase {
                     return 0;
                 }
             };
+        }
+
+        @Override
+        public SpellList spells() {
+            return null;
         }
 
         @Override

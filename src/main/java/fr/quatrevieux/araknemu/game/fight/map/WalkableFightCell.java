@@ -31,6 +31,11 @@ final public class WalkableFightCell implements FightCell {
     }
 
     @Override
+    public boolean walkableIgnoreFighter() {
+        return true;
+    }
+
+    @Override
     public boolean sightBlocking() {
         return !template.lineOfSight() || fighter != null;
     }

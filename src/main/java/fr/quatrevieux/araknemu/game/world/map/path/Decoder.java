@@ -13,26 +13,16 @@ import java.util.Map;
  */
 final public class Decoder<C extends MapCell> {
     final private GameMap<C> map;
-    final private Map<Direction, Integer> directionTransformationMap = new EnumMap<>(Direction.class);
 
     public Decoder(GameMap<C> map) {
         this.map = map;
-
-        directionTransformationMap.put(Direction.EAST,       1);
-        directionTransformationMap.put(Direction.SOUTH_EAST, map.dimensions().width());
-        directionTransformationMap.put(Direction.SOUTH,      2 * map.dimensions().width() - 1);
-        directionTransformationMap.put(Direction.SOUTH_WEST, map.dimensions().width() - 1);
-        directionTransformationMap.put(Direction.WEST,       -1);
-        directionTransformationMap.put(Direction.NORTH_WEST, -map.dimensions().width());
-        directionTransformationMap.put(Direction.NORTH,      -(2 * map.dimensions().width() - 1));
-        directionTransformationMap.put(Direction.NORTH_EAST, -(map.dimensions().width() - 1));
     }
 
     /**
      * Get the immediately next cell if we move by the given direction
      */
     public C nextCellByDirection(C start, Direction direction) throws PathException {
-        int nextId = start.id() + directionTransformationMap.get(direction);
+        int nextId = start.id() + direction.nextCellIncrement(map.dimensions().width());
 
         if (nextId >= map.size()) {
             throw new PathException("Invalid path : out of limit");

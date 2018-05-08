@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.fight.turn;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.turn.event.ActionPointsUsed;
 import fr.quatrevieux.araknemu.game.fight.turn.event.MovementPointsUsed;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,7 @@ class FighterTurnPointsTest extends FightBaseCase {
     @Test
     void defaults() {
         assertEquals(3, points.movementPoints());
+        assertEquals(6, points.actionPoints());
     }
 
     @Test
@@ -43,5 +45,18 @@ class FighterTurnPointsTest extends FightBaseCase {
         assertEquals(2, ref.get().quantity());
 
         assertEquals(1, points.movementPoints());
+    }
+
+    @Test
+    void useActionPoints() {
+        AtomicReference<ActionPointsUsed> ref = new AtomicReference<>();
+        fight.dispatcher().add(ActionPointsUsed.class, ref::set);
+
+        points.useActionPoints(2);
+
+        assertSame(fighter, ref.get().fighter());
+        assertEquals(2, ref.get().quantity());
+
+        assertEquals(4, points.actionPoints());
     }
 }

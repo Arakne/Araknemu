@@ -35,4 +35,16 @@ class DirectionTest {
         assertTrue(Direction.NORTH_EAST.restricted());
         assertTrue(Direction.SOUTH_EAST.restricted());
     }
+
+    @Test
+    void nextCellIncrement() {
+        assertEquals(1, Direction.EAST.nextCellIncrement(15));
+        assertEquals(15, Direction.SOUTH_EAST.nextCellIncrement(15));
+        assertEquals(29, Direction.SOUTH.nextCellIncrement(15));
+        assertEquals(14, Direction.SOUTH_WEST.nextCellIncrement(15));
+        assertEquals(-1, Direction.WEST.nextCellIncrement(15));
+        assertEquals(-15, Direction.NORTH_WEST.nextCellIncrement(15));
+        assertEquals(-29, Direction.NORTH.nextCellIncrement(15));
+        assertEquals(-14, Direction.NORTH_EAST.nextCellIncrement(15));
+    }
 }

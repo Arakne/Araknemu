@@ -1,6 +1,9 @@
 package fr.quatrevieux.araknemu.game.fight.fighter.player;
 
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterLifeChanged;
 import fr.quatrevieux.araknemu.game.player.characteristic.Life;
 
 /**
@@ -10,13 +13,15 @@ import fr.quatrevieux.araknemu.game.player.characteristic.Life;
  */
 final public class PlayerFighterLife implements FighterLife {
     final private Life baseLife;
+    final private Fighter fighter;
 
     private int max;
     private int current;
     private boolean initialised = false;
 
-    public PlayerFighterLife(Life baseLife) {
+    public PlayerFighterLife(Life baseLife, Fighter fighter) {
         this.baseLife = baseLife;
+        this.fighter = fighter;
     }
 
     @Override
@@ -27,6 +32,25 @@ final public class PlayerFighterLife implements FighterLife {
     @Override
     public int max() {
         return initialised ? max : baseLife.max();
+    }
+
+    @Override
+    public int alter(Fighter caster, int value) {
+        if (value < -current) {
+            value = -current;
+        } else if (value > max - current) {
+            value = max - current;
+        }
+
+        current += value;
+
+        fighter.fight().dispatch(new FighterLifeChanged(fighter, caster, value));
+
+        if (current == 0) {
+            fighter.fight().dispatch(new FighterDie(fighter, caster));
+        }
+
+        return value;
     }
 
     /**

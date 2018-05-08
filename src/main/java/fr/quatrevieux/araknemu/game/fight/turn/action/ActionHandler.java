@@ -48,6 +48,10 @@ final public class ActionHandler {
 
         fight.dispatch(new FightActionStarted(action, result));
 
+        if (!result.success()) {
+            action.failed();
+        }
+
         return true;
     }
 

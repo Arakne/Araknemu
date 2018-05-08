@@ -47,6 +47,9 @@ class SpellLevelAdapterTest extends GameBaseCase {
         assertEquals(0, spell.constraints().launchDelay());
         assertArrayEquals(new int[0], spell.constraints().requiredStates());
         assertArrayEquals(new int[] {18, 19, 3, 1, 41}, spell.constraints().forbiddenStates());
+
+        assertEquals(0, spell.spriteId());
+        assertEquals("0,1,1", spell.spriteArgs());
     }
 
     @Test

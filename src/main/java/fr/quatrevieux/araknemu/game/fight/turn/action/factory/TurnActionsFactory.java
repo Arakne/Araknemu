@@ -1,9 +1,11 @@
 package fr.quatrevieux.araknemu.game.fight.turn.action.factory;
 
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
 
@@ -27,6 +29,21 @@ final public class TurnActionsFactory implements FightActionFactory {
                     turn.fighter().cell()
                 )
             )
+        );
+
+        factories.put(
+            ActionType.CAST,
+            (action, arguments) -> {
+                Fighter fighter = turn.fighter();
+                int spellId = Integer.parseInt(arguments[0]);
+
+                return new Cast(
+                    turn,
+                    fighter,
+                    fighter.spells().has(spellId) ? fighter.spells().get(spellId) : null,
+                    turn.fight().map().get(Integer.parseInt(arguments[1]))
+                );
+            }
         );
     }
 

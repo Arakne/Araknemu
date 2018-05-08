@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.fight;
 
 import fr.quatrevieux.araknemu.core.event.*;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
@@ -27,6 +28,7 @@ final public class Fight implements Dispatcher, Sender {
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
     final private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     final private FightTurnList turnList = new FightTurnList(this);
+    final private EffectsHandler effects = new EffectsHandler(this);
 
     public Fight(FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow) {
         this.type = type;
@@ -115,6 +117,13 @@ final public class Fight implements Dispatcher, Sender {
      */
     public FightTurnList turnList() {
         return turnList;
+    }
+
+    /**
+     * Get the fight effects handle
+     */
+    public EffectsHandler effects() {
+        return effects;
     }
 
     @Override

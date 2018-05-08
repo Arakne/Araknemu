@@ -14,6 +14,16 @@ public interface Spell {
     public int id();
 
     /**
+     * Get the spell sprite
+     */
+    public int spriteId();
+
+    /**
+     * Get the spell sprite arguments
+     */
+    public String spriteArgs();
+
+    /**
      * Get the spell level in interval [1-6]
      */
     public int level();

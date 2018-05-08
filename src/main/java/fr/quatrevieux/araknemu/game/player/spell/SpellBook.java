@@ -84,6 +84,7 @@ final public class SpellBook implements SpellList, Dispatcher {
      *
      * @param spellId Spell to check
      */
+    @Override
     public boolean has(int spellId) {
         return entries.containsKey(spellId);
     }

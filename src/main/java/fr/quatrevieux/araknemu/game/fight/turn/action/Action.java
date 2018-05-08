@@ -29,6 +29,11 @@ public interface Action {
     public ActionType type();
 
     /**
+     * The action is failed
+     */
+    public void failed();
+
+    /**
      * End the action normally (i.e. the action is successfully done)
      */
     public void end();

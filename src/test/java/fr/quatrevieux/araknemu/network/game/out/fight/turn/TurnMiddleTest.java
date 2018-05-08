@@ -21,7 +21,7 @@ class TurnMiddleTest extends FightBaseCase {
     @Test
     void generate() {
         assertEquals(
-            "GTM|1;0;295;6;3;122;295|2;0;50;6;3;125;50",
+            "GTM|1;0;295;6;3;122;;295|2;0;50;6;3;125;;50",
             new TurnMiddle(fight.fighters()).toString()
         );
     }

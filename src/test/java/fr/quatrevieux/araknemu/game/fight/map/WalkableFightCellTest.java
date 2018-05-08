@@ -30,6 +30,7 @@ class WalkableFightCellTest extends GameBaseCase {
     void initialState() {
         assertEquals(123, cell.id());
         assertTrue(cell.walkable());
+        assertTrue(cell.walkableIgnoreFighter());
         assertFalse(cell.sightBlocking());
         assertFalse(cell.fighter().isPresent());
     }
@@ -42,6 +43,7 @@ class WalkableFightCellTest extends GameBaseCase {
 
         assertSame(fighter, cell.fighter().get());
         assertFalse(cell.walkable());
+        assertTrue(cell.walkableIgnoreFighter());
         assertTrue(cell.sightBlocking());
     }
 

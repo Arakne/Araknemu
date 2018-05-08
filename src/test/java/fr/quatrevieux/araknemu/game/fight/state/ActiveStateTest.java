@@ -8,10 +8,9 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightStarted;
-import fr.quatrevieux.araknemu.game.listener.fight.turn.SendFightTurnStarted;
-import fr.quatrevieux.araknemu.game.listener.fight.turn.SendFightTurnStopped;
-import fr.quatrevieux.araknemu.game.listener.fight.turn.SendFightersInformation;
-import fr.quatrevieux.araknemu.game.listener.fight.turn.SendUsedMovementPoints;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterDie;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterLifeChanged;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.*;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightAction;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightActionTerminated;
 import fr.quatrevieux.araknemu.network.game.out.fight.BeginFight;
@@ -23,7 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ActiveStateTest extends GameBaseCase {
     private ActiveState state;
@@ -66,6 +65,9 @@ class ActiveStateTest extends GameBaseCase {
         assertTrue(fight.dispatcher().has(SendFightAction.class));
         assertTrue(fight.dispatcher().has(SendFightActionTerminated.class));
         assertTrue(fight.dispatcher().has(SendUsedMovementPoints.class));
+        assertTrue(fight.dispatcher().has(SendUsedActionPoints.class));
+        assertTrue(fight.dispatcher().has(SendFighterDie.class));
+        assertTrue(fight.dispatcher().has(SendFighterLifeChanged.class));
 
         Thread.sleep(210); // Wait for start turn
 

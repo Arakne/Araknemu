@@ -59,6 +59,11 @@ class ActionHandlerTest extends FightBaseCase {
             }
 
             @Override
+            public void failed() {
+
+            }
+
+            @Override
             public Duration duration() {
                 return null;
             }
@@ -85,7 +90,7 @@ class ActionHandlerTest extends FightBaseCase {
     }
 
     @Test
-    void startFailedWillDispatchEvent() {
+    void startFailedWillDispatchEventAndCallFailed() {
         Action action = Mockito.mock(Action.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
@@ -102,6 +107,7 @@ class ActionHandlerTest extends FightBaseCase {
         assertSame(result, ref.get().result());
 
         Mockito.verify(action, Mockito.never()).duration();
+        Mockito.verify(action).failed();
     }
 
     @Test

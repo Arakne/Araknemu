@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.fight;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
@@ -51,6 +52,7 @@ class FightTest extends GameBaseCase {
         assertInstanceOf(NullState.class, fight.state());
         assertEquals(teams, fight.teams());
         assertInstanceOf(ChallengeType.class, fight.type());
+        assertInstanceOf(EffectsHandler.class, fight.effects());
     }
 
     @Test

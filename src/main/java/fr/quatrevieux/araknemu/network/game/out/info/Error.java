@@ -37,4 +37,42 @@ final public class Error extends InformationMessage {
     static public Error cantLearnSpell(int spellId) {
         return new Error(7, spellId);
     }
+
+    /**
+     * Cannot cast the spell : not in the spell list
+     */
+    static public Error cantCastNotFound() {
+        return new Error(169);
+    }
+
+    /**
+     * Cannot cast the spell : not enough action points
+     *
+     * @param available The available action points
+     * @param required The required action points for cast the spell
+     */
+    static public Error cantCastNotEnoughActionPoints(int available, int required) {
+        return new Error(170, available, required);
+    }
+
+    /**
+     * Cannot cast the spell : The target cell is invalid
+     */
+    static public Error cantCastInvalidCell() {
+        return new Error(193);
+    }
+
+    /**
+     * Cannot cast the spell : The target cell is not available
+     */
+    static public Error cantCastCellNotAvailable() {
+        return new Error(172);
+    }
+
+    /**
+     * Cannot cast the spell : The target cell is not in line
+     */
+    static public Error cantCastLineLaunch() {
+        return new Error(173);
+    }
 }

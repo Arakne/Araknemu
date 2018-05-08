@@ -19,4 +19,29 @@ class ErrorTest {
     void cantLearnSpell() {
         assertEquals("Im17;123", Error.cantLearnSpell(123).toString());
     }
+
+    @Test
+    void cantCastNotFound() {
+        assertEquals("Im1169;", Error.cantCastNotFound().toString());
+    }
+
+    @Test
+    void cantCastInvalidCell() {
+        assertEquals("Im1193;", Error.cantCastInvalidCell().toString());
+    }
+
+    @Test
+    void cantCastCellNotAvailable() {
+        assertEquals("Im1172;", Error.cantCastCellNotAvailable().toString());
+    }
+
+    @Test
+    void cantCastLineLaunch() {
+        assertEquals("Im1173;", Error.cantCastLineLaunch().toString());
+    }
+
+    @Test
+    void cantCastNotEnoughActionPoints() {
+        assertEquals("Im1170;4~5", Error.cantCastNotEnoughActionPoints(4, 5).toString());
+    }
 }

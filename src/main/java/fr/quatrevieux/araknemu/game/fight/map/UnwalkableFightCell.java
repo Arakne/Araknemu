@@ -29,6 +29,11 @@ final public class UnwalkableFightCell implements FightCell {
     }
 
     @Override
+    public boolean walkableIgnoreFighter() {
+        return false;
+    }
+
+    @Override
     public boolean sightBlocking() {
         return !template.lineOfSight();
     }

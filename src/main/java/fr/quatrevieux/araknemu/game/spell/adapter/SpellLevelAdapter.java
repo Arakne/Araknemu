@@ -38,6 +38,16 @@ final public class SpellLevelAdapter implements Spell {
     }
 
     @Override
+    public int spriteId() {
+        return template.sprite();
+    }
+
+    @Override
+    public String spriteArgs() {
+        return template.spriteArgs();
+    }
+
+    @Override
     public int level() {
         return level;
     }
