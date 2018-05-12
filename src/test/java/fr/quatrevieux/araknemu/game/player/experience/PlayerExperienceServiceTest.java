@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.listener.player.RebuildLifePointsOnLevelUp;
 import fr.quatrevieux.araknemu.game.listener.player.SendLevelUp;
 import fr.quatrevieux.araknemu.game.listener.player.SendPlayerXp;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
@@ -58,6 +59,7 @@ class PlayerExperienceServiceTest extends GameBaseCase {
 
         assertTrue(gamePlayer().dispatcher().has(SendPlayerXp.class));
         assertTrue(gamePlayer().dispatcher().has(SendLevelUp.class));
+        assertTrue(gamePlayer().dispatcher().has(RebuildLifePointsOnLevelUp.class)); // Issue #55
     }
 
     @Test

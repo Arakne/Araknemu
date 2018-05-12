@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceR
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
+import fr.quatrevieux.araknemu.game.listener.player.RebuildLifePointsOnLevelUp;
 import fr.quatrevieux.araknemu.game.listener.player.SendLevelUp;
 import fr.quatrevieux.araknemu.game.listener.player.SendPlayerXp;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
@@ -46,6 +47,7 @@ final public class PlayerExperienceService implements PreloadableService, Events
             new Listener<PlayerLoaded>() {
                 @Override
                 public void on(PlayerLoaded event) {
+                    event.player().dispatcher().add(new RebuildLifePointsOnLevelUp(event.player())); // Issue #55 : Before send stats
                     event.player().dispatcher().add(new SendLevelUp(event.player()));
                     event.player().dispatcher().add(new SendPlayerXp(event.player()));
                 }

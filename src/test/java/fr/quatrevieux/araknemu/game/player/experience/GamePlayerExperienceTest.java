@@ -143,6 +143,8 @@ class GamePlayerExperienceTest extends GameBaseCase {
         player.experience().add(860000);
 
         assertEquals(51, player.experience().level());
+        assertEquals(300, player.life().max()); // Issue #55
+        assertEquals(300, player.life().current());
         assertEquals(5, player.characteristics().boostPoints());
         assertEquals(1, player.spells().upgradePoints());
 
