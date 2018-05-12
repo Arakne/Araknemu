@@ -39,4 +39,9 @@ final public class SimpleTeam implements FightTeam {
     public void send(Object packet) {
         fighters.forEach(fighter -> fighter.send(packet));
     }
+
+    @Override
+    public boolean alive() {
+        return fighters.stream().anyMatch(fighter -> !fighter.dead());
+    }
 }

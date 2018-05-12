@@ -57,4 +57,11 @@ class FightMapTest extends GameBaseCase {
         assertEquals(15, map.dimensions().width());
         assertEquals(479, map.size());
     }
+
+    @Test
+    void destroy() {
+        map.destroy();
+
+        assertEquals(0, map.size());
+    }
 }

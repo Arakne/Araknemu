@@ -98,7 +98,12 @@ final public class FightTurn {
             fight.dispatch(new TurnStopped(this));
             fighter.stop();
 
-            fight.turnList().next();
+            if (fighter.dead()) {
+                // Wait for die animation
+                fight.schedule(() -> fight.turnList().next(), Duration.ofMillis(1500));
+            } else {
+                fight.turnList().next();
+            }
         });
     }
 
@@ -110,6 +115,10 @@ final public class FightTurn {
     public void perform(Action action) throws FightException {
         if (!active.get()) {
             throw new FightException("Turn is not active");
+        }
+
+        if (fighter.dead()) {
+            throw new FightException("The fighter is dead");
         }
 
         if (!actionHandler.start(action)) {

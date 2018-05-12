@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.order.FighterOrderStrategy;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Handle fight turns
@@ -17,6 +18,7 @@ final public class FightTurnList {
     private List<Fighter> fighters;
     private int current;
     private FightTurn turn;
+    private AtomicBoolean active = new AtomicBoolean(false);
 
     public FightTurnList(Fight fight) {
         this.fight = fight;
@@ -48,32 +50,53 @@ final public class FightTurnList {
     }
 
     /**
+     * Get the current turn fighter
+     */
+    public Fighter currentFighter() {
+        return fighters.get(current);
+    }
+
+    /**
      * Start the turn system
      */
     public void start() {
+        active.set(true);
         current = -1;
 
         next();
     }
 
     /**
+     * Stop the turn system
+     */
+    public void stop() {
+        if (!active.getAndSet(false)) {
+            return;
+        }
+
+        if (turn != null) {
+            turn.stop();
+            turn = null;
+        }
+    }
+
+    /**
      * Stop the current turn and start the next
      *
-     * @todo test turn with return false
-     * @todo test dead fighter
+     * @todo test start with return false
      */
     void next() {
         turn = null;
         fight.dispatch(new NextTurnInitiated());
 
-        for (;;) {
+        while (active.get()) {
             if (++current == fighters.size()) {
                 current = 0;
             }
 
-//            if (fighters.get(current).dead()) {
-//                continue;
-//            }
+            if (fighters.get(current).dead()) {
+                continue;
+            }
 
             turn = new FightTurn(fighters.get(current), fight, fight.type().turnDuration());
 

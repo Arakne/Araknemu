@@ -3,11 +3,12 @@ package fr.quatrevieux.araknemu.game.fight.state;
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.fight.turn.order.FighterOrderStrategy;
+import fr.quatrevieux.araknemu.game.listener.fight.CheckFightTerminated;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightStarted;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.RemoveDeadFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterDie;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterLifeChanged;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.*;
@@ -40,12 +41,7 @@ final public class ActiveState implements FightState, EventsSubscriber {
         fight.fighters().forEach(Fighter::init);
         fight.turnList().init(orderStrategy);
 
-        fight.dispatch(new FightStarted());
-
-        fight.schedule(
-            () -> fight.turnList().start(),
-            Duration.ofMillis(200)
-        );
+        fight.start();
     }
 
     @Override
@@ -60,12 +56,28 @@ final public class ActiveState implements FightState, EventsSubscriber {
             new SendUsedMovementPoints(fight),
             new SendUsedActionPoints(fight),
             new SendFighterLifeChanged(fight),
-            new SendFighterDie(fight)
+            new SendFighterDie(fight),
+            new RemoveDeadFighter(fight),
+            new CheckFightTerminated(fight)
         };
     }
 
     @Override
     public int id() {
         return 3;
+    }
+
+    /**
+     * Terminate the fight
+     */
+    public void terminate() {
+        if (fight.state() != this) {
+            return;
+        }
+
+        fight.dispatcher().unregister(this);
+        fight.stop();
+
+        fight.schedule(fight::nextState, Duration.ofMillis(1500));
     }
 }

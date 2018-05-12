@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.fight;
 
 import fr.quatrevieux.araknemu.core.event.*;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
+import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
@@ -10,6 +11,7 @@ import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurnList;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
+import org.apache.commons.lang3.time.StopWatch;
 
 import java.time.Duration;
 import java.util.List;
@@ -30,6 +32,8 @@ final public class Fight implements Dispatcher, Sender {
     final private FightTurnList turnList = new FightTurnList(this);
     final private EffectsHandler effects = new EffectsHandler(this);
 
+    final private StopWatch duration = new StopWatch();
+
     public Fight(FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow) {
         this.type = type;
         this.map = map;
@@ -42,7 +46,8 @@ final public class Fight implements Dispatcher, Sender {
             new NullState(),
             new InitialiseState(),
             new PlacementState(),
-            new ActiveState()
+            new ActiveState(),
+            new FinishState()
         ));
     }
 
@@ -90,6 +95,7 @@ final public class Fight implements Dispatcher, Sender {
     /**
      * Get the current fight state if the type corresponds
      */
+    @SuppressWarnings("unchecked")
     public <T extends FightState> T state(Class<T> type) {
         if (!type.isInstance(statesFlow.current())) {
             throw new InvalidFightStateException(type);
@@ -164,5 +170,47 @@ final public class Fight implements Dispatcher, Sender {
      */
     public ListenerAggregate dispatcher() {
         return dispatcher;
+    }
+
+    /**
+     * Start the fight
+     */
+    public void start() {
+        schedule(turnList::start, Duration.ofMillis(200));
+        dispatch(new FightStarted());
+
+        duration.start();
+    }
+
+    /**
+     * Stop the fight
+     */
+    public void stop() {
+        duration.stop();
+        turnList.stop();
+    }
+
+    /**
+     * Get the fight duration in milliseconds
+     */
+    public long duration() {
+        return duration.getTime();
+    }
+
+    /**
+     * Check if the fight is active
+     */
+    public boolean active() {
+        return duration.isStarted();
+    }
+
+    /**
+     * Destroy fight after terminated
+     */
+    public void destroy() {
+        executor.shutdown();
+
+        teams.clear();
+        map.destroy();
     }
 }

@@ -46,6 +46,9 @@ class AlternateTeamFighterOrderTest extends TestCase {
 
         @Override
         public void send(Object packet) {}
+
+        @Override
+        public boolean alive() { return true; }
     }
 
     class FighterStub implements Fighter {
@@ -55,6 +58,11 @@ class AlternateTeamFighterOrderTest extends TestCase {
         public FighterStub(int id, int init) {
             this.id = id;
             this.init = init;
+        }
+
+        @Override
+        public int level() {
+            return 0;
         }
 
         @Override

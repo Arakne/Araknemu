@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.fight.turn;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.event.NextTurnInitiated;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStarted;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
@@ -98,6 +99,7 @@ class FightTurnListTest extends FightBaseCase {
         assertSame(other.fighter(), turnList.current().get().fighter());
         assertSame(other.fighter().turn(), turnList.current().get());
         assertSame(other.fighter().turn(), ref1.get().turn());
+        assertSame(other.fighter(), turnList.currentFighter());
         assertNotNull(ref2.get());
     }
 
@@ -110,5 +112,35 @@ class FightTurnListTest extends FightBaseCase {
         turnList.next();
 
         assertSame(player.fighter(), turnList.current().get().fighter());
+    }
+
+    @Test
+    void nextWillSkipDeadFighter() {
+        fight.fighters().forEach(Fighter::init);
+        turnList.init(new AlternateTeamFighterOrder());
+        turnList.start();
+
+        other.fighter().life().alter(other.fighter(), -1000);
+        assertTrue(other.fighter().dead());
+
+        turnList.next();
+        assertSame(player.fighter(), turnList.current().get().fighter());
+        assertSame(player.fighter(), turnList.currentFighter());
+    }
+
+    @Test
+    void stop() {
+        turnList.init(new AlternateTeamFighterOrder());
+        turnList.start();
+
+        turnList.stop();
+
+        assertFalse(turnList.current().isPresent());
+        assertSame(player.fighter(), turnList.currentFighter());
+    }
+
+    @Test
+    void stopNotActive() {
+        turnList.stop();
     }
 }

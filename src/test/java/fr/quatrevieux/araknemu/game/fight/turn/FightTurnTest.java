@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.fight.turn;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.TurnActionsFactory;
@@ -28,7 +29,9 @@ class FightTurnTest extends FightBaseCase {
         super.setUp();
 
         fight = createFight();
+        fight.fighters().forEach(Fighter::init);
         fight.turnList().init(teams -> Arrays.asList(player.fighter(), other.fighter()));
+        fight.turnList().start();
         turn = new FightTurn(player.fighter(), fight, Duration.ofMillis(50));
     }
 
@@ -119,6 +122,19 @@ class FightTurnTest extends FightBaseCase {
         turn.perform(action);
 
         Mockito.verify(action).start();
+    }
+
+    @Test
+    void performDead() {
+        turn.start();
+
+        turn.fighter().life().alter(turn.fighter(), -1000);
+        assertTrue(turn.fighter().dead());
+
+        Action action = Mockito.mock(Action.class);
+        Mockito.when(action.validate()).thenReturn(false);
+
+        assertThrows(FightException.class, () -> turn.perform(action));
     }
 
     @Test

@@ -12,6 +12,7 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,15 +37,16 @@ public class FightBaseCase extends GameBaseCase {
             container.get(FightService.class).map(
                 container.get(ExplorationMapService.class).load(10340)
             ),
-            Arrays.asList(
+            new ArrayList<>(Arrays.asList(
                 createTeam0(),
                 createTeam1()
-            ),
+            )),
             new StatesFlow(
                 new NullState(),
                 new InitialiseState(false),
                 new PlacementState(),
-                new ActiveState()
+                new ActiveState(),
+                new FinishState()
             )
         );
 

@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.fight;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
+import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
@@ -10,14 +11,17 @@ import fr.quatrevieux.araknemu.game.fight.state.NullState;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,10 +42,10 @@ class FightTest extends GameBaseCase {
         fight = new Fight(
             new ChallengeType(),
             map = container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
-            teams = Arrays.asList(
+            teams = new ArrayList<>(Arrays.asList(
                 new SimpleTeam(fighter1 = new PlayerFighter(gamePlayer(true)), Arrays.asList(123), 0),
                 new SimpleTeam(fighter2 = new PlayerFighter(makeOtherPlayer()), Arrays.asList(321), 1)
-            )
+            ))
         );
     }
 
@@ -53,6 +57,7 @@ class FightTest extends GameBaseCase {
         assertEquals(teams, fight.teams());
         assertInstanceOf(ChallengeType.class, fight.type());
         assertInstanceOf(EffectsHandler.class, fight.effects());
+        assertFalse(fight.active());
     }
 
     @Test
@@ -112,5 +117,35 @@ class FightTest extends GameBaseCase {
 
         Thread.sleep(11);
         assertTrue(ab.get());
+    }
+
+    @Test
+    void destroy() {
+        fight.destroy();
+
+        assertCount(0, fight.teams());
+        assertEquals(0, fight.map().size());
+    }
+
+    @Test
+    void startStop() throws InterruptedException {
+        AtomicReference<FightStarted> ref = new AtomicReference<>();
+
+        fight.dispatcher().add(FightStarted.class, ref::set);
+        fight.turnList().init(new AlternateTeamFighterOrder());
+
+        fight.start();
+        assertTrue(fight.active());
+        assertNotNull(ref.get());
+
+        Thread.sleep(205);
+
+        assertTrue(fight.turnList().current().isPresent());
+
+        fight.stop();
+        assertFalse(fight.active());
+        assertFalse(fight.turnList().current().isPresent());
+
+        assertBetween(205, 220, (int) fight.duration());
     }
 }

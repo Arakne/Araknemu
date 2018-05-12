@@ -7,7 +7,9 @@ import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
+import fr.quatrevieux.araknemu.game.listener.fight.CheckFightTerminated;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightStarted;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.RemoveDeadFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterDie;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterLifeChanged;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.*;
@@ -22,6 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ActiveStateTest extends GameBaseCase {
@@ -66,8 +69,10 @@ class ActiveStateTest extends GameBaseCase {
         assertTrue(fight.dispatcher().has(SendFightActionTerminated.class));
         assertTrue(fight.dispatcher().has(SendUsedMovementPoints.class));
         assertTrue(fight.dispatcher().has(SendUsedActionPoints.class));
-        assertTrue(fight.dispatcher().has(SendFighterDie.class));
         assertTrue(fight.dispatcher().has(SendFighterLifeChanged.class));
+        assertTrue(fight.dispatcher().has(SendFighterDie.class));
+        assertTrue(fight.dispatcher().has(RemoveDeadFighter.class));
+        assertTrue(fight.dispatcher().has(CheckFightTerminated.class));
 
         Thread.sleep(210); // Wait for start turn
 
@@ -79,5 +84,33 @@ class ActiveStateTest extends GameBaseCase {
             new TurnMiddle(fight.fighters()),
             new StartTurn(fight.turnList().current().get())
         );
+    }
+
+    @Test
+    void terminateSuccess() {
+        fight.nextState();
+        state.terminate();
+
+        assertFalse(fight.dispatcher().has(SendFightStarted.class));
+        assertFalse(fight.dispatcher().has(SendFightersInformation.class));
+        assertFalse(fight.dispatcher().has(SendFightTurnStarted.class));
+        assertFalse(fight.dispatcher().has(SendFightTurnStopped.class));
+        assertFalse(fight.dispatcher().has(SendFightAction.class));
+        assertFalse(fight.dispatcher().has(SendFightActionTerminated.class));
+        assertFalse(fight.dispatcher().has(SendUsedMovementPoints.class));
+        assertFalse(fight.dispatcher().has(SendUsedActionPoints.class));
+        assertFalse(fight.dispatcher().has(SendFighterLifeChanged.class));
+        assertFalse(fight.dispatcher().has(SendFighterDie.class));
+        assertFalse(fight.dispatcher().has(RemoveDeadFighter.class));
+        assertFalse(fight.dispatcher().has(CheckFightTerminated.class));
+
+        assertFalse(fight.turnList().current().isPresent());
+        assertFalse(fight.active());
+    }
+
+    @Test
+    void terminateBadState() {
+        state.start(fight);
+        state.terminate();
     }
 }

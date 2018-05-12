@@ -153,6 +153,21 @@ class GamePlayerTest extends GameBaseCase {
     }
 
     @Test
+    void stopFighting() {
+        PlayerFighter fighter = new PlayerFighter(player);
+        player.attachFighter(fighter);
+        player.stopFighting();
+
+        assertNull(session.fighter());
+        assertFalse(player.isFighting());
+    }
+
+    @Test
+    void stopFightingNotInFight() {
+        assertThrows(IllegalStateException.class, () -> player.stopFighting());
+    }
+
+    @Test
     void save() throws ContainerException {
         player.setPosition(
             new Position(7894, 12)

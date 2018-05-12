@@ -16,6 +16,7 @@ import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.ApplyEndFightReward;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -102,6 +103,7 @@ class PlayerFighterTest extends GameBaseCase {
     @Test
     void dispatcher() {
         assertTrue(fighter.dispatcher().has(SendFightJoined.class));
+        assertTrue(fighter.dispatcher().has(ApplyEndFightReward.class));
     }
 
     @Test

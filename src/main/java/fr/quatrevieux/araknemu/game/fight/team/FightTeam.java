@@ -30,4 +30,9 @@ public interface FightTeam extends Sender {
      */
     @Override
     public void send(Object packet);
+
+    /**
+     * Check if there is at least one alive fighter in the team
+     */
+    public boolean alive();
 }

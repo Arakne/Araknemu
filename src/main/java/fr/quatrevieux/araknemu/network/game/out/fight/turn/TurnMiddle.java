@@ -24,11 +24,10 @@ final public class TurnMiddle {
         for(Fighter fighter : fighters){
             sb.append('|').append(fighter.id()).append(';');
 
-            // @todo fighter dead
-//            if(fighter.dead()){
-//                sb.append(1);
-//                continue;
-//            }
+            if(fighter.dead()){
+                sb.append(1);
+                continue;
+            }
 
             sb.append("0;").append(fighter.life().current()).append(';')
                 .append(fighter.characteristics().get(Characteristic.ACTION_POINT)).append(';')

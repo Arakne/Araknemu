@@ -6,10 +6,15 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 import fr.quatrevieux.araknemu.game.fight.builder.FightHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
+import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.DropReward;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.FightRewardsSheet;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.state.ActiveState;
+import fr.quatrevieux.araknemu.game.fight.state.FinishState;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
@@ -22,11 +27,8 @@ import fr.quatrevieux.araknemu.game.world.map.Direction;
 import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
 import fr.quatrevieux.araknemu.game.world.map.path.Path;
 import fr.quatrevieux.araknemu.game.world.map.path.PathStep;
-import fr.quatrevieux.araknemu.network.game.out.fight.BeginFight;
+import fr.quatrevieux.araknemu.network.game.out.fight.*;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
-import fr.quatrevieux.araknemu.network.game.out.fight.FighterReadyState;
-import fr.quatrevieux.araknemu.network.game.out.fight.JoinFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.FightAction;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
@@ -39,6 +41,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  *
@@ -250,6 +253,57 @@ public class FunctionalTest extends GameBaseCase {
             new FightAction(new CastFailed(player.fighter(), player.fighter().spells().get(3))),
             ActionEffect.usedActionPoints(player.fighter(), 5)
         );
+
+        nextTurn();
+
+        for (;;) {
+            nextTurn();
+            requestStack.clear();
+
+            cast(3, other.fighter().cell());
+            player.fighter().turn().terminate();
+
+            if (other.fighter().dead()) {
+                break;
+            }
+
+            nextTurn();
+        }
+
+        requestStack.assertLast(ActionEffect.fighterDie(player.fighter(), other.fighter()));
+
+        Fighter winner = player.fighter();
+        Fighter looser = other.fighter();
+
+        Thread.sleep(1550); // Wait for finish state
+
+        assertInstanceOf(FinishState.class, fight.state());
+        requestStack.assertLast(
+            new FightEnd(
+                new FightRewardsSheet(
+                    new EndFightResults(fight, Collections.singletonList(winner), Collections.singletonList(looser)),
+                    FightRewardsSheet.Type.NORMAL,
+                    Arrays.asList(
+                        new DropReward(RewardType.WINNER, winner),
+                        new DropReward(RewardType.LOOSER, looser)
+                    )
+                )
+            )
+        );
+
+        assertFalse(player.isFighting());
+        assertFalse(other.isFighting());
+    }
+
+    private void cast(int spellId, FightCell target) {
+        FightTurn currentTurn = fight.turnList().current().get();
+
+        currentTurn.perform(new Cast(
+            currentTurn,
+            currentTurn.fighter(),
+            currentTurn.fighter().spells().get(spellId),
+            target
+        ));
     }
 
     private void castNormal(int spellId, FightCell target) {

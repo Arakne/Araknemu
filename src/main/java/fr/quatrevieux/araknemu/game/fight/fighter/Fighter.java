@@ -7,7 +7,6 @@ import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
-import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 
 /**
  * Base fighter
@@ -53,6 +52,11 @@ public interface Fighter extends Dispatcher {
      * Get the fighter spells
      */
     public SpellList spells();
+
+    /**
+     * Get the fighter level
+     */
+    public int level();
 
     /**
      * Get the fighter team

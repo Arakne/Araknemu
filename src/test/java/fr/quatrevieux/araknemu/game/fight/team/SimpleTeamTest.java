@@ -1,6 +1,6 @@
 package fr.quatrevieux.araknemu.game.fight.team;
 
-import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,7 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SimpleTeamTest extends GameBaseCase {
+class SimpleTeamTest extends FightBaseCase {
     private SimpleTeam team;
     private PlayerFighter fighter;
 
@@ -37,5 +37,16 @@ class SimpleTeamTest extends GameBaseCase {
         team.send("test");
 
         requestStack.assertLast("test");
+    }
+
+    @Test
+    void alive() throws Exception {
+        assertTrue(team.alive());
+
+        fighter.init();
+        fighter.setFight(createFight());
+        fighter.life().alter(fighter, -1000);
+
+        assertFalse(team.alive());
     }
 }

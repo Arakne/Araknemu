@@ -46,6 +46,17 @@ final public class FightMap implements GameMap<FightCell> {
         return cells.size();
     }
 
+    /**
+     * Clear map data
+     */
+    public void destroy() {
+        for (FightCell cell : cells) {
+            cell.fighter().ifPresent(fighter -> cell.removeFighter());
+        }
+
+        cells.clear();
+    }
+
     private List<FightCell> makeCells(List<MapTemplate.Cell> template) {
         ArrayList<FightCell> cells = new ArrayList<>(template.size());
 

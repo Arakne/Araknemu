@@ -1,5 +1,8 @@
 package fr.quatrevieux.araknemu.game.fight.type;
 
+import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.ChallengeRewardsGenerator;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.RewardsGenerator;
+
 import java.time.Duration;
 
 /**
@@ -29,5 +32,10 @@ final public class ChallengeType implements FightType {
     @Override
     public Duration turnDuration() {
         return Duration.ofSeconds(30); // @todo configuration
+    }
+
+    @Override
+    public RewardsGenerator rewards() {
+        return new ChallengeRewardsGenerator();
     }
 }

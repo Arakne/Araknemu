@@ -28,11 +28,12 @@ class SendFightActionTerminatedTest extends FightBaseCase {
         listener = new SendFightActionTerminated();
 
         fight = createFight();
+        fight.nextState();
         requestStack.clear();
     }
 
     @Test
-    void onActionStarted() {
+    void onFightActionTerminated() {
         Move move = new Move(
             new FightTurn(player.fighter(), fight, Duration.ofSeconds(30)),
             player.fighter(),
@@ -50,5 +51,30 @@ class SendFightActionTerminatedTest extends FightBaseCase {
         listener.on(new FightActionTerminated(move));
 
         requestStack.assertAll(new FinishFightAction(move));
+    }
+
+    @Test
+    void onFightActionTerminatedWithDeadFighter() {
+        player.fighter().life().alter(player.fighter(), -1000);
+
+        Move move = new Move(
+            new FightTurn(player.fighter(), fight, Duration.ofSeconds(30)),
+            player.fighter(),
+            new Path<>(
+                new Decoder<>(fight.map()),
+                Arrays.asList(
+                    new PathStep<>(fight.map().get(185), Direction.EAST),
+                    new PathStep<>(fight.map().get(199), Direction.SOUTH_WEST),
+                    new PathStep<>(fight.map().get(213), Direction.SOUTH_WEST),
+                    new PathStep<>(fight.map().get(198), Direction.NORTH_WEST)
+                )
+            )
+        );
+
+        requestStack.clear();
+
+        listener.on(new FightActionTerminated(move));
+
+        requestStack.assertEmpty();
     }
 }

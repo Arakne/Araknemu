@@ -12,6 +12,7 @@ import fr.quatrevieux.araknemu.game.listener.fight.SendFightJoined;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.ApplyEndFightReward;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
@@ -40,6 +41,7 @@ final public class PlayerFighter implements Fighter, Sender {
         this.life = new PlayerFighterLife(player.life(), this);
 
         dispatcher.add(new SendFightJoined(this));
+        dispatcher.add(new ApplyEndFightReward(this));
     }
 
     @Override
@@ -97,6 +99,11 @@ final public class PlayerFighter implements Fighter, Sender {
     @Override
     public SpellList spells() {
         return player.spells();
+    }
+
+    @Override
+    public int level() {
+        return player.experience().level();
     }
 
     @Override

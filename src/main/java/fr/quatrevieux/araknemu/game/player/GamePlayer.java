@@ -163,6 +163,17 @@ final public class GamePlayer implements Dispatcher, PlayerData, Sender {
     }
 
     /**
+     * Remove the attached fighter
+     */
+    public void stopFighting() {
+        if (!isFighting()) {
+            throw new IllegalStateException("The current player is not in fight");
+        }
+
+        session.setFighter(null);
+    }
+
+    /**
      * Get the attached fighter
      */
     public PlayerFighter fighter() {

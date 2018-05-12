@@ -1,5 +1,7 @@
 package fr.quatrevieux.araknemu.game.fight.type;
 
+import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.RewardsGenerator;
+
 import java.time.Duration;
 
 /**
@@ -35,4 +37,9 @@ public interface FightType {
      * Get the maximum duration of a turn
      */
     public Duration turnDuration();
+
+    /**
+     * Get the rewards generator
+     */
+    public RewardsGenerator rewards();
 }
