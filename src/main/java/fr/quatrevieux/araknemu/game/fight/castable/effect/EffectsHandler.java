@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.StealLifeHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.TeleportHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -22,6 +23,8 @@ final public class EffectsHandler {
 
     public EffectsHandler(Fight fight) {
         this.fight = fight;
+
+        register(4, new TeleportHandler(fight));
 
         register(91, new StealLifeHandler(Element.WATER));
         register(92, new StealLifeHandler(Element.EARTH));

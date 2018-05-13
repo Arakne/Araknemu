@@ -66,13 +66,16 @@ final public class ActionHandler {
         future.cancel(false);
 
         Action action = current;
-        action.end();
 
-        current = null;
-        fight.dispatch(new FightActionTerminated(action));
+        try {
+            action.end();
+        } finally {
+            current = null;
+            fight.dispatch(new FightActionTerminated(action));
 
-        termination.forEach(Runnable::run);
-        termination.clear();
+            termination.forEach(Runnable::run);
+            termination.clear();
+        }
     }
 
     /**

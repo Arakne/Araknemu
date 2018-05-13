@@ -222,6 +222,28 @@ class ActionHandlerTest extends FightBaseCase {
     }
 
     @Test
+    void terminateWithException() {
+        Action action = Mockito.mock(Action.class);
+        ActionResult result = Mockito.mock(ActionResult.class);
+
+        Mockito.when(action.validate()).thenReturn(true);
+        Mockito.when(action.start()).thenReturn(result);
+        Mockito.when(action.duration()).thenReturn(Duration.ofMillis(10));
+        Mockito.doThrow(new RuntimeException()).when(action).end();
+
+        Mockito.when(result.success()).thenReturn(true);
+
+        actionHandler.start(action);
+
+        AtomicBoolean b = new AtomicBoolean();
+        actionHandler.terminated(() -> b.set(true));
+
+        assertThrows(Exception.class, () -> actionHandler.terminate());
+
+        assertTrue(b.get());
+    }
+
+    @Test
     void terminateWithTerminationListenerWillRemoveOldListeners() {
         Action action = Mockito.mock(Action.class);
         ActionResult result = Mockito.mock(ActionResult.class);

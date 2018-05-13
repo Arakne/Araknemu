@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.network.game.out.fight.action;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -69,6 +70,23 @@ class ActionEffectTest {
         assertEquals(
             "GA;103;123;321",
             ActionEffect.fighterDie(caster, fighter).toString()
+        );
+    }
+
+    @Test
+    void teleport() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Mockito.when(caster.id()).thenReturn(123);
+
+        Fighter fighter = Mockito.mock(Fighter.class);
+        Mockito.when(fighter.id()).thenReturn(321);
+
+        FightCell target = Mockito.mock(FightCell.class);
+        Mockito.when(target.id()).thenReturn(456);
+
+        assertEquals(
+            "GA;4;123;321,456",
+            ActionEffect.teleport(caster, fighter, target).toString()
         );
     }
 }

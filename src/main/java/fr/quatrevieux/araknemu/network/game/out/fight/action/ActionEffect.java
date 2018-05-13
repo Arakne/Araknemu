@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.network.game.out.fight.action;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.apache.commons.lang3.StringUtils;
 
@@ -72,5 +73,16 @@ final public class ActionEffect {
      */
     static public ActionEffect fighterDie(Fighter caster, Fighter fighter) {
         return new ActionEffect(103, caster, fighter.id());
+    }
+
+    /**
+     * Teleport a fighter
+     *
+     * @param caster The spell caster
+     * @param fighter The teleport fighter
+     * @param target The target cell
+     */
+    static public ActionEffect teleport(Fighter caster, Fighter fighter, FightCell target) {
+        return new ActionEffect(4, caster, fighter.id(), target.id());
     }
 }

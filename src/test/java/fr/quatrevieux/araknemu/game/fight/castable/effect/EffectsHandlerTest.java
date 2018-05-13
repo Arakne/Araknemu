@@ -66,4 +66,17 @@ class EffectsHandlerTest extends FightBaseCase {
             ActionEffect.alterLifePoints(player.fighter(), player.fighter(), 7)
         );
     }
+
+    @Test
+    void applyTeleport() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.effect()).thenReturn(4);
+        requestStack.clear();
+
+        handler.apply(player.fighter(), Mockito.mock(Spell.class), effect, fight.map().get(123));
+
+        requestStack.assertLast(ActionEffect.teleport(player.fighter(), player.fighter(), fight.map().get(123)));
+        assertEquals(123, player.fighter().cell().id());
+    }
 }
