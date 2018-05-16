@@ -60,6 +60,7 @@ import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
 import fr.quatrevieux.araknemu.network.adapter.Server;
 import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
 import fr.quatrevieux.araknemu.network.adapter.netty.NettyServer;
@@ -378,8 +379,14 @@ final public class GameModule implements ContainerModule {
         configurator.persist(
             SpellService.class,
             container -> new SpellService(
-                container.get(SpellTemplateRepository.class)
+                container.get(SpellTemplateRepository.class),
+                container.get(SpellEffectService.class)
             )
+        );
+
+        configurator.persist(
+            SpellEffectService.class,
+            container -> new SpellEffectService()
         );
 
         configurator.persist(

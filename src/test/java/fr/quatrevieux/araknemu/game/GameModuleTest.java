@@ -36,6 +36,7 @@ import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
 import fr.quatrevieux.araknemu.network.adapter.Server;
 import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
 import fr.quatrevieux.araknemu.network.adapter.netty.NettyServer;
@@ -90,6 +91,7 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(CellLoaderAggregate.class, container.get(CellLoader.class));
         assertInstanceOf(MapTriggerService.class, container.get(MapTriggerService.class));
         assertInstanceOf(ActionFactoryRegistry.class, container.get(CellActionFactory.class));
+        assertInstanceOf(SpellEffectService.class, container.get(SpellEffectService.class));
 
         assertSame(
             container.get(ListenerAggregate.class),

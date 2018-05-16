@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.spell;
 
 import fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,7 +21,8 @@ class SpellServiceTest extends GameBaseCase {
         dataSet.pushSpells();
 
         service = new SpellService(
-            container.get(SpellTemplateRepository.class)
+            container.get(SpellTemplateRepository.class),
+            container.get(SpellEffectService.class)
         );
     }
 

@@ -32,6 +32,10 @@ final public class EffectArea {
             this.c = c;
         }
 
+        public char c() {
+            return c;
+        }
+
         /**
          * Get the effect area type by char id
          */
@@ -58,5 +62,10 @@ final public class EffectArea {
 
     public int size() {
         return size;
+    }
+
+    @Override
+    public String toString() {
+        return type.name() + "(" + size + ")";
     }
 }

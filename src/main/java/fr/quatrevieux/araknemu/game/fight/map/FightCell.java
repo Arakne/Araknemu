@@ -9,15 +9,8 @@ import java.util.Optional;
  * Cell for a fight map
  */
 public interface FightCell extends MapCell {
-    /**
-     * Get the cell number
-     */
-    public int id();
-
-    /**
-     * Check if the cell is walkable
-     */
-    public boolean walkable();
+    @Override
+    public FightMap map();
 
     /**
      * Check if the cell is walkable, ignoring current fighter

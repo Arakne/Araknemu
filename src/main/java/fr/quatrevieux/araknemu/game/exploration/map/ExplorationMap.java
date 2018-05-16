@@ -71,7 +71,7 @@ final public class ExplorationMap implements GameMap<ExplorationMapCell>, Dispat
             return cells.get(id);
         }
 
-        return new BasicCell(id, template.cells().get(id));
+        return new BasicCell(id, template.cells().get(id), this);
     }
 
     /**

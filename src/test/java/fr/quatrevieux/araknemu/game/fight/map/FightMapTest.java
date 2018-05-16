@@ -32,6 +32,7 @@ class FightMapTest extends GameBaseCase {
         assertTrue(cell.walkable());
         assertFalse(cell.sightBlocking());
         assertEquals(123, cell.id());
+        assertSame(map, cell.map());
     }
 
     @Test
@@ -43,6 +44,7 @@ class FightMapTest extends GameBaseCase {
         assertFalse(cell.walkable());
         assertFalse(cell.sightBlocking());
         assertEquals(1, cell.id());
+        assertSame(map, cell.map());
     }
 
     @Test

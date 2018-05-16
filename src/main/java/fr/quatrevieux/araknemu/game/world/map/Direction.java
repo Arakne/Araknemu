@@ -36,6 +36,13 @@ public enum Direction {
     }
 
     /**
+     * Get the orthogonal direction
+     */
+    public Direction orthogonal() {
+        return Direction.values()[(ordinal() + 2) % 8];
+    }
+
+    /**
      * Does the direction is restricted
      *
      * A restricted direction can be used in fight, or by monsters's sprites

@@ -180,5 +180,6 @@ class ExplorationMapTest extends GameBaseCase {
         assertNotSame(map.get(456), map.get(456));
         assertEquals(map.get(456), map.get(456));
         assertEquals(456, map.get(456).id());
+        assertSame(map, map.get(456).map());
     }
 }

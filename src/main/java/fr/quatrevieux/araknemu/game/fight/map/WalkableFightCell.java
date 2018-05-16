@@ -10,12 +10,14 @@ import java.util.Optional;
  * Base fight cell
  */
 final public class WalkableFightCell implements FightCell {
+    final private FightMap map;
     final private MapTemplate.Cell template;
     final private int id;
 
     private Fighter fighter;
 
-    public WalkableFightCell(MapTemplate.Cell template, int id) {
+    public WalkableFightCell(FightMap map, MapTemplate.Cell template, int id) {
+        this.map = map;
         this.template = template;
         this.id = id;
     }
@@ -23,6 +25,11 @@ final public class WalkableFightCell implements FightCell {
     @Override
     public int id() {
         return id;
+    }
+
+    @Override
+    public FightMap map() {
+        return map;
     }
 
     @Override
@@ -61,5 +68,10 @@ final public class WalkableFightCell implements FightCell {
         }
 
         this.fighter = null;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 }

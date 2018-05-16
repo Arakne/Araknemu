@@ -24,6 +24,14 @@ class DirectionTest {
     }
 
     @Test
+    void orthogonal() {
+        assertEquals(Direction.SOUTH, Direction.EAST.orthogonal());
+        assertEquals(Direction.WEST, Direction.SOUTH.orthogonal());
+        assertEquals(Direction.NORTH, Direction.WEST.orthogonal());
+        assertEquals(Direction.EAST, Direction.NORTH.orthogonal());
+    }
+
+    @Test
     void restricted() {
         assertFalse(Direction.WEST.restricted());
         assertFalse(Direction.NORTH.restricted());

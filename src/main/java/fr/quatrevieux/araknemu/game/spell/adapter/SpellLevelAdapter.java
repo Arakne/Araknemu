@@ -1,13 +1,10 @@
 package fr.quatrevieux.araknemu.game.spell.adapter;
 
-import fr.quatrevieux.araknemu.data.value.SpellTemplateEffect;
 import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
-import fr.quatrevieux.araknemu.game.spell.effect.SpellTemplateEffectAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,19 +14,17 @@ final public class SpellLevelAdapter implements Spell {
     final private int level;
     final private SpellTemplate template;
     final private SpellTemplate.Level data;
-
-    final private SpellLevelConstraintAdapter constraints;
     final private List<SpellEffect> effects;
     final private List<SpellEffect> criticalEffects;
+    final private SpellLevelConstraintAdapter constraints;
 
-    public SpellLevelAdapter(int level, SpellTemplate template, SpellTemplate.Level data) {
+    public SpellLevelAdapter(int level, SpellTemplate template, SpellTemplate.Level data, List<SpellEffect> effects, List<SpellEffect> criticalEffects) {
         this.level = level;
         this.template = template;
         this.data = data;
-
-        constraints = new SpellLevelConstraintAdapter(data);
-        effects = makeEffects(data.effects(), 0);
-        criticalEffects = makeEffects(data.criticalEffects(), data.effects().size());
+        this.effects = effects;
+        this.criticalEffects = criticalEffects;
+        this.constraints = new SpellLevelConstraintAdapter(data);
     }
 
     @Override
@@ -95,23 +90,5 @@ final public class SpellLevelAdapter implements Spell {
     @Override
     public SpellConstraints constraints() {
         return constraints;
-    }
-
-    private List<SpellEffect> makeEffects(List<SpellTemplateEffect> templateEffects, int areaIndexStart) {
-        List<SpellEffect> effects = new ArrayList<>(templateEffects.size());
-
-        for (int i = 0; i < templateEffects.size(); ++i) {
-            effects.add(
-                new SpellTemplateEffectAdapter(
-                    templateEffects.get(i),
-                    data.effectAreas().get(i + areaIndexStart),
-                    template.targets().length > i
-                        ? template.targets()[i]
-                        : 0
-                )
-            );
-        }
-
-        return effects;
     }
 }

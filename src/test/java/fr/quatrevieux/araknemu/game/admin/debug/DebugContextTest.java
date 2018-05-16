@@ -24,10 +24,12 @@ class DebugContextTest extends GameBaseCase {
         assertInstanceOf(FightPos.class, context.command("fightpos"));
         assertInstanceOf(MapStats.class, context.command("mapstats"));
         assertInstanceOf(Movement.class, context.command("movement"));
+        assertInstanceOf(Area.class, context.command("area"));
 
         assertContainsType(GenItem.class, context.commands());
         assertContainsType(FightPos.class, context.commands());
         assertContainsType(MapStats.class, context.commands());
         assertContainsType(Movement.class, context.commands());
+        assertContainsType(Area.class, context.commands());
     }
 }

@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UnwalkableFightCellTest extends GameBaseCase {
     private MapTemplate mapTemplate;
+    private FightMap map;
 
     @Override
     @BeforeEach
@@ -24,37 +25,39 @@ class UnwalkableFightCellTest extends GameBaseCase {
         dataSet.pushMaps();
 
         mapTemplate = container.get(MapTemplateRepository.class).get(10340);
+        map = new FightMap(mapTemplate);
     }
 
     @Test
     void sightBlocking() {
-        UnwalkableFightCell cell = new UnwalkableFightCell(mapTemplate.cells().get(0), 0);
+        UnwalkableFightCell cell = new UnwalkableFightCell(map, mapTemplate.cells().get(0), 0);
         assertFalse(cell.sightBlocking());
 
-        cell = new UnwalkableFightCell(mapTemplate.cells().get(11), 11);
+        cell = new UnwalkableFightCell(map, mapTemplate.cells().get(11), 11);
         assertTrue(cell.sightBlocking());
     }
 
     @Test
     void getters() {
-        UnwalkableFightCell cell = new UnwalkableFightCell(mapTemplate.cells().get(0), 0);
+        UnwalkableFightCell cell = new UnwalkableFightCell(map, mapTemplate.cells().get(0), 0);
 
         assertEquals(0, cell.id());
         assertFalse(cell.walkable());
         assertFalse(cell.walkableIgnoreFighter());
         assertSame(Optional.empty(), cell.fighter());
+        assertSame(map, cell.map());
     }
 
     @Test
     void set() {
-        UnwalkableFightCell cell = new UnwalkableFightCell(mapTemplate.cells().get(0), 0);
+        UnwalkableFightCell cell = new UnwalkableFightCell(map, mapTemplate.cells().get(0), 0);
 
         assertThrows(FightMapException.class, () -> cell.set(Mockito.mock(Fighter.class)));
     }
 
     @Test
     void removeFighter() {
-        UnwalkableFightCell cell = new UnwalkableFightCell(mapTemplate.cells().get(0), 0);
+        UnwalkableFightCell cell = new UnwalkableFightCell(map, mapTemplate.cells().get(0), 0);
 
         assertThrows(FightMapException.class, () -> cell.removeFighter());
     }

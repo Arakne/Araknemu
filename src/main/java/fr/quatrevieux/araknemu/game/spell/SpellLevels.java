@@ -12,13 +12,11 @@ import java.util.NoSuchElementException;
  */
 final public class SpellLevels {
     final private SpellTemplate entity;
+    final private Spell[] levels;
 
-    final private List<Spell> levels = new ArrayList<>();
-
-    public SpellLevels(SpellTemplate entity) {
+    public SpellLevels(SpellTemplate entity, Spell[] levels) {
         this.entity = entity;
-
-        makeLevels();
+        this.levels = levels;
     }
 
     /**
@@ -41,29 +39,17 @@ final public class SpellLevels {
     public Spell level(int level) {
         --level;
 
-        if (level < 0 || level >= levels.size()) {
+        if (level < 0 || level >= levels.length) {
             throw new NoSuchElementException("Invalid spell level");
         }
 
-        return levels.get(level);
+        return levels[level];
     }
 
     /**
      * Get the maximum spell level
      */
     public int max() {
-        return levels.size();
-    }
-
-    private void makeLevels() {
-        for (int i = 0; i < entity.levels().length; ++i) {
-            SpellTemplate.Level level = entity.levels()[i];
-
-            if (level == null) {
-                break;
-            }
-
-            levels.add(new SpellLevelAdapter(i + 1, entity, level));
-        }
+        return levels.length;
     }
 }

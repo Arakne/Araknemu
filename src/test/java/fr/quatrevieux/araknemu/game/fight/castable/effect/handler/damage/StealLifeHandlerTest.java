@@ -1,12 +1,15 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
+import fr.quatrevieux.araknemu.game.spell.effect.area.CircleArea;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +35,7 @@ class StealLifeHandlerTest extends FightBaseCase {
 
         caster = player.fighter();
         target = other.fighter();
+        target.move(fight.map().get(123));
 
         caster.life().alter(caster, -50);
         baseLife = caster.life().current();
@@ -46,6 +50,7 @@ class StealLifeHandlerTest extends FightBaseCase {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
 
         Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
 
         handler.handle(caster, Mockito.mock(Spell.class), effect, target.cell());
 
@@ -63,6 +68,7 @@ class StealLifeHandlerTest extends FightBaseCase {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
 
         Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
 
         player.characteristics().base().set(Characteristic.AGILITY, 100);
 
@@ -77,6 +83,7 @@ class StealLifeHandlerTest extends FightBaseCase {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
 
         Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
 
         caster.life().alter(caster, 50);
         requestStack.clear();
@@ -94,6 +101,7 @@ class StealLifeHandlerTest extends FightBaseCase {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
 
         Mockito.when(effect.min()).thenReturn(0);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
 
         handler.handle(caster, Mockito.mock(Spell.class), effect, target.cell());
 
@@ -108,6 +116,7 @@ class StealLifeHandlerTest extends FightBaseCase {
         requestStack.clear();
 
         Mockito.when(effect.min()).thenReturn(20);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
 
         handler.handle(caster, Mockito.mock(Spell.class), effect, target.cell());
 
@@ -122,6 +131,7 @@ class StealLifeHandlerTest extends FightBaseCase {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
 
         Mockito.when(effect.min()).thenReturn(1);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
 
         handler.handle(caster, Mockito.mock(Spell.class), effect, target.cell());
 
@@ -135,11 +145,39 @@ class StealLifeHandlerTest extends FightBaseCase {
     void applyToEmptyCell() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
 
         handler.handle(caster, Mockito.mock(Spell.class), effect, fight.map().get(5));
 
         requestStack.assertEmpty();
 
         assertEquals(baseLife, caster.life().current());
+    }
+
+    @Test
+    void applyToEmptyCellWithArea() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 2)));
+
+        handler.handle(caster, Mockito.mock(Spell.class), effect, fight.map().get(122));
+
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, target, -10));
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, caster, 5));
+    }
+
+    @Test
+    void applyWithAreaMultipleFighters() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 25)));
+
+        handler.handle(caster, Mockito.mock(Spell.class), effect, fight.map().get(122));
+
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, target, -10));
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, caster, 5));
+
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, caster, -10));
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, caster, 5));
     }
 }

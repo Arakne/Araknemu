@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class WalkableFightCellTest extends GameBaseCase {
     private WalkableFightCell cell;
+    private FightMap map;
 
     @Override
     @BeforeEach
@@ -21,6 +22,7 @@ class WalkableFightCellTest extends GameBaseCase {
         dataSet.pushMaps();
 
         cell = new WalkableFightCell(
+            map = new FightMap(container.get(MapTemplateRepository.class).get(10340)),
             container.get(MapTemplateRepository.class).get(10340).cells().get(123),
             123
         );
@@ -33,6 +35,7 @@ class WalkableFightCellTest extends GameBaseCase {
         assertTrue(cell.walkableIgnoreFighter());
         assertFalse(cell.sightBlocking());
         assertFalse(cell.fighter().isPresent());
+        assertSame(map, cell.map());
     }
 
     @Test

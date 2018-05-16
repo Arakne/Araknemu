@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.game.admin.*;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
 
 import java.util.Collection;
 
@@ -45,6 +46,7 @@ final public class DebugContext implements Context {
             .add(new FightPos(container.get(MapTemplateRepository.class)))
             .add(new Movement(container.get(MapTemplateRepository.class)))
             .add(new MapStats(container.get(MapTemplateRepository.class)))
+            .add(new Area(container.get(SpellEffectService.class)))
         ;
     }
 }

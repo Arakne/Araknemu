@@ -8,6 +8,8 @@ import fr.quatrevieux.araknemu.game.spell.boost.SpellModifiers;
 import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
 import fr.quatrevieux.araknemu.game.spell.boost.spell.BoostedSpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellTemplateEffectAdapter;
+import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
+import fr.quatrevieux.araknemu.game.spell.effect.area.CircleArea;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +36,7 @@ class BoostedSpellEffectTest extends GameBaseCase {
         BoostedSpellEffect effect = new BoostedSpellEffect(
             new SpellTemplateEffectAdapter(
                 new SpellTemplateEffect(123, 5, 10, 0, 5, 25, "a"),
-                new EffectArea(EffectArea.Type.CELL, 1),
+                new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 1)),
                 1
             ),
             modifiers
@@ -51,7 +53,7 @@ class BoostedSpellEffectTest extends GameBaseCase {
         assertEquals(5, effect.duration());
         assertEquals(25, effect.probability());
         assertEquals("a", effect.text());
-        assertEquals(EffectArea.Type.CELL, effect.area().type());
+        assertEquals(EffectArea.Type.CIRCLE, effect.area().type());
         assertEquals(1, effect.area().size());
         assertEquals(1, effect.target());
     }
@@ -61,7 +63,7 @@ class BoostedSpellEffectTest extends GameBaseCase {
         BoostedSpellEffect effect = new BoostedSpellEffect(
             new SpellTemplateEffectAdapter(
                 new SpellTemplateEffect(95, 5, 10, 0, 5, 25, "a"),
-                new EffectArea(EffectArea.Type.CELL, 1),
+                new CellArea(),
                 1
             ),
             modifiers
@@ -81,7 +83,7 @@ class BoostedSpellEffectTest extends GameBaseCase {
         BoostedSpellEffect effect = new BoostedSpellEffect(
             new SpellTemplateEffectAdapter(
                 new SpellTemplateEffect(95, 5, 0, 0, 5, 25, "a"),
-                new EffectArea(EffectArea.Type.CELL, 1),
+                new CellArea(),
                 1
             ),
             modifiers
@@ -101,7 +103,7 @@ class BoostedSpellEffectTest extends GameBaseCase {
         BoostedSpellEffect effect = new BoostedSpellEffect(
             new SpellTemplateEffectAdapter(
                 new SpellTemplateEffect(81, 5, 10, 0, 5, 25, "a"),
-                new EffectArea(EffectArea.Type.CELL, 1),
+                new CellArea(),
                 1
             ),
             modifiers
@@ -121,7 +123,7 @@ class BoostedSpellEffectTest extends GameBaseCase {
         BoostedSpellEffect effect = new BoostedSpellEffect(
             new SpellTemplateEffectAdapter(
                 new SpellTemplateEffect(108, 5, 0, 0, 5, 25, "a"),
-                new EffectArea(EffectArea.Type.CELL, 1),
+                new CellArea(),
                 1
             ),
             modifiers

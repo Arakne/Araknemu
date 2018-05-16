@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.exploration.map.cell;
 
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 
 /**
  * Simple cell type
@@ -8,10 +9,17 @@ import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 final public class BasicCell implements ExplorationMapCell {
     final private int id;
     final private MapTemplate.Cell template;
+    final private ExplorationMap map;
 
-    public BasicCell(int id, MapTemplate.Cell template) {
+    public BasicCell(int id, MapTemplate.Cell template, ExplorationMap map) {
         this.id = id;
         this.template = template;
+        this.map = map;
+    }
+
+    @Override
+    public ExplorationMap map() {
+        return map;
     }
 
     @Override

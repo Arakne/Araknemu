@@ -22,7 +22,7 @@ final public class TriggerLoader implements CellLoader {
     @Override
     public Collection<ExplorationMapCell> load(ExplorationMap map, List<MapTemplate.Cell> cells) {
         return service.forMap(map).stream()
-            .map(action -> new TriggerCell(action.cell(), action))
+            .map(action -> new TriggerCell(action.cell(), action, map))
             .collect(Collectors.toList())
         ;
     }

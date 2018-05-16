@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,6 +44,7 @@ class EffectsHandlerTest extends FightBaseCase {
 
         Mockito.when(effect.effect()).thenReturn(100);
         Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
 
         handler.apply(player.fighter(), Mockito.mock(Spell.class), effect, other.fighter().cell());
 
@@ -55,6 +57,7 @@ class EffectsHandlerTest extends FightBaseCase {
 
         Mockito.when(effect.effect()).thenReturn(95);
         Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
 
         player.fighter().life().alter(player.fighter(), -20);
         requestStack.clear();

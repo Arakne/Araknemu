@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -16,7 +17,7 @@ import java.util.function.Function;
  * When no effect, zero will be returned
  * When damage is transformed to heal, will return a positive value (50 => The target win 50 LP)
  */
-final public class DamageApplier implements Function<Fighter, Integer> {
+final public class DamageApplier implements Function<Fighter, Integer>, Consumer<Fighter> {
     final private Fighter caster;
     final private SpellEffect effect;
     final private Element element;
@@ -43,5 +44,10 @@ final public class DamageApplier implements Function<Fighter, Integer> {
         // @todo returned damage
 
         return target.life().alter(caster, -damage.value());
+    }
+
+    @Override
+    public void accept(Fighter fighter) {
+        apply(fighter);
     }
 }

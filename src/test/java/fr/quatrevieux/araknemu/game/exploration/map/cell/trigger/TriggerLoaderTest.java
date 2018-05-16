@@ -50,5 +50,7 @@ class TriggerLoaderTest extends GameBaseCase {
 
         assertEquals(123, cellsArray[0].id());
         assertEquals(456, cellsArray[1].id());
+
+        assertSame(mapService.load(10300), cellsArray[0].map());
     }
 }

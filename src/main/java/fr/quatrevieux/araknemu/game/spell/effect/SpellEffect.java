@@ -1,6 +1,6 @@
 package fr.quatrevieux.araknemu.game.spell.effect;
 
-import fr.quatrevieux.araknemu.data.value.EffectArea;
+import fr.quatrevieux.araknemu.game.spell.effect.area.SpellEffectArea;
 
 /**
  * Type effect for spells
@@ -58,7 +58,7 @@ public interface SpellEffect {
     /**
      * Get the effect area
      */
-    public EffectArea area();
+    public SpellEffectArea area();
 
     /**
      * Get the effect target

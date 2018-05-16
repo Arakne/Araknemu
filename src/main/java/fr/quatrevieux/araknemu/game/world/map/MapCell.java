@@ -15,6 +15,11 @@ public interface MapCell {
     public boolean walkable();
 
     /**
+     * Get the container map
+     */
+    public GameMap map();
+
+    /**
      * Check if two map cells are equals
      *
      * @param other cell to check

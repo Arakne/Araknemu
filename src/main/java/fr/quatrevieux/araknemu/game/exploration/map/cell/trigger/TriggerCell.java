@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.exploration.map.cell.trigger;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.CellAction;
 
@@ -10,10 +11,17 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.CellActi
 final public class TriggerCell implements ExplorationMapCell {
     final private int id;
     final private CellAction action;
+    final private ExplorationMap map;
 
-    public TriggerCell(int id, CellAction action) {
+    public TriggerCell(int id, CellAction action, ExplorationMap map) {
         this.id = id;
         this.action = action;
+        this.map = map;
+    }
+
+    @Override
+    public ExplorationMap map() {
+        return map;
     }
 
     @Override

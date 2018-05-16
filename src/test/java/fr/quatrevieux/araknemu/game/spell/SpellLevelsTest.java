@@ -23,7 +23,7 @@ class SpellLevelsTest extends GameBaseCase {
 
         dataSet.pushSpells();
 
-        levels = new SpellLevels(container.get(SpellTemplateRepository.class).get(202));
+        levels = container.get(SpellService.class).get(202);
     }
 
     @Test

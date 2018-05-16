@@ -64,9 +64,9 @@ final public class FightMap implements GameMap<FightCell> {
             MapTemplate.Cell cell = template.get(i);
 
             if (!cell.active() || cell.movement() < 2) {
-                cells.add(new UnwalkableFightCell(template.get(i), i));
+                cells.add(new UnwalkableFightCell(this, template.get(i), i));
             } else {
-                cells.add(new WalkableFightCell(template.get(i), i));
+                cells.add(new WalkableFightCell(this, template.get(i), i));
             }
         }
 

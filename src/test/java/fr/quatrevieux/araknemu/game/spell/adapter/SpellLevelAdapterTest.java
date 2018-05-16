@@ -1,16 +1,21 @@
 package fr.quatrevieux.araknemu.game.spell.adapter;
 
 import fr.quatrevieux.araknemu.data.value.EffectArea;
+import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellTemplateEffectAdapter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class SpellLevelAdapterTest extends GameBaseCase {
     private SpellTemplateRepository repository;
+    private SpellEffectService effectService;
 
     @Override
     @BeforeEach
@@ -20,11 +25,16 @@ class SpellLevelAdapterTest extends GameBaseCase {
         dataSet.pushSpells();
 
         repository = container.get(SpellTemplateRepository.class);
+        effectService = container.get(SpellEffectService.class);
     }
 
     @Test
     void getters() {
-        SpellLevelAdapter spell = new SpellLevelAdapter(1, repository.get(202), repository.get(202).levels()[0]);
+        SpellLevelAdapter spell = new SpellLevelAdapter(
+            1, repository.get(202), repository.get(202).levels()[0],
+            new ArrayList<>(),
+            new ArrayList<>()
+        );
 
         assertInstanceOf(SpellLevelAdapter.class, spell);
         assertEquals(202, spell.id());
@@ -54,7 +64,12 @@ class SpellLevelAdapterTest extends GameBaseCase {
 
     @Test
     void effectsWithTarget() {
-        SpellLevelAdapter spell = new SpellLevelAdapter(3, repository.get(6), repository.get(6).levels()[2]);
+        SpellTemplate template = repository.get(6);
+        SpellLevelAdapter spell = new SpellLevelAdapter(
+            3, template, template.levels()[2],
+            effectService.makeAll(template.levels()[2].effects(), template.levels()[2].effectAreas(), template.targets()),
+            effectService.makeAll(template.levels()[2].criticalEffects(), template.levels()[2].effectAreas().subList(1, 2), template.targets())
+        );
 
         assertCount(1, spell.effects());
         assertEquals(4, spell.effects().get(0).target());
@@ -65,7 +80,13 @@ class SpellLevelAdapterTest extends GameBaseCase {
 
     @Test
     void effectsMultiple() {
-        SpellLevelAdapter spell = new SpellLevelAdapter(3, repository.get(2), repository.get(2).levels()[2]);
+        SpellTemplate template = repository.get(2);
+
+        SpellLevelAdapter spell = new SpellLevelAdapter(
+            3, template, template.levels()[2],
+            effectService.makeAll(template.levels()[2].effects(), template.levels()[2].effectAreas(), template.targets()),
+            effectService.makeAll(template.levels()[2].criticalEffects(), template.levels()[2].effectAreas().subList(2, 4), template.targets())
+        );
 
         assertCount(2, spell.effects());
         assertContainsOnly(SpellTemplateEffectAdapter.class, spell.effects());

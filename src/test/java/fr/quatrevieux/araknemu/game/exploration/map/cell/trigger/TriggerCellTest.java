@@ -23,24 +23,29 @@ class TriggerCellTest extends GameBaseCase {
         super.setUp();
 
         dataSet.pushMaps();
-        cell = new TriggerCell(123, new Teleport(
-            container.get(ExplorationMapService.class),
+        cell = new TriggerCell(
             123,
-            new Position(10340, 321)
-        ));
+            new Teleport(
+                container.get(ExplorationMapService.class),
+                123,
+                new Position(10340, 321)
+            ),
+            container.get(ExplorationMapService.class).load(10300)
+        );
     }
 
     @Test
-    void values() {
+    void values() throws ContainerException {
         assertEquals(123, cell.id());
         assertTrue(cell.walkable());
+        assertSame(container.get(ExplorationMapService.class).load(10300), cell.map());
     }
 
     @Test
     void equals() {
         assertEquals(cell, cell);
         assertNotEquals(cell, new Object());
-        assertNotEquals(cell, new TriggerCell(321, null));
+        assertNotEquals(cell, new TriggerCell(321, null, null));
     }
 
     @Test

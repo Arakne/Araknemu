@@ -10,12 +10,19 @@ import java.util.Optional;
  * Non walkable fight cell
  */
 final public class UnwalkableFightCell implements FightCell {
+    final private FightMap map;
     final private MapTemplate.Cell template;
     final private int id;
 
-    public UnwalkableFightCell(MapTemplate.Cell template, int id) {
+    public UnwalkableFightCell(FightMap map, MapTemplate.Cell template, int id) {
+        this.map = map;
         this.template = template;
         this.id = id;
+    }
+
+    @Override
+    public FightMap map() {
+        return map;
     }
 
     @Override
@@ -51,5 +58,10 @@ final public class UnwalkableFightCell implements FightCell {
     @Override
     public void removeFighter() {
         throw new FightMapException("Cannot remove fighter on unwalkable cell");
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 }

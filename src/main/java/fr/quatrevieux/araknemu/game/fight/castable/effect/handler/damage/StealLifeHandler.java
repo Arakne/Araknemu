@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.TargetResolver;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -19,9 +20,10 @@ final public class StealLifeHandler implements EffectHandler {
 
     @Override
     public void handle(Fighter caster, Spell spell, SpellEffect effect, FightCell target) {
-        target.fighter()
+        new TargetResolver(caster, target)
+            .area(effect.area())
             .map(new DamageApplier(caster, effect, element))
-            .ifPresent(damage -> {
+            .forEach(damage -> {
                 if (damage >= 0) { // Heal or no effect
                     return;
                 }
