@@ -44,7 +44,8 @@ final public class CommonLoader implements Loader {
             new ExploringOrFightingSwitcher(
                 new EndGameAction(),
                 new EnsureFighting(new TerminateTurnAction())
-            )
+            ),
+            new SendQuickPong()
         };
     }
 }

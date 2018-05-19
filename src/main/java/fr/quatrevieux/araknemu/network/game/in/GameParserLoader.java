@@ -60,7 +60,8 @@ final public class GameParserLoader implements ParserLoader {
             new SpellUpgrade.Parser(),
             new FighterChangePlace.Parser(),
             new FighterReady.Parser(),
-            new TurnEnd.Parser()
+            new TurnEnd.Parser(),
+            new QuickPing.Parser()
         );
     }
 }
