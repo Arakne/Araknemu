@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-class RingAreaTest extends GameBaseCase {
+class CheckboardAreaTest extends GameBaseCase {
     private FightMap map;
 
     @Override
@@ -25,9 +25,9 @@ class RingAreaTest extends GameBaseCase {
 
     @Test
     void getters() {
-        RingArea area = new RingArea(new EffectArea(EffectArea.Type.RING, 2));
+        CheckboardArea area = new CheckboardArea(new EffectArea(EffectArea.Type.CHECKERBOARD, 2));
 
-        assertEquals(EffectArea.Type.RING, area.type());
+        assertEquals(EffectArea.Type.CHECKERBOARD, area.type());
         assertEquals(2, area.size());
     }
 
@@ -35,24 +35,37 @@ class RingAreaTest extends GameBaseCase {
     void resolveSize0() {
         assertEquals(
             Collections.singleton(map.get(123)),
-            new RingArea(new EffectArea(EffectArea.Type.RING, 0)).resolve(map.get(123), map.get(123))
+            new CheckboardArea(new EffectArea(EffectArea.Type.CHECKERBOARD, 0)).resolve(map.get(123), map.get(123))
         );
     }
 
     @Test
-    void resolve() {
+    void resolvePairSize() {
         assertCollectionEquals(
-            new RingArea(new EffectArea(EffectArea.Type.RING, 2)).resolve(map.get(123), map.get(137)),
+            new CheckboardArea(new EffectArea(EffectArea.Type.CHECKERBOARD, 2)).resolve(map.get(123), map.get(137)),
+
+            map.get(123),
 
             map.get(95),
             map.get(153),
             map.get(151),
             map.get(93),
-
             map.get(124),
             map.get(152),
             map.get(122),
             map.get(94)
+        );
+    }
+
+    @Test
+    void resolveImpairSize() {
+        assertCollectionEquals(
+            new CheckboardArea(new EffectArea(EffectArea.Type.CHECKERBOARD, 1)).resolve(map.get(123), map.get(137)),
+
+            map.get(109),
+            map.get(138),
+            map.get(137),
+            map.get(108)
         );
     }
 }

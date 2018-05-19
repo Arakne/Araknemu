@@ -24,6 +24,14 @@ class CircleAreaTest extends GameBaseCase {
     }
 
     @Test
+    void getters() {
+        CircleArea area = new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 2));
+
+        assertEquals(EffectArea.Type.CIRCLE, area.type());
+        assertEquals(2, area.size());
+    }
+
+    @Test
     void resolveSize0() {
         assertEquals(
             Collections.singleton(map.get(123)),

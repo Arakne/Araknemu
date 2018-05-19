@@ -24,6 +24,14 @@ class PerpendicularLineAreaTest extends GameBaseCase {
     }
 
     @Test
+    void getters() {
+        PerpendicularLineArea area = new PerpendicularLineArea(new EffectArea(EffectArea.Type.PERPENDICULAR_LINE, 2));
+
+        assertEquals(EffectArea.Type.PERPENDICULAR_LINE, area.type());
+        assertEquals(2, area.size());
+    }
+
+    @Test
     void resolveSize0() {
         assertEquals(
             Collections.singleton(map.get(123)),

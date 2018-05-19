@@ -24,6 +24,14 @@ class CrossAreaTest extends GameBaseCase {
     }
 
     @Test
+    void getters() {
+        CrossArea area = new CrossArea(new EffectArea(EffectArea.Type.CROSS, 2));
+
+        assertEquals(EffectArea.Type.CROSS, area.type());
+        assertEquals(2, area.size());
+    }
+
+    @Test
     void resolveSize0() {
         assertEquals(
             Collections.singleton(map.get(123)),

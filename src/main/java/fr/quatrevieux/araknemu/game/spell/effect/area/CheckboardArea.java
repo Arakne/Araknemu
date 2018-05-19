@@ -8,11 +8,13 @@ import java.util.Set;
 /**
  * Resolve ring area (circle border)
  */
-final public class RingArea implements SpellEffectArea {
+final public class CheckboardArea implements SpellEffectArea {
     final private CircularArea area;
 
-    public RingArea(EffectArea area) {
-        this.area = new CircularArea(area, distance -> distance == area.size());
+    public CheckboardArea(EffectArea area) {
+        final int mod = area.size() % 2;
+
+        this.area = new CircularArea(area, distance -> distance <= area.size() && distance % 2 == mod);
     }
 
     @Override

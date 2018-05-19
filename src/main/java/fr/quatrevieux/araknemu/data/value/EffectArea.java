@@ -15,7 +15,7 @@ final public class EffectArea {
         LINE('L'),
         CROSS('X'),
         PERPENDICULAR_LINE('T'),
-        RECTANGLE('R'),
+        RECTANGLE('R'), // Rectangle needs 2 sizes => cannot be used on spells
         RING('O');
 
         final private char c;

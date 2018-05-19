@@ -22,6 +22,7 @@ final public class SpellEffectService {
         areaFactories.put(EffectArea.Type.CROSS, CrossArea::new);
         areaFactories.put(EffectArea.Type.PERPENDICULAR_LINE, PerpendicularLineArea::new);
         areaFactories.put(EffectArea.Type.RING, RingArea::new);
+        areaFactories.put(EffectArea.Type.CHECKERBOARD, CheckboardArea::new);
     }
 
     public SpellEffectService(Map<EffectArea.Type, Function<EffectArea, SpellEffectArea>> areaFactories) {
@@ -63,9 +64,7 @@ final public class SpellEffectService {
      */
     public SpellEffectArea area(EffectArea area) {
         if (!areaFactories.containsKey(area.type())) {
-            //throw new NoSuchElementException("Effect area " + area + " not available");
-            // @todo exception
-            return areaFactories.get(EffectArea.Type.CELL).apply(area);
+            throw new NoSuchElementException("Effect area " + area + " not available");
         }
 
         return areaFactories.get(area.type()).apply(area);

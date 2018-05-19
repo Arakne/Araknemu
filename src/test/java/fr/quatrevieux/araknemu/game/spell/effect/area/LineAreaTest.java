@@ -24,6 +24,14 @@ class LineAreaTest extends GameBaseCase {
     }
 
     @Test
+    void getters() {
+        LineArea area = new LineArea(new EffectArea(EffectArea.Type.LINE, 2));
+
+        assertEquals(EffectArea.Type.LINE, area.type());
+        assertEquals(2, area.size());
+    }
+
+    @Test
     void resolveSize0() {
         assertEquals(
             Collections.singleton(map.get(123)),
