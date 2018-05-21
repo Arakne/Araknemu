@@ -2,14 +2,17 @@ package fr.quatrevieux.araknemu.game.fight;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.event.ExplorationPlayerCreated;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
+import fr.quatrevieux.araknemu.game.fight.event.FightCreated;
 import fr.quatrevieux.araknemu.game.listener.player.exploration.LeaveExplorationForFight;
 import fr.quatrevieux.araknemu.game.listener.player.fight.AttachFighter;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
@@ -18,11 +21,14 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FightServiceTest extends GameBaseCase {
+class FightServiceTest extends FightBaseCase {
     private FightService service;
+    private ListenerAggregate dispatcher;
 
     @Override
     @BeforeEach
@@ -33,6 +39,7 @@ class FightServiceTest extends GameBaseCase {
 
         service = new FightService(
             container.get(MapTemplateRepository.class),
+            dispatcher = new DefaultListenerAggregate(),
             Arrays.asList(
                 new ChallengeBuilderFactory()
             )
@@ -68,5 +75,69 @@ class FightServiceTest extends GameBaseCase {
         dispatcher.dispatch(new ExplorationPlayerCreated(player));
 
         assertTrue(player.dispatcher().has(LeaveExplorationForFight.class));
+    }
+
+    @Test
+    void newFightId() {
+        assertEquals(1, service.newFightId());
+        assertEquals(2, service.newFightId());
+    }
+
+    @Test
+    void created() throws Exception {
+        Fight fight = createFight(false);
+
+        AtomicReference<FightCreated> ref = new AtomicReference<>();
+        dispatcher.add(FightCreated.class, ref::set);
+
+        service.created(fight);
+
+        assertSame(fight, ref.get().fight());
+        assertSame(fight, service.getFromMap(10340, 1));
+        assertCollectionEquals(service.fightsByMap(10340), fight);
+    }
+
+    @Test
+    void remove() throws Exception {
+        Fight fight = createFight(false);
+
+        service.created(fight);
+        service.remove(fight);
+
+        assertCount(0, service.fightsByMap(10340));
+    }
+
+    @Test
+    void getFromMapInvalidMap() {
+        assertThrows(NoSuchElementException.class, () -> service.getFromMap(0, 0));
+    }
+
+    @Test
+    void getFromMapInvalidFightId() throws Exception {
+        Fight fight = createFight(false);
+
+        service.created(fight);
+
+        assertThrows(NoSuchElementException.class, () -> service.getFromMap(10340, 0));
+    }
+
+    @Test
+    void fightsByMapNoFights() {
+        assertCount(0, service.fightsByMap(10340));
+    }
+
+    @Test
+    void fightsByMap() throws ContainerException, SQLException {
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
+
+        Fight fight1 = createSimpleFight(map);
+        Fight fight2 = createSimpleFight(map);
+        Fight fight3 = createSimpleFight(map);
+
+        service.created(fight1);
+        service.created(fight2);
+        service.created(fight3);
+
+        assertCollectionEquals(service.fightsByMap(10340), fight1, fight2, fight3);
     }
 }

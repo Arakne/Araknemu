@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.fight.fighter;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
@@ -27,9 +28,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PlayerFighterTest extends GameBaseCase {
+class PlayerFighterTest extends FightBaseCase {
     private PlayerFighter fighter;
     private FightMap map;
+    private Fight fight;
 
     @Override
     @BeforeEach
@@ -38,6 +40,7 @@ class PlayerFighterTest extends GameBaseCase {
 
         dataSet.pushMaps();
 
+        fight = createFight();
         fighter = new PlayerFighter(
             gamePlayer(true)
         );
@@ -67,8 +70,6 @@ class PlayerFighterTest extends GameBaseCase {
 
     @Test
     void fight() {
-        Fight fight = new Fight(new ChallengeType(), map, new ArrayList<>());
-
         fighter.setFight(fight);
 
         assertSame(fight, fighter.fight());
@@ -108,7 +109,6 @@ class PlayerFighterTest extends GameBaseCase {
 
     @Test
     void setReady() {
-        Fight fight = new Fight(new ChallengeType(), map, new ArrayList<>());
         fighter.setFight(fight);
 
         AtomicReference<FighterReadyStateChanged> ref = new AtomicReference<>();
@@ -122,7 +122,6 @@ class PlayerFighterTest extends GameBaseCase {
 
     @Test
     void unsetReady() {
-        Fight fight = new Fight(new ChallengeType(), map, new ArrayList<>());
         fighter.setFight(fight);
         fighter.setReady(true);
 
@@ -142,7 +141,6 @@ class PlayerFighterTest extends GameBaseCase {
 
     @Test
     void playAndStop() {
-        Fight fight = new Fight(new ChallengeType(), map, new ArrayList<>());
         FightTurn turn = new FightTurn(fighter, fight, Duration.ZERO);
         turn.start();
 

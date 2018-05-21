@@ -10,7 +10,12 @@ import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.game.exploration.event.ExplorationPlayerCreated;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
+import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.event.FightCreated;
 import fr.quatrevieux.araknemu.game.listener.map.*;
+import fr.quatrevieux.araknemu.game.listener.map.fight.HideFightOnStart;
+import fr.quatrevieux.araknemu.game.listener.map.fight.SendCreatedFight;
+import fr.quatrevieux.araknemu.game.listener.map.fight.SendFightsCount;
 import fr.quatrevieux.araknemu.game.listener.player.SendMapData;
 import org.slf4j.Logger;
 
@@ -22,13 +27,15 @@ import java.util.concurrent.ConcurrentMap;
  */
 final public class ExplorationMapService implements PreloadableService, EventsSubscriber {
     final private MapTemplateRepository repository;
+    final private FightService fightService;
     final private Dispatcher dispatcher;
     final private CellLoader loader;
 
     final private ConcurrentMap<Integer, ExplorationMap> maps = new ConcurrentHashMap<>();
 
-    public ExplorationMapService(MapTemplateRepository repository, Dispatcher dispatcher, CellLoader loader) {
+    public ExplorationMapService(MapTemplateRepository repository, FightService fightService, Dispatcher dispatcher, CellLoader loader) {
         this.repository = repository;
+        this.fightService = fightService;
         this.dispatcher = dispatcher;
         this.loader = loader;
     }
@@ -70,7 +77,23 @@ final public class ExplorationMapService implements PreloadableService, EventsSu
                 public Class<ExplorationPlayerCreated> event() {
                     return ExplorationPlayerCreated.class;
                 }
-            }
+            },
+
+            new SendCreatedFight(this, fightService),
+            new Listener<FightCreated>() {
+                @Override
+                public void on(FightCreated event) {
+                    ExplorationMap map = load(event.fight().map().id());
+
+                    event.fight().dispatcher().add(new HideFightOnStart(map));
+                    event.fight().dispatcher().add(new SendFightsCount(map, fightService));
+                }
+
+                @Override
+                public Class<FightCreated> event() {
+                    return FightCreated.class;
+                }
+            },
         };
     }
 

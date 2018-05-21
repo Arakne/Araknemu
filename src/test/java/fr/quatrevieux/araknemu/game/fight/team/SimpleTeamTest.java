@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.game.fight.team;
 
+import fr.quatrevieux.araknemu.data.constant.Alignment;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +31,10 @@ class SimpleTeamTest extends FightBaseCase {
         assertEquals(Arrays.asList(fighter), team.fighters());
         assertEquals(Arrays.asList(123, 456), team.startPlaces());
         assertEquals(1, team.number());
+        assertEquals(1, team.id());
+        assertEquals(0, team.type());
+        assertEquals(Alignment.NONE, team.alignment());
+        assertEquals(player.position().cell(), team.cell());
     }
 
     @Test

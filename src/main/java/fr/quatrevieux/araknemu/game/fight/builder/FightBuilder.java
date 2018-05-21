@@ -9,5 +9,5 @@ public interface FightBuilder {
     /**
      * Create the fight
      */
-    public Fight build();
+    public Fight build(int fightId);
 }

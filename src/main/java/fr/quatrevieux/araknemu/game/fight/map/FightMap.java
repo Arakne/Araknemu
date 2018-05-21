@@ -20,6 +20,13 @@ final public class FightMap implements GameMap<FightCell> {
     }
 
     /**
+     * Get the map id
+     */
+    public int id() {
+        return template.id();
+    }
+
+    /**
      * Get a fight cell
      *
      * @param cellId The cell id

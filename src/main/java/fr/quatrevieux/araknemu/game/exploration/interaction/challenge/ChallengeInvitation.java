@@ -5,7 +5,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
-import fr.quatrevieux.araknemu.game.fight.builder.FightHandler;
+import fr.quatrevieux.araknemu.game.fight.FightHandler;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 
 import java.util.Arrays;

@@ -1,9 +1,11 @@
 package fr.quatrevieux.araknemu.game.fight;
 
+import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
+import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
@@ -40,6 +42,7 @@ class FightTest extends GameBaseCase {
         dataSet.pushMaps();
 
         fight = new Fight(
+            5,
             new ChallengeType(),
             map = container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
             teams = new ArrayList<>(Arrays.asList(
@@ -51,6 +54,7 @@ class FightTest extends GameBaseCase {
 
     @Test
     void getters() {
+        assertEquals(5, fight.id());
         assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters());
         assertSame(map, fight.map());
         assertInstanceOf(NullState.class, fight.state());
@@ -130,19 +134,45 @@ class FightTest extends GameBaseCase {
     @Test
     void startStop() throws InterruptedException {
         AtomicReference<FightStarted> ref = new AtomicReference<>();
+        AtomicReference<FightStopped> ref2 = new AtomicReference<>();
 
-        fight.dispatcher().add(FightStarted.class, ref::set);
+        fight.dispatcher().add(new Listener<FightStarted>() {
+            @Override
+            public void on(FightStarted event) {
+                ref.set(event);
+            }
+
+            @Override
+            public Class<FightStarted> event() {
+                return FightStarted.class;
+            }
+        });
+
+        fight.dispatcher().add(new Listener<FightStopped>() {
+            @Override
+            public void on(FightStopped event) {
+                ref2.set(event);
+            }
+
+            @Override
+            public Class<FightStopped> event() {
+                return FightStopped.class;
+            }
+        });
+
         fight.turnList().init(new AlternateTeamFighterOrder());
 
         fight.start();
         assertTrue(fight.active());
         assertNotNull(ref.get());
+        assertSame(fight, ref.get().fight());
 
         Thread.sleep(205);
 
         assertTrue(fight.turnList().current().isPresent());
 
         fight.stop();
+        assertSame(fight, ref2.get().fight());
         assertFalse(fight.active());
         assertFalse(fight.turnList().current().isPresent());
 

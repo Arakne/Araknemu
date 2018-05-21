@@ -36,7 +36,7 @@ class ChallengeBuilderTest extends GameBaseCase {
             .map(
                 container.get(ExplorationMapService.class).load(10340)
             )
-            .build()
+            .build(1)
         ;
 
         assertInstanceOf(ChallengeType.class, fight.type());
@@ -44,6 +44,7 @@ class ChallengeBuilderTest extends GameBaseCase {
         assertCount(2, fight.fighters());
         assertContainsOnly(SimpleTeam.class, fight.teams());
         assertContainsOnly(PlayerFighter.class, fight.fighters());
+        assertEquals(1, fight.id());
     }
 
     @Test
@@ -57,7 +58,7 @@ class ChallengeBuilderTest extends GameBaseCase {
         int nbTeam0 = 0;
 
         for (int i = 0; i < 100; ++i) {
-            Fight fight = builder.build();
+            Fight fight = builder.build(1);
 
             Fighter fighter = new ArrayList<>(fight.team(0).fighters()).get(0);
 

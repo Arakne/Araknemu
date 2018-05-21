@@ -25,6 +25,7 @@ class StatesFlowTest extends GameBaseCase {
         assertSame(s1, flow.current());
 
         Fight fight = new Fight(
+            1,
             new ChallengeType(),
             new FightMap(
                 new MapTemplate(0, "", new Dimensions(0, 0), "", new ArrayList<>(), new List[0])

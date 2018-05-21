@@ -28,8 +28,9 @@ final public class ChallengeBuilder implements FightBuilder {
     }
 
     @Override
-    public Fight build() {
+    public Fight build(int fightId) {
         return new Fight(
+            fightId,
             new ChallengeType(),
             map,
             buildTeams()

@@ -240,6 +240,7 @@ final public class GameModule implements ContainerModule {
             ExplorationMapService.class,
             container -> new ExplorationMapService(
                 container.get(MapTemplateRepository.class),
+                container.get(FightService.class),
                 container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class),
                 // Use proxy to fix circular reference between ExplorationMapService and MapTriggerService
                 (map, cells) -> {
@@ -418,6 +419,7 @@ final public class GameModule implements ContainerModule {
             FightService.class,
             container -> new FightService(
                 container.get(MapTemplateRepository.class),
+                container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class),
                 Arrays.asList(
                     new ChallengeBuilderFactory()
                 )

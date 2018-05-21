@@ -48,7 +48,7 @@ class SendFightStartedTest extends GameBaseCase {
 
     @Test
     void onFightStarted() {
-        listener.on(new FightStarted());
+        listener.on(new FightStarted(fight));
 
         requestStack.assertAll(
             new BeginFight(),

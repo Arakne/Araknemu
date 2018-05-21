@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.fight;
 import fr.quatrevieux.araknemu.core.event.*;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
+import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
  * Handle fight
  */
 final public class Fight implements Dispatcher, Sender {
+    final private int id;
     final private FightType type;
     final private FightMap map;
     final private List<FightTeam> teams;
@@ -34,21 +36,29 @@ final public class Fight implements Dispatcher, Sender {
 
     final private StopWatch duration = new StopWatch();
 
-    public Fight(FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow) {
+    public Fight(int id, FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow) {
+        this.id = id;
         this.type = type;
         this.map = map;
         this.teams = teams;
         this.statesFlow = statesFlow;
     }
 
-    public Fight(FightType type, FightMap map, List<FightTeam> teams) {
-        this(type, map, teams, new StatesFlow(
+    public Fight(int id, FightType type, FightMap map, List<FightTeam> teams) {
+        this(id, type, map, teams, new StatesFlow(
             new NullState(),
             new InitialiseState(),
             new PlacementState(),
             new ActiveState(),
             new FinishState()
         ));
+    }
+
+    /**
+     * Get the fight id
+     */
+    public int id() {
+        return id;
     }
 
     /**
@@ -177,7 +187,7 @@ final public class Fight implements Dispatcher, Sender {
      */
     public void start() {
         schedule(turnList::start, Duration.ofMillis(200));
-        dispatch(new FightStarted());
+        dispatch(new FightStarted(this));
 
         duration.start();
     }
@@ -188,6 +198,8 @@ final public class Fight implements Dispatcher, Sender {
     public void stop() {
         duration.stop();
         turnList.stop();
+
+        dispatch(new FightStopped(this));
     }
 
     /**

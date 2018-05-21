@@ -1,21 +1,14 @@
 package fr.quatrevieux.araknemu.game.listener.fight;
 
-import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
-import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.network.game.out.fight.FighterReadyState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
-class SendFighterReadyStateTest extends GameBaseCase {
+class SendFighterReadyStateTest extends FightBaseCase {
     private SendFighterReadyState listener;
     private PlayerFighter fighter;
 
@@ -27,16 +20,7 @@ class SendFighterReadyStateTest extends GameBaseCase {
         dataSet.pushMaps();
 
         fighter = new PlayerFighter(gamePlayer(true));
-        Fight fight = new Fight(
-            new ChallengeType(),
-            container.get(FightService.class).map(
-                container.get(ExplorationMapService.class).load(10340)
-            ),
-            Arrays.asList(
-                new SimpleTeam(fighter, new ArrayList<>(), 0),
-                new SimpleTeam(new PlayerFighter(makeOtherPlayer()), new ArrayList<>(), 1)
-            )
-        );
+        Fight fight = createFight();
 
         listener = new SendFighterReadyState(fight);
     }

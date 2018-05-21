@@ -1,19 +1,13 @@
 package fr.quatrevieux.araknemu.network.game.out.fight;
 
-import fr.quatrevieux.araknemu.core.di.ContainerException;
-import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.FightService;
-import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class JoinFightTest extends GameBaseCase {
+class JoinFightTest extends FightBaseCase {
     @Override
     @BeforeEach
     public void setUp() throws Exception {
@@ -23,16 +17,8 @@ class JoinFightTest extends GameBaseCase {
     }
 
     @Test
-    void generateForChallenge() throws ContainerException {
-        Fight fight = new Fight(
-            new ChallengeType(),
-            container.get(FightService.class).map(
-                container.get(ExplorationMapService.class).load(10340)
-            ),
-            new ArrayList<>()
-        );
-
-        fight.nextState();
+    void generateForChallenge() throws Exception {
+        Fight fight = createFight();
 
         assertEquals(
             "GJK2|1|1|0||0",

@@ -24,6 +24,11 @@ class FightMapTest extends GameBaseCase {
     }
 
     @Test
+    void getters() {
+        assertEquals(10340, map.id());
+    }
+
+    @Test
     void getWalkable() {
         FightCell cell = map.get(123);
 

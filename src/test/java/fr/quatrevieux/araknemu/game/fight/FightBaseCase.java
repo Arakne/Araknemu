@@ -2,7 +2,9 @@ package fr.quatrevieux.araknemu.game.fight;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.state.*;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
@@ -14,11 +16,12 @@ import org.junit.jupiter.api.BeforeEach;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class FightBaseCase extends GameBaseCase {
     protected GamePlayer player;
     protected GamePlayer other;
+
+    private int lastPlayerId = 5;
 
     @Override
     @BeforeEach
@@ -33,6 +36,7 @@ public class FightBaseCase extends GameBaseCase {
 
     public Fight createFight(boolean init) throws Exception {
         Fight fight = new Fight(
+            1,
             new ChallengeType(),
             container.get(FightService.class).map(
                 container.get(ExplorationMapService.class).load(10340)
@@ -75,5 +79,19 @@ public class FightBaseCase extends GameBaseCase {
             Arrays.asList(125, 126, 127),
             0
         );
+    }
+
+    public Fight createSimpleFight(ExplorationMap map) throws ContainerException, SQLException {
+        GamePlayer player1 = makeSimpleGamePlayer(++lastPlayerId);
+        GamePlayer player2 = makeSimpleGamePlayer(++lastPlayerId);
+
+        return container.get(FightService.class)
+            .handler(ChallengeBuilder.class)
+            .start(builder -> builder
+                .map(map)
+                .fighter(player1)
+                .fighter(player2)
+            )
+        ;
     }
 }

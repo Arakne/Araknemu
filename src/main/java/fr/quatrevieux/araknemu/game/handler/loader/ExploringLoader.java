@@ -2,7 +2,10 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.handler.EnsureExploring;
+import fr.quatrevieux.araknemu.game.handler.fight.ListFights;
+import fr.quatrevieux.araknemu.game.handler.fight.ShowFightDetails;
 import fr.quatrevieux.araknemu.game.handler.game.CancelGameAction;
 import fr.quatrevieux.araknemu.game.handler.game.LoadExtraInfo;
 import fr.quatrevieux.araknemu.game.handler.object.UseObject;
@@ -20,9 +23,11 @@ final public class ExploringLoader extends AbstractLoader {
     @Override
     public PacketHandler<GameSession, ?>[] handlers(Container container) throws ContainerException {
         return new PacketHandler[] {
-            new LoadExtraInfo(),
+            new LoadExtraInfo(container.get(FightService.class)),
             new CancelGameAction(),
-            new UseObject()
+            new UseObject(),
+            new ListFights(container.get(FightService.class)),
+            new ShowFightDetails(container.get(FightService.class))
         };
     }
 }

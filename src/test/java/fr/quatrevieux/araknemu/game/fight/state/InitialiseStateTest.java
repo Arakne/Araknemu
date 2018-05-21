@@ -26,6 +26,7 @@ class InitialiseStateTest extends GameBaseCase {
         dataSet.pushMaps();
 
         fight = new Fight(
+            1,
             new ChallengeType(),
             container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
             Arrays.asList(

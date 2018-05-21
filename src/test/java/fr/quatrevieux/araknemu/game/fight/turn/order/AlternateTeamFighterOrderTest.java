@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.fight.turn.order;
 
 import fr.quatrevieux.araknemu._test.TestCase;
+import fr.quatrevieux.araknemu.data.constant.Alignment;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -23,10 +24,30 @@ class AlternateTeamFighterOrderTest extends TestCase {
     private AlternateTeamFighterOrder strategy = new AlternateTeamFighterOrder();
 
     class TeamStub implements FightTeam {
-        final private Collection<Fighter> fighters;
+        final private List<Fighter> fighters;
 
-        public TeamStub(Collection<Fighter> fighters) {
+        public TeamStub(List<Fighter> fighters) {
             this.fighters = fighters;
+        }
+
+        @Override
+        public int id() {
+            return fighters.get(0).id();
+        }
+
+        @Override
+        public int cell() {
+            return 123;
+        }
+
+        @Override
+        public int type() {
+            return 0;
+        }
+
+        @Override
+        public Alignment alignment() {
+            return Alignment.NONE;
         }
 
         @Override

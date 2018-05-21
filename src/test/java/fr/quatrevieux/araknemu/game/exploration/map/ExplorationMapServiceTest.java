@@ -13,8 +13,17 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.TriggerCell;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.teleport.Teleport;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.event.FightCreated;
 import fr.quatrevieux.araknemu.game.listener.map.*;
+import fr.quatrevieux.araknemu.game.listener.map.fight.HideFightOnStart;
+import fr.quatrevieux.araknemu.game.listener.map.fight.SendFightsCount;
 import fr.quatrevieux.araknemu.game.listener.player.SendMapData;
+import fr.quatrevieux.araknemu.network.game.out.fight.exploration.AddTeamFighters;
+import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightsCount;
+import fr.quatrevieux.araknemu.network.game.out.fight.exploration.ShowFight;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -25,7 +34,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ExplorationMapServiceTest extends GameBaseCase {
+class ExplorationMapServiceTest extends FightBaseCase {
     private ExplorationMapService service;
     private ListenerAggregate dispatcher;
 
@@ -36,6 +45,7 @@ class ExplorationMapServiceTest extends GameBaseCase {
 
         service = new ExplorationMapService(
             container.get(MapTemplateRepository.class),
+            container.get(FightService.class),
             dispatcher = new DefaultListenerAggregate(),
             container.get(CellLoader.class)
         );
@@ -78,6 +88,30 @@ class ExplorationMapServiceTest extends GameBaseCase {
         dispatcher.dispatch(new ExplorationPlayerCreated(player));
 
         assertTrue(player.dispatcher().has(SendMapData.class));
+    }
+
+    @Test
+    void fightListeners() throws Exception {
+        ExplorationMap map = service.load(10340);
+        explorationPlayer().join(map);
+
+        ListenerAggregate dispatcher = new DefaultListenerAggregate();
+        dispatcher.register(service);
+
+        Fight fight = createSimpleFight(map);
+        requestStack.clear();
+
+        dispatcher.dispatch(new FightCreated(fight));
+
+        assertTrue(fight.dispatcher().has(HideFightOnStart.class));
+        assertTrue(fight.dispatcher().has(SendFightsCount.class));
+
+        requestStack.assertAll(
+            new ShowFight(fight),
+            new AddTeamFighters(fight.team(0)),
+            new AddTeamFighters(fight.team(1)),
+            new FightsCount(1)
+        );
     }
 
     @Test

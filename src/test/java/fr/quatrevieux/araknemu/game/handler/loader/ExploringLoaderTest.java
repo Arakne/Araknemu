@@ -2,6 +2,8 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.handler.EnsureExploring;
+import fr.quatrevieux.araknemu.network.game.in.fight.AskFightDetails;
+import fr.quatrevieux.araknemu.network.game.in.fight.ListFightsRequest;
 import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionCancel;
@@ -31,5 +33,7 @@ class ExploringLoaderTest extends LoaderTestCase {
         assertHandlePacket(AskExtraInfo.class, handlers);
         assertHandlePacket(GameActionCancel.class, handlers);
         assertHandlePacket(ObjectUseRequest.class, handlers);
+        assertHandlePacket(ListFightsRequest.class, handlers);
+        assertHandlePacket(AskFightDetails.class, handlers);
     }
 }

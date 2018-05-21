@@ -1,14 +1,9 @@
 package fr.quatrevieux.araknemu.game.listener.fight;
 
-import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
-import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.fight.map.FightMap;
-import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
-import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.network.game.out.fight.JoinFight;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
@@ -19,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-class SendFightJoinedTest extends GameBaseCase {
+class SendFightJoinedTest extends FightBaseCase {
     private SendFightJoined listener;
     private Fight fight;
     private PlayerFighter fighter;
@@ -31,22 +26,10 @@ class SendFightJoinedTest extends GameBaseCase {
 
         dataSet.pushMaps();
 
-        fighter = new PlayerFighter(gamePlayer());
-        FightMap fightMap = container.get(FightService.class).map(
-            container.get(ExplorationMapService.class).load(10340)
-        );
+        fight = createFight();
 
-        fight = new Fight(
-            new ChallengeType(),
-            fightMap,
-            Arrays.asList(
-                new SimpleTeam(fighter, fightMap.startPlaces(0), 0),
-                new SimpleTeam(new PlayerFighter(makeOtherPlayer()), fightMap.startPlaces(1), 1)
-            )
-        );
-
-        fight.nextState();
-
+        requestStack.clear();
+        fighter = player.fighter();
         listener = new SendFightJoined(fighter);
     }
 
