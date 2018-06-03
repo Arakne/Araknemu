@@ -4,6 +4,8 @@ import fr.quatrevieux.araknemu._test.TestCase;
 import fr.quatrevieux.araknemu.data.constant.Alignment;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.JoinFightError;
+import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
@@ -70,6 +72,11 @@ class AlternateTeamFighterOrderTest extends TestCase {
 
         @Override
         public boolean alive() { return true; }
+
+        @Override
+        public void join(Fighter fighter) throws JoinFightException {
+            throw new JoinFightException(JoinFightError.CANT_DO_TOO_LATE);
+        }
     }
 
     class FighterStub implements Fighter {

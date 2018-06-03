@@ -2,6 +2,8 @@ package fr.quatrevieux.araknemu.game.exploration.interaction.action.factory;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.*;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.fight.JoinFight;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
 
@@ -39,6 +41,16 @@ final public class ExplorationActionFactory implements ActionFactory {
         factories.put(
             ActionType.REFUSE_CHALLENGE,
             (player, action, arguments) -> new RefuseChallenge(player, Integer.parseInt(arguments[0]))
+        );
+
+        factories.put(
+            ActionType.JOIN_FIGHT,
+            (player, action, arguments) -> {
+                // @todo refactor GA factories
+                Fight fight = fightService.getFromMap(player.map().id(), Integer.parseInt(arguments[0]));
+
+                return new JoinFight(player, fight, fight.teams().stream().filter(team -> team.id() == Integer.parseInt(arguments[1])).findFirst().get());
+            }
         );
     }
 

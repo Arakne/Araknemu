@@ -1,23 +1,30 @@
 package fr.quatrevieux.araknemu.game.fight.state;
 
+import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
+import fr.quatrevieux.araknemu.game.fight.event.FighterAdded;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.exception.FightMapException;
+import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFighterPositions;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFighterReadyState;
+import fr.quatrevieux.araknemu.game.listener.fight.SendNewFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.StartFightWhenAllReady;
 import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
+import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -125,5 +132,47 @@ class PlacementStateTest extends GameBaseCase {
         assertFalse(fight.dispatcher().has(SendFighterPositions.class));
         assertFalse(fight.dispatcher().has(SendFighterReadyState.class));
         assertFalse(fight.dispatcher().has(StartFightWhenAllReady.class));
+        assertFalse(fight.dispatcher().has(SendNewFighter.class));
+    }
+
+    @Test
+    void joinTeamSuccess() throws SQLException, ContainerException, JoinFightException {
+        fight.nextState();
+
+        AtomicReference<FighterAdded> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterAdded.class, ref::set);
+
+        PlayerFighter newFighter = new PlayerFighter(makeSimpleGamePlayer(5));
+        requestStack.clear();
+
+        state.joinTeam(newFighter, fight.team(0));
+
+        assertCount(2, fight.team(0).fighters());
+        assertContains(newFighter, fight.team(0).fighters());
+
+        assertSame(fight, newFighter.fight());
+        assertSame(fight.team(0), newFighter.team());
+        assertNotNull(newFighter.cell());
+        assertSame(newFighter, newFighter.cell().fighter().get());
+        assertContains(newFighter.cell().id(), fight.team(0).startPlaces());
+
+        assertSame(newFighter, ref.get().fighter());
+
+        requestStack.assertLast(new AddSprites(Collections.singleton(newFighter.sprite())));
+    }
+
+    @Test
+    void joinTeamBadState() throws SQLException, ContainerException {
+        fight.nextState();
+        state.startFight();
+
+        AtomicReference<FighterAdded> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterAdded.class, ref::set);
+
+        PlayerFighter newFighter = new PlayerFighter(makeSimpleGamePlayer(5));
+
+        assertThrows(JoinFightException.class, () -> state.joinTeam(newFighter, fight.team(0)));
+        assertNull(ref.get());
+        assertCount(1, fight.team(0).fighters());
     }
 }

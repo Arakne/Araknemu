@@ -14,7 +14,7 @@ public enum ActionType {
     CHALLENGE(900),
     ACCEPT_CHALLENGE(901),
     REFUSE_CHALLENGE(902),
-    JOIN_FIGHT_ERROR(903);
+    JOIN_FIGHT(903);
 
     final private int id;
 

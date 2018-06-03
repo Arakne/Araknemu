@@ -10,8 +10,6 @@ import org.apache.commons.lang3.StringUtils;
  * Message sent to chat
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Chat.as#L19
- *
- * @todo Handle send items
  */
 final public class Message implements Packet {
     final static public class Parser implements SinglePacketParser<Message> {

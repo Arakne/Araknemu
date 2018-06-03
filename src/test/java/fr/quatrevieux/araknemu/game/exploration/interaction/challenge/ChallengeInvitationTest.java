@@ -12,7 +12,6 @@ import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.helpers.NOPLogger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -55,7 +54,7 @@ class ChallengeInvitationTest extends GameBaseCase {
         assertFalse(challenger.interactions().interacting());
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.JOIN_FIGHT_ERROR, "" + initiator.id(), new Object[] {"o"})
+            new GameActionResponse("", ActionType.JOIN_FIGHT, "" + initiator.id(), new Object[] {"o"})
         );
     }
 
@@ -69,7 +68,7 @@ class ChallengeInvitationTest extends GameBaseCase {
         assertNull(invitation.start());
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.JOIN_FIGHT_ERROR, "" + initiator.id(), new Object[] {"z"})
+            new GameActionResponse("", ActionType.JOIN_FIGHT, "" + initiator.id(), new Object[] {"z"})
         );
     }
 
@@ -82,7 +81,7 @@ class ChallengeInvitationTest extends GameBaseCase {
         assertNull(invitation.start());
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.JOIN_FIGHT_ERROR, "" + initiator.id(), new Object[] {"p"})
+            new GameActionResponse("", ActionType.JOIN_FIGHT, "" + initiator.id(), new Object[] {"p"})
         );
     }
 
@@ -94,7 +93,7 @@ class ChallengeInvitationTest extends GameBaseCase {
         assertNull(invitation.start());
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.JOIN_FIGHT_ERROR, "" + initiator.id(), new Object[] {"p"})
+            new GameActionResponse("", ActionType.JOIN_FIGHT, "" + initiator.id(), new Object[] {"p"})
         );
     }
 

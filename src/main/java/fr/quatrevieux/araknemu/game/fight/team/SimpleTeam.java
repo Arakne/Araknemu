@@ -1,10 +1,14 @@
 package fr.quatrevieux.araknemu.game.fight.team;
 
 import fr.quatrevieux.araknemu.data.constant.Alignment;
+import fr.quatrevieux.araknemu.game.fight.JoinFightError;
+import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Simple fight team for player fighters
@@ -64,5 +68,20 @@ final public class SimpleTeam implements FightTeam {
     @Override
     public boolean alive() {
         return fighters.stream().anyMatch(fighter -> !fighter.dead());
+    }
+
+    @Override
+    public void join(Fighter fighter) throws JoinFightException {
+        if (!(fighter instanceof PlayerFighter)) {
+            throw new JoinFightException(JoinFightError.TEAM_CLOSED);
+        }
+
+        PlayerFighter playerFighter = (PlayerFighter) fighter;
+
+        if (fighters.size() >= startPlaces.size()) {
+            throw new JoinFightException(JoinFightError.TEAM_FULL);
+        }
+
+        fighters.add(playerFighter);
     }
 }

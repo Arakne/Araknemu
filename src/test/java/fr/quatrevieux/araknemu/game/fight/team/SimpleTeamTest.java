@@ -1,11 +1,17 @@
 package fr.quatrevieux.araknemu.game.fight.team;
 
+import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Alignment;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.JoinFightError;
+import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -53,5 +59,32 @@ class SimpleTeamTest extends FightBaseCase {
         fighter.life().alter(fighter, -1000);
 
         assertFalse(team.alive());
+    }
+
+    @Test
+    void joinNotPlayerFighter() {
+        assertThrows(JoinFightException.class, () -> team.join(Mockito.mock(Fighter.class)));
+    }
+
+    @Test
+    void joinFullTeam() throws SQLException, ContainerException, JoinFightException {
+        team.join(new PlayerFighter(makeSimpleGamePlayer(10)));
+
+        try {
+            team.join(new PlayerFighter(makeSimpleGamePlayer(11)));
+
+            fail("JoinFightException expected");
+        } catch (JoinFightException e) {
+            assertEquals(JoinFightError.TEAM_FULL, e.error());
+        }
+    }
+
+    @Test
+    void joinSuccess() throws SQLException, ContainerException, JoinFightException {
+        PlayerFighter fighter = new PlayerFighter(makeSimpleGamePlayer(10));
+        team.join(fighter);
+
+        assertCount(2, team.fighters());
+        assertContains(fighter, team.fighters());
     }
 }

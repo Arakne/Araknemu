@@ -1,17 +1,19 @@
 package fr.quatrevieux.araknemu.game.exploration.interaction.action.factory;
 
-import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.*;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.fight.JoinFight;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
-import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ExplorationActionFactoryTest extends GameBaseCase {
+class ExplorationActionFactoryTest extends FightBaseCase {
     private ExplorationActionFactory factory;
 
     @Override
@@ -53,7 +55,7 @@ class ExplorationActionFactoryTest extends GameBaseCase {
 
     @Test
     void createAskChallenge() throws Exception {
-        ExplorationPlayer other = new ExplorationPlayer(makeOtherPlayer());
+        ExplorationPlayer other = new ExplorationPlayer(this.other);
 
         explorationPlayer().map().add(other);
 
@@ -64,7 +66,7 @@ class ExplorationActionFactoryTest extends GameBaseCase {
 
     @Test
     void createAcceptChallenge() throws Exception {
-        ExplorationPlayer other = new ExplorationPlayer(makeOtherPlayer());
+        ExplorationPlayer other = new ExplorationPlayer(this.other);
 
         explorationPlayer().map().add(other);
 
@@ -75,12 +77,26 @@ class ExplorationActionFactoryTest extends GameBaseCase {
 
     @Test
     void createRefuseChallenge() throws Exception {
-        ExplorationPlayer other = new ExplorationPlayer(makeOtherPlayer());
+        ExplorationPlayer other = new ExplorationPlayer(this.other);
 
         explorationPlayer().map().add(other);
 
         Action action = factory.create(explorationPlayer(), ActionType.REFUSE_CHALLENGE, new String[] {"" + other.id()});
 
         assertInstanceOf(RefuseChallenge.class, action);
+    }
+
+    @Test
+    void createJoinFight() throws Exception {
+        ExplorationPlayer player = explorationPlayer();
+
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
+        player.join(map);
+
+        Fight fight = createSimpleFight(map);
+
+        Action action = factory.create(player, ActionType.JOIN_FIGHT, new String[] {fight.id() + "", fight.team(0).id() + ""});
+
+        assertInstanceOf(JoinFight.class, action);
     }
 }

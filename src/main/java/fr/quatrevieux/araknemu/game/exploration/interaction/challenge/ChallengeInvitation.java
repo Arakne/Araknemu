@@ -140,7 +140,7 @@ final public class ChallengeInvitation implements Interaction {
         initiator.send(
             new GameActionResponse(
                 "",
-                ActionType.JOIN_FIGHT_ERROR,
+                ActionType.JOIN_FIGHT,
                 Integer.toString(initiator.id()),
                 new Object[] {Character.toString(error.error())}
             )

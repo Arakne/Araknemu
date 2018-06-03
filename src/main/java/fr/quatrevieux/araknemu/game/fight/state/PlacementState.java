@@ -2,15 +2,21 @@ package fr.quatrevieux.araknemu.game.fight.state;
 
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.JoinFightError;
+import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
+import fr.quatrevieux.araknemu.game.fight.event.FighterAdded;
 import fr.quatrevieux.araknemu.game.fight.event.FighterPlaceChanged;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.exception.FightMapException;
+import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.util.PlacementCellsGenerator;
+import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFighterPositions;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFighterReadyState;
+import fr.quatrevieux.araknemu.game.listener.fight.SendNewFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.StartFightWhenAllReady;
 
 /**
@@ -45,7 +51,8 @@ final public class PlacementState implements FightState, EventsSubscriber {
         return listeners = new Listener[] {
             new SendFighterPositions(fight),
             new SendFighterReadyState(fight),
-            new StartFightWhenAllReady(fight, this)
+            new StartFightWhenAllReady(fight, this),
+            new SendNewFighter(fight)
         };
     }
 
@@ -77,6 +84,31 @@ final public class PlacementState implements FightState, EventsSubscriber {
 
         fighter.move(cell);
         fight.dispatch(new FighterPlaceChanged(fighter));
+    }
+
+    /**
+     * Try to join a team
+     *
+     * @param fighter The fighter to add
+     * @param team The team
+     *
+     * @throws JoinFightException When cannot join the team
+     */
+    synchronized public void joinTeam(Fighter fighter, FightTeam team) throws JoinFightException {
+        if (fight.state() != this) {
+            throw new JoinFightException(JoinFightError.CANT_DO_TOO_LATE);
+        }
+
+        team.join(fighter);
+
+        FightCell cell = PlacementCellsGenerator.randomized(fight.map(), team.startPlaces()).next();
+
+        fighter.move(cell);
+        fighter.setFight(fight);
+        fighter.join(team);
+
+        fight.dispatch(new FighterAdded(fighter));
+        fighter.dispatch(new FightJoined(fight, fighter));
     }
 
     /**

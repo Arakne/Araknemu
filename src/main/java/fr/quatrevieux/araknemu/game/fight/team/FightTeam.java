@@ -1,6 +1,8 @@
 package fr.quatrevieux.araknemu.game.fight.team;
 
 import fr.quatrevieux.araknemu.data.constant.Alignment;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 
@@ -57,4 +59,13 @@ public interface FightTeam extends Sender {
      * Check if there is at least one alive fighter in the team
      */
     public boolean alive();
+
+    /**
+     * Add a new fighter to the team
+     *
+     * @param fighter Fighter to add
+     *
+     * @throws JoinFightException
+     */
+    public void join(Fighter fighter) throws JoinFightException;
 }

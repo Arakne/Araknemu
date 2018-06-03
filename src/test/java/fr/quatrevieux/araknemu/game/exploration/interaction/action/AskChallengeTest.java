@@ -29,7 +29,7 @@ class AskChallengeTest extends GameBaseCase {
         action.start();
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.JOIN_FIGHT_ERROR, "1", new Object[] {"z"})
+            new GameActionResponse("", ActionType.JOIN_FIGHT, "1", new Object[] {"z"})
         );
     }
 
@@ -47,7 +47,7 @@ class AskChallengeTest extends GameBaseCase {
         action.start();
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.JOIN_FIGHT_ERROR, "1", new Object[] {"p"})
+            new GameActionResponse("", ActionType.JOIN_FIGHT, "1", new Object[] {"p"})
         );
     }
 
