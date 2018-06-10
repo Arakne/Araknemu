@@ -43,6 +43,7 @@ class PlayerFighterLifeTest extends FightBaseCase {
     void defaults() throws SQLException, ContainerException {
         assertEquals(gamePlayer().life().current(), life.current());
         assertEquals(gamePlayer().life().max(), life.max());
+        assertFalse(life.dead());
     }
 
     @Test
@@ -139,6 +140,44 @@ class PlayerFighterLifeTest extends FightBaseCase {
         assertEquals(195, ref.get().value());
     }
 
+    /**
+     * #56 : Dot not heal when dead
+     */
+    @Test
+    void alterHealIfDead() {
+        life.init();
+        life.alter(fighter, -1000);
+
+        AtomicReference<FighterLifeChanged> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterLifeChanged.class, ref::set);
+
+        Fighter caster = Mockito.mock(Fighter.class);
+
+        assertEquals(0, life.alter(caster, 1000));
+        assertEquals(0, life.current());
+        assertTrue(life.dead());
+        assertNull(ref.get());
+    }
+
+    /**
+     * #56 : Dot not heal when dead
+     */
+    @Test
+    void alterDamageIfDead() {
+        life.init();
+        life.alter(fighter, -1000);
+
+        AtomicReference<FighterLifeChanged> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterLifeChanged.class, ref::set);
+
+        Fighter caster = Mockito.mock(Fighter.class);
+
+        assertEquals(0, life.alter(caster, -1000));
+        assertEquals(0, life.current());
+        assertTrue(life.dead());
+        assertNull(ref.get());
+    }
+
     @Test
     void alterOnDie() {
         player.life().set(100);
@@ -154,5 +193,6 @@ class PlayerFighterLifeTest extends FightBaseCase {
         assertEquals(0, life.current());
         assertSame(caster, ref.get().caster());
         assertSame(fighter, ref.get().fighter());
+        assertTrue(life.dead());
     }
 }

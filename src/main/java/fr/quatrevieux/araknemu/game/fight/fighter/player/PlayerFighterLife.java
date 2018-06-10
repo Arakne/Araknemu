@@ -18,6 +18,7 @@ final public class PlayerFighterLife implements FighterLife {
     private int max;
     private int current;
     private boolean initialised = false;
+    private boolean dead = false;
 
     public PlayerFighterLife(Life baseLife, Fighter fighter) {
         this.baseLife = baseLife;
@@ -35,7 +36,16 @@ final public class PlayerFighterLife implements FighterLife {
     }
 
     @Override
+    public boolean dead() {
+        return dead;
+    }
+
+    @Override
     public int alter(Fighter caster, int value) {
+        if (dead) {
+            return 0;
+        }
+
         if (value < -current) {
             value = -current;
         } else if (value > max - current) {
@@ -47,6 +57,7 @@ final public class PlayerFighterLife implements FighterLife {
         fighter.fight().dispatch(new FighterLifeChanged(fighter, caster, value));
 
         if (current == 0) {
+            dead = true;
             fighter.fight().dispatch(new FighterDie(fighter, caster));
         }
 

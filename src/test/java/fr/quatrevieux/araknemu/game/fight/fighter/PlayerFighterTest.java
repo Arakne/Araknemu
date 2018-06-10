@@ -176,10 +176,12 @@ class PlayerFighterTest extends FightBaseCase {
     }
 
     @Test
-    void dead() throws SQLException, ContainerException {
+    void dead() {
+        fighter.setFight(fight);
+        fighter.init();
         assertFalse(fighter.dead());
 
-        gamePlayer().life().set(0);
+        fighter.life().alter(fighter, -10000);
 
         assertTrue(fighter.dead());
     }

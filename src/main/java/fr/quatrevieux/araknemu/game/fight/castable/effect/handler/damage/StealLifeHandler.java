@@ -24,7 +24,8 @@ final public class StealLifeHandler implements EffectHandler {
             .area(effect.area())
             .map(new DamageApplier(caster, effect, element))
             .forEach(damage -> {
-                if (damage >= 0) { // Heal or no effect
+                // #56 : do not heal if dead
+                if (damage >= 0 || caster.dead()) { // Heal or no effect
                     return;
                 }
 

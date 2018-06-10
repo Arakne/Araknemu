@@ -94,7 +94,7 @@ final public class PlayerFighter implements Fighter, Sender {
 
     @Override
     public boolean dead() {
-        return life.current() == 0;
+        return life.dead();
     }
 
     @Override

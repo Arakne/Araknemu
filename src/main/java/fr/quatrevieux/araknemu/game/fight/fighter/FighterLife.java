@@ -15,6 +15,11 @@ public interface FighterLife {
     public int max();
 
     /**
+     * Check if the fighter is dead
+     */
+    public boolean dead();
+
+    /**
      * Change fighter life
      *
      * @param caster The caster

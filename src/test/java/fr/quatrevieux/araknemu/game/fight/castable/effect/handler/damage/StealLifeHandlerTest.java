@@ -180,4 +180,25 @@ class StealLifeHandlerTest extends FightBaseCase {
         requestStack.assertOne(ActionEffect.alterLifePoints(caster, caster, -10));
         requestStack.assertOne(ActionEffect.alterLifePoints(caster, caster, 5));
     }
+
+    /**
+     * #56 : Suicide with steel life will not heal
+     */
+    @Test
+    void applySuicide() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(10000);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+
+        handler.handle(caster, Mockito.mock(Spell.class), effect, caster.cell());
+
+        assertEquals(0, caster.life().current());
+        assertTrue(caster.dead());
+
+        requestStack.assertAll(
+            ActionEffect.alterLifePoints(caster, caster, -245),
+            ActionEffect.fighterDie(caster, caster)
+        );
+    }
 }
