@@ -4,6 +4,8 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
+import fr.quatrevieux.araknemu.game.fight.event.FightCancelled;
+import fr.quatrevieux.araknemu.game.fight.event.FightLeaved;
 import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
 import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
@@ -177,5 +179,24 @@ class FightTest extends GameBaseCase {
         assertFalse(fight.turnList().current().isPresent());
 
         assertBetween(205, 220, (int) fight.duration());
+    }
+
+    @Test
+    void cancelActive() {
+        fight.start();
+
+        assertThrows(IllegalStateException.class, () -> fight.cancel());
+    }
+
+    @Test
+    void cancel() {
+        AtomicReference<FightCancelled> ref = new AtomicReference<>();
+        fight.dispatcher().add(FightCancelled.class, ref::set);
+
+        fight.cancel();
+
+        assertSame(fight, ref.get().fight());
+        assertCount(0, fight.teams());
+        assertCount(0, fight.fighters());
     }
 }

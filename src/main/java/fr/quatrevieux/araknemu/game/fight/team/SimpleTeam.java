@@ -14,11 +14,13 @@ import java.util.List;
  * Simple fight team for player fighters
  */
 final public class SimpleTeam implements FightTeam {
+    final private PlayerFighter leader;
     final private List<PlayerFighter> fighters;
     final private List<Integer> startPlaces;
     final private int number;
 
     public SimpleTeam(PlayerFighter leader, List<Integer> startPlaces, int number) {
+        this.leader = leader;
         this.fighters = new ArrayList<>();
         this.fighters.add(leader);
         this.startPlaces = startPlaces;
@@ -26,13 +28,18 @@ final public class SimpleTeam implements FightTeam {
     }
 
     @Override
+    public Fighter leader() {
+        return leader;
+    }
+
+    @Override
     public int id() {
-        return fighters.get(0).id();
+        return leader.id();
     }
 
     @Override
     public int cell() {
-        return fighters.get(0).player().position().cell();
+        return leader.player().position().cell();
     }
 
     @Override
@@ -83,5 +90,10 @@ final public class SimpleTeam implements FightTeam {
         }
 
         fighters.add(playerFighter);
+    }
+
+    @Override
+    public void kick(Fighter fighter) {
+        fighters.remove(PlayerFighter.class.cast(fighter));
     }
 }

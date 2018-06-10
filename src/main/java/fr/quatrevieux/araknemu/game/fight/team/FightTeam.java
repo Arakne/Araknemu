@@ -14,6 +14,11 @@ import java.util.List;
  */
 public interface FightTeam extends Sender {
     /**
+     * Get the team leader (the fight initiator)
+     */
+    public Fighter leader();
+
+    /**
      * Get the team id (must be unique over the map)
      * Generally the team id is the team leader id
      */
@@ -68,4 +73,11 @@ public interface FightTeam extends Sender {
      * @throws JoinFightException
      */
     public void join(Fighter fighter) throws JoinFightException;
+
+    /**
+     * Remove the fighter from the team
+     *
+     * @param fighter Fighter to remove
+     */
+    public void kick(Fighter fighter);
 }

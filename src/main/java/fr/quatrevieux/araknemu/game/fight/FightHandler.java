@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.fight;
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.builder.FightBuilder;
+import fr.quatrevieux.araknemu.game.fight.event.FightCancelled;
 import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
 
 import java.util.function.Consumer;
@@ -49,6 +50,17 @@ final public class FightHandler<B extends FightBuilder> implements EventsSubscri
                 @Override
                 public Class<FightStopped> event() {
                     return FightStopped.class;
+                }
+            },
+            new Listener<FightCancelled>() {
+                @Override
+                public void on(FightCancelled event) {
+                    service.remove(event.fight());
+                }
+
+                @Override
+                public Class<FightCancelled> event() {
+                    return FightCancelled.class;
                 }
             }
         };

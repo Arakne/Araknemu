@@ -1,15 +1,16 @@
 package fr.quatrevieux.araknemu.game.handler;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
-import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.value.Position;
-import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.in.SessionClosed;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +20,7 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class StopSessionTest extends GameBaseCase {
+class StopSessionTest extends FightBaseCase {
     private StopSession handler;
     private AccountService accountService;
 
@@ -27,6 +28,8 @@ class StopSessionTest extends GameBaseCase {
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
+
+        dataSet.pushMaps();
 
         handler = new StopSession();
         accountService = container.get(AccountService.class);
@@ -92,5 +95,16 @@ class StopSessionTest extends GameBaseCase {
 
         assertEquals(new Position(1234, 56), savedPlayer.position());
         assertEquals(12, savedPlayer.boostPoints());
+    }
+
+    @Test
+    void withFighterWillLeaveTheFight() throws Exception {
+        Fight fight = createFight();
+        PlayerFighter fighter = player.fighter();
+
+        handler.handle(session, new SessionClosed());
+
+        assertNull(session.fighter());
+        assertFalse(fight.fighters().contains(fighter));
     }
 }

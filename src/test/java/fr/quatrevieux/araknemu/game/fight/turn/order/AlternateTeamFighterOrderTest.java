@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,6 +31,11 @@ class AlternateTeamFighterOrderTest extends TestCase {
 
         public TeamStub(List<Fighter> fighters) {
             this.fighters = fighters;
+        }
+
+        @Override
+        public Fighter leader() {
+            return fighters.get(0);
         }
 
         @Override
@@ -77,6 +83,9 @@ class AlternateTeamFighterOrderTest extends TestCase {
         public void join(Fighter fighter) throws JoinFightException {
             throw new JoinFightException(JoinFightError.CANT_DO_TOO_LATE);
         }
+
+        @Override
+        public void kick(Fighter fighter) {}
     }
 
     class FighterStub implements Fighter {

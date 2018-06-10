@@ -58,6 +58,7 @@ class GameParserLoaderTest {
         assertContainsInstance(QuickPing.Parser.class, parsers);
         assertContainsInstance(ListFightsRequest.Parser.class, parsers);
         assertContainsInstance(AskFightDetails.Parser.class, parsers);
+        assertContainsInstance(LeaveFightRequest.Parser.class, parsers);
     }
 
     public void assertContainsInstance(Class type, Collection collection) {

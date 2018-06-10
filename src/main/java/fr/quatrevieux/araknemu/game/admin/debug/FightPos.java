@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.AdminUser;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
+import fr.quatrevieux.araknemu.network.game.out.fight.CancelFight;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
 
 import java.util.Arrays;
@@ -42,7 +43,7 @@ final public class FightPos extends AbstractCommand {
 
         if (arguments.size() > 1 && arguments.get(1).equalsIgnoreCase("hide")) {
             user.player().exploration().leave();
-            user.send("GV"); // @todo leave fight packet
+            user.send(new CancelFight());
             return;
         }
 

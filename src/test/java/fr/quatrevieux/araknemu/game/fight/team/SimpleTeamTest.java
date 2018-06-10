@@ -34,6 +34,7 @@ class SimpleTeamTest extends FightBaseCase {
 
     @Test
     void getters() {
+        assertSame(fighter, team.leader());
         assertEquals(Arrays.asList(fighter), team.fighters());
         assertEquals(Arrays.asList(123, 456), team.startPlaces());
         assertEquals(1, team.number());
@@ -86,5 +87,16 @@ class SimpleTeamTest extends FightBaseCase {
 
         assertCount(2, team.fighters());
         assertContains(fighter, team.fighters());
+    }
+
+    @Test
+    void kick() throws SQLException, ContainerException, JoinFightException {
+        PlayerFighter fighter = new PlayerFighter(makeSimpleGamePlayer(10));
+        team.join(fighter);
+
+        team.kick(fighter);
+
+        assertFalse(team.fighters().contains(fighter));
+        assertCount(1, team.fighters());
     }
 }

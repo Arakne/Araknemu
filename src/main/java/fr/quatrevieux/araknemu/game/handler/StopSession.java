@@ -16,6 +16,11 @@ final public class StopSession implements PacketHandler<GameSession, SessionClos
             session.setExploration(null);
         }
 
+        if (session.fighter() != null) {
+            session.fighter().dispatch(new Disconnected());
+            session.setFighter(null);
+        }
+
         if (session.player() != null) {
             session.player().dispatch(new Disconnected());
             session.setPlayer(null);

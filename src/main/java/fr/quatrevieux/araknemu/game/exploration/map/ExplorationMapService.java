@@ -13,9 +13,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.event.FightCreated;
 import fr.quatrevieux.araknemu.game.listener.map.*;
-import fr.quatrevieux.araknemu.game.listener.map.fight.HideFightOnStart;
-import fr.quatrevieux.araknemu.game.listener.map.fight.SendCreatedFight;
-import fr.quatrevieux.araknemu.game.listener.map.fight.SendFightsCount;
+import fr.quatrevieux.araknemu.game.listener.map.fight.*;
 import fr.quatrevieux.araknemu.game.listener.player.SendMapData;
 import org.slf4j.Logger;
 
@@ -87,6 +85,8 @@ final public class ExplorationMapService implements PreloadableService, EventsSu
 
                     event.fight().dispatcher().add(new HideFightOnStart(map));
                     event.fight().dispatcher().add(new SendFightsCount(map, fightService));
+                    event.fight().dispatcher().add(new SendCancelledFight(map, fightService));
+                    event.fight().dispatcher().add(new SendTeamFighterRemoved(map));
                 }
 
                 @Override

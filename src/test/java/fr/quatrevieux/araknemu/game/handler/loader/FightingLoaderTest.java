@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.handler.EnsureFighting;
 import fr.quatrevieux.araknemu.network.game.in.fight.FighterChangePlace;
 import fr.quatrevieux.araknemu.network.game.in.fight.FighterReady;
+import fr.quatrevieux.araknemu.network.game.in.fight.LeaveFightRequest;
 import fr.quatrevieux.araknemu.network.game.in.fight.TurnEnd;
 import fr.quatrevieux.araknemu.network.in.PacketHandler;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,5 +30,6 @@ class FightingLoaderTest extends LoaderTestCase {
         assertHandlePacket(FighterChangePlace.class, handlers);
         assertHandlePacket(FighterReady.class, handlers);
         assertHandlePacket(TurnEnd.class, handlers);
+        assertHandlePacket(LeaveFightRequest.class, handlers);
     }
 }

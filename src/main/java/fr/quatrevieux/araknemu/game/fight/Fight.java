@@ -2,6 +2,8 @@ package fr.quatrevieux.araknemu.game.fight;
 
 import fr.quatrevieux.araknemu.core.event.*;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
+import fr.quatrevieux.araknemu.game.fight.event.FightCancelled;
+import fr.quatrevieux.araknemu.game.fight.event.FightLeaved;
 import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
 import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
@@ -200,6 +202,21 @@ final public class Fight implements Dispatcher, Sender {
         turnList.stop();
 
         dispatch(new FightStopped(this));
+    }
+
+    /**
+     * Cancel the fight
+     *
+     * Must be called before start the fight
+     */
+    public void cancel() {
+        if (active()) {
+            throw new IllegalStateException("Cannot cancel an active fight");
+        }
+
+        fighters().forEach(fighter -> fighter.dispatch(new FightLeaved()));
+        dispatch(new FightCancelled(this));
+        destroy();
     }
 
     /**

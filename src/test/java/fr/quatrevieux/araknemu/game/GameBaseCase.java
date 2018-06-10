@@ -354,6 +354,17 @@ public class GameBaseCase extends DatabaseTestCase {
         return explorationPlayer;
     }
 
+    public ExplorationPlayer makeExplorationPlayer(GamePlayer player) throws Exception {
+        ExplorationPlayer explorationPlayer = container.get(ExplorationService.class).create(player);
+
+        Field sessionField = GamePlayer.class.getDeclaredField("session");
+        sessionField.setAccessible(true);
+
+        GameSession.class.cast(sessionField.get(player)).setExploration(explorationPlayer);
+
+        return explorationPlayer;
+    }
+
     public GamePlayer makeSimpleGamePlayer(int id) throws ContainerException, SQLException {
         return makeSimpleGamePlayer(id, new GameSession(new DummyChannel()));
     }

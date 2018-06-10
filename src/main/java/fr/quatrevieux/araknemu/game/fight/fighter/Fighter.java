@@ -99,4 +99,11 @@ public interface Fighter extends Dispatcher {
      * Stop the turn
      */
     public void stop();
+
+    /**
+     * Check if the fighter is the team leader
+     */
+    default public boolean isTeamLeader() {
+        return equals(team().leader());
+    }
 }

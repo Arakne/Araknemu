@@ -105,4 +105,31 @@ class FightHandlerTest extends GameBaseCase {
 
         assertCount(0, service.fightsByMap(10340));
     }
+
+    @Test
+    void cancelFightWillRemoveTheFight() throws ContainerException {
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
+
+        FightHandler<ChallengeBuilder> handler = new FightHandler<>(
+            service,
+            new ChallengeBuilder(service)
+        );
+
+        Fight fight = handler.start(
+            builder -> {
+                try {
+                    builder
+                        .map(map)
+                        .fighter(makeSimpleGamePlayer(5))
+                        .fighter(makeSimpleGamePlayer(6))
+                    ;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        );
+
+        fight.cancel();
+        assertCount(0, service.fightsByMap(10340));
+    }
 }

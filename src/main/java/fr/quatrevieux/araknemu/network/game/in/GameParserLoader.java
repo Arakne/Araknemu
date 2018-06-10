@@ -61,7 +61,8 @@ final public class GameParserLoader implements ParserLoader {
             new TurnEnd.Parser(),
             new QuickPing.Parser(),
             new ListFightsRequest.Parser(),
-            new AskFightDetails.Parser()
+            new AskFightDetails.Parser(),
+            new LeaveFightRequest.Parser()
         );
     }
 }
