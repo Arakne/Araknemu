@@ -18,10 +18,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.event.FightCreated;
 import fr.quatrevieux.araknemu.game.listener.map.*;
-import fr.quatrevieux.araknemu.game.listener.map.fight.HideFightOnStart;
-import fr.quatrevieux.araknemu.game.listener.map.fight.SendCancelledFight;
-import fr.quatrevieux.araknemu.game.listener.map.fight.SendFightsCount;
-import fr.quatrevieux.araknemu.game.listener.map.fight.SendTeamFighterRemoved;
+import fr.quatrevieux.araknemu.game.listener.map.fight.*;
 import fr.quatrevieux.araknemu.game.listener.player.SendMapData;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.AddTeamFighters;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightsCount;
@@ -109,6 +106,7 @@ class ExplorationMapServiceTest extends FightBaseCase {
         assertTrue(fight.dispatcher().has(SendFightsCount.class));
         assertTrue(fight.dispatcher().has(SendCancelledFight.class));
         assertTrue(fight.dispatcher().has(SendTeamFighterRemoved.class));
+        assertTrue(fight.dispatcher().has(SendTeamFighterAdded.class));
 
         requestStack.assertAll(
             new ShowFight(fight),

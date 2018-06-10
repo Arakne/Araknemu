@@ -74,9 +74,9 @@ public class FunctionalFromExplorationMapTest extends FightBaseCase {
         assertContains(otherFighter, fight.fighters());
         assertContains(otherFighter, fight.team(0).fighters());
 
-        // @fixme Add fighter on team
         requestStack.assertAll(
-            new RemoveSprite(explorationPlayer.sprite())
+            new RemoveSprite(explorationPlayer.sprite()),
+            new AddTeamFighters(fight.team(0), Collections.singleton(otherFighter))
         );
     }
 

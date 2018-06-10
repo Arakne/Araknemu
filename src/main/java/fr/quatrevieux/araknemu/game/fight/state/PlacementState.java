@@ -110,8 +110,8 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
         fighter.setFight(fight);
         fighter.join(team);
 
-        fight.dispatch(new FighterAdded(fighter));
         fighter.dispatch(new FightJoined(fight, fighter));
+        fight.dispatch(new FighterAdded(fighter));
     }
 
     @Override

@@ -87,6 +87,7 @@ final public class ExplorationMapService implements PreloadableService, EventsSu
                     event.fight().dispatcher().add(new SendFightsCount(map, fightService));
                     event.fight().dispatcher().add(new SendCancelledFight(map, fightService));
                     event.fight().dispatcher().add(new SendTeamFighterRemoved(map));
+                    event.fight().dispatcher().add(new SendTeamFighterAdded(map));
                 }
 
                 @Override
