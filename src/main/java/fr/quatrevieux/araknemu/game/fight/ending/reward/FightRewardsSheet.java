@@ -2,7 +2,7 @@ package fr.quatrevieux.araknemu.game.fight.ending.reward;
 
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Contains all end fight rewards
@@ -17,9 +17,9 @@ final public class FightRewardsSheet {
 
     final private EndFightResults results;
     final private Type type;
-    final private Collection<DropReward> rewards;
+    final private List<DropReward> rewards;
 
-    public FightRewardsSheet(EndFightResults results, Type type, Collection<DropReward> rewards) {
+    public FightRewardsSheet(EndFightResults results, Type type, List<DropReward> rewards) {
         this.results = results;
         this.type = type;
         this.rewards = rewards;
@@ -42,7 +42,7 @@ final public class FightRewardsSheet {
     /**
      * Get all rewards
      */
-    public Collection<DropReward> rewards() {
+    public List<DropReward> rewards() {
         return rewards;
     }
 }

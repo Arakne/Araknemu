@@ -64,6 +64,13 @@ final public class PlayerFighterLife implements FighterLife {
         return value;
     }
 
+    @Override
+    public void kill(Fighter caster) {
+        current = 0;
+        dead = true;
+        fighter.fight().dispatch(new FighterDie(fighter, caster));
+    }
+
     /**
      * Initialise the fighter life when fight is started
      */

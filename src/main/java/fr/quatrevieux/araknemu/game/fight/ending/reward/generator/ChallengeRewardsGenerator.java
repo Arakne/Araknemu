@@ -6,7 +6,7 @@ import fr.quatrevieux.araknemu.game.fight.ending.reward.FightRewardsSheet;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Generate rewards for challenge fight
@@ -14,7 +14,7 @@ import java.util.Collection;
 final public class ChallengeRewardsGenerator implements RewardsGenerator {
     @Override
     public FightRewardsSheet generate(EndFightResults results) {
-        Collection<DropReward> rewards = new ArrayList<>();
+        List<DropReward> rewards = new ArrayList<>();
 
         results.winners().stream().map(fighter -> new DropReward(RewardType.WINNER, fighter)).forEach(rewards::add);
         results.loosers().stream().map(fighter -> new DropReward(RewardType.LOOSER, fighter)).forEach(rewards::add);

@@ -17,10 +17,7 @@ import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
-import fr.quatrevieux.araknemu.game.listener.fight.fighter.ApplyEndFightReward;
-import fr.quatrevieux.araknemu.game.listener.fight.fighter.LeaveOnDisconnect;
-import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFightLeaved;
-import fr.quatrevieux.araknemu.game.listener.fight.fighter.StopFightSession;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -111,6 +108,7 @@ class PlayerFighterTest extends FightBaseCase {
         assertTrue(fighter.dispatcher().has(StopFightSession.class));
         assertTrue(fighter.dispatcher().has(SendFightLeaved.class));
         assertTrue(fighter.dispatcher().has(LeaveOnDisconnect.class));
+        assertTrue(fighter.dispatcher().has(ApplyLeaveReward.class));
     }
 
     @Test

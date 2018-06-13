@@ -11,6 +11,7 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.in.SessionClosed;
 import org.junit.jupiter.api.BeforeEach;
@@ -106,5 +107,19 @@ class StopSessionTest extends FightBaseCase {
 
         assertNull(session.fighter());
         assertFalse(fight.fighters().contains(fighter));
+    }
+
+    @Test
+    void withFighterWillLeaveTheFightOnActiveFight() throws Exception {
+        Fight fight = createFight();
+        PlayerFighter fighter = player.fighter();
+
+        fight.state(PlacementState.class).startFight();
+
+        handler.handle(session, new SessionClosed());
+
+        assertNull(session.fighter());
+        assertFalse(fight.active());
+        assertTrue(fighter.dead());
     }
 }

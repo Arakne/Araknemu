@@ -195,4 +195,21 @@ class PlayerFighterLifeTest extends FightBaseCase {
         assertSame(fighter, ref.get().fighter());
         assertTrue(life.dead());
     }
+
+    @Test
+    void kill() {
+        life.init();
+
+        AtomicReference<FighterDie> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterDie.class, ref::set);
+
+        Fighter caster = Mockito.mock(Fighter.class);
+
+        life.kill(caster);
+
+        assertEquals(0, life.current());
+        assertSame(caster, ref.get().caster());
+        assertSame(fighter, ref.get().fighter());
+        assertTrue(life.dead());
+    }
 }

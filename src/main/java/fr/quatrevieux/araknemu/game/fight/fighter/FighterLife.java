@@ -26,4 +26,9 @@ public interface FighterLife {
      * @param value The modified value. Positive for heal, negative for damage
      */
     public int alter(Fighter caster, int value);
+
+    /**
+     * Kill the fighter
+     */
+    public void kill(Fighter caster);
 }

@@ -1,9 +1,16 @@
 package fr.quatrevieux.araknemu.game.fight.state;
 
+import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.DropReward;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
+import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
+import fr.quatrevieux.araknemu.game.fight.event.FightLeaved;
+import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
@@ -16,21 +23,25 @@ import fr.quatrevieux.araknemu.game.listener.fight.turn.*;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightAction;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightActionTerminated;
 import fr.quatrevieux.araknemu.network.game.out.fight.BeginFight;
+import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
+import fr.quatrevieux.araknemu.network.game.out.fight.action.FightAction;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ActiveStateTest extends GameBaseCase {
     private ActiveState state;
     private Fight fight;
     private PlayerFighter fighter;
+    private PlayerFighter other;
 
     @Override
     @BeforeEach
@@ -45,7 +56,7 @@ class ActiveStateTest extends GameBaseCase {
             container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
             Arrays.asList(
                 new SimpleTeam(fighter = new PlayerFighter(gamePlayer(true)), Arrays.asList(123, 222), 0),
-                new SimpleTeam(new PlayerFighter(makeOtherPlayer()), Arrays.asList(321), 1)
+                new SimpleTeam(other = new PlayerFighter(makeOtherPlayer()), Arrays.asList(321), 1)
             ),
             new StatesFlow(
                 new NullState(),
@@ -74,6 +85,7 @@ class ActiveStateTest extends GameBaseCase {
         assertTrue(fight.dispatcher().has(SendFighterDie.class));
         assertTrue(fight.dispatcher().has(RemoveDeadFighter.class));
         assertTrue(fight.dispatcher().has(CheckFightTerminated.class));
+        assertTrue(fight.dispatcher().has(SendTurnList.class));
 
         Thread.sleep(210); // Wait for start turn
 
@@ -113,5 +125,68 @@ class ActiveStateTest extends GameBaseCase {
     void terminateBadState() {
         state.start(fight);
         state.terminate();
+    }
+
+    @Test
+    void leaveFightLastOfTeamWillTerminateTheFight() {
+        fight.nextState();
+
+        state.leave(other);
+
+        assertTrue(other.dead());
+        assertFalse(fight.active());
+        assertContains(other, fight.fighters());
+
+        requestStack.assertLast(ActionEffect.fighterDie(other, other));
+    }
+
+    @Test
+    void leaveNotLastOfTeamWillKillAndRemoveTheFighterFromFight() throws SQLException, ContainerException, JoinFightException {
+        PlayerFighter mutineer = new PlayerFighter(makeSimpleGamePlayer(10));
+
+        fight.team(0).join(mutineer);
+        mutineer.move(fight.map().get(222));
+        mutineer.setFight(fight);
+        mutineer.join(fight.team(0));
+
+        fight.nextState();
+        requestStack.clear();
+
+        state.leave(mutineer);
+
+        assertTrue(fight.active());
+        assertFalse(mutineer.cell().fighter().isPresent());
+        assertTrue(mutineer.dead());
+        assertFalse(fight.team(0).fighters().contains(mutineer));
+        assertFalse(fight.fighters().contains(mutineer));
+        assertFalse(fight.turnList().fighters().contains(mutineer));
+
+        requestStack.assertAll(
+            ActionEffect.fighterDie(mutineer, mutineer),
+            new FighterTurnOrder(fight.turnList())
+        );
+    }
+
+    @Test
+    void leaveNotLastOfTeamWillDispatchLeavedEventWithALooserReward() throws SQLException, ContainerException, JoinFightException {
+        AtomicReference<FightLeaved> ref = new AtomicReference<>();
+        fighter.dispatcher().add(FightLeaved.class, ref::set);
+        fighter.dispatch(new FightJoined(fight, fighter));
+
+        PlayerFighter teammate = new PlayerFighter(makeSimpleGamePlayer(10));
+
+        fight.team(0).join(teammate);
+        teammate.move(fight.map().get(222));
+        teammate.setFight(fight);
+        teammate.join(fight.team(0));
+
+        fight.nextState();
+        requestStack.clear();
+
+        state.leave(fighter);
+
+        assertNotNull(ref.get());
+        assertInstanceOf(DropReward.class, ref.get().reward().get());
+        assertEquals(RewardType.LOOSER, ref.get().reward().get().type());
     }
 }

@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.event.NextTurnInitiated;
+import fr.quatrevieux.araknemu.game.fight.turn.event.TurnListChanged;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStarted;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import org.junit.jupiter.api.BeforeEach;
@@ -142,5 +143,19 @@ class FightTurnListTest extends FightBaseCase {
     @Test
     void stopNotActive() {
         turnList.stop();
+    }
+
+    @Test
+    void remove() {
+        turnList.init(new AlternateTeamFighterOrder());
+        turnList.start();
+
+        AtomicReference<TurnListChanged> ref = new AtomicReference<>();
+        fight.dispatcher().add(TurnListChanged.class, ref::set);
+
+        turnList.remove(player.fighter());
+
+        assertSame(turnList, ref.get().turnList());
+        assertFalse(turnList.fighters().contains(player.fighter()));
     }
 }

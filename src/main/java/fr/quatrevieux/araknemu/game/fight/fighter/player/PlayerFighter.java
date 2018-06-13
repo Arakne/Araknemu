@@ -12,10 +12,7 @@ import fr.quatrevieux.araknemu.game.listener.fight.SendFightJoined;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
-import fr.quatrevieux.araknemu.game.listener.fight.fighter.ApplyEndFightReward;
-import fr.quatrevieux.araknemu.game.listener.fight.fighter.LeaveOnDisconnect;
-import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFightLeaved;
-import fr.quatrevieux.araknemu.game.listener.fight.fighter.StopFightSession;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.*;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
@@ -48,6 +45,7 @@ final public class PlayerFighter implements Fighter, Sender {
         dispatcher.add(new StopFightSession(this));
         dispatcher.add(new SendFightLeaved(this));
         dispatcher.add(new LeaveOnDisconnect(this));
+        dispatcher.add(new ApplyLeaveReward(this));
     }
 
     @Override

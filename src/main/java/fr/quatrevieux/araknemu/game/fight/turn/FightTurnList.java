@@ -3,7 +3,9 @@ package fr.quatrevieux.araknemu.game.fight.turn;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.turn.event.NextTurnInitiated;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.turn.event.TurnListChanged;
 import fr.quatrevieux.araknemu.game.fight.turn.order.FighterOrderStrategy;
+import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +42,17 @@ final public class FightTurnList {
      */
     public List<Fighter> fighters() {
         return fighters;
+    }
+
+    /**
+     * Remove a fighter from turn list
+     *
+     * @param fighter Fighter to remove
+     */
+    public void remove(Fighter fighter) {
+        fighters.remove(fighter);
+
+        fight.dispatch(new TurnListChanged(this));
     }
 
     /**
