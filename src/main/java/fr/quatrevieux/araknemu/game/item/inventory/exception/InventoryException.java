@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.world.item.inventory.exception;
+package fr.quatrevieux.araknemu.game.item.inventory.exception;
 
 /**
  * Base exception for inventory actions

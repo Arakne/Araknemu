@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.item.type;
 
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
+import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.game.item.GameItemSet;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import fr.quatrevieux.araknemu.game.item.effect.CharacteristicEffect;
@@ -16,8 +17,8 @@ import java.util.List;
 abstract public class Equipment extends BaseItem {
     final private List<CharacteristicEffect> characteristics;
 
-    public Equipment(ItemTemplate template, GameItemSet set, List<CharacteristicEffect> characteristics, List<SpecialEffect> specials) {
-        super(template, set, specials);
+    public Equipment(ItemTemplate template, ItemType type, GameItemSet set, List<CharacteristicEffect> characteristics, List<SpecialEffect> specials) {
+        super(template, type, set, specials);
         this.characteristics = characteristics;
     }
 

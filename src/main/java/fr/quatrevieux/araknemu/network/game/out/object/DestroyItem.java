@@ -1,6 +1,6 @@
 package fr.quatrevieux.araknemu.network.game.out.object;
 
-import fr.quatrevieux.araknemu.game.world.item.inventory.ItemEntry;
+import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 
 /**
  * Remove the item from the inventory

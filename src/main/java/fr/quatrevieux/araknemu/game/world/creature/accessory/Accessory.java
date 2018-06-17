@@ -1,7 +1,5 @@
 package fr.quatrevieux.araknemu.game.world.creature.accessory;
 
-import fr.quatrevieux.araknemu.game.world.item.Type;
-
 /**
  * Interface for sprite accessory
  */
@@ -18,10 +16,10 @@ public interface Accessory {
 
     /**
      * Get the accessory item type
-     * This method return null to use the appearance type
+     * This method return -1 to use the appearance type
      */
-    default public Type itemType() {
-        return null;
+    default public int itemType() {
+        return -1;
     }
 
     /**

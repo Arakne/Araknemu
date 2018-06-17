@@ -6,7 +6,6 @@ import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.transformer.ItemEffectsTransformer;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.world.item.Type;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,9 +22,9 @@ class ItemTemplateRepositoryTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushItemTemplate(new ItemTemplate(39, Type.AMULETTE, "Petite Amulette du Hibou", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "0d0+2")), 4, "", 0, "", 100));
-        dataSet.pushItemTemplate(new ItemTemplate(40, Type.EPEE, "Petite Epée de Boisaille", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")), 20, "CS>4", 0, "4;1;1;50;30;5;0", 200));
-        dataSet.pushItemTemplate(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10));
+        dataSet.pushItemTemplate(new ItemTemplate(39, 1, "Petite Amulette du Hibou", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "0d0+2")), 4, "", 0, "", 100));
+        dataSet.pushItemTemplate(new ItemTemplate(40, 6, "Petite Epée de Boisaille", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")), 20, "CS>4", 0, "4;1;1;50;30;5;0", 200));
+        dataSet.pushItemTemplate(new ItemTemplate(284, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10));
 
         repository = new ItemTemplateRepository(
             app.database().get("game"),
@@ -43,7 +42,7 @@ class ItemTemplateRepositoryTest extends GameBaseCase {
         ItemTemplate item = repository.get(39);
 
         assertEquals(39, item.id());
-        assertEquals(Type.AMULETTE, item.type());
+        assertEquals(1, item.type());
         assertEquals("Petite Amulette du Hibou", item.name());
         assertCount(1, item.effects());
         assertEquals(Effect.ADD_INTELLIGENCE, item.effects().get(0).effect());
@@ -54,10 +53,10 @@ class ItemTemplateRepositoryTest extends GameBaseCase {
 
     @Test
     void getByTemplate() {
-        ItemTemplate item = repository.get(new ItemTemplate(40, null, null, 0, null, 0, null, 0, null, 0));
+        ItemTemplate item = repository.get(new ItemTemplate(40, 0, null, 0, null, 0, null, 0, null, 0));
 
         assertEquals(40, item.id());
-        assertEquals(Type.EPEE, item.type());
+        assertEquals(6, item.type());
         assertEquals("Petite Epée de Boisaille", item.name());
         assertCount(1, item.effects());
         assertEquals(Effect.INFLICT_DAMAGE_NEUTRAL, item.effects().get(0).effect());
@@ -71,15 +70,15 @@ class ItemTemplateRepositoryTest extends GameBaseCase {
 
     @Test
     void has() {
-        assertTrue(repository.has(new ItemTemplate(40, null, null, 0, null, 0, null, 0, null, 0)));
-        assertFalse(repository.has(new ItemTemplate(-5, null, null, 0, null, 0, null, 0, null, 0)));
+        assertTrue(repository.has(new ItemTemplate(40, 0, null, 0, null, 0, null, 0, null, 0)));
+        assertFalse(repository.has(new ItemTemplate(-5, 0, null, 0, null, 0, null, 0, null, 0)));
     }
 
     @Test
     void load() {
         assertCount(3, repository.load());
-        assertContains(new ItemTemplate(39, Type.AMULETTE, "Petite Amulette du Hibou", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "0d0+2")), 4, "", 0, "", 100), repository.load());
-        assertContains(new ItemTemplate(40, Type.EPEE, "Petite Epée de Boisaille", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")), 20, "CS>4", 0, "4;1;1;50;30;5;0", 200), repository.load());
-        assertContains(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), repository.load());
+        assertContains(new ItemTemplate(39, 1, "Petite Amulette du Hibou", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "0d0+2")), 4, "", 0, "", 100), repository.load());
+        assertContains(new ItemTemplate(40, 6, "Petite Epée de Boisaille", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")), 20, "CS>4", 0, "4;1;1;50;30;5;0", 200), repository.load());
+        assertContains(new ItemTemplate(284, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), repository.load());
     }
 }

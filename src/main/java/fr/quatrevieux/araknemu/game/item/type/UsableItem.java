@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.item.type;
 
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
+import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
@@ -15,8 +16,8 @@ import java.util.List;
 final public class UsableItem extends BaseItem {
     final private List<UseEffect> useEffects;
 
-    public UsableItem(ItemTemplate template, List<UseEffect> useEffects, List<SpecialEffect> specials) {
-        super(template, null, specials);
+    public UsableItem(ItemTemplate template, ItemType type, List<UseEffect> useEffects, List<SpecialEffect> specials) {
+        super(template, type, null, specials);
 
         this.useEffects = useEffects;
     }

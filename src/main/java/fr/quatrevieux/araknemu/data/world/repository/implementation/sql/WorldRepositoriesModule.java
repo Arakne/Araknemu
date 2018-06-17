@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.transformer.ImmutableCharacteristicsTransformer;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.local.ItemSetRepositoryCache;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.local.ItemTemplateRepositoryCache;
+import fr.quatrevieux.araknemu.data.world.repository.implementation.local.ItemTypeRepositoryCache;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.local.PlayerRaceRepositoryCache;
 import fr.quatrevieux.araknemu.data.world.transformer.*;
 
@@ -67,6 +68,16 @@ final public class WorldRepositoriesModule implements ContainerModule {
         );
 
         configurator.persist(
+            fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository.class,
+            container -> new ItemTypeRepositoryCache(
+                    new ItemTypeRepository(
+                    connection,
+                    container.get(EffectAreaTransformer.class)
+                )
+            )
+        );
+
+        configurator.persist(
             fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository.class,
             container -> new SpellTemplateRepository(
                 connection,
@@ -108,12 +119,19 @@ final public class WorldRepositoriesModule implements ContainerModule {
 
         configurator.persist(
             SpellTemplateLevelTransformer.class,
-            container -> new SpellTemplateLevelTransformer()
+            container -> new SpellTemplateLevelTransformer(
+                container.get(EffectAreaTransformer.class)
+            )
         );
 
         configurator.persist(
             FightPlacesTransformer.class,
             container -> new FightPlacesTransformer()
+        );
+
+        configurator.persist(
+            EffectAreaTransformer.class,
+            container -> new EffectAreaTransformer()
         );
     }
 }

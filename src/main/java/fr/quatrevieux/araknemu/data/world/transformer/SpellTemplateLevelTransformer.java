@@ -38,6 +38,12 @@ public class SpellTemplateLevelTransformer implements Transformer<SpellTemplate.
     final static public int MIN_PLAYE_LEVEL = 18;
     final static public int ENDS_TURN_ON_FAILURE = 19;
 
+    final private Transformer<EffectArea> areaTransformer;
+
+    public SpellTemplateLevelTransformer(Transformer<EffectArea> areaTransformer) {
+        this.areaTransformer = areaTransformer;
+    }
+
     @Override
     public String serialize(SpellTemplate.Level value) {
         throw new UnsupportedOperationException();
@@ -120,12 +126,7 @@ public class SpellTemplateLevelTransformer implements Transformer<SpellTemplate.
         List<EffectArea> areas = new ArrayList<>(sAreas.length() / 2);
 
         for (int i = 0; i < sAreas.length(); i += 2) {
-            areas.add(
-                new EffectArea(
-                    EffectArea.Type.byChar(sAreas.charAt(i)),
-                    Base64.ord(sAreas.charAt(i + 1))
-                )
-            );
+            areas.add(areaTransformer.unserialize(sAreas.substring(i, i + 2)));
         }
 
         return areas;

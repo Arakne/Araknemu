@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.world.item.inventory.exception;
+package fr.quatrevieux.araknemu.game.item.inventory.exception;
 
 /**
  * Exception raised when cannot found the item to the inventory

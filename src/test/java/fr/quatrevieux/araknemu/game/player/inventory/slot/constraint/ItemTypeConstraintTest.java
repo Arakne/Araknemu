@@ -3,15 +3,15 @@ package fr.quatrevieux.araknemu.game.player.inventory.slot.constraint;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.item.ItemService;
-import fr.quatrevieux.araknemu.game.world.item.Type;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.item.SuperType;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ItemTypeConstraintTest extends GameBaseCase {
-    private ItemTypeConstraint constraint = new ItemTypeConstraint(Type.AMULETTE);
+    private ItemTypeConstraint constraint = new ItemTypeConstraint(SuperType.AMULET);
 
     @Override
     @BeforeEach
@@ -33,7 +33,7 @@ class ItemTypeConstraintTest extends GameBaseCase {
     }
 
     @Test
-    void fail() throws ContainerException {
+    void fail() {
         assertThrows(
             InventoryException.class,
             () -> constraint.check(

@@ -1,6 +1,7 @@
-package fr.quatrevieux.araknemu.game.world.item;
+package fr.quatrevieux.araknemu.game.item;
 
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
+import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.game.item.GameItemSet;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
@@ -31,4 +32,9 @@ public interface Item {
      * Get list of special effects
      */
     public List<SpecialEffect> specials();
+
+    /**
+     * Get the item type
+     */
+    public ItemType type();
 }

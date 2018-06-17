@@ -5,12 +5,12 @@ import fr.quatrevieux.araknemu.data.world.entity.item.ItemSet;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
+import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.game.item.effect.CharacteristicEffect;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
 import fr.quatrevieux.araknemu.game.item.factory.ItemFactory;
-import fr.quatrevieux.araknemu.game.world.item.Item;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -25,19 +25,22 @@ final public class ItemService implements PreloadableService {
     final private ItemTemplateRepository repository;
     final private ItemFactory factory;
     final private ItemSetRepository itemSetRepository;
+    final private ItemTypeRepository itemTypeRepository;
     final private EffectMappers mappers;
 
     final private ConcurrentMap<Integer, GameItemSet> itemSetsById = new ConcurrentHashMap<>();
 
-    public ItemService(ItemTemplateRepository repository, ItemFactory factory, ItemSetRepository itemSetRepository, EffectMappers mappers) {
+    public ItemService(ItemTemplateRepository repository, ItemFactory factory, ItemSetRepository itemSetRepository, ItemTypeRepository itemTypeRepository, EffectMappers mappers) {
         this.repository = repository;
         this.factory = factory;
         this.itemSetRepository = itemSetRepository;
+        this.itemTypeRepository = itemTypeRepository;
         this.mappers = mappers;
     }
 
     @Override
     public void preload(Logger logger) {
+        loadItemTypes(logger);
         loadItemSets(logger);
         loadItems(logger);
     }
@@ -53,6 +56,7 @@ final public class ItemService implements PreloadableService {
 
         return factory.create(
             template,
+            itemTypeRepository.get(template.type()),
             template.itemSet() == 0
                 ? null
                 : itemSet(template.itemSet())
@@ -81,6 +85,7 @@ final public class ItemService implements PreloadableService {
 
         return factory.retrieve(
             template,
+            itemTypeRepository.get(template.type()),
             template.itemSet() == 0
                 ? null
                 : itemSet(template.itemSet())
@@ -136,5 +141,10 @@ final public class ItemService implements PreloadableService {
         }
 
         logger.info("Successfully load {} item sets", itemSetsById.size());
+    }
+
+    public void loadItemTypes(Logger logger) {
+        logger.info("Loading item types...");
+        logger.info("Successfully load {} item sets", itemTypeRepository.load().size());
     }
 }

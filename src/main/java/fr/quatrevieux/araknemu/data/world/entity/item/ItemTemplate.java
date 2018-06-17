@@ -1,7 +1,6 @@
 package fr.quatrevieux.araknemu.data.world.entity.item;
 
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
-import fr.quatrevieux.araknemu.game.world.item.Type;
 
 import java.util.List;
 
@@ -10,7 +9,7 @@ import java.util.List;
  */
 final public class ItemTemplate {
     final private int id;
-    final private Type type;
+    final private int type;
     final private String name;
     final private int level;
     final private List<ItemTemplateEffectEntry> effects;
@@ -20,7 +19,7 @@ final public class ItemTemplate {
     final private String weaponInfo;
     final private int price;
 
-    public ItemTemplate(int id, Type type, String name, int level, List<ItemTemplateEffectEntry> effects, int weight, String condition, int itemSet, String weaponInfo, int price) {
+    public ItemTemplate(int id, int type, String name, int level, List<ItemTemplateEffectEntry> effects, int weight, String condition, int itemSet, String weaponInfo, int price) {
         this.id = id;
         this.type = type;
         this.name = name;
@@ -37,7 +36,7 @@ final public class ItemTemplate {
         return id;
     }
 
-    public Type type() {
+    public int type() {
         return type;
     }
 

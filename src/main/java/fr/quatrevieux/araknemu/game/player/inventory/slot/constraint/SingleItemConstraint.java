@@ -1,7 +1,7 @@
 package fr.quatrevieux.araknemu.game.player.inventory.slot.constraint;
 
-import fr.quatrevieux.araknemu.game.world.item.Item;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.item.Item;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 
 /**
  * Check that only one item is set to the entry

@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.world.item.inventory;
+package fr.quatrevieux.araknemu.game.item.inventory;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
@@ -7,10 +7,10 @@ import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
-import fr.quatrevieux.araknemu.game.world.item.Item;
+import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
 import fr.quatrevieux.araknemu.game.item.type.Wearable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

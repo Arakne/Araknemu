@@ -18,7 +18,7 @@ import fr.quatrevieux.araknemu.game.listener.player.inventory.itemset.ApplyItemS
 import fr.quatrevieux.araknemu.game.listener.player.inventory.itemset.InitializeItemSets;
 import fr.quatrevieux.araknemu.game.listener.player.inventory.itemset.SendItemSetChange;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

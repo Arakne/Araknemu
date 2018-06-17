@@ -7,7 +7,7 @@ import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.EquipmentLe
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.ItemClassConstraint;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SingleItemConstraint;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SlotConstraint;
-import fr.quatrevieux.araknemu.game.world.item.inventory.ItemStorage;
+import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
 
 /**

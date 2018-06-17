@@ -2,10 +2,9 @@ package fr.quatrevieux.araknemu.game.player.inventory.slot;
 
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SlotConstraint;
-import fr.quatrevieux.araknemu.game.world.item.Item;
-import fr.quatrevieux.araknemu.game.world.item.inventory.ItemStorage;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.MoveException;
+import fr.quatrevieux.araknemu.game.item.Item;
+import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 
 /**
  * Base slot class

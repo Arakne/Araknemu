@@ -14,7 +14,7 @@ import fr.quatrevieux.araknemu.game.listener.player.inventory.itemset.Initialize
 import fr.quatrevieux.araknemu.game.listener.player.inventory.itemset.SendItemSetChange;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
-import fr.quatrevieux.araknemu.game.world.item.Item;
+import fr.quatrevieux.araknemu.game.item.Item;
 
 import java.util.stream.Collectors;
 

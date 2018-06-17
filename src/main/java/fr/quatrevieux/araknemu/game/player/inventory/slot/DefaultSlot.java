@@ -1,11 +1,11 @@
 package fr.quatrevieux.araknemu.game.player.inventory.slot;
 
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
-import fr.quatrevieux.araknemu.game.world.item.Item;
-import fr.quatrevieux.araknemu.game.world.item.inventory.ItemEntry;
-import fr.quatrevieux.araknemu.game.world.item.inventory.ItemStorage;
-import fr.quatrevieux.araknemu.game.world.item.inventory.StackableItemStorage;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.item.Item;
+import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
+import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
+import fr.quatrevieux.araknemu.game.item.inventory.StackableItemStorage;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 
 /**
  * Slot for default position

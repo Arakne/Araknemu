@@ -2,13 +2,14 @@ package fr.quatrevieux.araknemu.game.item.factory;
 
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
+import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.game.item.GameItemSet;
+import fr.quatrevieux.araknemu.game.item.Item;
+import fr.quatrevieux.araknemu.game.item.SuperType;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
 import fr.quatrevieux.araknemu.game.item.type.UsableItem;
-import fr.quatrevieux.araknemu.game.world.item.Item;
-import fr.quatrevieux.araknemu.game.world.item.Type;
 
 import java.util.List;
 
@@ -23,44 +24,24 @@ final public class UsableFactory implements ItemFactory {
     }
 
     @Override
-    public Item create(ItemTemplate template, GameItemSet set, boolean maximize) {
-        return create(template, template.effects(), maximize);
+    public Item create(ItemTemplate template, ItemType type, GameItemSet set, boolean maximize) {
+        return create(template, type, template.effects(), maximize);
     }
 
     @Override
-    public Item retrieve(ItemTemplate template, GameItemSet set, List<ItemTemplateEffectEntry> effects) {
-        return create(template, effects, false);
+    public Item retrieve(ItemTemplate template, ItemType type, GameItemSet set, List<ItemTemplateEffectEntry> effects) {
+        return create(template, type, effects, false);
     }
 
     @Override
-    public Type[] types() {
-        return new Type[] {
-            Type.BIERE,
-            Type.BOISSON,
-            Type.DOCUMENT,
-            Type.DONS,
-            Type.BOOST_FOOD,
-            Type.CADEAUX,
-            Type.COMESTI_POISSON,
-            Type.FEE_ARTIFICE,
-            Type.PAIN,
-            Type.PARCHEMIN_CARAC,
-            Type.PARCHEMIN_SORT,
-            Type.PARCHO_EXP,
-            Type.PARCHO_RECHERCHE,
-            Type.POTION,
-            Type.POTION_FAMILIER,
-            Type.POTION_METIER,
-            Type.POTION_OUBLIE,
-            Type.POTION_SORT,
-            Type.PRISME,
-            Type.VIANDE_COMESTIBLE
-        };
+    public SuperType type() {
+        return SuperType.USABLE;
     }
 
-    private Item create(ItemTemplate template, List<ItemTemplateEffectEntry> effects, boolean maximize) {
+    private Item create(ItemTemplate template, ItemType type, List<ItemTemplateEffectEntry> effects, boolean maximize) {
         return new UsableItem(
             template,
+            type,
             mappers.get(UseEffect.class).create(effects),
             mappers.get(SpecialEffect.class).create(effects, true)
         );

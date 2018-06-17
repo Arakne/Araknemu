@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SpellTemplateLevelTransformerTest extends TestCase {
-    private SpellTemplateLevelTransformer transformer = new SpellTemplateLevelTransformer();
+    private SpellTemplateLevelTransformer transformer = new SpellTemplateLevelTransformer(new EffectAreaTransformer());
 
     @Test
     void unserializeEmpty() {

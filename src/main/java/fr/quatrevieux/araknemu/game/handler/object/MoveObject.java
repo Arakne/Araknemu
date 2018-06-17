@@ -1,7 +1,6 @@
 package fr.quatrevieux.araknemu.game.handler.object;
 
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.BadLevelException;
-import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.BadLevelException;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectMoveRequest;
 import fr.quatrevieux.araknemu.network.game.out.object.AddItemError;

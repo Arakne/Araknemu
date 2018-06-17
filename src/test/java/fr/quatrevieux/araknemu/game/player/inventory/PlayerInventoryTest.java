@@ -1,32 +1,36 @@
 package fr.quatrevieux.araknemu.game.player.inventory;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.event.Listener;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
+import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.item.Item;
+import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.item.SuperType;
+import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
+import fr.quatrevieux.araknemu.game.item.type.Resource;
+import fr.quatrevieux.araknemu.game.player.inventory.accessory.InventoryAccessories;
 import fr.quatrevieux.araknemu.game.player.inventory.event.EquipmentChanged;
 import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectAdded;
 import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectDeleted;
-import fr.quatrevieux.araknemu.game.item.ItemService;
-import fr.quatrevieux.araknemu.game.player.inventory.accessory.InventoryAccessories;
 import fr.quatrevieux.araknemu.game.player.inventory.itemset.PlayerItemSet;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.AccessoryType;
-import fr.quatrevieux.araknemu.game.world.item.Item;
-import fr.quatrevieux.araknemu.game.world.item.Type;
-import fr.quatrevieux.araknemu.game.world.item.inventory.ItemEntry;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
-import fr.quatrevieux.araknemu.game.item.type.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,14 +61,14 @@ class PlayerInventoryTest extends GameBaseCase {
         AtomicReference<ObjectAdded> ref = new AtomicReference<>();
         dispatcher.add(ObjectAdded.class, ref::set);
 
-        InventoryEntry entry = inventory.add(new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>()));
+        InventoryEntry entry = inventory.add(new Resource(new ItemTemplate(284, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ItemType(48, "Poudre", SuperType.RESOURCE, null), new ArrayList<>()));
 
         assertSame(entry, ref.get().entry());
     }
 
     @Test
     void addWillCreateNewEntry() throws InventoryException {
-        Item item = new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
+        Item item = new Resource(new ItemTemplate(284, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ItemType(48, "Poudre", SuperType.RESOURCE, null), new ArrayList<>());
         InventoryEntry entry = inventory.add(item, 5);
 
         assertEquals(item, entry.item());
@@ -74,7 +78,7 @@ class PlayerInventoryTest extends GameBaseCase {
 
     @Test
     void addGet() throws InventoryException {
-        Item item = new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
+        Item item = new Resource(new ItemTemplate(284, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ItemType(48, "Poudre", SuperType.RESOURCE, null), new ArrayList<>());
         InventoryEntry entry = inventory.add(item, 5);
 
         assertSame(entry, inventory.get(entry.id()));
@@ -82,9 +86,9 @@ class PlayerInventoryTest extends GameBaseCase {
 
     @Test
     void iterator() throws InventoryException {
-        Item item1 = new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
-        Item item2 = new Resource(new ItemTemplate(285, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
-        Item item3 = new Resource(new ItemTemplate(288, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
+        Item item1 = new Resource(new ItemTemplate(284, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ItemType(48, "Poudre", SuperType.RESOURCE, null), new ArrayList<>());
+        Item item2 = new Resource(new ItemTemplate(285, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ItemType(48, "Poudre", SuperType.RESOURCE, null), new ArrayList<>());
+        Item item3 = new Resource(new ItemTemplate(288, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ItemType(48, "Poudre", SuperType.RESOURCE, null), new ArrayList<>());
 
         List<InventoryEntry> entries = Arrays.asList(
             inventory.add(item1, 5),
@@ -197,7 +201,7 @@ class PlayerInventoryTest extends GameBaseCase {
 
     @Test
     void addSameItemWillStack() throws InventoryException {
-        Item item = new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
+        Item item = new Resource(new ItemTemplate(284, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ItemType(48, "Poudre", SuperType.RESOURCE, null), new ArrayList<>());
 
         InventoryEntry entry = inventory.add(item, 5);
 

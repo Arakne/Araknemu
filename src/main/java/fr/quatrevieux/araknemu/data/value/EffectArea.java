@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.data.value;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * Value object for spell effect area
@@ -67,5 +68,23 @@ final public class EffectArea {
     @Override
     public String toString() {
         return type.name() + "(" + size + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        EffectArea area = (EffectArea) o;
+
+        return
+            size == area.size
+            && type == area.type
+        ;
     }
 }

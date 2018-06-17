@@ -1,21 +1,18 @@
 package fr.quatrevieux.araknemu.game.player.inventory;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
-import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
-import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.item.Item;
+import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
 import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectAdded;
 import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectDeleted;
 import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectMoved;
 import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectQuantityChanged;
-import fr.quatrevieux.araknemu.game.item.ItemService;
-import fr.quatrevieux.araknemu.game.world.item.Item;
-import fr.quatrevieux.araknemu.game.world.item.Type;
-import fr.quatrevieux.araknemu.game.world.item.inventory.ItemEntry;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
-import fr.quatrevieux.araknemu.game.item.type.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -42,8 +39,8 @@ class InventoryEntryTest extends GameBaseCase {
     }
 
     @Test
-    void getters() throws InventoryException {
-        Item item = new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
+    void getters() throws InventoryException, ContainerException {
+        Item item = container.get(ItemService.class).create(284);
 
         InventoryEntry entry = inventory.add(item, 12, -1);
 
@@ -56,15 +53,15 @@ class InventoryEntryTest extends GameBaseCase {
     }
 
     @Test
-    void moveNegativeQuantity() throws InventoryException {
-        InventoryEntry entry = inventory.add(new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>()));
+    void moveNegativeQuantity() throws InventoryException, ContainerException {
+        InventoryEntry entry = inventory.add(container.get(ItemService.class).create(284));
 
         assertThrows(InventoryException.class, () -> entry.move(0, -5), "Invalid quantity given");
     }
 
     @Test
-    void moveTooHighQuantity() throws InventoryException {
-        InventoryEntry entry = inventory.add(new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>()));
+    void moveTooHighQuantity() throws InventoryException, ContainerException {
+        InventoryEntry entry = inventory.add(container.get(ItemService.class).create(284));
 
         assertThrows(InventoryException.class, () -> entry.move(0, 100), "Invalid quantity given");
     }
@@ -127,9 +124,9 @@ class InventoryEntryTest extends GameBaseCase {
     }
 
     @Test
-    void add() throws InventoryException {
+    void add() throws InventoryException, ContainerException {
         InventoryEntry entry = inventory.add(
-            new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>()),
+            container.get(ItemService.class).create(284),
             12
         );
 
@@ -143,9 +140,9 @@ class InventoryEntryTest extends GameBaseCase {
     }
 
     @Test
-    void remove() throws InventoryException {
+    void remove() throws InventoryException, ContainerException {
         InventoryEntry entry = inventory.add(
-            new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>()),
+            container.get(ItemService.class).create(284),
             12
         );
 
@@ -159,9 +156,9 @@ class InventoryEntryTest extends GameBaseCase {
     }
 
     @Test
-    void removeNegativeQuantity() throws InventoryException {
+    void removeNegativeQuantity() throws InventoryException, ContainerException {
         InventoryEntry entry = inventory.add(
-            new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>()),
+            container.get(ItemService.class).create(284),
             12
         );
 
@@ -175,9 +172,9 @@ class InventoryEntryTest extends GameBaseCase {
     }
 
     @Test
-    void removeTooHighQuantity() throws InventoryException {
+    void removeTooHighQuantity() throws InventoryException, ContainerException {
         InventoryEntry entry = inventory.add(
-            new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>()),
+            container.get(ItemService.class).create(284),
             12
         );
 
@@ -191,9 +188,9 @@ class InventoryEntryTest extends GameBaseCase {
     }
 
     @Test
-    void removeAll() throws InventoryException {
+    void removeAll() throws InventoryException, ContainerException {
         InventoryEntry entry = inventory.add(
-            new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>()),
+            container.get(ItemService.class).create(284),
             12
         );
 

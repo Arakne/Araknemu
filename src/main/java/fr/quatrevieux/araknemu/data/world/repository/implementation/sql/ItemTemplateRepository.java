@@ -5,9 +5,8 @@ import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
-import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
-import fr.quatrevieux.araknemu.game.world.item.Type;
+import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,7 +22,7 @@ final class ItemTemplateRepository implements fr.quatrevieux.araknemu.data.world
         public ItemTemplate create(ResultSet rs) throws SQLException {
             return new ItemTemplate(
                 rs.getInt("ITEM_TEMPLATE_ID"),
-                Type.values()[rs.getInt("ITEM_TYPE")],
+                rs.getInt("ITEM_TYPE"),
                 rs.getString("ITEM_NAME"),
                 rs.getInt("ITEM_LEVEL"),
                 effectsTransformer.unserialize(rs.getString("ITEM_EFFECTS")),

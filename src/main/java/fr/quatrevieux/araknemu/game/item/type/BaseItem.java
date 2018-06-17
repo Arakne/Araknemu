@@ -1,8 +1,9 @@
 package fr.quatrevieux.araknemu.game.item.type;
 
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
+import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.game.item.GameItemSet;
-import fr.quatrevieux.araknemu.game.world.item.Item;
+import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 
@@ -14,11 +15,13 @@ import java.util.Optional;
  */
 abstract public class BaseItem implements Item {
     final private ItemTemplate template;
+    final private ItemType type;
     final private GameItemSet set;
     final private List<SpecialEffect> specials;
 
-    public BaseItem(ItemTemplate template, GameItemSet set, List<SpecialEffect> specials) {
+    public BaseItem(ItemTemplate template, ItemType type, GameItemSet set, List<SpecialEffect> specials) {
         this.template = template;
+        this.type = type;
         this.set = set;
         this.specials = specials;
     }
@@ -41,6 +44,11 @@ abstract public class BaseItem implements Item {
     @Override
     public List<SpecialEffect> specials() {
         return specials;
+    }
+
+    @Override
+    public ItemType type() {
+        return type;
     }
 
     @Override

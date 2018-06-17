@@ -1,6 +1,6 @@
 package fr.quatrevieux.araknemu.game.player.inventory.event;
 
-import fr.quatrevieux.araknemu.game.world.item.inventory.ItemEntry;
+import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 
 /**
  * Event trigger when equipment is changed

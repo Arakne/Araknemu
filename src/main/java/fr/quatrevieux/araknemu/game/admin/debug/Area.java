@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.admin.debug;
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
+import fr.quatrevieux.araknemu.data.world.transformer.EffectAreaTransformer;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.AdminUser;
@@ -25,9 +26,11 @@ import java.util.stream.Collectors;
  */
 final public class Area extends AbstractCommand {
     final private SpellEffectService service;
+    final private EffectAreaTransformer areaTransformer;
 
     public Area(SpellEffectService service) {
         this.service = service;
+        this.areaTransformer = new EffectAreaTransformer();
     }
 
     @Override
@@ -59,10 +62,7 @@ final public class Area extends AbstractCommand {
     public void execute(AdminPerformer performer, List<String> arguments) {
         AdminUser user = AdminUser.class.cast(performer);
 
-        EffectArea area = new EffectArea(
-            EffectArea.Type.byChar(arguments.get(1).charAt(0)),
-            Base64.ord(arguments.get(1).charAt(1))
-        );
+        EffectArea area = areaTransformer.unserialize(arguments.get(1));
 
         ExplorationMap map = user.player().exploration().map();
 

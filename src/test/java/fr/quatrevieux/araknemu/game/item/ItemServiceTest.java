@@ -4,13 +4,10 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
+import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToCharacteristicMapping;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
 import fr.quatrevieux.araknemu.game.item.factory.ItemFactory;
-import fr.quatrevieux.araknemu.game.world.item.Item;
-import fr.quatrevieux.araknemu.game.world.item.Type;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.item.type.Wearable;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +36,7 @@ class ItemServiceTest extends GameBaseCase {
             container.get(ItemTemplateRepository.class),
             container.get(ItemFactory.class),
             container.get(ItemSetRepository.class),
+            container.get(ItemTypeRepository.class),
             container.get(EffectMappers.class)
         );
     }
@@ -62,7 +60,9 @@ class ItemServiceTest extends GameBaseCase {
 
         assertEquals(39, item.template().id());
         assertInstanceOf(Wearable.class, item);
-        assertEquals(Type.AMULETTE, item.template().type());
+        assertEquals(1, item.template().type());
+        assertEquals(1, item.type().id());
+        assertEquals(SuperType.AMULET, item.type().superType());
         assertCount(1, item.effects());
 
         Wearable wearable = (Wearable) item;

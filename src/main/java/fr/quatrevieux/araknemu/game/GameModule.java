@@ -17,6 +17,7 @@ import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepo
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
+import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
@@ -52,6 +53,7 @@ import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.handler.loader.*;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.item.SuperType;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.*;
 import fr.quatrevieux.araknemu.game.item.factory.*;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
@@ -373,6 +375,7 @@ final public class GameModule implements ContainerModule {
                 container.get(ItemTemplateRepository.class),
                 container.get(ItemFactory.class),
                 container.get(ItemSetRepository.class),
+                container.get(ItemTypeRepository.class),
                 container.get(EffectMappers.class)
             )
         );
@@ -464,9 +467,16 @@ final public class GameModule implements ContainerModule {
             ItemFactory.class,
             container -> new DefaultItemFactory(
                 new ResourceFactory(container.get(EffectMappers.class)),
+                new UsableFactory(container.get(EffectMappers.class)),
                 new WeaponFactory(container.get(EffectMappers.class)),
-                new WearableFactory(container.get(EffectMappers.class)),
-                new UsableFactory(container.get(EffectMappers.class))
+                new WearableFactory(SuperType.AMULET, container.get(EffectMappers.class)),
+                new WearableFactory(SuperType.RING, container.get(EffectMappers.class)),
+                new WearableFactory(SuperType.BELT, container.get(EffectMappers.class)),
+                new WearableFactory(SuperType.BOOT, container.get(EffectMappers.class)),
+                new WearableFactory(SuperType.SHIELD, container.get(EffectMappers.class)),
+                new WearableFactory(SuperType.HELMET, container.get(EffectMappers.class)),
+                new WearableFactory(SuperType.MANTLE, container.get(EffectMappers.class)),
+                new WearableFactory(SuperType.DOFUS, container.get(EffectMappers.class))
             )
         );
     }

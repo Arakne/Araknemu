@@ -4,10 +4,10 @@ import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectMoved;
 import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectQuantityChanged;
-import fr.quatrevieux.araknemu.game.world.item.Item;
+import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
-import fr.quatrevieux.araknemu.game.world.item.inventory.ItemEntry;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 
 import java.util.List;
 import java.util.stream.Collectors;

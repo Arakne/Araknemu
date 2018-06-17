@@ -1,8 +1,8 @@
-package fr.quatrevieux.araknemu.game.world.item.inventory;
+package fr.quatrevieux.araknemu.game.item.inventory;
 
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
-import fr.quatrevieux.araknemu.game.world.item.Item;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.item.Item;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 
 import java.util.List;
 

@@ -8,11 +8,11 @@ import fr.quatrevieux.araknemu.game.player.inventory.itemset.ItemSets;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlot;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.Accessories;
-import fr.quatrevieux.araknemu.game.world.item.Item;
-import fr.quatrevieux.araknemu.game.world.item.inventory.ItemStorage;
-import fr.quatrevieux.araknemu.game.world.item.inventory.SimpleItemStorage;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
+import fr.quatrevieux.araknemu.game.item.Item;
+import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
+import fr.quatrevieux.araknemu.game.item.inventory.SimpleItemStorage;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
 
 import java.util.Collection;
 import java.util.Iterator;

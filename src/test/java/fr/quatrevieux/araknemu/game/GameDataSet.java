@@ -21,17 +21,12 @@ import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemSet;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
+import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.data.world.transformer.ItemEffectsTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.ItemSetBonusTransformer;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
-import fr.quatrevieux.araknemu.game.world.item.Type;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -171,13 +166,15 @@ public class GameDataSet extends TestingDataSet {
     }
 
     public ItemTemplate pushItemTemplate(ItemTemplate template) throws SQLException, ContainerException {
+        pushItemTypes();
+
         use(ItemTemplate.class);
 
         connection.prepare(
             "INSERT INTO ITEM_TEMPLATE (ITEM_TEMPLATE_ID, ITEM_TYPE, ITEM_NAME, ITEM_LEVEL, ITEM_EFFECTS, WEIGHT, ITEM_SET_ID, PRICE, CONDITIONS, WEAPON_INFO) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             stmt -> {
                 stmt.setInt(1, template.id());
-                stmt.setInt(2, template.type().ordinal());
+                stmt.setInt(2, template.type());
                 stmt.setString(3, template.name());
                 stmt.setInt(4, template.level());
                 stmt.setString(5, new ItemEffectsTransformer().serialize(template.effects()));
@@ -195,49 +192,49 @@ public class GameDataSet extends TestingDataSet {
     }
 
     public GameDataSet pushItemTemplates() throws SQLException, ContainerException {
-        pushItemTemplate(new ItemTemplate(39, Type.AMULETTE, "Petite Amulette du Hibou", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "0d0+2")), 4, "", 0, "", 100));
-        pushItemTemplate(new ItemTemplate(40, Type.EPEE, "Petite Epée de Boisaille", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")), 20, "CS>4", 0, "4;1;1;50;30;5;0", 200));
-        pushItemTemplate(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10));
-        pushItemTemplate(new ItemTemplate(694, Type.DOFUS, "Dofus Pourpre", 6, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_DAMAGE_PERCENT, 26, 50, 0, "1d25+25")), 1, "", 0, "", 10));
+        pushItemTemplate(new ItemTemplate(39, 1, "Petite Amulette du Hibou", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "0d0+2")), 4, "", 0, "", 100));
+        pushItemTemplate(new ItemTemplate(40, 6, "Petite Epée de Boisaille", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")), 20, "CS>4", 0, "4;1;1;50;30;5;0", 200));
+        pushItemTemplate(new ItemTemplate(284, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10));
+        pushItemTemplate(new ItemTemplate(694, 23, "Dofus Pourpre", 6, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_DAMAGE_PERCENT, 26, 50, 0, "1d25+25")), 1, "", 0, "", 10));
 
-        pushItemTemplate(new ItemTemplate(2411, Type.COIFFE, "Coiffe du Bouftou", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 40, 0, "1d40+0"), new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 40, 0, "1d40+0")), 10, "", 1, "", 550));
-        pushItemTemplate(new ItemTemplate(2414, Type.CAPE, "Cape Bouffante", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INITIATIVE, 1, 300, 0, "1d300+0"), new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 48, 0, "1d48+0")), 10, "", 1, "", 550));
-        pushItemTemplate(new ItemTemplate(2416, Type.MARTEAU, "Marteau du Bouftou", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_EARTH, 4, 8, 0, "1d5+3"), new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_FIRE, 4, 8, 0, "1d5+3"), new ItemTemplateEffectEntry(Effect.ADD_SUMMONS, 1, 0, 0, "0d0+1")), 10, "", 1, "", 550));
-        pushItemTemplate(new ItemTemplate(2419, Type.ANNEAU, "Anneau de Bouze le Clerc", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 28, 0, "1d28+0")), 10, "", 1, "", 550));
-        pushItemTemplate(new ItemTemplate(2422, Type.BOTTES, "Boufbottes", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_DAMAGE_PERCENT, 1, 15, 0, "1d15+0"), new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 33, 0, "1d33+0")), 10, "", 1, "", 550));
-        pushItemTemplate(new ItemTemplate(2425, Type.AMULETTE, "Amulette du Bouftou", 3, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 10, 0, "1d10+0"), new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 10, 0, "1d10+0")), 10, "", 1, "", 550));
-        pushItemTemplate(new ItemTemplate(2428, Type.CEINTURE, "Amulette du Bouftou", 20, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_PODS, 1, 500, 0, "1d500+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(2411, 16, "Coiffe du Bouftou", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 40, 0, "1d40+0"), new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 40, 0, "1d40+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(2414, 17, "Cape Bouffante", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INITIATIVE, 1, 300, 0, "1d300+0"), new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 48, 0, "1d48+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(2416, 7, "Marteau du Bouftou", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_EARTH, 4, 8, 0, "1d5+3"), new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_FIRE, 4, 8, 0, "1d5+3"), new ItemTemplateEffectEntry(Effect.ADD_SUMMONS, 1, 0, 0, "0d0+1")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(2419, 9, "Anneau de Bouze le Clerc", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 28, 0, "1d28+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(2422, 11, "Boufbottes", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_DAMAGE_PERCENT, 1, 15, 0, "1d15+0"), new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 33, 0, "1d33+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(2425, 1, "Amulette du Bouftou", 3, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 10, 0, "1d10+0"), new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 10, 0, "1d10+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(2428, 10, "Amulette du Bouftou", 20, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_PODS, 1, 500, 0, "1d500+0")), 10, "", 1, "", 550));
 
-        pushItemTemplate(new ItemTemplate(2641, Type.COIFFE, "Toady", 30, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_AGILITY, 11, 60, 0, "1d50+10")), 10, "", 7, "", 2700));
+        pushItemTemplate(new ItemTemplate(2641, 16, "Toady", 30, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_AGILITY, 11, 60, 0, "1d50+10")), 10, "", 7, "", 2700));
 
-        pushItemTemplate(new ItemTemplate(8213, Type.AMULETTE, "Amulette du Piou Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, "0d0+1")), 1, "", 60, "", 1));
-        pushItemTemplate(new ItemTemplate(8219, Type.ANNEAU, "Anneau du Piou Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, "0d0+1")), 1, "", 60, "", 1));
-        pushItemTemplate(new ItemTemplate(8225, Type.BOTTES, "Sandales du Piou Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, "0d0+1")), 1, "", 60, "", 1));
-        pushItemTemplate(new ItemTemplate(8231, Type.CAPE, "Cape du Piou Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, "0d0+1")), 10, "", 60, "", 100));
-        pushItemTemplate(new ItemTemplate(8237, Type.CEINTURE, "Ceinture du Piou Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, "0d0+1")), 1, "", 60, "", 1));
-        pushItemTemplate(new ItemTemplate(8243, Type.COIFFE, "Chapeau du Piou Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, "0d0+1")), 1, "", 60, "", 1));
+        pushItemTemplate(new ItemTemplate(8213, 1, "Amulette du Piou Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, "0d0+1")), 1, "", 60, "", 1));
+        pushItemTemplate(new ItemTemplate(8219, 9, "Anneau du Piou Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, "0d0+1")), 1, "", 60, "", 1));
+        pushItemTemplate(new ItemTemplate(8225, 11, "Sandales du Piou Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, "0d0+1")), 1, "", 60, "", 1));
+        pushItemTemplate(new ItemTemplate(8231, 17, "Cape du Piou Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, "0d0+1")), 10, "", 60, "", 100));
+        pushItemTemplate(new ItemTemplate(8237, 10, "Ceinture du Piou Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, "0d0+1")), 1, "", 60, "", 1));
+        pushItemTemplate(new ItemTemplate(8243, 16, "Chapeau du Piou Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 0, 0, "0d0+1")), 1, "", 60, "", 1));
 
         return this;
     }
 
     public GameDataSet pushHighLevelItems() throws SQLException, ContainerException {
-        pushItemTemplate(new ItemTemplate(112411, Type.COIFFE, "Coiffe du Bouftou", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 40, 0, "1d40+0"), new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 40, 0, "1d40+0")), 10, "", 1, "", 550));
-        pushItemTemplate(new ItemTemplate(112414, Type.CAPE, "Cape Bouffante", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INITIATIVE, 1, 300, 0, "1d300+0"), new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 48, 0, "1d48+0")), 10, "", 1, "", 550));
-        pushItemTemplate(new ItemTemplate(112416, Type.MARTEAU, "Marteau du Bouftou", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_EARTH, 4, 8, 0, "1d5+3"), new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_FIRE, 4, 8, 0, "1d5+3"), new ItemTemplateEffectEntry(Effect.ADD_SUMMONS, 1, 0, 0, "0d0+1")), 10, "", 1, "", 550));
-        pushItemTemplate(new ItemTemplate(112419, Type.ANNEAU, "Anneau de Bouze le Clerc", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 28, 0, "1d28+0")), 10, "", 1, "", 550));
-        pushItemTemplate(new ItemTemplate(112422, Type.BOTTES, "Boufbottes", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_DAMAGE_PERCENT, 1, 15, 0, "1d15+0"), new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 33, 0, "1d33+0")), 10, "", 1, "", 550));
-        pushItemTemplate(new ItemTemplate(112425, Type.AMULETTE, "Amulette du Bouftou", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 10, 0, "1d10+0"), new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 10, 0, "1d10+0")), 10, "", 1, "", 550));
-        pushItemTemplate(new ItemTemplate(112428, Type.CEINTURE, "Amulette du Bouftou", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_PODS, 1, 500, 0, "1d500+0")), 10, "", 1, "", 550));
-        pushItemTemplate(new ItemTemplate(111694, Type.DOFUS, "Dofus Pourpre", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_DAMAGE_PERCENT, 26, 50, 0, "1d25+25")), 1, "", 0, "", 10));
+        pushItemTemplate(new ItemTemplate(112411, 16, "Coiffe du Bouftou", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 40, 0, "1d40+0"), new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 40, 0, "1d40+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(112414, 17, "Cape Bouffante", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INITIATIVE, 1, 300, 0, "1d300+0"), new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 48, 0, "1d48+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(112416, 7, "Marteau du Bouftou", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_EARTH, 4, 8, 0, "1d5+3"), new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_FIRE, 4, 8, 0, "1d5+3"), new ItemTemplateEffectEntry(Effect.ADD_SUMMONS, 1, 0, 0, "0d0+1")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(112419, 9, "Anneau de Bouze le Clerc", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 28, 0, "1d28+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(112422, 11, "Boufbottes", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_DAMAGE_PERCENT, 1, 15, 0, "1d15+0"), new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 33, 0, "1d33+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(112425, 1, "Amulette du Bouftou", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 10, 0, "1d10+0"), new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 10, 0, "1d10+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(112428, 10, "Amulette du Bouftou", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_PODS, 1, 500, 0, "1d500+0")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(111694, 23, "Dofus Pourpre", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_DAMAGE_PERCENT, 26, 50, 0, "1d25+25")), 1, "", 0, "", 10));
 
         return this;
     }
 
     public GameDataSet pushUsableItems() throws SQLException, ContainerException {
-        pushItemTemplate(new ItemTemplate(283, Type.POTION, "Fiole de Soin", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_LIFE, 31, 60, 0, "1d30+30")), 1, "", 0, "", 10));
-        pushItemTemplate(new ItemTemplate(468, Type.PAIN, "Pain d'Amakna", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_LIFE, 10, 0, 0, "0d0+10")), 1, "", 0, "", 1));
-        pushItemTemplate(new ItemTemplate(800, Type.PARCHEMIN_CARAC, "Grand Parchemin d'Agilité ", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_CHARACT_AGILITY, 1, 0, 0, "")), 1, "", 0, "", 40000));
-        pushItemTemplate(new ItemTemplate(2240, Type.FEE_ARTIFICE, "Petite Fée d'Artifice Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.FIREWORK, 1, 0, 2900, "")), 1, "", 0, "", 350));
+        pushItemTemplate(new ItemTemplate(283, 12, "Fiole de Soin", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_LIFE, 31, 60, 0, "1d30+30")), 1, "", 0, "", 10));
+        pushItemTemplate(new ItemTemplate(468, 33, "Pain d'Amakna", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_LIFE, 10, 0, 0, "0d0+10")), 1, "", 0, "", 1));
+        pushItemTemplate(new ItemTemplate(800, 76, "Grand Parchemin d'Agilité ", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_CHARACT_AGILITY, 1, 0, 0, "")), 1, "", 0, "", 40000));
+        pushItemTemplate(new ItemTemplate(2240, 74, "Petite Fée d'Artifice Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.FIREWORK, 1, 0, 2900, "")), 1, "", 0, "", 350));
 
         return this;
     }
@@ -378,6 +375,133 @@ public class GameDataSet extends TestingDataSet {
                 "(52, 6390000), (53, 6950000), (54, 7530000), (55, 8130000), (56, 8765100), (57, 9420000), (58, 10150000), (59, 10894000), (60, 11650000), (61, 12450000), (62, 13280000), (63, 14130000), (64, 15170000), (65, 16251000), (66, 17377000), (67, 18553000), (68, 19778000), (69, 21055000), (70, 22385000), (71, 23529000), (72, 25209000), (73, 26707000), (74, 28264000), (75, 29882000), (76, 31563000), (77, 33307000), (78, 35118000), (79, 36997000), (80, 38945000), (81, 40965000), (82, 43059000), (83, 45229000), (84, 47476000), (85, 49803000), (86, 52211000), (87, 54704000), (88, 57284000), (89, 59952000), (90, 62712000), (91, 65565000), (92, 68514000), (93, 71561000), (94, 74710000), (95, 77963000), (96, 81323000), (97, 84792000), (98, 88374000), (99, 92071000), (100, 95886000), (101, 99823000)," +
                 "(102, 103885000), (103, 108075000), (104, 112396000), (105, 116853000), (106, 121447000), (107, 126184000), (108, 131066000), (109, 136098000), (110, 141283000), (111, 146626000), (112, 152130000), (113, 157800000), (114, 163640000), (115, 169655000), (116, 175848000), (117, 182225000), (118, 188791000), (119, 195550000), (120, 202507000), (121, 209667000), (122, 217037000), (123, 224620000), (124, 232424000), (125, 240452000), (126, 248712000), (127, 257209000), (128, 265949000), (129, 274939000), (130, 284186000), (131, 293694000), (132, 303473000), (133, 313527000), (134, 323866000), (135, 334495000), (136, 345423000), (137, 356657000), (138, 368206000), (139, 380076000), (140, 392278000), (141, 404818000), (142, 417706000), (143, 430952000), (144, 444564000), (145, 458551000), (146, 472924000), (147, 487693000), (148, 502867000), (149, 518458000), (150, 534476000), (151, 551000000)," +
                 "(152, 567839000), (153, 585206000), (154, 603047000), (155, 621374000), (156, 640199000), (157, 659536000), (158, 679398000), (159, 699798000), (160, 720751000), (161, 742772000), (162, 764374000), (163, 787074000), (164, 810387000), (165, 834329000), (166, 858917000), (167, 884167000), (168, 910098000), (169, 936727000), (170, 964073000), (171, 992154000), (172, 1020991000), (173, 1050603000), (174, 1081010000), (175, 1112235000), (176, 1144298000), (177, 1177222000), (178, 1211030000), (179, 1245745000), (180, 1281393000), (181, 1317997000), (182, 1355584000), (183, 1404179000), (184, 1463811000), (185, 1534506000), (186, 1616294000), (187, 1709205000), (188, 1813267000), (189, 1928513000), (190, 2054975000), (191, 2192686000), (192, 2341679000), (193, 2501990000), (194, 2673655000), (195, 2856710000), (196, 3051194000), (197, 3257146000), (198, 3474606000), (199, 3703616000), (200, 7407232000)"
+        );
+
+        return this;
+    }
+
+    public GameDataSet pushItemTypes() throws ContainerException, SQLException {
+        use(ItemType.class);
+
+        if (repository(ItemType.class).has(new ItemType(1, null, null, null))) {
+            return this;
+        }
+
+        connection.query(
+            "INSERT INTO ITEM_TYPE (TYPE_ID, TYPE_NAME, SUPER_TYPE, EFFECT_AREA) VALUES (1, \"Amulette\", 1, NULL),\n" +
+                "(2, \"Arc\", 2, \"Pa\"),\n" +
+                "(3, \"Baguette\", 2, \"Pa\"),\n" +
+                "(4, \"Bâton\", 2, \"Tb\"),\n" +
+                "(5, \"Dague\", 2, \"Pa\"),\n" +
+                "(6, \"Épée\", 2, \"Pa\"),\n" +
+                "(7, \"Marteau\", 2, \"Xb\"),\n" +
+                "(8, \"Pelle\", 2, \"Pa\"),\n" +
+                "(9, \"Anneau\", 3, NULL),\n" +
+                "(10, \"Ceinture\", 4, NULL),\n" +
+                "(11, \"Botte\", 5, NULL),\n" +
+                "(12, \"Potion\", 6, NULL),\n" +
+                "(13, \"Parchemin d'expérience\", 6, NULL),\n" +
+                "(14, \"Objet de dons\", 6, NULL),\n" +
+                "(15, \"Ressource\", 9, NULL),\n" +
+                "(16, \"Chapeau\", 10, NULL),\n" +
+                "(17, \"Cape\", 11, NULL),\n" +
+                "(18, \"Familier\", 12, NULL),\n" +
+                "(19, \"Hache\", 2, \"Pa\"),\n" +
+                "(20, \"Outil\", 2, \"Pa\"),\n" +
+                "(21, \"Pioche\", 2, \"Pa\"),\n" +
+                "(22, \"Faux\", 2, \"Pa\"),\n" +
+                "(23, \"Dofus\", 13, NULL),\n" +
+                "(24, \"Objet de Quête\", 14, NULL),\n" +
+                "(25, \"Document\", 6, NULL),\n" +
+                "(26, \"Potion de forgemagie\", 9, NULL),\n" +
+                "(27, \"Objet de Mutation\", 15, NULL),\n" +
+                "(28, \"Nourriture boost\", 16, NULL),\n" +
+                "(29, \"Bénédiction\", 17, NULL),\n" +
+                "(30, \"Malédiction\", 18, NULL),\n" +
+                "(31, \"Roleplay Buffs\", 19, NULL),\n" +
+                "(32, \"Personnage suiveur\", 20, NULL),\n" +
+                "(33, \"Pain\", 6, NULL),\n" +
+                "(34, \"Céréale\", 9, NULL),\n" +
+                "(35, \"Fleur\", 9, NULL),\n" +
+                "(36, \"Plante\", 9, NULL),\n" +
+                "(37, \"Bière\", 6, NULL),\n" +
+                "(38, \"Bois\", 9, NULL),\n" +
+                "(39, \"Minerai\", 9, NULL),\n" +
+                "(40, \"Alliage\", 9, NULL),\n" +
+                "(41, \"Poisson\", 9, NULL),\n" +
+                "(42, \"Friandise\", 6, NULL),\n" +
+                "(43, \"Potion d'oubli de sort\", 6, NULL),\n" +
+                "(44, \"Potion d'oubli de métier\", 6, NULL),\n" +
+                "(45, \"Potion d'oubli de maîtrise\", 6, NULL),\n" +
+                "(46, \"Fruit\", 9, NULL),\n" +
+                "(47, \"Os\", 9, NULL),\n" +
+                "(48, \"Poudre\", 9, NULL),\n" +
+                "(49, \"Poisson comestible\", 6, NULL),\n" +
+                "(50, \"Pierre précieuse\", 9, NULL),\n" +
+                "(51, \"Pierre brute\", 9, NULL),\n" +
+                "(52, \"Farine\", 9, NULL),\n" +
+                "(53, \"Plume\", 9, NULL),\n" +
+                "(54, \"Poil\", 9, NULL),\n" +
+                "(55, \"Etoffe\", 9, NULL),\n" +
+                "(56, \"Cuir\", 9, NULL),\n" +
+                "(57, \"Laine\", 9, NULL),\n" +
+                "(58, \"Graine\", 9, NULL),\n" +
+                "(59, \"Peau\", 9, NULL),\n" +
+                "(60, \"Huile\", 9, NULL),\n" +
+                "(61, \"Peluche\", 9, NULL),\n" +
+                "(62, \"Poisson vidé\", 9, NULL),\n" +
+                "(63, \"Viande\", 9, NULL),\n" +
+                "(64, \"Viande conservée\", 9, NULL),\n" +
+                "(65, \"Queue\", 9, NULL),\n" +
+                "(66, \"Metaria\", 9, NULL),\n" +
+                "(68, \"Légume\", 9, NULL),\n" +
+                "(69, \"Viande comestible\", 6, NULL),\n" +
+                "(70, \"Teinture\", 6, NULL),\n" +
+                "(71, \"Matériel d'alchimie\", 9, NULL),\n" +
+                "(72, \"Oeuf de familier\", 6, NULL),\n" +
+                "(73, \"Maîtrise\", 6, NULL),\n" +
+                "(74, \"Fée d'artifice\", 6, NULL),\n" +
+                "(75, \"Parchemin de sort\", 6, NULL),\n" +
+                "(76, \"Parchemin de caractéristique\", 6, NULL),\n" +
+                "(77, \"Certificat de mise en chanil\", 6, NULL),\n" +
+                "(78, \"Rune de forgemagie\", 9, NULL),\n" +
+                "(79, \"Boisson\", 6, NULL),\n" +
+                "(80, \"Objet de mission\", 6, NULL),\n" +
+                "(81, \"Sac à dos\", 11, NULL),\n" +
+                "(82, \"Bouclier\", 7, NULL),\n" +
+                "(83, \"Pierre d'âme\", 8, NULL),\n" +
+                "(84, \"Clefs\", 9, NULL),\n" +
+                "(85, \"Pierre d'âme pleine\", 6, NULL),\n" +
+                "(86, \"Potion d'oubli percepteur\", 6, NULL),\n" +
+                "(87, \"Parchemin de recherche\", 6, NULL),\n" +
+                "(88, \"Pierre magique\", 6, NULL),\n" +
+                "(89, \"Cadeaux\", 6, NULL),\n" +
+                "(90, \"Fantôme de Familier\", 9, NULL),\n" +
+                "(91, \"Dragodinde\", 21, NULL),\n" +
+                "(92, \"Bouftou\", 21, NULL),\n" +
+                "(93, \"Objet d'élevage\", 6, NULL),\n" +
+                "(94, \"Objet utilisable\", 6, NULL),\n" +
+                "(95, \"Planche\", 9, NULL),\n" +
+                "(96, \"Ecorce\", 9, NULL),\n" +
+                "(97, \"Certificat de monture\", 6, NULL),\n" +
+                "(98, \"Racine\", 9, NULL),\n" +
+                "(99, \"Filet de capture\", 8, NULL),\n" +
+                "(100, \"Sac de ressources\", 6, NULL),\n" +
+                "(102, \"Arbalète\", 2, \"Lc\"),\n" +
+                "(103, \"Patte\", 9, NULL),\n" +
+                "(104, \"Aile\", 9, NULL),\n" +
+                "(105, \"Oeuf\", 9, NULL),\n" +
+                "(106, \"Oreille\", 9, NULL),\n" +
+                "(107, \"Carapace\", 9, NULL),\n" +
+                "(108, \"Bourgeon\", 9, NULL),\n" +
+                "(109, \"Oeil\", 9, NULL),\n" +
+                "(110, \"Gelée\", 9, NULL),\n" +
+                "(111, \"Coquille\", 9, NULL),\n" +
+                "(112, \"Prisme\", 6, NULL),\n" +
+                "(113, \"Objet vivant\", 22, NULL),\n" +
+                "(114, \"Arme magique\", 2, \"Pa\"),\n" +
+                "(115, \"Fragment d'âme de Shushu\", 6, NULL),\n" +
+                "(116, \"Potion de familier\", 6, NULL)"
         );
 
         return this;

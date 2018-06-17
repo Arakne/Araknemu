@@ -16,7 +16,7 @@ class InventoryAccessoryTest {
 
         assertEquals(AccessoryType.HELMET, accessory.type());
         assertEquals(123, accessory.appearance());
-        assertNull(accessory.itemType());
+        assertEquals(-1, accessory.itemType());
         assertEquals(0, accessory.frame());
         assertEquals("7b", accessory.toString());
     }

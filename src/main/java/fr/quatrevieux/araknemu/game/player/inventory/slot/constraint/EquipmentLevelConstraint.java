@@ -1,9 +1,9 @@
 package fr.quatrevieux.araknemu.game.player.inventory.slot.constraint;
 
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.game.world.item.Item;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.BadLevelException;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.item.Item;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.BadLevelException;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 
 /**
  * Check the player level for equip the item

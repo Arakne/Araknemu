@@ -2,7 +2,7 @@ package fr.quatrevieux.araknemu.game.player.inventory.accessory;
 
 import fr.quatrevieux.araknemu.game.world.creature.accessory.Accessory;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.AccessoryType;
-import fr.quatrevieux.araknemu.game.world.item.inventory.ItemEntry;
+import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 
 /**
  * Adapt inventory entry to accessory

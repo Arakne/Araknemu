@@ -1,17 +1,18 @@
-package fr.quatrevieux.araknemu.game.world.item.inventory;
+package fr.quatrevieux.araknemu.game.item.inventory;
 
 import fr.quatrevieux.araknemu._test.TestCase;
+import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
-import fr.quatrevieux.araknemu.core.event.Dispatcher;
+import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
+import fr.quatrevieux.araknemu.game.item.Item;
+import fr.quatrevieux.araknemu.game.item.SuperType;
+import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
+import fr.quatrevieux.araknemu.game.item.type.Resource;
 import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectAdded;
 import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectDeleted;
-import fr.quatrevieux.araknemu.game.world.item.Item;
-import fr.quatrevieux.araknemu.game.world.item.Type;
-import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.InventoryException;
-import fr.quatrevieux.araknemu.game.world.item.inventory.exception.ItemNotFoundException;
-import fr.quatrevieux.araknemu.game.item.type.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -96,14 +97,14 @@ class SimpleItemStorageTest extends TestCase {
 
     @Test
     void addWillDispatchEvent() throws InventoryException {
-        Entry entry = storage.add(new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>()));
+        Entry entry = storage.add(new Resource(new ItemTemplate(284, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ItemType(48, "Poudre", SuperType.RESOURCE, null), new ArrayList<>()));
 
         Mockito.verify(dispatcher).dispatch(Mockito.argThat(argument -> ObjectAdded.class.cast(argument).entry() == entry));
     }
 
     @Test
     void addWillCreateNewEntry() throws InventoryException {
-        Item item = new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
+        Item item = new Resource(new ItemTemplate(284, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ItemType(48, "Poudre", SuperType.RESOURCE, null), new ArrayList<>());
         Entry entry = storage.add(item, 5);
 
         assertEquals(1, entry.id());
@@ -114,7 +115,7 @@ class SimpleItemStorageTest extends TestCase {
 
     @Test
     void addWillIncrementId() throws InventoryException {
-        Item item = new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
+        Item item = new Resource(new ItemTemplate(284, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ItemType(48, "Poudre", SuperType.RESOURCE, null), new ArrayList<>());
 
         assertEquals(1, storage.add(item, 5).id());
         assertEquals(2, storage.add(item, 5).id());
@@ -123,7 +124,7 @@ class SimpleItemStorageTest extends TestCase {
 
     @Test
     void addGet() throws InventoryException {
-        Item item = new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
+        Item item = new Resource(new ItemTemplate(284, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ItemType(48, "Poudre", SuperType.RESOURCE, null), new ArrayList<>());
         Entry entry = storage.add(item, 5);
 
         assertSame(entry, storage.get(1));
@@ -131,7 +132,7 @@ class SimpleItemStorageTest extends TestCase {
 
     @Test
     void iterator() throws InventoryException {
-        Item item = new Resource(new ItemTemplate(284, Type.POUDRE, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ArrayList<>());
+        Item item = new Resource(new ItemTemplate(284, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ItemType(48, "Poudre", SuperType.RESOURCE, null), new ArrayList<>());
 
         List<Entry> entries = Arrays.asList(
             storage.add(item, 5),

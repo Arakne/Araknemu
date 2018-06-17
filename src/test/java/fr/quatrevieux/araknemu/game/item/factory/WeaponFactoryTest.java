@@ -1,15 +1,14 @@
 package fr.quatrevieux.araknemu.game.item.factory;
 
 import fr.quatrevieux.araknemu.data.constant.Effect;
+import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
+import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.item.Item;
+import fr.quatrevieux.araknemu.game.item.SuperType;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
-import fr.quatrevieux.araknemu.game.world.item.Item;
-import fr.quatrevieux.araknemu.game.world.item.Type;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToCharacteristicMapping;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToWeaponMapping;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,17 +30,19 @@ class WeaponFactoryTest extends GameBaseCase {
 
     @Test
     void createSimple() {
+        ItemType type = new ItemType(6, "Épée", SuperType.WEAPON, new EffectArea(EffectArea.Type.CELL, 0));
         Item item = factory.create(
-            new ItemTemplate(40, Type.EPEE, "Petite Epée de Boisaille", 1,
+            new ItemTemplate(40, 6, "Petite Epée de Boisaille", 1,
                 Arrays.asList(
                     new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")
                 ),
                 20, "CS>4", 0, "4;1;1;50;30;5;0", 200
-            ), null, false
+            ), type, null, false
         );
 
         assertInstanceOf(Weapon.class, item);
         assertCount(1, item.effects());
+        assertSame(type, item.type());
 
         Weapon weapon = (Weapon) item;
 
@@ -53,14 +54,15 @@ class WeaponFactoryTest extends GameBaseCase {
 
     @Test
     void createWithRandomCharacteristic() {
+        ItemType type = new ItemType(6, "Épée", SuperType.WEAPON, new EffectArea(EffectArea.Type.CELL, 0));
         Item item = factory.create(
-            new ItemTemplate(40, Type.EPEE, "Petite Epée de Boisaille", 1,
+            new ItemTemplate(40, 6, "Petite Epée de Boisaille", 1,
                 Arrays.asList(
                     new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0"),
                     new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 10, 0, "")
                 ),
                 20, "CS>4", 0, "4;1;1;50;30;5;0", 200
-            ), null, false
+            ), type, null, false
         );
 
         assertInstanceOf(Weapon.class, item);
@@ -76,14 +78,15 @@ class WeaponFactoryTest extends GameBaseCase {
 
     @Test
     void createWithMaxCharacteristic() {
+        ItemType type = new ItemType(6, "Épée", SuperType.WEAPON, new EffectArea(EffectArea.Type.CELL, 0));
         Item item = factory.create(
-            new ItemTemplate(40, Type.EPEE, "Petite Epée de Boisaille", 1,
+            new ItemTemplate(40, 6, "Petite Epée de Boisaille", 1,
                 Arrays.asList(
                     new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0"),
                     new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 10, 0, "")
                 ),
                 20, "CS>4", 0, "4;1;1;50;30;5;0", 200
-            ), null, true
+            ), type, null, true
         );
 
         assertInstanceOf(Weapon.class, item);
@@ -98,14 +101,15 @@ class WeaponFactoryTest extends GameBaseCase {
 
     @Test
     void createWithSpecialEffect() {
+        ItemType type = new ItemType(6, "Épée", SuperType.WEAPON, new EffectArea(EffectArea.Type.CELL, 0));
         Item item = factory.create(
-            new ItemTemplate(40, Type.EPEE, "Petite Epée de Boisaille", 1,
+            new ItemTemplate(40, 6, "Petite Epée de Boisaille", 1,
                 Arrays.asList(
                     new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0"),
                     new ItemTemplateEffectEntry(Effect.NULL1, 0, 0, 0, "")
                 ),
                 20, "CS>4", 0, "4;1;1;50;30;5;0", 200
-            ), null, true
+            ), type, null, true
         );
 
         assertInstanceOf(Weapon.class, item);
@@ -119,13 +123,15 @@ class WeaponFactoryTest extends GameBaseCase {
 
     @Test
     void retrieve() {
+        ItemType type = new ItemType(6, "Épée", SuperType.WEAPON, new EffectArea(EffectArea.Type.CELL, 0));
         Item item = factory.retrieve(
-            new ItemTemplate(40, Type.EPEE, "Petite Epée de Boisaille", 1,
+            new ItemTemplate(40, 6, "Petite Epée de Boisaille", 1,
                 Arrays.asList(
                     new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")
                 ),
                 20, "CS>4", 0, "4;1;1;50;30;5;0", 200
             ),
+            type,
             null,
             Arrays.asList(
                 new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0"),
@@ -142,6 +148,7 @@ class WeaponFactoryTest extends GameBaseCase {
         assertEquals(Effect.INFLICT_DAMAGE_NEUTRAL, weapon.weaponEffects().get(0).effect());
         assertEquals(1, weapon.weaponEffects().get(0).min());
         assertEquals(7, weapon.weaponEffects().get(0).max());
+        assertSame(type, item.type());
 
         assertCount(1, weapon.characteristics());
         assertEquals(Effect.ADD_STRENGTH, weapon.characteristics().get(0).effect());

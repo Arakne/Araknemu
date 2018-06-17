@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.world.item.inventory.exception;
+package fr.quatrevieux.araknemu.game.item.inventory.exception;
 
 /**
  * Raise when an item is to high level for the player
