@@ -3,33 +3,60 @@ package fr.quatrevieux.araknemu.game.item.type;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.item.GameItemSet;
+import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Usable item
  */
-final public class UsableItem extends BaseItem {
+final public class UsableItem implements Item {
+    final private ItemTemplate template;
+    final private ItemType type;
     final private List<UseEffect> useEffects;
+    final private List<SpecialEffect> specials;
 
     public UsableItem(ItemTemplate template, ItemType type, List<UseEffect> useEffects, List<SpecialEffect> specials) {
-        super(template, type, null, specials);
-
+        this.template = template;
+        this.type = type;
         this.useEffects = useEffects;
+        this.specials = specials;
     }
 
+    @Override
+    public ItemTemplate template() {
+        return template;
+    }
+
+    @Override
+    public Optional<GameItemSet> set() {
+        return Optional.empty();
+    }
 
     @Override
     public List<? extends ItemEffect> effects() {
         List<ItemEffect> effects = new ArrayList<>(useEffects);
 
-        effects.addAll(super.effects());
+        effects.addAll(specials);
 
         return effects;
+    }
+
+    @Override
+    public List<SpecialEffect> specials() {
+        return specials;
+    }
+
+    @Override
+    public ItemType type() {
+        return type;
     }
 
     /**
@@ -78,21 +105,21 @@ final public class UsableItem extends BaseItem {
 
     @Override
     public boolean equals(Object obj) {
-        if (!super.equals(obj)) {
+        if (getClass() != obj.getClass()) {
             return false;
         }
 
         UsableItem usable = (UsableItem) obj;
 
-        return useEffects.equals(usable.useEffects);
+        return
+            template.equals(usable.template)
+            && useEffects.equals(usable.useEffects)
+            && specials.equals(usable.specials)
+        ;
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-
-        result = 31 * result + useEffects.hashCode();
-
-        return result;
+        return Objects.hash(template, useEffects, specials);
     }
 }
