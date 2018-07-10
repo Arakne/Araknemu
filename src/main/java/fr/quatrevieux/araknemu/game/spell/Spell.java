@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.game.spell;
 
+import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 /**
  * Interface for spells
  */
-public interface Spell {
+public interface Spell extends Castable {
     /**
      * Get the spell id
      */
@@ -29,31 +30,6 @@ public interface Spell {
     public int level();
 
     /**
-     * List of normal spell effects
-     */
-    public List<SpellEffect> effects();
-
-    /**
-     * List of critical spell effects
-     */
-    public List<SpellEffect> criticalEffects();
-
-    /**
-     * The AP cost
-     */
-    public int apCost();
-
-    /**
-     * Percent of chance for get critical hit
-     */
-    public int criticalHit();
-
-    /**
-     * Percent of chance for get a critical failure
-     */
-    public int criticalFailure();
-
-    /**
      * Does the spell range is modifiable ?
      */
     public boolean modifiableRange();
@@ -67,9 +43,4 @@ public interface Spell {
      * Does critical failures will ends the current fight turn ?
      */
     public boolean endsTurnOnFailure();
-
-    /**
-     * Get the launch constraints
-     */
-    public SpellConstraints constraints();
 }

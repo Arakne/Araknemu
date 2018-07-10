@@ -199,7 +199,7 @@ public class GameDataSet extends TestingDataSet {
 
         pushItemTemplate(new ItemTemplate(2411, 16, "Coiffe du Bouftou", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 40, 0, "1d40+0"), new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 40, 0, "1d40+0")), 10, "", 1, "", 550));
         pushItemTemplate(new ItemTemplate(2414, 17, "Cape Bouffante", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INITIATIVE, 1, 300, 0, "1d300+0"), new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 48, 0, "1d48+0")), 10, "", 1, "", 550));
-        pushItemTemplate(new ItemTemplate(2416, 7, "Marteau du Bouftou", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_EARTH, 4, 8, 0, "1d5+3"), new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_FIRE, 4, 8, 0, "1d5+3"), new ItemTemplateEffectEntry(Effect.ADD_SUMMONS, 1, 0, 0, "0d0+1")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(2416, 7, "Marteau du Bouftou", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_EARTH, 4, 8, 0, "1d5+3"), new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_FIRE, 4, 8, 0, "1d5+3"), new ItemTemplateEffectEntry(Effect.ADD_SUMMONS, 1, 0, 0, "0d0+1")), 10, "", 1, "5;1;1;40;40;5;0", 550));
         pushItemTemplate(new ItemTemplate(2419, 9, "Anneau de Bouze le Clerc", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 28, 0, "1d28+0")), 10, "", 1, "", 550));
         pushItemTemplate(new ItemTemplate(2422, 11, "Boufbottes", 10, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_DAMAGE_PERCENT, 1, 15, 0, "1d15+0"), new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 33, 0, "1d33+0")), 10, "", 1, "", 550));
         pushItemTemplate(new ItemTemplate(2425, 1, "Amulette du Bouftou", 3, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 10, 0, "1d10+0"), new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 10, 0, "1d10+0")), 10, "", 1, "", 550));
@@ -220,7 +220,7 @@ public class GameDataSet extends TestingDataSet {
     public GameDataSet pushHighLevelItems() throws SQLException, ContainerException {
         pushItemTemplate(new ItemTemplate(112411, 16, "Coiffe du Bouftou", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 40, 0, "1d40+0"), new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 40, 0, "1d40+0")), 10, "", 1, "", 550));
         pushItemTemplate(new ItemTemplate(112414, 17, "Cape Bouffante", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INITIATIVE, 1, 300, 0, "1d300+0"), new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 48, 0, "1d48+0")), 10, "", 1, "", 550));
-        pushItemTemplate(new ItemTemplate(112416, 7, "Marteau du Bouftou", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_EARTH, 4, 8, 0, "1d5+3"), new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_FIRE, 4, 8, 0, "1d5+3"), new ItemTemplateEffectEntry(Effect.ADD_SUMMONS, 1, 0, 0, "0d0+1")), 10, "", 1, "", 550));
+        pushItemTemplate(new ItemTemplate(112416, 7, "Marteau du Bouftou", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_EARTH, 4, 8, 0, "1d5+3"), new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_FIRE, 4, 8, 0, "1d5+3"), new ItemTemplateEffectEntry(Effect.ADD_SUMMONS, 1, 0, 0, "0d0+1")), 10, "", 1, "5;1;1;40;40;5;0", 550));
         pushItemTemplate(new ItemTemplate(112419, 9, "Anneau de Bouze le Clerc", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 28, 0, "1d28+0")), 10, "", 1, "", 550));
         pushItemTemplate(new ItemTemplate(112422, 11, "Boufbottes", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_DAMAGE_PERCENT, 1, 15, 0, "1d15+0"), new ItemTemplateEffectEntry(Effect.ADD_VITALITY, 1, 33, 0, "1d33+0")), 10, "", 1, "", 550));
         pushItemTemplate(new ItemTemplate(112425, 1, "Amulette du Bouftou", 200, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 1, 10, 0, "1d10+0"), new ItemTemplateEffectEntry(Effect.ADD_STRENGTH, 1, 10, 0, "1d10+0")), 10, "", 1, "", 550));
@@ -235,6 +235,13 @@ public class GameDataSet extends TestingDataSet {
         pushItemTemplate(new ItemTemplate(468, 33, "Pain d'Amakna", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_LIFE, 10, 0, 0, "0d0+10")), 1, "", 0, "", 1));
         pushItemTemplate(new ItemTemplate(800, 76, "Grand Parchemin d'Agilité ", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_CHARACT_AGILITY, 1, 0, 0, "")), 1, "", 0, "", 40000));
         pushItemTemplate(new ItemTemplate(2240, 74, "Petite Fée d'Artifice Rouge", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.FIREWORK, 1, 0, 2900, "")), 1, "", 0, "", 350));
+
+        return this;
+    }
+
+    public GameDataSet pushWeaponTemplates() throws SQLException, ContainerException {
+        pushItemTemplate(new ItemTemplate(88, 2, "Petit Arc de Boisaille", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 4, 0, "1d4+0")), 10, "CS>1", 0, "4;2;6;30;50;5;0", 250));
+        pushItemTemplate(new ItemTemplate(89, 2, "Arc de Boisaille", 2, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 2, 4, 0, "1d3+1")), 10, "CS>2", 0, "4;2;6;30;50;5;1", 300));
 
         return this;
     }

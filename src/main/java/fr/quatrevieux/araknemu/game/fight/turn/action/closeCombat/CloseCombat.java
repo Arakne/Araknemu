@@ -1,14 +1,18 @@
 package fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat;
 
+import fr.quatrevieux.araknemu.game.fight.castable.weapon.WeaponConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
-import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastSuccess;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.game.world.util.Sender;
+import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
+import fr.quatrevieux.araknemu.network.game.out.info.Error;
 
 import java.time.Duration;
 
@@ -19,53 +23,50 @@ final public class CloseCombat implements Action {
     final private FightTurn turn;
     final private Fighter caster;
     final private FightCell target;
+    final private WeaponConstraintsValidator validator;
     final private CriticalityStrategy criticalityStrategy;
 
-    private CastSuccess result;
+    private CloseCombatSuccess result;
 
     public CloseCombat(FightTurn turn, Fighter caster, FightCell target) {
-        this(turn, caster, target, new BaseCriticalityStrategy(caster));
+        this(turn, caster, target, new WeaponConstraintsValidator(turn), new BaseCriticalityStrategy(caster));
     }
 
-    public CloseCombat(FightTurn turn, Fighter caster, FightCell target, CriticalityStrategy criticalityStrategy) {
+    public CloseCombat(FightTurn turn, Fighter caster, FightCell target, WeaponConstraintsValidator validator, CriticalityStrategy criticalityStrategy) {
         this.turn = turn;
         this.caster = caster;
         this.target = target;
+        this.validator = validator;
         this.criticalityStrategy = criticalityStrategy;
     }
 
     @Override
     public boolean validate() {
-//        Error error = spell == null
-//            ? Error.cantCastNotFound()
-//            : validator.validate(spell, target)
-//        ;
-//
-//        if (error != null) {
-//            if (caster instanceof Sender) {
-//                Sender.class.cast(caster).send(error);
-//            }
-//
-//            return false;
-//        }
+        Error error = validator.validate(caster.weapon(), target);
+
+        if (error != null) {
+            if (caster instanceof Sender) {
+                Sender.class.cast(caster).send(error);
+            }
+
+            return false;
+        }
 
         return true;
     }
 
     @Override
     public ActionResult start() {
-//        if (criticalityStrategy.failed(spell.criticalFailure())) {
-//            return new CastFailed(caster, spell);
-//        }
-//
-//        return result = new CastSuccess(
-//            caster,
-//            spell,
-//            target,
-//            criticalityStrategy.hit(spell.criticalHit())
-//        );
+        if (criticalityStrategy.failed(caster.weapon().criticalFailure())) {
+            return new CloseCombatFailed(caster);
+        }
 
-        return null;
+        return result = new CloseCombatSuccess(
+            caster,
+            caster.weapon(),
+            target,
+            criticalityStrategy.hit(caster.weapon().criticalHit())
+        );
     }
 
     @Override
@@ -80,24 +81,21 @@ final public class CloseCombat implements Action {
 
     @Override
     public void end() {
-//        if (result.critical()) {
-//            caster.fight().send(ActionEffect.criticalHitSpell(caster, spell));
-//        }
-//
-//        turn.points().useActionPoints(spell.apCost());
-//
-//        for (SpellEffect effect : result.effects()) {
-//            turn.fight().effects().apply(caster, spell, effect, target);
-//        }
+        if (result.critical()) {
+            caster.fight().send(ActionEffect.criticalHitCloseCombat(caster));
+        }
+
+        turn.points().useActionPoints(caster.weapon().apCost());
+
+        for (SpellEffect effect : result.effects()) {
+            turn.fight().effects().apply(caster, caster.weapon(), effect, target);
+        }
     }
 
     @Override
     public void failed() {
-//        turn.points().useActionPoints(spell.apCost());
-//
-//        if (spell.endsTurnOnFailure()) {
-//            turn.stop();
-//        }
+        turn.points().useActionPoints(caster.weapon().apCost());
+        turn.stop();
     }
 
     @Override

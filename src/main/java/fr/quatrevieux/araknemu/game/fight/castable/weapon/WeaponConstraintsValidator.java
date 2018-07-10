@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.fight.castable.spell;
+package fr.quatrevieux.araknemu.game.fight.castable.weapon;
 
 import fr.quatrevieux.araknemu.game.fight.castable.validator.ApCostValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
@@ -6,40 +6,38 @@ import fr.quatrevieux.araknemu.game.fight.castable.validator.LineLaunchValidator
 import fr.quatrevieux.araknemu.game.fight.castable.validator.TargetCellValidator;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
-import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 
 /**
- * Validate spell constraints
+ * Validate weapon cast constraints
  */
-final public class SpellConstraintsValidator {
+final public class WeaponConstraintsValidator {
     final private FightTurn turn;
-    final private CastConstraintValidator<? super Spell>[] validators;
+    final private CastConstraintValidator<? super CastableWeapon>[] validators;
 
-    public SpellConstraintsValidator(FightTurn turn) {
+    public WeaponConstraintsValidator(FightTurn turn) {
         this(turn, new CastConstraintValidator[] {
             new ApCostValidator(),
             new TargetCellValidator(),
-            new LineLaunchValidator()
         });
     }
 
-    public SpellConstraintsValidator(FightTurn turn, CastConstraintValidator<? super Spell>[] validators) {
+    public WeaponConstraintsValidator(FightTurn turn, CastConstraintValidator<? super CastableWeapon>[] validators) {
         this.turn = turn;
         this.validators = validators;
     }
 
     /**
-     * Validate the spell cast
+     * Validate the weapon cast
      *
-     * @param spell Spell to cast
+     * @param weapon Weapon to cast
      * @param target The target cell
      *
-     * @return The error if cannot cast the spell, or null on success
+     * @return The error if cannot cast the weapon, or null on success
      */
-    public Error validate(Spell spell, FightCell target) {
-        for (CastConstraintValidator<? super Spell> validator : validators) {
-            Error error = validator.validate(turn, spell, target);
+    public Error validate(CastableWeapon weapon, FightCell target) {
+        for (CastConstraintValidator<? super CastableWeapon> validator : validators) {
+            Error error = validator.validate(turn, weapon, target);
 
             if (error != null) {
                 return error;

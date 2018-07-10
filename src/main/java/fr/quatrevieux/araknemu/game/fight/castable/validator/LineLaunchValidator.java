@@ -1,22 +1,22 @@
-package fr.quatrevieux.araknemu.game.fight.castable.spell;
+package fr.quatrevieux.araknemu.game.fight.castable.validator;
 
+import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
-import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 
 /**
  * Check if spell should be cast in line launch
  */
-final public class LineLaunchValidator implements SpellConstraintValidator {
+final public class LineLaunchValidator implements CastConstraintValidator {
     @Override
-    public Error validate(FightTurn turn, Spell spell, FightCell target) {
-        if (!spell.constraints().lineLaunch()) {
+    public Error validate(FightTurn turn, Castable castable, FightCell target) {
+        if (!castable.constraints().lineLaunch()) {
             return null;
         }
 
-        if (spell.constraints().range().max() < 2 || target.equals(turn.fighter().cell())) {
+        if (castable.constraints().range().max() < 2 || target.equals(turn.fighter().cell())) {
             return null;
         }
 

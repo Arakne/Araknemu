@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -19,7 +20,7 @@ final public class TeleportHandler implements EffectHandler {
     }
 
     @Override
-    public void handle(Fighter caster, Spell spell, SpellEffect effect, FightCell target) {
+    public void handle(Fighter caster, Castable castable, SpellEffect effect, FightCell target) {
         if (!target.walkable()) {
             return; // @todo exception ?
         }

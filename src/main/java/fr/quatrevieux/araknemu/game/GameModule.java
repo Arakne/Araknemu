@@ -468,7 +468,10 @@ final public class GameModule implements ContainerModule {
             container -> new DefaultItemFactory(
                 new ResourceFactory(container.get(EffectMappers.class)),
                 new UsableFactory(container.get(EffectMappers.class)),
-                new WeaponFactory(container.get(EffectMappers.class)),
+                new WeaponFactory(
+                    container.get(EffectMappers.class),
+                    container.get(SpellEffectService.class)
+                ),
                 new WearableFactory(SuperType.AMULET, container.get(EffectMappers.class)),
                 new WearableFactory(SuperType.RING, container.get(EffectMappers.class)),
                 new WearableFactory(SuperType.BELT, container.get(EffectMappers.class)),

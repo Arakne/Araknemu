@@ -2,18 +2,22 @@ package fr.quatrevieux.araknemu.game.fight.fighter.player;
 
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightJoined;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.*;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.WeaponSlot;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
@@ -34,6 +38,7 @@ final public class PlayerFighter implements Fighter, Sender {
     private FightTurn turn;
 
     private boolean ready = false;
+    private CastableWeapon weapon;
 
     public PlayerFighter(GamePlayer player) {
         this.player = player;
@@ -103,6 +108,24 @@ final public class PlayerFighter implements Fighter, Sender {
     @Override
     public SpellList spells() {
         return player.spells();
+    }
+
+    @Override
+    public CastableWeapon weapon() {
+        if (weapon != null) {
+            return weapon;
+        }
+
+        try {
+            return weapon = player.inventory()
+                .bySlot(WeaponSlot.SLOT_ID)
+                .map(Weapon.class::cast)
+                .map(CastableWeapon::new)
+                .orElseThrow(() -> new FightException("The fighter do not have any weapon"))
+            ;
+        } catch (InventoryException e) {
+            throw new FightException(e);
+        }
     }
 
     @Override

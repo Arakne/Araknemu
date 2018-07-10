@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 
+import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.TargetResolver;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
@@ -19,7 +20,7 @@ final public class DamageHandler implements EffectHandler {
     }
 
     @Override
-    public void handle(Fighter caster, Spell spell, SpellEffect effect, FightCell target) {
+    public void handle(Fighter caster, Castable castable, SpellEffect effect, FightCell target) {
         new TargetResolver(caster, target)
             .area(effect.area())
             .fighters(new DamageApplier(caster, effect, element))

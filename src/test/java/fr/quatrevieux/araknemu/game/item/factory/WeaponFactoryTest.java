@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.SuperType;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +26,10 @@ class WeaponFactoryTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        factory = new WeaponFactory(container.get(EffectMappers.class));
+        factory = new WeaponFactory(
+            container.get(EffectMappers.class),
+            container.get(SpellEffectService.class)
+        );
     }
 
     @Test
@@ -50,6 +54,14 @@ class WeaponFactoryTest extends GameBaseCase {
         assertEquals(Effect.INFLICT_DAMAGE_NEUTRAL, weapon.weaponEffects().get(0).effect());
         assertEquals(1, weapon.weaponEffects().get(0).min());
         assertEquals(7, weapon.weaponEffects().get(0).max());
+
+        assertEquals(4, weapon.info().apCost());
+        assertEquals(1, weapon.info().range().min());
+        assertEquals(1, weapon.info().range().max());
+        assertEquals(50, weapon.info().criticalRate());
+        assertEquals(30, weapon.info().failureRate());
+        assertEquals(5, weapon.info().criticalBonus());
+        assertFalse(weapon.info().isTwoHanded());
     }
 
     @Test
@@ -153,5 +165,13 @@ class WeaponFactoryTest extends GameBaseCase {
         assertCount(1, weapon.characteristics());
         assertEquals(Effect.ADD_STRENGTH, weapon.characteristics().get(0).effect());
         assertEquals(20, weapon.characteristics().get(0).value());
+
+        assertEquals(4, weapon.info().apCost());
+        assertEquals(1, weapon.info().range().min());
+        assertEquals(1, weapon.info().range().max());
+        assertEquals(50, weapon.info().criticalRate());
+        assertEquals(30, weapon.info().failureRate());
+        assertEquals(5, weapon.info().criticalBonus());
+        assertFalse(weapon.info().isTwoHanded());
     }
 }

@@ -4,11 +4,13 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighterSprite;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightJoined;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
@@ -188,5 +190,21 @@ class PlayerFighterTest extends FightBaseCase {
     void characteristics() throws SQLException, ContainerException {
         assertEquals(gamePlayer().characteristics().initiative(), fighter.characteristics().initiative());
         assertEquals(gamePlayer().characteristics().get(Characteristic.ACTION_POINT), fighter.characteristics().get(Characteristic.ACTION_POINT));
+    }
+
+    @Test
+    void weaponNoWeapon() {
+        assertThrows(FightException.class, () -> fighter.weapon());
+    }
+
+    @Test
+    void weaponEquiped() throws ContainerException, SQLException, InventoryException {
+        equipWeapon(player);
+
+        CastableWeapon weapon = fighter.weapon();
+
+        assertEquals(4, weapon.apCost());
+        assertEquals(1, weapon.effects().get(0).min());
+        assertEquals(7, weapon.effects().get(0).max());
     }
 }

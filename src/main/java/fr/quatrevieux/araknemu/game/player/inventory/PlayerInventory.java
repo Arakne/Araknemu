@@ -16,6 +16,7 @@ import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundExcepti
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -103,6 +104,23 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry>, Dispa
      */
     public Collection<Equipment> equipments() {
         return slots.equipments();
+    }
+
+    /**
+     * Get an item by the slot id
+     *
+     * @param slotId The slot of the item
+     *
+     * @return The item contained in the slot, or an empty Optional
+     */
+    public Optional<Item> bySlot(int slotId) throws InventoryException {
+        InventorySlot slot = slots.get(slotId);
+
+        if (slot.entry() != null) {
+            return Optional.of(slot.entry().item());
+        } else {
+            return Optional.empty();
+        }
     }
 
     /**

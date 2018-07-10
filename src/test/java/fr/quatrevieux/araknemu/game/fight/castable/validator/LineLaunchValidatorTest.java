@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.fight.castable.spell;
+package fr.quatrevieux.araknemu.game.fight.castable.validator;
 
 import fr.quatrevieux.araknemu.data.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.Fight;

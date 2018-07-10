@@ -10,7 +10,12 @@ import fr.quatrevieux.araknemu.game.fight.state.*;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
+import fr.quatrevieux.araknemu.game.item.Item;
+import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.WeaponSlot;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.sql.SQLException;
@@ -93,5 +98,12 @@ public class FightBaseCase extends GameBaseCase {
                 .fighter(player2)
             )
         ;
+    }
+
+    public void equipWeapon(GamePlayer player) throws ContainerException, InventoryException, SQLException {
+        dataSet.pushItemTemplates();
+        Item weapon = container.get(ItemService.class).create(40);
+
+        player.inventory().add(weapon, 1, WeaponSlot.SLOT_ID);
     }
 }

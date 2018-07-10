@@ -66,6 +66,15 @@ final public class ActionEffect {
     }
 
     /**
+     * Critical hit for close combat cast
+     *
+     * @param caster The weapon caster
+     */
+    static public ActionEffect criticalHitCloseCombat(Fighter caster) {
+        return new ActionEffect(304, caster);
+    }
+
+    /**
      * A fighter die
      *
      * @param caster The spell caster

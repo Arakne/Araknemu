@@ -27,10 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -249,5 +246,18 @@ class PlayerInventoryTest extends GameBaseCase {
         assertEquals(5, itemSet.bonus().characteristics().get(0).value());
         assertEquals(Effect.ADD_INTELLIGENCE, itemSet.bonus().characteristics().get(1).effect());
         assertEquals(5, itemSet.bonus().characteristics().get(1).value());
+    }
+
+    @Test
+    void bySlot() throws SQLException, ContainerException, InventoryException {
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
+
+        InventoryEntry entry = inventory.add(container.get(ItemService.class).create(2416), 1, 1);
+
+        assertEquals(Optional.of(entry.item()), inventory.bySlot(1));
+        assertFalse(inventory.bySlot(5).isPresent());
     }
 }

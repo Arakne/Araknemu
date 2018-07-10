@@ -89,4 +89,15 @@ class ActionEffectTest {
             ActionEffect.teleport(caster, fighter, target).toString()
         );
     }
+
+    @Test
+    void criticalHitCloseCombat() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Mockito.when(caster.id()).thenReturn(123);
+
+        assertEquals(
+            "GA;304;123;",
+            ActionEffect.criticalHitCloseCombat(caster).toString()
+        );
+    }
 }

@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
+import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombat;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
 
@@ -44,6 +45,15 @@ final public class TurnActionsFactory implements FightActionFactory {
                     turn.fight().map().get(Integer.parseInt(arguments[1]))
                 );
             }
+        );
+
+        factories.put(
+            ActionType.CLOSE_COMBAT,
+            (action, arguments) -> new CloseCombat(
+                turn,
+                turn.fighter(),
+                turn.fight().map().get(Integer.parseInt(arguments[0]))
+            )
         );
     }
 

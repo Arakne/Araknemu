@@ -1,13 +1,13 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.StealLifeHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.TeleportHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 import java.util.HashMap;
@@ -47,13 +47,13 @@ final public class EffectsHandler {
      * Apply one effect to the fight
      *
      * @param caster The effect caster
-     * @param spell The spell
+     * @param castable The castable object
      * @param effect The effect to apply
      * @param target The target cell
      */
-    public void apply(Fighter caster, Spell spell, SpellEffect effect, FightCell target) {
+    public void apply(Fighter caster, Castable castable, SpellEffect effect, FightCell target) {
         if (handlers.containsKey(effect.effect())) {
-            handlers.get(effect.effect()).handle(caster, spell, effect, target);
+            handlers.get(effect.effect()).handle(caster, castable, effect, target);
         }
     }
 }

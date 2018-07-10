@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.weapon.WeaponConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.DropReward;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.FightRewardsSheet;
@@ -20,8 +21,11 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastFailed;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastSuccess;
+import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombat;
+import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombatSuccess;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
+import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
 import fr.quatrevieux.araknemu.game.world.map.path.Path;
@@ -61,10 +65,15 @@ public class FunctionalTest extends GameBaseCase {
 
     @Test
     void challengeFight() throws Exception {
+        dataSet.pushWeaponTemplates();
         FightHandler<ChallengeBuilder> handler = service.handler(ChallengeBuilder.class);
 
         GamePlayer player = gamePlayer(true);
         GamePlayer other = makeOtherPlayer();
+
+        // Equip a weapon
+        other.inventory().add(container.get(ItemService.class).create(88), 1, 1);
+
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
 
         fight = handler.start(
@@ -254,6 +263,45 @@ public class FunctionalTest extends GameBaseCase {
         );
 
         nextTurn();
+
+        // Close combat
+        other.fighter().turn().perform(
+            new CloseCombat(
+                other.fighter().turn(),
+                other.fighter(),
+                player.fighter().cell(),
+                new WeaponConstraintsValidator(other.fighter().turn()),
+                new CriticalityStrategy() {
+                    public int hitRate(int base) { return 0; }
+                    public int failureRate(int base) { return 0; }
+                    public boolean hit(int baseRate) { return false; }
+                    public boolean failed(int baseRate) { return false; }
+                }
+            )
+        );
+
+        requestStack.assertLast(
+            new FightAction(
+                new CloseCombatSuccess(
+                    other.fighter(),
+                    other.fighter().weapon(),
+                    player.fighter().cell(),
+                    false
+                )
+            )
+        );
+
+        int baseLife = player.fighter().life().current();
+
+        other.fighter().turn().terminate();
+
+        assertEquals(2, other.fighter().turn().points().actionPoints());
+        requestStack.assertOne(ActionEffect.usedActionPoints(other.fighter(), 4));
+
+        damage = baseLife - player.fighter().life().current();
+
+        assertBetween(1, 4, damage);
+        requestStack.assertOne(ActionEffect.alterLifePoints(other.fighter(), player.fighter(), -damage));
 
         for (;;) {
             nextTurn();
