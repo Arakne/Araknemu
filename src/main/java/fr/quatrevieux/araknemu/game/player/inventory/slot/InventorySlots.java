@@ -9,6 +9,7 @@ import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.type.Equipment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -59,9 +60,7 @@ final public class InventorySlots {
         Collection<Equipment> equipments = new ArrayList<>();
 
         for (InventorySlot slot : slots) {
-            if (slot.hasEquipment()) {
-                equipments.add(slot.equipment());
-            }
+            slot.equipment().ifPresent(equipments::add);
         }
 
         return equipments;

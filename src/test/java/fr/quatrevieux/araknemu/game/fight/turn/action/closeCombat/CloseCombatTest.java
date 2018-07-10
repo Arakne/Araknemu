@@ -1,6 +1,5 @@
 package fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat;
 
-import com.sun.org.apache.bcel.internal.generic.NOP;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;

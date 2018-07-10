@@ -116,16 +116,12 @@ final public class PlayerFighter implements Fighter, Sender {
             return weapon;
         }
 
-        try {
-            return weapon = player.inventory()
-                .bySlot(WeaponSlot.SLOT_ID)
-                .map(Weapon.class::cast)
-                .map(CastableWeapon::new)
-                .orElseThrow(() -> new FightException("The fighter do not have any weapon"))
-            ;
-        } catch (InventoryException e) {
-            throw new FightException(e);
-        }
+        return weapon = player.inventory()
+            .bySlot(WeaponSlot.SLOT_ID)
+            .map(Weapon.class::cast)
+            .map(CastableWeapon::new)
+            .orElseThrow(() -> new FightException("The fighter do not have any weapon"))
+        ;
     }
 
     @Override

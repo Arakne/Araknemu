@@ -7,6 +7,8 @@ import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
 import fr.quatrevieux.araknemu.game.item.inventory.StackableItemStorage;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 
+import java.util.Optional;
+
 /**
  * Slot for default position
  *
@@ -25,8 +27,8 @@ final public class DefaultSlot implements InventorySlot {
     }
 
     @Override
-    public InventoryEntry entry() {
-        return null;
+    public Optional<InventoryEntry> entry() {
+        return Optional.empty();
     }
 
     @Override
@@ -34,20 +36,21 @@ final public class DefaultSlot implements InventorySlot {
 
     @Override
     public InventoryEntry set(InventoryEntry entry) throws InventoryException {
-        InventoryEntry last = storage.find(entry.item());
+        return storage.find(entry.item())
+            .map(last -> {
+                storage.delete(entry);
+                last.add(entry.quantity());
 
-        if (last != null) {
-            storage.delete(entry);
-            last.add(entry.quantity());
+                return last;
+            })
+            .orElseGet(() -> {
+                // Indexing the entry after move
+                // For ensure that new item will be stacked
+                storage.indexing(entry);
 
-            return last;
-        }
-
-        // Indexing the entry after move
-        // For ensure that new item will be stacked
-        storage.indexing(entry);
-
-        return entry;
+                return entry;
+            })
+        ;
     }
 
     @Override
@@ -57,9 +60,4 @@ final public class DefaultSlot implements InventorySlot {
 
     @Override
     public void uncheckedSet(InventoryEntry entry) {}
-
-    @Override
-    public boolean hasEquipment() {
-        return false;
-    }
 }

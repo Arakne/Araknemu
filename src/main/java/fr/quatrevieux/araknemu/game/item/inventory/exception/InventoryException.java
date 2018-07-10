@@ -3,7 +3,7 @@ package fr.quatrevieux.araknemu.game.item.inventory.exception;
 /**
  * Base exception for inventory actions
  */
-public class InventoryException extends Exception {
+public class InventoryException extends RuntimeException {
     public InventoryException() {
     }
 

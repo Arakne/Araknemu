@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,7 +48,8 @@ class DefaultSlotTest extends GameBaseCase {
 
     @Test
     void getters() {
-        assertNull(slot.entry());
+        assertEquals(Optional.empty(), slot.entry());
+        assertEquals(Optional.empty(), slot.equipment());
         assertEquals(-1, slot.id());
         slot.check(null, 1);
     }

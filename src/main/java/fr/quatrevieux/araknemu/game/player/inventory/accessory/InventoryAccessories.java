@@ -1,9 +1,10 @@
 package fr.quatrevieux.araknemu.game.player.inventory.accessory;
 
-import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlot;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
-import fr.quatrevieux.araknemu.game.world.creature.accessory.*;
-import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.world.creature.accessory.AbstractAccessories;
+import fr.quatrevieux.araknemu.game.world.creature.accessory.Accessory;
+import fr.quatrevieux.araknemu.game.world.creature.accessory.AccessoryType;
+import fr.quatrevieux.araknemu.game.world.creature.accessory.NullAccessory;
 
 /**
  * Accessories implementation using inventory
@@ -17,18 +18,9 @@ final public class InventoryAccessories extends AbstractAccessories {
 
     @Override
     public Accessory get(AccessoryType type) {
-        InventorySlot slot;
-
-        try {
-            slot = slots.get(type.slot());
-        } catch (InventoryException e) {
-            throw new RuntimeException(e);
-        }
-
-        if (!slot.hasEquipment()) {
-            return new NullAccessory(type);
-        }
-
-        return new InventoryAccessory(slot.entry());
+        return slots.get(type.slot()).entry()
+            .<Accessory>map(InventoryAccessory::new)
+            .orElseGet(() -> new NullAccessory(type))
+        ;
     }
 }

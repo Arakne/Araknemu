@@ -66,7 +66,8 @@ class DofusSlotTest extends GameBaseCase {
             new InventoryEntry(null, new PlayerItem(1, 1, 39, new ArrayList<>(), 1, -1), container.get(ItemService.class).create(39)
         )));
 
-        assertNull(slot.entry());
+        assertFalse(slot.entry().isPresent());
+        assertFalse(slot.equipment().isPresent());
     }
 
     @Test
@@ -75,6 +76,7 @@ class DofusSlotTest extends GameBaseCase {
 
         slot.set(entry);
 
-        assertSame(entry, slot.entry());
+        assertSame(entry, slot.entry().get());
+        assertSame(entry.item(), slot.equipment().get());
     }
 }

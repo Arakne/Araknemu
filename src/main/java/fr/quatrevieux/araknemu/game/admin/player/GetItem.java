@@ -92,34 +92,30 @@ final public class GetItem extends AbstractCommand {
         int itemId   = Integer.parseInt(arguments.get(i));
         int quantity = arguments.size() > i + 1 ? Integer.parseInt(arguments.get(i + 1)) : 1;
 
-        try {
-            int times = 1;
+        int times = 1;
 
-            if (each) {
-                times = quantity;
-                quantity = 1;
-            }
+        if (each) {
+            times = quantity;
+            quantity = 1;
+        }
 
-            for (int j = 0; j < times; ++j) {
-                Item item = effects == null
-                    ? service.create(itemId, max)
-                    : service.retrieve(itemId, effects)
-                ;
+        for (int j = 0; j < times; ++j) {
+            Item item = effects == null
+                ? service.create(itemId, max)
+                : service.retrieve(itemId, effects)
+            ;
 
-                player.inventory().add(item, quantity);
+            player.inventory().add(item, quantity);
 
-                performer.success("Generate {} '{}'", quantity, item.template().name());
+            performer.success("Generate {} '{}'", quantity, item.template().name());
 
-                if (!item.effects().isEmpty()) {
-                    performer.success("Effects :");
+            if (!item.effects().isEmpty()) {
+                performer.success("Effects :");
 
-                    for (ItemEffect effect : item.effects()) {
-                        performer.success("\t{}", effect.toString());
-                    }
+                for (ItemEffect effect : item.effects()) {
+                    performer.success("\t{}", effect.toString());
                 }
             }
-        } catch (InventoryException e) {
-            throw new CommandException("Unexpected error : " + e.toString(), e);
         }
     }
 

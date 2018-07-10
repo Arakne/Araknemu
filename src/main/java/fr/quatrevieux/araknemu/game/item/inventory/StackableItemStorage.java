@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundExcepti
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Add stack capabilities to an item storage
@@ -81,14 +82,14 @@ final public class StackableItemStorage<E extends ItemEntry> implements ItemStor
      *
      * @return The entry, or null if there is not corresponding entry
      */
-    public E find(Item item) {
+    public Optional<E> find(Item item) {
         E entry = stackMap.get(item);
 
         if (entry == null || entry.position() != stackPosition) {
-            return null;
+            return Optional.empty();
         }
 
-        return entry;
+        return Optional.of(entry);
     }
 
     /**

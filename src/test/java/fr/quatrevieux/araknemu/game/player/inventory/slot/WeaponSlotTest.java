@@ -69,7 +69,8 @@ class WeaponSlotTest extends GameBaseCase {
             new InventoryEntry(null, new PlayerItem(1, 1, 2425, new ArrayList<>(), 1, -1), container.get(ItemService.class).create(2425)
         )));
 
-        assertNull(slot.entry());
+        assertFalse(slot.entry().isPresent());
+        assertFalse(slot.equipment().isPresent());
     }
 
     @Test
@@ -78,6 +79,7 @@ class WeaponSlotTest extends GameBaseCase {
 
         slot.set(entry);
 
-        assertSame(entry, slot.entry());
+        assertSame(entry, slot.entry().get());
+        assertSame(entry.item(), slot.equipment().get());
     }
 }

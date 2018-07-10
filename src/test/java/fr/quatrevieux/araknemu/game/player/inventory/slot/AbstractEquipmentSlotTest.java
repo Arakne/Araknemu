@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,8 +41,8 @@ class AbstractEquipmentSlotTest extends GameBaseCase {
         storage = Mockito.mock(ItemStorage.class);
         slot = new AbstractEquipmentSlot(dispatcher = new DefaultListenerAggregate(), new SimpleSlot(1, new SlotConstraint[]{}, storage)) {
             @Override
-            public Equipment equipment() {
-                return null;
+            public Optional<Equipment> equipment() {
+                return Optional.empty();
             }
         };
     }
@@ -55,7 +56,7 @@ class AbstractEquipmentSlotTest extends GameBaseCase {
 
         assertSame(entry, slot.set(entry));
 
-        assertSame(entry, slot.entry());
+        assertSame(entry, slot.entry().get());
         assertSame(entry, ref.get().entry());
         assertEquals(1, ref.get().slot());
     }
@@ -71,7 +72,7 @@ class AbstractEquipmentSlotTest extends GameBaseCase {
 
         assertSame(entry, slot.set(item, 1));
 
-        assertSame(entry, slot.entry());
+        assertSame(entry, slot.entry().get());
         assertSame(entry, ref.get().entry());
         assertEquals(1, ref.get().slot());
     }
@@ -86,7 +87,7 @@ class AbstractEquipmentSlotTest extends GameBaseCase {
 
         slot.unset();
 
-        assertNull(slot.entry());
+        assertFalse(slot.entry().isPresent());
         assertSame(entry, ref.get().entry());
         assertEquals(1, ref.get().slot());
     }

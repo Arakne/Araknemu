@@ -72,7 +72,7 @@ class StackableItemStorageTest extends GameBaseCase {
         assertInstanceOf(Wearable.class, entry.item());
         assertSame(entry, storage.get(entry.id()));
 
-        assertSame(entry, storage.find(item));
+        assertSame(entry, storage.find(item).get());
     }
 
     @Test
@@ -81,7 +81,7 @@ class StackableItemStorageTest extends GameBaseCase {
         InventoryEntry entry = storage.add(item, 5);
 
         assertSame(entry, storage.add(item, 3));
-        assertSame(entry, storage.find(item));
+        assertSame(entry, storage.find(item).get());
         assertEquals(8, entry.quantity());
         assertEquals(-1, entry.position());
 
@@ -99,7 +99,7 @@ class StackableItemStorageTest extends GameBaseCase {
         InventoryEntry newEntry = storage.add(item, 1, 0);
 
         assertNotSame(entry, newEntry);
-        assertSame(entry, storage.find(item));
+        assertSame(entry, storage.find(item).get());
         assertEquals(5, entry.quantity());
         assertEquals(-1, entry.position());
 
@@ -125,7 +125,7 @@ class StackableItemStorageTest extends GameBaseCase {
         assertEquals(1, entry.quantity());
         assertEquals(0, entry.position());
 
-        assertSame(newEntry, storage.find(item));
+        assertSame(newEntry, storage.find(item).get());
         assertEquals(1, newEntry.quantity());
         assertEquals(-1, newEntry.position());
         assertEquals(item, newEntry.item());
@@ -147,7 +147,7 @@ class StackableItemStorageTest extends GameBaseCase {
         assertInstanceOf(Wearable.class, entry.item());
         assertSame(entry, storage.get(entry.id()));
 
-        assertNull(storage.find(item));
+        assertFalse(storage.find(item).isPresent());
     }
 
     @Test
@@ -169,9 +169,9 @@ class StackableItemStorageTest extends GameBaseCase {
             )
         );
 
-        assertEquals(-1, storage.find(container.get(ItemService.class).create(39)).position());
-        assertEquals(1, storage.find(container.get(ItemService.class).create(39)).quantity());
-        assertNull(storage.find(container.get(ItemService.class).create(40)));
+        assertEquals(-1, storage.find(container.get(ItemService.class).create(39)).get().position());
+        assertEquals(1, storage.find(container.get(ItemService.class).create(39)).get().quantity());
+        assertFalse(storage.find(container.get(ItemService.class).create(40)).isPresent());
     }
 
     @Test
@@ -180,7 +180,7 @@ class StackableItemStorageTest extends GameBaseCase {
         InventoryEntry entry = storage.add(item);
 
         assertSame(entry, storage.delete(entry));
-        assertNull(storage.find(entry.item()));
+        assertFalse(storage.find(entry.item()).isPresent());
 
         assertFalse(storage.iterator().hasNext());
     }

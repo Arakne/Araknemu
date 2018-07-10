@@ -1,10 +1,13 @@
 package fr.quatrevieux.araknemu.game.player.inventory.slot;
 
+import fr.quatrevieux.araknemu.game.item.type.Equipment;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SlotConstraint;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+
+import java.util.Optional;
 
 /**
  * Base slot class
@@ -28,8 +31,8 @@ final public class SimpleSlot implements InventorySlot {
     }
 
     @Override
-    public InventoryEntry entry() {
-        return entry;
+    public Optional<InventoryEntry> entry() {
+        return Optional.ofNullable(entry);
     }
 
     @Override
@@ -66,10 +69,5 @@ final public class SimpleSlot implements InventorySlot {
     @Override
     public void uncheckedSet(InventoryEntry entry) {
         this.entry = entry;
-    }
-
-    @Override
-    public boolean hasEquipment() {
-        return false;
     }
 }

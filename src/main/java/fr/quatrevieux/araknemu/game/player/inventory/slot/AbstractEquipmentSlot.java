@@ -1,10 +1,13 @@
 package fr.quatrevieux.araknemu.game.player.inventory.slot;
 
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
+import fr.quatrevieux.araknemu.game.item.type.Equipment;
 import fr.quatrevieux.araknemu.game.player.inventory.event.EquipmentChanged;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+
+import java.util.Optional;
 
 /**
  * Base slot class for equipments
@@ -24,7 +27,7 @@ abstract public class AbstractEquipmentSlot implements InventorySlot {
     }
 
     @Override
-    public InventoryEntry entry() {
+    public Optional<InventoryEntry> entry() {
         return slot.entry();
     }
 
@@ -48,10 +51,10 @@ abstract public class AbstractEquipmentSlot implements InventorySlot {
 
     @Override
     public void unset() {
-        InventoryEntry entry = entry();
-        slot.unset();
-
-        dispatcher.dispatch(new EquipmentChanged(entry, id(), false));
+        entry().ifPresent(entry -> {
+            slot.unset();
+            dispatcher.dispatch(new EquipmentChanged(entry, id(), false));
+        });
     }
 
     @Override
@@ -64,8 +67,10 @@ abstract public class AbstractEquipmentSlot implements InventorySlot {
         slot.check(item, quantity);
     }
 
-    @Override
-    public boolean hasEquipment() {
-        return slot.entry() != null;
+    /**
+     * Get the current equipment
+     */
+    public Optional<Equipment> equipment() {
+        return entry().map(InventoryEntry::item).map(Equipment.class::cast);
     }
 }

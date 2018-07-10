@@ -20,7 +20,12 @@ class NullSlotTest extends GameBaseCase {
 
     @Test
     void entry() {
-        assertNull(slot.entry());
+        assertFalse(slot.entry().isPresent());
+    }
+
+    @Test
+    void equipment() {
+        assertFalse(slot.equipment().isPresent());
     }
 
     @Test

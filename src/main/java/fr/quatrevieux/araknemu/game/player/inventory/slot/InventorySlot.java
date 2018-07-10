@@ -5,6 +5,8 @@ import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.type.Equipment;
 
+import java.util.Optional;
+
 /**
  * Slot for player inventory
  */
@@ -17,7 +19,7 @@ public interface InventorySlot {
     /**
      * Get the current entry
      */
-    public InventoryEntry entry();
+    public Optional<InventoryEntry> entry();
 
     /**
      * Check if the item can be moved to this slot
@@ -54,14 +56,9 @@ public interface InventorySlot {
     }
 
     /**
-     * Check if the slot has an equipment set
-     */
-    public boolean hasEquipment();
-
-    /**
      * Get the current equipment
      */
-    default public Equipment equipment() {
-        return Equipment.class.cast(entry().item());
+    default public Optional<Equipment> equipment() {
+        return Optional.empty();
     }
 }

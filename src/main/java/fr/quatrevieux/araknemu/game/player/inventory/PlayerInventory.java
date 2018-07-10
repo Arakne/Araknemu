@@ -114,13 +114,7 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry>, Dispa
      * @return The item contained in the slot, or an empty Optional
      */
     public Optional<Item> bySlot(int slotId) throws InventoryException {
-        InventorySlot slot = slots.get(slotId);
-
-        if (slot.entry() != null) {
-            return Optional.of(slot.entry().item());
-        } else {
-            return Optional.empty();
-        }
+        return slots.get(slotId).entry().map(InventoryEntry::item);
     }
 
     /**

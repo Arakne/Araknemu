@@ -54,7 +54,7 @@ class UsableSlotTest extends GameBaseCase {
             new InventoryEntry(null, new PlayerItem(1, 1, 39, new ArrayList<>(), 1, -1), container.get(ItemService.class).create(39)
         )));
 
-        assertNull(slot.entry());
+        assertFalse(slot.entry().isPresent());
     }
 
     @Test
@@ -63,11 +63,12 @@ class UsableSlotTest extends GameBaseCase {
 
         slot.set(entry);
 
-        assertSame(entry, slot.entry());
+        assertSame(entry, slot.entry().get());
+        assertFalse(slot.equipment().isPresent());
     }
 
     @Test
-    void hasEquipment() {
-        assertFalse(slot.hasEquipment());
+    void equipment() {
+        assertFalse(slot.equipment().isPresent());
     }
 }

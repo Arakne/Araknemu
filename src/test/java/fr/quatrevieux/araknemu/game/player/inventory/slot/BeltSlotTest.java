@@ -69,7 +69,8 @@ class BeltSlotTest extends GameBaseCase {
             new InventoryEntry(null, new PlayerItem(1, 1, 2411, new ArrayList<>(), 1, -1), container.get(ItemService.class).create(2411)
         )));
 
-        assertNull(slot.entry());
+        assertFalse(slot.entry().isPresent());
+        assertFalse(slot.equipment().isPresent());
     }
 
     @Test
@@ -78,6 +79,7 @@ class BeltSlotTest extends GameBaseCase {
 
         slot.set(entry);
 
-        assertSame(entry, slot.entry());
+        assertSame(entry, slot.entry().get());
+        assertSame(entry.item(), slot.equipment().get());
     }
 }
