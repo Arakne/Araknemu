@@ -14,24 +14,35 @@ import java.util.stream.Collectors;
 final public class CastableWeapon implements Castable {
     final private Weapon weapon;
 
+    private List<SpellEffect> effects;
+    private List<SpellEffect> criticalEffects;
+
     public CastableWeapon(Weapon weapon) {
         this.weapon = weapon;
     }
 
     @Override
     public List<SpellEffect> effects() {
-        return weapon.weaponEffects().stream()
-            .map(effect -> new CastableWeaponEffect(effect, weapon))
-            .collect(Collectors.toList())
-        ;
+        if (effects == null) {
+            effects = weapon.weaponEffects().stream()
+                .map(effect -> new CastableWeaponEffect(effect, weapon))
+                .collect(Collectors.toList())
+            ;
+        }
+
+        return effects;
     }
 
     @Override
     public List<SpellEffect> criticalEffects() {
-        return weapon.weaponEffects().stream()
-            .map(effect -> new CastableWeaponEffect(effect, weapon, true))
-            .collect(Collectors.toList())
-        ;
+        if (criticalEffects == null) {
+            criticalEffects = weapon.weaponEffects().stream()
+                .map(effect -> new CastableWeaponEffect(effect, weapon, true))
+                .collect(Collectors.toList())
+            ;
+        }
+
+        return criticalEffects;
     }
 
     @Override
