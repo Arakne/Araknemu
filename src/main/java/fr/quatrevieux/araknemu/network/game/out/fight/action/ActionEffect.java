@@ -94,4 +94,14 @@ final public class ActionEffect {
     static public ActionEffect teleport(Fighter caster, Fighter fighter, FightCell target) {
         return new ActionEffect(4, caster, fighter.id(), target.id());
     }
+
+    /**
+     * The fighter skip the next turn
+     *
+     * @param caster The buff caster
+     * @param fighter The target fighter
+     */
+    static public ActionEffect skipNextTurn(Fighter caster, Fighter fighter) {
+        return new ActionEffect(140, caster, fighter.id());
+    }
 }

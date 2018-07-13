@@ -100,4 +100,18 @@ class ActionEffectTest {
             ActionEffect.criticalHitCloseCombat(caster).toString()
         );
     }
+
+    @Test
+    void skipNextTurn() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Mockito.when(caster.id()).thenReturn(123);
+
+        Fighter target = Mockito.mock(Fighter.class);
+        Mockito.when(target.id()).thenReturn(456);
+
+        assertEquals(
+            "GA;140;123;456",
+            ActionEffect.skipNextTurn(caster, target).toString()
+        );
+    }
 }

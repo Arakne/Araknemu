@@ -12,13 +12,13 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FunctionalTest extends FightBaseCase {
@@ -47,6 +47,8 @@ public class FunctionalTest extends FightBaseCase {
 
         fight.state(PlacementState.class).startFight();
         fight.turnList().start();
+
+        requestStack.clear();
     }
 
     @Test
@@ -83,6 +85,25 @@ public class FunctionalTest extends FightBaseCase {
         requestStack.assertOne(ActionEffect.alterLifePoints(fighter1, fighter2, -12));
         assertEquals(3, buff1.get().remainingTurns());
         assertEquals(3, buff2.get().remainingTurns());
+    }
+
+    @Test
+    void skipNextTurn() {
+        castNormal(1630, fighter2.cell());
+
+        Optional<Buff> found = fighter2.buffs().stream().filter(buff -> buff.effect().effect() == 140).findFirst();
+
+        assertTrue(found.isPresent());
+        assertEquals(140, found.get().effect().effect());
+        assertEquals(0, found.get().remainingTurns());
+
+        requestStack.assertOne(ActionEffect.skipNextTurn(fighter1, fighter2));
+
+        fighter1.turn().stop();
+        assertSame(fighter1, fight.turnList().currentFighter());
+        fighter1.turn().stop();
+
+        assertSame(fighter2, fight.turnList().currentFighter());
     }
 
     private void castNormal(int spellId, FightCell target) {

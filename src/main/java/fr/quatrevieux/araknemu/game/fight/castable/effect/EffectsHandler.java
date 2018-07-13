@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.StealLifeHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.SkipTurnHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.TeleportHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -37,6 +38,8 @@ final public class EffectsHandler {
         register(98,  new DamageHandler(Element.AIR));
         register(99,  new DamageHandler(Element.FIRE));
         register(100, new DamageHandler(Element.NEUTRAL));
+
+        register(140, new SkipTurnHandler(fight));
     }
 
     public void register(int effectId, EffectHandler applier) {
