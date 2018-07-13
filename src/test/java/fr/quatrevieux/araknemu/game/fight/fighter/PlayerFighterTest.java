@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
@@ -206,5 +207,10 @@ class PlayerFighterTest extends FightBaseCase {
         assertEquals(4, weapon.apCost());
         assertEquals(1, weapon.effects().get(0).min());
         assertEquals(7, weapon.effects().get(0).max());
+    }
+
+    @Test
+    void buffs() {
+        assertInstanceOf(BuffList.class, fighter.buffs());
     }
 }

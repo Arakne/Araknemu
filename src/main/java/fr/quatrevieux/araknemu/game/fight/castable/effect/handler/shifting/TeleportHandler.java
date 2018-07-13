@@ -29,4 +29,9 @@ final public class TeleportHandler implements EffectHandler {
 
         fight.send(ActionEffect.teleport(caster, caster, target));
     }
+
+    @Override
+    public void buff(Fighter caster, Castable castable, SpellEffect effect, FightCell target) {
+        throw new UnsupportedOperationException("Cannot use Teleport as buff effect");
+    }
 }

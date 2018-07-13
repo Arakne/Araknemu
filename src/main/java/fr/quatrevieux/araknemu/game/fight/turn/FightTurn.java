@@ -73,10 +73,14 @@ final public class FightTurn {
      * @return true if the turn is successfully started, or false when turn needs to be skipped
      */
     public boolean start() {
-        fighter.play(this);
-
         points = new FighterTurnPoints(fight, fighter);
 
+        if (!fighter.buffs().onStartTurn()) {
+            endTurnActions();
+            return false;
+        }
+
+        fighter.play(this);
         active.set(true);
         fight.dispatch(new TurnStarted(this));
         timer = fight.schedule(this::stop, duration);
@@ -97,6 +101,8 @@ final public class FightTurn {
         actionHandler.terminated(() -> {
             fight.dispatch(new TurnStopped(this));
             fighter.stop();
+
+            endTurnActions();
 
             if (fighter.dead()) {
                 // Wait for die animation
@@ -145,5 +151,13 @@ final public class FightTurn {
      */
     public FighterTurnPoints points() {
         return points;
+    }
+
+    /**
+     * Perform actions on turn ending
+     */
+    private void endTurnActions() {
+        fighter.buffs().onEndTurn();
+        fighter.buffs().refresh();
     }
 }

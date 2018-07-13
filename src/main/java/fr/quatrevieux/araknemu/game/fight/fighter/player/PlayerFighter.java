@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.fight.fighter.player;
 
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
@@ -31,6 +32,7 @@ final public class PlayerFighter implements Fighter, Sender {
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
     final private PlayerFighterCharacteristics characteristics;
     final private PlayerFighterLife life;
+    final private BuffList buffs = new BuffList(this);
 
     private FightCell cell;
     private FightTeam team;
@@ -122,6 +124,11 @@ final public class PlayerFighter implements Fighter, Sender {
             .map(CastableWeapon::new)
             .orElseThrow(() -> new FightException("The fighter do not have any weapon"))
         ;
+    }
+
+    @Override
+    public BuffList buffs() {
+        return buffs;
     }
 
     @Override

@@ -2,6 +2,8 @@ package fr.quatrevieux.araknemu.game.fight.turn;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
@@ -9,6 +11,8 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.TurnActionsFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStarted;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStopped;
+import fr.quatrevieux.araknemu.game.spell.Spell;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -177,5 +181,83 @@ class FightTurnTest extends FightBaseCase {
 
         turn.terminate();
         assertSame(turn, ref.get().turn());
+    }
+
+    @Test
+    void stopWillDecrementBuffRemainingTurnsAndCallEndTurn() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.duration()).thenReturn(5);
+        Buff buff = new Buff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), new BuffHook() {});
+
+        player.fighter().buffs().add(buff);
+
+        assertTrue(turn.start());
+        turn.stop();
+
+        assertEquals(4, buff.remainingTurns());
+        assertTrue(player.fighter().buffs().stream().anyMatch(other -> other.equals(buff)));
+    }
+
+    @Test
+    void stopWillRemoveExpiredBuff() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        BuffHook hook = Mockito.mock(BuffHook.class);
+
+        Mockito.when(effect.duration()).thenReturn(0);
+        Buff buff = new Buff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook);
+        Mockito.when(hook.onStartTurn(buff)).thenReturn(true);
+
+        player.fighter().buffs().add(buff);
+
+        assertTrue(turn.start());
+        turn.stop();
+
+        assertFalse(player.fighter().buffs().stream().anyMatch(other -> other.equals(buff)));
+
+        Mockito.verify(hook).onBuffTerminated(buff);
+    }
+
+    @Test
+    void startWithSkipTurnBuff() {
+        AtomicReference<TurnStarted> ref = new AtomicReference<>();
+        fight.dispatcher().add(TurnStarted.class, ref::set);
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        BuffHook hook = Mockito.mock(BuffHook.class);
+
+        Mockito.when(effect.duration()).thenReturn(5);
+
+        Buff buff = new Buff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook);
+        Mockito.when(hook.onStartTurn(buff)).thenReturn(false);
+
+        player.fighter().buffs().add(buff);
+
+        assertFalse(turn.start());
+
+        assertFalse(turn.active());
+        Mockito.verify(hook).onStartTurn(buff);
+        Mockito.verify(hook).onEndTurn(buff);
+        assertEquals(4, buff.remainingTurns());
+        assertNull(ref.get());
+    }
+
+    @Test
+    void startStopWillCallBuffHook() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        BuffHook hook = Mockito.mock(BuffHook.class);
+
+        Mockito.when(effect.duration()).thenReturn(5);
+
+        Buff buff = new Buff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook);
+        Mockito.when(hook.onStartTurn(buff)).thenReturn(true);
+
+        player.fighter().buffs().add(buff);
+
+        assertTrue(turn.start());
+        Mockito.verify(hook).onStartTurn(buff);
+
+        turn.stop();
+        Mockito.verify(hook).onEndTurn(buff);
     }
 }

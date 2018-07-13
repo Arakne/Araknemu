@@ -53,7 +53,13 @@ final public class EffectsHandler {
      */
     public void apply(Fighter caster, Castable castable, SpellEffect effect, FightCell target) {
         if (handlers.containsKey(effect.effect())) {
-            handlers.get(effect.effect()).handle(caster, castable, effect, target);
+            EffectHandler handler = handlers.get(effect.effect());
+
+            if (effect.duration() == 0) {
+                handler.handle(caster, castable, effect, target);
+            } else {
+                handler.buff(caster, castable, effect, target);
+            }
         }
     }
 }

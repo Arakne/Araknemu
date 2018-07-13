@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
@@ -14,6 +15,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -200,5 +203,66 @@ class StealLifeHandlerTest extends FightBaseCase {
             ActionEffect.alterLifePoints(caster, caster, -245),
             ActionEffect.fighterDie(caster, caster)
         );
+    }
+
+    @Test
+    void buffWillAddBuffToList() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+
+        Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.duration()).thenReturn(5);
+
+        handler.buff(caster, spell, effect, target.cell());
+
+        Optional<Buff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
+
+        assertTrue(found.isPresent());
+        assertEquals(caster, found.get().caster());
+        assertEquals(target, found.get().target());
+        assertEquals(effect, found.get().effect());
+        assertEquals(spell, found.get().action());
+        assertEquals(handler, found.get().hook());
+        assertEquals(5, found.get().remainingTurns());
+    }
+
+    @Test
+    void buffWithAreaMultipleFighters() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 20)));
+
+        handler.buff(caster, Mockito.mock(Spell.class), effect, fight.map().get(122));
+
+        assertTrue(caster.buffs().stream().anyMatch(buff -> buff.effect().equals(effect)));
+        assertTrue(target.buffs().stream().anyMatch(buff -> buff.effect().equals(effect)));
+    }
+
+    @Test
+    void onStartTurn() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(10);
+
+        assertTrue(handler.onStartTurn(new Buff(effect, Mockito.mock(Spell.class), caster, target, handler)));
+
+        assertEquals(10, target.life().max() - target.life().current());
+        assertEquals(5, caster.life().current() - baseLife);
+
+        requestStack.assertAll(
+            ActionEffect.alterLifePoints(caster, target, -10),
+            ActionEffect.alterLifePoints(caster, caster, 5)
+        );
+    }
+
+    @Test
+    void onStartTurnOnDie() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(10000);
+
+        assertFalse(handler.onStartTurn(new Buff(effect, Mockito.mock(Spell.class), caster, target, handler)));
     }
 }
