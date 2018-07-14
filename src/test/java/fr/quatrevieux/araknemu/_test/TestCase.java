@@ -57,7 +57,7 @@ public class TestCase {
     }
 
     public void assertBetween(int min, int max, int value) {
-        assertTrue(value <= max);
-        assertTrue(value >= min);
+        assertTrue(value <= max, "Expected between " + min + " and " + max + " but get " + value);
+        assertTrue(value >= min, "Expected between " + min + " and " + max + " but get " + value);
     }
 }

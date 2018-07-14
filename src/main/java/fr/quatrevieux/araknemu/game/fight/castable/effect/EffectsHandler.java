@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
@@ -47,21 +48,18 @@ final public class EffectsHandler {
     }
 
     /**
-     * Apply one effect to the fight
-     *
-     * @param caster The effect caster
-     * @param castable The castable object
-     * @param effect The effect to apply
-     * @param target The target cell
+     * Apply a cast to the fight
      */
-    public void apply(Fighter caster, Castable castable, SpellEffect effect, FightCell target) {
-        if (handlers.containsKey(effect.effect())) {
-            EffectHandler handler = handlers.get(effect.effect());
+    public void apply(CastScope cast) {
+        for (CastScope.EffectScope effect : cast.effects()) {
+            if (handlers.containsKey(effect.effect().effect())) {
+                EffectHandler handler = handlers.get(effect.effect().effect());
 
-            if (effect.duration() == 0) {
-                handler.handle(caster, castable, effect, target);
-            } else {
-                handler.buff(caster, castable, effect, target);
+                if (effect.effect().duration() == 0) {
+                    handler.handle(cast, effect);
+                } else {
+                    handler.buff(cast, effect);
+                }
             }
         }
     }

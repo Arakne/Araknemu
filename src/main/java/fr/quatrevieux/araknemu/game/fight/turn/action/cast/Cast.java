@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.game.fight.turn.action.cast;
 
+import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -92,10 +93,7 @@ final public class Cast implements Action {
         }
 
         turn.points().useActionPoints(spell.apCost());
-
-        for (SpellEffect effect : result.effects()) {
-            turn.fight().effects().apply(caster, spell, effect, target);
-        }
+        turn.fight().effects().apply(new CastScope(spell, caster, target).withRandomEffects(result.effects()));
     }
 
     @Override

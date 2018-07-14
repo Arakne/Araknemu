@@ -4,10 +4,15 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
+import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CircleArea;
@@ -16,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,12 +53,17 @@ class DamageHandlerTest extends FightBaseCase {
     @Test
     void applyRandomEffect() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.min()).thenReturn(10);
         Mockito.when(effect.max()).thenReturn(15);
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        handler.handle(caster, Mockito.mock(Spell.class), effect, target.cell());
+        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        handler.handle(scope, scope.effects().get(0));
 
         int damage = target.life().max() - target.life().current();
 
@@ -64,11 +75,16 @@ class DamageHandlerTest extends FightBaseCase {
     @Test
     void applyFixedEffect() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.min()).thenReturn(10);
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        handler.handle(caster, Mockito.mock(Spell.class), effect, target.cell());
+        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        handler.handle(scope, scope.effects().get(0));
 
         int damage = target.life().max() - target.life().current();
 
@@ -80,13 +96,18 @@ class DamageHandlerTest extends FightBaseCase {
     @Test
     void applyBoostEffect() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.min()).thenReturn(10);
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
 
         player.characteristics().base().set(Characteristic.AGILITY, 100);
 
-        handler.handle(caster, Mockito.mock(Spell.class), effect, target.cell());
+        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        handler.handle(scope, scope.effects().get(0));
 
         int damage = target.life().max() - target.life().current();
 
@@ -96,10 +117,16 @@ class DamageHandlerTest extends FightBaseCase {
     @Test
     void applyToEmptyCell() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
         Mockito.when(effect.min()).thenReturn(10);
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        handler.handle(caster, Mockito.mock(Spell.class), effect, fight.map().get(5));
+        CastScope scope = makeCastScope(caster, spell, effect, fight.map().get(5));
+        handler.handle(scope, scope.effects().get(0));
 
         requestStack.assertEmpty();
     }
@@ -107,11 +134,16 @@ class DamageHandlerTest extends FightBaseCase {
     @Test
     void applyToEmptyCellWithArea() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.min()).thenReturn(10);
         Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 2)));
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        handler.handle(caster, Mockito.mock(Spell.class), effect, fight.map().get(122));
+        CastScope scope = makeCastScope(caster, spell, effect, fight.map().get(122));
+        handler.handle(scope, scope.effects().get(0));
 
         int damage = target.life().max() - target.life().current();
 
@@ -123,11 +155,16 @@ class DamageHandlerTest extends FightBaseCase {
     @Test
     void applyWithAreaMultipleFighters() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.min()).thenReturn(10);
         Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 20)));
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        handler.handle(caster, Mockito.mock(Spell.class), effect, fight.map().get(122));
+        CastScope scope = makeCastScope(caster, spell, effect, fight.map().get(122));
+        handler.handle(scope, scope.effects().get(0));
 
         requestStack.assertOne(ActionEffect.alterLifePoints(caster, target, -10));
         requestStack.assertOne(ActionEffect.alterLifePoints(caster, caster, -10));
@@ -137,12 +174,16 @@ class DamageHandlerTest extends FightBaseCase {
     void buffWillAddBuffToList() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.min()).thenReturn(10);
         Mockito.when(effect.area()).thenReturn(new CellArea());
         Mockito.when(effect.duration()).thenReturn(5);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        handler.buff(caster, spell, effect, target.cell());
+        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        handler.buff(scope, scope.effects().get(0));
 
         Optional<Buff> found = target.buffs().stream().filter(buff -> buff.effect().equals(effect)).findFirst();
 
@@ -158,11 +199,16 @@ class DamageHandlerTest extends FightBaseCase {
     @Test
     void buffWithAreaMultipleFighters() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.min()).thenReturn(10);
         Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 20)));
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        handler.buff(caster, Mockito.mock(Spell.class), effect, fight.map().get(122));
+        CastScope scope = makeCastScope(caster, spell, effect, fight.map().get(122));
+        handler.buff(scope, scope.effects().get(0));
 
         assertTrue(caster.buffs().stream().anyMatch(buff -> buff.effect().equals(effect)));
         assertTrue(target.buffs().stream().anyMatch(buff -> buff.effect().equals(effect)));

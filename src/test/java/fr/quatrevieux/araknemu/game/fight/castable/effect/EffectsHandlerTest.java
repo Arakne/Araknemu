@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
 import fr.quatrevieux.araknemu.game.spell.Spell;
+import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
@@ -36,9 +37,15 @@ class EffectsHandlerTest extends FightBaseCase {
     @Test
     void applyUndefinedEffect() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
-        Mockito.when(effect.effect()).thenReturn(-1);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
-        handler.apply(player.fighter(), Mockito.mock(Spell.class), effect, fight.map().get(123));
+        Mockito.when(effect.effect()).thenReturn(-1);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        handler.apply(makeCastScope(player.fighter(), spell, effect, fight.map().get(123)));
 
         requestStack.assertEmpty();
     }
@@ -46,12 +53,16 @@ class EffectsHandlerTest extends FightBaseCase {
     @Test
     void applyDamage() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.effect()).thenReturn(100);
         Mockito.when(effect.min()).thenReturn(10);
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        handler.apply(player.fighter(), Mockito.mock(Spell.class), effect, other.fighter().cell());
+        handler.apply(makeCastScope(player.fighter(), spell, effect, other.fighter().cell()));
 
         requestStack.assertLast(ActionEffect.alterLifePoints(player.fighter(), other.fighter(), -15));
     }
@@ -60,13 +71,16 @@ class EffectsHandlerTest extends FightBaseCase {
     void applyDamageBuff() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.effect()).thenReturn(100);
         Mockito.when(effect.min()).thenReturn(10);
         Mockito.when(effect.area()).thenReturn(new CellArea());
         Mockito.when(effect.duration()).thenReturn(5);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        handler.apply(player.fighter(), spell, effect, other.fighter().cell());
+        handler.apply(makeCastScope(player.fighter(), spell, effect, other.fighter().cell()));
         Optional<Buff> found = other.fighter().buffs().stream().filter(buff -> buff.effect().effect() == 100).findFirst();
 
         assertTrue(found.isPresent());
@@ -82,15 +96,19 @@ class EffectsHandlerTest extends FightBaseCase {
     @Test
     void applyStealLife() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.effect()).thenReturn(95);
         Mockito.when(effect.min()).thenReturn(10);
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
 
         player.fighter().life().alter(player.fighter(), -20);
         requestStack.clear();
 
-        handler.apply(player.fighter(), Mockito.mock(Spell.class), effect, other.fighter().cell());
+        handler.apply(makeCastScope(player.fighter(), spell, effect, other.fighter().cell()));
 
         requestStack.assertAll(
             ActionEffect.alterLifePoints(player.fighter(), other.fighter(), -15),
@@ -101,11 +119,16 @@ class EffectsHandlerTest extends FightBaseCase {
     @Test
     void applyTeleport() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.effect()).thenReturn(4);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(true);
         requestStack.clear();
 
-        handler.apply(player.fighter(), Mockito.mock(Spell.class), effect, fight.map().get(123));
+        handler.apply(makeCastScope(player.fighter(), spell, effect, fight.map().get(123)));
 
         requestStack.assertLast(ActionEffect.teleport(player.fighter(), player.fighter(), fight.map().get(123)));
         assertEquals(123, player.fighter().cell().id());

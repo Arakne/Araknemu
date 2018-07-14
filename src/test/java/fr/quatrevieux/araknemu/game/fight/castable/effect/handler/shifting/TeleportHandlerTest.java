@@ -2,10 +2,13 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
+import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,12 +39,19 @@ class TeleportHandlerTest extends FightBaseCase {
     @Test
     void applySuccess() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(true);
 
         FightCell lastCell = caster.cell();
 
         FightCell target = fight.map().get(123);
 
-        handler.handle(caster, Mockito.mock(Spell.class), effect, target);
+        CastScope scope = makeCastScope(caster, spell, effect, target);
+        handler.handle(scope, scope.effects().get(0));
 
         requestStack.assertLast(ActionEffect.teleport(caster, caster, target));
 
@@ -53,12 +63,19 @@ class TeleportHandlerTest extends FightBaseCase {
     @Test
     void applyNotFreeCell() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(true);
 
         FightCell lastCell = caster.cell();
 
         FightCell target = other.fighter().cell();
 
-        handler.handle(caster, Mockito.mock(Spell.class), effect, target);
+        CastScope scope = makeCastScope(caster, spell, effect, target);
+        handler.handle(scope, scope.effects().get(0));
 
         requestStack.assertEmpty();
 

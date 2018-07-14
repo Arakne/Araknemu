@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat;
 
+import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.WeaponConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -86,10 +87,7 @@ final public class CloseCombat implements Action {
         }
 
         turn.points().useActionPoints(caster.weapon().apCost());
-
-        for (SpellEffect effect : result.effects()) {
-            turn.fight().effects().apply(caster, caster.weapon(), effect, target);
-        }
+        turn.fight().effects().apply(new CastScope(caster.weapon(), caster, target).withEffects(result.effects()));
     }
 
     @Override

@@ -1,12 +1,8 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.Castable;
+import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import fr.quatrevieux.araknemu.game.spell.Spell;
-import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
 /**
@@ -20,18 +16,18 @@ final public class TeleportHandler implements EffectHandler {
     }
 
     @Override
-    public void handle(Fighter caster, Castable castable, SpellEffect effect, FightCell target) {
-        if (!target.walkable()) {
+    public void handle(CastScope cast, CastScope.EffectScope effect) {
+        if (!cast.target().walkable()) {
             return; // @todo exception ?
         }
 
-        caster.move(target);
+        cast.caster().move(cast.target());
 
-        fight.send(ActionEffect.teleport(caster, caster, target));
+        fight.send(ActionEffect.teleport(cast.caster(), cast.caster(), cast.target()));
     }
 
     @Override
-    public void buff(Fighter caster, Castable castable, SpellEffect effect, FightCell target) {
+    public void buff(CastScope cast, CastScope.EffectScope effect) {
         throw new UnsupportedOperationException("Cannot use Teleport as buff effect");
     }
 }

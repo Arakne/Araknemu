@@ -9,9 +9,13 @@ import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
+import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastSuccess;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
+import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
+import fr.quatrevieux.araknemu.network.game.out.fight.action.FightAction;
+import fr.quatrevieux.araknemu.network.game.out.fight.action.StartFightAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -106,13 +110,31 @@ public class FunctionalTest extends FightBaseCase {
         assertSame(fighter2, fight.turnList().currentFighter());
     }
 
-    private void castNormal(int spellId, FightCell target) {
+    @Test
+    void probableEffectSpell() {
+        Spell spell = castNormal(109, fighter2.cell()); // Bluff
+
+        int damage = fighter2.life().max() - fighter2.life().current();
+
+        assertBetween(1, 50, damage);
+
+        requestStack.assertAll(
+            "GAS1",
+            new FightAction(new CastSuccess(fighter1, spell, fighter2.cell(), false)),
+            ActionEffect.usedActionPoints(fighter1, 4),
+            ActionEffect.alterLifePoints(fighter1, fighter2, -damage),
+            "GAF0|1"
+        );
+    }
+
+    private Spell castNormal(int spellId, FightCell target) {
         FightTurn currentTurn = fight.turnList().current().get();
+        Spell spell = service.get(spellId).level(5);
 
         currentTurn.perform(new Cast(
             currentTurn,
             currentTurn.fighter(),
-            service.get(spellId).level(5),
+            spell,
             target,
             new SpellConstraintsValidator(currentTurn),
 
@@ -126,5 +148,7 @@ public class FunctionalTest extends FightBaseCase {
         ));
 
         currentTurn.terminate();
+
+        return spell;
     }
 }

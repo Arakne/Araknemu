@@ -2,9 +2,11 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
+import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
@@ -44,10 +46,15 @@ class SkipTurnHandlerTest extends FightBaseCase {
     @Test
     void handle() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        handler.handle(caster, Mockito.mock(Spell.class), effect, target.cell());
+        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        handler.handle(scope, scope.effects().get(0));
 
         Optional<Buff> buff = target.buffs().stream().findFirst();
 
@@ -63,11 +70,16 @@ class SkipTurnHandlerTest extends FightBaseCase {
     @Test
     void buff() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.area()).thenReturn(new CellArea());
         Mockito.when(effect.duration()).thenReturn(3);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        handler.buff(caster, Mockito.mock(Spell.class), effect, target.cell());
+        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        handler.buff(scope, scope.effects().get(0));
 
         Optional<Buff> buff = target.buffs().stream().findFirst();
 
