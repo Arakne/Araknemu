@@ -10,7 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DamageApplierTest extends FightBaseCase {
     private PlayerFighter caster;
@@ -35,9 +36,9 @@ class DamageApplierTest extends FightBaseCase {
 
         Mockito.when(effect.min()).thenReturn(10);
 
-        DamageApplier applier = new DamageApplier(caster, effect, Element.AIR);
+        DamageApplier applier = new DamageApplier(Element.AIR);
 
-        int value = applier.apply(target);
+        int value = applier.apply(caster, effect, target);
 
         assertEquals(-10, value);
         assertEquals(10, target.life().max() - target.life().current());
@@ -52,9 +53,9 @@ class DamageApplierTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(10);
         Mockito.when(effect.max()).thenReturn(15);
 
-        DamageApplier applier = new DamageApplier(caster, effect, Element.AIR);
+        DamageApplier applier = new DamageApplier(Element.AIR);
 
-        int value = applier.apply(target);
+        int value = applier.apply(caster, effect, target);
 
         assertBetween(-15, -10, value);
         assertEquals(value, target.life().current() - target.life().max());
@@ -68,13 +69,13 @@ class DamageApplierTest extends FightBaseCase {
 
         Mockito.when(effect.min()).thenReturn(10);
 
-        DamageApplier applier = new DamageApplier(caster, effect, Element.AIR);
+        DamageApplier applier = new DamageApplier(Element.AIR);
 
         player.characteristics().base().set(Characteristic.AGILITY, 50);
         player.characteristics().base().set(Characteristic.PERCENT_DAMAGE, 25);
         player.characteristics().base().set(Characteristic.FIXED_DAMAGE, 10);
 
-        int value = applier.apply(target);
+        int value = applier.apply(caster, effect, target);
 
         assertEquals(-27, value);
     }
@@ -85,12 +86,12 @@ class DamageApplierTest extends FightBaseCase {
 
         Mockito.when(effect.min()).thenReturn(10);
 
-        DamageApplier applier = new DamageApplier(caster, effect, Element.AIR);
+        DamageApplier applier = new DamageApplier(Element.AIR);
 
         other.characteristics().base().set(Characteristic.RESISTANCE_PERCENT_AIR, 25);
         other.characteristics().base().set(Characteristic.RESISTANCE_AIR, 5);
 
-        int value = applier.apply(target);
+        int value = applier.apply(caster, effect, target);
 
         assertEquals(-2, value);
     }
@@ -101,11 +102,11 @@ class DamageApplierTest extends FightBaseCase {
 
         Mockito.when(effect.min()).thenReturn(10);
 
-        DamageApplier applier = new DamageApplier(caster, effect, Element.AIR);
+        DamageApplier applier = new DamageApplier(Element.AIR);
 
         other.characteristics().base().set(Characteristic.RESISTANCE_AIR, 100);
 
-        int value = applier.apply(target);
+        int value = applier.apply(caster, effect, target);
 
         assertEquals(0, value);
     }
@@ -116,9 +117,9 @@ class DamageApplierTest extends FightBaseCase {
 
         Mockito.when(effect.min()).thenReturn(1000);
 
-        DamageApplier applier = new DamageApplier(caster, effect, Element.AIR);
+        DamageApplier applier = new DamageApplier(Element.AIR);
 
-        int value = applier.apply(target);
+        int value = applier.apply(caster, effect, target);
 
         assertEquals(-50, value);
         assertTrue(target.dead());

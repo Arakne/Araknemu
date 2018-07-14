@@ -11,18 +11,16 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
  * Handle steal life
  */
 final public class StealLifeHandler implements EffectHandler, BuffHook {
-    final private Element element;
+    final private DamageApplier applier;
 
     public StealLifeHandler(Element element) {
-        this.element = element;
+        this.applier = new DamageApplier(element);
     }
 
     @Override
     public void handle(CastScope cast, CastScope.EffectScope effect) {
-        DamageApplier applier = new DamageApplier(cast.caster(), effect.effect(), element);
-
         for (Fighter target : effect.targets()) {
-            applyCasterHeal(applier.apply(target), cast.caster());
+            applyCasterHeal(applier.apply(cast.caster(), effect.effect(), target), cast.caster());
         }
     }
 
@@ -35,10 +33,7 @@ final public class StealLifeHandler implements EffectHandler, BuffHook {
 
     @Override
     public boolean onStartTurn(Buff buff) {
-        applyCasterHeal(
-            new DamageApplier(buff.caster(), buff.effect(), element).apply(buff.target()),
-            buff.caster()
-        );
+        applyCasterHeal(applier.apply(buff), buff.caster());
 
         return !buff.target().dead();
     }

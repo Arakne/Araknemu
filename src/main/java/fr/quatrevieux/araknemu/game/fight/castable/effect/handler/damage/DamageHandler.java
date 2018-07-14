@@ -11,18 +11,16 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
  * Handle simple damage effect
  */
 final public class DamageHandler implements EffectHandler, BuffHook {
-    final private Element element;
+    final private DamageApplier applier;
 
     public DamageHandler(Element element) {
-        this.element = element;
+        this.applier = new DamageApplier(element);
     }
 
     @Override
     public void handle(CastScope cast, CastScope.EffectScope effect) {
-        DamageApplier applier = new DamageApplier(cast.caster(), effect.effect(), element);
-
         for (Fighter target : effect.targets()) {
-            applier.apply(target);
+            applier.apply(cast.caster(), effect.effect(), target);
         }
     }
 
@@ -35,7 +33,7 @@ final public class DamageHandler implements EffectHandler, BuffHook {
 
     @Override
     public boolean onStartTurn(Buff buff) {
-        new DamageApplier(buff.caster(), buff.effect(), element).accept(buff.target());
+        applier.apply(buff);
 
         return !buff.target().dead();
     }
