@@ -104,4 +104,14 @@ final public class ActionEffect {
     static public ActionEffect skipNextTurn(Fighter caster, Fighter fighter) {
         return new ActionEffect(140, caster, fighter.id());
     }
+
+    /**
+     * The fighter return the spell
+     *
+     * @param fighter The fighter
+     * @param success true is the spell is successfully returned
+     */
+    static public ActionEffect returnSpell(Fighter fighter, boolean success) {
+        return new ActionEffect(106, fighter, fighter.id(), success ? "1" : "0");
+    }
 }

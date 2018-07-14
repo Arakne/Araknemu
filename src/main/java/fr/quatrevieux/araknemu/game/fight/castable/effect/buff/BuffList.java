@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
+import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
 
@@ -61,13 +62,21 @@ final public class BuffList implements Iterable<Buff> {
         return result;
     }
 
-
     /**
      * @see BuffHook#onEndTurn(Buff)
      */
     public void onEndTurn() {
         for (Buff buff : buffs) {
             buff.hook().onEndTurn(buff);
+        }
+    }
+
+    /**
+     * @see BuffHook#onCastTarget(Buff, CastScope);
+     */
+    public void onCastTarget(CastScope cast) {
+        for (Buff buff : buffs) {
+            buff.hook().onCastTarget(buff, cast);
         }
     }
 

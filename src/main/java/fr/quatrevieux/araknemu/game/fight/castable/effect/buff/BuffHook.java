@@ -1,5 +1,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
+import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+
 /**
  * Hook action for apply buff effects
  */
@@ -27,4 +29,9 @@ public interface BuffHook {
      * The buff is terminated (buff expired, debuff...)
      */
     default public void onBuffTerminated(Buff buff) {}
+
+    /**
+     * The fighter is a target of a cast
+     */
+    default public void onCastTarget(Buff buff, CastScope cast) {}
 }

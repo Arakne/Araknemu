@@ -114,4 +114,13 @@ class ActionEffectTest {
             ActionEffect.skipNextTurn(caster, target).toString()
         );
     }
+
+    @Test
+    void returnSpell() {
+        Fighter fighter = Mockito.mock(Fighter.class);
+        Mockito.when(fighter.id()).thenReturn(456);
+
+        assertEquals("GA;106;456;456,1", ActionEffect.returnSpell(fighter, true).toString());
+        assertEquals("GA;106;456;456,0", ActionEffect.returnSpell(fighter, false).toString());
+    }
 }

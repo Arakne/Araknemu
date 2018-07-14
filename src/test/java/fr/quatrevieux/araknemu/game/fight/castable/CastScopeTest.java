@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
@@ -17,6 +18,7 @@ import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -273,5 +275,77 @@ class CastScopeTest extends FightBaseCase {
         }
 
         assertBetween(400, 600, count);
+    }
+
+    @Test
+    void spell() {
+        Spell spell = Mockito.mock(Spell.class);
+        CastScope scope = new CastScope(spell, caster, target.cell());
+
+        assertEquals(Optional.of(spell), scope.spell());
+    }
+
+    @Test
+    void spellNotASpell() {
+        Castable action = Mockito.mock(Castable.class);
+        CastScope scope = new CastScope(action, caster, target.cell());
+
+        assertEquals(Optional.empty(), scope.spell());
+    }
+
+    @Test
+    void targets() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 10)));
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        CastScope scope = new CastScope(spell, caster, target.cell());
+
+        scope.withEffects(Collections.singletonList(effect));
+
+        assertContainsAll(scope.targets(), target, caster);
+        assertContainsAll(scope.effects().get(0).targets(), target, caster);
+    }
+
+    @Test
+    void targetsWithDeadFighter() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 10)));
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        CastScope scope = new CastScope(spell, caster, target.cell());
+
+        scope.withEffects(Collections.singletonList(effect));
+
+        target.life().kill(caster);
+
+        assertContainsAll(scope.effects().get(0).targets(), caster);
+    }
+
+    @Test
+    void replaceTarget() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 10)));
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        CastScope scope = new CastScope(spell, caster, target.cell());
+
+        scope.withEffects(Collections.singletonList(effect));
+        scope.replaceTarget(target, caster);
+
+        assertContainsAll(scope.targets(), caster);
+        assertContainsAll(scope.effects().get(0).targets(), caster);
     }
 }

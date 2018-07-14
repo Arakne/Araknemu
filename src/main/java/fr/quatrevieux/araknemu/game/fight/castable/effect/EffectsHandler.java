@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.SpellReturnHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.StealLifeHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.SkipTurnHandler;
@@ -41,6 +42,8 @@ final public class EffectsHandler {
         register(100, new DamageHandler(Element.NEUTRAL));
 
         register(140, new SkipTurnHandler(fight));
+
+        register(106, new SpellReturnHandler(fight));
     }
 
     public void register(int effectId, EffectHandler applier) {
@@ -51,6 +54,10 @@ final public class EffectsHandler {
      * Apply a cast to the fight
      */
     public void apply(CastScope cast) {
+        for (Fighter target : cast.targets()) {
+            target.buffs().onCastTarget(cast);
+        }
+
         for (CastScope.EffectScope effect : cast.effects()) {
             if (handlers.containsKey(effect.effect().effect())) {
                 EffectHandler handler = handlers.get(effect.effect().effect());

@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.fight.castable;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 import java.util.*;
@@ -25,7 +26,11 @@ final public class CastScope {
         }
 
         public Collection<Fighter> targets() {
-            return targets;
+            return targets.stream()
+                .map(targetMapping::get)
+                .filter(fighter -> !fighter.dead())
+                .collect(Collectors.toList())
+            ;
         }
     }
 
@@ -36,6 +41,7 @@ final public class CastScope {
     final private FightCell target;
 
     private List<EffectScope> effects;
+    private Map<Fighter, Fighter> targetMapping;
 
     public CastScope(Castable action, Fighter caster, FightCell target) {
         this.action = action;
@@ -51,6 +57,17 @@ final public class CastScope {
     }
 
     /**
+     * Get the spell, if and only if the action is a spell
+     */
+    public Optional<Spell> spell() {
+        if (action instanceof Spell) {
+            return Optional.of((Spell) action);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    /**
      * Get the caster
      */
     public Fighter caster() {
@@ -62,6 +79,23 @@ final public class CastScope {
      */
     public FightCell target() {
         return target;
+    }
+
+    /**
+     * Get the cast targets
+     */
+    public Set<Fighter> targets() {
+        return new HashSet<>(targetMapping.values());
+    }
+
+    /**
+     * Replace a target of the cast
+     *
+     * @param originalTarget The base target fighter
+     * @param newTarget The new target fighter
+     */
+    public void replaceTarget(Fighter originalTarget, Fighter newTarget) {
+        targetMapping.put(originalTarget, newTarget);
     }
 
     /**
@@ -81,6 +115,14 @@ final public class CastScope {
             .map(effect -> new EffectScope(effect, resolveTargets(effect)))
             .collect(Collectors.toList())
         ;
+
+        targetMapping = new HashMap<>();
+
+        for (EffectScope effect : this.effects) {
+            for (Fighter target : effect.targets) {
+                targetMapping.put(target, target);
+            }
+        }
 
         return this;
     }

@@ -2,7 +2,9 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -132,5 +134,26 @@ class EffectsHandlerTest extends FightBaseCase {
 
         requestStack.assertLast(ActionEffect.teleport(player.fighter(), player.fighter(), fight.map().get(123)));
         assertEquals(123, player.fighter().cell().id());
+    }
+
+    @Test
+    void applyWillCallBuffOnCastTarget() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        BuffHook hook = Mockito.mock(BuffHook.class);
+        Buff buff = new Buff(effect, spell, player.fighter(), player.fighter(), hook);
+        other.fighter().buffs().add(buff);
+
+        CastScope cast = makeCastScope(player.fighter(), spell, effect, other.fighter().cell());
+
+        handler.apply(cast);
+
+        Mockito.verify(hook).onCastTarget(buff, cast);
     }
 }

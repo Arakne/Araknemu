@@ -203,4 +203,14 @@ final public class PlayerFighter implements Fighter, Sender {
         this.ready = ready;
         fight.dispatch(new FighterReadyStateChanged(this));
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return getClass().equals(obj.getClass()) && id() == ((PlayerFighter) obj).id();
+    }
+
+    @Override
+    public int hashCode() {
+        return id();
+    }
 }

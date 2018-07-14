@@ -15,7 +15,6 @@ import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.FightAction;
-import fr.quatrevieux.araknemu.network.game.out.fight.action.StartFightAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -125,6 +124,21 @@ public class FunctionalTest extends FightBaseCase {
             ActionEffect.alterLifePoints(fighter1, fighter2, -damage),
             "GAF0|1"
         );
+    }
+
+    @Test
+    void returnSpell() {
+        castNormal(4, fighter1.cell()); // Return spell
+        fighter1.turn().stop();
+
+        castNormal(109, fighter1.cell()); // Bluff
+
+        int damage = fighter2.life().max() - fighter2.life().current();
+
+        assertBetween(1, 50, damage);
+
+        requestStack.assertOne(ActionEffect.alterLifePoints(fighter2, fighter2, -damage));
+        requestStack.assertOne(ActionEffect.returnSpell(fighter1, true));
     }
 
     private Spell castNormal(int spellId, FightCell target) {
