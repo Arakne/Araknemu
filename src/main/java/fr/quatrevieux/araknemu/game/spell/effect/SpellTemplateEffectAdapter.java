@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.spell.effect;
 
 import fr.quatrevieux.araknemu.data.value.SpellTemplateEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.SpellEffectArea;
+import fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget;
 
 /**
  * Adapt {@link SpellTemplateEffect}
@@ -9,9 +10,9 @@ import fr.quatrevieux.araknemu.game.spell.effect.area.SpellEffectArea;
 final public class SpellTemplateEffectAdapter implements SpellEffect {
     final private SpellTemplateEffect effect;
     final private SpellEffectArea area;
-    final private int target;
+    final private EffectTarget target;
 
-    public SpellTemplateEffectAdapter(SpellTemplateEffect effect, SpellEffectArea area, int target) {
+    public SpellTemplateEffectAdapter(SpellTemplateEffect effect, SpellEffectArea area, EffectTarget target) {
         this.effect = effect;
         this.area = area;
         this.target = target;
@@ -58,7 +59,7 @@ final public class SpellTemplateEffectAdapter implements SpellEffect {
     }
 
     @Override
-    public int target() {
+    public EffectTarget target() {
         return target;
     }
 }

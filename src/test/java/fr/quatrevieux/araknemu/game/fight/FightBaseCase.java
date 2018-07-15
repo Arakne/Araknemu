@@ -106,11 +106,15 @@ public class FightBaseCase extends GameBaseCase {
         ;
     }
 
-    public void equipWeapon(GamePlayer player) throws ContainerException, InventoryException, SQLException {
+    public void equipWeapon(GamePlayer player, int weaponId) throws ContainerException, InventoryException, SQLException {
         dataSet.pushItemTemplates();
-        Item weapon = container.get(ItemService.class).create(40);
+        Item weapon = container.get(ItemService.class).create(weaponId);
 
         player.inventory().add(weapon, 1, WeaponSlot.SLOT_ID);
+    }
+
+    public void equipWeapon(GamePlayer player) throws ContainerException, InventoryException, SQLException {
+        equipWeapon(player, 40);
     }
 
     public CastScope makeCastScope(Fighter caster, Castable castable, SpellEffect effect, FightCell target) {

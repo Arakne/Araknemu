@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.spell.boost.SpellModifiers;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.SpellEffectArea;
+import fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget;
 
 /**
  * Apply spell modifiers on effect
@@ -71,7 +72,7 @@ final public class BoostedSpellEffect implements SpellEffect {
     }
 
     @Override
-    public int target() {
+    public EffectTarget target() {
         return effect.target();
     }
 

@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellTemplateEffectAdapter;
+import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -72,10 +73,10 @@ class SpellLevelAdapterTest extends GameBaseCase {
         );
 
         assertCount(1, spell.effects());
-        assertEquals(4, spell.effects().get(0).target());
+        assertEquals(new SpellEffectTarget(4), spell.effects().get(0).target());
 
         assertCount(1, spell.criticalEffects());
-        assertEquals(4, spell.criticalEffects().get(0).target());
+        assertEquals(new SpellEffectTarget(4), spell.criticalEffects().get(0).target());
     }
 
     @Test
@@ -102,7 +103,7 @@ class SpellLevelAdapterTest extends GameBaseCase {
         assertEquals("1d2+0", spell.effects().get(0).text());
         assertEquals(EffectArea.Type.CELL, spell.effects().get(0).area().type());
         assertEquals(0, spell.effects().get(0).area().size());
-        assertEquals(0, spell.effects().get(0).target());
+        assertEquals(SpellEffectTarget.DEFAULT, spell.effects().get(0).target());
         assertEquals(100, spell.effects().get(1).effect());
         assertEquals(2, spell.effects().get(1).min());
         assertEquals(4, spell.effects().get(1).max());
@@ -112,7 +113,7 @@ class SpellLevelAdapterTest extends GameBaseCase {
         assertEquals("1d3+1", spell.effects().get(1).text());
         assertEquals(EffectArea.Type.CELL, spell.effects().get(1).area().type());
         assertEquals(0, spell.effects().get(1).area().size());
-        assertEquals(0, spell.effects().get(1).target());
+        assertEquals(SpellEffectTarget.DEFAULT, spell.effects().get(1).target());
 
         assertEquals(101, spell.criticalEffects().get(0).effect());
         assertEquals(2, spell.criticalEffects().get(0).min());
@@ -123,7 +124,7 @@ class SpellLevelAdapterTest extends GameBaseCase {
         assertEquals("0d0+2", spell.criticalEffects().get(0).text());
         assertEquals(EffectArea.Type.CELL, spell.criticalEffects().get(0).area().type());
         assertEquals(0, spell.criticalEffects().get(0).area().size());
-        assertEquals(0, spell.criticalEffects().get(0).target());
+        assertEquals(SpellEffectTarget.DEFAULT, spell.criticalEffects().get(0).target());
         assertEquals(100, spell.criticalEffects().get(1).effect());
         assertEquals(5, spell.criticalEffects().get(1).min());
         assertEquals(0, spell.criticalEffects().get(1).max());
@@ -133,6 +134,6 @@ class SpellLevelAdapterTest extends GameBaseCase {
         assertEquals("0d0+5", spell.criticalEffects().get(1).text());
         assertEquals(EffectArea.Type.CELL, spell.criticalEffects().get(1).area().type());
         assertEquals(0, spell.criticalEffects().get(1).area().size());
-        assertEquals(0, spell.criticalEffects().get(1).target());
+        assertEquals(SpellEffectTarget.DEFAULT, spell.criticalEffects().get(1).target());
     }
 }

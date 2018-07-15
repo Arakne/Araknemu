@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.game.item.effect.WeaponEffect;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.SpellEffectArea;
+import fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget;
 
 /**
  * Effect for a weapon
@@ -64,8 +65,8 @@ final public class CastableWeaponEffect implements SpellEffect {
     }
 
     @Override
-    public int target() {
-        return 0;
+    public EffectTarget target() {
+        return WeaponEffectTarget.INSTANCE;
     }
 
     private int applyCriticalBonus(int base) {

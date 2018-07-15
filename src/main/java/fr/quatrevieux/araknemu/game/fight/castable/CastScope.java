@@ -167,6 +167,10 @@ final public class CastScope {
      * Resolve the targets of the effect
      */
     private Collection<Fighter> resolveTargets(SpellEffect effect) {
+        if (effect.target().onlyCaster()) {
+            return Collections.singleton(caster);
+        }
+
         if (action.constraints().freeCell()) {
             return Collections.emptyList();
         }
@@ -177,6 +181,7 @@ final public class CastScope {
             .map(FightCell::fighter)
             .filter(Optional::isPresent)
             .map(Optional::get)
+            .filter(fighter -> effect.target().test(caster, fighter))
             .collect(Collectors.toList())
         ;
     }

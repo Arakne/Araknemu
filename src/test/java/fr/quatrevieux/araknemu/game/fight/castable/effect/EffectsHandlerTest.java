@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
+import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
 import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,6 +45,7 @@ class EffectsHandlerTest extends FightBaseCase {
 
         Mockito.when(effect.effect()).thenReturn(-1);
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
@@ -61,6 +63,7 @@ class EffectsHandlerTest extends FightBaseCase {
         Mockito.when(effect.effect()).thenReturn(100);
         Mockito.when(effect.min()).thenReturn(10);
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
@@ -78,6 +81,7 @@ class EffectsHandlerTest extends FightBaseCase {
         Mockito.when(effect.effect()).thenReturn(100);
         Mockito.when(effect.min()).thenReturn(10);
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(effect.duration()).thenReturn(5);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
@@ -104,6 +108,7 @@ class EffectsHandlerTest extends FightBaseCase {
         Mockito.when(effect.effect()).thenReturn(95);
         Mockito.when(effect.min()).thenReturn(10);
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
@@ -126,6 +131,7 @@ class EffectsHandlerTest extends FightBaseCase {
 
         Mockito.when(effect.effect()).thenReturn(4);
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(true);
         requestStack.clear();
@@ -143,6 +149,7 @@ class EffectsHandlerTest extends FightBaseCase {
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 

@@ -50,7 +50,7 @@ class CastableWeaponTest extends GameBaseCase {
         assertEquals(97, weapon.effects().get(0).effect());
         assertEquals(0, weapon.effects().get(0).duration());
         assertEquals(0, weapon.effects().get(0).probability());
-        assertEquals(0, weapon.effects().get(0).target());
+        assertEquals(WeaponEffectTarget.INSTANCE, weapon.effects().get(0).target());
         assertEquals(0, weapon.effects().get(0).boost());
         assertEquals(1, weapon.effects().get(0).area().size());
         assertInstanceOf(CrossArea.class, weapon.effects().get(0).area());
@@ -62,7 +62,7 @@ class CastableWeaponTest extends GameBaseCase {
         assertEquals(99, weapon.effects().get(1).effect());
         assertEquals(0, weapon.effects().get(1).duration());
         assertEquals(0, weapon.effects().get(1).probability());
-        assertEquals(0, weapon.effects().get(1).target());
+        assertEquals(WeaponEffectTarget.INSTANCE, weapon.effects().get(1).target());
         assertEquals(0, weapon.effects().get(1).boost());
         assertEquals(1, weapon.effects().get(1).area().size());
         assertInstanceOf(CrossArea.class, weapon.effects().get(1).area());
@@ -81,7 +81,7 @@ class CastableWeaponTest extends GameBaseCase {
         assertEquals(100, weapon.effects().get(0).effect());
         assertEquals(0, weapon.effects().get(0).duration());
         assertEquals(0, weapon.effects().get(0).probability());
-        assertEquals(0, weapon.effects().get(0).target());
+        assertEquals(WeaponEffectTarget.INSTANCE, weapon.effects().get(0).target());
         assertEquals(0, weapon.effects().get(0).boost());
         assertEquals(0, weapon.effects().get(0).area().size());
         assertInstanceOf(CellArea.class, weapon.effects().get(0).area());
@@ -100,7 +100,7 @@ class CastableWeaponTest extends GameBaseCase {
         assertEquals(100, weapon.criticalEffects().get(0).effect());
         assertEquals(0, weapon.criticalEffects().get(0).duration());
         assertEquals(0, weapon.criticalEffects().get(0).probability());
-        assertEquals(0, weapon.criticalEffects().get(0).target());
+        assertEquals(WeaponEffectTarget.INSTANCE, weapon.criticalEffects().get(0).target());
         assertEquals(0, weapon.criticalEffects().get(0).boost());
         assertEquals(0, weapon.criticalEffects().get(0).area().size());
         assertInstanceOf(CellArea.class, weapon.criticalEffects().get(0).area());

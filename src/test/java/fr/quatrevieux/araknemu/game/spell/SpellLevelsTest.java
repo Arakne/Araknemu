@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.spell.adapter.SpellLevelAdapter;
 import fr.quatrevieux.araknemu.game.spell.adapter.SpellLevelConstraintAdapter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellTemplateEffectAdapter;
+import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -80,7 +81,7 @@ class SpellLevelsTest extends GameBaseCase {
         assertEquals("1d6+3", spell.effects().get(0).text());
         assertEquals(EffectArea.Type.CELL, spell.effects().get(0).area().type());
         assertEquals(0, spell.effects().get(0).area().size());
-        assertEquals(0, spell.effects().get(0).target());
+        assertEquals(SpellEffectTarget.DEFAULT, spell.effects().get(0).target());
 
         assertCount(1, spell.criticalEffects());
         assertContainsOnly(SpellTemplateEffectAdapter.class, spell.criticalEffects());
@@ -93,6 +94,6 @@ class SpellLevelsTest extends GameBaseCase {
         assertEquals("0d0+13", spell.criticalEffects().get(0).text());
         assertEquals(EffectArea.Type.CELL, spell.criticalEffects().get(0).area().type());
         assertEquals(0, spell.criticalEffects().get(0).area().size());
-        assertEquals(0, spell.criticalEffects().get(0).target());
+        assertEquals(SpellEffectTarget.DEFAULT, spell.criticalEffects().get(0).target());
     }
 }

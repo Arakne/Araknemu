@@ -275,4 +275,32 @@ class CloseCombatTest extends FightBaseCase {
         assertEquals(2, turn.points().actionPoints());
         requestStack.assertOne(ActionEffect.usedActionPoints(fighter, 4));
     }
+
+    @Test
+    void hammerWeaponWillNotTargetTheCaster() throws InventoryException, ContainerException, SQLException {
+        dataSet.pushItemSets();
+
+        action = new CloseCombat(
+            turn,
+            fighter,
+            fight.map().get(186),
+            new WeaponConstraintsValidator(turn),
+            new CriticalityStrategy() {
+                public int hitRate(int base) { return 0; }
+                public int failureRate(int base) { return 0; }
+                public boolean hit(int baseRate) { return false; }
+                public boolean failed(int baseRate) { return false; }
+            }
+        );
+
+        equipWeapon(player, 2416);
+        requestStack.clear();
+        action.start();
+
+        action.end();
+        int damage = other.fighter().life().max() - other.fighter().life().current();
+
+        assertBetween(6 + 10, 12 + 20, damage);
+        assertEquals(player.fighter().life().max(), player.fighter().life().current());
+    }
 }

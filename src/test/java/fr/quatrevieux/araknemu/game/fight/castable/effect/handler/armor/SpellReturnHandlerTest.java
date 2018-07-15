@@ -9,6 +9,7 @@ import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
+import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,6 +50,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
@@ -64,6 +66,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(effect.duration()).thenReturn(5);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
@@ -90,6 +93,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
 
         Mockito.when(effect.effect()).thenReturn(100);
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
@@ -113,6 +117,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
 
         Mockito.when(effect.effect()).thenReturn(100);
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(effect.duration()).thenReturn(5);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
@@ -137,6 +142,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
 
         Mockito.when(effect.effect()).thenReturn(123);
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(effect.duration()).thenReturn(5);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
@@ -162,6 +168,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
         Mockito.when(spell.level()).thenReturn(6);
         Mockito.when(effect.effect()).thenReturn(100);
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
@@ -188,6 +195,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
         Mockito.when(spell.level()).thenReturn(2);
         Mockito.when(effect.effect()).thenReturn(100);
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
@@ -214,6 +222,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
         Mockito.when(spell.level()).thenReturn(2);
         Mockito.when(effect.effect()).thenReturn(100);
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
@@ -241,6 +250,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
         Mockito.when(effect.effect()).thenReturn(101);
         Mockito.when(effect.duration()).thenReturn(5);
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 

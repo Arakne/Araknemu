@@ -6,12 +6,12 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CircleArea;
+import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -58,6 +58,7 @@ class CastScopeTest extends FightBaseCase {
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
@@ -77,6 +78,7 @@ class CastScopeTest extends FightBaseCase {
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 10)));
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(true);
 
@@ -96,6 +98,7 @@ class CastScopeTest extends FightBaseCase {
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 10)));
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
@@ -113,6 +116,7 @@ class CastScopeTest extends FightBaseCase {
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 2)));
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
@@ -130,6 +134,7 @@ class CastScopeTest extends FightBaseCase {
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 2)));
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
@@ -152,8 +157,10 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
         Mockito.when(effect1.area()).thenReturn(new CellArea());
+        Mockito.when(effect1.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(effect1.probability()).thenReturn(50);
         Mockito.when(effect2.area()).thenReturn(new CellArea());
+        Mockito.when(effect2.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(effect2.probability()).thenReturn(50);
 
         CastScope scope = new CastScope(spell, caster, target.cell());
@@ -189,8 +196,10 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
         Mockito.when(effect1.area()).thenReturn(new CellArea());
+        Mockito.when(effect1.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(effect1.probability()).thenReturn(80);
         Mockito.when(effect2.area()).thenReturn(new CellArea());
+        Mockito.when(effect2.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(effect2.probability()).thenReturn(20);
 
         CastScope scope = new CastScope(spell, caster, target.cell());
@@ -225,6 +234,7 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
         Mockito.when(effect1.area()).thenReturn(new CellArea());
+        Mockito.when(effect1.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(effect1.probability()).thenReturn(20);
 
         CastScope scope = new CastScope(spell, caster, target.cell());
@@ -254,8 +264,10 @@ class CastScopeTest extends FightBaseCase {
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
         Mockito.when(effect1.area()).thenReturn(new CellArea());
+        Mockito.when(effect1.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(effect1.probability()).thenReturn(0);
         Mockito.when(effect2.area()).thenReturn(new CellArea());
+        Mockito.when(effect2.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(effect2.probability()).thenReturn(50);
 
         CastScope scope = new CastScope(spell, caster, target.cell());
@@ -300,6 +312,7 @@ class CastScopeTest extends FightBaseCase {
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 10)));
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
@@ -318,6 +331,7 @@ class CastScopeTest extends FightBaseCase {
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 10)));
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
@@ -337,6 +351,7 @@ class CastScopeTest extends FightBaseCase {
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 10)));
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
@@ -347,5 +362,41 @@ class CastScopeTest extends FightBaseCase {
 
         assertContainsAll(scope.targets(), caster);
         assertContainsAll(scope.effects().get(0).targets(), caster);
+    }
+
+    @Test
+    void effectTargetsFilter() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 10)));
+        Mockito.when(effect.target()).thenReturn(new SpellEffectTarget(SpellEffectTarget.NOT_SELF));
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        CastScope scope = new CastScope(spell, caster, target.cell());
+
+        scope.withEffects(Collections.singletonList(effect));
+
+        assertContainsAll(scope.effects().get(0).targets(), target);
+    }
+
+    @Test
+    void effectTargetsOnlyCaster() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(new SpellEffectTarget(SpellEffectTarget.ONLY_CASTER));
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        CastScope scope = new CastScope(spell, caster, target.cell());
+
+        scope.withEffects(Collections.singletonList(effect));
+
+        assertEquals(Collections.singletonList(caster), scope.effects().get(0).targets());
     }
 }
