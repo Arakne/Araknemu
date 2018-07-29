@@ -99,13 +99,25 @@ public class FunctionalTest extends FightBaseCase {
 
         assertTrue(found.isPresent());
         assertEquals(140, found.get().effect().effect());
-        assertEquals(0, found.get().remainingTurns());
+        assertEquals(1, found.get().remainingTurns());
 
         requestStack.assertOne(ActionEffect.skipNextTurn(fighter1, fighter2));
 
         fighter1.turn().stop();
         assertSame(fighter1, fight.turnList().currentFighter());
         fighter1.turn().stop();
+
+        assertSame(fighter2, fight.turnList().currentFighter());
+    }
+
+    @Test
+    void skipNextTurnSelfCast() {
+        // #61 Skip next turn not working on self-buff
+        castNormal(1630, fighter1.cell());
+
+        fighter1.turn().stop();
+        assertSame(fighter2, fight.turnList().currentFighter());
+        fighter2.turn().stop();
 
         assertSame(fighter2, fight.turnList().currentFighter());
     }

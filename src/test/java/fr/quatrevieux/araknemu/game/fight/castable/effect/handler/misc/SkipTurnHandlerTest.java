@@ -70,6 +70,26 @@ class SkipTurnHandlerTest extends FightBaseCase {
     }
 
     @Test
+    void handleSelfCast() {
+        // #61 Skip next turn not working on self-buff
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        CastScope scope = makeCastScope(caster, spell, effect, caster.cell());
+        handler.handle(scope, scope.effects().get(0));
+
+        Optional<Buff> buff = caster.buffs().stream().findFirst();
+
+        assertEquals(2, buff.get().remainingTurns());
+    }
+
+    @Test
     void buff() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);

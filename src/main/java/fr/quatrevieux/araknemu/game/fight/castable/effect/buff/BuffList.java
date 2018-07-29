@@ -40,6 +40,10 @@ final public class BuffList implements Iterable<Buff> {
         buffs.add(buff);
         buff.hook().onBuffStarted(buff);
 
+        if (buff.remainingTurns() == 0) {
+            buff.incrementRemainingTurns();
+        }
+
         // @fixme Use event or not ?
         fighter.fight().send(new AddBuff(buff));
 

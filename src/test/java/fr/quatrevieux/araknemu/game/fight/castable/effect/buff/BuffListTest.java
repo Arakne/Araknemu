@@ -40,6 +40,21 @@ class BuffListTest extends FightBaseCase {
     }
 
     @Test
+    void addWithDurationZero() {
+        // #61 Buff removed on end turn
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        BuffHook hook = Mockito.mock(BuffHook.class);
+
+        Mockito.when(effect.duration()).thenReturn(0);
+
+        Buff buff = new Buff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook);
+
+        list.add(buff);
+
+        assertEquals(1, buff.remainingTurns());
+    }
+
+    @Test
     void addMultiple() {
         Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), Mockito.mock(BuffHook.class));
         Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), Mockito.mock(BuffHook.class));
