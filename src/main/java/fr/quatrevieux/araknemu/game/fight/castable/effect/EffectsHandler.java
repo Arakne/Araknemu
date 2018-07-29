@@ -1,17 +1,16 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect;
 
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.SpellReturnHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.*;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.StealLifeHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.SkipTurnHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.TeleportHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +43,38 @@ final public class EffectsHandler {
         register(140, new SkipTurnHandler(fight));
 
         register(106, new SpellReturnHandler(fight));
+
+        register(111, new AddActionPointsHandler(fight));
+        register(120, new AddActionPointsHandler(fight));
+        register(168, new RemoveActionPointsHandler(fight));
+
+        register(78,  new AddMovementPointsHandler(fight));
+        register(128, new AddMovementPointsHandler(fight));
+        register(169, new RemoveMovementPointsHandler(fight));
+
+        register(112, new AddCharacteristicHandler(fight, Characteristic.FIXED_DAMAGE));
+        register(115, new AddCharacteristicHandler(fight, Characteristic.CRITICAL_BONUS));
+        register(117, new AddCharacteristicHandler(fight, Characteristic.SIGHT_BOOST));
+        register(118, new AddCharacteristicHandler(fight, Characteristic.STRENGTH));
+        register(119, new AddCharacteristicHandler(fight, Characteristic.AGILITY));
+        register(122, new AddCharacteristicHandler(fight, Characteristic.FAIL_MALUS));
+        register(123, new AddCharacteristicHandler(fight, Characteristic.LUCK));
+        register(124, new AddCharacteristicHandler(fight, Characteristic.WISDOM));
+        register(126, new AddCharacteristicHandler(fight, Characteristic.INTELLIGENCE));
+        register(138, new AddCharacteristicHandler(fight, Characteristic.PERCENT_DAMAGE));
+        register(178, new AddCharacteristicHandler(fight, Characteristic.HEALTH_BOOST));
+        register(182, new AddCharacteristicHandler(fight, Characteristic.MAX_SUMMONED_CREATURES));
+
+        register(116, new RemoveCharacteristicHandler(fight, Characteristic.SIGHT_BOOST));
+        register(145, new RemoveCharacteristicHandler(fight, Characteristic.FIXED_DAMAGE));
+        register(152, new RemoveCharacteristicHandler(fight, Characteristic.LUCK));
+        register(154, new RemoveCharacteristicHandler(fight, Characteristic.AGILITY));
+        register(155, new RemoveCharacteristicHandler(fight, Characteristic.INTELLIGENCE));
+        register(156, new RemoveCharacteristicHandler(fight, Characteristic.WISDOM));
+        register(157, new RemoveCharacteristicHandler(fight, Characteristic.STRENGTH));
+        register(171, new RemoveCharacteristicHandler(fight, Characteristic.CRITICAL_BONUS));
+        register(179, new RemoveCharacteristicHandler(fight, Characteristic.HEALTH_BOOST));
+        register(186, new RemoveCharacteristicHandler(fight, Characteristic.PERCENT_DAMAGE));
     }
 
     public void register(int effectId, EffectHandler applier) {

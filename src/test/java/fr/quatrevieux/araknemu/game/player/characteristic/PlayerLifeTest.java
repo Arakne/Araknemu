@@ -17,8 +17,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LifeTest extends GameBaseCase {
-    private Life life;
+class PlayerLifeTest extends GameBaseCase {
+    private PlayerLife life;
 
     private GamePlayer player;
     private Player entity;
@@ -28,7 +28,7 @@ class LifeTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        life = new Life(
+        life = new PlayerLife(
             player = gamePlayer(true),
             entity = container.get(PlayerRepository.class).get(new Player(player.id()))
         );
@@ -105,7 +105,7 @@ class LifeTest extends GameBaseCase {
     void initWithLifePoints() throws SQLException, ContainerException {
         entity.setLife(65);
 
-        life = new Life(player, entity);
+        life = new PlayerLife(player, entity);
 
         assertEquals(65, life.current());
     }
@@ -114,7 +114,7 @@ class LifeTest extends GameBaseCase {
     void initWithMaxLifePoints() throws SQLException, ContainerException {
         entity.setLife(-1);
 
-        life = new Life(player, entity);
+        life = new PlayerLife(player, entity);
 
         assertEquals(295, life.current());
     }
@@ -123,7 +123,7 @@ class LifeTest extends GameBaseCase {
     void initWithLifePointsUpperThanMax() throws SQLException, ContainerException {
         entity.setLife(10000);
 
-        life = new Life(player, entity);
+        life = new PlayerLife(player, entity);
 
         assertEquals(295, life.current());
     }

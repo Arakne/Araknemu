@@ -30,8 +30,7 @@ final public class PlayerFighter implements Fighter, Sender {
     final private GamePlayer player;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
-    final private PlayerFighterCharacteristics characteristics;
-    final private PlayerFighterLife life;
+    final private PlayerFighterProperties properties;
     final private BuffList buffs = new BuffList(this);
 
     private FightCell cell;
@@ -44,8 +43,7 @@ final public class PlayerFighter implements Fighter, Sender {
 
     public PlayerFighter(GamePlayer player) {
         this.player = player;
-        this.characteristics = new PlayerFighterCharacteristics(player.characteristics());
-        this.life = new PlayerFighterLife(player.life(), this);
+        this.properties = new PlayerFighterProperties(this, player);
 
         dispatcher.add(new SendFightJoined(this));
         dispatcher.add(new ApplyEndFightReward(this));
@@ -53,11 +51,12 @@ final public class PlayerFighter implements Fighter, Sender {
         dispatcher.add(new SendFightLeaved(this));
         dispatcher.add(new LeaveOnDisconnect(this));
         dispatcher.add(new ApplyLeaveReward(this));
+        dispatcher.add(new SendStats(this));
     }
 
     @Override
     public void init() {
-        life.init();
+        properties.life().init();
     }
 
     @Override
@@ -94,17 +93,17 @@ final public class PlayerFighter implements Fighter, Sender {
 
     @Override
     public FighterLife life() {
-        return life;
+        return properties.life();
     }
 
     @Override
     public boolean dead() {
-        return life.dead();
+        return properties.life().dead();
     }
 
     @Override
     public FighterCharacteristics characteristics() {
-        return characteristics;
+        return properties.characteristics();
     }
 
     @Override
@@ -202,6 +201,13 @@ final public class PlayerFighter implements Fighter, Sender {
     public void setReady(boolean ready) {
         this.ready = ready;
         fight.dispatch(new FighterReadyStateChanged(this));
+    }
+
+    /**
+     * Get the properties of the current character
+     */
+    public PlayerFighterProperties properties() {
+        return properties;
     }
 
     @Override

@@ -17,7 +17,7 @@ import fr.quatrevieux.araknemu.game.item.type.Equipment;
  * Characteristic map for player
  * This class will handle aggregation of stats, and computed stats
  */
-final public class PlayerCharacteristics implements Characteristics {
+final public class PlayerCharacteristics implements CharacterCharacteristics {
     final private MutableCharacteristics base;
     final private Dispatcher dispatcher;
     final private Player entity;
@@ -43,30 +43,22 @@ final public class PlayerCharacteristics implements Characteristics {
         return base.get(characteristic) + stuff.get(characteristic);
     }
 
-    /**
-     * Get the player base stats (i.e. boosted stats + race stats)
-     */
+    @Override
     public MutableCharacteristics base() {
         return base;
     }
 
-    /**
-     * Get the total stuff stats
-     */
+    @Override
     public Characteristics stuff() {
         return stuff;
     }
 
-    /**
-     * Get the feat (candy ??) stats
-     */
+    @Override
     public Characteristics feats() {
         return new DefaultCharacteristics();
     }
 
-    /**
-     * Get the boost (buff) stats
-     */
+    @Override
     public Characteristics boost() {
         return new DefaultCharacteristics();
     }
@@ -97,9 +89,7 @@ final public class PlayerCharacteristics implements Characteristics {
         base.add(characteristic, interval.boost());
     }
 
-    /**
-     * Get the available boost points
-     */
+    @Override
     public int boostPoints() {
         return entity.boostPoints();
     }
@@ -112,9 +102,7 @@ final public class PlayerCharacteristics implements Characteristics {
         entity.setBoostPoints(points);
     }
 
-    /**
-     * Get the current player initiative
-     */
+    @Override
     public int initiative() {
         int base = race.initiative(player.life().max());
 
@@ -129,9 +117,7 @@ final public class PlayerCharacteristics implements Characteristics {
         return init < 1 ? 1 : init;
     }
 
-    /**
-     * Get the current player discernment
-     */
+    @Override
     public int discernment() {
         return race.startDiscernment()
             + get(Characteristic.LUCK) / 10

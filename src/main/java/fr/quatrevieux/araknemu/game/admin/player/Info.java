@@ -1,14 +1,9 @@
 package fr.quatrevieux.araknemu.game.admin.player;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
-import fr.quatrevieux.araknemu.data.constant.Race;
-import fr.quatrevieux.araknemu.data.constant.Sex;
-import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.game.player.PlayableCharacter;
-import fr.quatrevieux.araknemu.game.world.creature.accessory.Accessories;
 
 import java.util.List;
 

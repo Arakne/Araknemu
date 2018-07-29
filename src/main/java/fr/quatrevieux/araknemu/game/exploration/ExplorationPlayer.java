@@ -14,7 +14,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.event.PlayerMoveFini
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.player.*;
-import fr.quatrevieux.araknemu.game.player.characteristic.Life;
+import fr.quatrevieux.araknemu.game.player.characteristic.PlayerLife;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
 import fr.quatrevieux.araknemu.game.player.experience.GamePlayerExperience;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
@@ -28,7 +28,7 @@ import fr.quatrevieux.araknemu.game.world.util.Sender;
 /**
  * Player for exploration game session
  */
-final public class ExplorationPlayer implements Sender, Creature, Dispatcher, Explorer, PlayerData {
+final public class ExplorationPlayer implements Sender, Creature, Dispatcher, Explorer, CharacterProperties {
     final private GamePlayer player;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
@@ -55,7 +55,7 @@ final public class ExplorationPlayer implements Sender, Creature, Dispatcher, Ex
     }
 
     @Override
-    public Life life() {
+    public PlayerLife life() {
         return player.life();
     }
 

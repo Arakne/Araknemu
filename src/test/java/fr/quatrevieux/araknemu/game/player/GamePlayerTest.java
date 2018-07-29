@@ -16,7 +16,7 @@ import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.player.characteristic.Life;
+import fr.quatrevieux.araknemu.game.player.characteristic.PlayerLife;
 import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
@@ -183,7 +183,7 @@ class GamePlayerTest extends GameBaseCase {
 
     @Test
     void life() {
-        assertInstanceOf(Life.class, player.life());
+        assertInstanceOf(PlayerLife.class, player.life());
         assertEquals(345, player.life().current());
         assertEquals(345, player.life().max());
 

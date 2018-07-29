@@ -153,6 +153,11 @@ class AlternateTeamFighterOrderTest extends TestCase {
                 public int get(Characteristic characteristic) {
                     return 0;
                 }
+
+                @Override
+                public void alter(Characteristic characteristic, int value) {
+
+                }
             };
         }
 

@@ -1,7 +1,7 @@
 package fr.quatrevieux.araknemu.network.game.out.account;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
-import fr.quatrevieux.araknemu.game.player.PlayerData;
+import fr.quatrevieux.araknemu.game.player.CharacterProperties;
 
 /**
  * Send to client current player stats
@@ -9,9 +9,9 @@ import fr.quatrevieux.araknemu.game.player.PlayerData;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L797
  */
 final public class Stats {
-    final private PlayerData player;
+    final private CharacterProperties player;
 
-    public Stats(PlayerData player) {
+    public Stats(CharacterProperties player) {
         this.player = player;
     }
 

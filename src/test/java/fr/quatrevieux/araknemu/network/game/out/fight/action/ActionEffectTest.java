@@ -1,12 +1,14 @@
 package fr.quatrevieux.araknemu.network.game.out.fight.action;
 
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ActionEffectTest {
     @Test
@@ -122,5 +124,56 @@ class ActionEffectTest {
 
         assertEquals("GA;106;456;456,1", ActionEffect.returnSpell(fighter, true).toString());
         assertEquals("GA;106;456;456,0", ActionEffect.returnSpell(fighter, false).toString());
+    }
+
+    @Test
+    void buff() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Fighter caster = Mockito.mock(Fighter.class);
+        Fighter target = Mockito.mock(Fighter.class);
+
+        Mockito.when(effect.effect()).thenReturn(111);
+        Mockito.when(effect.min()).thenReturn(3);
+        Mockito.when(effect.duration()).thenReturn(5);
+
+        Mockito.when(caster.id()).thenReturn(123);
+        Mockito.when(target.id()).thenReturn(456);
+
+        Buff buff = new Buff(effect, Mockito.mock(Spell.class), caster, target, null);
+
+        assertEquals("GA;111;123;456,3,5", ActionEffect.buff(buff, 3).toString());
+        assertEquals("GA;111;123;456,-3,5", ActionEffect.buff(buff, -3).toString());
+    }
+
+    @Test
+    void addActionPoints() {
+        Fighter fighter = Mockito.mock(Fighter.class);
+        Mockito.when(fighter.id()).thenReturn(456);
+
+        assertEquals("GA;120;456;456,2", ActionEffect.addActionPoints(fighter, 2).toString());
+    }
+
+    @Test
+    void removeActionPoints() {
+        Fighter fighter = Mockito.mock(Fighter.class);
+        Mockito.when(fighter.id()).thenReturn(456);
+
+        assertEquals("GA;168;456;456,-2", ActionEffect.removeActionPoints(fighter, 2).toString());
+    }
+
+    @Test
+    void addMovementPoints() {
+        Fighter fighter = Mockito.mock(Fighter.class);
+        Mockito.when(fighter.id()).thenReturn(456);
+
+        assertEquals("GA;128;456;456,2", ActionEffect.addMovementPoints(fighter, 2).toString());
+    }
+
+    @Test
+    void removeMovementPoints() {
+        Fighter fighter = Mockito.mock(Fighter.class);
+        Mockito.when(fighter.id()).thenReturn(456);
+
+        assertEquals("GA;169;456;456,-2", ActionEffect.removeMovementPoints(fighter, 2).toString());
     }
 }

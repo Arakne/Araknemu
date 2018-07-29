@@ -4,7 +4,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterLifeChanged;
-import fr.quatrevieux.araknemu.game.player.characteristic.Life;
+import fr.quatrevieux.araknemu.game.world.creature.Life;
 
 /**
  * Handle life points for {@link PlayerFighter}

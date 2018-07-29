@@ -10,7 +10,7 @@ import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.player.characteristic.Life;
+import fr.quatrevieux.araknemu.game.player.characteristic.PlayerLife;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
 import fr.quatrevieux.araknemu.game.player.experience.GamePlayerExperience;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
@@ -27,7 +27,7 @@ import java.util.Set;
  * GamePlayer object
  * A player is a logged character, with associated game session
  */
-final public class GamePlayer implements Dispatcher, PlayerData, Sender {
+final public class GamePlayer implements Dispatcher, CharacterProperties, Sender {
     final private GameAccount account;
     final private Player entity;
     final private PlayerService service;
@@ -36,7 +36,7 @@ final public class GamePlayer implements Dispatcher, PlayerData, Sender {
     final private PlayerCharacteristics characteristics;
     final private Set<ChannelType> channels;
     final private PlayerInventory inventory;
-    final private Life life;
+    final private PlayerLife life;
     final private SpellBook spells;
     final private GamePlayerExperience experience;
     final private SpriteInfo spriteInfo;
@@ -57,7 +57,7 @@ final public class GamePlayer implements Dispatcher, PlayerData, Sender {
         characteristics = new PlayerCharacteristics(dispatcher, this, entity);
         characteristics.rebuildSpecialEffects();
 
-        life = new Life(this, entity);
+        life = new PlayerLife(this, entity);
         spriteInfo = new GamePlayerSpriteInfo(entity, inventory);
     }
 
@@ -203,7 +203,7 @@ final public class GamePlayer implements Dispatcher, PlayerData, Sender {
     }
 
     @Override
-    public Life life() {
+    public PlayerLife life() {
         return life;
     }
 

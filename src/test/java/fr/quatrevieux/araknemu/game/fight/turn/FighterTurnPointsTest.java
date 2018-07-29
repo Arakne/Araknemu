@@ -59,4 +59,50 @@ class FighterTurnPointsTest extends FightBaseCase {
 
         assertEquals(4, points.actionPoints());
     }
+
+    @Test
+    void addMovementPoints() {
+        points.addMovementPoints(3);
+
+        assertEquals(6, points.movementPoints());
+    }
+
+    @Test
+    void removeMovementPoints() {
+        points.removeMovementPoints(2);
+
+        assertEquals(1, points.movementPoints());
+    }
+
+    @Test
+    void removeAndAddMovementPoints() {
+        points.removeMovementPoints(10);
+        assertEquals(0, points.movementPoints());
+
+        points.addMovementPoints(2);
+        assertEquals(2, points.movementPoints());
+    }
+
+    @Test
+    void addActionPoints() {
+        points.addActionPoints(3);
+
+        assertEquals(9, points.actionPoints());
+    }
+
+    @Test
+    void removeActionPoints() {
+        points.removeActionPoints(2);
+
+        assertEquals(4, points.actionPoints());
+    }
+
+    @Test
+    void removeAndAddActionPoints() {
+        points.removeActionPoints(10);
+        assertEquals(0, points.actionPoints());
+
+        points.addActionPoints(2);
+        assertEquals(2, points.actionPoints());
+    }
 }

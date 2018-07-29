@@ -9,6 +9,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighterProperties;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighterSprite;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
@@ -112,6 +113,7 @@ class PlayerFighterTest extends FightBaseCase {
         assertTrue(fighter.dispatcher().has(SendFightLeaved.class));
         assertTrue(fighter.dispatcher().has(LeaveOnDisconnect.class));
         assertTrue(fighter.dispatcher().has(ApplyLeaveReward.class));
+        assertTrue(fighter.dispatcher().has(SendStats.class));
     }
 
     @Test
@@ -212,5 +214,10 @@ class PlayerFighterTest extends FightBaseCase {
     @Test
     void buffs() {
         assertInstanceOf(BuffList.class, fighter.buffs());
+    }
+
+    @Test
+    void properties() {
+        assertInstanceOf(PlayerFighterProperties.class, fighter.properties());
     }
 }

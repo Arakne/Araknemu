@@ -1,18 +1,18 @@
 package fr.quatrevieux.araknemu.game.player;
 
-import fr.quatrevieux.araknemu.game.player.characteristic.Life;
-import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
+import fr.quatrevieux.araknemu.game.player.characteristic.CharacterCharacteristics;
 import fr.quatrevieux.araknemu.game.player.experience.GamePlayerExperience;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
+import fr.quatrevieux.araknemu.game.world.creature.Life;
 
 /**
- * @todo rename ?
+ * Define properties and characteristics of the current character
  */
-public interface PlayerData {
+public interface CharacterProperties {
     /**
      * Get the player characteristics
      */
-    public PlayerCharacteristics characteristics();
+    public CharacterCharacteristics characteristics();
 
     /**
      * Get the player life

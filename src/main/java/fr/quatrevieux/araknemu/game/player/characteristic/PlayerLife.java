@@ -4,33 +4,30 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.player.characteristic.event.LifeChanged;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.world.creature.Life;
 
 /**
  * Handle player life
  */
-final public class Life {
+final public class PlayerLife implements Life {
     final private GamePlayer player;
     final private Player entity;
 
     private int max;
 
-    public Life(GamePlayer player, Player entity) {
+    public PlayerLife(GamePlayer player, Player entity) {
         this.player = player;
         this.entity = entity;
 
         init();
     }
 
-    /**
-     * Get the maximum player life
-     */
+    @Override
     public int max() {
         return max;
     }
 
-    /**
-     * Get the current life point
-     */
+    @Override
     public int current() {
         return entity.life();
     }
@@ -67,13 +64,6 @@ final public class Life {
 
         entity.setLife(value);
         player.dispatch(new LifeChanged(last, value));
-    }
-
-    /**
-     * Check if the player is full life
-     */
-    public boolean isFull() {
-        return max() == current();
     }
 
     /**

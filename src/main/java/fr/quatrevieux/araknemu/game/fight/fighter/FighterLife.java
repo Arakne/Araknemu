@@ -1,19 +1,11 @@
 package fr.quatrevieux.araknemu.game.fight.fighter;
 
+import fr.quatrevieux.araknemu.game.world.creature.Life;
+
 /**
  * Handle the fighter life
  */
-public interface FighterLife {
-    /**
-     * Get the fighter current life
-     */
-    public int current();
-
-    /**
-     * Get the maximum life of the fighter
-     */
-    public int max();
-
+public interface FighterLife extends Life {
     /**
      * Check if the fighter is dead
      */

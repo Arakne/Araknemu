@@ -13,8 +13,8 @@ final public class FighterTurnPoints {
     final private Fight fight;
     final private Fighter fighter;
 
-    final private int movementPoints;
-    final private int actionPoints;
+    private int movementPoints;
+    private int actionPoints;
 
     private int usedMovementPoints;
     private int usedActionPoints;
@@ -46,6 +46,28 @@ final public class FighterTurnPoints {
     }
 
     /**
+     * Add movement points to the current turn
+     */
+    public void addMovementPoints(int value) {
+        movementPoints += value;
+    }
+
+    /**
+     * Remove movement points to the current turn
+     *
+     * @return int The real removed MP amount
+     */
+    public int removeMovementPoints(int value) {
+        if (value > movementPoints()) {
+            value = movementPoints();
+        }
+
+        movementPoints -= value;
+
+        return value;
+    }
+
+    /**
      * Get the current fighter action points
      */
     public int actionPoints() {
@@ -61,5 +83,27 @@ final public class FighterTurnPoints {
         usedActionPoints += points;
 
         fight.dispatch(new ActionPointsUsed(fighter, points));
+    }
+
+    /**
+     * Add action points to the current turn
+     */
+    public void addActionPoints(int value) {
+        actionPoints += value;
+    }
+
+    /**
+     * Remove action points to the current turn
+     *
+     * @return int The real removed AP amount
+     */
+    public int removeActionPoints(int value) {
+        if (value > actionPoints()) {
+            value = actionPoints();
+        }
+
+        actionPoints -= value;
+
+        return value;
     }
 }

@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.network.game.out.fight.action;
 
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -113,5 +114,54 @@ final public class ActionEffect {
      */
     static public ActionEffect returnSpell(Fighter fighter, boolean success) {
         return new ActionEffect(106, fighter, fighter.id(), success ? "1" : "0");
+    }
+
+    /**
+     * Buff effect for characteristic change
+     *
+     * @param buff The applied buff
+     */
+    static public ActionEffect buff(Buff buff, int value) {
+        return new ActionEffect(buff.effect().effect(), buff.caster(), buff.target().id(), value, buff.effect().duration());
+    }
+
+    /**
+     * Add action points for the current turn
+     *
+     * @param fighter The fighter
+     * @param quantity The AP quantity
+     */
+    static public ActionEffect addActionPoints(Fighter fighter, int quantity) {
+        return new ActionEffect(120, fighter, fighter.id(), quantity);
+    }
+
+    /**
+     * Remove action points for the current turn
+     *
+     * @param fighter The fighter
+     * @param quantity The AP quantity
+     */
+    static public ActionEffect removeActionPoints(Fighter fighter, int quantity) {
+        return new ActionEffect(168, fighter, fighter.id(), -quantity);
+    }
+
+    /**
+     * Add movement points for the current turn
+     *
+     * @param fighter The fighter
+     * @param quantity The MP quantity
+     */
+    static public ActionEffect addMovementPoints(Fighter fighter, int quantity) {
+        return new ActionEffect(128, fighter, fighter.id(), quantity);
+    }
+
+    /**
+     * Remove movement points for the current turn
+     *
+     * @param fighter The fighter
+     * @param quantity The MP quantity
+     */
+    static public ActionEffect removeMovementPoints(Fighter fighter, int quantity) {
+        return new ActionEffect(169, fighter, fighter.id(), -quantity);
     }
 }
