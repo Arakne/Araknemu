@@ -222,6 +222,58 @@ public class FunctionalTest extends FightBaseCase {
         assertEquals(0, fighter2.characteristics().get(Characteristic.INTELLIGENCE));
     }
 
+    @Test
+    void armor() {
+        castNormal(1, fighter1.cell()); // Armure Incandescente
+        fighter1.turn().stop();
+
+        castNormal(3, fighter1.cell()); // Attaque naturelle
+
+        requestStack.assertOne(ActionEffect.reducedDamage(fighter1, 27));
+        requestStack.assertOne(ActionEffect.alterLifePoints(fighter2, fighter1, 0));
+
+        fighter2.turn().stop();
+        fighter1.turn().stop();
+
+        castNormal(2, fighter1.cell()); // Aveuglement
+
+        int damage = fighter1.life().max() - fighter1.life().current();
+
+        assertBetween(3, 7, damage);
+        requestStack.assertOne(ActionEffect.alterLifePoints(fighter2, fighter1, -damage));
+    }
+
+    @Test
+    void healOrMultiplyDamage() {
+        int healCount = 0;
+
+        for (int i = 0; i < 15; ++i) {
+            fighter1.life().alter(fighter1, fighter1.life().max() - fighter1.life().current() - 15); // Fighter1 has -15 LP
+            int lifeBefore = fighter1.life().current();
+
+            castNormal(103, fighter1.cell()); // Chance d'Ecaflip
+            fighter1.turn().stop();
+
+            castNormal(3, fighter1.cell()); // Attaque naturelle
+
+            int lifeChange = fighter1.life().current() - lifeBefore;
+
+            requestStack.assertOne(ActionEffect.alterLifePoints(fighter2, fighter1, lifeChange));
+
+            if (lifeChange < 0) {
+                assertBetween(14, 22, -lifeChange);
+            } else {
+                assertBetween(7, 11, lifeChange);
+                ++healCount;
+            }
+
+            fighter2.turn().stop();
+            passTurns(3);
+        }
+
+        assertTrue(healCount > 1);
+    }
+
     private void passTurns(int number) {
         for (; number > 0; --number) {
             fighter1.turn().stop();

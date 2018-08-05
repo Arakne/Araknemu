@@ -2,6 +2,8 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
@@ -161,6 +163,27 @@ class BuffListTest extends FightBaseCase {
         Mockito.verify(hook1).onCastTarget(buff1, cast);
         Mockito.verify(hook2).onCastTarget(buff2, cast);
         Mockito.verify(hook3).onCastTarget(buff3, cast);
+    }
+
+    @Test
+    void onDamage() {
+        BuffHook hook1, hook2, hook3;
+
+        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+
+        list.add(buff1);
+        list.add(buff2);
+        list.add(buff3);
+
+        Damage damage = new Damage(10, Element.NEUTRAL);
+
+        list.onDamage(damage);
+
+        Mockito.verify(hook1).onDamage(buff1, damage);
+        Mockito.verify(hook2).onDamage(buff2, damage);
+        Mockito.verify(hook3).onDamage(buff3, damage);
     }
 
     @Test

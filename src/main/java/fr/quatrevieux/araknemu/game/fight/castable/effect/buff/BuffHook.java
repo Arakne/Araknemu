@@ -1,6 +1,8 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 
 /**
  * Hook action for apply buff effects
@@ -34,4 +36,9 @@ public interface BuffHook {
      * The fighter is a target of a cast
      */
     default public void onCastTarget(Buff buff, CastScope cast) {}
+
+    /**
+     * The fighter will take damages
+     */
+    default public void onDamage(Buff buff, Damage value) {};
 }

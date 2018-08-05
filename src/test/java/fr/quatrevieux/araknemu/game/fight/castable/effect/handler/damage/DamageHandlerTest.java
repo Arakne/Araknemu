@@ -46,7 +46,7 @@ class DamageHandlerTest extends FightBaseCase {
 
         target.move(fight.map().get(123));
 
-        handler = new DamageHandler(Element.AIR);
+        handler = new DamageHandler(Element.AIR, fight);
 
         requestStack.clear();
     }

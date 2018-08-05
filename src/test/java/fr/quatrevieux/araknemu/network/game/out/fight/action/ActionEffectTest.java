@@ -176,4 +176,12 @@ class ActionEffectTest {
 
         assertEquals("GA;169;456;456,-2", ActionEffect.removeMovementPoints(fighter, 2).toString());
     }
+
+    @Test
+    void reduceDamage() {
+        Fighter fighter = Mockito.mock(Fighter.class);
+        Mockito.when(fighter.id()).thenReturn(456);
+
+        assertEquals("GA;105;456;456,5", ActionEffect.reducedDamage(fighter, 5).toString());
+    }
 }

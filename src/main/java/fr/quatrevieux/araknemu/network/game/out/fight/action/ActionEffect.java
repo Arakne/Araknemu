@@ -164,4 +164,14 @@ final public class ActionEffect {
     static public ActionEffect removeMovementPoints(Fighter fighter, int quantity) {
         return new ActionEffect(169, fighter, fighter.id(), -quantity);
     }
+
+    /**
+     * Suffered damage value is reduced
+     *
+     * @param fighter The fighter
+     * @param value The reduction value
+     */
+    static public ActionEffect reducedDamage(Fighter fighter, int value) {
+        return new ActionEffect(105, fighter, fighter.id(), value);
+    }
 }

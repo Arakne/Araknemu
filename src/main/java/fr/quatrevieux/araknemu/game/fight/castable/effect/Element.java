@@ -2,6 +2,11 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Effects elements
  */
@@ -15,6 +20,8 @@ public enum Element {
     final private Characteristic boost;
     final private Characteristic fixedResistance;
     final private Characteristic percentResistance;
+
+    static private Map<Integer, Set<Element>> bitSetCache = new HashMap<>();
 
     Element(Characteristic boost, Characteristic fixedResistance, Characteristic percentResistance) {
         this.boost = boost;
@@ -32,5 +39,30 @@ public enum Element {
 
     public Characteristic percentResistance() {
         return percentResistance;
+    }
+
+    /**
+     * Extract set of elements from a bit set
+     *
+     * @param value The bit set
+     */
+    static public Set<Element> fromBitSet(int value) {
+        if (bitSetCache.containsKey(value)) {
+            return bitSetCache.get(value);
+        }
+
+        Set<Element> elements = EnumSet.noneOf(Element.class);
+
+        for (Element element : values()) {
+            int id = 1 << (element.ordinal());
+
+            if ((value & id) == id) {
+                elements.add(element);
+            }
+        }
+
+        bitSetCache.put(value, elements);
+
+        return elements;
     }
 }

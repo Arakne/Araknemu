@@ -4,6 +4,8 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.HealOrMultiplyDamageHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.ReduceDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.SpellReturnHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.*;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
@@ -28,21 +30,24 @@ final public class EffectsHandler {
 
         register(4, new TeleportHandler(fight));
 
-        register(91, new StealLifeHandler(Element.WATER));
-        register(92, new StealLifeHandler(Element.EARTH));
-        register(93, new StealLifeHandler(Element.AIR));
-        register(94, new StealLifeHandler(Element.FIRE));
-        register(95, new StealLifeHandler(Element.NEUTRAL));
+        register(91, new StealLifeHandler(Element.WATER, fight));
+        register(92, new StealLifeHandler(Element.EARTH, fight));
+        register(93, new StealLifeHandler(Element.AIR, fight));
+        register(94, new StealLifeHandler(Element.FIRE, fight));
+        register(95, new StealLifeHandler(Element.NEUTRAL, fight));
 
-        register(96,  new DamageHandler(Element.WATER));
-        register(97,  new DamageHandler(Element.EARTH));
-        register(98,  new DamageHandler(Element.AIR));
-        register(99,  new DamageHandler(Element.FIRE));
-        register(100, new DamageHandler(Element.NEUTRAL));
+        register(96,  new DamageHandler(Element.WATER, fight));
+        register(97,  new DamageHandler(Element.EARTH, fight));
+        register(98,  new DamageHandler(Element.AIR, fight));
+        register(99,  new DamageHandler(Element.FIRE, fight));
+        register(100, new DamageHandler(Element.NEUTRAL, fight));
 
         register(140, new SkipTurnHandler(fight));
 
+        register(79,  new HealOrMultiplyDamageHandler());
+        register(105, new ReduceDamageHandler());
         register(106, new SpellReturnHandler(fight));
+        register(265, new ReduceDamageHandler());
 
         register(111, new AddActionPointsHandler(fight));
         register(120, new AddActionPointsHandler(fight));

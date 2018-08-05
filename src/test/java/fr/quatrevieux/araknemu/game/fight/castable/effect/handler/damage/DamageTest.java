@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 
+import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +11,7 @@ class DamageTest {
 
     @BeforeEach
     void setUp() {
-        damage = new Damage(15);
+        damage = new Damage(15, Element.EARTH);
     }
 
     @Test
@@ -51,5 +52,11 @@ class DamageTest {
     @Test
     void multiplyNegative() {
         assertEquals(-7, damage.percent(20).fixed(5).multiply(-1).value());
+    }
+
+    @Test
+    void reduce() {
+        assertEquals(7, damage.percent(20).reduce(5).value());
+        assertEquals(5, damage.reducedDamage());
     }
 }

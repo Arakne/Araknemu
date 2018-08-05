@@ -1,11 +1,13 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
 /**
  * Apply simple damage to fighter
@@ -17,9 +19,11 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
  */
 final public class DamageApplier {
     final private Element element;
+    final private Fight fight;
 
-    public DamageApplier(Element element) {
+    public DamageApplier(Element element, Fight fight) {
         this.element = element;
+        this.fight = fight;
     }
 
     /**
@@ -38,10 +42,16 @@ final public class DamageApplier {
             .fixed(caster.characteristics().get(Characteristic.FIXED_DAMAGE))
         ;
 
-        Damage damage = new Damage(value.value())
+        Damage damage = new Damage(value.value(), element)
             .percent(target.characteristics().get(element.percentResistance()))
             .fixed(target.characteristics().get(element.fixedResistance()))
         ;
+
+        target.buffs().onDamage(damage);
+
+        if (damage.reducedDamage() > 0) {
+            fight.send(ActionEffect.reducedDamage(target, damage.reducedDamage()));
+        }
 
         // @todo returned damage
 

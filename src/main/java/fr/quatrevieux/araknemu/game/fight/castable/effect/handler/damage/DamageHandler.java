@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
 
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
@@ -13,8 +14,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 final public class DamageHandler implements EffectHandler, BuffHook {
     final private DamageApplier applier;
 
-    public DamageHandler(Element element) {
-        this.applier = new DamageApplier(element);
+    public DamageHandler(Element element, Fight fight) {
+        this.applier = new DamageApplier(element, fight);
     }
 
     @Override

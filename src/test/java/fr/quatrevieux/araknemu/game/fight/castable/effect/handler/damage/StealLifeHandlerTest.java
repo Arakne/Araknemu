@@ -46,7 +46,7 @@ class StealLifeHandlerTest extends FightBaseCase {
         caster.life().alter(caster, -50);
         baseLife = caster.life().current();
 
-        handler = new StealLifeHandler(Element.AIR);
+        handler = new StealLifeHandler(Element.AIR, fight);
 
         requestStack.clear();
     }
