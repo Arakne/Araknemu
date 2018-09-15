@@ -46,6 +46,8 @@ class SpellConstraintsValidatorTest extends FightBaseCase {
         Mockito.when(spell.apCost()).thenReturn(4);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.range()).thenReturn(new Interval(1, 10));
+        Mockito.when(constraints.requiredStates()).thenReturn(new int[0]);
+        Mockito.when(constraints.forbiddenStates()).thenReturn(new int[0]);
 
         assertNull(validator.validate(spell, fight.map().get(186)));
     }
@@ -58,6 +60,8 @@ class SpellConstraintsValidatorTest extends FightBaseCase {
         Mockito.when(spell.apCost()).thenReturn(7);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.range()).thenReturn(new Interval(1, 10));
+        Mockito.when(constraints.requiredStates()).thenReturn(new int[0]);
+        Mockito.when(constraints.forbiddenStates()).thenReturn(new int[0]);
 
         assertEquals(
             Error.cantCastNotEnoughActionPoints(6, 7).toString(),

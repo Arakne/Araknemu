@@ -11,6 +11,8 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.TurnActionsFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStarted;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStopped;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.RefreshBuffs;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.RefreshStates;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +38,10 @@ class FightTurnTest extends FightBaseCase {
         fight.fighters().forEach(Fighter::init);
         fight.turnList().init(teams -> Arrays.asList(player.fighter(), other.fighter()));
         fight.turnList().start();
+
+        fight.dispatcher().add(new RefreshBuffs());
+        fight.dispatcher().add(new RefreshStates());
+
         turn = new FightTurn(player.fighter(), fight, Duration.ofMillis(50));
     }
 
@@ -219,6 +225,16 @@ class FightTurnTest extends FightBaseCase {
     }
 
     @Test
+    void stopWillRemoveExpiredStates() {
+        player.fighter().states().push(5, 1);
+
+        assertTrue(turn.start());
+        turn.stop();
+
+        assertFalse(player.fighter().states().has(5));
+    }
+
+    @Test
     void startWithSkipTurnBuff() {
         AtomicReference<TurnStarted> ref = new AtomicReference<>();
         fight.dispatcher().add(TurnStarted.class, ref::set);
@@ -232,6 +248,7 @@ class FightTurnTest extends FightBaseCase {
         Mockito.when(hook.onStartTurn(buff)).thenReturn(false);
 
         player.fighter().buffs().add(buff);
+        player.fighter().states().push(5, 1);
 
         assertFalse(turn.start());
 
@@ -240,6 +257,7 @@ class FightTurnTest extends FightBaseCase {
         Mockito.verify(hook).onEndTurn(buff);
         assertEquals(4, buff.remainingTurns());
         assertNull(ref.get());
+        assertFalse(player.fighter().states().has(5));
     }
 
     @Test

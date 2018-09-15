@@ -184,4 +184,20 @@ class ActionEffectTest {
 
         assertEquals("GA;105;456;456,5", ActionEffect.reducedDamage(fighter, 5).toString());
     }
+
+    @Test
+    void addState() {
+        Fighter fighter = Mockito.mock(Fighter.class);
+        Mockito.when(fighter.id()).thenReturn(456);
+
+        assertEquals("GA;950;456;456,5,1", ActionEffect.addState(fighter, 5).toString());
+    }
+
+    @Test
+    void removeState() {
+        Fighter fighter = Mockito.mock(Fighter.class);
+        Mockito.when(fighter.id()).thenReturn(456);
+
+        assertEquals("GA;950;456;456,5,0", ActionEffect.removeState(fighter, 5).toString());
+    }
 }

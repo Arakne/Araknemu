@@ -11,6 +11,7 @@ import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
+import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
@@ -198,6 +199,11 @@ class AlternateTeamFighterOrderTest extends TestCase {
 
         @Override
         public BuffList buffs() {
+            return null;
+        }
+
+        @Override
+        public States states() {
             return null;
         }
     }

@@ -9,6 +9,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.factory.TurnActionsFactory
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStarted;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStopped;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.turn.event.TurnTerminated;
 
 import java.time.Duration;
 import java.util.concurrent.ScheduledFuture;
@@ -76,7 +77,7 @@ final public class FightTurn {
         points = new FighterTurnPoints(fight, fighter);
 
         if (!fighter.buffs().onStartTurn()) {
-            endTurnActions();
+            endTurnActions(true);
             return false;
         }
 
@@ -102,7 +103,7 @@ final public class FightTurn {
             fight.dispatch(new TurnStopped(this));
             fighter.stop();
 
-            endTurnActions();
+            endTurnActions(false);
 
             if (fighter.dead()) {
                 // Wait for die animation
@@ -156,8 +157,9 @@ final public class FightTurn {
     /**
      * Perform actions on turn ending
      */
-    private void endTurnActions() {
+    private void endTurnActions(boolean aborted) {
         fighter.buffs().onEndTurn();
-        fighter.buffs().refresh();
+
+        fight.dispatch(new TurnTerminated(this, aborted));
     }
 }

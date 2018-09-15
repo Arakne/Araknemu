@@ -80,6 +80,16 @@ class CastTest extends FightBaseCase {
     }
 
     @Test
+    void validateBadState() {
+        fighter.states().push(19);
+
+        Cast cast = new Cast(turn, fighter, fighter.spells().get(3), fight.map().get(123));
+
+        assertFalse(cast.validate());
+        requestStack.assertLast(Error.cantCastBadState());
+    }
+
+    @Test
     void validateSuccess() {
         Cast cast = new Cast(turn, fighter, fighter.spells().get(3), fight.map().get(186));
 

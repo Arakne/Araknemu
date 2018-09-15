@@ -174,4 +174,24 @@ final public class ActionEffect {
     static public ActionEffect reducedDamage(Fighter fighter, int value) {
         return new ActionEffect(105, fighter, fighter.id(), value);
     }
+
+    /**
+     * Add state to the fighter
+     *
+     * @param fighter The fighter
+     * @param state The state id to add
+     */
+    static public ActionEffect addState(Fighter fighter, int state) {
+        return new ActionEffect(950, fighter, fighter.id(), state, 1);
+    }
+
+    /**
+     * Remove state from the fighter
+     *
+     * @param fighter The fighter
+     * @param state The state id to remove
+     */
+    static public ActionEffect removeState(Fighter fighter, int state) {
+        return new ActionEffect(950, fighter, fighter.id(), state, 0);
+    }
 }

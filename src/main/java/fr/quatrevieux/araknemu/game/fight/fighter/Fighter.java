@@ -69,6 +69,11 @@ public interface Fighter extends Dispatcher {
     public BuffList buffs();
 
     /**
+     * Get the fighter states
+     */
+    public States states();
+
+    /**
      * Get the fighter level
      */
     public int level();

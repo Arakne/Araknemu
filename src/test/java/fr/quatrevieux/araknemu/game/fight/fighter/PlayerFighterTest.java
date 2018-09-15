@@ -220,4 +220,9 @@ class PlayerFighterTest extends FightBaseCase {
     void properties() {
         assertInstanceOf(PlayerFighterProperties.class, fighter.properties());
     }
+
+    @Test
+    void states() {
+        assertInstanceOf(States.class, fighter.states());
+    }
 }

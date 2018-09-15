@@ -1,9 +1,6 @@
 package fr.quatrevieux.araknemu.game.fight.castable.weapon;
 
-import fr.quatrevieux.araknemu.game.fight.castable.validator.ApCostValidator;
-import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
-import fr.quatrevieux.araknemu.game.fight.castable.validator.LineLaunchValidator;
-import fr.quatrevieux.araknemu.game.fight.castable.validator.TargetCellValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.validator.*;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
@@ -19,6 +16,7 @@ final public class WeaponConstraintsValidator {
         this(turn, new CastConstraintValidator[] {
             new ApCostValidator(),
             new TargetCellValidator(),
+            new StatesValidator()
         });
     }
 

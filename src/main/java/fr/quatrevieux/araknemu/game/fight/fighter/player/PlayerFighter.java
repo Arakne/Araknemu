@@ -9,6 +9,7 @@ import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
+import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
@@ -32,6 +33,7 @@ final public class PlayerFighter implements Fighter, Sender {
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
     final private PlayerFighterProperties properties;
     final private BuffList buffs = new BuffList(this);
+    final private States states = new States(this);
 
     private FightCell cell;
     private FightTeam team;
@@ -128,6 +130,11 @@ final public class PlayerFighter implements Fighter, Sender {
     @Override
     public BuffList buffs() {
         return buffs;
+    }
+
+    @Override
+    public States states() {
+        return states;
     }
 
     @Override

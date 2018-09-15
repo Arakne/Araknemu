@@ -75,4 +75,11 @@ final public class Error extends InformationMessage {
     static public Error cantCastLineLaunch() {
         return new Error(173);
     }
+
+    /**
+     * Cannot cast the spell : The cast is in invalid state
+     */
+    static public Error cantCastBadState() {
+        return new Error(116);
+    }
 }

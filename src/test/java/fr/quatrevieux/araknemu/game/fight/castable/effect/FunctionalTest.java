@@ -16,14 +16,13 @@ import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.FightAction;
+import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FunctionalTest extends FightBaseCase {
     private SpellService service;
@@ -272,6 +271,34 @@ public class FunctionalTest extends FightBaseCase {
         }
 
         assertTrue(healCount > 1);
+    }
+
+    @Test
+    void state() {
+        castNormal(686, fighter1.cell()); // Picole
+
+        requestStack.assertOne(ActionEffect.addState(fighter1, 1));
+        assertTrue(fighter1.states().has(1));
+
+        passTurns(1);
+
+        castNormal(699, fighter1.cell()); // Lait de bambou
+
+        requestStack.assertOne(ActionEffect.removeState(fighter1, 1));
+        assertFalse(fighter1.states().has(1));
+    }
+
+    @Test
+    void stateExpiration() {
+        castNormal(686, fighter1.cell()); // Picole
+
+        requestStack.assertOne(ActionEffect.addState(fighter1, 1));
+        assertTrue(fighter1.states().has(1));
+
+        passTurns(10); // 9 + 1 for current turn
+
+        requestStack.assertOne(ActionEffect.removeState(fighter1, 1));
+        assertFalse(fighter1.states().has(1));
     }
 
     private void passTurns(int number) {

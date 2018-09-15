@@ -44,4 +44,9 @@ class ErrorTest {
     void cantCastNotEnoughActionPoints() {
         assertEquals("Im1170;4~5", Error.cantCastNotEnoughActionPoints(4, 5).toString());
     }
+
+    @Test
+    void cantCastBadState() {
+        assertEquals("Im1116;", Error.cantCastBadState().toString());
+    }
 }

@@ -16,9 +16,7 @@ import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.listener.fight.CheckFightTerminated;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightStarted;
-import fr.quatrevieux.araknemu.game.listener.fight.fighter.RemoveDeadFighter;
-import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterDie;
-import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterLifeChanged;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.*;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.*;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightAction;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightActionTerminated;
@@ -86,6 +84,9 @@ class ActiveStateTest extends GameBaseCase {
         assertTrue(fight.dispatcher().has(RemoveDeadFighter.class));
         assertTrue(fight.dispatcher().has(CheckFightTerminated.class));
         assertTrue(fight.dispatcher().has(SendTurnList.class));
+        assertTrue(fight.dispatcher().has(RefreshBuffs.class));
+        assertTrue(fight.dispatcher().has(RefreshStates.class));
+        assertTrue(fight.dispatcher().has(SendState.class));
 
         Thread.sleep(210); // Wait for start turn
 

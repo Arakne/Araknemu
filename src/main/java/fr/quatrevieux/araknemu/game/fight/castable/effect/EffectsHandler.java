@@ -10,6 +10,8 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.SpellRet
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.*;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.StealLifeHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.PushStateHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.RemoveStateHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.SkipTurnHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.TeleportHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -43,6 +45,8 @@ final public class EffectsHandler {
         register(100, new DamageHandler(Element.NEUTRAL, fight));
 
         register(140, new SkipTurnHandler(fight));
+        register(950, new PushStateHandler(fight));
+        register(951, new RemoveStateHandler());
 
         register(79,  new HealOrMultiplyDamageHandler());
         register(105, new ReduceDamageHandler());

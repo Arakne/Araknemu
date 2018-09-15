@@ -1,9 +1,6 @@
 package fr.quatrevieux.araknemu.game.fight.castable.spell;
 
-import fr.quatrevieux.araknemu.game.fight.castable.validator.ApCostValidator;
-import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
-import fr.quatrevieux.araknemu.game.fight.castable.validator.LineLaunchValidator;
-import fr.quatrevieux.araknemu.game.fight.castable.validator.TargetCellValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.validator.*;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -20,7 +17,8 @@ final public class SpellConstraintsValidator {
         this(turn, new CastConstraintValidator[] {
             new ApCostValidator(),
             new TargetCellValidator(),
-            new LineLaunchValidator()
+            new LineLaunchValidator(),
+            new StatesValidator()
         });
     }
 
