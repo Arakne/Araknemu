@@ -2,9 +2,7 @@ package fr.quatrevieux.araknemu.game.fight;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
-import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.event.ExplorationPlayerCreated;
@@ -13,6 +11,9 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.event.FightCreated;
+import fr.quatrevieux.araknemu.game.fight.module.FightModule;
+import fr.quatrevieux.araknemu.game.fight.module.RaulebaqueModule;
+import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.listener.player.exploration.LeaveExplorationForFight;
 import fr.quatrevieux.araknemu.game.listener.player.fight.AttachFighter;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
@@ -20,8 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,6 +42,9 @@ class FightServiceTest extends FightBaseCase {
             dispatcher = new DefaultListenerAggregate(),
             Arrays.asList(
                 new ChallengeBuilderFactory()
+            ),
+            Arrays.asList(
+                RaulebaqueModule::new
             )
         );
     }
@@ -139,5 +142,15 @@ class FightServiceTest extends FightBaseCase {
         service.created(fight3);
 
         assertCollectionEquals(service.fightsByMap(10340), fight1, fight2, fight3);
+    }
+
+    @Test
+    void modules() throws ContainerException {
+        Fight fight = new Fight(1, new ChallengeType(), service.map(container.get(ExplorationMapService.class).load(10340)), new ArrayList<>());
+
+        Collection<FightModule> modules = service.modules(fight);
+
+        assertCount(1, modules);
+        assertContainsType(RaulebaqueModule.class, modules);
     }
 }

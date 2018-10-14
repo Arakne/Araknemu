@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.game.fight.builder.FightBuilder;
 import fr.quatrevieux.araknemu.game.fight.builder.FightBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.event.FightCreated;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
+import fr.quatrevieux.araknemu.game.fight.module.FightModule;
 import fr.quatrevieux.araknemu.game.listener.player.exploration.LeaveExplorationForFight;
 import fr.quatrevieux.araknemu.game.listener.player.fight.AttachFighter;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
@@ -26,13 +27,15 @@ final public class FightService implements EventsSubscriber {
     final private MapTemplateRepository mapRepository;
     final private Dispatcher dispatcher;
     final private Map<Class, FightBuilderFactory> builderFactories;
+    final private Collection<FightModule.Factory> moduleFactories;
 
     final private Map<Integer, Map<Integer, Fight>> fightsByMapId = new HashMap<>();
     final private AtomicInteger lastFightId = new AtomicInteger();
 
-    public FightService(MapTemplateRepository mapRepository, Dispatcher dispatcher, Collection<? extends FightBuilderFactory> factories) {
+    public FightService(MapTemplateRepository mapRepository, Dispatcher dispatcher, Collection<? extends FightBuilderFactory> factories, Collection<FightModule.Factory> moduleFactories) {
         this.mapRepository = mapRepository;
         this.dispatcher = dispatcher;
+        this.moduleFactories = moduleFactories;
 
         this.builderFactories = factories.stream().collect(
             Collectors.toMap(
@@ -154,5 +157,15 @@ final public class FightService implements EventsSubscriber {
      */
     synchronized void remove(Fight fight) {
         fightsByMapId.get(fight.map().id()).remove(fight.id());
+    }
+
+    /**
+     * Make modules for a fight
+     */
+    Collection<FightModule> modules(Fight fight) {
+        return moduleFactories.stream()
+            .map(factory -> factory.create(fight))
+            .collect(Collectors.toList())
+        ;
     }
 }

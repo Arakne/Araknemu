@@ -20,8 +20,13 @@ import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.WeaponSlot;
+import fr.quatrevieux.araknemu.game.spell.Spell;
+import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
+import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
 import org.junit.jupiter.api.BeforeEach;
+import org.mockito.Mockito;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -119,5 +124,23 @@ public class FightBaseCase extends GameBaseCase {
 
     public CastScope makeCastScope(Fighter caster, Castable castable, SpellEffect effect, FightCell target) {
         return new CastScope(castable, caster, target).withEffects(Collections.singletonList(effect));
+    }
+
+    public CastScope makeCastScopeForEffect(int effectId) {
+        return makeCastScopeForEffect(effectId, player.fighter(), other.fighter().cell());
+    }
+
+    public CastScope makeCastScopeForEffect(int effectId, Fighter caster, FightCell target) {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.effect()).thenReturn(effectId);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        return makeCastScope(caster, spell, effect, target);
     }
 }

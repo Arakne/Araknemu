@@ -11,6 +11,7 @@ import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
+import fr.quatrevieux.araknemu.game.fight.module.FightModule;
 import fr.quatrevieux.araknemu.game.fight.state.NullState;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
@@ -19,6 +20,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -198,5 +200,30 @@ class FightTest extends GameBaseCase {
         assertSame(fight, ref.get().fight());
         assertCount(0, fight.teams());
         assertCount(0, fight.fighters());
+    }
+
+    @Test
+    void register() {
+        FightModule module = Mockito.mock(FightModule.class);
+
+        Mockito.when(module.listeners()).thenReturn(new Listener[0]);
+
+        fight.register(module);
+
+        Mockito.verify(module).effects(fight.effects());
+        Mockito.verify(module).listeners();
+    }
+
+    @Test
+    void nextStateWillNotifyModules() {
+        fight.nextState();
+
+        FightModule module = Mockito.mock(FightModule.class);
+        Mockito.when(module.listeners()).thenReturn(new Listener[0]);
+        fight.register(module);
+
+        fight.nextState();
+
+        Mockito.verify(module).stateChanged(fight.state());
     }
 }

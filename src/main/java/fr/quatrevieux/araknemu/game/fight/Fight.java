@@ -9,6 +9,7 @@ import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
+import fr.quatrevieux.araknemu.game.fight.module.FightModule;
 import fr.quatrevieux.araknemu.game.fight.state.*;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurnList;
@@ -17,6 +18,7 @@ import fr.quatrevieux.araknemu.game.world.util.Sender;
 import org.apache.commons.lang3.time.StopWatch;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
@@ -30,6 +32,7 @@ final public class Fight implements Dispatcher, Sender {
     final private FightMap map;
     final private List<FightTeam> teams;
     final private StatesFlow statesFlow;
+    final private List<FightModule> modules = new ArrayList<>();
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
     final private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
@@ -54,6 +57,16 @@ final public class Fight implements Dispatcher, Sender {
             new ActiveState(),
             new FinishState()
         ));
+    }
+
+    /**
+     * Register a module
+     */
+    public void register(FightModule module)
+    {
+        modules.add(module);
+        dispatcher.register(module);
+        module.effects(effects);
     }
 
     /**
@@ -121,6 +134,7 @@ final public class Fight implements Dispatcher, Sender {
      */
     public void nextState() {
         statesFlow.next(this);
+        modules.forEach(module -> module.stateChanged(statesFlow.current()));
     }
 
     /**

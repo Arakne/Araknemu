@@ -72,7 +72,10 @@ final public class PlayerFighter implements Fighter, Sender {
             this.cell.removeFighter();
         }
 
-        cell.set(this);
+        if (cell != null) {
+            cell.set(this);
+        }
+
         this.cell = cell;
     }
 

@@ -1,7 +1,5 @@
 package fr.quatrevieux.araknemu.core.event;
 
-import java.util.Collection;
-
 /**
  * Subscribe to events registering listeners
  */

@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.builder.FightBuilder;
 import fr.quatrevieux.araknemu.game.fight.event.FightCancelled;
 import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
+import fr.quatrevieux.araknemu.game.fight.module.FightModule;
 
 import java.util.function.Consumer;
 
@@ -29,6 +30,8 @@ final public class FightHandler<B extends FightBuilder> implements EventsSubscri
         configuration.accept(builder);
 
         Fight fight = builder.build(service.newFightId());
+
+        service.modules(fight).forEach(fight::register);
         fight.nextState();
 
         fight.dispatcher().register(this);

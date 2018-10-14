@@ -99,6 +99,15 @@ class PlayerFighterTest extends FightBaseCase {
     }
 
     @Test
+    void moveRemoveCell() {
+        fighter.move(map.get(123));
+        fighter.move(null);
+
+        assertNull(fighter.cell());
+        assertFalse(map.get(123).fighter().isPresent());
+    }
+
+    @Test
     void send() {
         fighter.send("test");
 
