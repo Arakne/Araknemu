@@ -37,7 +37,7 @@ final public class Fight implements Dispatcher, Sender {
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
     final private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     final private FightTurnList turnList = new FightTurnList(this);
-    final private EffectsHandler effects = new EffectsHandler(this);
+    final private EffectsHandler effects = new EffectsHandler();
 
     final private StopWatch duration = new StopWatch();
 

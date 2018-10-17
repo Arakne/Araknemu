@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
@@ -41,6 +42,7 @@ public class FunctionalTest extends FightBaseCase {
         dataSet.pushFunctionalSpells();
 
         fight = createFight();
+        fight.register(new CommonEffectsModule(fight));
 
         fighter1 = player.fighter();
         fighter2 = other.fighter();

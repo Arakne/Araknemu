@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.WeaponConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
@@ -34,6 +35,7 @@ class CloseCombatTest extends FightBaseCase {
 
         fight = createFight();
         fight.nextState();
+        fight.register(new CommonEffectsModule(fight));
         turn = new FightTurn(fighter = player.fighter(), fight, Duration.ofSeconds(30));
 
         fighter.move(fight.map().get(171));

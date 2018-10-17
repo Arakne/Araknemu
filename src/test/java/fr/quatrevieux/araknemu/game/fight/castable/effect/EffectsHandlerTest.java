@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
+import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
@@ -32,7 +33,9 @@ class EffectsHandlerTest extends FightBaseCase {
 
         fight = createFight();
         fight.nextState();
-        handler = new EffectsHandler(fight);
+        handler = new EffectsHandler();
+
+        new CommonEffectsModule(fight).effects(handler);
 
         requestStack.clear();
     }

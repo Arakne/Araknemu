@@ -51,6 +51,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.teleport
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.teleport.TeleportFactory;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
+import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.module.RaulebaqueModule;
 import fr.quatrevieux.araknemu.game.fight.module.StatesModule;
 import fr.quatrevieux.araknemu.game.handler.loader.*;
@@ -429,6 +430,7 @@ final public class GameModule implements ContainerModule {
                     new ChallengeBuilderFactory()
                 ),
                 Arrays.asList(
+                    CommonEffectsModule::new,
                     StatesModule::new,
                     RaulebaqueModule::new
                 )
