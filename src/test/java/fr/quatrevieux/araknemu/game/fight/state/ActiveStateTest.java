@@ -10,7 +10,6 @@ import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
 import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
 import fr.quatrevieux.araknemu.game.fight.event.FightLeaved;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
@@ -22,7 +21,6 @@ import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightAction;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightActionTerminated;
 import fr.quatrevieux.araknemu.network.game.out.fight.BeginFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
-import fr.quatrevieux.araknemu.network.game.out.fight.action.FightAction;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
@@ -85,8 +83,6 @@ class ActiveStateTest extends GameBaseCase {
         assertTrue(fight.dispatcher().has(CheckFightTerminated.class));
         assertTrue(fight.dispatcher().has(SendTurnList.class));
         assertTrue(fight.dispatcher().has(RefreshBuffs.class));
-        assertTrue(fight.dispatcher().has(RefreshStates.class));
-        assertTrue(fight.dispatcher().has(SendState.class));
 
         Thread.sleep(210); // Wait for start turn
 
@@ -117,6 +113,8 @@ class ActiveStateTest extends GameBaseCase {
         assertFalse(fight.dispatcher().has(SendFighterDie.class));
         assertFalse(fight.dispatcher().has(RemoveDeadFighter.class));
         assertFalse(fight.dispatcher().has(CheckFightTerminated.class));
+        assertFalse(fight.dispatcher().has(SendTurnList.class));
+        assertFalse(fight.dispatcher().has(RefreshBuffs.class));
 
         assertFalse(fight.turnList().current().isPresent());
         assertFalse(fight.active());

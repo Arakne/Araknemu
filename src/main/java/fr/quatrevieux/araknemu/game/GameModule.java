@@ -52,6 +52,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.teleport
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.module.RaulebaqueModule;
+import fr.quatrevieux.araknemu.game.fight.module.StatesModule;
 import fr.quatrevieux.araknemu.game.handler.loader.*;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.SuperType;
@@ -428,6 +429,7 @@ final public class GameModule implements ContainerModule {
                     new ChallengeBuilderFactory()
                 ),
                 Arrays.asList(
+                    StatesModule::new,
                     RaulebaqueModule::new
                 )
             )

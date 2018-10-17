@@ -26,6 +26,7 @@ final public class ActiveState implements LeavableState, EventsSubscriber {
     final private FighterOrderStrategy orderStrategy;
 
     private Fight fight;
+    private Listener[] listeners;
 
     public ActiveState(FighterOrderStrategy orderStrategy) {
         this.orderStrategy = orderStrategy;
@@ -48,24 +49,26 @@ final public class ActiveState implements LeavableState, EventsSubscriber {
 
     @Override
     public Listener[] listeners() {
-        return new Listener[] {
-            new SendFightStarted(fight),
-            new SendFightersInformation(fight),
-            new SendFightTurnStarted(fight),
-            new SendFightTurnStopped(fight),
-            new SendFightAction(fight),
-            new SendFightActionTerminated(),
-            new SendUsedMovementPoints(fight),
-            new SendUsedActionPoints(fight),
-            new SendFighterLifeChanged(fight),
-            new SendFighterDie(fight),
-            new RemoveDeadFighter(fight),
-            new CheckFightTerminated(fight),
-            new SendTurnList(fight),
-            new RefreshBuffs(),
-            new RefreshStates(),
-            new SendState(fight)
-        };
+        if (listeners == null) {
+            listeners = new Listener[] {
+                new SendFightStarted(fight),
+                new SendFightersInformation(fight),
+                new SendFightTurnStarted(fight),
+                new SendFightTurnStopped(fight),
+                new SendFightAction(fight),
+                new SendFightActionTerminated(),
+                new SendUsedMovementPoints(fight),
+                new SendUsedActionPoints(fight),
+                new SendFighterLifeChanged(fight),
+                new SendFighterDie(fight),
+                new RemoveDeadFighter(fight),
+                new CheckFightTerminated(fight),
+                new SendTurnList(fight),
+                new RefreshBuffs(),
+            };
+        }
+
+        return listeners;
     }
 
     @Override

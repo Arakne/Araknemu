@@ -7,7 +7,6 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.Raule
 import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import fr.quatrevieux.araknemu.game.fight.state.FightState;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,11 +28,6 @@ final public class RaulebaqueModule implements FightModule {
     @Override
     public void effects(EffectsHandler handler) {
         handler.register(784, new RaulebaqueHandler(fight, this));
-    }
-
-    @Override
-    public void stateChanged(FightState newState) {
-
     }
 
     public Map<Fighter, FightCell> startPositions() {

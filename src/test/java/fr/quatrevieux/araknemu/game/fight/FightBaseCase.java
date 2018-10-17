@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.module.StatesModule;
 import fr.quatrevieux.araknemu.game.fight.state.*;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
@@ -69,6 +70,8 @@ public class FightBaseCase extends GameBaseCase {
                 new FinishState()
             )
         );
+
+        fight.register(new StatesModule(fight));
 
         if (init) {
             fight.nextState();
