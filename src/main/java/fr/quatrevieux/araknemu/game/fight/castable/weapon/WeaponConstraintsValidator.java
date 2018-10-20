@@ -16,7 +16,8 @@ final public class WeaponConstraintsValidator {
         this(turn, new CastConstraintValidator[] {
             new ApCostValidator(),
             new TargetCellValidator(),
-            new StatesValidator()
+            new StatesValidator(),
+            new RangeValidator()
         });
     }
 

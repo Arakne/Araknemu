@@ -30,11 +30,6 @@ public interface Spell extends Castable {
     public int level();
 
     /**
-     * Does the spell range is modifiable ?
-     */
-    public boolean modifiableRange();
-
-    /**
      * Minimal player level for use the spell
      */
     public int minPlayerLevel();

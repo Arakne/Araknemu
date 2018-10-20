@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.network.game.out.info;
 
+import fr.quatrevieux.araknemu.data.value.Interval;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -48,5 +49,10 @@ class ErrorTest {
     @Test
     void cantCastBadState() {
         assertEquals("Im1116;", Error.cantCastBadState().toString());
+    }
+
+    @Test
+    void cantCastBadRange() {
+        assertEquals("Im1171;2~5~1", Error.cantCastBadRange(new Interval(2, 5), 1).toString());
     }
 }

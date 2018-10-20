@@ -35,6 +35,11 @@ public interface Castable {
     public int criticalFailure();
 
     /**
+     * Does the castable range is modifiable ?
+     */
+    public boolean modifiableRange();
+
+    /**
      * Constraints for casting
      */
     public SpellConstraints constraints();

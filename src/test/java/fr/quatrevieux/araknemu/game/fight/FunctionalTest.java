@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.game.fight;
 
+import fr.quatrevieux.araknemu.data.value.Interval;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
@@ -10,6 +11,7 @@ import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.DropReward;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.FightRewardsSheet;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
+import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -39,6 +41,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.turn.FinishTurn;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
+import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -205,6 +208,24 @@ public class FunctionalTest extends GameBaseCase {
         assertEquals(198, fighter1.cell().id());
         assertEquals(0, fighter1.turn().points().movementPoints());
 
+        fighter1.turn().stop();
+
+        move = new Move(
+            fighter2.turn(),
+            fighter2,
+            new Path<>(
+                new Decoder<>(fight.map()),
+                Arrays.asList(
+                    new PathStep<>(fight.map().get(150), Direction.SOUTH_EAST),
+                    new PathStep<>(fight.map().get(195), Direction.SOUTH_EAST)
+                )
+            )
+        );
+
+        fighter2.turn().perform(move);
+        fighter2.turn().terminate();
+        assertEquals(195, fighter2.cell().id());
+
         fight.turnList().current()
             .filter(turn -> turn.fighter() != player.fighter())
             .ifPresent(FightTurn::stop)
@@ -302,6 +323,11 @@ public class FunctionalTest extends GameBaseCase {
 
         assertBetween(1, 4, damage);
         requestStack.assertOne(ActionEffect.alterLifePoints(other.fighter(), player.fighter(), -damage));
+        nextTurn();
+
+        assertThrows(FightException.class, () -> castNormal(3, fight.map().get(95)));
+        requestStack.assertLast(Error.cantCastBadRange(new Interval(1, 6), 7));
+        nextTurn();
 
         for (;;) {
             nextTurn();

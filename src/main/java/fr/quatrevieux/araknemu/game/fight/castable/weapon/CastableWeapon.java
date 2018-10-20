@@ -61,6 +61,11 @@ final public class CastableWeapon implements Castable {
     }
 
     @Override
+    public boolean modifiableRange() {
+        return false;
+    }
+
+    @Override
     public SpellConstraints constraints() {
         return new WeaponConstraints(weapon);
     }

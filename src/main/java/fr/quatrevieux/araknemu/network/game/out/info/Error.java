@@ -1,5 +1,7 @@
 package fr.quatrevieux.araknemu.network.game.out.info;
 
+import fr.quatrevieux.araknemu.data.value.Interval;
+
 /**
  * Error message
  */
@@ -81,5 +83,15 @@ final public class Error extends InformationMessage {
      */
     static public Error cantCastBadState() {
         return new Error(116);
+    }
+
+    /**
+     * Cannot cast the spell : the cell is out of range
+     *
+     * @param range The spell range
+     * @param distance The cell distance
+     */
+    public static Error cantCastBadRange(Interval range, int distance) {
+        return new Error(171, range.min(), range.max(), distance);
     }
 }
