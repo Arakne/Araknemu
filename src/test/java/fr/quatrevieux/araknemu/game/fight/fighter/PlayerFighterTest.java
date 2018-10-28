@@ -5,9 +5,11 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
+import fr.quatrevieux.araknemu.game.fight.castable.spell.LaunchedSpells;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighterProperties;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighterSprite;
@@ -181,6 +183,7 @@ class PlayerFighterTest extends FightBaseCase {
     void lifeAfterInitIsNotSyncWithPlayer() throws SQLException, ContainerException {
         gamePlayer().life().set(100);
         assertEquals(100, fighter.life().current());
+        fighter.setFight(fight);
         fighter.init();
 
         gamePlayer().life().set(120);
@@ -233,5 +236,27 @@ class PlayerFighterTest extends FightBaseCase {
     @Test
     void states() {
         assertInstanceOf(States.class, fighter.states());
+    }
+
+    @Test
+    void attachments() {
+        fighter.attach("key", 42);
+        assertSame(42, fighter.attachment("key"));
+
+        LaunchedSpells launchedSpells = new LaunchedSpells();
+
+        fighter.attach(launchedSpells);
+        assertSame(launchedSpells, fighter.attachment(LaunchedSpells.class));
+    }
+
+    @Test
+    void init() {
+        AtomicReference<FighterInitialized> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterInitialized.class, ref::set);
+
+        fighter.setFight(fight);
+        fighter.init();
+
+        assertSame(fighter, ref.get().fighter());
     }
 }

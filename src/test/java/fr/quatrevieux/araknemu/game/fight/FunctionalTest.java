@@ -329,6 +329,20 @@ public class FunctionalTest extends GameBaseCase {
         requestStack.assertLast(Error.cantCastBadRange(new Interval(1, 6), 7));
         nextTurn();
 
+        castNormal(6, other.fighter().cell());
+        other.fighter().turn().terminate();
+
+        assertThrows(FightException.class, () -> castNormal(6, other.fighter().cell())); // Cooldown
+
+        // Skip 5 turns
+        for (int i = 0; i < 5; ++i) {
+            nextTurn();
+            nextTurn();
+        }
+
+        castNormal(6, other.fighter().cell());
+        other.fighter().turn().terminate();
+
         for (;;) {
             nextTurn();
             requestStack.clear();

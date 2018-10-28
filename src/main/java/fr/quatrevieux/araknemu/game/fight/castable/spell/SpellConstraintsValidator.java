@@ -19,7 +19,8 @@ final public class SpellConstraintsValidator {
             new TargetCellValidator(),
             new LineLaunchValidator(),
             new StatesValidator(),
-            new RangeValidator()
+            new RangeValidator(),
+            new SpellLaunchValidator()
         });
     }
 

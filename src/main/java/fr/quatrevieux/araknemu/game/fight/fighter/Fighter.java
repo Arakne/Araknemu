@@ -7,7 +7,6 @@ import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
-import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 
@@ -72,6 +71,51 @@ public interface Fighter extends Dispatcher {
      * Get the fighter states
      */
     public States states();
+
+    /**
+     * Attach an attribute to the fighter
+     *
+     * @param key The attachment key
+     * @param value The attached value
+     *
+     * @see Fighter#attachment(Object) For get the attachment
+     */
+    public void attach(Object key, Object value);
+
+    /**
+     * Attach an object by its class
+     *
+     * @param value The attachment
+     *
+     * @see Fighter#attachment(Class) For get the attachment
+     */
+    default public void attach(Object value) {
+        attach(value.getClass(), value);
+    }
+
+    /**
+     * Get an attachment by its key
+     *
+     * @param key The attachment key
+     *
+     * @return The attached value
+     *
+     * @see Fighter#attach(Object, Object) For set the attachment
+     */
+    public Object attachment(Object key);
+
+    /**
+     * Get attachment by its class
+     *
+     * @param type The attachment class
+     *
+     * @return The attachment
+     *
+     * @see Fighter#attach(Object) Fir set the attachment
+     */
+    default public <T> T attachment(Class<T> type) {
+        return type.cast(attachment((Object) type));
+    }
 
     /**
      * Get the fighter level

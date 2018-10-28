@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.States;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
@@ -24,6 +25,9 @@ import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Fighter for a player
  */
@@ -34,6 +38,7 @@ final public class PlayerFighter implements Fighter, Sender {
     final private PlayerFighterProperties properties;
     final private BuffList buffs = new BuffList(this);
     final private States states = new States(this);
+    final private Map<Object, Object> attachments = new HashMap<>();
 
     private FightCell cell;
     private FightTeam team;
@@ -59,6 +64,8 @@ final public class PlayerFighter implements Fighter, Sender {
     @Override
     public void init() {
         properties.life().init();
+
+        fight.dispatch(new FighterInitialized(this));
     }
 
     @Override
@@ -218,6 +225,16 @@ final public class PlayerFighter implements Fighter, Sender {
      */
     public PlayerFighterProperties properties() {
         return properties;
+    }
+
+    @Override
+    public void attach(Object key, Object value) {
+        attachments.put(key, value);
+    }
+
+    @Override
+    public Object attachment(Object key) {
+        return attachments.get(key);
     }
 
     @Override

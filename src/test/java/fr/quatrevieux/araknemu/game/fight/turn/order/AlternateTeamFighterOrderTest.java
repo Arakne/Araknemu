@@ -206,6 +206,16 @@ class AlternateTeamFighterOrderTest extends TestCase {
         public States states() {
             return null;
         }
+
+        @Override
+        public void attach(Object key, Object value) {
+
+        }
+
+        @Override
+        public Object attachment(Object key) {
+            return null;
+        }
     }
 
     @Test

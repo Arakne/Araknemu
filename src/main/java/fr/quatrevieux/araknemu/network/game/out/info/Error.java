@@ -94,4 +94,11 @@ final public class Error extends InformationMessage {
     public static Error cantCastBadRange(Interval range, int distance) {
         return new Error(171, range.min(), range.max(), distance);
     }
+
+    /**
+     * Cannot cast the spell
+     */
+    static public Error cantCast() {
+        return new Error(175);
+    }
 }

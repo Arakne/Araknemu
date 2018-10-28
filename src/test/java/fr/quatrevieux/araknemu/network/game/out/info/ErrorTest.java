@@ -55,4 +55,9 @@ class ErrorTest {
     void cantCastBadRange() {
         assertEquals("Im1171;2~5~1", Error.cantCastBadRange(new Interval(2, 5), 1).toString());
     }
+
+    @Test
+    void cantCast() {
+        assertEquals("Im1175;", Error.cantCast().toString());
+    }
 }

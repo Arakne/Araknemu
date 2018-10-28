@@ -9,6 +9,7 @@ import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import fr.quatrevieux.araknemu.game.fight.turn.action.event.SpellCasted;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.time.Duration;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -226,6 +228,9 @@ class CastTest extends FightBaseCase {
 
     @Test
     void endOnSuccess() {
+        AtomicReference<SpellCasted> ref = new AtomicReference<>();
+        fight.dispatcher().add(SpellCasted.class, ref::set);
+
         Cast cast = new Cast(
             turn,
             fighter,
@@ -255,6 +260,7 @@ class CastTest extends FightBaseCase {
         );
 
         assertEquals(1, turn.points().actionPoints());
+        assertEquals(cast, ref.get().action());
     }
 
     @Test

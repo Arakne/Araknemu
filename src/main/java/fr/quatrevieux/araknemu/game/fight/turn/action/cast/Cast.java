@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import fr.quatrevieux.araknemu.game.fight.turn.action.event.SpellCasted;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -94,6 +95,8 @@ final public class Cast implements Action {
 
         turn.points().useActionPoints(spell.apCost());
         turn.fight().effects().apply(new CastScope(spell, caster, target).withRandomEffects(result.effects()));
+
+        turn.fight().dispatch(new SpellCasted(this));
     }
 
     @Override
@@ -108,5 +111,17 @@ final public class Cast implements Action {
     @Override
     public Duration duration() {
         return Duration.ofMillis(500);
+    }
+
+    public Fighter caster() {
+        return caster;
+    }
+
+    public Spell spell() {
+        return spell;
+    }
+
+    public FightCell target() {
+        return target;
     }
 }

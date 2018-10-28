@@ -55,8 +55,8 @@ class SimpleTeamTest extends FightBaseCase {
     void alive() throws Exception {
         assertTrue(team.alive());
 
-        fighter.init();
         fighter.setFight(createFight());
+        fighter.init();
         fighter.life().alter(fighter, -1000);
 
         assertFalse(team.alive());
