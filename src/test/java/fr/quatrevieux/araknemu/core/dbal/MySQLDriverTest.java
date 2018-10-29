@@ -25,11 +25,11 @@ class MySQLDriverTest {
 
         try (Connection connection = driver.newConnection()) {
             try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery("select * from area_data where id = 0");
+                ResultSet rs = stmt.executeQuery("select 1");
 
                 assertTrue(rs.next());
 
-                assertEquals("Amakna", rs.getString("name"));
+                assertEquals(1, rs.getInt("1"));
             } catch (SQLException e) {
                 e.printStackTrace();
                 throw e;
