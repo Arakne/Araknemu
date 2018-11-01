@@ -86,6 +86,23 @@ final public class DatabaseConfiguration implements ConfigurationModule {
         public String path() {
             return pool.string(name + ".path", dbname() + ".db");
         }
+
+        /**
+         * Auto-reconnect to the connection when query fail
+         * Default to true
+         */
+        public boolean autoReconnect() {
+            return pool.bool(name + ".autoReconnect", true);
+        }
+
+        /**
+         * Get the refresh pool interval in seconds
+         * If the value is lower than 1, the refresh will be disabled
+         * Default to 3600 (1 hour)
+         */
+        public int refreshPoolInterval() {
+            return pool.integer(name + ".refreshPoolInterval", 3600);
+        }
     }
 
     private PoolUtils pool;

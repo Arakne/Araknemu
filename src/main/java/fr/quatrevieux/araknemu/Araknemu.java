@@ -69,6 +69,8 @@ public class Araknemu {
             service.shutdown();
         }
 
+        database.stop();
+
         logger.info("Araknemu successfully stopped");
     }
 
@@ -106,7 +108,8 @@ public class Araknemu {
         Araknemu app = new Araknemu(
             configuration,
             new DefaultDatabaseHandler(
-                configuration.module(DatabaseConfiguration.class)
+                configuration.module(DatabaseConfiguration.class),
+                LoggerFactory.getLogger(DatabaseHandler.class)
             )
         );
 

@@ -36,6 +36,11 @@ final public class ConnectionPoolUtils implements ConnectionPool {
         pool.release(connection);
     }
 
+    @Override
+    public int size() {
+        return pool.size();
+    }
+
     /**
      * Prepare SQL query
      *
@@ -105,5 +110,15 @@ final public class ConnectionPoolUtils implements ConnectionPool {
 
             return null;
         });
+    }
+
+    @Override
+    public <T> T execute(Task<T> task) throws SQLException {
+        return pool.execute(task);
+    }
+
+    @Override
+    public void close() throws Exception {
+        pool.close();
     }
 }

@@ -7,9 +7,12 @@ import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -27,7 +30,8 @@ class ConnectionPoolUtilsTest {
                     new IniDriver(
                         new Ini(new File("src/test/test_config.ini"))
                     )
-                ).module(DatabaseConfiguration.class)
+                ).module(DatabaseConfiguration.class),
+                Mockito.mock(Logger.class)
             ).get("realm")
         );
     }
@@ -70,5 +74,27 @@ class ConnectionPoolUtilsTest {
         ));
 
         utils.query("drop table test_table");
+    }
+
+    @Test
+    void size() throws SQLException {
+        assertEquals(4, utils.size());
+
+        utils.acquire();
+
+        assertEquals(3, utils.size());
+    }
+
+    @Test
+    void close() throws Exception {
+        assertEquals(4, utils.size());
+
+        Connection connection = utils.acquire();
+        utils.release(connection);
+
+        utils.close();
+        assertEquals(0, utils.size());
+
+        assertTrue(connection.isClosed());
     }
 }

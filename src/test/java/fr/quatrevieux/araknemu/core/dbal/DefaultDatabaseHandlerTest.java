@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.core.dbal;
 
+import fr.quatrevieux.araknemu._test.TestCase;
 import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
 import org.ini4j.Ini;
@@ -14,7 +15,7 @@ import java.sql.Statement;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DefaultDatabaseHandlerTest {
+class DefaultDatabaseHandlerTest extends TestCase {
     private DefaultDatabaseHandler handler;
 
     @BeforeEach
@@ -69,5 +70,27 @@ class DefaultDatabaseHandlerTest {
     @Test
     void getNotSamePool() throws SQLException {
         assertNotEquals(handler.get("realm"), handler.get("no_shared"));
+    }
+
+    @Test
+    void getWithAutoReconnect() throws SQLException {
+        assertInstanceOf(AutoReconnectConnectionPool.class, handler.get("test_ar"));
+    }
+
+    @Test
+    void getWithRefreshPool() throws SQLException {
+        assertInstanceOf(RefreshConnectionPool.class, handler.get("test_refresh"));
+        handler.stop(); // Ensure that refresh task is stopped
+    }
+
+    @Test
+    void stop() throws SQLException {
+        ConnectionPool pool = handler.get("realm");
+
+        assertSame(pool, handler.get("realm"));
+
+        handler.stop();
+
+        assertNotSame(pool, handler.get("realm"));
     }
 }

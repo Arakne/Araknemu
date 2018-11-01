@@ -7,7 +7,7 @@ import java.sql.SQLException;
  * Handle pool of database connection for multi-threading optimisation
  * All implementation MUST be thread-safe
  */
-public interface ConnectionPool {
+public interface ConnectionPool extends AutoCloseable {
     /**
      * Task for a connection
      * @param <T> Type of the result
@@ -40,6 +40,11 @@ public interface ConnectionPool {
      * @param connection Connection to release to the pool
      */
     public void release(Connection connection);
+
+    /**
+     * Get the current size of the pool
+     */
+    public int size();
 
     /**
      * Execute a connection pool task

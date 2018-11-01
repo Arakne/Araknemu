@@ -51,6 +51,20 @@ class SimpleConnectionPoolTest {
     }
 
     @Test
+    void releasePoolFull() throws SQLException {
+        SimpleConnectionPool pool = new SimpleConnectionPool(driver, 1);
+
+        Connection connection1 = pool.acquire();
+        Connection connection2 = pool.acquire();
+
+        pool.release(connection1);
+        pool.release(connection2);
+
+        assertEquals(1, pool.size());
+        assertTrue(connection2.isClosed());
+    }
+
+    @Test
     void releaseClosedConnection() throws SQLException {
         SimpleConnectionPool pool = new SimpleConnectionPool(driver, 1);
 
@@ -92,5 +106,29 @@ class SimpleConnectionPoolTest {
 
             return true;
         });
+    }
+
+    @Test
+    void stop() throws SQLException {
+        SimpleConnectionPool pool = new SimpleConnectionPool(driver, 2);
+
+        assertEquals(0, pool.size());
+
+        pool.initialize();
+
+        assertEquals(2, pool.size());
+
+        Connection connection1 = pool.acquire();
+        Connection connection2 = pool.acquire();
+
+        pool.release(connection1);
+        pool.release(connection2);
+
+        pool.close();
+
+        assertEquals(0, pool.size());
+
+        assertTrue(connection1.isClosed());
+        assertTrue(connection2.isClosed());
     }
 }

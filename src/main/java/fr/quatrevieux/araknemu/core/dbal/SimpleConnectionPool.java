@@ -1,7 +1,13 @@
 package fr.quatrevieux.araknemu.core.dbal;
 
+import org.slf4j.Logger;
+import org.slf4j.helpers.NOPLogger;
+
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -11,10 +17,16 @@ import java.util.concurrent.BlockingQueue;
 final public class SimpleConnectionPool implements ConnectionPool {
     final private Driver driver;
     final private BlockingQueue<Connection> connections;
+    final private Logger logger;
+
+    public SimpleConnectionPool(Driver driver, int size, Logger logger) {
+        this.driver = driver;
+        this.logger = logger;
+        this.connections = new ArrayBlockingQueue<>(size);
+    }
 
     public SimpleConnectionPool(Driver driver, int size) {
-        this.driver = driver;
-        connections = new ArrayBlockingQueue<>(size);
+        this(driver, size, NOPLogger.NOP_LOGGER);
     }
 
     @Override
@@ -31,6 +43,7 @@ final public class SimpleConnectionPool implements ConnectionPool {
     @Override
     public Connection acquire() throws SQLException {
         if (connections.isEmpty()) {
+            logger.warn("Pool is empty : create a new connection. If this message occurs too many times consider increase poolSize value");
             return driver.newConnection();
         }
 
@@ -51,6 +64,25 @@ final public class SimpleConnectionPool implements ConnectionPool {
 
         // Cannot post the connection, close the connection
         if (!connections.offer(connection)) {
+            try {
+                connection.close();
+            } catch (SQLException e) { }
+        }
+    }
+
+    @Override
+    public int size() {
+        return connections.size();
+    }
+
+    @Override
+    public void close() {
+        logger.info("Closing database connections...");
+
+        Collection<Connection> toClose = new ArrayList<>(connections);
+        connections.clear();
+
+        for (Connection connection : toClose) {
             try {
                 connection.close();
             } catch (SQLException e) { }

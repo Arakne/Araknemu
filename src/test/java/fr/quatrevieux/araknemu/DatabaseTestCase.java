@@ -10,6 +10,10 @@ import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
 import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.platform.commons.logging.LoggerFactory;
+import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.helpers.NOPLogger;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -27,7 +31,8 @@ public class DatabaseTestCase extends TestCase {
                 new IniDriver(
                     new Ini(new File("src/test/test_config.ini"))
                 )
-            ).module(DatabaseConfiguration.class)
+            ).module(DatabaseConfiguration.class),
+            NOPLogger.NOP_LOGGER
         ).get("realm");
 
         poolUtils = new ConnectionPoolUtils(connection);

@@ -61,4 +61,12 @@ class DatabaseConfigurationTest {
         assertEquals("", config.password());
         assertEquals(16, config.maxPoolSize());
     }
+
+    @Test
+    void defaults() {
+        DatabaseConfiguration.Connection config = configuration.connection("test_sqlite");
+
+        assertTrue(config.autoReconnect());
+        assertEquals(3600, config.refreshPoolInterval());
+    }
 }

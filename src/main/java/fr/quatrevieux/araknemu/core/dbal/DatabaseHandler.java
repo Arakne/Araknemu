@@ -12,4 +12,9 @@ public interface DatabaseHandler {
      * @return
      */
     public ConnectionPool get(String name) throws SQLException;
+
+    /**
+     * Stop all active connections
+     */
+    public void stop();
 }
