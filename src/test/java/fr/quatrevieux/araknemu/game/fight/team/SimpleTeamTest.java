@@ -42,6 +42,8 @@ class SimpleTeamTest extends FightBaseCase {
         assertEquals(0, team.type());
         assertEquals(Alignment.NONE, team.alignment());
         assertEquals(player.position().cell(), team.cell());
+
+        assertSame(team, fighter.team());
     }
 
     @Test
@@ -87,6 +89,7 @@ class SimpleTeamTest extends FightBaseCase {
 
         assertCount(2, team.fighters());
         assertContains(fighter, team.fighters());
+        assertSame(team, fighter.team());
     }
 
     @Test

@@ -69,7 +69,7 @@ class PlayerFighterTest extends FightBaseCase {
     @Test
     void team() {
         FightTeam team = new SimpleTeam(fighter, new ArrayList<>(), 0);
-        fighter.join(team);
+        fighter.setTeam(team);
 
         assertSame(team, fighter.team());
     }

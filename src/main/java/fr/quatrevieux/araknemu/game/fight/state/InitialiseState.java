@@ -33,7 +33,6 @@ final public class InitialiseState implements FightState {
 
             for (Fighter fighter : team.fighters()) {
                 fighter.move(generator.next());
-                fighter.join(team);
                 fighter.setFight(fight);
             }
         }

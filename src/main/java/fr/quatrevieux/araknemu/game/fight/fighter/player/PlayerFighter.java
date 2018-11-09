@@ -166,8 +166,10 @@ final public class PlayerFighter implements Fighter, Sender {
         return team;
     }
 
-    @Override
-    public void join(FightTeam team) {
+    /**
+     * Set the fighter team
+     */
+    public void setTeam(FightTeam team) {
         this.team = team;
     }
 

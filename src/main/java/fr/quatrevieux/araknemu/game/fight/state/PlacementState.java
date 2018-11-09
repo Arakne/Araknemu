@@ -108,7 +108,6 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
 
         fighter.move(cell);
         fighter.setFight(fight);
-        fighter.join(team);
 
         fighter.dispatch(new FightJoined(fight, fighter));
         fight.dispatch(new FighterAdded(fighter));

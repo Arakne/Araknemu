@@ -146,7 +146,6 @@ class ActiveStateTest extends GameBaseCase {
         fight.team(0).join(mutineer);
         mutineer.move(fight.map().get(222));
         mutineer.setFight(fight);
-        mutineer.join(fight.team(0));
 
         fight.nextState();
         requestStack.clear();
@@ -177,7 +176,6 @@ class ActiveStateTest extends GameBaseCase {
         fight.team(0).join(teammate);
         teammate.move(fight.map().get(222));
         teammate.setFight(fight);
-        teammate.join(fight.team(0));
 
         fight.nextState();
         requestStack.clear();

@@ -17,7 +17,7 @@ class SendTeamFighterAddedTest extends FightBaseCase {
     private Fight fight;
     private ExplorationMap map;
     private SendTeamFighterAdded listener;
-    private Fighter fighter;
+    private PlayerFighter fighter;
 
     @Override
     @BeforeEach
@@ -39,7 +39,7 @@ class SendTeamFighterAddedTest extends FightBaseCase {
 
     @Test
     void onFighterAdded() {
-        fighter.join(fight.team(0));
+        fighter.setTeam(fight.team(0));
 
         listener.on(new FighterAdded(fighter));
 

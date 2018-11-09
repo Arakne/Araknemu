@@ -128,11 +128,6 @@ public interface Fighter extends Dispatcher {
     public FightTeam team();
 
     /**
-     * Join a team
-     */
-    public void join(FightTeam team);
-
-    /**
      * Get the fight
      */
     public Fight fight();

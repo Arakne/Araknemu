@@ -173,9 +173,6 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
-        public void join(FightTeam team) {}
-
-        @Override
         public Fight fight() {
             return null;
         }
