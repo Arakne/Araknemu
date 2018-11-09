@@ -20,6 +20,9 @@ import fr.quatrevieux.araknemu.game.listener.fight.StartFightWhenAllReady;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.ClearFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterRemoved;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Placement before start fight
  */
@@ -28,6 +31,17 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
     private Fight fight;
     private Listener[] listeners;
 
+    final private boolean randomize;
+    final private Map<FightTeam, PlacementCellsGenerator> cellsGenerators = new HashMap<>();
+
+    public PlacementState() {
+        this(true);
+    }
+
+    public PlacementState(boolean randomize) {
+        this.randomize = randomize;
+    }
+
     @Override
     public void start(Fight fight) {
         this.fight = fight;
@@ -35,7 +49,20 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
         fight.dispatcher().register(this);
         startTime = System.currentTimeMillis();
 
-        fight.fighters().forEach(fighter -> fighter.dispatch(new FightJoined(fight, fighter)));
+        for (FightTeam team : fight.teams()) {
+            cellsGenerators.put(
+                team,
+                randomize
+                    ? PlacementCellsGenerator.randomized(fight.map(), team.startPlaces())
+                    : new PlacementCellsGenerator(fight.map(), team.startPlaces())
+            );
+        }
+
+        for (Fighter fighter : fight.fighters()) {
+            fighter.move(cellsGenerators.get(fighter.team()).next());
+            fighter.setFight(fight);
+            fighter.dispatch(new FightJoined(fight, fighter));
+        }
     }
 
     @Override
@@ -104,7 +131,7 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
 
         team.join(fighter);
 
-        FightCell cell = PlacementCellsGenerator.randomized(fight.map(), team.startPlaces()).next();
+        FightCell cell = cellsGenerators.get(team).next();
 
         fighter.move(cell);
         fighter.setFight(fight);

@@ -56,12 +56,12 @@ class ActiveStateTest extends GameBaseCase {
             ),
             new StatesFlow(
                 new NullState(),
-                new NullState(),
+                new PlacementState(false),
                 state = new ActiveState()
             )
         );
 
-        new InitialiseState(false).start(fight);
+        fight.nextState();
         requestStack.clear();
     }
 
@@ -169,7 +169,6 @@ class ActiveStateTest extends GameBaseCase {
     void leaveNotLastOfTeamWillDispatchLeavedEventWithALooserReward() throws SQLException, ContainerException, JoinFightException {
         AtomicReference<FightLeaved> ref = new AtomicReference<>();
         fighter.dispatcher().add(FightLeaved.class, ref::set);
-        fighter.dispatch(new FightJoined(fight, fighter));
 
         PlayerFighter teammate = new PlayerFighter(makeSimpleGamePlayer(10));
 

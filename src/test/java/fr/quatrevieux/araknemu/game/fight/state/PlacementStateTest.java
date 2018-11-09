@@ -61,13 +61,11 @@ class PlacementStateTest extends GameBaseCase {
             )),
             new StatesFlow(
                 new NullState(),
-                new NullState(),
-                state = new PlacementState(),
+                new InitialiseState(),
+                state = new PlacementState(false),
                 new ActiveState()
             )
         );
-
-        new InitialiseState(false).start(fight);
     }
 
     @Test
@@ -84,6 +82,28 @@ class PlacementStateTest extends GameBaseCase {
         assertTrue(fight.dispatcher().has(SendFighterPositions.class));
         assertTrue(fight.dispatcher().has(SendFighterReadyState.class));
         assertTrue(fight.dispatcher().has(StartFightWhenAllReady.class));
+
+        assertEquals(123, fighter.cell().id());
+        assertEquals(fight.team(0), fighter.team());
+        assertEquals(fight, fighter.fight());
+        assertEquals(321, fight.fighters().get(1).cell().id());
+        assertEquals(fight.team(1), fight.fighters().get(1).team());
+        assertEquals(fight, fight.fighters().get(1).fight());
+    }
+
+
+    @Test
+    void startRandomized() {
+        state = new PlacementState(true);
+
+        state.start(fight);
+
+        assertNotNull(fighter.cell());
+        assertEquals(fight.team(0), fighter.team());
+        assertEquals(fight, fighter.fight());
+        assertNotNull(fight.fighters().get(1).cell());
+        assertEquals(fight.team(1), fight.fighters().get(1).team());
+        assertEquals(fight, fight.fighters().get(1).fight());
     }
 
     @Test

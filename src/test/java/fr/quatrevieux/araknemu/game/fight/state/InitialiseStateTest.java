@@ -12,7 +12,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class InitialiseStateTest extends GameBaseCase {
     private Fight fight;
@@ -43,16 +44,6 @@ class InitialiseStateTest extends GameBaseCase {
     @Test
     void start() {
         new InitialiseState().start(fight);
-
-        assertSame(fight, fight.fighters().get(0).fight());
-        assertSame(fight, fight.fighters().get(1).fight());
-
-        assertSame(fight.team(0), fight.fighters().get(0).team());
-        assertSame(fight.team(1), fight.fighters().get(1).team());
-
-        assertEquals(123, fight.fighters().get(0).cell().id());
-        assertEquals(321, fight.fighters().get(1).cell().id());
-
         assertSame(nextState, fight.state());
     }
 
