@@ -327,7 +327,8 @@ final public class GameModule implements ContainerModule {
                     new NullChannel(ChannelType.MEETIC),
                     new PrivateChannel(
                         container.get(PlayerService.class)
-                    )
+                    ),
+                    new FightTeamChannel()
                 }
             )
         );

@@ -31,7 +31,7 @@ class EnsureFightingTest extends FightBaseCase {
         Packet packet = new AskCharacterList(false);
 
         handler.handle(session, packet);
-        Thread.sleep(1);
+        Thread.sleep(5);
 
         Mockito.verify(inner).handle(session, packet);
     }
