@@ -3,6 +3,8 @@ package fr.quatrevieux.araknemu.game.handler.game;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.Move;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.PathValidator;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.ValidateWalkable;
 import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +32,8 @@ class EndGameActionTest extends GameBaseCase {
         player.interactions().push(
             new Move(
                 player,
-                new Decoder<>(player.map()).decode("bftdgl", player.map().get(279))
+                new Decoder<>(player.map()).decode("bftdgl", player.map().get(279)),
+                new PathValidator[] {new ValidateWalkable()}
             )
         );
 

@@ -5,6 +5,8 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.Move;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.PathValidator;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.ValidateWalkable;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
 import fr.quatrevieux.araknemu.game.world.map.path.Path;
@@ -32,7 +34,8 @@ class MoveTest extends GameBaseCase {
     void success() throws Exception {
         Move move = new Move(
             player,
-            new Decoder<>(player.map()).decode("bftdgl", player.map().get(279))
+            new Decoder<>(player.map()).decode("bftdgl", player.map().get(279)),
+            new PathValidator[] {new ValidateWalkable()}
         );
 
         move.setId(1);
@@ -60,7 +63,8 @@ class MoveTest extends GameBaseCase {
     void data() throws Exception {
         Move move = new Move(
             player,
-            new Decoder<>(player.map()).decode("bftdgl", player.map().get(279))
+            new Decoder<>(player.map()).decode("bftdgl", player.map().get(279)),
+            new PathValidator[] {new ValidateWalkable()}
         );
 
         move.setId(1);
@@ -77,7 +81,8 @@ class MoveTest extends GameBaseCase {
     void invalidPath() {
         Move move = new Move(
             player,
-            new Path<>(new Decoder<>(player.map()))
+            new Path<>(new Decoder<>(player.map())),
+            new PathValidator[] {new ValidateWalkable()}
         );
 
         move.setId(1);
@@ -90,7 +95,8 @@ class MoveTest extends GameBaseCase {
     void moveWithCancel() throws Exception {
         Move move = new Move(
             player,
-            new Decoder<>(player.map()).decode("bftdgl", player.map().get(279))
+            new Decoder<>(player.map()).decode("bftdgl", player.map().get(279)),
+            new PathValidator[] {new ValidateWalkable()}
         );
 
         move.setId(1);
@@ -118,7 +124,8 @@ class MoveTest extends GameBaseCase {
     void moveWithCancelNull() throws Exception {
         Move move = new Move(
             player,
-            new Decoder<>(player.map()).decode("bftdgl", player.map().get(279))
+            new Decoder<>(player.map()).decode("bftdgl", player.map().get(279)),
+            new PathValidator[] {new ValidateWalkable()}
         );
 
         move.setId(1);
@@ -146,7 +153,8 @@ class MoveTest extends GameBaseCase {
     void moveWithCancelNotInPath() throws Exception {
         Move move = new Move(
             player,
-            new Decoder<>(player.map()).decode("bftdgl", player.map().get(279))
+            new Decoder<>(player.map()).decode("bftdgl", player.map().get(279)),
+            new PathValidator[] {new ValidateWalkable()}
         );
 
         move.setId(1);
@@ -178,7 +186,8 @@ class MoveTest extends GameBaseCase {
 
         Move move = new Move(
             player,
-            new Decoder<>(player.map()).decode("acPfcl", player.map().get(169))
+            new Decoder<>(player.map()).decode("acPfcl", player.map().get(169)),
+            new PathValidator[] {new ValidateWalkable()}
         );
 
         player.interactions().push(move);

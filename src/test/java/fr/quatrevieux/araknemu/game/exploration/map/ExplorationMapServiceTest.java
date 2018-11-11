@@ -72,7 +72,6 @@ class ExplorationMapServiceTest extends FightBaseCase {
         assertNotSame(map, service.load(10300));
 
         assertTrue(map.dispatcher().has(SendNewSprite.class));
-        assertTrue(map.dispatcher().has(ValidatePlayerPath.class));
         assertTrue(map.dispatcher().has(SendSpriteRemoved.class));
         assertTrue(map.dispatcher().has(SendPlayerChangeCell.class));
     }

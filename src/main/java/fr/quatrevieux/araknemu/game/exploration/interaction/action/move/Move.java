@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.PathValidator;
 import fr.quatrevieux.araknemu.game.exploration.interaction.event.PlayerMoving;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.world.map.path.Path;
@@ -15,13 +16,15 @@ import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
  */
 final public class Move implements BlockingAction {
     final private ExplorationPlayer player;
+    final private PathValidator[] validators;
     private Path<ExplorationMapCell> path;
 
     private int id;
 
-    public Move(ExplorationPlayer player, Path<ExplorationMapCell> path) {
+    public Move(ExplorationPlayer player, Path<ExplorationMapCell> path, PathValidator[] validators) {
         this.player = player;
         this.path = path;
+        this.validators = validators;
     }
 
     @Override
@@ -30,7 +33,9 @@ final public class Move implements BlockingAction {
             throw new IllegalArgumentException("Empty path");
         }
 
-        player.map().dispatch(new PlayerMoving(player, this));
+        for (PathValidator validator : validators) {
+            path = validator.validate(this, path);
+        }
 
         if (path.target().id() != player.cell()) {
             queue.setPending(this);
@@ -89,12 +94,5 @@ final public class Move implements BlockingAction {
 
     public Path<ExplorationMapCell> path() {
         return path;
-    }
-
-    /**
-     * Replace the move path
-     */
-    public void replace(Path<ExplorationMapCell> path) {
-        this.path = path;
     }
 }

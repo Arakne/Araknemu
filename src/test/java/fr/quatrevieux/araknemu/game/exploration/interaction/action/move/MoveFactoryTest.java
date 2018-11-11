@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ExplorationActionRegistry;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.ValidateWalkable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +19,7 @@ class MoveFactoryTest extends GameBaseCase {
         super.setUp();
 
         dataSet.pushMaps();
-        factory = new MoveFactory();
+        factory = new MoveFactory(new ValidateWalkable());
     }
 
     @Test
