@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.exploration.interaction.action;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -22,19 +23,19 @@ class ActionQueueTest extends GameBaseCase {
 
     @Test
     void pushFirstWillRunAndSetBusy() {
-        BlockingAction action = Mockito.mock(BlockingAction.class);
+        BlockingAction action = Mockito.spy(MyBlockingAction.class);
 
         queue.push(action);
 
-        Mockito.verify(action).start();
+        Mockito.verify(action).start(queue);
         assertTrue(queue.isBusy());
     }
 
     @Test
     void pushWillSetIdOnTheFirst() {
-        BlockingAction a1 = Mockito.mock(BlockingAction.class);
-        BlockingAction a2 = Mockito.mock(BlockingAction.class);
-        BlockingAction a3 = Mockito.mock(BlockingAction.class);
+        BlockingAction a1 = Mockito.spy(MyBlockingAction.class);
+        BlockingAction a2 = Mockito.spy(MyBlockingAction.class);
+        BlockingAction a3 = Mockito.spy(MyBlockingAction.class);
 
         queue.push(a1);
         queue.push(a2);
@@ -47,21 +48,21 @@ class ActionQueueTest extends GameBaseCase {
 
     @Test
     void pushTwoWillStartOnlyTheFirstOnBlocking() {
-        BlockingAction a1 = Mockito.mock(BlockingAction.class);
-        BlockingAction a2 = Mockito.mock(BlockingAction.class);
+        BlockingAction a1 = Mockito.spy(MyBlockingAction.class);
+        BlockingAction a2 = Mockito.spy(MyBlockingAction.class);
 
         queue.push(a1);
         queue.push(a2);
 
-        Mockito.verify(a1).start();
-        Mockito.verify(a2, Mockito.never()).start();
+        Mockito.verify(a1).start(queue);
+        Mockito.verify(a2, Mockito.never()).start(queue);
 
         assertTrue(queue.isBusy());
     }
 
     @Test
     void endWithOneBlockingActionWillTerminateTheCurrentActionAndClearTheQueue() {
-        BlockingAction action = Mockito.mock(BlockingAction.class);
+        BlockingAction action = Mockito.spy(MyBlockingAction.class);
         Mockito.when(action.id()).thenReturn(1);
 
         queue.push(action);
@@ -73,8 +74,8 @@ class ActionQueueTest extends GameBaseCase {
 
     @Test
     void endWithTwoActionWillStartTheNextAction() {
-        BlockingAction a1 = Mockito.mock(BlockingAction.class);
-        BlockingAction a2 = Mockito.mock(BlockingAction.class);
+        BlockingAction a1 = Mockito.spy(MyBlockingAction.class);
+        BlockingAction a2 = Mockito.spy(MyBlockingAction.class);
         Mockito.when(a1.id()).thenReturn(1);
 
         queue.push(a1);
@@ -83,16 +84,16 @@ class ActionQueueTest extends GameBaseCase {
         queue.end(1);
 
         Mockito.verify(a1).end();
-        Mockito.verify(a2).start();
+        Mockito.verify(a2).start(queue);
 
         assertTrue(queue.isBusy());
     }
 
     @Test
     void startWithExceptionWillRemoveTheAction() {
-        BlockingAction action = Mockito.mock(BlockingAction.class);
+        BlockingAction action = Mockito.spy(MyBlockingAction.class);
 
-        Mockito.doThrow(new IllegalArgumentException()).when(action).start();
+        Mockito.doThrow(new IllegalArgumentException()).when(action).start(queue);
 
         assertThrows(IllegalArgumentException.class, () -> queue.push(action));
         assertFalse(queue.isBusy());
@@ -100,13 +101,13 @@ class ActionQueueTest extends GameBaseCase {
 
     @Test
     void startWithExceptionWillExecuteTheNextAction() {
-        BlockingAction a1 = Mockito.mock(BlockingAction.class);
-        BlockingAction a2 = Mockito.mock(BlockingAction.class);
-        BlockingAction a3 = Mockito.mock(BlockingAction.class);
+        BlockingAction a1 = Mockito.spy(MyBlockingAction.class);
+        BlockingAction a2 = Mockito.spy(MyBlockingAction.class);
+        BlockingAction a3 = Mockito.spy(MyBlockingAction.class);
         Mockito.when(a1.id()).thenReturn(1);
         Mockito.when(a3.id()).thenReturn(3);
 
-        Mockito.doThrow(new IllegalArgumentException()).when(a2).start();
+        Mockito.doThrow(new IllegalArgumentException()).when(a2).start(queue);
 
         queue.push(a1);
         queue.push(a2);
@@ -114,7 +115,7 @@ class ActionQueueTest extends GameBaseCase {
 
         assertThrows(IllegalArgumentException.class, () -> queue.end(1));
 
-        Mockito.verify(a3).start();
+        Mockito.verify(a3).start(queue);
 
         queue.end(3);
 
@@ -130,7 +131,7 @@ class ActionQueueTest extends GameBaseCase {
 
     @Test
     void endWithBadId() {
-        BlockingAction a1 = Mockito.mock(BlockingAction.class);
+        BlockingAction a1 = Mockito.spy(MyBlockingAction.class);
         Mockito.when(a1.id()).thenReturn(1);
 
         queue.push(a1);
@@ -145,7 +146,7 @@ class ActionQueueTest extends GameBaseCase {
 
     @Test
     void cancelWithBadId() {
-        BlockingAction a1 = Mockito.mock(BlockingAction.class);
+        BlockingAction a1 = Mockito.spy(MyBlockingAction.class);
         Mockito.when(a1.id()).thenReturn(1);
 
         queue.push(a1);
@@ -155,9 +156,9 @@ class ActionQueueTest extends GameBaseCase {
 
     @Test
     void cancelWillClearTheQueue() {
-        BlockingAction a1 = Mockito.mock(BlockingAction.class);
-        BlockingAction a2 = Mockito.mock(BlockingAction.class);
-        BlockingAction a3 = Mockito.mock(BlockingAction.class);
+        BlockingAction a1 = Mockito.spy(MyBlockingAction.class);
+        BlockingAction a2 = Mockito.spy(MyBlockingAction.class);
+        BlockingAction a3 = Mockito.spy(MyBlockingAction.class);
 
         Mockito.when(a1.id()).thenReturn(1);
 
@@ -182,26 +183,26 @@ class ActionQueueTest extends GameBaseCase {
         queue.push(a2);
         queue.push(a3);
 
-        Mockito.verify(a1).start();
-        Mockito.verify(a2).start();
-        Mockito.verify(a3).start();
+        Mockito.verify(a1).start(queue);
+        Mockito.verify(a2).start(queue);
+        Mockito.verify(a3).start(queue);
 
         assertFalse(queue.isBusy());
     }
 
     @Test
     void nonBlockingActionAfterBlockingWillBeExecuteAtEnd() {
-        BlockingAction a1 = Mockito.mock(BlockingAction.class);
+        BlockingAction a1 = Mockito.spy(MyBlockingAction.class);
         Action a2 = Mockito.mock(Action.class);
 
         queue.push(a1);
-        Mockito.verify(a1).start();
+        Mockito.verify(a1).start(queue);
 
         queue.push(a2);
         queue.end(a1.id());
 
         Mockito.verify(a1).end();
-        Mockito.verify(a2).start();
+        Mockito.verify(a2).start(queue);
 
         assertFalse(queue.isBusy());
     }
@@ -213,7 +214,7 @@ class ActionQueueTest extends GameBaseCase {
 
     @Test
     void stopWithOnlyOneCurrentAction() {
-        BlockingAction a1 = Mockito.mock(BlockingAction.class);
+        BlockingAction a1 = Mockito.spy(MyBlockingAction.class);
 
         queue.push(a1);
 
@@ -225,7 +226,7 @@ class ActionQueueTest extends GameBaseCase {
 
     @Test
     void stopWithPendingAction() {
-        BlockingAction a1 = Mockito.mock(BlockingAction.class);
+        BlockingAction a1 = Mockito.spy(MyBlockingAction.class);
         Action a2 = Mockito.mock(Action.class);
 
         queue.push(a1);
@@ -235,5 +236,45 @@ class ActionQueueTest extends GameBaseCase {
 
         assertFalse(queue.isBusy());
         Mockito.verify(a1).cancel(null);
+    }
+
+    public static class MyBlockingAction implements BlockingAction {
+        private int id;
+
+        @Override
+        public void cancel(String argument) { }
+
+        @Override
+        public void end() { }
+
+        @Override
+        public int id() {
+            return id;
+        }
+
+        @Override
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        @Override
+        public void start(ActionQueue queue) {
+            queue.setPending(this);
+        }
+
+        @Override
+        public ExplorationPlayer performer() {
+            return null;
+        }
+
+        @Override
+        public ActionType type() {
+            return null;
+        }
+
+        @Override
+        public Object[] arguments() {
+            return new Object[0];
+        }
     }
 }

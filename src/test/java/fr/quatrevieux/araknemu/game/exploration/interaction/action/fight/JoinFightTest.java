@@ -1,6 +1,8 @@
 package fr.quatrevieux.araknemu.game.exploration.interaction.action.fight;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
@@ -46,10 +48,10 @@ class JoinFightTest extends FightBaseCase {
 
     @Test
     void busy() throws SQLException, ContainerException {
-        explorationPlayer().interactions().push(Mockito.mock(BlockingAction.class));
+        explorationPlayer().interactions().push(new MyBlockingAction());
         assertTrue(explorationPlayer().interactions().busy());
 
-        action.start();
+        action.start(new ActionQueue());
 
         requestStack.assertLast(
             new GameActionResponse("", ActionType.JOIN_FIGHT, player.id() + "", new Object[] {"o"})
@@ -60,7 +62,7 @@ class JoinFightTest extends FightBaseCase {
     void tooLate() {
         fight.nextState();
 
-        action.start();
+        action.start(new ActionQueue());
 
         requestStack.assertLast(
             new GameActionResponse("", ActionType.JOIN_FIGHT, player.id() + "", new Object[] {"l"})
@@ -71,7 +73,7 @@ class JoinFightTest extends FightBaseCase {
     void badMap() throws SQLException, ContainerException {
         explorationPlayer().join(container.get(ExplorationMapService.class).load(10540));
 
-        action.start();
+        action.start(new ActionQueue());
 
         requestStack.assertLast(
             new GameActionResponse("", ActionType.JOIN_FIGHT, player.id() + "", new Object[] {"p"})
@@ -84,7 +86,7 @@ class JoinFightTest extends FightBaseCase {
             fight.team(0).join(new PlayerFighter(makeSimpleGamePlayer(i)));
         }
 
-        action.start();
+        action.start(new ActionQueue());
         Thread.sleep(5);
 
         requestStack.assertLast(
@@ -94,7 +96,7 @@ class JoinFightTest extends FightBaseCase {
 
     @Test
     void success() throws InterruptedException {
-        action.start();
+        action.start(new ActionQueue());
         Thread.sleep(5);
 
         assertTrue(player.isFighting());
@@ -109,5 +111,45 @@ class JoinFightTest extends FightBaseCase {
             new FightStartPositions(new List[] { fight.team(0).startPlaces(), fight.team(1).startPlaces() }, 0),
             new AddSprites(Collections.singleton(player.fighter().sprite()))
         );
+    }
+
+    public static class MyBlockingAction implements BlockingAction {
+        private int id;
+
+        @Override
+        public void cancel(String argument) { }
+
+        @Override
+        public void end() { }
+
+        @Override
+        public int id() {
+            return id;
+        }
+
+        @Override
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        @Override
+        public void start(ActionQueue queue) {
+            queue.setPending(this);
+        }
+
+        @Override
+        public ExplorationPlayer performer() {
+            return null;
+        }
+
+        @Override
+        public ActionType type() {
+            return null;
+        }
+
+        @Override
+        public Object[] arguments() {
+            return new Object[0];
+        }
     }
 }

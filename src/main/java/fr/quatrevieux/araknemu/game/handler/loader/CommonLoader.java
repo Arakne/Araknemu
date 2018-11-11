@@ -5,7 +5,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
 import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.factory.ActionFactory;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionFactory;
 import fr.quatrevieux.araknemu.game.handler.*;
 import fr.quatrevieux.araknemu.game.handler.account.GenerateName;
 import fr.quatrevieux.araknemu.game.handler.account.Login;

@@ -1,6 +1,9 @@
-package fr.quatrevieux.araknemu.game.exploration.interaction.action;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action.move;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 
@@ -27,7 +30,9 @@ final public class ChangeMap implements BlockingAction {
     }
 
     @Override
-    public void start() {
+    public void start(ActionQueue queue) {
+        queue.setPending(this);
+
         player.leave();
 
         player.send(new GameActionResponse(this));

@@ -1,8 +1,11 @@
-package fr.quatrevieux.araknemu.game.exploration.interaction.action;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action.challenge;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.challenge.RefuseChallenge;
 import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengeInvitation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
@@ -35,7 +38,7 @@ class RefuseChallengeTest extends GameBaseCase {
     void noInvitation() throws SQLException, ContainerException {
         RefuseChallenge action = new RefuseChallenge(explorationPlayer(), 5);
 
-        assertThrows(IllegalArgumentException.class, () -> action.start(), "Invalid interaction type");
+        assertThrows(IllegalArgumentException.class, () -> action.start(new ActionQueue()), "Invalid interaction type");
     }
 
     @Test
@@ -46,7 +49,7 @@ class RefuseChallengeTest extends GameBaseCase {
 
         RefuseChallenge action = new RefuseChallenge(explorationPlayer(), -5);
 
-        assertThrows(IllegalArgumentException.class, () -> action.start(), "Invalid challenge target");
+        assertThrows(IllegalArgumentException.class, () -> action.start(new ActionQueue()), "Invalid challenge target");
     }
 
     @Test
@@ -55,7 +58,7 @@ class RefuseChallengeTest extends GameBaseCase {
 
         RefuseChallenge action = new RefuseChallenge(player, player.id());
 
-        action.start();
+        action.start(new ActionQueue());
 
         assertFalse(player.interactions().interacting());
         assertFalse(other.interactions().interacting());
@@ -71,7 +74,7 @@ class RefuseChallengeTest extends GameBaseCase {
 
         RefuseChallenge action = new RefuseChallenge(player, other.id());
 
-        action.start();
+        action.start(new ActionQueue());
 
         assertFalse(player.interactions().interacting());
         assertFalse(other.interactions().interacting());

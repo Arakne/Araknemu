@@ -1,8 +1,11 @@
-package fr.quatrevieux.araknemu.game.exploration.interaction.action;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action.challenge;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.challenge.AcceptChallenge;
 import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengeInvitation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
@@ -37,7 +40,7 @@ class AcceptChallengeTest extends GameBaseCase {
     void noInvitation() throws SQLException, ContainerException {
         AcceptChallenge action = new AcceptChallenge(explorationPlayer(), 5);
 
-        assertThrows(IllegalArgumentException.class, () -> action.start(), "Invalid interaction type");
+        assertThrows(IllegalArgumentException.class, () -> action.start(new ActionQueue()), "Invalid interaction type");
     }
 
     @Test
@@ -48,7 +51,7 @@ class AcceptChallengeTest extends GameBaseCase {
 
         AcceptChallenge action = new AcceptChallenge(explorationPlayer(), -5);
 
-        assertThrows(IllegalArgumentException.class, () -> action.start(), "Invalid challenge target");
+        assertThrows(IllegalArgumentException.class, () -> action.start(new ActionQueue()), "Invalid challenge target");
     }
 
     @Test
@@ -57,7 +60,7 @@ class AcceptChallengeTest extends GameBaseCase {
 
         AcceptChallenge action = new AcceptChallenge(player, player.id());
 
-        assertThrows(IllegalArgumentException.class, () -> action.start());
+        assertThrows(IllegalArgumentException.class, () -> action.start(new ActionQueue()));
     }
 
     @Test
@@ -66,7 +69,7 @@ class AcceptChallengeTest extends GameBaseCase {
 
         AcceptChallenge action = new AcceptChallenge(player, other.id());
 
-        action.start();
+        action.start(new ActionQueue());
 
         assertFalse(player.interactions().interacting());
         assertFalse(other.interactions().interacting());

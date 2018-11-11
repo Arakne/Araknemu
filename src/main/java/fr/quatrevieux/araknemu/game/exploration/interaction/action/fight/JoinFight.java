@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.exploration.interaction.action.fight;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
@@ -26,7 +27,7 @@ final public class JoinFight implements Action {
     }
 
     @Override
-    public void start() {
+    public void start(ActionQueue queue) {
         if (player.interactions().busy()) {
             error(JoinFightError.CANT_YOU_R_BUSY);
             return;

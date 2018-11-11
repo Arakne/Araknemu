@@ -1,12 +1,16 @@
-package fr.quatrevieux.araknemu.game.exploration.interaction.action;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action.move;
 
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.ChangeMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.network.game.out.game.MapData;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +38,7 @@ class ChangeMapTest extends GameBaseCase {
 
         assertEquals(2, changeMap.id());
         assertSame(player, changeMap.performer());
-        assertEquals(ActionType.CHANGE_MAP, changeMap.type());
+        Assertions.assertEquals(ActionType.CHANGE_MAP, changeMap.type());
         assertArrayEquals(new Object[] {""}, changeMap.arguments());
     }
 
@@ -52,13 +56,14 @@ class ChangeMapTest extends GameBaseCase {
     @Test
     void startWithoutCinematic() throws Exception {
         ExplorationMap lastMap = player.map();
+        ActionQueue queue = new ActionQueue();
 
         ChangeMap changeMap = new ChangeMap(player, map, 123);
-        changeMap.setId(2);
 
-        changeMap.start();
+        changeMap.start(queue);
 
         assertFalse(lastMap.players().contains(player));
+        assertTrue(queue.isBusy());
         requestStack.assertLast(
             new GameActionResponse(changeMap)
         );
@@ -67,15 +72,16 @@ class ChangeMapTest extends GameBaseCase {
     @Test
     void startWithCinematic() throws Exception {
         ExplorationMap lastMap = player.map();
+        ActionQueue queue = new ActionQueue();
 
         ChangeMap changeMap = new ChangeMap(player, map, 123, 5);
-        changeMap.setId(2);
 
-        changeMap.start();
+        changeMap.start(queue);
 
         assertFalse(lastMap.players().contains(player));
+        assertTrue(queue.isBusy());
         requestStack.assertLast(
-            new GameActionResponse(2, ActionType.CHANGE_MAP, player.id(), "5")
+            new GameActionResponse(1, ActionType.CHANGE_MAP, player.id(), "5")
         );
     }
 
@@ -83,14 +89,15 @@ class ChangeMapTest extends GameBaseCase {
     void startWillNotChangePosition() throws Exception {
         ExplorationMap lastMap = player.map();
         Position lastPosition = player.position();
+        ActionQueue queue = new ActionQueue();
 
         ChangeMap changeMap = new ChangeMap(player, map, 123, 5);
-        changeMap.setId(2);
 
-        changeMap.start();
+        changeMap.start(queue);
 
         assertSame(lastMap, player.map());
         assertEquals(lastPosition, player.position());
+        assertTrue(queue.isBusy());
     }
 
     @Test

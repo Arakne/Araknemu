@@ -105,6 +105,18 @@ final public class ActionQueue {
     }
 
     /**
+     * The action waits for a Game action end and blocks the action queue
+     * A unique action id will be generated
+     *
+     * @param pending The pending action
+     */
+    public void setPending(BlockingAction pending) {
+        pending.setId(generateId());
+
+        this.current = pending;
+    }
+
+    /**
      * Generate a new action id
      */
     private int generateId() {
@@ -123,11 +135,7 @@ final public class ActionQueue {
             Action action = actions.remove();
 
             try {
-                if (action instanceof BlockingAction) {
-                    setCurrent((BlockingAction) action);
-                }
-
-                action.start();
+                action.start(this);
             } catch (RuntimeException e) {
                 this.current = null;
                 error = e;
@@ -137,11 +145,5 @@ final public class ActionQueue {
         if (error != null) {
             throw error;
         }
-    }
-
-    private void setCurrent(BlockingAction current) {
-        current.setId(generateId());
-
-        this.current = current;
     }
 }

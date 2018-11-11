@@ -1,6 +1,9 @@
-package fr.quatrevieux.araknemu.game.exploration.interaction.action;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action.environment;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 
 /**
@@ -23,7 +26,9 @@ final public class LaunchFirework implements BlockingAction {
     }
 
     @Override
-    public void start() {
+    public void start(ActionQueue queue) {
+        queue.setPending(this);
+
         player.map().send(new GameActionResponse(this));
     }
 

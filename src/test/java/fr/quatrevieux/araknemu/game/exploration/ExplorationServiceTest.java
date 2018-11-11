@@ -1,16 +1,12 @@
 package fr.quatrevieux.araknemu.game.exploration;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
-import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.listener.player.InitializeGame;
 import fr.quatrevieux.araknemu.game.listener.player.StopExploration;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.factory.ExplorationActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

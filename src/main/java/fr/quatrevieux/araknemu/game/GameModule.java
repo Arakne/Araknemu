@@ -37,9 +37,12 @@ import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.factory.ActionFactory;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.factory.ExplorationActionFactory;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionFactory;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ExplorationActionRegistry;
 import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.challenge.ChallengeActionsFactories;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.fight.FightActionsFactories;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.MoveFactory;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoaderAggregate;
@@ -282,8 +285,10 @@ final public class GameModule implements ContainerModule {
 
         configurator.persist(
             ActionFactory.class,
-            container -> new ExplorationActionFactory(
-                container.get(FightService.class)
+            container -> new ExplorationActionRegistry(
+                new MoveFactory(),
+                new ChallengeActionsFactories(container.get(FightService.class)),
+                new FightActionsFactories(container.get(FightService.class))
             )
         );
 

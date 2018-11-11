@@ -1,7 +1,7 @@
 package fr.quatrevieux.araknemu.game.handler.game;
 
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.factory.ActionFactory;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionFactory;
 import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;

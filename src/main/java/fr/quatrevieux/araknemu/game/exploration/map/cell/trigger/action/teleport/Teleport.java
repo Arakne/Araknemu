@@ -2,7 +2,7 @@ package fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.telepor
 
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.ChangeMap;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.ChangeMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.CellAction;

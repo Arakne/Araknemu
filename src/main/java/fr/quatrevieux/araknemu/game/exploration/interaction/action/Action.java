@@ -9,7 +9,7 @@ public interface Action {
     /**
      * Start to perform the action
      */
-    public void start();
+    public void start(ActionQueue queue);
 
     /**
      * Get the action performer

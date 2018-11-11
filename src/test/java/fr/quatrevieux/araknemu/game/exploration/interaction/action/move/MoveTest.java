@@ -1,14 +1,17 @@
-package fr.quatrevieux.araknemu.game.exploration.interaction.action;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action.move;
 
+import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.Move;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
 import fr.quatrevieux.araknemu.game.world.map.path.Path;
+import fr.quatrevieux.araknemu.game.world.map.path.PathException;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -165,5 +168,22 @@ class MoveTest extends GameBaseCase {
         assertFalse(player.interactions().busy());
 
         assertEquals(279, player.position().cell());
+    }
+
+    @Test
+    void blockedPath() throws PathException, ContainerException {
+        player.join(container.get(ExplorationMapService.class).load(10340));
+        player.move(player.map().get(169));
+        requestStack.clear();
+
+        Move move = new Move(
+            player,
+            new Decoder<>(player.map()).decode("acPfcl", player.map().get(169))
+        );
+
+        player.interactions().push(move);
+
+        assertFalse(player.interactions().busy());
+        requestStack.assertEmpty();
     }
 }

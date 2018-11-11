@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.exploration.interaction.action.factory;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;

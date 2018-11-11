@@ -1,8 +1,12 @@
-package fr.quatrevieux.araknemu.game.exploration.interaction.action;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action.environment;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.environment.LaunchFirework;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -39,7 +43,7 @@ class LaunchFireworkTest extends GameBaseCase {
 
     @Test
     void type() {
-        assertEquals(ActionType.FIREWORK, action.type());
+        Assertions.assertEquals(ActionType.FIREWORK, action.type());
     }
 
     @Test
@@ -52,11 +56,14 @@ class LaunchFireworkTest extends GameBaseCase {
 
     @Test
     void start() {
-        action.start();
+        ActionQueue queue = new ActionQueue();
+        action.start(queue);
 
         requestStack.assertLast(
             new GameActionResponse(action)
         );
+
+        assertTrue(queue.isBusy());
     }
 
     @Test

@@ -1,7 +1,10 @@
 package fr.quatrevieux.araknemu.game.exploration.interaction;
 
 import fr.quatrevieux.araknemu._test.TestCase;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +38,7 @@ class InteractionHandlerTest extends TestCase {
     void busyOneBlockingAction() throws Exception {
         assertFalse(handler.busy());
 
-        handler.push(Mockito.mock(BlockingAction.class));
+        handler.push(new MyBlockingAction());
 
         assertTrue(handler.busy());
     }
@@ -69,10 +72,10 @@ class InteractionHandlerTest extends TestCase {
 
     @Test
     void stopWillStopGameActions() throws Exception {
-        BlockingAction current = Mockito.mock(BlockingAction.class);
+        BlockingAction current = Mockito.spy(MyBlockingAction.class);
 
         handler.push(current);
-        handler.push(Mockito.mock(BlockingAction.class));
+        handler.push(new MyBlockingAction());
 
         handler.stop();
 
@@ -140,8 +143,48 @@ class InteractionHandlerTest extends TestCase {
         Action action = Mockito.mock(Action.class);
         handler.push(action);
 
-        Mockito.verify(action).start();
+        Mockito.verify(action).start(Mockito.any(ActionQueue.class));
     }
 
     interface ExtendedInteraction extends Interaction {}
+
+    public static class MyBlockingAction implements BlockingAction {
+        private int id;
+
+        @Override
+        public void cancel(String argument) { }
+
+        @Override
+        public void end() { }
+
+        @Override
+        public int id() {
+            return id;
+        }
+
+        @Override
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        @Override
+        public void start(ActionQueue queue) {
+            queue.setPending(this);
+        }
+
+        @Override
+        public ExplorationPlayer performer() {
+            return null;
+        }
+
+        @Override
+        public ActionType type() {
+            return null;
+        }
+
+        @Override
+        public Object[] arguments() {
+            return new Object[0];
+        }
+    }
 }

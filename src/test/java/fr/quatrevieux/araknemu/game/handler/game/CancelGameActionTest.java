@@ -2,7 +2,7 @@ package fr.quatrevieux.araknemu.game.handler.game;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.Move;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.Move;
 import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionCancel;
 import org.junit.jupiter.api.BeforeEach;

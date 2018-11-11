@@ -1,6 +1,9 @@
-package fr.quatrevieux.araknemu.game.exploration.interaction.action;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action.challenge;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengeInvitation;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
@@ -20,7 +23,7 @@ final public class AskChallenge implements Action {
     }
 
     @Override
-    public void start() {
+    public void start(ActionQueue queue) {
         player
             .interactions()
             .start(new ChallengeInvitation(player, challenger, fightService.handler(ChallengeBuilder.class)))

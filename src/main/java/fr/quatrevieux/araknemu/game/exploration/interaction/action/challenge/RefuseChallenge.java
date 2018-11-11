@@ -1,6 +1,9 @@
-package fr.quatrevieux.araknemu.game.exploration.interaction.action;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action.challenge;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengeDialog;
 
 /**
@@ -16,7 +19,7 @@ final public class RefuseChallenge implements Action {
     }
 
     @Override
-    public void start() {
+    public void start(ActionQueue queue) {
         ChallengeDialog dialog = player.interactions().get(ChallengeDialog.class);
 
         if (dialog.initiator().id() != target) {

@@ -1,10 +1,14 @@
-package fr.quatrevieux.araknemu.game.exploration.interaction.action;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action.move;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
 import fr.quatrevieux.araknemu.game.exploration.interaction.event.PlayerMoving;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.world.map.path.Path;
 import fr.quatrevieux.araknemu.game.world.map.path.PathStep;
+import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 
 /**
  * Move the player
@@ -21,12 +25,17 @@ final public class Move implements BlockingAction {
     }
 
     @Override
-    public void start() {
+    public void start(ActionQueue queue) {
         if (path.isEmpty()) {
             throw new IllegalArgumentException("Empty path");
         }
 
         player.map().dispatch(new PlayerMoving(player, this));
+
+        if (path.target().id() != player.cell()) {
+            queue.setPending(this);
+            player.map().send(new GameActionResponse(this));
+        }
     }
 
     @Override

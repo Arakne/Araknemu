@@ -1,8 +1,11 @@
-package fr.quatrevieux.araknemu.game.exploration.interaction.action;
+package fr.quatrevieux.araknemu.game.exploration.interaction.action.challenge;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.challenge.AskChallenge;
 import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengerDialog;
 import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.InitiatorDialog;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
@@ -26,7 +29,7 @@ class AskChallengeTest extends GameBaseCase {
 
         AskChallenge action = new AskChallenge(current, other, container.get(FightService.class));
 
-        action.start();
+        action.start(new ActionQueue());
 
         requestStack.assertLast(
             new GameActionResponse("", ActionType.JOIN_FIGHT, "1", new Object[] {"z"})
@@ -44,7 +47,7 @@ class AskChallengeTest extends GameBaseCase {
 
         AskChallenge action = new AskChallenge(current, other, container.get(FightService.class));
 
-        action.start();
+        action.start(new ActionQueue());
 
         requestStack.assertLast(
             new GameActionResponse("", ActionType.JOIN_FIGHT, "1", new Object[] {"p"})
@@ -61,7 +64,7 @@ class AskChallengeTest extends GameBaseCase {
 
         AskChallenge action = new AskChallenge(current, other, container.get(FightService.class));
 
-        action.start();
+        action.start(new ActionQueue());
 
         requestStack.assertLast(new GameActionResponse(action));
 
