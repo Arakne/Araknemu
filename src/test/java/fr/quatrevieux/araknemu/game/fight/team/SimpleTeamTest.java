@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.fight.team;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Alignment;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
@@ -57,7 +58,8 @@ class SimpleTeamTest extends FightBaseCase {
     void alive() throws Exception {
         assertTrue(team.alive());
 
-        fighter.setFight(createFight());
+        Fight fight = createFight();
+        fighter.joinFight(fight, fight.map().get(123));
         fighter.init();
         fighter.life().alter(fighter, -1000);
 

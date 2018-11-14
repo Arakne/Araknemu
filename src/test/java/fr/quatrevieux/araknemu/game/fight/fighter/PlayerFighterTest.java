@@ -76,9 +76,21 @@ class PlayerFighterTest extends FightBaseCase {
 
     @Test
     void fight() {
-        fighter.setFight(fight);
+        fighter.joinFight(fight, map.get(123));
 
         assertSame(fight, fighter.fight());
+    }
+
+    @Test
+    void joinFight() {
+        assertFalse(fighter.isOnFight());
+
+        fighter.joinFight(fight, map.get(123));
+
+        assertSame(fight, fighter.fight());
+        assertSame(map.get(123), fighter.cell());
+        assertSame(fighter, fighter.cell().fighter().get());
+        assertTrue(fighter.isOnFight());
     }
 
     @Test
@@ -129,7 +141,7 @@ class PlayerFighterTest extends FightBaseCase {
 
     @Test
     void setReady() {
-        fighter.setFight(fight);
+        fighter.joinFight(fight, map.get(123));
 
         AtomicReference<FighterReadyStateChanged> ref = new AtomicReference<>();
         fight.dispatcher().add(FighterReadyStateChanged.class, ref::set);
@@ -142,7 +154,7 @@ class PlayerFighterTest extends FightBaseCase {
 
     @Test
     void unsetReady() {
-        fighter.setFight(fight);
+        fighter.joinFight(fight, map.get(123));
         fighter.setReady(true);
 
         AtomicReference<FighterReadyStateChanged> ref = new AtomicReference<>();
@@ -183,7 +195,7 @@ class PlayerFighterTest extends FightBaseCase {
     void lifeAfterInitIsNotSyncWithPlayer() throws SQLException, ContainerException {
         gamePlayer().life().set(100);
         assertEquals(100, fighter.life().current());
-        fighter.setFight(fight);
+        fighter.joinFight(fight, map.get(123));
         fighter.init();
 
         gamePlayer().life().set(120);
@@ -192,7 +204,7 @@ class PlayerFighterTest extends FightBaseCase {
 
     @Test
     void dead() {
-        fighter.setFight(fight);
+        fighter.joinFight(fight, map.get(123));
         fighter.init();
         assertFalse(fighter.dead());
 
@@ -254,7 +266,7 @@ class PlayerFighterTest extends FightBaseCase {
         AtomicReference<FighterInitialized> ref = new AtomicReference<>();
         fight.dispatcher().add(FighterInitialized.class, ref::set);
 
-        fighter.setFight(fight);
+        fighter.joinFight(fight, map.get(123));
         fighter.init();
 
         assertSame(fighter, ref.get().fighter());

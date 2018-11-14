@@ -93,9 +93,27 @@ final public class Fight implements Dispatcher, Sender {
     }
 
     /**
-     * Get all fighters
+     * Get all fighters on the fight
      */
     public List<Fighter> fighters() {
+        return teams
+            .stream()
+            .flatMap(fightTeam -> fightTeam.fighters().stream())
+            .filter(Fighter::isOnFight)
+            .collect(Collectors.toList())
+        ;
+    }
+
+    /**
+     * Get all fighters
+     *
+     * @param onlyInitialized true to returns only initialized fighter (is on the fight)
+     */
+    public List<Fighter> fighters(boolean onlyInitialized) {
+        if (onlyInitialized) {
+            return fighters();
+        }
+
         return teams
             .stream()
             .flatMap(fightTeam -> fightTeam.fighters().stream())

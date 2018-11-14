@@ -71,7 +71,7 @@ class PlacementStateTest extends GameBaseCase {
     @Test
     void start() {
         AtomicReference<FightJoined> ref = new AtomicReference<>();
-        PlayerFighter.class.cast(fight.fighters().get(0)).dispatcher().add(FightJoined.class, ref::set);
+        PlayerFighter.class.cast(fight.fighters(false).get(0)).dispatcher().add(FightJoined.class, ref::set);
 
         state.start(fight);
 
@@ -89,8 +89,9 @@ class PlacementStateTest extends GameBaseCase {
         assertEquals(321, fight.fighters().get(1).cell().id());
         assertEquals(fight.team(1), fight.fighters().get(1).team());
         assertEquals(fight, fight.fighters().get(1).fight());
-    }
 
+        assertCount(2, fight.fighters());
+    }
 
     @Test
     void startRandomized() {
