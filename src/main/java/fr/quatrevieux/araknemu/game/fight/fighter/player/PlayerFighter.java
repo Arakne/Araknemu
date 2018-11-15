@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
+import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -166,8 +167,10 @@ final public class PlayerFighter implements Fighter, Sender {
         return team;
     }
 
-    @Override
-    public void join(FightTeam team) {
+    /**
+     * Set the fighter team
+     */
+    public void setTeam(FightTeam team) {
         this.team = team;
     }
 
@@ -182,8 +185,14 @@ final public class PlayerFighter implements Fighter, Sender {
     }
 
     @Override
-    public void setFight(Fight fight) {
+    public void joinFight(Fight fight, FightCell startCell) {
+        if (this.fight != null) {
+            throw new IllegalStateException("A fight is already defined");
+        }
+
         this.fight = fight;
+        this.cell = startCell;
+        startCell.set(this);
     }
 
     @Override
@@ -238,6 +247,11 @@ final public class PlayerFighter implements Fighter, Sender {
     }
 
     @Override
+    public boolean isOnFight() {
+        return fight != null && cell != null;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         return getClass().equals(obj.getClass()) && id() == ((PlayerFighter) obj).id();
     }
@@ -245,5 +259,13 @@ final public class PlayerFighter implements Fighter, Sender {
     @Override
     public int hashCode() {
         return id();
+    }
+
+    /**
+     * Clear fighter data
+     */
+    public void destroy() {
+        this.fight = null;
+        this.attachments.clear();
     }
 }

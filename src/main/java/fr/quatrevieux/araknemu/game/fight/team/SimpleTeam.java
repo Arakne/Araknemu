@@ -25,6 +25,8 @@ final public class SimpleTeam implements FightTeam {
         this.fighters.add(leader);
         this.startPlaces = startPlaces;
         this.number = number;
+
+        leader.setTeam(this);
     }
 
     @Override
@@ -89,6 +91,7 @@ final public class SimpleTeam implements FightTeam {
             throw new JoinFightException(JoinFightError.TEAM_FULL);
         }
 
+        playerFighter.setTeam(this);
         fighters.add(playerFighter);
     }
 

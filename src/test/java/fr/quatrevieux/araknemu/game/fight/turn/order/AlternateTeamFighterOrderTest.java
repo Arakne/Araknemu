@@ -143,6 +143,11 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
+        public boolean isOnFight() {
+            return true;
+        }
+
+        @Override
         public FighterCharacteristics characteristics() {
             return new FighterCharacteristics() {
                 @Override
@@ -173,15 +178,12 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
-        public void join(FightTeam team) {}
-
-        @Override
         public Fight fight() {
             return null;
         }
 
         @Override
-        public void setFight(Fight fight) {}
+        public void joinFight(Fight fight, FightCell startCell) {}
 
         @Override
         public boolean ready() {

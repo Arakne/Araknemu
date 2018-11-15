@@ -128,19 +128,17 @@ public interface Fighter extends Dispatcher {
     public FightTeam team();
 
     /**
-     * Join a team
-     */
-    public void join(FightTeam team);
-
-    /**
      * Get the fight
      */
     public Fight fight();
 
     /**
-     * Set the fight one the fighter
+     * Join the fight
+     *
+     * @param fight Fight to join
+     * @param startCell The start cell
      */
-    public void setFight(Fight fight);
+    public void joinFight(Fight fight, FightCell startCell);
 
     /**
      * Check if the fighter is ready for fight
@@ -163,6 +161,11 @@ public interface Fighter extends Dispatcher {
      * Stop the turn
      */
     public void stop();
+
+    /**
+     * Check if the fighter is on the fight (The fight is set and is on a cell)
+     */
+    public boolean isOnFight();
 
     /**
      * Check if the fighter is the team leader

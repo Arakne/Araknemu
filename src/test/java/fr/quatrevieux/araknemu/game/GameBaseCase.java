@@ -216,6 +216,7 @@ public class GameBaseCase extends DatabaseTestCase {
     @AfterEach
     public void tearDown() throws ContainerException {
         dataSet.destroy();
+        app.database().stop();
     }
 
     public void assertClosed() {

@@ -20,6 +20,11 @@ import fr.quatrevieux.araknemu.game.listener.fight.StartFightWhenAllReady;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.ClearFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterRemoved;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Placement before start fight
  */
@@ -27,15 +32,35 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
     private long startTime;
     private Fight fight;
     private Listener[] listeners;
+    private Map<FightTeam, PlacementCellsGenerator> cellsGenerators;
+
+    final private boolean randomize;
+
+    public PlacementState() {
+        this(true);
+    }
+
+    public PlacementState(boolean randomize) {
+        this.randomize = randomize;
+    }
 
     @Override
     public void start(Fight fight) {
         this.fight = fight;
+        this.cellsGenerators = new HashMap<>();
+
+        for (FightTeam team : fight.teams()) {
+            cellsGenerators.put(
+                team,
+                randomize
+                    ? PlacementCellsGenerator.randomized(fight.map(), team.startPlaces())
+                    : new PlacementCellsGenerator(fight.map(), team.startPlaces())
+            );
+        }
 
         fight.dispatcher().register(this);
         startTime = System.currentTimeMillis();
-
-        fight.fighters().forEach(fighter -> fighter.dispatch(new FightJoined(fight, fighter)));
+        addFighters(fight.fighters(false));
     }
 
     @Override
@@ -103,15 +128,7 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
         }
 
         team.join(fighter);
-
-        FightCell cell = PlacementCellsGenerator.randomized(fight.map(), team.startPlaces()).next();
-
-        fighter.move(cell);
-        fighter.setFight(fight);
-        fighter.join(team);
-
-        fighter.dispatch(new FightJoined(fight, fighter));
-        fight.dispatch(new FighterAdded(fighter));
+        addFighters(Collections.singleton(fighter));
     }
 
     @Override
@@ -152,6 +169,20 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
         }
 
         checkFightValid();
+    }
+
+    private void addFighters(Collection<Fighter> fighters) {
+        for (Fighter fighter : fighters) {
+            fighter.joinFight(fight, cellsGenerators.get(fighter.team()).next());
+        }
+
+        for (Fighter fighter : fighters) {
+            fighter.dispatch(new FightJoined(fight, fighter));
+        }
+
+        for (Fighter fighter : fighters) {
+            fight.dispatch(new FighterAdded(fighter));
+        }
     }
 
     /**

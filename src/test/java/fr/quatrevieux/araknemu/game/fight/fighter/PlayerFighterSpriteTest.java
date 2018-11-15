@@ -34,7 +34,7 @@ class PlayerFighterSpriteTest extends GameBaseCase {
         PlayerFighter fighter = new PlayerFighter(gamePlayer(true));
         sprite = new PlayerFighterSprite(fighter, gamePlayer().spriteInfo());
 
-        fighter.join(new SimpleTeam(fighter, new ArrayList<>(), 0));
+        fighter.setTeam(new SimpleTeam(fighter, new ArrayList<>(), 0));
         fighter.move(map.get(222));
     }
 

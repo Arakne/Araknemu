@@ -59,13 +59,23 @@ class FightTest extends GameBaseCase {
     @Test
     void getters() {
         assertEquals(5, fight.id());
-        assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters());
+        assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters(false));
         assertSame(map, fight.map());
         assertInstanceOf(NullState.class, fight.state());
         assertEquals(teams, fight.teams());
         assertInstanceOf(ChallengeType.class, fight.type());
         assertInstanceOf(EffectsHandler.class, fight.effects());
         assertFalse(fight.active());
+    }
+
+    @Test
+    void fighters() {
+        assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters(false));
+        assertCount(0, fight.fighters(true));
+
+        new PlacementState().start(fight);
+
+        assertEquals(Arrays.asList(fighter1, fighter2), fight.fighters(true));
     }
 
     @Test

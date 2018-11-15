@@ -16,7 +16,7 @@ final public class StopFightSession implements Listener<FightLeaved> {
 
     @Override
     public void on(FightLeaved event) {
-        fighter.setFight(null);
+        fighter.destroy();
 
         fighter.player().stopFighting();
     }

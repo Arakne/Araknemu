@@ -64,8 +64,8 @@ public class FightBaseCase extends GameBaseCase {
             )),
             new StatesFlow(
                 new NullState(),
-                new InitialiseState(false),
-                new PlacementState(),
+                new InitialiseState(),
+                new PlacementState(false),
                 new ActiveState(),
                 new FinishState()
             )

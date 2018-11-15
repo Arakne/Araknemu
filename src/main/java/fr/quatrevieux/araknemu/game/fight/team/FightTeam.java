@@ -67,6 +67,7 @@ public interface FightTeam extends Sender {
 
     /**
      * Add a new fighter to the team
+     * When the fighter join the team it must be linked to the team (Fighter.team() must return the joined team)
      *
      * @param fighter Fighter to add
      *
