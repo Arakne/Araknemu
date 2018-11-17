@@ -28,7 +28,7 @@ class SendNewFighterTest extends FightBaseCase {
 
     @Test
     void onFighterAdded() throws SQLException, ContainerException, JoinFightException {
-        PlayerFighter fighter = new PlayerFighter(makeSimpleGamePlayer(10));
+        PlayerFighter fighter = makePlayerFighter(makeSimpleGamePlayer(10));
         fight.team(0).join(fighter);
         fighter.move(fight.map().get(123));
 

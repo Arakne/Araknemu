@@ -31,7 +31,7 @@ class LeaveExplorationForFightTest extends FightBaseCase {
         listener.on(
             new FightJoined(
                 createFight(false),
-                new PlayerFighter(player.player())
+                makePlayerFighter(player.player())
             )
         );
 

@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.Move;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.MoveFactory;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -27,7 +28,7 @@ class ExplorationActionRegistryTest extends FightBaseCase {
         factory = new ExplorationActionRegistry(
             new MoveFactory(),
             new ChallengeActionsFactories(container.get(FightService.class)),
-            new FightActionsFactories(container.get(FightService.class))
+            new FightActionsFactories(container.get(FightService.class), container.get(FighterFactory.class))
         );
 
         dataSet.pushMaps();

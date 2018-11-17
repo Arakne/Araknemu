@@ -24,7 +24,7 @@ class SendFighterRemovedTest extends FightBaseCase {
 
         fight = createFight();
         listener = new SendFighterRemoved(fight);
-        fighter = new PlayerFighter(makeSimpleGamePlayer(10));
+        fighter = makePlayerFighter(makeSimpleGamePlayer(10));
         fight.state(PlacementState.class).joinTeam(fighter, fight.team(0));
 
         requestStack.clear();

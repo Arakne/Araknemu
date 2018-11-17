@@ -11,6 +11,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.event.FightCreated;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.module.FightModule;
 import fr.quatrevieux.araknemu.game.fight.module.RaulebaqueModule;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
@@ -41,7 +42,7 @@ class FightServiceTest extends FightBaseCase {
             container.get(MapTemplateRepository.class),
             dispatcher = new DefaultListenerAggregate(),
             Arrays.asList(
-                new ChallengeBuilderFactory()
+                new ChallengeBuilderFactory(container.get(FighterFactory.class))
             ),
             Arrays.asList(
                 RaulebaqueModule::new

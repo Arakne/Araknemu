@@ -43,7 +43,7 @@ class LeaveFightTest extends FightBaseCase {
     @Test
     void leaveFightDuringPlacementNotLeader() throws SQLException, ContainerException, JoinFightException {
         Fight fight = createSimpleFight(map);
-        Fighter fighter = new PlayerFighter(gamePlayer());
+        Fighter fighter = makePlayerFighter(gamePlayer());
 
         fight.state(PlacementState.class).joinTeam(fighter, fight.team(0));
         requestStack.clear();
@@ -61,7 +61,7 @@ class LeaveFightTest extends FightBaseCase {
         Fight fight = createFight();
 
         GamePlayer other = makeSimpleGamePlayer(10);
-        PlayerFighter otherFighter = new PlayerFighter(other);
+        PlayerFighter otherFighter = makePlayerFighter(other);
 
         fight.state(PlacementState.class).joinTeam(otherFighter, fight.team(0));
         requestStack.clear();
@@ -79,7 +79,7 @@ class LeaveFightTest extends FightBaseCase {
     @Test
     void leaveFightActiveStateNotLastOfTeam() throws SQLException, ContainerException, JoinFightException {
         Fight fight = createSimpleFight(map);
-        Fighter fighter = new PlayerFighter(gamePlayer());
+        Fighter fighter = makePlayerFighter(gamePlayer());
 
         fight.state(PlacementState.class).joinTeam(fighter, fight.team(0));
         fight.state(PlacementState.class).startFight();
@@ -105,7 +105,7 @@ class LeaveFightTest extends FightBaseCase {
     void leaveFightActiveStateOnCurrentTurnWillStopTheTurn() throws Exception {
         Fight fight = createFight();
 
-        fight.state(PlacementState.class).joinTeam(new PlayerFighter(makeSimpleGamePlayer(10)), fight.team(0));
+        fight.state(PlacementState.class).joinTeam(makePlayerFighter(makeSimpleGamePlayer(10)), fight.team(0));
         fight.state(PlacementState.class).startFight();
         requestStack.clear();
 

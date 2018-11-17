@@ -11,6 +11,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightHandler;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.module.FightModule;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
@@ -45,7 +46,7 @@ class FightHandlerTest extends GameBaseCase {
     void withChallengeFight() throws ContainerException {
         FightHandler<ChallengeBuilder> handler = new FightHandler<>(
             container.get(FightService.class),
-            new ChallengeBuilder(container.get(FightService.class))
+            new ChallengeBuilder(container.get(FightService.class), container.get(FighterFactory.class))
         );
 
         Fight fight = handler.start(
@@ -77,7 +78,7 @@ class FightHandlerTest extends GameBaseCase {
 
         FightHandler<ChallengeBuilder> handler = new FightHandler<>(
             service,
-            new ChallengeBuilder(service)
+            new ChallengeBuilder(service, container.get(FighterFactory.class))
         );
 
         Fight fight = handler.start(
@@ -120,7 +121,7 @@ class FightHandlerTest extends GameBaseCase {
 
         FightHandler<ChallengeBuilder> handler = new FightHandler<>(
             service,
-            new ChallengeBuilder(service)
+            new ChallengeBuilder(service, container.get(FighterFactory.class))
         );
 
         Fight fight = handler.start(
@@ -153,13 +154,13 @@ class FightHandlerTest extends GameBaseCase {
                 container.get(MapTemplateRepository.class),
                 dispatcher,
                 Arrays.asList(
-                    new ChallengeBuilderFactory()
+                    new ChallengeBuilderFactory(container.get(FighterFactory.class))
                 ),
                 Arrays.asList(
                     (fight) -> module
                 )
             ),
-            new ChallengeBuilder(service)
+            new ChallengeBuilder(service, container.get(FighterFactory.class))
         );
 
         Fight fight = handler.start(

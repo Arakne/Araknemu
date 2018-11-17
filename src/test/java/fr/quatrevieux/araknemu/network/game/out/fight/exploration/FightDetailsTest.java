@@ -26,7 +26,7 @@ class FightDetailsTest extends FightBaseCase {
 
         Fight fight = createFight();
 
-        fight.team(0).join(new PlayerFighter(makeSimpleGamePlayer(10)));
+        fight.team(0).join(makePlayerFighter(makeSimpleGamePlayer(10)));
 
         assertEquals("fD1|Bob~50;PLAYER_10~1|Other~1", new FightDetails(fight).toString());
     }

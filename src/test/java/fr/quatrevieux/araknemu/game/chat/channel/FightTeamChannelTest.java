@@ -56,7 +56,7 @@ class FightTeamChannelTest extends FightBaseCase {
     void sendToFight() throws Exception {
         Fight fight = createFight();
 
-        PlayerFighter teammate = new PlayerFighter(makeSimpleGamePlayer(10));
+        PlayerFighter teammate = makePlayerFighter(makeSimpleGamePlayer(10));
         fight.state(PlacementState.class).joinTeam(teammate, player.fighter().team());
         teammate.player().attachFighter(teammate);
 

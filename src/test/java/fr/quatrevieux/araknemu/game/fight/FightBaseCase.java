@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.module.StatesModule;
@@ -84,17 +85,17 @@ public class FightBaseCase extends GameBaseCase {
         return createFight(true);
     }
 
-    public FightTeam createTeam0() {
+    public FightTeam createTeam0() throws ContainerException {
         return new SimpleTeam(
-            new PlayerFighter(player),
+            makePlayerFighter(player),
             Arrays.asList(122, 123, 124),
             0
         );
     }
 
-    public FightTeam createTeam1() {
+    public FightTeam createTeam1() throws ContainerException {
         return new SimpleTeam(
-            new PlayerFighter(other),
+            makePlayerFighter(other),
             Arrays.asList(125, 126, 127),
             0
         );
@@ -145,5 +146,9 @@ public class FightBaseCase extends GameBaseCase {
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
         return makeCastScope(caster, spell, effect, target);
+    }
+
+    public PlayerFighter makePlayerFighter(GamePlayer player) throws ContainerException {
+        return container.get(FighterFactory.class).create(player);
     }
 }

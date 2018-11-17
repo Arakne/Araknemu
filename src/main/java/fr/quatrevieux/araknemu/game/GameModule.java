@@ -55,6 +55,8 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.teleport
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.teleport.TeleportFactory;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
+import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.module.LaunchedSpellsModule;
 import fr.quatrevieux.araknemu.game.fight.module.RaulebaqueModule;
@@ -291,7 +293,10 @@ final public class GameModule implements ContainerModule {
                     new ValidateWalkable()
                 ),
                 new ChallengeActionsFactories(container.get(FightService.class)),
-                new FightActionsFactories(container.get(FightService.class))
+                new FightActionsFactories(
+                    container.get(FightService.class),
+                    container.get(FighterFactory.class)
+                )
             )
         );
 
@@ -437,7 +442,7 @@ final public class GameModule implements ContainerModule {
                 container.get(MapTemplateRepository.class),
                 container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class),
                 Arrays.asList(
-                    new ChallengeBuilderFactory()
+                    new ChallengeBuilderFactory(container.get(FighterFactory.class))
                 ),
                 Arrays.asList(
                     CommonEffectsModule::new,
@@ -445,6 +450,13 @@ final public class GameModule implements ContainerModule {
                     RaulebaqueModule::new,
                     LaunchedSpellsModule::new
                 )
+            )
+        );
+
+        configurator.persist(
+            FighterFactory.class,
+            container -> new DefaultFighterFactory(
+                container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class)
             )
         );
 

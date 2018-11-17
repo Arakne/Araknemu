@@ -26,7 +26,7 @@ class SpellEffectTargetTest extends FightBaseCase {
         caster = player.fighter();
         enemy = other.fighter();
 
-        teammate = new PlayerFighter(makeSimpleGamePlayer(10));
+        teammate = makePlayerFighter(makeSimpleGamePlayer(10));
         fight.state(PlacementState.class).joinTeam(teammate, caster.team());
     }
 

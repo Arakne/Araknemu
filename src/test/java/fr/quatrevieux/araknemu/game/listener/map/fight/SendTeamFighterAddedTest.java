@@ -32,7 +32,7 @@ class SendTeamFighterAddedTest extends FightBaseCase {
         fight = createSimpleFight(map);
         listener = new SendTeamFighterAdded(map);
 
-        fighter = new PlayerFighter(makeSimpleGamePlayer(10));
+        fighter = makePlayerFighter(makeSimpleGamePlayer(10));
 
         requestStack.clear();
     }

@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.fight.builder;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +17,7 @@ class ChallengeBuilderFactoryTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        factory = new ChallengeBuilderFactory();
+        factory = new ChallengeBuilderFactory(container.get(FighterFactory.class));
     }
 
     @Test

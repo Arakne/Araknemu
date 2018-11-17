@@ -129,17 +129,6 @@ class PlayerFighterTest extends FightBaseCase {
     }
 
     @Test
-    void dispatcher() {
-        assertTrue(fighter.dispatcher().has(SendFightJoined.class));
-        assertTrue(fighter.dispatcher().has(ApplyEndFightReward.class));
-        assertTrue(fighter.dispatcher().has(StopFightSession.class));
-        assertTrue(fighter.dispatcher().has(SendFightLeaved.class));
-        assertTrue(fighter.dispatcher().has(LeaveOnDisconnect.class));
-        assertTrue(fighter.dispatcher().has(ApplyLeaveReward.class));
-        assertTrue(fighter.dispatcher().has(SendStats.class));
-    }
-
-    @Test
     void setReady() {
         fighter.joinFight(fight, map.get(123));
 

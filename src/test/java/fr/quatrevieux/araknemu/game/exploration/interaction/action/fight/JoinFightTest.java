@@ -12,6 +12,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
@@ -41,7 +42,7 @@ class JoinFightTest extends FightBaseCase {
         explorationPlayer().join(map);
 
         fight = createSimpleFight(map);
-        action = new JoinFight(explorationPlayer(), fight, fight.team(0));
+        action = new JoinFight(explorationPlayer(), fight, fight.team(0), container.get(FighterFactory.class));
 
         requestStack.clear();
     }
@@ -83,7 +84,7 @@ class JoinFightTest extends FightBaseCase {
     @Test
     void fullTeam() throws SQLException, ContainerException, JoinFightException, InterruptedException {
         for (int i = 10; fight.team(0).fighters().size() < fight.team(0).startPlaces().size(); ++i) {
-            fight.team(0).join(new PlayerFighter(makeSimpleGamePlayer(i)));
+            fight.team(0).join(makePlayerFighter(makeSimpleGamePlayer(i)));
         }
 
         action.start(new ActionQueue());

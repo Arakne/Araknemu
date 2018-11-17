@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
@@ -25,7 +26,7 @@ class ChallengeBuilderTest extends GameBaseCase {
 
         dataSet.pushMaps();
 
-        builder = new ChallengeBuilder(container.get(FightService.class));
+        builder = new ChallengeBuilder(container.get(FightService.class), container.get(FighterFactory.class));
     }
 
     @Test

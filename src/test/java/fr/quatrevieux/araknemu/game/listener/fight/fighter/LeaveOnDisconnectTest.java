@@ -25,7 +25,7 @@ class LeaveOnDisconnectTest extends FightBaseCase {
         super.setUp();
 
         fight = createFight();
-        fighter = new PlayerFighter(makeSimpleGamePlayer(10));
+        fighter = makePlayerFighter(makeSimpleGamePlayer(10));
         fight.state(PlacementState.class).joinTeam(fighter, fight.team(0));
 
         listener = new LeaveOnDisconnect(fighter);

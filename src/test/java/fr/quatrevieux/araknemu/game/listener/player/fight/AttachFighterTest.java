@@ -26,7 +26,7 @@ class AttachFighterTest extends FightBaseCase {
     @Test
     void onFightJoined() throws Exception {
         Fight fight = createFight(false);
-        PlayerFighter fighter = new PlayerFighter(gamePlayer());
+        PlayerFighter fighter = makePlayerFighter(gamePlayer());
 
         listener.on(new FightJoined(fight, fighter));
 

@@ -2,9 +2,9 @@ package fr.quatrevieux.araknemu.game.fight.fighter.player;
 
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
-import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -12,14 +12,10 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
-import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
-import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
-import fr.quatrevieux.araknemu.game.item.type.Weapon;
-import fr.quatrevieux.araknemu.game.listener.fight.SendFightJoined;
-import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
-import fr.quatrevieux.araknemu.game.listener.fight.fighter.*;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
+import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.WeaponSlot;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
@@ -52,14 +48,6 @@ final public class PlayerFighter implements Fighter, Sender {
     public PlayerFighter(GamePlayer player) {
         this.player = player;
         this.properties = new PlayerFighterProperties(this, player);
-
-        dispatcher.add(new SendFightJoined(this));
-        dispatcher.add(new ApplyEndFightReward(this));
-        dispatcher.add(new StopFightSession(this));
-        dispatcher.add(new SendFightLeaved(this));
-        dispatcher.add(new LeaveOnDisconnect(this));
-        dispatcher.add(new ApplyLeaveReward(this));
-        dispatcher.add(new SendStats(this));
     }
 
     @Override

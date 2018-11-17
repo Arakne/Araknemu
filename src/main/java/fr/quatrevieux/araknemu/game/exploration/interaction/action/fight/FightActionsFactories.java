@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ExplorationActionRegistry;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 
 /**
@@ -12,9 +13,11 @@ import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
  */
 final public class FightActionsFactories implements ExplorationActionRegistry.SelfRegisterable {
     final private FightService fightService;
+    final private FighterFactory fighterFactory;
 
-    public FightActionsFactories(FightService fightService) {
+    public FightActionsFactories(FightService fightService, FighterFactory fighterFactory) {
         this.fightService = fightService;
+        this.fighterFactory = fighterFactory;
     }
 
     @Override
@@ -28,7 +31,8 @@ final public class FightActionsFactories implements ExplorationActionRegistry.Se
         return new JoinFight(
             player,
             fight,
-            findTeamById(fight, Integer.parseInt(arguments[1]))
+            findTeamById(fight, Integer.parseInt(arguments[1])),
+            fighterFactory
         );
     }
 

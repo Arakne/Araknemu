@@ -26,6 +26,8 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.MapTriggerServi
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.ActionFactoryRegistry;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.CellActionFactory;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.*;
 import fr.quatrevieux.araknemu.game.item.factory.DefaultItemFactory;
@@ -92,6 +94,7 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(MapTriggerService.class, container.get(MapTriggerService.class));
         assertInstanceOf(ActionFactoryRegistry.class, container.get(CellActionFactory.class));
         assertInstanceOf(SpellEffectService.class, container.get(SpellEffectService.class));
+        assertInstanceOf(DefaultFighterFactory.class, container.get(FighterFactory.class));
 
         assertSame(
             container.get(ListenerAggregate.class),

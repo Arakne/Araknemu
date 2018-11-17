@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.event.FightCancelled;
 import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
@@ -39,7 +40,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PlacementStateTest extends GameBaseCase {
+class PlacementStateTest extends FightBaseCase {
     private Fight fight;
     private PlacementState state;
     private PlayerFighter fighter;
@@ -49,15 +50,13 @@ class PlacementStateTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushMaps();
-
         fight = new Fight(
             1,
             new ChallengeType(),
             container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
             new ArrayList<>(Arrays.asList(
-                new SimpleTeam(fighter = new PlayerFighter(gamePlayer(true)), Arrays.asList(123, 222), 0),
-                new SimpleTeam(new PlayerFighter(makeOtherPlayer()), Arrays.asList(321), 1)
+                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(123, 222), 0),
+                new SimpleTeam(makePlayerFighter(other), Arrays.asList(321), 1)
             )),
             new StatesFlow(
                 new NullState(),
@@ -133,7 +132,7 @@ class PlacementStateTest extends GameBaseCase {
     }
 
     @Test
-    void changePlaceSuccess() throws InterruptedException {
+    void changePlaceSuccess() {
         state.start(fight);
 
         state.changePlace(fighter, fight.map().get(222));
@@ -175,7 +174,7 @@ class PlacementStateTest extends GameBaseCase {
         AtomicReference<FighterAdded> ref = new AtomicReference<>();
         fight.dispatcher().add(FighterAdded.class, ref::set);
 
-        PlayerFighter newFighter = new PlayerFighter(makeSimpleGamePlayer(5));
+        PlayerFighter newFighter = makePlayerFighter(makeSimpleGamePlayer(5));
         requestStack.clear();
 
         state.joinTeam(newFighter, fight.team(0));
@@ -202,7 +201,7 @@ class PlacementStateTest extends GameBaseCase {
         AtomicReference<FighterAdded> ref = new AtomicReference<>();
         fight.dispatcher().add(FighterAdded.class, ref::set);
 
-        PlayerFighter newFighter = new PlayerFighter(makeSimpleGamePlayer(5));
+        PlayerFighter newFighter = makePlayerFighter(makeSimpleGamePlayer(5));
 
         assertThrows(JoinFightException.class, () -> state.joinTeam(newFighter, fight.team(0)));
         assertNull(ref.get());
@@ -211,7 +210,7 @@ class PlacementStateTest extends GameBaseCase {
 
     @Test
     void leaveBadState() throws SQLException, ContainerException, JoinFightException {
-        PlayerFighter newFighter = new PlayerFighter(makeSimpleGamePlayer(5));
+        PlayerFighter newFighter = makePlayerFighter(makeSimpleGamePlayer(5));
 
         fight.nextState();
         state.joinTeam(newFighter, fight.team(0));
@@ -228,7 +227,7 @@ class PlacementStateTest extends GameBaseCase {
 
     @Test
     void leaveNotLeader() throws SQLException, ContainerException, JoinFightException {
-        PlayerFighter newFighter = new PlayerFighter(makeSimpleGamePlayer(5));
+        PlayerFighter newFighter = makePlayerFighter(makeSimpleGamePlayer(5));
 
         fight.nextState();
         state.joinTeam(newFighter, fight.team(0));
@@ -247,7 +246,7 @@ class PlacementStateTest extends GameBaseCase {
 
     @Test
     void leaveLeaderWillDissolveTeam() throws SQLException, ContainerException, JoinFightException {
-        PlayerFighter newFighter = new PlayerFighter(makeSimpleGamePlayer(5));
+        PlayerFighter newFighter = makePlayerFighter(makeSimpleGamePlayer(5));
 
         fight.nextState();
         state.joinTeam(newFighter, fight.team(0));

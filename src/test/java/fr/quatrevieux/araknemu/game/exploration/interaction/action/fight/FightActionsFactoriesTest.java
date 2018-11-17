@@ -9,6 +9,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +21,7 @@ class FightActionsFactoriesTest extends FightBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        factory = new ExplorationActionRegistry(new FightActionsFactories(container.get(FightService.class)));
+        factory = new ExplorationActionRegistry(new FightActionsFactories(container.get(FightService.class), container.get(FighterFactory.class)));
 
         dataSet.pushMaps();
     }

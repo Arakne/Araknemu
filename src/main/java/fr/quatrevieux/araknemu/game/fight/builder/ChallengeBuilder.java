@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.fight.builder;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
@@ -19,12 +20,14 @@ import java.util.List;
  */
 final public class ChallengeBuilder implements FightBuilder {
     final private FightService service;
+    final private FighterFactory fighterFactory;
 
     final private List<PlayerFighter> challengers = new ArrayList<>();
     private FightMap map;
 
-    public ChallengeBuilder(FightService service) {
+    public ChallengeBuilder(FightService service, FighterFactory fighterFactory) {
         this.service = service;
+        this.fighterFactory = fighterFactory;
     }
 
     @Override
@@ -50,7 +53,7 @@ final public class ChallengeBuilder implements FightBuilder {
      * Add new fighter
      */
     public ChallengeBuilder fighter(GamePlayer player) {
-        challengers.add(new PlayerFighter(player));
+        challengers.add(fighterFactory.create(player));
 
         return this;
     }

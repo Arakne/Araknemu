@@ -19,7 +19,7 @@ class SendFighterReadyStateTest extends FightBaseCase {
 
         dataSet.pushMaps();
 
-        fighter = new PlayerFighter(gamePlayer(true));
+        fighter = makePlayerFighter(gamePlayer(true));
         Fight fight = createFight();
 
         listener = new SendFighterReadyState(fight);

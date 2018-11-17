@@ -62,7 +62,7 @@ class RaulebaqueHandlerTest extends FightBaseCase {
         caster.move(fight.map().get(125));
         other.fighter().move(fight.map().get(325));
 
-        Fighter newFighter = new PlayerFighter(makeSimpleGamePlayer(10));
+        Fighter newFighter = makePlayerFighter(makeSimpleGamePlayer(10));
         newFighter.move(fight.map().get(235));
         fight.team(0).join(newFighter);
 
@@ -84,7 +84,7 @@ class RaulebaqueHandlerTest extends FightBaseCase {
         caster.move(fight.map().get(125));
         other.fighter().move(fight.map().get(325));
 
-        Fighter newFighter = new PlayerFighter(makeSimpleGamePlayer(10));
+        Fighter newFighter = makePlayerFighter(makeSimpleGamePlayer(10));
         newFighter.move(fight.map().get(123));
         fight.team(0).join(newFighter);
 
