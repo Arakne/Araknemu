@@ -7,6 +7,8 @@ import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.event.ExplorationPlayerCreated;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.PlayerFighterCreated;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterAccessories;
 import fr.quatrevieux.araknemu.game.listener.map.SendAccessories;
 import fr.quatrevieux.araknemu.game.listener.player.inventory.*;
 import fr.quatrevieux.araknemu.game.listener.player.inventory.itemset.ApplyItemSetSpecialEffects;
@@ -89,6 +91,18 @@ final public class InventoryService implements EventsSubscriber {
                 @Override
                 public Class<ExplorationPlayerCreated> event() {
                     return ExplorationPlayerCreated.class;
+                }
+            },
+
+            new Listener<PlayerFighterCreated>() {
+                @Override
+                public void on(PlayerFighterCreated event) {
+                    event.fighter().dispatcher().add(new SendFighterAccessories(event.fighter()));
+                }
+
+                @Override
+                public Class<PlayerFighterCreated> event() {
+                    return PlayerFighterCreated.class;
                 }
             }
         };

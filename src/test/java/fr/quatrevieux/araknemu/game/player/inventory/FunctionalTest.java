@@ -4,20 +4,21 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
-import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.player.inventory.event.EquipmentChanged;
-import fr.quatrevieux.araknemu.game.listener.player.SendStats;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.BadLevelException;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
+import fr.quatrevieux.araknemu.game.listener.player.SendStats;
 import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
+import fr.quatrevieux.araknemu.game.player.inventory.event.EquipmentChanged;
 import fr.quatrevieux.araknemu.game.player.inventory.itemset.PlayerItemSet;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.AmuletSlot;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.BootsSlot;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.HelmetSlot;
 import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
-import fr.quatrevieux.araknemu.game.item.Item;
-import fr.quatrevieux.araknemu.game.item.inventory.exception.BadLevelException;
-import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
-import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
 import fr.quatrevieux.araknemu.network.game.out.object.*;
 import fr.quatrevieux.araknemu.network.game.out.spell.SpellBoost;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +31,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FunctionalTest extends GameBaseCase {
+public class FunctionalTest extends FightBaseCase {
     private PlayerInventory inventory;
     private ItemService itemService;
 
@@ -45,7 +46,7 @@ public class FunctionalTest extends GameBaseCase {
         ;
 
         itemService = container.get(ItemService.class);
-        inventory = gamePlayer(true).inventory();
+        inventory = player.inventory();
         requestStack.clear();
 
         // remove indirect inventory listeners
@@ -484,5 +485,44 @@ public class FunctionalTest extends GameBaseCase {
 
         requestStack.assertOne(new SpellBoost(3, SpellsBoosts.Modifier.DAMAGE, 0));
         assertEquals(0, gamePlayer().spells().boosts().modifiers(3).damage());
+    }
+
+    @Test
+    void equipAccessoryOnFightDuringPlacement() throws Exception {
+        createFight();
+
+        InventoryEntry entry = inventory.add(itemService.create(2411, true));
+        requestStack.clear();
+
+        entry.move(HelmetSlot.SLOT_ID, 1);
+
+        requestStack.assertAll(
+            new UpdateItemSet(inventory.itemSets().get(entry.item().set().get())),
+            new SpriteAccessories(gamePlayer().id(), inventory.accessories()),
+            new ItemPosition(entry)
+        );
+
+        assertEquals(190, player.fighter().characteristics().get(Characteristic.INTELLIGENCE));
+        assertEquals(90, player.fighter().characteristics().get(Characteristic.STRENGTH));
+    }
+
+    @Test
+    void unequipAccessoryOnFightDuringPlacement() throws Exception {
+        InventoryEntry entry = inventory.add(itemService.create(2411, true));
+        entry.move(HelmetSlot.SLOT_ID, 1);
+
+        createFight();
+        requestStack.clear();
+
+        entry.move(ItemEntry.DEFAULT_POSITION, 1);
+
+        requestStack.assertAll(
+            new UpdateItemSet(inventory.itemSets().get(entry.item().set().get())),
+            new SpriteAccessories(gamePlayer().id(), inventory.accessories()),
+            new ItemPosition(entry)
+        );
+
+        assertEquals(150, player.fighter().characteristics().get(Characteristic.INTELLIGENCE));
+        assertEquals(50, player.fighter().characteristics().get(Characteristic.STRENGTH));
     }
 }

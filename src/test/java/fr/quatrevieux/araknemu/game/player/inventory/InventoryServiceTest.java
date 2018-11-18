@@ -11,7 +11,10 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.event.ExplorationPlayerCreated;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.PlayerFighterCreated;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterAccessories;
 import fr.quatrevieux.araknemu.game.listener.map.SendAccessories;
 import fr.quatrevieux.araknemu.game.listener.player.inventory.*;
 import fr.quatrevieux.araknemu.game.listener.player.inventory.itemset.ApplyItemSetSpecialEffects;
@@ -98,5 +101,16 @@ class InventoryServiceTest extends GameBaseCase {
         dispatcher.dispatch(new ExplorationPlayerCreated(player));
 
         assertTrue(player.dispatcher().has(SendAccessories.class));
+    }
+
+    @Test
+    void playerFighterCreatedListener() throws Exception {
+        PlayerFighter fighter = new PlayerFighter(gamePlayer());
+
+        ListenerAggregate dispatcher = new DefaultListenerAggregate();
+        dispatcher.register(service);
+        dispatcher.dispatch(new PlayerFighterCreated(fighter));
+
+        assertTrue(fighter.dispatcher().has(SendFighterAccessories.class));
     }
 }
