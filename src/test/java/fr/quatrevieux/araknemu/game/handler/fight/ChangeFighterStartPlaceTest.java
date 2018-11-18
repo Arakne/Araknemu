@@ -1,16 +1,9 @@
 package fr.quatrevieux.araknemu.game.handler.fight;
 
-import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.fight.state.InitialiseState;
-import fr.quatrevieux.araknemu.game.fight.state.NullState;
-import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
-import fr.quatrevieux.araknemu.game.fight.state.StatesFlow;
-import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
-import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
+import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.in.fight.FighterChangePlace;
 import fr.quatrevieux.araknemu.network.game.out.fight.ChangeFighterPlaceError;
@@ -18,11 +11,11 @@ import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class ChangeFighterStartPlaceTest extends GameBaseCase {
+class ChangeFighterStartPlaceTest extends FightBaseCase {
     private ChangeFighterStartPlace handler;
     private Fight fight;
     private PlayerFighter fighter;
@@ -33,29 +26,14 @@ class ChangeFighterStartPlaceTest extends GameBaseCase {
         super.setUp();
 
         dataSet.pushMaps();
-
-        fight = new Fight(
-            1,
-            new ChallengeType(),
-            container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
-            Arrays.asList(
-                new SimpleTeam(fighter = new PlayerFighter(gamePlayer(true)), Arrays.asList(123, 222), 0),
-                new SimpleTeam(new PlayerFighter(makeOtherPlayer()), Arrays.asList(321), 1)
-            ),
-            new StatesFlow(
-                new NullState(),
-                new InitialiseState(),
-                new PlacementState(false)
-            )
-        );
-
-        fight.nextState();
-
         handler = new ChangeFighterStartPlace();
     }
 
     @Test
     void handleError() throws Exception {
+        fight = createFight();
+        fighter = player.fighter();
+
         try {
             handler.handle(session, new FighterChangePlace(256));
             fail("ErrorPacket must be thrown");
@@ -69,10 +47,29 @@ class ChangeFighterStartPlaceTest extends GameBaseCase {
 
     @Test
     void handleSuccess() throws Exception {
-        handler.handle(session, new FighterChangePlace(222));
+        fight = createFight();
+        fighter = player.fighter();
+
+        handler.handle(session, new FighterChangePlace(123));
 
         requestStack.assertLast(new FighterPositions(fight.fighters()));
 
-        assertEquals(222, fighter.cell().id());
+        assertEquals(123, fighter.cell().id());
+    }
+
+    @Test
+    void functionalNotInFight() {
+        assertThrows(CloseImmediately.class, () -> handlePacket(new FighterChangePlace(123)));
+    }
+
+    @Test
+    void functionalSuccess() throws Exception {
+        fight = createFight();
+        fighter = player.fighter();
+
+        handlePacket(new FighterChangePlace(123));
+        Thread.sleep(5);
+
+        assertEquals(123, fighter.cell().id());
     }
 }

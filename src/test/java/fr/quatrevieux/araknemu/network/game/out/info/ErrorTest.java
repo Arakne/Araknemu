@@ -60,4 +60,9 @@ class ErrorTest {
     void cantCast() {
         assertEquals("Im1175;", Error.cantCast().toString());
     }
+
+    @Test
+    void cantDoDuringFight() {
+        assertEquals("Im191;", Error.cantDoDuringFight().toString());
+    }
 }

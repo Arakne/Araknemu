@@ -12,6 +12,12 @@ final public class ExploringOrFightingSwitcher<P extends Packet> implements Pack
     final private PacketHandler<GameSession, P> exploringHandler;
     final private PacketHandler<GameSession, P> fightingHandler;
 
+    /**
+     * ExploringOrFightingSwitcher constructor
+     *
+     * @param exploringHandler The handler to use when client is in exploration
+     * @param fightingHandler The handler to use when client is in exploration
+     */
     public ExploringOrFightingSwitcher(PacketHandler<GameSession, P> exploringHandler, PacketHandler<GameSession, P> fightingHandler) {
         this.exploringHandler = exploringHandler;
         this.fightingHandler = fightingHandler;

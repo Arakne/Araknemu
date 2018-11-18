@@ -1,20 +1,23 @@
 package fr.quatrevieux.araknemu.game.handler.object;
 
-import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectDeleteRequest;
+import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import fr.quatrevieux.araknemu.network.game.out.object.DestroyItem;
 import fr.quatrevieux.araknemu.network.game.out.object.ItemDeletionError;
 import fr.quatrevieux.araknemu.network.game.out.object.ItemQuantity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
-class RemoveObjectTest extends GameBaseCase {
+class RemoveObjectTest extends FightBaseCase {
     private RemoveObject handler;
     private InventoryEntry entry;
 
@@ -60,6 +63,25 @@ class RemoveObjectTest extends GameBaseCase {
 
         requestStack.assertLast(
             new ItemQuantity(entry)
+        );
+    }
+
+    @Test
+    void functionalNotAllowedOnActiveFight() throws Exception {
+        Fight fight = createFight();
+        fight.start();
+
+        assertErrorPacket(Error.cantDoDuringFight(), () -> handlePacket(new ObjectDeleteRequest(entry.id(), 10)));
+    }
+
+    @Test
+    void functionalSuccessDuringPlacement() throws Exception {
+        createFight();
+
+        handlePacket(new ObjectDeleteRequest(entry.id(), 10));
+
+        requestStack.assertLast(
+            new DestroyItem(entry)
         );
     }
 }

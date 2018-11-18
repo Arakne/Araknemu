@@ -101,4 +101,11 @@ final public class Error extends InformationMessage {
     static public Error cantCast() {
         return new Error(175);
     }
+
+    /**
+     * Cannot perform the action during fight
+     */
+    static public Error cantDoDuringFight() {
+        return new Error(91);
+    }
 }

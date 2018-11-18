@@ -1,5 +1,9 @@
 package fr.quatrevieux.araknemu._test;
 
+import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.network.exception.WritePacket;
+import org.junit.jupiter.api.function.Executable;
+
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -59,5 +63,16 @@ public class TestCase {
     public void assertBetween(int min, int max, int value) {
         assertTrue(value <= max, "Expected between " + min + " and " + max + " but get " + value);
         assertTrue(value >= min, "Expected between " + min + " and " + max + " but get " + value);
+    }
+
+    public void assertErrorPacket(Object excpectedPacket, Executable executable) {
+        try {
+            executable.execute();
+
+            fail("Expects an ErrorPacket");
+        } catch (Throwable e) {
+            assertInstanceOf(WritePacket.class, e);
+            assertEquals(excpectedPacket.toString(), WritePacket.class.cast(e).packet().toString(), "Invalid packet");
+        }
     }
 }

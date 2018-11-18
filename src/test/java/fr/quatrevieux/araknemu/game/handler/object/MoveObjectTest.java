@@ -1,11 +1,13 @@
 package fr.quatrevieux.araknemu.game.handler.object;
 
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
-import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.MantleSlot;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectMoveRequest;
+import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import fr.quatrevieux.araknemu.network.game.out.object.AddItemError;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  *
  */
-class MoveObjectTest extends GameBaseCase {
+class MoveObjectTest extends FightBaseCase {
     private MoveObject handler;
 
     private ItemService itemService;
@@ -74,5 +76,23 @@ class MoveObjectTest extends GameBaseCase {
         requestStack.assertLast(
             new AddItemError(AddItemError.Error.TOO_LOW_LEVEL)
         );
+    }
+
+    @Test
+    void functionalNotAllowedOnActiveFight() throws Exception {
+        Fight fight = createFight();
+        fight.start();
+
+        assertErrorPacket(Error.cantDoDuringFight(), () -> handlePacket(new ObjectMoveRequest(1, -1, 1)));
+    }
+
+    @Test
+    void functionalSuccessDuringPlacement() throws Exception {
+        createFight();
+
+        handlePacket(new ObjectMoveRequest(1, -1, 1));
+
+        assertEquals(-1, gamePlayer().inventory().get(1).position());
+        assertEquals(1, gamePlayer().inventory().get(1).quantity());
     }
 }

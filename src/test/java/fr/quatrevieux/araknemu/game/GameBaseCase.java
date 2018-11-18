@@ -60,6 +60,8 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharac
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+import fr.quatrevieux.araknemu.network.in.Dispatcher;
+import fr.quatrevieux.araknemu.network.in.Packet;
 import org.apache.mina.core.filterchain.IoFilterAdapter;
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IoSession;
@@ -415,5 +417,9 @@ public class GameBaseCase extends DatabaseTestCase {
         session.setPlayer(gp);
 
         return gp;
+    }
+
+    public void handlePacket(Packet packet) throws Exception {
+        container.get(Dispatcher.class).dispatch(session, packet);
     }
 }
