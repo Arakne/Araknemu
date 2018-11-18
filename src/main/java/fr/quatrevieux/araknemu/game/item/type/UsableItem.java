@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.item.type;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.GameItemSet;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
@@ -100,6 +101,28 @@ final public class UsableItem implements Item {
     public void applyToTarget(ExplorationPlayer player, ExplorationPlayer target, int cell) {
         for (UseEffect effect : useEffects) {
             effect.applyToTarget(player, target, cell);
+        }
+    }
+
+    /**
+     * Check if the fighter can use the item
+     */
+    public boolean checkFighter(PlayerFighter fighter) {
+        for (UseEffect effect : useEffects) {
+            if (!effect.checkFighter(fighter)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Apply the item use effects to the fighter
+     */
+    public void applyToFighter(PlayerFighter fighter) {
+        for (UseEffect effect : useEffects) {
+            effect.applyToFighter(fighter);
         }
     }
 

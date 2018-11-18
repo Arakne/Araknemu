@@ -15,6 +15,7 @@ class NullEffectHandlerTest extends TestCase {
     void check() {
         assertTrue(NullEffectHandler.INSTANCE.check(null, null));
         assertTrue(NullEffectHandler.INSTANCE.checkTarget(null, null, null, 0));
+        assertTrue(NullEffectHandler.INSTANCE.checkFighter(null, null));
     }
 
     @Test

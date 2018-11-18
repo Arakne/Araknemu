@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.item.effect.use;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
 
 /**
@@ -22,6 +23,11 @@ final public class NullEffectHandler implements UseEffectHandler {
 
     @Override
     public boolean check(UseEffect effect, ExplorationPlayer caster) {
+        return true;
+    }
+
+    @Override
+    public boolean checkFighter(UseEffect effect, PlayerFighter fighter) {
         return true;
     }
 }

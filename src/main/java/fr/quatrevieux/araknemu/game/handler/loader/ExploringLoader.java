@@ -25,7 +25,6 @@ final public class ExploringLoader extends AbstractLoader {
         return new PacketHandler[] {
             new LoadExtraInfo(container.get(FightService.class)),
             new CancelGameAction(),
-            new UseObject(),
             new ListFights(container.get(FightService.class)),
             new ShowFightDetails(container.get(FightService.class))
         };

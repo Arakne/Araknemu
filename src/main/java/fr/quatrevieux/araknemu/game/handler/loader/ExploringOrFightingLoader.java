@@ -4,11 +4,14 @@ import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionFactory;
 import fr.quatrevieux.araknemu.game.handler.EnsureFighting;
+import fr.quatrevieux.araknemu.game.handler.EnsureInactiveFight;
 import fr.quatrevieux.araknemu.game.handler.ExploringOrFightingSwitcher;
 import fr.quatrevieux.araknemu.game.handler.fight.PerformTurnAction;
 import fr.quatrevieux.araknemu.game.handler.fight.TerminateTurnAction;
+import fr.quatrevieux.araknemu.game.handler.fight.UseObjectBeforeStart;
 import fr.quatrevieux.araknemu.game.handler.game.EndGameAction;
 import fr.quatrevieux.araknemu.game.handler.game.ValidateGameAction;
+import fr.quatrevieux.araknemu.game.handler.object.UseObject;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.in.PacketHandler;
 
@@ -26,7 +29,11 @@ final public class ExploringOrFightingLoader implements Loader {
             new ExploringOrFightingSwitcher(
                 new EndGameAction(),
                 new EnsureFighting(new TerminateTurnAction())
-            )
+            ),
+            new ExploringOrFightingSwitcher(
+                new UseObject(),
+                new EnsureInactiveFight(new UseObjectBeforeStart())
+            ),
         };
     }
 }

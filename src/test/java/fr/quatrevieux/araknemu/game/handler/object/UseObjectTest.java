@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
+import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectUseRequest;
 import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
@@ -95,5 +96,26 @@ class UseObjectTest extends GameBaseCase {
             new ItemQuantity(entry)
         );
         assertEquals(99, entry.quantity());
+    }
+
+    @Test
+    void functionalSuccess() throws Exception {
+        InventoryEntry entry = explorationPlayer().inventory().add(container.get(ItemService.class).create(800));
+        requestStack.clear();
+
+        handlePacket(new ObjectUseRequest(entry.id(), 0, 0, false));
+
+        assertEquals(1, explorationPlayer().characteristics().base().get(Characteristic.AGILITY));
+    }
+
+    @Test
+    void functionalErrorNotExploring() throws Exception {
+        gamePlayer().stopExploring();
+
+        InventoryEntry entry = gamePlayer().inventory().add(container.get(ItemService.class).create(800));
+        requestStack.clear();
+
+        assertThrows(CloseImmediately.class, () -> handlePacket(new ObjectUseRequest(entry.id(), 0, 0, false)));
+        assertEquals(1, entry.quantity());
     }
 }

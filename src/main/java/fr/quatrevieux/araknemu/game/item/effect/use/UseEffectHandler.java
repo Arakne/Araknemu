@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.item.effect.use;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
 
 /**
@@ -46,4 +47,24 @@ public interface UseEffectHandler {
      * @return True if the effect can be applied or false
      */
     public boolean checkTarget(UseEffect effect, ExplorationPlayer caster, ExplorationPlayer target, int cell);
+
+    /**
+     * Check if the effect can be used by a fighter during placement
+     *
+     * @param effect The effect to apply
+     * @param fighter The fighter The fighter to check
+     *
+     * @return True if the effect can be applied or false
+     */
+    default public boolean checkFighter(UseEffect effect, PlayerFighter fighter) {
+        return false;
+    }
+
+    /**
+     * Apply the item effect to the fighter during placement
+     *
+     * @param effect The effect to apply
+     * @param fighter The fighter
+     */
+    default public void applyToFighter(UseEffect effect, PlayerFighter fighter) {}
 }

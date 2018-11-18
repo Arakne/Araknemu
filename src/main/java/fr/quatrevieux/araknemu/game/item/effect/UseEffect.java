@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.item.effect;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.effect.use.UseEffectHandler;
 
 import java.util.Arrays;
@@ -73,6 +74,13 @@ final public class UseEffect implements ItemEffect {
     }
 
     /**
+     * Check if the fighter can use the effect
+     */
+    public boolean checkFighter(PlayerFighter fighter) {
+        return handler.checkFighter(this, fighter);
+    }
+
+    /**
      * Apply the effect to the player
      */
     public void apply(ExplorationPlayer caster) {
@@ -84,6 +92,13 @@ final public class UseEffect implements ItemEffect {
      */
     public void applyToTarget(ExplorationPlayer caster, ExplorationPlayer target, int cell) {
         handler.applyToTarget(this, caster, target, cell);
+    }
+
+    /**
+     * Apply the effect to the fighter
+     */
+    public void applyToFighter(PlayerFighter fighter) {
+        handler.applyToFighter(this, fighter);
     }
 
     @Override

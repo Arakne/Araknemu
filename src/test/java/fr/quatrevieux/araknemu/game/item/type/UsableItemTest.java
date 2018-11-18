@@ -4,8 +4,11 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.out.info.Information;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -102,6 +105,28 @@ class UsableItemTest extends GameBaseCase {
     }
 
     @Test
+    void checkOnFighter() throws Exception {
+        UsableItem item = (UsableItem) container.get(ItemService.class).create(468);
+
+        GamePlayer target = makeOtherPlayer();
+        target.life().set(10);
+
+        PlayerFighter fighter = container.get(FighterFactory.class).create(target);
+
+        assertTrue(item.checkFighter(fighter));
+    }
+
+    @Test
+    void checkOnFighterNotValid() throws Exception {
+        UsableItem item = (UsableItem) container.get(ItemService.class).create(2240);
+
+        GamePlayer target = makeOtherPlayer();
+        PlayerFighter fighter = container.get(FighterFactory.class).create(target);
+
+        assertFalse(item.checkFighter(fighter));
+    }
+
+    @Test
     void applyOnSelf() throws ContainerException, SQLException {
         UsableItem item = (UsableItem) container.get(ItemService.class).create(800);
 
@@ -120,5 +145,19 @@ class UsableItemTest extends GameBaseCase {
 
         item.applyToTarget(explorationPlayer(), target, 0);
         assertEquals(20, target.life().current());
+    }
+
+    @Test
+    void applyOnFighter() throws Exception {
+        UsableItem item = (UsableItem) container.get(ItemService.class).create(468);
+
+        GamePlayer target = makeOtherPlayer();
+        target.life().set(10);
+
+        PlayerFighter fighter = container.get(FighterFactory.class).create(target);
+
+        item.applyToFighter(fighter);
+        assertEquals(20, target.life().current());
+        assertEquals(20, fighter.life().current());
     }
 }

@@ -6,7 +6,11 @@ import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.effect.use.AddCharacteristicEffect;
+import fr.quatrevieux.araknemu.game.item.effect.use.AddLifeEffect;
 import fr.quatrevieux.araknemu.game.item.effect.use.FireworkEffect;
 import fr.quatrevieux.araknemu.game.item.effect.use.NullEffectHandler;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
@@ -122,5 +126,18 @@ class UseEffectTest extends GameBaseCase {
 
         assertTrue(effect.checkTarget(null, null, 150));
         assertFalse(effect.check(explorationPlayer()));
+        assertFalse(effect.checkFighter(container.get(FighterFactory.class).create(gamePlayer())));
+    }
+
+    @Test
+    void applyToFighter() throws SQLException, ContainerException {
+        gamePlayer().life().set(10);
+        PlayerFighter fighter = container.get(FighterFactory.class).create(gamePlayer());
+
+        UseEffect effect = new UseEffect(new AddLifeEffect(), Effect.NULL1, new int[] {10, 0, 0});
+
+        effect.applyToFighter(fighter);
+
+        assertEquals(20, fighter.life().current());
     }
 }

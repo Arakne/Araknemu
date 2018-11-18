@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.item.effect.use;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
 import fr.quatrevieux.araknemu.util.RandomUtil;
 
@@ -29,6 +30,18 @@ final public class AddLifeEffect implements UseEffectHandler {
 
     @Override
     public boolean checkTarget(UseEffect effect, ExplorationPlayer caster, ExplorationPlayer target, int cell) {
-        return target != null && check(effect, target);
+        return target != null;
+    }
+
+    @Override
+    public boolean checkFighter(UseEffect effect, PlayerFighter fighter) {
+        return !fighter.life().isFull();
+    }
+
+    @Override
+    public void applyToFighter(UseEffect effect, PlayerFighter fighter) {
+        int value = random.rand(effect.arguments());
+
+        fighter.player().life().add(value);
     }
 }

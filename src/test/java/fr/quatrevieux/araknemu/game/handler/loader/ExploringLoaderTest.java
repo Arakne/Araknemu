@@ -32,7 +32,6 @@ class ExploringLoaderTest extends LoaderTestCase {
 
         assertHandlePacket(AskExtraInfo.class, handlers);
         assertHandlePacket(GameActionCancel.class, handlers);
-        assertHandlePacket(ObjectUseRequest.class, handlers);
         assertHandlePacket(ListFightsRequest.class, handlers);
         assertHandlePacket(AskFightDetails.class, handlers);
     }
