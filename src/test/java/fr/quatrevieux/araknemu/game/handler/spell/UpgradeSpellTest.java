@@ -43,7 +43,7 @@ class UpgradeSpellTest extends GameBaseCase {
 
     @Test
     void upgradeNotEnoughPoints() throws Exception {
-        gamePlayer().spells().setUpgradePoints(0);
+        gamePlayer().properties().spells().setUpgradePoints(0);
 
         try {
             handler.handle(session, new SpellUpgrade(3));
@@ -56,17 +56,17 @@ class UpgradeSpellTest extends GameBaseCase {
 
     @Test
     void upgradeSuccess() throws Exception {
-        gamePlayer().spells().setUpgradePoints(5);
+        gamePlayer().properties().spells().setUpgradePoints(5);
 
         handler.handle(session, new SpellUpgrade(3));
 
-        SpellBookEntry entry = gamePlayer().spells().entry(3);
-        assertEquals(4, gamePlayer().spells().upgradePoints());
+        SpellBookEntry entry = gamePlayer().properties().spells().entry(3);
+        assertEquals(4, gamePlayer().properties().spells().upgradePoints());
         assertEquals(2, entry.spell().level());
 
         requestStack.assertAll(
             new UpdateSpell(entry),
-            new Stats(gamePlayer())
+            new Stats(gamePlayer().properties())
         );
 
         assertEquals(4, dataSet.refresh(new Player(1)).spellPoints());

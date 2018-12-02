@@ -62,9 +62,12 @@ class CreateGameTest extends GameBaseCase {
         assertTrue(session.exploration().dispatcher().has(SendMapData.class));
         assertTrue(session.exploration().dispatcher().has(LeaveExplorationForFight.class));
 
+        assertTrue(gamePlayer().isExploring());
+        assertSame(session.exploration(), gamePlayer().scope());
+
         requestStack.assertAll(
             new GameCreated(CreateGameRequest.Type.EXPLORATION),
-            new Stats(gamePlayer()),
+            new Stats(gamePlayer().properties()),
             new MapData(explorationPlayer().map()),
             Error.welcome()
         );

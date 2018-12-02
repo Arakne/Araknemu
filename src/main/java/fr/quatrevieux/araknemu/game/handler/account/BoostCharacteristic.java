@@ -11,6 +11,7 @@ final public class BoostCharacteristic implements PacketHandler<GameSession, Ask
     @Override
     public void handle(GameSession session, AskBoost packet) throws Exception {
         session.player()
+            .properties()
             .characteristics()
             .boostCharacteristic(packet.characteristic())
         ;

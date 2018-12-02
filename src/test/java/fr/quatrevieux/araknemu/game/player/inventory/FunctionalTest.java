@@ -185,8 +185,8 @@ public class FunctionalTest extends FightBaseCase {
         assertNotNull(ref.get(), "EquipmentChanged should be dispatched");
         assertSame(entry, ref.get().entry());
 
-        assertEquals(10, gamePlayer().characteristics().stuff().get(Characteristic.INTELLIGENCE));
-        assertEquals(10, gamePlayer().characteristics().stuff().get(Characteristic.STRENGTH));
+        assertEquals(10, gamePlayer().properties().characteristics().stuff().get(Characteristic.INTELLIGENCE));
+        assertEquals(10, gamePlayer().properties().characteristics().stuff().get(Characteristic.STRENGTH));
     }
 
     @Test
@@ -214,8 +214,8 @@ public class FunctionalTest extends FightBaseCase {
         assertNotNull(ref.get(), "EquipmentChanged should be dispatched");
         assertSame(entry, ref.get().entry());
 
-        assertEquals(0, gamePlayer().characteristics().stuff().get(Characteristic.INTELLIGENCE));
-        assertEquals(0, gamePlayer().characteristics().stuff().get(Characteristic.STRENGTH));
+        assertEquals(0, gamePlayer().properties().characteristics().stuff().get(Characteristic.INTELLIGENCE));
+        assertEquals(0, gamePlayer().properties().characteristics().stuff().get(Characteristic.STRENGTH));
     }
 
     @Test
@@ -418,8 +418,8 @@ public class FunctionalTest extends FightBaseCase {
         assertEquals(Effect.ADD_STRENGTH, itemSet.bonus().characteristics().get(0).effect());
         assertEquals(Effect.ADD_INTELLIGENCE, itemSet.bonus().characteristics().get(1).effect());
 
-        assertEquals(55, gamePlayer().characteristics().stuff().get(Characteristic.STRENGTH));
-        assertEquals(55, gamePlayer().characteristics().stuff().get(Characteristic.INTELLIGENCE));
+        assertEquals(55, gamePlayer().properties().characteristics().stuff().get(Characteristic.STRENGTH));
+        assertEquals(55, gamePlayer().properties().characteristics().stuff().get(Characteristic.INTELLIGENCE));
 
         requestStack.assertOne(
             new UpdateItemSet(itemSet)
@@ -454,7 +454,7 @@ public class FunctionalTest extends FightBaseCase {
         InventoryEntry entry = inventory.add(container.get(ItemService.class).create(8243), 1, -1);
         entry.move(6, 1);
 
-        assertEquals(30, gamePlayer().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
+        assertEquals(30, gamePlayer().properties().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
     }
 
     @Test
@@ -466,7 +466,7 @@ public class FunctionalTest extends FightBaseCase {
         InventoryEntry entry = inventory.add(container.get(ItemService.class).create(8243), 1, 6);
         entry.move(-1, 1);
 
-        assertEquals(0, gamePlayer().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
+        assertEquals(0, gamePlayer().properties().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
     }
 
 
@@ -479,12 +479,12 @@ public class FunctionalTest extends FightBaseCase {
         InventoryEntry entry = inventory.add(item, 1, 0);
 
         requestStack.assertOne(new SpellBoost(3, SpellsBoosts.Modifier.DAMAGE, 15));
-        assertEquals(15, gamePlayer().spells().boosts().modifiers(3).damage());
+        assertEquals(15, gamePlayer().properties().spells().boosts().modifiers(3).damage());
 
         entry.move(-1, 1);
 
         requestStack.assertOne(new SpellBoost(3, SpellsBoosts.Modifier.DAMAGE, 0));
-        assertEquals(0, gamePlayer().spells().boosts().modifiers(3).damage());
+        assertEquals(0, gamePlayer().properties().spells().boosts().modifiers(3).damage());
     }
 
     @Test

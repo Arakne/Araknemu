@@ -50,7 +50,7 @@ final public class AddStats extends AbstractCommand {
     public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
         Characteristic characteristic = Characteristic.valueOf(arguments.get(1).toUpperCase());
 
-        player.characteristics().base().add(
+        player.properties().characteristics().base().add(
             characteristic,
             Integer.parseInt(arguments.get(2))
         );
@@ -59,7 +59,7 @@ final public class AddStats extends AbstractCommand {
             "Characteristic changed for {} : {} = {}",
             player.name(),
             characteristic,
-            player.characteristics().base().get(characteristic)
+            player.properties().characteristics().base().get(characteristic)
         );
     }
 }

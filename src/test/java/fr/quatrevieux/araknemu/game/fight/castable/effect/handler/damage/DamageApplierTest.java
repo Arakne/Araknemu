@@ -77,9 +77,9 @@ class DamageApplierTest extends FightBaseCase {
 
         DamageApplier applier = new DamageApplier(Element.AIR, fight);
 
-        player.characteristics().base().set(Characteristic.AGILITY, 50);
-        player.characteristics().base().set(Characteristic.PERCENT_DAMAGE, 25);
-        player.characteristics().base().set(Characteristic.FIXED_DAMAGE, 10);
+        player.properties().characteristics().base().set(Characteristic.AGILITY, 50);
+        player.properties().characteristics().base().set(Characteristic.PERCENT_DAMAGE, 25);
+        player.properties().characteristics().base().set(Characteristic.FIXED_DAMAGE, 10);
 
         int value = applier.apply(caster, effect, target);
 
@@ -94,8 +94,8 @@ class DamageApplierTest extends FightBaseCase {
 
         DamageApplier applier = new DamageApplier(Element.AIR, fight);
 
-        other.characteristics().base().set(Characteristic.RESISTANCE_PERCENT_AIR, 25);
-        other.characteristics().base().set(Characteristic.RESISTANCE_AIR, 5);
+        other.properties().characteristics().base().set(Characteristic.RESISTANCE_PERCENT_AIR, 25);
+        other.properties().characteristics().base().set(Characteristic.RESISTANCE_AIR, 5);
 
         int value = applier.apply(caster, effect, target);
 
@@ -110,7 +110,7 @@ class DamageApplierTest extends FightBaseCase {
 
         DamageApplier applier = new DamageApplier(Element.AIR, fight);
 
-        other.characteristics().base().set(Characteristic.RESISTANCE_AIR, 100);
+        other.properties().characteristics().base().set(Characteristic.RESISTANCE_AIR, 100);
 
         int value = applier.apply(caster, effect, target);
 

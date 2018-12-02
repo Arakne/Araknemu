@@ -21,7 +21,7 @@ final public class InitializeGame implements Listener<StartExploration> {
 
     @Override
     public void on(StartExploration event) {
-        player.send(new Stats(player));
+        player.send(new Stats(player.properties()));
 
         player.join(
             mapService.load(player.position().map()) // @todo handle entity not found

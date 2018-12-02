@@ -41,11 +41,11 @@ class ApplyItemSetSpecialEffectsTest extends GameBaseCase {
         gamePlayer().inventory().add(container.get(ItemService.class).create(8231), 1, 7);
         InventoryEntry entry = gamePlayer().inventory().add(container.get(ItemService.class).create(8243), 1, 6);
 
-        gamePlayer().characteristics().specials().clear();
+        gamePlayer().properties().characteristics().specials().clear();
 
         listener.on(new EquipmentChanged(entry, 6, true));
 
-        assertEquals(30, gamePlayer().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
+        assertEquals(30, gamePlayer().properties().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
     }
 
     @Test
@@ -56,10 +56,10 @@ class ApplyItemSetSpecialEffectsTest extends GameBaseCase {
         gamePlayer().inventory().add(container.get(ItemService.class).create(8231), 1, 7);
         InventoryEntry entry = gamePlayer().inventory().add(container.get(ItemService.class).create(8243), 1, -1);
 
-        gamePlayer().characteristics().specials().add(SpecialEffects.Type.INITIATIVE, 30);
+        gamePlayer().properties().characteristics().specials().add(SpecialEffects.Type.INITIATIVE, 30);
 
         listener.on(new EquipmentChanged(entry, 6, false));
 
-        assertEquals(0, gamePlayer().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
+        assertEquals(0, gamePlayer().properties().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
     }
 }

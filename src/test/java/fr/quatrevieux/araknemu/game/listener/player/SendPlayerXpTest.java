@@ -26,6 +26,6 @@ class SendPlayerXpTest extends GameBaseCase {
     void onPlayerXpChanged() throws SQLException, ContainerException {
         listener.on(new PlayerXpChanged());
 
-        requestStack.assertLast(new Stats(gamePlayer()));
+        requestStack.assertLast(new Stats(gamePlayer().properties()));
     }
 }

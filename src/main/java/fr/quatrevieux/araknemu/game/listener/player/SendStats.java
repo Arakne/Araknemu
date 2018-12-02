@@ -17,9 +17,7 @@ final public class SendStats implements Listener<CharacteristicsChanged> {
 
     @Override
     public void on(CharacteristicsChanged event) {
-        player.send(
-            new Stats(player)
-        );
+        player.send(new Stats(player.scope().properties()));
     }
 
     @Override

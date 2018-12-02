@@ -108,7 +108,7 @@ class DamageHandlerTest extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        player.characteristics().base().set(Characteristic.AGILITY, 100);
+        player.properties().characteristics().base().set(Characteristic.AGILITY, 100);
 
         CastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.handle(scope, scope.effects().get(0));

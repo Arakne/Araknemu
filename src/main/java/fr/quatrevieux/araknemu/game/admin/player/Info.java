@@ -37,7 +37,7 @@ final public class Info extends AbstractCommand {
         performer.success("==============================");
         performer.info("ID:    {}", player.id());
         performer.info("Name:  {}", player.name());
-        performer.info("Level: {}", player.experience().level());
+        performer.info("Level: {}", player.properties().experience().level());
         performer.info("Race:  {}", player.race().name());
         performer.info("Sex:   {}", player.spriteInfo().sex());
         performer.info("GfxID: {}", player.spriteInfo().gfxId());

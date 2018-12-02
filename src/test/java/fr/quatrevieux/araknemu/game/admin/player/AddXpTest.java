@@ -25,7 +25,7 @@ class AddXpTest extends CommandTestCase {
 
         assertOutput("Add 1000 xp to Bob (level = 50)");
 
-        assertEquals(5482459, gamePlayer().experience().current());
+        assertEquals(5482459, gamePlayer().properties().experience().current());
     }
 
     @Test
@@ -34,7 +34,7 @@ class AddXpTest extends CommandTestCase {
 
         assertOutput("Add 1000000 xp to Bob (level = 52)");
 
-        assertEquals(6481459, gamePlayer().experience().current());
+        assertEquals(6481459, gamePlayer().properties().experience().current());
     }
 
     @Test
@@ -43,6 +43,6 @@ class AddXpTest extends CommandTestCase {
 
         assertOutput("Add 10000000000 xp to Bob (level = 200)");
 
-        assertEquals(10005481459L, gamePlayer().experience().current());
+        assertEquals(10005481459L, gamePlayer().properties().experience().current());
     }
 }

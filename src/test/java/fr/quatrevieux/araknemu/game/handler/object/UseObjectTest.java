@@ -47,14 +47,14 @@ class UseObjectTest extends GameBaseCase {
         handler.handle(session, new ObjectUseRequest(entry.id(), 0, 0, false));
 
         requestStack.assertAll(
-            new Stats(gamePlayer()),
+            new Stats(gamePlayer().properties()),
             Information.characteristicBoosted(Characteristic.AGILITY, 1),
             new DestroyItem(entry)
         );
 
         assertThrows(ItemNotFoundException.class, () -> explorationPlayer().inventory().get(entry.id()));
         assertEquals(0, entry.quantity());
-        assertEquals(1, explorationPlayer().characteristics().base().get(Characteristic.AGILITY));
+        assertEquals(1, explorationPlayer().properties().characteristics().base().get(Characteristic.AGILITY));
     }
 
     @Test
@@ -74,13 +74,13 @@ class UseObjectTest extends GameBaseCase {
         GamePlayer other = makeOtherPlayer();
         ExplorationPlayer otherPlayer = new ExplorationPlayer(other);
         explorationPlayer().map().add(otherPlayer);
-        other.life().set(10);
+        other.properties().life().set(10);
         requestStack.clear();
 
         handler.handle(session, new ObjectUseRequest(entry.id(), otherPlayer.id(), 0, true));
 
         requestStack.assertAll(new DestroyItem(entry));
-        assertEquals(20, other.life().current());
+        assertEquals(20, other.properties().life().current());
         assertEquals(0, entry.quantity());
     }
 
@@ -105,7 +105,7 @@ class UseObjectTest extends GameBaseCase {
 
         handlePacket(new ObjectUseRequest(entry.id(), 0, 0, false));
 
-        assertEquals(1, explorationPlayer().characteristics().base().get(Characteristic.AGILITY));
+        assertEquals(1, explorationPlayer().properties().characteristics().base().get(Characteristic.AGILITY));
     }
 
     @Test

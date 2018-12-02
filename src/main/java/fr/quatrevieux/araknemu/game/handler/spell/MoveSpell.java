@@ -10,7 +10,7 @@ import fr.quatrevieux.araknemu.network.in.PacketHandler;
 final public class MoveSpell implements PacketHandler<GameSession, SpellMove> {
     @Override
     public void handle(GameSession session, SpellMove packet) throws Exception {
-        session.player().spells()
+        session.player().properties().spells()
             .entry(packet.spellId())
             .move(packet.position())
         ;

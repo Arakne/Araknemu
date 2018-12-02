@@ -32,6 +32,8 @@ class PlayerLifeTest extends GameBaseCase {
             player = gamePlayer(true),
             entity = container.get(PlayerRepository.class).get(new Player(player.id()))
         );
+
+        life.init();
     }
 
     @Test
@@ -46,12 +48,12 @@ class PlayerLifeTest extends GameBaseCase {
             .pushItemSets()
         ;
 
-        player.characteristics().base().set(Characteristic.VITALITY, 50);
+        player.properties().characteristics().base().set(Characteristic.VITALITY, 50);
         player.inventory().add(
             container.get(ItemService.class).create(2419, true),
             1, 2
         );
-        player.characteristics().rebuildStuffStats();
+        player.properties().characteristics().rebuildStuffStats();
 
         life.rebuild();
         assertEquals(373, life.max());
@@ -78,7 +80,7 @@ class PlayerLifeTest extends GameBaseCase {
         assertEquals(295, life.current());
         assertEquals(100, life.percent());
 
-        player.characteristics().base().set(Characteristic.VITALITY, 100);
+        player.properties().characteristics().base().set(Characteristic.VITALITY, 100);
         life.rebuild();
 
         assertEquals(395, life.max());
@@ -93,7 +95,7 @@ class PlayerLifeTest extends GameBaseCase {
         assertEquals(295, life.max());
         assertEquals(20, life.percent());
 
-        player.characteristics().base().set(Characteristic.VITALITY, 100);
+        player.properties().characteristics().base().set(Characteristic.VITALITY, 100);
         life.rebuild();
 
         assertEquals(395, life.max());
@@ -106,6 +108,7 @@ class PlayerLifeTest extends GameBaseCase {
         entity.setLife(65);
 
         life = new PlayerLife(player, entity);
+        life.init();
 
         assertEquals(65, life.current());
     }
@@ -115,6 +118,7 @@ class PlayerLifeTest extends GameBaseCase {
         entity.setLife(-1);
 
         life = new PlayerLife(player, entity);
+        life.init();
 
         assertEquals(295, life.current());
     }
@@ -124,6 +128,7 @@ class PlayerLifeTest extends GameBaseCase {
         entity.setLife(10000);
 
         life = new PlayerLife(player, entity);
+        life.init();
 
         assertEquals(295, life.current());
     }

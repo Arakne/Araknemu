@@ -38,7 +38,7 @@ class InitializeGameTest extends GameBaseCase {
         listener.on(new StartExploration(player));
 
         requestStack.assertAll(
-            new Stats(player),
+            new Stats(player.properties()),
             Error.welcome()
         );
 

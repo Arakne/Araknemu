@@ -19,7 +19,7 @@ final public class SendLevelUp implements Listener<PlayerLevelUp> {
     @Override
     public void on(PlayerLevelUp event) {
         player.send(new NewPlayerLevel(event.level()));
-        player.send(new Stats(player));
+        player.send(new Stats(player.scope().properties()));
     }
 
     @Override

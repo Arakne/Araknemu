@@ -18,7 +18,7 @@ final public class SendLearnedSpell implements Listener<SpellLearned> {
 
     @Override
     public void on(SpellLearned event) {
-        player.send(new SpellList(player.spells()));
+        player.send(new SpellList(player.scope().properties().spells()));
         player.send(Information.spellLearn(event.entry().spell().id()));
     }
 

@@ -18,7 +18,7 @@ final public class RebuildLifePointsOnLevelUp implements Listener<PlayerLevelUp>
 
     @Override
     public void on(PlayerLevelUp event) {
-        player.life().rebuild();
+        player.properties().life().rebuild();
     }
 
     @Override

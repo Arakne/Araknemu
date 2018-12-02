@@ -134,9 +134,9 @@ class ItemSetsTest extends GameBaseCase {
         gamePlayer().inventory().add(service.create(8237), 1, BeltSlot.SLOT_ID);
         gamePlayer().inventory().add(service.create(8243), 1, 6);
 
-        gamePlayer().characteristics().specials().clear();
+        gamePlayer().properties().characteristics().specials().clear();
         itemSets.applySpecials(gamePlayer());
 
-        assertEquals(60, gamePlayer().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
+        assertEquals(60, gamePlayer().properties().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
     }
 }

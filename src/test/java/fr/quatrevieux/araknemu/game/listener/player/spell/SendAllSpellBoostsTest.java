@@ -32,9 +32,9 @@ class SendAllSpellBoostsTest extends GameBaseCase {
 
     @Test
     void withBoosts() throws SQLException, ContainerException {
-        gamePlayer().spells().boosts().boost(3, SpellsBoosts.Modifier.DAMAGE, 15);
-        gamePlayer().spells().boosts().boost(3, SpellsBoosts.Modifier.RANGE, 3);
-        gamePlayer().spells().boosts().boost(6, SpellsBoosts.Modifier.AP_COST, 2);
+        gamePlayer().properties().spells().boosts().boost(3, SpellsBoosts.Modifier.DAMAGE, 15);
+        gamePlayer().properties().spells().boosts().boost(3, SpellsBoosts.Modifier.RANGE, 3);
+        gamePlayer().properties().spells().boosts().boost(6, SpellsBoosts.Modifier.AP_COST, 2);
         requestStack.clear();
 
         listener.on(new GameJoined());

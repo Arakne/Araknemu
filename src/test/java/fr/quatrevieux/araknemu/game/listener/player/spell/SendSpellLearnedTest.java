@@ -40,7 +40,7 @@ class SendSpellLearnedTest extends GameBaseCase {
         );
 
         requestStack.assertAll(
-            new SpellList(gamePlayer().spells()),
+            new SpellList(gamePlayer().properties().spells()),
             Information.spellLearn(2)
         );
     }

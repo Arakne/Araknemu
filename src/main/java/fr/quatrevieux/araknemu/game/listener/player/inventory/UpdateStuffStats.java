@@ -27,7 +27,7 @@ final public class UpdateStuffStats implements Listener<EquipmentChanged> {
             }
         }
 
-        player.characteristics().rebuildStuffStats();
+        player.properties().characteristics().rebuildStuffStats();
     }
 
     @Override

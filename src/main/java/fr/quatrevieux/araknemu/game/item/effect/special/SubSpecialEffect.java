@@ -20,12 +20,12 @@ final public class SubSpecialEffect implements SpecialEffectHandler {
 
     @Override
     public void apply(SpecialEffect effect, GamePlayer player) {
-        player.characteristics().specials().sub(type, effect.arguments()[0]);
+        player.properties().characteristics().specials().sub(type, effect.arguments()[0]);
     }
 
     @Override
     public void relieve(SpecialEffect effect, GamePlayer player) {
-        player.characteristics().specials().add(type, effect.arguments()[0]);
+        player.properties().characteristics().specials().add(type, effect.arguments()[0]);
     }
 
     @Override

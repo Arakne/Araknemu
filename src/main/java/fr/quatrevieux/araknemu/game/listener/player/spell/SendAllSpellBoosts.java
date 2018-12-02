@@ -19,7 +19,7 @@ final public class SendAllSpellBoosts implements Listener<GameJoined> {
 
     @Override
     public void on(GameJoined event) {
-        for (SpellModifiers modifiers : player.spells().boosts().all()) {
+        for (SpellModifiers modifiers : player.properties().spells().boosts().all()) {
             for (SpellsBoosts.Modifier modifier : SpellsBoosts.Modifier.values()) {
                 if (modifiers.has(modifier)) {
                     player.send(

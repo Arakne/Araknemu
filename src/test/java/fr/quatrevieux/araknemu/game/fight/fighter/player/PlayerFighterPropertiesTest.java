@@ -15,14 +15,14 @@ class PlayerFighterPropertiesTest extends FightBaseCase {
         super.setUp();
 
         createFight();
-        properties = new PlayerFighterProperties(player.fighter(), player);
+        properties = new PlayerFighterProperties(player.fighter(), player.properties());
     }
 
     @Test
     void getters() {
         assertInstanceOf(PlayerFighterCharacteristics.class, properties.characteristics());
         assertInstanceOf(PlayerFighterLife.class, properties.life());
-        assertEquals(player.spells(), properties.spells());
-        assertEquals(player.experience(), properties.experience());
+        assertEquals(player.properties().spells(), properties.spells());
+        assertEquals(player.properties().experience(), properties.experience());
     }
 }

@@ -15,7 +15,7 @@ final public class AddLifeEffect implements UseEffectHandler {
     public void apply(UseEffect effect, ExplorationPlayer caster) {
         int value = random.rand(effect.arguments());
 
-        caster.life().add(value);
+        caster.player().properties().life().add(value);
     }
 
     @Override
@@ -25,7 +25,7 @@ final public class AddLifeEffect implements UseEffectHandler {
 
     @Override
     public boolean check(UseEffect effect, ExplorationPlayer caster) {
-        return !caster.life().isFull();
+        return !caster.properties().life().isFull();
     }
 
     @Override
@@ -42,6 +42,6 @@ final public class AddLifeEffect implements UseEffectHandler {
     public void applyToFighter(UseEffect effect, PlayerFighter fighter) {
         int value = random.rand(effect.arguments());
 
-        fighter.player().life().add(value);
+        fighter.player().properties().life().add(value);
     }
 }

@@ -99,7 +99,7 @@ class UsableItemTest extends GameBaseCase {
         UsableItem item = (UsableItem) container.get(ItemService.class).create(468);
 
         ExplorationPlayer target = new ExplorationPlayer(makeOtherPlayer());
-        target.life().set(10);
+        target.player().properties().life().set(10);
 
         assertTrue(item.checkTarget(explorationPlayer(), target, 0));
     }
@@ -109,7 +109,7 @@ class UsableItemTest extends GameBaseCase {
         UsableItem item = (UsableItem) container.get(ItemService.class).create(468);
 
         GamePlayer target = makeOtherPlayer();
-        target.life().set(10);
+        target.properties().life().set(10);
 
         PlayerFighter fighter = container.get(FighterFactory.class).create(target);
 
@@ -132,7 +132,7 @@ class UsableItemTest extends GameBaseCase {
 
         item.apply(explorationPlayer());
 
-        assertEquals(1, explorationPlayer().characteristics().base().get(Characteristic.AGILITY));
+        assertEquals(1, explorationPlayer().properties().characteristics().base().get(Characteristic.AGILITY));
         requestStack.assertLast(Information.characteristicBoosted(Characteristic.AGILITY, 1));
     }
 
@@ -141,10 +141,10 @@ class UsableItemTest extends GameBaseCase {
         UsableItem item = (UsableItem) container.get(ItemService.class).create(468);
 
         ExplorationPlayer target = new ExplorationPlayer(makeOtherPlayer());
-        target.life().set(10);
+        target.player().properties().life().set(10);
 
         item.applyToTarget(explorationPlayer(), target, 0);
-        assertEquals(20, target.life().current());
+        assertEquals(20, target.player().properties().life().current());
     }
 
     @Test
@@ -152,12 +152,12 @@ class UsableItemTest extends GameBaseCase {
         UsableItem item = (UsableItem) container.get(ItemService.class).create(468);
 
         GamePlayer target = makeOtherPlayer();
-        target.life().set(10);
+        target.properties().life().set(10);
 
         PlayerFighter fighter = container.get(FighterFactory.class).create(target);
 
         item.applyToFighter(fighter);
-        assertEquals(20, target.life().current());
+        assertEquals(20, target.properties().life().current());
         assertEquals(20, fighter.life().current());
     }
 }

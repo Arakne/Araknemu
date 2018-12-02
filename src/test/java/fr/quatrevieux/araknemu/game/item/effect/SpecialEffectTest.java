@@ -112,7 +112,7 @@ class SpecialEffectTest extends GameBaseCase {
 
         effect.apply(gamePlayer(true));
 
-        assertEquals(150, gamePlayer().characteristics().specials().get(SpecialEffects.Type.PODS));
+        assertEquals(150, gamePlayer().properties().characteristics().specials().get(SpecialEffects.Type.PODS));
     }
 
     @Test
@@ -126,6 +126,6 @@ class SpecialEffectTest extends GameBaseCase {
         effect.apply(gamePlayer(true));
         effect.relieve(gamePlayer());
 
-        assertEquals(0, gamePlayer().characteristics().specials().get(SpecialEffects.Type.PODS));
+        assertEquals(0, gamePlayer().properties().characteristics().specials().get(SpecialEffects.Type.PODS));
     }
 }

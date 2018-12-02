@@ -42,13 +42,11 @@ final public class SetLife extends AbstractCommand {
     @Override
     public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
         if (arguments.get(1).equalsIgnoreCase("max")) {
-            player.life().set(player.life().max());
+            player.properties().life().set(player.properties().life().max());
 
             performer.success("{} retrieve all his life", player.name());
         } else {
-            player.life().set(
-                Integer.parseUnsignedInt(arguments.get(1))
-            );
+            player.properties().life().set(Integer.parseUnsignedInt(arguments.get(1)));
 
             performer.success("Life of {} is set to {}", player.name(), arguments.get(1));
         }

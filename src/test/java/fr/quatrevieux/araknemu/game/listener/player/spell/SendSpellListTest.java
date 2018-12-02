@@ -31,7 +31,7 @@ class SendSpellListTest extends GameBaseCase {
         );
 
         requestStack.assertLast(
-            new SpellList(gamePlayer().spells())
+            new SpellList(gamePlayer().properties().spells())
         );
     }
 }

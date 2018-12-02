@@ -16,7 +16,7 @@ final public class PlayerFighterRewardApplier implements FightRewardVisitor {
     @Override
     public void onDropReward(DropReward reward) {
         if (reward.xp() != 0) {
-            fighter.player().experience().add(reward.xp());
+            fighter.player().properties().experience().add(reward.xp());
         }
 
         // @todo kamas,items...

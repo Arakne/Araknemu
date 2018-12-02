@@ -104,7 +104,7 @@ final public class PlayerCharacteristics implements CharacterCharacteristics {
 
     @Override
     public int initiative() {
-        int base = race.initiative(player.life().max());
+        int base = race.initiative(player.properties().life().max());
 
         base += get(Characteristic.STRENGTH);
         base += get(Characteristic.LUCK);
@@ -112,7 +112,7 @@ final public class PlayerCharacteristics implements CharacterCharacteristics {
         base += get(Characteristic.INTELLIGENCE);
         base += specials.get(SpecialEffects.Type.INITIATIVE);
 
-        int init = base * player.life().current() / player.life().max();
+        int init = base * player.properties().life().current() / player.properties().life().max();
 
         return init < 1 ? 1 : init;
     }

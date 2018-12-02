@@ -17,24 +17,25 @@ final public class SetSpellModifierEffect implements SpecialEffectHandler {
 
     @Override
     public void apply(SpecialEffect effect, GamePlayer player) {
+        final SpellsBoosts boosts = player.properties().spells().boosts();
+
         int spell = effect.arguments()[0];
         int value = effect.arguments()[2];
 
-        if (
-            !player.spells().boosts().modifiers(spell).has(modifier)
-            || player.spells().boosts().modifiers(spell).value(modifier) > value
-        ) {
-            player.spells().boosts().set(spell, modifier, value);
+        if (!boosts.modifiers(spell).has(modifier) || boosts.modifiers(spell).value(modifier) > value) {
+            boosts.set(spell, modifier, value);
         }
     }
 
     @Override
     public void relieve(SpecialEffect effect, GamePlayer player) {
+        final SpellsBoosts boosts = player.properties().spells().boosts();
+
         int spell = effect.arguments()[0];
         int value = effect.arguments()[2];
 
-        if (player.spells().boosts().modifiers(spell).value(modifier) == value) {
-            player.spells().boosts().unset(spell, modifier);
+        if (boosts.modifiers(spell).value(modifier) == value) {
+            boosts.unset(spell, modifier);
         }
     }
 

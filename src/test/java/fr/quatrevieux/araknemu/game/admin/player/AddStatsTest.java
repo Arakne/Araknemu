@@ -23,7 +23,7 @@ class AddStatsTest extends CommandTestCase {
     void executeSuccess() throws ContainerException, SQLException, AdminException {
         execute("addstats", "vitality", "100");
 
-        assertEquals(395, gamePlayer().life().max());
+        assertEquals(395, gamePlayer().properties().life().max());
         assertOutput("Characteristic changed for Bob : VITALITY = 100");
     }
 }

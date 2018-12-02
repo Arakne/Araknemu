@@ -34,7 +34,7 @@ class SaveUpgradedSpellTest extends GameBaseCase {
         PlayerSpell spell = dataSet.push(new PlayerSpell(1, 202, false, 2, 3));
 
         spell.setLevel(3);
-        gamePlayer().spells().setUpgradePoints(5);
+        gamePlayer().properties().spells().setUpgradePoints(5);
 
         SpellBookEntry entry = new SpellBookEntry(spell, container.get(SpellService.class).get(202));
 

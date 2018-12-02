@@ -37,7 +37,7 @@ class SendLifeChangedTest extends GameBaseCase {
         listener.on(new LifeChanged(100, 50));
 
         requestStack.assertAll(
-            new Stats(gamePlayer())
+            new Stats(gamePlayer().properties())
         );
     }
 
@@ -46,7 +46,7 @@ class SendLifeChangedTest extends GameBaseCase {
         listener.on(new LifeChanged(100, 150));
 
         requestStack.assertAll(
-            new Stats(gamePlayer()),
+            new Stats(gamePlayer().properties()),
             Information.heal(50)
         );
     }

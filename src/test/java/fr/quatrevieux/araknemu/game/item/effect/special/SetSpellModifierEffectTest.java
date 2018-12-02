@@ -31,55 +31,55 @@ class SetSpellModifierEffectTest extends GameBaseCase {
             player
         );
 
-        assertEquals(2, player.spells().boosts().modifiers(3).fixedDelay());
+        assertEquals(2, player.properties().spells().boosts().modifiers(3).fixedDelay());
     }
 
     @Test
     void applyAlreadySetBetterBoost() {
-        player.spells().boosts().set(3, SpellsBoosts.Modifier.SET_DELAY, 1);
+        player.properties().spells().boosts().set(3, SpellsBoosts.Modifier.SET_DELAY, 1);
 
         handler.apply(
             new SpecialEffect(handler, Effect.SPELL_SET_DELAY, new int [] {3, 0, 2}, ""),
             player
         );
 
-        assertEquals(1, player.spells().boosts().modifiers(3).fixedDelay());
+        assertEquals(1, player.properties().spells().boosts().modifiers(3).fixedDelay());
     }
 
     @Test
     void applyAlreadyWorstBoost() {
-        player.spells().boosts().set(3, SpellsBoosts.Modifier.SET_DELAY, 4);
+        player.properties().spells().boosts().set(3, SpellsBoosts.Modifier.SET_DELAY, 4);
 
         handler.apply(
             new SpecialEffect(handler, Effect.SPELL_SET_DELAY, new int [] {3, 0, 2}, ""),
             player
         );
 
-        assertEquals(2, player.spells().boosts().modifiers(3).fixedDelay());
+        assertEquals(2, player.properties().spells().boosts().modifiers(3).fixedDelay());
     }
 
     @Test
     void relieveNotCurrentBoost() {
-        player.spells().boosts().set(3, SpellsBoosts.Modifier.SET_DELAY, 4);
+        player.properties().spells().boosts().set(3, SpellsBoosts.Modifier.SET_DELAY, 4);
 
         handler.relieve(
             new SpecialEffect(handler, Effect.SPELL_SET_DELAY, new int [] {3, 0, 2}, ""),
             player
         );
 
-        assertEquals(4, player.spells().boosts().modifiers(3).fixedDelay());
+        assertEquals(4, player.properties().spells().boosts().modifiers(3).fixedDelay());
     }
 
     @Test
     void relieveSuccess() {
-        player.spells().boosts().set(3, SpellsBoosts.Modifier.SET_DELAY, 2);
+        player.properties().spells().boosts().set(3, SpellsBoosts.Modifier.SET_DELAY, 2);
 
         handler.relieve(
             new SpecialEffect(handler, Effect.SPELL_SET_DELAY, new int [] {3, 0, 2}, ""),
             player
         );
 
-        assertFalse(player.spells().boosts().modifiers(3).has(SpellsBoosts.Modifier.SET_DELAY));
+        assertFalse(player.properties().spells().boosts().modifiers(3).has(SpellsBoosts.Modifier.SET_DELAY));
     }
 
     @Test

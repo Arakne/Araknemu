@@ -17,7 +17,9 @@ import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.PlayerSessionScope;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.WeaponSlot;
+import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
@@ -28,7 +30,7 @@ import java.util.Map;
 /**
  * Fighter for a player
  */
-final public class PlayerFighter implements Fighter, Sender {
+final public class PlayerFighter implements Fighter, PlayerSessionScope {
     final private GamePlayer player;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
@@ -47,7 +49,7 @@ final public class PlayerFighter implements Fighter, Sender {
 
     public PlayerFighter(GamePlayer player) {
         this.player = player;
-        this.properties = new PlayerFighterProperties(this, player);
+        this.properties = new PlayerFighterProperties(this, player.properties());
     }
 
     @Override
@@ -107,9 +109,27 @@ final public class PlayerFighter implements Fighter, Sender {
         return properties.characteristics();
     }
 
+    /**
+     * Get the properties of the current character
+     */
+    @Override
+    public PlayerFighterProperties properties() {
+        return properties;
+    }
+
     @Override
     public SpellList spells() {
-        return player.spells();
+        return properties.spells();
+    }
+
+    @Override
+    public void dispatch(Object event) {
+        player.dispatch(event);
+    }
+
+    @Override
+    public ListenerAggregate dispatcher() {
+        return dispatcher;
     }
 
     @Override
@@ -138,16 +158,7 @@ final public class PlayerFighter implements Fighter, Sender {
 
     @Override
     public int level() {
-        return player.experience().level();
-    }
-
-    @Override
-    public void dispatch(Object event) {
-        player.dispatch(event);
-    }
-
-    public ListenerAggregate dispatcher() {
-        return dispatcher;
+        return player.properties().experience().level();
     }
 
     @Override
@@ -215,13 +226,6 @@ final public class PlayerFighter implements Fighter, Sender {
     public void setReady(boolean ready) {
         this.ready = ready;
         fight.dispatch(new FighterReadyStateChanged(this));
-    }
-
-    /**
-     * Get the properties of the current character
-     */
-    public PlayerFighterProperties properties() {
-        return properties;
     }
 
     @Override

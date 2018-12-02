@@ -1,34 +1,30 @@
 package fr.quatrevieux.araknemu.game.exploration;
 
+import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
-import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.core.event.Dispatcher;
-import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.event.CellChanged;
 import fr.quatrevieux.araknemu.game.exploration.event.MapChanged;
-import fr.quatrevieux.araknemu.game.exploration.event.MapLeaved;
 import fr.quatrevieux.araknemu.game.exploration.event.MapJoined;
+import fr.quatrevieux.araknemu.game.exploration.event.MapLeaved;
 import fr.quatrevieux.araknemu.game.exploration.interaction.InteractionHandler;
 import fr.quatrevieux.araknemu.game.exploration.interaction.event.PlayerMoveFinished;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
-import fr.quatrevieux.araknemu.game.player.*;
-import fr.quatrevieux.araknemu.game.player.characteristic.PlayerLife;
-import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
-import fr.quatrevieux.araknemu.game.player.experience.GamePlayerExperience;
+import fr.quatrevieux.araknemu.game.player.CharacterProperties;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.PlayerSessionScope;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
-import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
 import fr.quatrevieux.araknemu.game.player.sprite.PlayerSprite;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import fr.quatrevieux.araknemu.game.world.creature.Explorer;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
-import fr.quatrevieux.araknemu.game.world.util.Sender;
 
 /**
  * Player for exploration game session
  */
-final public class ExplorationPlayer implements Sender, Creature, Dispatcher, Explorer, CharacterProperties {
+final public class ExplorationPlayer implements Creature, Explorer, PlayerSessionScope {
     final private GamePlayer player;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
@@ -50,18 +46,23 @@ final public class ExplorationPlayer implements Sender, Creature, Dispatcher, Ex
     }
 
     @Override
-    public PlayerCharacteristics characteristics() {
-        return player.characteristics();
-    }
-
-    @Override
-    public PlayerLife life() {
-        return player.life();
+    public CharacterProperties properties() {
+        return player.properties();
     }
 
     @Override
     public void send(Object packet) {
         player.send(packet);
+    }
+
+    @Override
+    public ListenerAggregate dispatcher() {
+        return dispatcher;
+    }
+
+    @Override
+    public void dispatch(Object event) {
+        player.dispatch(event);
     }
 
     @Override
@@ -72,11 +73,6 @@ final public class ExplorationPlayer implements Sender, Creature, Dispatcher, Ex
     @Override
     public int cell() {
         return position().cell();
-    }
-
-    @Override
-    public void dispatch(Object event) {
-        player.dispatch(event);
     }
 
     @Override
@@ -152,29 +148,10 @@ final public class ExplorationPlayer implements Sender, Creature, Dispatcher, Ex
     }
 
     /**
-     * Get the dispatcher
-     */
-    public ListenerAggregate dispatcher() {
-        return dispatcher;
-    }
-
-    /**
      * Handle player interactions
      */
     public InteractionHandler interactions() {
         return interactions;
-    }
-
-    /**
-     * @todo to remove
-     */
-    public SpellBook spells() {
-        return player.spells();
-    }
-
-    @Override
-    public GamePlayerExperience experience() {
-        return player.experience();
     }
 
     /**

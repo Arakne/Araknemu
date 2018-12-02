@@ -37,7 +37,7 @@ final public class PlayingLoader extends AbstractLoader {
             new SaveSubscription(),
             new EnsureInactiveFight(new MoveObject()),
             new EnsureInactiveFight(new RemoveObject()),
-            new BoostCharacteristic(),
+            new BoostCharacteristic(), // @todo inactive fight
             new MoveSpell(),
             new UpgradeSpell()
         };

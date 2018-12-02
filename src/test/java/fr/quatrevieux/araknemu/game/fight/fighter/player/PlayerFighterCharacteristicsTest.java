@@ -24,7 +24,7 @@ class PlayerFighterCharacteristicsTest extends FightBaseCase {
 
         createFight();
 
-        baseCharacteristics = player.characteristics();
+        baseCharacteristics = player.properties().characteristics();
         fighterCharacteristics = new PlayerFighterCharacteristics(baseCharacteristics, fighter = player.fighter());
     }
 

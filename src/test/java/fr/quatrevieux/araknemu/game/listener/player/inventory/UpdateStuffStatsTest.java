@@ -56,7 +56,7 @@ class UpdateStuffStatsTest extends GameBaseCase {
         assertNotNull(ref.get());
 
         requestStack.assertLast(
-            new Stats(player)
+            new Stats(player.properties())
         );
     }
 
@@ -75,14 +75,14 @@ class UpdateStuffStatsTest extends GameBaseCase {
             )
         );
 
-        assertEquals(500, player.characteristics().specials().get(SpecialEffects.Type.PODS));
+        assertEquals(500, player.properties().characteristics().specials().get(SpecialEffects.Type.PODS));
     }
 
     @Test
     void onEquipmentChangedWithUnequipSpecialEffect() throws SQLException, ContainerException {
         GamePlayer player = gamePlayer();
 
-        player.characteristics().specials().add(SpecialEffects.Type.PODS, 500);
+        player.properties().characteristics().specials().add(SpecialEffects.Type.PODS, 500);
 
         listener.on(
             new EquipmentChanged(
@@ -95,6 +95,6 @@ class UpdateStuffStatsTest extends GameBaseCase {
             )
         );
 
-        assertEquals(0, player.characteristics().specials().get(SpecialEffects.Type.PODS));
+        assertEquals(0, player.properties().characteristics().specials().get(SpecialEffects.Type.PODS));
     }
 }

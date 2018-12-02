@@ -25,11 +25,11 @@ class ApplyLeaveRewardTest extends FightBaseCase {
 
     @Test
     void withReward() {
-        long lastXp = player.experience().current();
+        long lastXp = player.properties().experience().current();
 
         listener.on(new FightLeaved(new DropReward(RewardType.WINNER, player.fighter(), 1000, 0)));
 
-        assertEquals(lastXp + 1000, player.experience().current());
+        assertEquals(lastXp + 1000, player.properties().experience().current());
     }
 
     @Test

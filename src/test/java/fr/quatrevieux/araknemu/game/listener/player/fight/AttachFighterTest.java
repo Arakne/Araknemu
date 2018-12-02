@@ -32,5 +32,6 @@ class AttachFighterTest extends FightBaseCase {
 
         assertTrue(gamePlayer().isFighting());
         assertSame(fighter, gamePlayer().fighter());
+        assertSame(fighter, gamePlayer().scope());
     }
 }

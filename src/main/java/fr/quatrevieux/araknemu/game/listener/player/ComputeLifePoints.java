@@ -16,7 +16,7 @@ final public class ComputeLifePoints implements Listener<CharacteristicsChanged>
 
     @Override
     public void on(CharacteristicsChanged event) {
-        player.life().rebuild();
+        player.properties().life().rebuild();
     }
 
     @Override

@@ -28,21 +28,21 @@ class BoostCharacteristicTest extends GameBaseCase {
 
     @Test
     void handleSuccess() throws Exception {
-        gamePlayer().characteristics().setBoostPoints(10);
+        gamePlayer().properties().characteristics().setBoostPoints(10);
 
         handler.handle(session, new AskBoost(Characteristic.INTELLIGENCE));
 
         requestStack.assertLast(
-            new Stats(gamePlayer())
+            new Stats(gamePlayer().properties())
         );
 
-        assertEquals(151, gamePlayer().characteristics().base().get(Characteristic.INTELLIGENCE));
-        assertEquals(8, gamePlayer().characteristics().boostPoints());
+        assertEquals(151, gamePlayer().properties().characteristics().base().get(Characteristic.INTELLIGENCE));
+        assertEquals(8, gamePlayer().properties().characteristics().boostPoints());
     }
 
     @Test
     void handleError() throws SQLException, ContainerException {
-        gamePlayer().characteristics().setBoostPoints(0);
+        gamePlayer().properties().characteristics().setBoostPoints(0);
 
         assertThrows(IllegalArgumentException.class, () -> handler.handle(session, new AskBoost(Characteristic.INTELLIGENCE)));
 

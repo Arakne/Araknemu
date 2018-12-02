@@ -140,17 +140,17 @@ class GamePlayerExperienceTest extends GameBaseCase {
         GamePlayer player = gamePlayer(true);
         requestStack.clear();
 
-        player.experience().add(860000);
+        player.properties().experience().add(860000);
 
-        assertEquals(51, player.experience().level());
-        assertEquals(300, player.life().max()); // Issue #55
-        assertEquals(300, player.life().current());
-        assertEquals(5, player.characteristics().boostPoints());
-        assertEquals(1, player.spells().upgradePoints());
+        assertEquals(51, player.properties().experience().level());
+        assertEquals(300, player.properties().life().max()); // Issue #55
+        assertEquals(300, player.properties().life().current());
+        assertEquals(5, player.properties().characteristics().boostPoints());
+        assertEquals(1, player.properties().spells().upgradePoints());
 
         requestStack.assertAll(
             new NewPlayerLevel(51),
-            new Stats(player)
+            new Stats(player.properties())
         );
     }
 
@@ -159,12 +159,12 @@ class GamePlayerExperienceTest extends GameBaseCase {
         GamePlayer player = gamePlayer(true);
         requestStack.clear();
 
-        player.experience().add(1000);
+        player.properties().experience().add(1000);
 
-        assertEquals(50, player.experience().level());
+        assertEquals(50, player.properties().experience().level());
 
         requestStack.assertAll(
-            new Stats(player)
+            new Stats(player.properties())
         );
     }
 }

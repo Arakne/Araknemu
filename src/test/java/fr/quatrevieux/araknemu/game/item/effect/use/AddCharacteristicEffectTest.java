@@ -32,7 +32,7 @@ class AddCharacteristicEffectTest extends GameBaseCase {
     void applyFixedValue() {
         effect.apply(new UseEffect(null, Effect.ADD_CHARACT_WISDOM, new int[] {2, 0, 0}), player);
 
-        assertEquals(2, player.characteristics().base().get(Characteristic.WISDOM));
+        assertEquals(2, player.properties().characteristics().base().get(Characteristic.WISDOM));
         requestStack.assertLast(
             Information.characteristicBoosted(Characteristic.WISDOM, 2)
         );
@@ -42,11 +42,11 @@ class AddCharacteristicEffectTest extends GameBaseCase {
     void applyRandomValue() {
         effect.apply(new UseEffect(null, Effect.ADD_CHARACT_WISDOM, new int[] {1, 10, 0}), player);
 
-        int value = player.characteristics().base().get(Characteristic.WISDOM);
+        int value = player.properties().characteristics().base().get(Characteristic.WISDOM);
         assertBetween(1, 10, value);
 
         requestStack.assertAll(
-            new Stats(player),
+            new Stats(player.properties()),
             Information.characteristicBoosted(Characteristic.WISDOM, value)
         );
     }
@@ -56,9 +56,9 @@ class AddCharacteristicEffectTest extends GameBaseCase {
         effect = new AddCharacteristicEffect(Characteristic.RESISTANCE_ACTION_POINT);
         effect.apply(new UseEffect(null, Effect.ADD_CHARACT_WISDOM, new int[] {10, 0, 0}), player);
 
-        assertEquals(10, player.characteristics().base().get(Characteristic.RESISTANCE_ACTION_POINT));
+        assertEquals(10, player.properties().characteristics().base().get(Characteristic.RESISTANCE_ACTION_POINT));
         requestStack.assertAll(
-            new Stats(player)
+            new Stats(player.properties())
         );
     }
 

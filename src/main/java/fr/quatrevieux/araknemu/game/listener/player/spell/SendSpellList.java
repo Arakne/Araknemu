@@ -17,9 +17,7 @@ final public class SendSpellList implements Listener<GameJoined> {
 
     @Override
     public void on(GameJoined event) {
-        player.send(
-            new SpellList(player.spells())
-        );
+        player.send(new SpellList(player.scope().properties().spells()));
     }
 
     @Override

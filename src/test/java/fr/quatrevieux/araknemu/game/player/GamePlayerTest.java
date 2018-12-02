@@ -79,9 +79,9 @@ class GamePlayerTest extends GameBaseCase {
 
     @Test
     void characteristics() {
-        assertEquals(150, player.characteristics().get(Characteristic.INTELLIGENCE));
-        assertEquals(3, player.characteristics().get(Characteristic.MOVEMENT_POINT));
-        assertEquals(6, player.characteristics().get(Characteristic.ACTION_POINT));
+        assertEquals(150, player.properties().characteristics().get(Characteristic.INTELLIGENCE));
+        assertEquals(3, player.properties().characteristics().get(Characteristic.MOVEMENT_POINT));
+        assertEquals(6, player.properties().characteristics().get(Characteristic.ACTION_POINT));
     }
 
     @Test
@@ -107,12 +107,24 @@ class GamePlayerTest extends GameBaseCase {
 
     @Test
     void stopExploringSuccess() {
-        session.setExploration(new ExplorationPlayer(player));
-
+        player.attachExploration(new ExplorationPlayer(player));
         player.stopExploring();
 
         assertNull(session.exploration());
         assertFalse(player.isExploring());
+        assertSame(player, player.scope());
+    }
+
+    @Test
+    void stopExploringWithFightSession() {
+        player.attachExploration(new ExplorationPlayer(player));
+        player.attachFighter(new PlayerFighter(player));
+        player.stopExploring();
+
+        assertNull(session.exploration());
+        assertFalse(player.isExploring());
+        assertTrue(player.isFighting());
+        assertSame(player.fighter(), player.scope());
     }
 
     @Test
@@ -122,9 +134,7 @@ class GamePlayerTest extends GameBaseCase {
 
     @Test
     void exploration() {
-        session.setExploration(
-            new ExplorationPlayer(player)
-        );
+        player.attachExploration(new ExplorationPlayer(player));
 
         assertSame(session.exploration(), player.exploration());
     }
@@ -144,7 +154,8 @@ class GamePlayerTest extends GameBaseCase {
         player.attachFighter(fighter);
 
         assertSame(fighter, session.fighter());
-        assertSame(fighter, session.fighter());
+        assertSame(fighter, player.fighter());
+        assertSame(fighter, player.scope());
     }
 
     @Test
@@ -160,6 +171,7 @@ class GamePlayerTest extends GameBaseCase {
 
         assertNull(session.fighter());
         assertFalse(player.isFighting());
+        assertSame(player, player.scope());
     }
 
     @Test
@@ -178,16 +190,16 @@ class GamePlayerTest extends GameBaseCase {
         player.save();
 
         assertEquals(new Position(7894, 12), dataSet.refresh(entity).position());
-        assertEquals(123, player.characteristics().get(Characteristic.AGILITY));
+        assertEquals(123, player.properties().characteristics().get(Characteristic.AGILITY));
     }
 
     @Test
     void life() {
-        assertInstanceOf(PlayerLife.class, player.life());
-        assertEquals(345, player.life().current());
-        assertEquals(345, player.life().max());
+        assertInstanceOf(PlayerLife.class, player.properties().life());
+        assertEquals(345, player.properties().life().current());
+        assertEquals(345, player.properties().life().max());
 
         player.entity().setLife(10);
-        assertEquals(10, player.life().current());
+        assertEquals(10, player.properties().life().current());
     }
 }

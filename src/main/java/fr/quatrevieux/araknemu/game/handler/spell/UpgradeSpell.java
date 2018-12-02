@@ -13,7 +13,7 @@ final public class UpgradeSpell implements PacketHandler<GameSession, SpellUpgra
     @Override
     public void handle(GameSession session, SpellUpgrade packet) throws Exception {
         try {
-            session.player().spells()
+            session.player().properties().spells()
                 .entry(packet.spellId())
                 .upgrade()
             ;

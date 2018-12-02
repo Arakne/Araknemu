@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.handler.game;
 import fr.quatrevieux.araknemu.game.exploration.event.StartExploration;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
@@ -22,13 +23,15 @@ final public class CreateGame implements PacketHandler<GameSession, CreateGameRe
 
     @Override
     public void handle(GameSession session, CreateGameRequest packet) throws Exception {
+        final GamePlayer player = session.player();
+
         if (packet.type() != CreateGameRequest.Type.EXPLORATION) {
             throw new ErrorPacket(new GameCreationError());
         }
 
-        ExplorationPlayer exploration = service.create(session.player());
+        ExplorationPlayer exploration = service.create(player);
 
-        session.setExploration(exploration);
+        player.attachExploration(exploration);
 
         session.write(new GameCreated(CreateGameRequest.Type.EXPLORATION));
         session.dispatch(new StartExploration(exploration));

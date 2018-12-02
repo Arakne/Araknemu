@@ -19,7 +19,7 @@ final public class SendUpgradedSpell implements Listener<SpellUpgraded> {
     @Override
     public void on(SpellUpgraded event) {
         player.send(new UpdateSpell(event.entry()));
-        player.send(new Stats(player));
+        player.send(new Stats(player.scope().properties()));
     }
 
     @Override

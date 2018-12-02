@@ -107,7 +107,7 @@ class PlayerItemSetTest extends GameBaseCase {
 
         set.applySpecials(player);
 
-        assertEquals(60, player.characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
+        assertEquals(60, player.properties().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
     }
 
     @Test
@@ -122,12 +122,12 @@ class PlayerItemSetTest extends GameBaseCase {
         set.add(container.get(ItemTemplateRepository.class).get(8237));
 
         set.applySpecials(player);
-        assertEquals(30, player.characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
+        assertEquals(30, player.properties().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
 
         set.add(container.get(ItemTemplateRepository.class).get(8243));
         set.applyCurrentBonus(player);
 
-        assertEquals(60, player.characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
+        assertEquals(60, player.properties().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
     }
 
     @Test
@@ -135,7 +135,7 @@ class PlayerItemSetTest extends GameBaseCase {
         GamePlayer player = gamePlayer();
         PlayerItemSet set = new PlayerItemSet(service.itemSet(60));
 
-        player.characteristics().specials().add(SpecialEffects.Type.INITIATIVE, 60);
+        player.properties().characteristics().specials().add(SpecialEffects.Type.INITIATIVE, 60);
 
         set.add(container.get(ItemTemplateRepository.class).get(8213));
         set.add(container.get(ItemTemplateRepository.class).get(8219));
@@ -144,6 +144,6 @@ class PlayerItemSetTest extends GameBaseCase {
         set.add(container.get(ItemTemplateRepository.class).get(8237));
 
         set.relieveLastBonus(player);
-        assertEquals(30, player.characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
+        assertEquals(30, player.properties().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
     }
 }

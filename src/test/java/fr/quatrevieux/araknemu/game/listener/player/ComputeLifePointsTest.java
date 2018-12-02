@@ -25,10 +25,10 @@ class ComputeLifePointsTest extends GameBaseCase {
 
     @Test
     void onCharacteristicsChanged() {
-        player.characteristics().base().set(Characteristic.VITALITY, 100);
+        player.properties().characteristics().base().set(Characteristic.VITALITY, 100);
 
         listener.on(new CharacteristicsChanged());
 
-        assertEquals(395, player.life().max());
+        assertEquals(395, player.properties().life().max());
     }
 }

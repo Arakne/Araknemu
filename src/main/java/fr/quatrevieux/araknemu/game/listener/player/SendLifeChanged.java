@@ -22,7 +22,7 @@ final public class SendLifeChanged implements Listener<LifeChanged> {
             return;
         }
 
-        player.send(new Stats(player));
+        player.send(new Stats(player.scope().properties()));
 
         if (event.diff() > 0) {
             player.send(Information.heal(event.diff()));

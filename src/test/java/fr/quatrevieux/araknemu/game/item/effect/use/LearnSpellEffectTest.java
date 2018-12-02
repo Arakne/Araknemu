@@ -80,9 +80,9 @@ class LearnSpellEffectTest extends GameBaseCase {
             explorationPlayer()
         );
 
-        assertTrue(gamePlayer().spells().has(202));
-        assertEquals(1, gamePlayer().spells().entry(202).spell().level());
-        assertEquals(63, gamePlayer().spells().entry(202).position());
-        assertFalse(gamePlayer().spells().entry(202).classSpell());
+        assertTrue(gamePlayer().properties().spells().has(202));
+        assertEquals(1, gamePlayer().properties().spells().entry(202).spell().level());
+        assertEquals(63, gamePlayer().properties().spells().entry(202).position());
+        assertFalse(gamePlayer().properties().spells().entry(202).classSpell());
     }
 }

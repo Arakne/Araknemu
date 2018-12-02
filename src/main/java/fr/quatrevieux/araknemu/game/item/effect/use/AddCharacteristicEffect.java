@@ -22,7 +22,7 @@ final public class AddCharacteristicEffect implements UseEffectHandler {
     public void apply(UseEffect effect, ExplorationPlayer caster) {
         int value = random.rand(effect.arguments());
 
-        caster.characteristics().base().add(characteristic, value);
+        caster.player().properties().characteristics().base().add(characteristic, value);
 
         Information info = Information.characteristicBoosted(characteristic, value);
 

@@ -17,7 +17,7 @@ final public class SendPlayerXp implements Listener<PlayerXpChanged> {
 
     @Override
     public void on(PlayerXpChanged event) {
-        player.send(new Stats(player));
+        player.send(new Stats(player.scope().properties()));
     }
 
     @Override

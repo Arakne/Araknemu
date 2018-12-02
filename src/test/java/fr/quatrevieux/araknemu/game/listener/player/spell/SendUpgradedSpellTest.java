@@ -3,6 +3,8 @@ package fr.quatrevieux.araknemu.game.listener.player.spell;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.player.spell.event.SpellUpgraded;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookEntry;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
@@ -13,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-class SendUpgradedSpellTest extends GameBaseCase {
+class SendUpgradedSpellTest extends FightBaseCase {
     private SendUpgradedSpell listener;
 
     @Override
@@ -41,7 +43,29 @@ class SendUpgradedSpellTest extends GameBaseCase {
 
         requestStack.assertAll(
             new UpdateSpell(entry),
-            new Stats(gamePlayer())
+            new Stats(gamePlayer().properties())
+        );
+    }
+
+    @Test
+    void onSpellUpgradedDuringFight() throws Exception {
+        createFight();
+        PlayerFighter fighter = player.fighter();
+        fighter.init();
+        fighter.life().alter(fighter, -100);
+
+        SpellBookEntry entry = new SpellBookEntry(
+            new PlayerSpell(1, 202, false, 3, 3),
+            container.get(SpellService.class).get(202)
+        );
+
+        requestStack.clear();
+
+        listener.on(new SpellUpgraded(entry));
+
+        requestStack.assertAll(
+            new UpdateSpell(entry),
+            new Stats(fighter.properties())
         );
     }
 }

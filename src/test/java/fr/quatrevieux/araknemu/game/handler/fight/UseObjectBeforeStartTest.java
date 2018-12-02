@@ -43,7 +43,7 @@ class UseObjectBeforeStartTest extends FightBaseCase {
 
     @Test
     void handleSuccess() throws Exception {
-        player.life().set(10);
+        player.properties().life().set(10);
 
         createFight();
 
@@ -53,12 +53,12 @@ class UseObjectBeforeStartTest extends FightBaseCase {
         handler.handle(session, new ObjectUseRequest(entry.id(), 0, 0, false));
 
         requestStack.assertAll(
-            new Stats(player),
+            new Stats(player.properties()),
             Information.heal(10),
             new DestroyItem(entry)
         );
 
-        assertEquals(20, player.life().current());
+        assertEquals(20, player.properties().life().current());
         assertEquals(20, player.fighter().life().current());
         assertEquals(0, entry.quantity());
     }
@@ -75,7 +75,7 @@ class UseObjectBeforeStartTest extends FightBaseCase {
 
     @Test
     void functionalSuccess() throws Exception {
-        player.life().set(10);
+        player.properties().life().set(10);
 
         InventoryEntry entry = player.inventory().add(container.get(ItemService.class).create(468));
 

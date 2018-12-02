@@ -29,7 +29,7 @@ class SendLevelUpTest extends GameBaseCase {
 
         requestStack.assertAll(
             new NewPlayerLevel(50),
-            new Stats(gamePlayer())
+            new Stats(gamePlayer().properties())
         );
     }
 }

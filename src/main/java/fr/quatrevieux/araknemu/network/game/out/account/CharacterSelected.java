@@ -25,7 +25,7 @@ final public class CharacterSelected {
             "ASK|" +
             character.id() + "|" +
             character.name() + "|" +
-            character.experience().level() + "|" +
+            character.properties().experience().level() + "|" +
             "|" + // @todo guild
             character.spriteInfo().sex().ordinal() + "|" +
             character.spriteInfo().gfxId() + "|" +

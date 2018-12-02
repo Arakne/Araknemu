@@ -17,7 +17,7 @@ final public class BoostSpellEffect implements SpecialEffectHandler {
 
     @Override
     public void apply(SpecialEffect effect, GamePlayer player) {
-        player.spells().boosts().boost(
+        player.properties().spells().boosts().boost(
             effect.arguments()[0],
             modifier,
             effect.arguments()[2]
@@ -26,7 +26,7 @@ final public class BoostSpellEffect implements SpecialEffectHandler {
 
     @Override
     public void relieve(SpecialEffect effect, GamePlayer player) {
-        player.spells().boosts().boost(
+        player.properties().spells().boosts().boost(
             effect.arguments()[0],
             modifier,
             -effect.arguments()[2]

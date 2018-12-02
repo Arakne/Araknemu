@@ -31,19 +31,19 @@ class SubSpecialEffectTest extends GameBaseCase {
             player
         );
 
-        assertEquals(-15, player.characteristics().specials().get(SpecialEffects.Type.DISCERNMENT));
+        assertEquals(-15, player.properties().characteristics().specials().get(SpecialEffects.Type.DISCERNMENT));
     }
 
     @Test
     void relieve() {
-        player.characteristics().specials().add(SpecialEffects.Type.DISCERNMENT, -15);
+        player.properties().characteristics().specials().add(SpecialEffects.Type.DISCERNMENT, -15);
 
         handler.relieve(
             new SpecialEffect(handler, Effect.SUB_DISCERNMENT, new int[] {15, 0, 0}, ""),
             player
         );
 
-        assertEquals(0, player.characteristics().specials().get(SpecialEffects.Type.DISCERNMENT));
+        assertEquals(0, player.properties().characteristics().specials().get(SpecialEffects.Type.DISCERNMENT));
     }
 
     @Test

@@ -53,7 +53,7 @@ final public class PlayerFighterSprite implements Sprite {
             spriteInfo.race().ordinal() + ";" +
             spriteInfo.gfxId() + "^" + spriteInfo.size() + ";" +
             spriteInfo.sex().ordinal() + ";" +
-            fighter.player().experience().level() + ";" +
+            fighter.properties().experience().level() + ";" +
             "0,0,0,0;" + // @todo alignment
             StringUtils.join(spriteInfo.colors().toHexArray(), ";") + ";" +
             spriteInfo.accessories() + ";" +

@@ -31,31 +31,31 @@ class BoostSpellEffectTest extends GameBaseCase {
             player
         );
 
-        assertEquals(15, player.spells().boosts().modifiers(3).damage());
+        assertEquals(15, player.properties().spells().boosts().modifiers(3).damage());
     }
 
     @Test
     void applyWillAddToCurrentBoost() {
-        player.spells().boosts().set(3, SpellsBoosts.Modifier.DAMAGE, 5);
+        player.properties().spells().boosts().set(3, SpellsBoosts.Modifier.DAMAGE, 5);
 
         handler.apply(
             new SpecialEffect(handler, Effect.SPELL_ADD_DAMAGE, new int[] {3, 0, 15}, ""),
             player
         );
 
-        assertEquals(20, player.spells().boosts().modifiers(3).damage());
+        assertEquals(20, player.properties().spells().boosts().modifiers(3).damage());
     }
 
     @Test
     void relieve() {
-        player.spells().boosts().set(3, SpellsBoosts.Modifier.DAMAGE, 20);
+        player.properties().spells().boosts().set(3, SpellsBoosts.Modifier.DAMAGE, 20);
 
         handler.relieve(
             new SpecialEffect(handler, Effect.SPELL_ADD_DAMAGE, new int[] {3, 0, 15}, ""),
             player
         );
 
-        assertEquals(5, player.spells().boosts().modifiers(3).damage());
+        assertEquals(5, player.properties().spells().boosts().modifiers(3).damage());
     }
 
     @Test

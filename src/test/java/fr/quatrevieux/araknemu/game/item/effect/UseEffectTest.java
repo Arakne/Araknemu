@@ -106,7 +106,7 @@ class UseEffectTest extends GameBaseCase {
 
         effect.apply(explorationPlayer());
 
-        assertEquals(1, explorationPlayer().characteristics().base().get(Characteristic.AGILITY));
+        assertEquals(1, explorationPlayer().properties().characteristics().base().get(Characteristic.AGILITY));
     }
 
     @Test
@@ -131,7 +131,7 @@ class UseEffectTest extends GameBaseCase {
 
     @Test
     void applyToFighter() throws SQLException, ContainerException {
-        gamePlayer().life().set(10);
+        gamePlayer().properties().life().set(10);
         PlayerFighter fighter = container.get(FighterFactory.class).create(gamePlayer());
 
         UseEffect effect = new UseEffect(new AddLifeEffect(), Effect.NULL1, new int[] {10, 0, 0});

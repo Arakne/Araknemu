@@ -40,7 +40,7 @@ final public class FightEnd {
         private String formatExperience(Fighter fighter) {
             GamePlayer player = PlayerFighter.class.cast(fighter).player();
 
-            return player.experience().min() + ";" + player.experience().current() + ";" + player.experience().max();
+            return player.properties().experience().min() + ";" + player.properties().experience().current() + ";" + player.properties().experience().max();
 
             // @todo handle other fighters types
 //            if (fighter instanceof PlayerFighter) {

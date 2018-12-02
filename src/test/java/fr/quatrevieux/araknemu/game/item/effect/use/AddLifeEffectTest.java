@@ -36,52 +36,52 @@ class AddLifeEffectTest extends GameBaseCase {
 
     @Test
     void applyFixed() {
-        player.life().set(100);
+        player.player().properties().life().set(100);
         requestStack.clear();
 
         effect.apply(new UseEffect(effect, Effect.ADD_LIFE, new int[] {10, 0, 0}), player);
 
-        assertEquals(110, player.life().current());
+        assertEquals(110, player.properties().life().current());
         requestStack.assertAll(
-            new Stats(player),
+            new Stats(player.properties()),
             Information.heal(10)
         );
     }
 
     @Test
     void applyRandom() {
-        player.life().set(100);
+        player.player().properties().life().set(100);
         requestStack.clear();
 
         effect.apply(new UseEffect(effect, Effect.ADD_LIFE, new int[] {1, 10, 0}), player);
 
-        assertBetween(101, 110, player.life().current());
+        assertBetween(101, 110, player.properties().life().current());
         requestStack.assertAll(
-            new Stats(player),
-            Information.heal(player.life().current() - 100)
+            new Stats(player.properties()),
+            Information.heal(player.properties().life().current() - 100)
         );
     }
 
     @Test
     void applyToTarget() throws Exception {
         ExplorationPlayer target = new ExplorationPlayer(makeOtherPlayer());
-        target.life().set(10);
+        target.player().properties().life().set(10);
 
         effect.applyToTarget(new UseEffect(effect, Effect.ADD_LIFE, new int[] {10, 0, 0}), player, target, 0);
 
-        assertEquals(20, target.life().current());
+        assertEquals(20, target.properties().life().current());
     }
 
     @Test
     void applyToFighter() throws Exception {
         GamePlayer target = makeOtherPlayer();
-        target.life().set(10);
+        target.properties().life().set(10);
 
         PlayerFighter fighter = container.get(FighterFactory.class).create(target);
 
         effect.applyToFighter(new UseEffect(effect, Effect.ADD_LIFE, new int[] {10, 0, 0}), fighter);
 
-        assertEquals(20, target.life().current());
+        assertEquals(20, target.properties().life().current());
         assertEquals(20, fighter.life().current());
     }
 
@@ -92,7 +92,7 @@ class AddLifeEffectTest extends GameBaseCase {
 
     @Test
     void checkOk() {
-        player.life().set(10);
+        player.player().properties().life().set(10);
 
         assertTrue(effect.check(new UseEffect(effect, Effect.ADD_LIFE, new int[] {1, 10, 0}), player));
     }
@@ -112,7 +112,7 @@ class AddLifeEffectTest extends GameBaseCase {
     @Test
     void checkTargetOk() throws Exception {
         ExplorationPlayer target = new ExplorationPlayer(makeOtherPlayer());
-        target.life().set(10);
+        target.player().properties().life().set(10);
 
         assertTrue(effect.checkTarget(new UseEffect(effect, Effect.ADD_LIFE, new int[] {1, 10, 0}), player, target, 0));
     }
@@ -126,7 +126,7 @@ class AddLifeEffectTest extends GameBaseCase {
 
     @Test
     void checkFighterOk() throws SQLException, ContainerException {
-        gamePlayer().life().set(10);
+        gamePlayer().properties().life().set(10);
         PlayerFighter fighter = container.get(FighterFactory.class).create(gamePlayer());
 
         assertTrue(effect.checkFighter(new UseEffect(effect, Effect.ADD_LIFE, new int[] {1, 10, 0}), fighter));

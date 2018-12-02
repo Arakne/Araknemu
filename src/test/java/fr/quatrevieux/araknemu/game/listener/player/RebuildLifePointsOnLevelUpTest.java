@@ -26,9 +26,9 @@ class RebuildLifePointsOnLevelUpTest extends GameBaseCase {
 
     @Test
     void onCharacteristicsChanged() {
-        player.experience().add(860000);
+        player.properties().experience().add(860000);
         listener.on(new PlayerLevelUp(51));
 
-        assertEquals(300, player.life().max());
+        assertEquals(300, player.properties().life().max());
     }
 }

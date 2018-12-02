@@ -23,21 +23,21 @@ class SetLifeTest extends CommandTestCase {
 
     @Test
     void executeWithFixedLife() throws ContainerException, SQLException, AdminException {
-        gamePlayer().life().set(5);
+        gamePlayer().properties().life().set(5);
 
         execute("setlife", "100");
 
-        assertEquals(100, gamePlayer().life().current());
+        assertEquals(100, gamePlayer().properties().life().current());
         assertOutput("Life of Bob is set to 100");
     }
 
     @Test
     void executeWithMaxLife() throws ContainerException, SQLException, AdminException {
-        gamePlayer().life().set(5);
+        gamePlayer().properties().life().set(5);
 
         execute("setlife", "max");
 
-        assertTrue(gamePlayer().life().isFull());
+        assertTrue(gamePlayer().properties().life().isFull());
         assertOutput("Bob retrieve all his life");
     }
 }

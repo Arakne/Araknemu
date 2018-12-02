@@ -35,8 +35,8 @@ final public class AddXp extends AbstractCommand {
     public void execute(AdminPerformer performer, List<String> arguments) {
         long xp = Long.parseUnsignedLong(arguments.get(1));
 
-        player.experience().add(xp);
+        player.properties().experience().add(xp);
 
-        performer.success("Add {} xp to {} (level = {})", xp, player.name(), player.experience().level());
+        performer.success("Add {} xp to {} (level = {})", xp, player.name(), player.properties().experience().level());
     }
 }

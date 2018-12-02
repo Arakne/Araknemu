@@ -18,8 +18,6 @@ final public class PlayerLife implements Life {
     public PlayerLife(GamePlayer player, Player entity) {
         this.player = player;
         this.entity = entity;
-
-        init();
     }
 
     @Override
@@ -77,10 +75,10 @@ final public class PlayerLife implements Life {
     }
 
     private int computeMaxLife() {
-        return player.race().life(entity.level()) + player.characteristics().get(Characteristic.VITALITY);
+        return player.race().life(entity.level()) + player.properties().characteristics().get(Characteristic.VITALITY);
     }
 
-    private void init() {
+    public void init() {
         max = computeMaxLife();
 
         if (current() < 0 || current() > max) {

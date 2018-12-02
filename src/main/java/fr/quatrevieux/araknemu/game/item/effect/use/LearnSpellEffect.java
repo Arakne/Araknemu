@@ -17,7 +17,7 @@ final public class LearnSpellEffect implements UseEffectHandler {
 
     @Override
     public void apply(UseEffect effect, ExplorationPlayer caster) {
-        caster.spells().learn(
+        caster.properties().spells().learn(
             service.get(effect.arguments()[2])
         );
     }
@@ -29,7 +29,7 @@ final public class LearnSpellEffect implements UseEffectHandler {
     public boolean check(UseEffect effect, ExplorationPlayer caster) {
         int spellId = effect.arguments()[2];
 
-        if (!caster.spells().canLearn(service.get(spellId))) {
+        if (!caster.properties().spells().canLearn(service.get(spellId))) {
             caster.send(Error.cantLearnSpell(spellId));
 
             return false;

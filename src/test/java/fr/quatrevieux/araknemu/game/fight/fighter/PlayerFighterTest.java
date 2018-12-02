@@ -176,18 +176,18 @@ class PlayerFighterTest extends FightBaseCase {
 
     @Test
     void life() throws SQLException, ContainerException {
-        assertEquals(gamePlayer().life().current(), fighter.life().current());
-        assertEquals(gamePlayer().life().max(), fighter.life().max());
+        assertEquals(gamePlayer().properties().life().current(), fighter.life().current());
+        assertEquals(gamePlayer().properties().life().max(), fighter.life().max());
     }
 
     @Test
     void lifeAfterInitIsNotSyncWithPlayer() throws SQLException, ContainerException {
-        gamePlayer().life().set(100);
+        gamePlayer().properties().life().set(100);
         assertEquals(100, fighter.life().current());
         fighter.joinFight(fight, map.get(123));
         fighter.init();
 
-        gamePlayer().life().set(120);
+        gamePlayer().properties().life().set(120);
         assertEquals(100, fighter.life().current());
     }
 
@@ -204,8 +204,8 @@ class PlayerFighterTest extends FightBaseCase {
 
     @Test
     void characteristics() throws SQLException, ContainerException {
-        assertEquals(gamePlayer().characteristics().initiative(), fighter.characteristics().initiative());
-        assertEquals(gamePlayer().characteristics().get(Characteristic.ACTION_POINT), fighter.characteristics().get(Characteristic.ACTION_POINT));
+        assertEquals(gamePlayer().properties().characteristics().initiative(), fighter.characteristics().initiative());
+        assertEquals(gamePlayer().properties().characteristics().get(Characteristic.ACTION_POINT), fighter.characteristics().get(Characteristic.ACTION_POINT));
     }
 
     @Test

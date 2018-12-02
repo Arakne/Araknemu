@@ -27,14 +27,14 @@ class BaseCriticalityStrategyTest extends FightBaseCase {
 
     @Test
     void hitRateWithFixedBonus() {
-        player.characteristics().base().set(Characteristic.CRITICAL_BONUS, 10);
+        player.properties().characteristics().base().set(Characteristic.CRITICAL_BONUS, 10);
 
         assertEquals(15, strategy.hitRate(25));
     }
 
     @Test
     void hitRateWithAgility() {
-        player.characteristics().base().set(Characteristic.AGILITY, 100);
+        player.properties().characteristics().base().set(Characteristic.AGILITY, 100);
 
         assertEquals(15, strategy.hitRate(25));
     }
@@ -56,7 +56,7 @@ class BaseCriticalityStrategyTest extends FightBaseCase {
 
     @Test
     void failureRateWithMalus() {
-        player.characteristics().base().set(Characteristic.FAIL_MALUS, 10);
+        player.properties().characteristics().base().set(Characteristic.FAIL_MALUS, 10);
 
         assertEquals(90, strategy.failureRate(100));
     }

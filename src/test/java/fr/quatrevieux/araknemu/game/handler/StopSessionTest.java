@@ -86,7 +86,7 @@ class StopSessionTest extends FightBaseCase {
         GamePlayer player = gamePlayer(true);
 
         player.setPosition(new Position(1234, 56));
-        player.characteristics().setBoostPoints(12);
+        player.properties().characteristics().setBoostPoints(12);
 
         int playerid = gamePlayer().id();
 

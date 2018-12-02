@@ -34,7 +34,7 @@ class PlayerCharacteristicsTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        base = MutableCharacteristics.class.cast(gamePlayer(true).characteristics().base());
+        base = MutableCharacteristics.class.cast(gamePlayer(true).properties().characteristics().base());
 
         characteristics = new PlayerCharacteristics(
             dispatcher = new DefaultListenerAggregate(),
@@ -95,14 +95,14 @@ class PlayerCharacteristicsTest extends GameBaseCase {
 
         characteristics.rebuildStuffStats();
 
-        assertEquals(100, gamePlayer().characteristics().stuff().get(Characteristic.STRENGTH));
-        assertEquals(100, gamePlayer().characteristics().stuff().get(Characteristic.INTELLIGENCE));
-        assertEquals(20, gamePlayer().characteristics().stuff().get(Characteristic.WISDOM));
-        assertEquals(139, gamePlayer().characteristics().stuff().get(Characteristic.VITALITY));
-        assertEquals(5, gamePlayer().characteristics().stuff().get(Characteristic.FIXED_DAMAGE));
-        assertEquals(15, gamePlayer().characteristics().stuff().get(Characteristic.PERCENT_DAMAGE));
-        assertEquals(1, gamePlayer().characteristics().stuff().get(Characteristic.ACTION_POINT));
-        assertEquals(1, gamePlayer().characteristics().stuff().get(Characteristic.MAX_SUMMONED_CREATURES));
+        assertEquals(100, gamePlayer().properties().characteristics().stuff().get(Characteristic.STRENGTH));
+        assertEquals(100, gamePlayer().properties().characteristics().stuff().get(Characteristic.INTELLIGENCE));
+        assertEquals(20, gamePlayer().properties().characteristics().stuff().get(Characteristic.WISDOM));
+        assertEquals(139, gamePlayer().properties().characteristics().stuff().get(Characteristic.VITALITY));
+        assertEquals(5, gamePlayer().properties().characteristics().stuff().get(Characteristic.FIXED_DAMAGE));
+        assertEquals(15, gamePlayer().properties().characteristics().stuff().get(Characteristic.PERCENT_DAMAGE));
+        assertEquals(1, gamePlayer().properties().characteristics().stuff().get(Characteristic.ACTION_POINT));
+        assertEquals(1, gamePlayer().properties().characteristics().stuff().get(Characteristic.MAX_SUMMONED_CREATURES));
     }
 
     @Test
@@ -119,10 +119,10 @@ class PlayerCharacteristicsTest extends GameBaseCase {
         gamePlayer().inventory().add(container.get(ItemService.class).create(8237), 1, BeltSlot.SLOT_ID);
         gamePlayer().inventory().add(container.get(ItemService.class).create(8243), 1, 6);
 
-        gamePlayer().characteristics().specials().clear();
+        gamePlayer().properties().characteristics().specials().clear();
         characteristics.rebuildSpecialEffects();
 
-        assertEquals(60, gamePlayer().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
+        assertEquals(60, gamePlayer().properties().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
     }
 
     @Test
@@ -200,9 +200,9 @@ class PlayerCharacteristicsTest extends GameBaseCase {
         gamePlayer().entity().stats().set(Characteristic.VITALITY, 50);
         gamePlayer().inventory().add(container.get(ItemService.class).create(2414, true), 1, 7);
         gamePlayer().inventory().add(container.get(ItemService.class).create(2428, true), 1, 3);
-        gamePlayer().characteristics().rebuildSpecialEffects();
+        gamePlayer().properties().characteristics().rebuildSpecialEffects();
 
-        assertEquals(500, gamePlayer().characteristics().specials().get(SpecialEffects.Type.PODS));
-        assertEquals(300, gamePlayer().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
+        assertEquals(500, gamePlayer().properties().characteristics().specials().get(SpecialEffects.Type.PODS));
+        assertEquals(300, gamePlayer().properties().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
     }
 }

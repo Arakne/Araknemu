@@ -29,7 +29,7 @@ class PlayerFighterLifeTest extends FightBaseCase {
         fight = createFight();
         fighter = player.fighter();
 
-        life = new PlayerFighterLife(gamePlayer(true).life(), fighter);
+        life = new PlayerFighterLife(gamePlayer(true).properties().life(), fighter);
     }
 
     @Test
@@ -41,17 +41,17 @@ class PlayerFighterLifeTest extends FightBaseCase {
 
     @Test
     void defaults() throws SQLException, ContainerException {
-        assertEquals(gamePlayer().life().current(), life.current());
-        assertEquals(gamePlayer().life().max(), life.max());
+        assertEquals(gamePlayer().properties().life().current(), life.current());
+        assertEquals(gamePlayer().properties().life().max(), life.max());
         assertFalse(life.dead());
     }
 
     @Test
     void notInit() throws SQLException, ContainerException {
-        gamePlayer().life().set(100);
+        gamePlayer().properties().life().set(100);
 
         assertEquals(100, life.current());
-        assertEquals(gamePlayer().life().max(), life.max());
+        assertEquals(gamePlayer().properties().life().max(), life.max());
     }
 
     @Test
@@ -62,7 +62,7 @@ class PlayerFighterLifeTest extends FightBaseCase {
 
         life.init();
 
-        gamePlayer().life().set(5);
+        gamePlayer().properties().life().set(5);
 
         assertEquals(current, life.current());
         assertEquals(max, life.max());
@@ -70,7 +70,7 @@ class PlayerFighterLifeTest extends FightBaseCase {
 
     @Test
     void alterOnDamage() {
-        player.life().set(100);
+        player.properties().life().set(100);
         life.init();
 
         AtomicReference<FighterLifeChanged> ref = new AtomicReference<>();
@@ -88,7 +88,7 @@ class PlayerFighterLifeTest extends FightBaseCase {
 
     @Test
     void alterOnDamageHigherThanCurrentLife() {
-        player.life().set(100);
+        player.properties().life().set(100);
         life.init();
 
         AtomicReference<FighterLifeChanged> ref = new AtomicReference<>();
@@ -106,7 +106,7 @@ class PlayerFighterLifeTest extends FightBaseCase {
 
     @Test
     void alterOnHeal() {
-        player.life().set(100);
+        player.properties().life().set(100);
         life.init();
 
         AtomicReference<FighterLifeChanged> ref = new AtomicReference<>();
@@ -124,7 +124,7 @@ class PlayerFighterLifeTest extends FightBaseCase {
 
     @Test
     void alterOnHealHigherThanMax() {
-        player.life().set(100);
+        player.properties().life().set(100);
         life.init();
 
         AtomicReference<FighterLifeChanged> ref = new AtomicReference<>();
@@ -180,7 +180,7 @@ class PlayerFighterLifeTest extends FightBaseCase {
 
     @Test
     void alterOnDie() {
-        player.life().set(100);
+        player.properties().life().set(100);
         life.init();
 
         AtomicReference<FighterDie> ref = new AtomicReference<>();
