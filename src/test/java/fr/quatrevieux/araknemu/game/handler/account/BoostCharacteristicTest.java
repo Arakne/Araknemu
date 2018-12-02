@@ -2,17 +2,20 @@ package fr.quatrevieux.araknemu.game.handler.account;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
-import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.network.game.in.account.AskBoost;
 import fr.quatrevieux.araknemu.network.game.out.account.Stats;
+import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class BoostCharacteristicTest extends GameBaseCase {
+class BoostCharacteristicTest extends FightBaseCase {
     private BoostCharacteristic handler;
 
     @Override
@@ -47,5 +50,40 @@ class BoostCharacteristicTest extends GameBaseCase {
         assertThrows(IllegalArgumentException.class, () -> handler.handle(session, new AskBoost(Characteristic.INTELLIGENCE)));
 
         requestStack.assertEmpty();
+    }
+
+    @Test
+    void functionalInActiveFight() throws Exception {
+        player.properties().characteristics().setBoostPoints(10);
+
+        Fight fight = createFight();
+        fight.start();
+
+        assertErrorPacket(Error.cantDoDuringFight(), () -> handlePacket(new AskBoost(Characteristic.INTELLIGENCE)));
+    }
+
+    @Test
+    void functionalSuccess() throws Exception {
+        player.properties().characteristics().setBoostPoints(10);
+
+        handlePacket(new AskBoost(Characteristic.INTELLIGENCE));
+
+        requestStack.assertLast(
+            new Stats(gamePlayer().properties())
+        );
+
+        assertEquals(151, gamePlayer().properties().characteristics().base().get(Characteristic.INTELLIGENCE));
+        assertEquals(8, gamePlayer().properties().characteristics().boostPoints());
+    }
+
+    @Test
+    void functionalSuccessDuringPlacement() throws Exception {
+        player.properties().characteristics().setBoostPoints(10);
+
+        Fight fight = createFight();
+
+        handlePacket(new AskBoost(Characteristic.INTELLIGENCE));
+
+        assertEquals(151, gamePlayer().properties().characteristics().base().get(Characteristic.INTELLIGENCE));
     }
 }
