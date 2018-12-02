@@ -110,7 +110,7 @@ class UseObjectTest extends GameBaseCase {
 
     @Test
     void functionalErrorNotExploring() throws Exception {
-        gamePlayer().stopExploring();
+        gamePlayer().stop(gamePlayer().exploration());
 
         InventoryEntry entry = gamePlayer().inventory().add(container.get(ItemService.class).create(800));
         requestStack.clear();

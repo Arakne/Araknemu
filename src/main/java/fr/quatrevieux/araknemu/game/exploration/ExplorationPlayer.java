@@ -20,6 +20,7 @@ import fr.quatrevieux.araknemu.game.player.sprite.PlayerSprite;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import fr.quatrevieux.araknemu.game.world.creature.Explorer;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import fr.quatrevieux.araknemu.network.game.GameSession;
 
 /**
  * Player for exploration game session
@@ -63,6 +64,19 @@ final public class ExplorationPlayer implements Creature, Explorer, PlayerSessio
     @Override
     public void dispatch(Object event) {
         player.dispatch(event);
+    }
+
+    @Override
+    public void register(GameSession session) {
+        session.setExploration(this);
+    }
+
+    @Override
+    public void unregister(GameSession session) {
+        leave();
+        interactions().stop();
+
+        session.setExploration(null);
     }
 
     @Override
@@ -135,9 +149,10 @@ final public class ExplorationPlayer implements Creature, Explorer, PlayerSessio
      * Leave the current map
      */
     public void leave() {
-        map.remove(this);
-
-        dispatch(new MapLeaved(map));
+        if (map != null) {
+            map.remove(this);
+            dispatch(new MapLeaved(map));
+        }
     }
 
     /**
@@ -159,12 +174,5 @@ final public class ExplorationPlayer implements Creature, Explorer, PlayerSessio
      */
     public GamePlayer player() {
          return player;
-    }
-
-    /**
-     * Stop the exploration
-     */
-    public void stopExploring() {
-        player.stopExploring();
     }
 }

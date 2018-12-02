@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
+import fr.quatrevieux.araknemu.network.game.GameSession;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -130,6 +131,18 @@ final public class PlayerFighter implements Fighter, PlayerSessionScope {
     @Override
     public ListenerAggregate dispatcher() {
         return dispatcher;
+    }
+
+    @Override
+    public void register(GameSession session) {
+        session.setFighter(this);
+    }
+
+    @Override
+    public void unregister(GameSession session) {
+        destroy();
+
+        session.setFighter(null);
     }
 
     @Override

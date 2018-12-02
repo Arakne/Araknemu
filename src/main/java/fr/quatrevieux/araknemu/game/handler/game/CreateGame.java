@@ -31,7 +31,7 @@ final public class CreateGame implements PacketHandler<GameSession, CreateGameRe
 
         ExplorationPlayer exploration = service.create(player);
 
-        player.attachExploration(exploration);
+        player.start(exploration);
 
         session.write(new GameCreated(CreateGameRequest.Type.EXPLORATION));
         session.dispatch(new StartExploration(exploration));

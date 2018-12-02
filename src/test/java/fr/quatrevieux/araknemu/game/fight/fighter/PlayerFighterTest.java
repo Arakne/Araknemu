@@ -260,4 +260,13 @@ class PlayerFighterTest extends FightBaseCase {
 
         assertSame(fighter, ref.get().fighter());
     }
+
+    @Test
+    void registerUnregister() {
+        fighter.register(session);
+        assertSame(fighter, session.fighter());
+
+        fighter.unregister(session);
+        assertNull(session.fighter());
+    }
 }

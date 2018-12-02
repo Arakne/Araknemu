@@ -16,9 +16,7 @@ final public class LeaveExplorationForFight implements Listener<FightJoined> {
 
     @Override
     public void on(FightJoined event) {
-        new LeaveExploration(player).run();
-
-        player.stopExploring();
+        player.player().stop(player);
     }
 
     @Override

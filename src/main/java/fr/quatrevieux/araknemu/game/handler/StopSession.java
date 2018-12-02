@@ -5,26 +5,22 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.in.PacketHandler;
 import fr.quatrevieux.araknemu.network.in.SessionClosed;
 
+import java.util.Objects;
+import java.util.stream.Stream;
+
 /**
  * Handle end of session
  */
 final public class StopSession implements PacketHandler<GameSession, SessionClosed> {
     @Override
     public void handle(GameSession session, SessionClosed packet) {
-        if (session.exploration() != null) {
-            session.exploration().dispatch(new Disconnected());
-            session.setExploration(null);
-        }
-
-        if (session.fighter() != null) {
-            session.fighter().dispatch(new Disconnected());
-            session.setFighter(null);
-        }
-
-        if (session.player() != null) {
-            session.player().dispatch(new Disconnected());
-            session.setPlayer(null);
-        }
+        Stream.of(session.exploration(), session.fighter(), session.player())
+            .filter(Objects::nonNull)
+            .forEach(scope -> {
+                scope.dispatch(new Disconnected());
+                scope.unregister(session);
+            })
+        ;
 
         if (session.isLogged()) {
             session.account().detach();

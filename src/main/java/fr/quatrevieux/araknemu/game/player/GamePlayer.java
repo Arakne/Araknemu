@@ -9,14 +9,12 @@ import fr.quatrevieux.araknemu.game.chat.ChannelSet;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.player.characteristic.CharacterCharacteristics;
 import fr.quatrevieux.araknemu.game.player.experience.GamePlayerExperience;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.game.player.race.GamePlayerRace;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
 import fr.quatrevieux.araknemu.game.player.sprite.GamePlayerSpriteInfo;
 import fr.quatrevieux.araknemu.game.player.sprite.SpriteInfo;
-import fr.quatrevieux.araknemu.game.world.creature.Life;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 import java.util.Set;
@@ -79,6 +77,16 @@ final public class GamePlayer implements PlayerSessionScope {
         session.write(packet);
     }
 
+    @Override
+    public void register(GameSession session) {
+        session.setPlayer(this);
+    }
+
+    @Override
+    public void unregister(GameSession session) {
+        session.setPlayer(null);
+    }
+
     public int id() {
         return entity.id();
     }
@@ -127,25 +135,34 @@ final public class GamePlayer implements PlayerSessionScope {
     }
 
     /**
+     * Start a new session scope
+     */
+    public void start(PlayerSessionScope scope) {
+        if (this.scope == scope) {
+            throw new IllegalStateException("Scope already started");
+        }
+
+        scope.register(session);
+        this.scope = scope;
+    }
+
+    /**
+     * Stop the scope
+     */
+    public void stop(PlayerSessionScope scope) {
+        scope.unregister(session);
+
+        // Reset the scope only if we stop the active scope
+        if (this.scope == scope) {
+            this.scope = this;
+        }
+    }
+
+    /**
      * Check if the player is exploring
      */
     public boolean isExploring() {
         return session.exploration() != null;
-    }
-
-    /**
-     * Attach the exploration session to the current game
-     *
-     * @todo attachScope
-     */
-    @Deprecated
-    public void attachExploration(ExplorationPlayer exploration) {
-        if (isExploring()) {
-            throw new IllegalStateException("The current player is already exploring");
-        }
-
-        session.setExploration(exploration);
-        scope = exploration;
     }
 
     /**
@@ -159,57 +176,6 @@ final public class GamePlayer implements PlayerSessionScope {
         }
 
         return session.exploration();
-    }
-
-    /**
-     * Remove the exploration player
-     *
-     * @todo stopScope
-     */
-    @Deprecated
-    public void stopExploring() {
-        if (!isExploring()) {
-            throw new IllegalStateException("The current player is not an exploration state");
-        }
-
-        if (exploration() == scope) {
-            scope = this;
-        }
-
-        session.setExploration(null);
-    }
-
-    /**
-     * Attach a fighter to the player
-     *
-     * @todo attachScope
-     */
-    @Deprecated
-    public void attachFighter(PlayerFighter fighter) {
-        if (isFighting()) {
-            throw new IllegalStateException("The current player is already in fight");
-        }
-
-        session.setFighter(fighter);
-        scope = fighter;
-    }
-
-    /**
-     * Remove the attached fighter
-     *
-     * @todo stopScope
-     */
-    @Deprecated
-    public void stopFighting() {
-        if (!isFighting()) {
-            throw new IllegalStateException("The current player is not in fight");
-        }
-
-        if (fighter() == scope) {
-            scope = this;
-        }
-
-        session.setFighter(null);
     }
 
     /**

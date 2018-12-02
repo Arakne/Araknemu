@@ -58,7 +58,7 @@ class FightTeamChannelTest extends FightBaseCase {
 
         PlayerFighter teammate = makePlayerFighter(makeSimpleGamePlayer(10));
         fight.state(PlacementState.class).joinTeam(teammate, player.fighter().team());
-        teammate.player().attachFighter(teammate);
+        teammate.player().start(teammate);
 
         requestStack.clear();
 

@@ -1,15 +1,11 @@
 package fr.quatrevieux.araknemu.game.handler.game;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.listener.map.SendAccessories;
 import fr.quatrevieux.araknemu.game.listener.player.InitializeGame;
 import fr.quatrevieux.araknemu.game.listener.player.SendMapData;
-import fr.quatrevieux.araknemu.game.listener.player.StopExploration;
 import fr.quatrevieux.araknemu.game.listener.player.exploration.LeaveExplorationForFight;
-import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
-import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
-import fr.quatrevieux.araknemu.game.fight.FightService;
-import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
 import fr.quatrevieux.araknemu.network.game.out.account.Stats;
@@ -19,7 +15,6 @@ import fr.quatrevieux.araknemu.network.game.out.game.MapData;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.helpers.NOPLogger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -58,7 +53,6 @@ class CreateGameTest extends GameBaseCase {
 
         assertTrue(session.exploration().dispatcher().has(SendAccessories.class));
         assertTrue(session.exploration().dispatcher().has(InitializeGame.class));
-        assertTrue(session.exploration().dispatcher().has(StopExploration.class));
         assertTrue(session.exploration().dispatcher().has(SendMapData.class));
         assertTrue(session.exploration().dispatcher().has(LeaveExplorationForFight.class));
 

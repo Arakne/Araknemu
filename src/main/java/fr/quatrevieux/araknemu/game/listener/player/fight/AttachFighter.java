@@ -17,7 +17,7 @@ final public class AttachFighter implements Listener<FightJoined> {
 
     @Override
     public void on(FightJoined event) {
-        player.attachFighter(PlayerFighter.class.cast(event.fighter()));
+        player.start(PlayerFighter.class.cast(event.fighter()));
     }
 
     @Override

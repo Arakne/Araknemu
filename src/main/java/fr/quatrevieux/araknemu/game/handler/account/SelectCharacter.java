@@ -23,22 +23,12 @@ final public class SelectCharacter implements PacketHandler<GameSession, ChooseP
     @Override
     public void handle(GameSession session, ChoosePlayingCharacter packet) throws Exception {
         try {
-            session.setPlayer(
-                service.load(
-                    session,
-                    packet.id()
-                )
-            );
+            service.load(session, packet.id()).register(session);
         } catch (EntityNotFoundException e) {
-            throw new CloseWithPacket(
-                new CharacterSelectionError()
-            );
+            throw new CloseWithPacket(new CharacterSelectionError());
         }
 
-        session.write(
-            new CharacterSelected(session.player())
-        );
-
+        session.write(new CharacterSelected(session.player()));
         session.player().dispatch(new GameJoined());
     }
 

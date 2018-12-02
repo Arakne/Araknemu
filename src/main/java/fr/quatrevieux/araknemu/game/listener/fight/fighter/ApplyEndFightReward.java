@@ -17,7 +17,7 @@ final public class ApplyEndFightReward implements Listener<FightFinished> {
 
     @Override
     public void on(FightFinished event) {
-        fighter.player().stopFighting();
+        fighter.player().stop(fighter);
         event.reward().apply(new PlayerFighterRewardApplier(fighter));
         fighter.player().save();
     }

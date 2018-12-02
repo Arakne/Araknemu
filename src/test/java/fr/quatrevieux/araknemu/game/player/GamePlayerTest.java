@@ -101,14 +101,10 @@ class GamePlayerTest extends GameBaseCase {
     }
 
     @Test
-    void stopExploringNotExploring() {
-        assertThrows(IllegalStateException.class, () -> player.stopExploring());
-    }
-
-    @Test
     void stopExploringSuccess() {
-        player.attachExploration(new ExplorationPlayer(player));
-        player.stopExploring();
+        ExplorationPlayer exploration = new ExplorationPlayer(player);
+        player.start(exploration);
+        player.stop(exploration);
 
         assertNull(session.exploration());
         assertFalse(player.isExploring());
@@ -117,9 +113,10 @@ class GamePlayerTest extends GameBaseCase {
 
     @Test
     void stopExploringWithFightSession() {
-        player.attachExploration(new ExplorationPlayer(player));
-        player.attachFighter(new PlayerFighter(player));
-        player.stopExploring();
+        ExplorationPlayer exploration = new ExplorationPlayer(player);
+        player.start(exploration);
+        player.start(new PlayerFighter(player));
+        player.stop(exploration);
 
         assertNull(session.exploration());
         assertFalse(player.isExploring());
@@ -134,7 +131,8 @@ class GamePlayerTest extends GameBaseCase {
 
     @Test
     void exploration() {
-        player.attachExploration(new ExplorationPlayer(player));
+        ExplorationPlayer exploration = new ExplorationPlayer(player);
+        player.start(exploration);
 
         assertSame(session.exploration(), player.exploration());
     }
@@ -143,15 +141,23 @@ class GamePlayerTest extends GameBaseCase {
     void isFighting() {
         assertFalse(player.isFighting());
 
-        player.attachFighter(new PlayerFighter(player));
+        player.start(new PlayerFighter(player));
 
         assertTrue(player.isFighting());
     }
 
     @Test
+    void startAlreadyOnScope() {
+        PlayerFighter fighter = new PlayerFighter(player);
+        player.start(fighter);
+
+        assertThrows(IllegalStateException.class, () -> player.start(fighter));
+    }
+
+    @Test
     void attachFighter() {
         PlayerFighter fighter = new PlayerFighter(player);
-        player.attachFighter(fighter);
+        player.start(fighter);
 
         assertSame(fighter, session.fighter());
         assertSame(fighter, player.fighter());
@@ -166,8 +172,8 @@ class GamePlayerTest extends GameBaseCase {
     @Test
     void stopFighting() {
         PlayerFighter fighter = new PlayerFighter(player);
-        player.attachFighter(fighter);
-        player.stopFighting();
+        player.start(fighter);
+        player.stop(fighter);
 
         assertNull(session.fighter());
         assertFalse(player.isFighting());
@@ -175,8 +181,14 @@ class GamePlayerTest extends GameBaseCase {
     }
 
     @Test
-    void stopFightingNotInFight() {
-        assertThrows(IllegalStateException.class, () -> player.stopFighting());
+    void registerUnregister() {
+        assertNull(session.player());
+
+        player.register(session);
+        assertSame(player, session.player());
+
+        player.unregister(session);
+        assertNull(session.player());
     }
 
     @Test

@@ -4,7 +4,6 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.listener.player.InitializeGame;
-import fr.quatrevieux.araknemu.game.listener.player.StopExploration;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +36,5 @@ class ExplorationServiceTest extends GameBaseCase {
         ExplorationPlayer explorationPlayer = service.create(player);
 
         assertTrue(explorationPlayer.dispatcher().has(InitializeGame.class));
-        assertTrue(explorationPlayer.dispatcher().has(StopExploration.class));
     }
 }

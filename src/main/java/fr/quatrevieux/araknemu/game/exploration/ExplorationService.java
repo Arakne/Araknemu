@@ -2,9 +2,8 @@ package fr.quatrevieux.araknemu.game.exploration;
 
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.exploration.event.ExplorationPlayerCreated;
-import fr.quatrevieux.araknemu.game.listener.player.StopExploration;
-import fr.quatrevieux.araknemu.game.listener.player.InitializeGame;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.listener.player.InitializeGame;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 
 /**
@@ -26,7 +25,6 @@ final public class ExplorationService {
         ExplorationPlayer exploration = new ExplorationPlayer(player);
 
         exploration.dispatcher().add(new InitializeGame(exploration, mapService));
-        exploration.dispatcher().add(new StopExploration(exploration));
 
         dispatcher.dispatch(new ExplorationPlayerCreated(exploration));
 

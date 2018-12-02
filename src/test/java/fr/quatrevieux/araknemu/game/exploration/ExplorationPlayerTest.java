@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.exploration.event.MapChanged;
 import fr.quatrevieux.araknemu.game.exploration.event.MapLeaved;
 import fr.quatrevieux.araknemu.game.exploration.event.MapJoined;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
 import fr.quatrevieux.araknemu.game.exploration.interaction.event.PlayerMoveFinished;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
@@ -16,6 +17,7 @@ import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.sql.SQLException;
 import java.util.Collections;
@@ -181,11 +183,42 @@ class ExplorationPlayerTest extends GameBaseCase {
     }
 
     @Test
-    void stopExploring() {
+    void register() {
+        player.register(session);
+        assertSame(player, session.exploration());
+    }
+
+    @Test
+    void unregister() {
         session.setExploration(player);
 
-        player.stopExploring();
+        player.unregister(session);
 
         assertNull(session.exploration());
+        // @todo test leave
+    }
+
+    @Test
+    void unregisterShouldLeaveMap() throws ContainerException {
+        session.setExploration(player);
+
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10300);
+        player.join(map);
+
+        player.unregister(session);
+
+        assertNull(session.exploration());
+        assertFalse(player.map().players().contains(player));
+    }
+
+    @Test
+    void unregisterShouldStopInteractions() {
+        session.setExploration(player);
+        player.interactions().push(Mockito.mock(BlockingAction.class));
+
+        player.unregister(session);
+
+        assertNull(session.exploration());
+        assertFalse(player.interactions().busy());
     }
 }
