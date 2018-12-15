@@ -82,6 +82,8 @@ class PlayerServiceTest extends GameBaseCase {
         assertTrue(player.dispatcher().has(SendStats.class));
         assertTrue(player.dispatcher().has(ComputeLifePoints.class));
         assertTrue(player.dispatcher().has(SendLifeChanged.class));
+        assertTrue(player.dispatcher().has(SendRestrictions.class));
+        assertTrue(player.dispatcher().has(InitializeRestrictions.class));
     }
 
     @Test

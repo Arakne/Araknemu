@@ -33,6 +33,7 @@ final public class GamePlayer implements PlayerSessionScope {
     final private PlayerInventory inventory;
     final private SpriteInfo spriteInfo;
     final private PlayerData data;
+    final private Restrictions restrictions;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
@@ -48,8 +49,10 @@ final public class GamePlayer implements PlayerSessionScope {
         this.inventory = inventory.attach(this);
         this.data = new PlayerData(dispatcher, this, entity, spells, experience);
         this.spriteInfo = new GamePlayerSpriteInfo(entity, inventory);
+        this.restrictions = new Restrictions(this);
 
         this.data.build();
+        this.restrictions.init(this);
     }
 
     @Override
@@ -212,6 +215,13 @@ final public class GamePlayer implements PlayerSessionScope {
      */
     public SpriteInfo spriteInfo() {
         return spriteInfo;
+    }
+
+    /**
+     * Get the current player restrictions
+     */
+    public Restrictions restrictions() {
+        return restrictions;
     }
 
     Player entity() {

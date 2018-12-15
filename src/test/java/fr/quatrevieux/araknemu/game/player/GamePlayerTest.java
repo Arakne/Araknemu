@@ -214,4 +214,11 @@ class GamePlayerTest extends GameBaseCase {
         player.entity().setLife(10);
         assertEquals(10, player.properties().life().current());
     }
+
+    @Test
+    void restrictionsDefaults() {
+        assertTrue(player.restrictions().canMoveAllDirections());
+        assertFalse(player.restrictions().canBeMerchant());
+        assertFalse(player.restrictions().canExchange());
+    }
 }

@@ -2,6 +2,8 @@ package fr.quatrevieux.araknemu.game.player;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.Restrictions;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.sprite.PlayerSprite;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
@@ -29,7 +31,7 @@ class PlayerSpriteTest extends GameBaseCase {
     void data() throws SQLException, ContainerException {
         GamePlayer player = gamePlayer();
 
-        PlayerSprite sprite = new PlayerSprite(player.spriteInfo(), player.position());
+        PlayerSprite sprite = new PlayerSprite(player.spriteInfo(), player.position(), new Restrictions(explorationPlayer()));
 
         assertEquals(1, sprite.id());
         assertEquals(200, sprite.cell());
@@ -40,8 +42,22 @@ class PlayerSpriteTest extends GameBaseCase {
     @Test
     void generateString() throws SQLException, ContainerException {
         assertEquals(
-            "200;0;0;1;Bob;1;10^100x100;0;;7b;1c8;315;,,,,;;;;;;;",
-            new PlayerSprite(gamePlayer().spriteInfo(), gamePlayer().position()).toString()
+            "200;0;0;1;Bob;1;10^100x100;0;;7b;1c8;315;,,,,;;;;;;0;",
+            new PlayerSprite(gamePlayer().spriteInfo(), gamePlayer().position(), new Restrictions(explorationPlayer())).toString()
+        );
+    }
+
+    @Test
+    void withRestrictions() throws SQLException, ContainerException {
+        ExplorationPlayer exploration = explorationPlayer();
+        exploration.player().restrictions().set(
+            fr.quatrevieux.araknemu.game.player.Restrictions.Restriction.DENY_CHALLENGE,
+            fr.quatrevieux.araknemu.game.player.Restrictions.Restriction.DENY_ASSAULT
+        );
+
+        assertEquals(
+            "279;0;0;1;Bob;1;10^100x100;0;;7b;1c8;315;,,,,;;;;;;f;",
+            new PlayerSprite(gamePlayer().spriteInfo(), gamePlayer().position(), exploration.restrictions()).toString()
         );
     }
 
@@ -52,8 +68,8 @@ class PlayerSpriteTest extends GameBaseCase {
         gamePlayer().inventory().add(container.get(ItemService.class).create(2416), 1, 1);
 
         assertEquals(
-            "200;0;0;1;Bob;1;10^100x100;0;;7b;1c8;315;970,96b,96e,,;;;;;;;",
-            new PlayerSprite(gamePlayer().spriteInfo(), gamePlayer().position()).toString()
+            "200;0;0;1;Bob;1;10^100x100;0;;7b;1c8;315;970,96b,96e,,;;;;;;0;",
+            new PlayerSprite(gamePlayer().spriteInfo(), gamePlayer().position(), new Restrictions(explorationPlayer())).toString()
         );
     }
 }

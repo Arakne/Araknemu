@@ -83,6 +83,8 @@ final public class PlayerService {
         gamePlayer.dispatcher().add(new ComputeLifePoints(gamePlayer));
         gamePlayer.dispatcher().add(new SendLifeChanged(gamePlayer));
         gamePlayer.dispatcher().add(new SendStats(gamePlayer));
+        gamePlayer.dispatcher().add(new SendRestrictions(gamePlayer));
+        gamePlayer.dispatcher().add(new InitializeRestrictions(gamePlayer));
         this.dispatcher.dispatch(new PlayerLoaded(gamePlayer));
         gamePlayer.dispatcher().add(new SavePlayer(gamePlayer)); // After all events
 

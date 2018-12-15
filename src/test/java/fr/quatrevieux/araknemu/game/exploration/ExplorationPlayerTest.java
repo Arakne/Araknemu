@@ -40,8 +40,11 @@ class ExplorationPlayerTest extends GameBaseCase {
 
     @Test
     void sprite() throws SQLException, ContainerException {
+        Restrictions restrictions = new Restrictions(explorationPlayer());
+        restrictions.refresh();
+
         assertEquals(
-            new PlayerSprite(gamePlayer().spriteInfo(), gamePlayer().position()).toString(),
+            new PlayerSprite(gamePlayer().spriteInfo(), gamePlayer().position(), restrictions).toString(),
             player.sprite().toString()
         );
     }
@@ -195,7 +198,6 @@ class ExplorationPlayerTest extends GameBaseCase {
         player.unregister(session);
 
         assertNull(session.exploration());
-        // @todo test leave
     }
 
     @Test
@@ -220,5 +222,13 @@ class ExplorationPlayerTest extends GameBaseCase {
 
         assertNull(session.exploration());
         assertFalse(player.interactions().busy());
+    }
+
+    @Test
+    void restrictions() {
+        assertTrue(player.restrictions().canChallenge());
+        assertFalse(player.restrictions().canAttack());
+        assertFalse(player.restrictions().isTomb());
+        assertFalse(player.restrictions().isSlow());
     }
 }

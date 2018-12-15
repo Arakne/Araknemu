@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.listener.map;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.Restrictions;
 import fr.quatrevieux.araknemu.game.exploration.map.event.NewSpriteOnMap;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.sprite.PlayerSprite;
@@ -32,7 +33,7 @@ class SendNewSpriteTest extends GameBaseCase {
 
         listener.on(
             new NewSpriteOnMap(
-                new PlayerSprite(gamePlayer().spriteInfo(), gamePlayer().position())
+                new PlayerSprite(gamePlayer().spriteInfo(), gamePlayer().position(), new Restrictions(explorationPlayer()))
             )
         );
 
@@ -42,7 +43,7 @@ class SendNewSpriteTest extends GameBaseCase {
     @Test
     void onOtherSprite() throws Exception {
         GamePlayer player = makeOtherPlayer();
-        Sprite sprite = new PlayerSprite(player.spriteInfo(), player.position());
+        Sprite sprite = new PlayerSprite(player.spriteInfo(), player.position(), new Restrictions(explorationPlayer()));
 
         listener.on(
             new NewSpriteOnMap(sprite)

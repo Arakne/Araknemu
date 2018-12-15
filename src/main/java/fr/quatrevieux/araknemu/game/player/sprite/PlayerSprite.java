@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.player.sprite;
 
 import fr.quatrevieux.araknemu.data.value.Position;
+import fr.quatrevieux.araknemu.game.exploration.Restrictions;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,10 +15,12 @@ import org.apache.commons.lang3.StringUtils;
 final public class PlayerSprite implements Sprite {
     final private SpriteInfo spriteInfo;
     final private Position position;
+    final private Restrictions restrictions;
 
-    public PlayerSprite(SpriteInfo spriteInfo, Position position) {
+    public PlayerSprite(SpriteInfo spriteInfo, Position position, Restrictions restrictions) {
         this.spriteInfo = spriteInfo;
         this.position = position;
+        this.restrictions = restrictions;
     }
 
     @Override
@@ -60,7 +63,7 @@ final public class PlayerSprite implements Sprite {
             ";" + // @todo aura
             ";;" + // @todo emote; emote timer
             ";;" + // @todo guild; guild emblem
-            ";" // @todo restriction
+            Integer.toString(restrictions.toInt(), 36) + ";"
             // @todo mount
         ;
     }

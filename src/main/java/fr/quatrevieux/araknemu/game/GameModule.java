@@ -127,7 +127,8 @@ final public class GameModule implements ContainerModule {
                     container.get(InventoryService.class),
                     container.get(SpellBookService.class),
                     container.get(PlayerExperienceService.class),
-                    container.get(FightService.class)
+                    container.get(FightService.class),
+                    container.get(ExplorationService.class)
                 )
             )
         );

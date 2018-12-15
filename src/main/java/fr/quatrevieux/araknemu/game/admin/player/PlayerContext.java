@@ -49,6 +49,7 @@ final public class PlayerContext implements Context {
             .add(new SetLife(player))
             .add(new AddStats(player))
             .add(new AddXp(player))
+            .add(new Restriction(player))
             .add("account", accountContext)
         ;
     }

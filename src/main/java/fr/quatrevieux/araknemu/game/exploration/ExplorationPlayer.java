@@ -30,11 +30,14 @@ final public class ExplorationPlayer implements Creature, Explorer, PlayerSessio
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
     final private InteractionHandler interactions = new InteractionHandler();
+    final private Restrictions restrictions = new Restrictions(this);
 
     private ExplorationMap map;
 
     public ExplorationPlayer(GamePlayer player) {
         this.player = player;
+
+        restrictions.refresh();
     }
 
     @Override
@@ -81,7 +84,7 @@ final public class ExplorationPlayer implements Creature, Explorer, PlayerSessio
 
     @Override
     public Sprite sprite() {
-        return new PlayerSprite(player.spriteInfo(), position());
+        return new PlayerSprite(player.spriteInfo(), position(), restrictions);
     }
 
     @Override
@@ -94,6 +97,9 @@ final public class ExplorationPlayer implements Creature, Explorer, PlayerSessio
         return player.position();
     }
 
+    /**
+     * @todo Returns Optional<ExplorationMap>
+     */
     @Override
     public ExplorationMap map() {
         return map;
@@ -174,5 +180,12 @@ final public class ExplorationPlayer implements Creature, Explorer, PlayerSessio
      */
     public GamePlayer player() {
          return player;
+    }
+
+    /**
+     * Get the restrictions of the exploration player
+     */
+    public Restrictions restrictions() {
+        return restrictions;
     }
 }
