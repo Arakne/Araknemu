@@ -32,6 +32,13 @@ final public class Error extends InformationMessage {
     }
 
     /**
+     * Cannot do the action on the current state
+     */
+    static public Error cantDoOnCurrentState() {
+        return new Error(116);
+    }
+
+    /**
      * Cannot learn the spell
      *
      * @param spellId The spell

@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
+import fr.quatrevieux.araknemu.game.player.Restrictions;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,6 +70,29 @@ class ChallengeInvitationTest extends GameBaseCase {
 
         requestStack.assertLast(
             new GameActionResponse("", ActionType.JOIN_FIGHT, "" + initiator.id(), new Object[] {"z"})
+        );
+    }
+
+    @Test
+    void startInitiatorCantChallenge() {
+        initiator.player().restrictions().set(Restrictions.Restriction.DENY_CHALLENGE);
+
+        assertNull(invitation.start());
+
+        requestStack.assertLast(
+            new GameActionResponse("", ActionType.JOIN_FIGHT, "" + initiator.id(), new Object[] {"i"})
+        );
+    }
+
+    @Test
+    void startChallengerCantChallenge() {
+        challenger.player().restrictions().set(Restrictions.Restriction.DENY_CHALLENGE);
+        challenger.restrictions().refresh();
+
+        assertNull(invitation.start());
+
+        requestStack.assertLast(
+            new GameActionResponse("", ActionType.JOIN_FIGHT, "" + initiator.id(), new Object[] {"i"})
         );
     }
 

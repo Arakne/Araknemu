@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.chat.ChatException;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
+import fr.quatrevieux.araknemu.game.player.Restrictions;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
@@ -124,4 +125,20 @@ class SendMessageTest extends GameBaseCase {
         }
     }
 
+    @Test
+    void handleCantChat() throws Exception {
+        explorationPlayer();
+        gamePlayer().restrictions().set(Restrictions.Restriction.DENY_CHAT);
+
+        try {
+            handler.handle(
+                session,
+                new Message(ChannelType.MESSAGES, null, "Hello World !", "")
+            );
+
+            fail("Error packet should be thrown");
+        } catch (ErrorPacket packet) {
+            assertEquals(Error.cantDoOnCurrentState().toString(), packet.packet().toString());
+        }
+    }
 }

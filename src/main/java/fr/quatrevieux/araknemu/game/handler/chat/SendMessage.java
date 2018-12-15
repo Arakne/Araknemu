@@ -21,11 +21,12 @@ final public class SendMessage implements PacketHandler<GameSession, Message> {
 
     @Override
     public void handle(GameSession session, Message packet) throws Exception {
+        if (!session.player().restrictions().canChat()) {
+            throw new ErrorPacket(Error.cantDoOnCurrentState());
+        }
+
         try {
-            service.send(
-                session.player(),
-                packet
-            );
+            service.send(session.player(), packet);
         } catch (ChatException e) {
             switch (e.error()) {
                 case UNAUTHORIZED:

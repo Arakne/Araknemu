@@ -133,6 +133,10 @@ final public class ChallengeInvitation implements Interaction {
             return error(JoinFightError.CANT_BECAUSE_MAP);
         }
 
+        if (!initiator.player().restrictions().canChallenge() || !challenger.restrictions().canChallenge()) {
+            return error(JoinFightError.CANT_FIGHT_NO_RIGHTS);
+        }
+
         return true;
     }
 

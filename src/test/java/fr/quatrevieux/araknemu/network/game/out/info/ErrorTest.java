@@ -51,6 +51,12 @@ class ErrorTest {
         assertEquals("Im1116;", Error.cantCastBadState().toString());
     }
 
+
+    @Test
+    void cantDoOnCurrentState() {
+        assertEquals("Im1116;", Error.cantDoOnCurrentState().toString());
+    }
+
     @Test
     void cantCastBadRange() {
         assertEquals("Im1171;2~5~1", Error.cantCastBadRange(new Interval(2, 5), 1).toString());

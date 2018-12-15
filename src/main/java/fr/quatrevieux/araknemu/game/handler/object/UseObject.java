@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectUseRequest;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
+import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import fr.quatrevieux.araknemu.network.in.PacketHandler;
 
 /**
@@ -15,6 +16,10 @@ import fr.quatrevieux.araknemu.network.in.PacketHandler;
 final public class UseObject implements PacketHandler<GameSession, ObjectUseRequest> {
     @Override
     public void handle(GameSession session, ObjectUseRequest packet) throws Exception {
+        if (!session.player().restrictions().canUseObject()) {
+            throw new ErrorPacket(Error.cantDoOnCurrentState());
+        }
+
         InventoryEntry entry = session.player().inventory().get(packet.objectId());
 
         UsableItem item = UsableItem.class.cast(entry.item());
