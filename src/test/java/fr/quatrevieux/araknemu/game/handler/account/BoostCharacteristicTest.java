@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.network.game.in.account.AskBoost;
 import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import fr.quatrevieux.araknemu.network.game.out.object.InventoryWeight;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,11 +33,13 @@ class BoostCharacteristicTest extends FightBaseCase {
     @Test
     void handleSuccess() throws Exception {
         gamePlayer().properties().characteristics().setBoostPoints(10);
+        requestStack.clear();
 
         handler.handle(session, new AskBoost(Characteristic.INTELLIGENCE));
 
-        requestStack.assertLast(
-            new Stats(gamePlayer().properties())
+        requestStack.assertAll(
+            new Stats(gamePlayer().properties()),
+            new InventoryWeight(gamePlayer())
         );
 
         assertEquals(151, gamePlayer().properties().characteristics().base().get(Characteristic.INTELLIGENCE));
@@ -65,11 +68,13 @@ class BoostCharacteristicTest extends FightBaseCase {
     @Test
     void functionalSuccess() throws Exception {
         player.properties().characteristics().setBoostPoints(10);
+        requestStack.clear();
 
         handlePacket(new AskBoost(Characteristic.INTELLIGENCE));
 
-        requestStack.assertLast(
-            new Stats(gamePlayer().properties())
+        requestStack.assertAll(
+            new Stats(gamePlayer().properties()),
+            new InventoryWeight(gamePlayer())
         );
 
         assertEquals(151, gamePlayer().properties().characteristics().base().get(Characteristic.INTELLIGENCE));

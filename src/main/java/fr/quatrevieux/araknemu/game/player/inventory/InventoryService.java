@@ -74,6 +74,9 @@ final public class InventoryService implements EventsSubscriber {
 
                     // Must be the last registered listener : the stats will be sent
                     dispatcher.add(new UpdateStuffStats(event.player()));
+
+                    // Compute and send weight after stats updated
+                    dispatcher.register(new SendWeight(event.player()));
                 }
 
                 @Override

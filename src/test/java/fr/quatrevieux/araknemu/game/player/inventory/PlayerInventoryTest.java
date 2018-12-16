@@ -260,4 +260,47 @@ class PlayerInventoryTest extends GameBaseCase {
         assertEquals(Optional.of(entry.item()), inventory.bySlot(1));
         assertFalse(inventory.bySlot(5).isPresent());
     }
+
+    @Test
+    void weight() throws SQLException, ContainerException {
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
+
+        assertEquals(0, inventory.weight());
+
+        InventoryEntry entry = inventory.add(container.get(ItemService.class).create(2416), 1, 1);
+        inventory.refreshWeight();
+
+        assertEquals(10, inventory.weight());
+
+        entry.add(5);
+        inventory.refreshWeight();
+
+        assertEquals(60, inventory.weight());
+
+        inventory.add(container.get(ItemService.class).create(2411), 10, -1);
+        inventory.refreshWeight();
+
+        assertEquals(160, inventory.weight());
+    }
+
+    @Test
+    void overweight() throws SQLException, ContainerException {
+        dataSet
+            .pushItemTemplates()
+            .pushItemSets()
+        ;
+
+        assertFalse(inventory.overweight());
+
+        InventoryEntry entry = inventory.add(container.get(ItemService.class).create(2416), 10, -1);
+        assertFalse(inventory.overweight());
+
+        entry.add(1000);
+        inventory.refreshWeight();
+
+        assertTrue(inventory.overweight());
+    }
 }

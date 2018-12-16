@@ -12,6 +12,7 @@ import fr.quatrevieux.araknemu.game.item.inventory.exception.BadLevelException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
 import fr.quatrevieux.araknemu.game.listener.player.SendStats;
+import fr.quatrevieux.araknemu.game.listener.player.inventory.SendWeight;
 import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
 import fr.quatrevieux.araknemu.game.player.inventory.event.EquipmentChanged;
 import fr.quatrevieux.araknemu.game.player.inventory.itemset.PlayerItemSet;
@@ -51,6 +52,7 @@ public class FunctionalTest extends FightBaseCase {
 
         // remove indirect inventory listeners
         gamePlayer().dispatcher().remove(SendStats.class);
+        gamePlayer().dispatcher().remove(new SendWeight(player).listeners()[1].getClass());
     }
 
     @Test
@@ -63,9 +65,11 @@ public class FunctionalTest extends FightBaseCase {
         assertEquals(1, entry.quantity());
         assertSame(item, entry.item());
         assertSame(entry, inventory.get(entry.id()));
+        assertEquals(1, inventory.weight());
 
-        requestStack.assertLast(
-            new AddItem(entry)
+        requestStack.assertAll(
+            new AddItem(entry),
+            new InventoryWeight(player)
         );
     }
 
@@ -79,9 +83,11 @@ public class FunctionalTest extends FightBaseCase {
         assertEquals(10, entry.quantity());
         assertSame(item, entry.item());
         assertSame(entry, inventory.get(entry.id()));
+        assertEquals(10, inventory.weight());
 
-        requestStack.assertLast(
-            new AddItem(entry)
+        requestStack.assertAll(
+            new AddItem(entry),
+            new InventoryWeight(player)
         );
     }
 
@@ -94,11 +100,15 @@ public class FunctionalTest extends FightBaseCase {
         );
 
         assertIterableEquals(entries, inventory);
+        assertEquals(30, inventory.weight());
 
         requestStack.assertAll(
             new AddItem(entries.get(0)),
+            new InventoryWeight(player),
             new AddItem(entries.get(1)),
-            new AddItem(entries.get(2))
+            new InventoryWeight(player),
+            new AddItem(entries.get(2)),
+            new InventoryWeight(player)
         );
     }
 
@@ -162,7 +172,9 @@ public class FunctionalTest extends FightBaseCase {
 
         requestStack.assertAll(
             new AddItem(newEntry),
-            new ItemQuantity(entry)
+            new InventoryWeight(player),
+            new ItemQuantity(entry),
+            new InventoryWeight(player)
         );
 
         assertEquals(-1, entry.position());
@@ -261,8 +273,10 @@ public class FunctionalTest extends FightBaseCase {
         inventory.delete(entry);
 
         assertThrows(ItemNotFoundException.class, () -> inventory.get(entry.id()));
+        assertEquals(0, inventory.weight());
         requestStack.assertAll(
-            new DestroyItem(entry)
+            new DestroyItem(entry),
+            new InventoryWeight(player)
         );
     }
 
@@ -279,12 +293,14 @@ public class FunctionalTest extends FightBaseCase {
 
         requestStack.assertAll(
             new UpdateItemSet(inventory.itemSets().get(entry.item().set().get())),
-            new DestroyItem(entry)
+            new DestroyItem(entry),
+            new InventoryWeight(player)
         );
 
         assertSame(entry, ref.get().entry());
         assertFalse(ref.get().equiped());
         assertEquals(0, ref.get().slot());
+        assertEquals(0, inventory.weight());
     }
 
     @Test
@@ -299,7 +315,8 @@ public class FunctionalTest extends FightBaseCase {
         requestStack.assertAll(
             new UpdateItemSet(inventory.itemSets().get(entry.item().set().get())),
             new SpriteAccessories(gamePlayer().id(), inventory.accessories()),
-            new DestroyItem(entry)
+            new DestroyItem(entry),
+            new InventoryWeight(player)
         );
     }
 
@@ -311,9 +328,11 @@ public class FunctionalTest extends FightBaseCase {
         entry.remove(3);
 
         assertEquals(7, entry.quantity());
+        assertEquals(70, inventory.weight());
 
-        requestStack.assertLast(
-            new ItemQuantity(entry)
+        requestStack.assertAll(
+            new ItemQuantity(entry),
+            new InventoryWeight(player)
         );
     }
 
@@ -325,9 +344,11 @@ public class FunctionalTest extends FightBaseCase {
         entry.remove(10);
 
         assertEquals(0, entry.quantity());
+        assertEquals(0, inventory.weight());
 
-        requestStack.assertLast(
-            new DestroyItem(entry)
+        requestStack.assertAll(
+            new DestroyItem(entry),
+            new InventoryWeight(player)
         );
     }
 
@@ -338,9 +359,11 @@ public class FunctionalTest extends FightBaseCase {
 
         assertSame(entry, inventory.add(itemService.create(2411, true)));
         assertEquals(2, entry.quantity());
+        assertEquals(20, inventory.weight());
 
-        requestStack.assertLast(
-            new ItemQuantity(entry)
+        requestStack.assertAll(
+            new ItemQuantity(entry),
+            new InventoryWeight(player)
         );
     }
 
@@ -359,7 +382,9 @@ public class FunctionalTest extends FightBaseCase {
         requestStack.assertAll(
             new UpdateItemSet(inventory.itemSets().get(entry2.item().set().get())),
             new DestroyItem(entry2),
-            new ItemQuantity(entry)
+            new InventoryWeight(player),
+            new ItemQuantity(entry),
+            new InventoryWeight(player)
         );
     }
 

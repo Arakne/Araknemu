@@ -41,4 +41,9 @@ public interface CharacterCharacteristics extends Characteristics {
      * Get the current player discernment
      */
     public int discernment();
+
+    /**
+     * Get the current player pods
+     */
+    public int pods();
 }

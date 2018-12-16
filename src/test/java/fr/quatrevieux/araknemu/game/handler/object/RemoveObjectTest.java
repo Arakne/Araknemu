@@ -9,6 +9,7 @@ import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectDeleteRequest;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import fr.quatrevieux.araknemu.network.game.out.object.DestroyItem;
+import fr.quatrevieux.araknemu.network.game.out.object.InventoryWeight;
 import fr.quatrevieux.araknemu.network.game.out.object.ItemDeletionError;
 import fr.quatrevieux.araknemu.network.game.out.object.ItemQuantity;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,21 +49,25 @@ class RemoveObjectTest extends FightBaseCase {
 
     @Test
     void handleSuccessAllItems() throws Exception {
+        requestStack.clear();
         handler.handle(session, new ObjectDeleteRequest(entry.id(), 10));
 
-        requestStack.assertLast(
-            new DestroyItem(entry)
+        requestStack.assertAll(
+            new DestroyItem(entry),
+            new InventoryWeight(gamePlayer())
         );
     }
 
     @Test
     void handleSuccessPartial() throws Exception {
+        requestStack.clear();
         handler.handle(session, new ObjectDeleteRequest(entry.id(), 3));
 
         assertEquals(7, entry.quantity());
 
-        requestStack.assertLast(
-            new ItemQuantity(entry)
+        requestStack.assertAll(
+            new ItemQuantity(entry),
+            new InventoryWeight(gamePlayer())
         );
     }
 
@@ -77,11 +82,13 @@ class RemoveObjectTest extends FightBaseCase {
     @Test
     void functionalSuccessDuringPlacement() throws Exception {
         createFight();
+        requestStack.clear();
 
         handlePacket(new ObjectDeleteRequest(entry.id(), 10));
 
-        requestStack.assertLast(
-            new DestroyItem(entry)
+        requestStack.assertAll(
+            new DestroyItem(entry),
+            new InventoryWeight(gamePlayer())
         );
     }
 }

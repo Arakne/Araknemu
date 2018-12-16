@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
 import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import fr.quatrevieux.araknemu.network.game.out.info.Information;
+import fr.quatrevieux.araknemu.network.game.out.object.InventoryWeight;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -47,6 +48,7 @@ class AddCharacteristicEffectTest extends GameBaseCase {
 
         requestStack.assertAll(
             new Stats(player.properties()),
+            new InventoryWeight(player.player()),
             Information.characteristicBoosted(Characteristic.WISDOM, value)
         );
     }
@@ -58,7 +60,8 @@ class AddCharacteristicEffectTest extends GameBaseCase {
 
         assertEquals(10, player.properties().characteristics().base().get(Characteristic.RESISTANCE_ACTION_POINT));
         requestStack.assertAll(
-            new Stats(player.properties())
+            new Stats(player.properties()),
+            new InventoryWeight(player.player())
         );
     }
 

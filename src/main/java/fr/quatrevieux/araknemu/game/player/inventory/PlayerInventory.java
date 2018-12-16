@@ -29,6 +29,7 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry>, Dispa
     final private ItemSets itemSets;
 
     private GamePlayer owner;
+    private int weight;
 
     public PlayerInventory(Collection<InventoryService.LoadedItem> items) {
         this.storage = new SimpleItemStorage<>(
@@ -129,6 +130,34 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry>, Dispa
      */
     public ItemSets itemSets() {
         return itemSets;
+    }
+
+    /**
+     * Get the total inventory weight
+     */
+    public int weight() {
+        return weight;
+    }
+
+    /**
+     * Check if the inventory is overweight
+     *
+     * @return true if the inventory is full
+     */
+    public boolean overweight() {
+        return weight() > owner.scope().properties().characteristics().pods();
+    }
+
+    /**
+     * Refresh the inventory weight
+     * Should be called after inventory operations
+     */
+    public void refreshWeight() {
+        weight = 0;
+
+        for (InventoryEntry entry : this) {
+            weight += entry.quantity() * entry.item().template().weight();
+        }
     }
 
     /**

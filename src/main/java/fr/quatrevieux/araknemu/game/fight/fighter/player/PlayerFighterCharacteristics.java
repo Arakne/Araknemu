@@ -64,6 +64,11 @@ final public class PlayerFighterCharacteristics implements FighterCharacteristic
     }
 
     @Override
+    public int pods() {
+        return baseCharacteristics.pods();
+    }
+
+    @Override
     public void alter(Characteristic characteristic, int value) {
         buffs.add(characteristic, value);
         fighter.dispatch(new FighterCharacteristicChanged(characteristic, value));

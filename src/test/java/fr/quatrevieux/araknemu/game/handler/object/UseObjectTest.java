@@ -17,6 +17,7 @@ import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import fr.quatrevieux.araknemu.network.game.out.info.Information;
 import fr.quatrevieux.araknemu.network.game.out.object.DestroyItem;
+import fr.quatrevieux.araknemu.network.game.out.object.InventoryWeight;
 import fr.quatrevieux.araknemu.network.game.out.object.ItemQuantity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,8 +51,10 @@ class UseObjectTest extends GameBaseCase {
 
         requestStack.assertAll(
             new Stats(gamePlayer().properties()),
+            new InventoryWeight(gamePlayer()),
             Information.characteristicBoosted(Characteristic.AGILITY, 1),
-            new DestroyItem(entry)
+            new DestroyItem(entry),
+            new InventoryWeight(gamePlayer())
         );
 
         assertThrows(ItemNotFoundException.class, () -> explorationPlayer().inventory().get(entry.id()));
@@ -81,7 +84,10 @@ class UseObjectTest extends GameBaseCase {
 
         handler.handle(session, new ObjectUseRequest(entry.id(), otherPlayer.id(), 0, true));
 
-        requestStack.assertAll(new DestroyItem(entry));
+        requestStack.assertAll(
+            new DestroyItem(entry),
+            new InventoryWeight(gamePlayer())
+        );
         assertEquals(20, other.properties().life().current());
         assertEquals(0, entry.quantity());
     }
@@ -95,7 +101,8 @@ class UseObjectTest extends GameBaseCase {
 
         requestStack.assertAll(
             new GameActionResponse(1, ActionType.FIREWORK, explorationPlayer().id(), "150,2900,11,8,1"),
-            new ItemQuantity(entry)
+            new ItemQuantity(entry),
+            new InventoryWeight(gamePlayer())
         );
         assertEquals(99, entry.quantity());
     }

@@ -52,6 +52,7 @@ class PlayerFighterCharacteristicsTest extends FightBaseCase {
         assertEquals(baseCharacteristics.stuff(), fighterCharacteristics.stuff());
         assertEquals(baseCharacteristics.feats(), fighterCharacteristics.feats());
         assertEquals(baseCharacteristics.boostPoints(), fighterCharacteristics.boostPoints());
+        assertEquals(baseCharacteristics.pods(), fighterCharacteristics.pods());
     }
 
     @Test

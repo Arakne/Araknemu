@@ -125,6 +125,14 @@ final public class PlayerCharacteristics implements CharacterCharacteristics {
         ;
     }
 
+    @Override
+    public int pods() {
+        return race.startPods()
+            + specials.get(SpecialEffects.Type.PODS)
+            + get(Characteristic.STRENGTH) * 5
+        ;
+    }
+
     /**
      * Rebuild the stuff stats
      */

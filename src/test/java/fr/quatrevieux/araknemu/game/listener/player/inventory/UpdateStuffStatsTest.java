@@ -55,9 +55,7 @@ class UpdateStuffStatsTest extends GameBaseCase {
 
         assertNotNull(ref.get());
 
-        requestStack.assertLast(
-            new Stats(player.properties())
-        );
+        requestStack.assertOne(new Stats(player.properties()));
     }
 
     @Test

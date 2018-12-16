@@ -205,4 +205,15 @@ class PlayerCharacteristicsTest extends GameBaseCase {
         assertEquals(500, gamePlayer().properties().characteristics().specials().get(SpecialEffects.Type.PODS));
         assertEquals(300, gamePlayer().properties().characteristics().specials().get(SpecialEffects.Type.INITIATIVE));
     }
+
+    @Test
+    void pods() {
+        assertEquals(1250, characteristics.pods());
+
+        characteristics.specials().add(SpecialEffects.Type.PODS, 100);
+        assertEquals(1350, characteristics.pods());
+
+        characteristics.base().add(Characteristic.STRENGTH, 100);
+        assertEquals(1850, characteristics.pods());
+    }
 }

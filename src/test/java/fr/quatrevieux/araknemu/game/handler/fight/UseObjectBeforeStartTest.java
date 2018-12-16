@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import fr.quatrevieux.araknemu.network.game.out.info.Information;
 import fr.quatrevieux.araknemu.network.game.out.object.DestroyItem;
+import fr.quatrevieux.araknemu.network.game.out.object.InventoryWeight;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -55,7 +56,8 @@ class UseObjectBeforeStartTest extends FightBaseCase {
         requestStack.assertAll(
             new Stats(player.properties()),
             Information.heal(10),
-            new DestroyItem(entry)
+            new DestroyItem(entry),
+            new InventoryWeight(player)
         );
 
         assertEquals(20, player.properties().life().current());

@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.player.inventory;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
@@ -90,6 +91,10 @@ class InventoryServiceTest extends GameBaseCase {
         assertTrue(gamePlayer().dispatcher().has(SendItemSetChange.class));
         assertTrue(gamePlayer().dispatcher().has(InitializeItemSets.class));
         assertTrue(gamePlayer().dispatcher().has(ApplyItemSetSpecialEffects.class));
+
+        for (Listener listener : new SendWeight(gamePlayer()).listeners()) {
+            assertTrue(gamePlayer().dispatcher().has(listener.getClass()));
+        }
     }
 
     @Test
