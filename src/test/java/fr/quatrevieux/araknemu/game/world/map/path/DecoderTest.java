@@ -133,6 +133,27 @@ class DecoderTest extends GameBaseCase {
         );
     }
 
+    /**
+     * https://github.com/vincent4vx/Araknemu/issues/69
+     */
+    @Test
+    void encodeRectilinearPathWillNotCompressTheStartCellOnEast() {
+        assertEquals(
+            "abKabN",
+            decoder.encode(
+                new Path(
+                    decoder,
+                    Arrays.asList(
+                        new PathStep(map.get(100), Direction.EAST),
+                        new PathStep(map.get(101), Direction.EAST),
+                        new PathStep(map.get(102), Direction.EAST),
+                        new PathStep(map.get(103), Direction.EAST)
+                    )
+                )
+            )
+        );
+    }
+
     @Test
     void decodeComplex() throws PathException {
         Path path = decoder.decode("ebIgbf", map.get(100));

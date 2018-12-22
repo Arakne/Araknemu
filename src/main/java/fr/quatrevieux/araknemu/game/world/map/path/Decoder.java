@@ -74,7 +74,14 @@ final public class Decoder<C extends MapCell> {
     public String encode(Path<C> path) {
         StringBuilder encoded = new StringBuilder(path.size() * 3);
 
-        for (int i = 0; i < path.size(); ++i) {
+        // #69 : The start cell must be added to path without compression
+        encoded
+            .append(Direction.EAST.toChar())
+            .append(Base64.encode(path.get(0).cell().id(), 2))
+        ;
+
+        // Start the path at step 1 : The step 0 is the start cell
+        for (int i = 1; i < path.size(); ++i) {
             PathStep step = path.get(i);
 
             encoded.append(step.direction().toChar());
