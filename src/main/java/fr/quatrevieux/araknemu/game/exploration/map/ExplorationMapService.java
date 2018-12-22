@@ -105,6 +105,7 @@ final public class ExplorationMapService implements PreloadableService, EventsSu
         map.dispatcher().add(new SendNewSprite(map));
         map.dispatcher().add(new SendSpriteRemoved(map));
         map.dispatcher().add(new SendPlayerChangeCell(map));
+        map.dispatcher().add(new SendPlayerChangeOrientation(map));
 
         dispatcher.dispatch(new MapLoaded(map));
 

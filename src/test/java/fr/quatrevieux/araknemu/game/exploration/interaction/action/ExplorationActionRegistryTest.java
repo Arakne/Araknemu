@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.MoveFact
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import fr.quatrevieux.araknemu.game.world.map.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -45,7 +46,7 @@ class ExplorationActionRegistryTest extends FightBaseCase {
 
     @Test
     void createSuccess() throws Exception {
-        explorationPlayer().move(explorationPlayer().map().get(100));
+        explorationPlayer().move(explorationPlayer().map().get(100), Direction.SOUTH_EAST);
 
         Action action = factory.create(explorationPlayer(), ActionType.MOVE, new String[] {"ebIgbf"});
 

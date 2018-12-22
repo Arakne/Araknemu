@@ -7,13 +7,15 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.exploration.event.MapChanged;
 import fr.quatrevieux.araknemu.game.exploration.event.MapLeaved;
 import fr.quatrevieux.araknemu.game.exploration.event.MapJoined;
+import fr.quatrevieux.araknemu.game.exploration.event.OrientationChanged;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
 import fr.quatrevieux.araknemu.game.exploration.interaction.event.PlayerMoveFinished;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
-import fr.quatrevieux.araknemu.game.player.sprite.PlayerSprite;
+import fr.quatrevieux.araknemu.game.exploration.sprite.PlayerSprite;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerLife;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
+import fr.quatrevieux.araknemu.game.world.map.Direction;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,11 +42,8 @@ class ExplorationPlayerTest extends GameBaseCase {
 
     @Test
     void sprite() throws SQLException, ContainerException {
-        Restrictions restrictions = new Restrictions(explorationPlayer());
-        restrictions.refresh();
-
         assertEquals(
-            new PlayerSprite(gamePlayer().spriteInfo(), gamePlayer().position(), restrictions).toString(),
+            new PlayerSprite(new ExplorationPlayer(gamePlayer())).toString(),
             player.sprite().toString()
         );
     }
@@ -81,10 +80,11 @@ class ExplorationPlayerTest extends GameBaseCase {
         AtomicReference<PlayerMoveFinished> ref = new AtomicReference<>();
         map.dispatcher().add(PlayerMoveFinished.class, ref::set);
 
-        player.move(map.get(123));
+        player.move(map.get(123), Direction.EAST);
 
         assertEquals(123, player.cell());
         assertEquals(123, player.position().cell());
+        assertEquals(player.orientation(), Direction.EAST);
 
         assertEquals(123, ref.get().cell().id());
         assertSame(player, ref.get().player());
@@ -230,5 +230,22 @@ class ExplorationPlayerTest extends GameBaseCase {
         assertFalse(player.restrictions().canAttack());
         assertFalse(player.restrictions().isTomb());
         assertFalse(player.restrictions().isSlow());
+    }
+
+    @Test
+    void orientation() throws ContainerException {
+        assertEquals(Direction.SOUTH_EAST, player.orientation());
+
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10300);
+        player.join(map);
+
+        AtomicReference<OrientationChanged> ref = new AtomicReference<>();
+        map.dispatcher().add(OrientationChanged.class, ref::set);
+
+        player.setOrientation(Direction.WEST);
+        assertEquals(Direction.WEST, player.orientation());
+
+        assertSame(player, ref.get().player());
+        assertSame(Direction.WEST, ref.get().orientation());
     }
 }

@@ -74,6 +74,7 @@ class ExplorationMapServiceTest extends FightBaseCase {
         assertTrue(map.dispatcher().has(SendNewSprite.class));
         assertTrue(map.dispatcher().has(SendSpriteRemoved.class));
         assertTrue(map.dispatcher().has(SendPlayerChangeCell.class));
+        assertTrue(map.dispatcher().has(SendPlayerChangeOrientation.class));
     }
 
     @Test

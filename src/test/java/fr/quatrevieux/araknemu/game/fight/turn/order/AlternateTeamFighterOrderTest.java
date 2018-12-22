@@ -18,6 +18,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import fr.quatrevieux.araknemu.game.world.map.Direction;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -114,6 +115,11 @@ class AlternateTeamFighterOrderTest extends TestCase {
         @Override
         public FightCell cell() {
             return null;
+        }
+
+        @Override
+        public Direction orientation() {
+            return Direction.SOUTH_EAST;
         }
 
         @Override

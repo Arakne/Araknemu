@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ExplorationActionRegistry;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.ValidateWalkable;
+import fr.quatrevieux.araknemu.game.world.map.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +25,7 @@ class MoveFactoryTest extends GameBaseCase {
 
     @Test
     void create() throws Exception {
-        explorationPlayer().move(explorationPlayer().map().get(100));
+        explorationPlayer().move(explorationPlayer().map().get(100), Direction.SOUTH_EAST);
 
         Action action = factory.create(explorationPlayer(), ActionType.MOVE, new String[] {"ebIgbf"});
 
@@ -45,7 +46,7 @@ class MoveFactoryTest extends GameBaseCase {
 
     @Test
     void register() throws Exception {
-        explorationPlayer().move(explorationPlayer().map().get(100));
+        explorationPlayer().move(explorationPlayer().map().get(100), Direction.SOUTH_EAST);
         ExplorationActionRegistry registry = new ExplorationActionRegistry();
         factory.register(registry);
 

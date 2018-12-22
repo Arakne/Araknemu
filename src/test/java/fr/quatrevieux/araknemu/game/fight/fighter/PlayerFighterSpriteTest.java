@@ -9,6 +9,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighterSprite;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import fr.quatrevieux.araknemu.game.world.map.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -52,5 +53,6 @@ class PlayerFighterSpriteTest extends GameBaseCase {
         assertEquals(222, sprite.cell());
         assertEquals(Sprite.Type.PLAYER, sprite.type());
         assertEquals("Bob", sprite.name());
+        assertEquals(Direction.SOUTH_EAST, sprite.orientation());
     }
 }

@@ -4,10 +4,7 @@ import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
-import fr.quatrevieux.araknemu.game.exploration.event.CellChanged;
-import fr.quatrevieux.araknemu.game.exploration.event.MapChanged;
-import fr.quatrevieux.araknemu.game.exploration.event.MapJoined;
-import fr.quatrevieux.araknemu.game.exploration.event.MapLeaved;
+import fr.quatrevieux.araknemu.game.exploration.event.*;
 import fr.quatrevieux.araknemu.game.exploration.interaction.InteractionHandler;
 import fr.quatrevieux.araknemu.game.exploration.interaction.event.PlayerMoveFinished;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
@@ -16,10 +13,11 @@ import fr.quatrevieux.araknemu.game.player.CharacterProperties;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerSessionScope;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
-import fr.quatrevieux.araknemu.game.player.sprite.PlayerSprite;
+import fr.quatrevieux.araknemu.game.exploration.sprite.PlayerSprite;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import fr.quatrevieux.araknemu.game.world.creature.Explorer;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import fr.quatrevieux.araknemu.game.world.map.Direction;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 /**
@@ -31,11 +29,14 @@ final public class ExplorationPlayer implements Creature, Explorer, PlayerSessio
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
     final private InteractionHandler interactions = new InteractionHandler();
     final private Restrictions restrictions = new Restrictions(this);
+    final private Sprite sprite;
 
     private ExplorationMap map;
+    private Direction orientation = Direction.SOUTH_EAST;
 
     public ExplorationPlayer(GamePlayer player) {
         this.player = player;
+        this.sprite = new PlayerSprite(this);
 
         restrictions.refresh();
     }
@@ -84,7 +85,7 @@ final public class ExplorationPlayer implements Creature, Explorer, PlayerSessio
 
     @Override
     public Sprite sprite() {
-        return new PlayerSprite(player.spriteInfo(), position(), restrictions);
+        return sprite;
     }
 
     @Override
@@ -106,8 +107,10 @@ final public class ExplorationPlayer implements Creature, Explorer, PlayerSessio
     }
 
     @Override
-    public void move(ExplorationMapCell cell) {
+    public void move(ExplorationMapCell cell, Direction orientation) {
         player.setPosition(player.position().newCell(cell.id()));
+        this.orientation = orientation;
+
         map.dispatch(new PlayerMoveFinished(this, cell));
     }
 
@@ -187,5 +190,23 @@ final public class ExplorationPlayer implements Creature, Explorer, PlayerSessio
      */
     public Restrictions restrictions() {
         return restrictions;
+    }
+
+    /**
+     * Get the exploration player orientation
+     */
+    public Direction orientation() {
+        return orientation;
+    }
+
+    /**
+     * Change the player's orientation
+     */
+    public void setOrientation(Direction orientation) {
+        this.orientation = orientation;
+
+        if (map != null) {
+            map.dispatch(new OrientationChanged(this, orientation));
+        }
     }
 }

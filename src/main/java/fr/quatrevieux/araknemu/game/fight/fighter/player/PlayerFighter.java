@@ -19,10 +19,9 @@ import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerSessionScope;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.WeaponSlot;
-import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
-import fr.quatrevieux.araknemu.game.world.util.Sender;
+import fr.quatrevieux.araknemu.game.world.map.Direction;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 import java.util.HashMap;
@@ -44,6 +43,7 @@ final public class PlayerFighter implements Fighter, PlayerSessionScope {
     private FightTeam team;
     private Fight fight;
     private FightTurn turn;
+    private Direction orientation = Direction.SOUTH_EAST;
 
     private boolean ready = false;
     private CastableWeapon weapon;
@@ -63,6 +63,11 @@ final public class PlayerFighter implements Fighter, PlayerSessionScope {
     @Override
     public FightCell cell() {
         return cell;
+    }
+
+    @Override
+    public Direction orientation() {
+        return orientation;
     }
 
     @Override
@@ -92,6 +97,7 @@ final public class PlayerFighter implements Fighter, PlayerSessionScope {
 
     @Override
     public Sprite sprite() {
+        // @todo Save the sprite ?
         return new PlayerFighterSprite(this, player.spriteInfo());
     }
 

@@ -9,9 +9,12 @@ import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import fr.quatrevieux.araknemu.game.world.map.Direction;
 
 /**
  * Base fighter
+ *
+ * @todo extends Creature
  */
 public interface Fighter extends Dispatcher {
     /**
@@ -29,6 +32,11 @@ public interface Fighter extends Dispatcher {
      * Get the current player cell
      */
     public FightCell cell();
+
+    /**
+     * Get the fighter orientation
+     */
+    public Direction orientation();
 
     /**
      * Go to the given cell

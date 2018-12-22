@@ -1,5 +1,7 @@
 package fr.quatrevieux.araknemu.game.world.creature;
 
+import fr.quatrevieux.araknemu.game.world.map.Direction;
+
 /**
  * Interface for representing sprites
  *
@@ -38,6 +40,13 @@ public interface Sprite {
      * Get the map cell where the sprite is located
      */
     public int cell();
+
+    /**
+     * Get the sprite orientation
+     * Some sprites can only are restricted to 4 directions
+     * The playable sprites supports all the 8 directions
+     */
+    public Direction orientation();
 
     /**
      * Get the sprite type

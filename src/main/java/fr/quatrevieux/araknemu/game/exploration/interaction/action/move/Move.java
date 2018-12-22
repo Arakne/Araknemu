@@ -5,7 +5,6 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.PathValidator;
-import fr.quatrevieux.araknemu.game.exploration.interaction.event.PlayerMoving;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.world.map.path.Path;
 import fr.quatrevieux.araknemu.game.world.map.path.PathStep;
@@ -53,7 +52,7 @@ final public class Move implements BlockingAction {
 
         for (PathStep<ExplorationMapCell> step : path) {
             if (step.cell().id() == cellId) {
-                player.move(step.cell());
+                player.move(step.cell(), step.direction());
 
                 return;
             }
@@ -64,7 +63,7 @@ final public class Move implements BlockingAction {
 
     @Override
     public void end() {
-        player.move(path.target());
+        player.move(path.target(), path.last().direction());
     }
 
     @Override

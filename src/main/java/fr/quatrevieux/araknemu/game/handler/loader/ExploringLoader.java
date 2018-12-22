@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.handler.EnsureExploring;
+import fr.quatrevieux.araknemu.game.handler.emote.ChangeOrientation;
 import fr.quatrevieux.araknemu.game.handler.fight.ListFights;
 import fr.quatrevieux.araknemu.game.handler.fight.ShowFightDetails;
 import fr.quatrevieux.araknemu.game.handler.game.CancelGameAction;
@@ -26,7 +27,8 @@ final public class ExploringLoader extends AbstractLoader {
             new LoadExtraInfo(container.get(FightService.class)),
             new CancelGameAction(),
             new ListFights(container.get(FightService.class)),
-            new ShowFightDetails(container.get(FightService.class))
+            new ShowFightDetails(container.get(FightService.class)),
+            new ChangeOrientation(),
         };
     }
 }

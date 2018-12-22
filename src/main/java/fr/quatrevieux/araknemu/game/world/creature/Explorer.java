@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.world.creature;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
+import fr.quatrevieux.araknemu.game.world.map.Direction;
 
 /**
  * Creature that can change map
@@ -18,7 +19,7 @@ public interface Explorer {
      *
      * @param cell The cell
      */
-    public void move(ExplorationMapCell cell);
+    public void move(ExplorationMapCell cell, Direction direction);
 
     /**
      * Get the current map

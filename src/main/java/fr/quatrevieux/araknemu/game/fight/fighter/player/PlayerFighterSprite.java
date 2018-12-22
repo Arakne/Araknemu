@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.player.sprite.SpriteInfo;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import fr.quatrevieux.araknemu.game.world.map.Direction;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -33,6 +34,11 @@ final public class PlayerFighterSprite implements Sprite {
     }
 
     @Override
+    public Direction orientation() {
+        return fighter.orientation();
+    }
+
+    @Override
     public Type type() {
         return Type.PLAYER;
     }
@@ -46,7 +52,7 @@ final public class PlayerFighterSprite implements Sprite {
     public String toString() {
         return
             cell() + ";" +
-            "1;" + // @todo direction
+            fighter.orientation().ordinal() + ";" +
             "0;" + // Bonus value, not used on player
             id() + ";" +
             name() + ";" +

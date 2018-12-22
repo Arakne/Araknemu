@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.network.game.in.basic.AskDate;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminCommand;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import fr.quatrevieux.araknemu.network.game.in.chat.SubscribeChannels;
+import fr.quatrevieux.araknemu.network.game.in.emote.SetOrientationRequest;
 import fr.quatrevieux.araknemu.network.game.in.fight.*;
 import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
@@ -62,7 +63,8 @@ final public class GameParserLoader implements ParserLoader {
             new QuickPing.Parser(),
             new ListFightsRequest.Parser(),
             new AskFightDetails.Parser(),
-            new LeaveFightRequest.Parser()
+            new LeaveFightRequest.Parser(),
+            new SetOrientationRequest.Parser()
         );
     }
 }

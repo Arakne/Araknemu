@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.Move;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.PathValidator;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.ValidateWalkable;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.world.map.Direction;
 import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
 import fr.quatrevieux.araknemu.game.world.map.path.Path;
 import fr.quatrevieux.araknemu.game.world.map.path.PathException;
@@ -57,6 +58,7 @@ class MoveTest extends GameBaseCase {
         assertFalse(player.interactions().busy());
 
         assertEquals(395, player.position().cell());
+        assertEquals(Direction.SOUTH_WEST, player.orientation());
     }
 
     @Test
@@ -118,6 +120,7 @@ class MoveTest extends GameBaseCase {
         assertFalse(player.interactions().busy());
 
         assertEquals(294, player.position().cell());
+        assertEquals(Direction.SOUTH_EAST, player.orientation());
     }
 
     @Test
@@ -181,7 +184,7 @@ class MoveTest extends GameBaseCase {
     @Test
     void blockedPath() throws PathException, ContainerException {
         player.join(container.get(ExplorationMapService.class).load(10340));
-        player.move(player.map().get(169));
+        player.move(player.map().get(169), Direction.SOUTH_EAST);
         requestStack.clear();
 
         Move move = new Move(
