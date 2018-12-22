@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import fr.quatrevieux.araknemu.game.world.map.Direction;
 import fr.quatrevieux.araknemu.game.world.map.path.Path;
 
 /**
@@ -40,6 +41,10 @@ final class MoveSuccess implements ActionResult {
 
     public FightCell target() {
         return path.target();
+    }
+
+    public Direction orientation() {
+        return path.last().direction();
     }
 
     public int steps() {

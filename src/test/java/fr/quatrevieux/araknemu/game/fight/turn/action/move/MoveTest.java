@@ -159,6 +159,7 @@ class MoveTest extends FightBaseCase {
 
         assertEquals(1, turn.points().movementPoints());
         assertEquals(213, fighter.cell().id());
+        assertEquals(Direction.SOUTH_WEST, fighter.orientation());
     }
 
     @Test

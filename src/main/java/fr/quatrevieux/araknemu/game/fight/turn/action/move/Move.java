@@ -46,6 +46,7 @@ final public class Move implements Action {
     public void end() {
         turn.points().useMovementPoints(result.steps());
         fighter.move(result.target());
+        fighter.setOrientation(result.orientation());
     }
 
     @Override

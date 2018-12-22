@@ -39,6 +39,11 @@ public interface Fighter extends Dispatcher {
     public Direction orientation();
 
     /**
+     * Change the fighter orientation
+     */
+    public void setOrientation(Direction orientation);
+
+    /**
      * Go to the given cell
      */
     public void move(FightCell cell);

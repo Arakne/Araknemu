@@ -12,6 +12,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.event.SpellCasted;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.spell.Spell;
+import fr.quatrevieux.araknemu.game.world.map.util.CoordinateCell;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
@@ -64,6 +65,13 @@ final public class Cast implements Action {
 
     @Override
     public ActionResult start() {
+        if (!target.equals(caster.cell())) {
+            caster.setOrientation(
+                new CoordinateCell<>(caster.cell())
+                    .directionTo(new CoordinateCell<>(target))
+            );
+        }
+
         if (criticalityStrategy.failed(spell.criticalFailure())) {
             return new CastFailed(caster, spell);
         }

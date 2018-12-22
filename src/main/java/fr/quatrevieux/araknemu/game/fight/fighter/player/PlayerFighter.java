@@ -71,6 +71,11 @@ final public class PlayerFighter implements Fighter, PlayerSessionScope {
     }
 
     @Override
+    public void setOrientation(Direction orientation) {
+        this.orientation = orientation;
+    }
+
+    @Override
     public void move(FightCell cell) {
         if (this.cell != null) {
             this.cell.removeFighter();

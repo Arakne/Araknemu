@@ -12,6 +12,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.turn.action.event.SpellCasted;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.spell.Spell;
+import fr.quatrevieux.araknemu.game.world.map.Direction;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.junit.jupiter.api.BeforeEach;
@@ -125,6 +126,29 @@ class CastTest extends FightBaseCase {
         assertArrayEquals(new Object[] {3, 186, 103, 1, "30,1,1"}, result.arguments());
         assertFalse(CastSuccess.class.cast(result).critical());
         assertEquals(fighter.spells().get(3).effects(), CastSuccess.class.cast(result).effects());
+        assertEquals(Direction.SOUTH_EAST, fighter.orientation());
+    }
+
+    @Test
+    void startTargetCurrentCellShouldNotChangeTheOrientation() {
+        fighter.setOrientation(Direction.NORTH_EAST);
+
+        Cast cast = new Cast(
+            turn,
+            fighter,
+            fighter.spells().get(3),
+            fighter.cell(),
+            new SpellConstraintsValidator(turn, new CastConstraintValidator[0]),
+            new CriticalityStrategy() {
+                public int hitRate(int base) { return 0; }
+                public int failureRate(int base) { return 0; }
+                public boolean hit(int baseRate) { return false; }
+                public boolean failed(int baseRate) { return false; }
+            }
+        );
+
+        cast.start();
+        assertEquals(Direction.NORTH_EAST, fighter.orientation());
     }
 
     @Test
@@ -152,6 +176,7 @@ class CastTest extends FightBaseCase {
         assertArrayEquals(new Object[] {3, 186, 103, 1, "30,1,1"}, result.arguments());
         assertTrue(CastSuccess.class.cast(result).critical());
         assertEquals(fighter.spells().get(3).criticalEffects(), CastSuccess.class.cast(result).effects());
+        assertEquals(Direction.SOUTH_EAST, fighter.orientation());
     }
 
     @Test
@@ -177,6 +202,7 @@ class CastTest extends FightBaseCase {
         assertEquals(302, result.action());
         assertSame(fighter, result.performer());
         assertArrayEquals(new Object[] {3}, result.arguments());
+        assertEquals(Direction.SOUTH_EAST, fighter.orientation());
     }
 
     @Test

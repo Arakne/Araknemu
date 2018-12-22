@@ -206,6 +206,7 @@ public class FunctionalTest extends GameBaseCase {
         fighter1.turn().terminate();
         requestStack.assertOne(ActionEffect.usedMovementPoints(fighter1, 3));
         assertEquals(198, fighter1.cell().id());
+        assertEquals(Direction.NORTH_WEST, fighter1.orientation());
         assertEquals(0, fighter1.turn().points().movementPoints());
 
         fighter1.turn().stop();
@@ -225,6 +226,7 @@ public class FunctionalTest extends GameBaseCase {
         fighter2.turn().perform(move);
         fighter2.turn().terminate();
         assertEquals(195, fighter2.cell().id());
+        assertEquals(Direction.SOUTH_EAST, fighter2.orientation());
 
         fight.turnList().current()
             .filter(turn -> turn.fighter() != player.fighter())

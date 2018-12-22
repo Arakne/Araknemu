@@ -270,5 +270,8 @@ class PlayerFighterTest extends FightBaseCase {
     @Test
     void orientation() {
         assertEquals(Direction.SOUTH_EAST, fighter.orientation());
+
+        fighter.setOrientation(Direction.NORTH_EAST);
+        assertEquals(Direction.NORTH_EAST, fighter.orientation());
     }
 }

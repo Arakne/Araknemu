@@ -123,6 +123,11 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
+        public void setOrientation(Direction orientation) {
+
+        }
+
+        @Override
         public void move(FightCell cell) {}
 
         @Override
