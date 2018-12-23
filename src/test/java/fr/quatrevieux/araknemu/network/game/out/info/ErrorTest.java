@@ -71,4 +71,9 @@ class ErrorTest {
     void cantDoDuringFight() {
         assertEquals("Im191;", Error.cantDoDuringFight().toString());
     }
+
+    @Test
+    void cantMoveOverweight() {
+        assertEquals("Im112;", Error.cantMoveOverweight().toString());
+    }
 }

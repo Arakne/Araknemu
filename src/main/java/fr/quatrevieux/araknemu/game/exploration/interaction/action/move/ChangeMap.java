@@ -7,6 +7,8 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingActio
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 
+import java.util.Arrays;
+
 /**
  * Change current map after a move
  */

@@ -64,7 +64,7 @@ class RefuseChallengeTest extends GameBaseCase {
         assertFalse(other.interactions().interacting());
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.REFUSE_CHALLENGE, "" + player.id(), new Object[] {"" + other.id()})
+            new GameActionResponse("", ActionType.REFUSE_CHALLENGE, player.id(), other.id())
         );
     }
 
@@ -80,7 +80,7 @@ class RefuseChallengeTest extends GameBaseCase {
         assertFalse(other.interactions().interacting());
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.REFUSE_CHALLENGE, "" + player.id(), new Object[] {"" + other.id()})
+            new GameActionResponse("", ActionType.REFUSE_CHALLENGE, player.id(), other.id())
         );
     }
 }

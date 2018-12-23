@@ -72,12 +72,7 @@ final public class JoinFight implements Action {
 
     private void error(JoinFightError error) {
         player.send(
-            new GameActionResponse(
-                "",
-                ActionType.JOIN_FIGHT,
-                Integer.toString(player.id()),
-                new Object[] {Character.toString(error.error())}
-            )
+            new GameActionResponse("", ActionType.JOIN_FIGHT, player.id(), Character.toString(error.error()))
         );
     }
 }

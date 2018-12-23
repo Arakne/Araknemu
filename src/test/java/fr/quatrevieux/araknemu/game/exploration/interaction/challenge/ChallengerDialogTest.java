@@ -63,7 +63,7 @@ class ChallengerDialogTest extends GameBaseCase {
         assertFalse(challenger.interactions().interacting());
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.REFUSE_CHALLENGE, "" + challenger.id(), new Object[] {initiator.id()})
+            new GameActionResponse("", ActionType.REFUSE_CHALLENGE, challenger.id(), initiator.id())
         );
     }
 
@@ -75,7 +75,7 @@ class ChallengerDialogTest extends GameBaseCase {
         assertFalse(challenger.interactions().interacting());
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.REFUSE_CHALLENGE, "" + challenger.id(), new Object[] {initiator.id()})
+            new GameActionResponse("", ActionType.REFUSE_CHALLENGE, challenger.id(), initiator.id())
         );
     }
 
@@ -97,7 +97,7 @@ class ChallengerDialogTest extends GameBaseCase {
         assertInstanceOf(ChallengeType.class, initiator.player().fighter().fight().type());
         assertInstanceOf(PlacementState.class, initiator.player().fighter().fight().state());
 
-        requestStack.assertOne(new GameActionResponse("", ActionType.ACCEPT_CHALLENGE, "" + challenger.id(), new Object[] {initiator.id()}));
+        requestStack.assertOne(new GameActionResponse("", ActionType.ACCEPT_CHALLENGE, challenger.id(), initiator.id()));
         requestStack.assertOne(new JoinFight(session.fighter().fight()));
     }
 }

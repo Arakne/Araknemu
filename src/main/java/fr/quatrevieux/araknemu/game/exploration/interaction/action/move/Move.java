@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.PathValidationException;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.PathValidator;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.world.map.path.Path;
@@ -32,14 +33,23 @@ final public class Move implements BlockingAction {
             throw new IllegalArgumentException("Empty path");
         }
 
-        for (PathValidator validator : validators) {
-            path = validator.validate(this, path);
+        try {
+            for (PathValidator validator : validators) {
+                path = validator.validate(this, path);
+            }
+        } catch (PathValidationException e) {
+            player.send(GameActionResponse.NOOP);
+            e.errorPacket().ifPresent(player::send);
+            return;
         }
 
-        if (path.target().id() != player.cell()) {
-            queue.setPending(this);
-            player.map().send(new GameActionResponse(this));
+        if (path.target().id() == player.cell()) {
+            player.send(GameActionResponse.NOOP);
+            return;
         }
+
+        queue.setPending(this);
+        player.map().send(new GameActionResponse(this));
     }
 
     @Override

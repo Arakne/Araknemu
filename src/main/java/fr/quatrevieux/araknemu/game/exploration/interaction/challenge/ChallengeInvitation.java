@@ -74,8 +74,8 @@ final public class ChallengeInvitation implements Interaction {
             new GameActionResponse(
                 "",
                 ActionType.REFUSE_CHALLENGE,
-                Integer.toString(dialog.self().id()),
-                new Object[] {dialog.interlocutor().id()}
+                dialog.self().id(),
+                dialog.interlocutor().id()
             )
         );
     }
@@ -92,8 +92,8 @@ final public class ChallengeInvitation implements Interaction {
             new GameActionResponse(
                 "",
                 ActionType.ACCEPT_CHALLENGE,
-                Integer.toString(dialog.self().id()),
-                new Object[] {dialog.interlocutor().id()}
+                dialog.self().id(),
+                dialog.interlocutor().id()
             )
         );
 
@@ -145,8 +145,8 @@ final public class ChallengeInvitation implements Interaction {
             new GameActionResponse(
                 "",
                 ActionType.JOIN_FIGHT,
-                Integer.toString(initiator.id()),
-                new Object[] {Character.toString(error.error())}
+                initiator.id(),
+                Character.toString(error.error())
             )
         );
 

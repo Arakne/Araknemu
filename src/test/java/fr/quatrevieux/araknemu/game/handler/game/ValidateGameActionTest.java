@@ -47,12 +47,7 @@ class ValidateGameActionTest extends GameBaseCase {
         );
 
         requestStack.assertLast(
-            new GameActionResponse(
-                1,
-                ActionType.MOVE,
-                explorationPlayer().id(),
-                "aexbftdgl"
-            )
+            new GameActionResponse("1", ActionType.MOVE, explorationPlayer().id(), "aexbftdgl")
         );
 
         assertTrue(explorationPlayer().interactions().busy());

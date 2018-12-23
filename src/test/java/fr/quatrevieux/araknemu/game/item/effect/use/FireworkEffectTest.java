@@ -39,7 +39,7 @@ class FireworkEffectTest extends GameBaseCase {
         effect.applyToTarget(new UseEffect(effect, Effect.FIREWORK , new int[] {6, 0, 2900}), player, null, 150);
 
         requestStack.assertLast(
-            new GameActionResponse(1, ActionType.FIREWORK, player.id(), "150,2900,11,8,6")
+            new GameActionResponse("1", ActionType.FIREWORK, player.id(), "150,2900,11,8,6")
         );
 
         assertTrue(player.interactions().busy());

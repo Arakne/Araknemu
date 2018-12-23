@@ -55,7 +55,7 @@ class JoinFightTest extends FightBaseCase {
         action.start(new ActionQueue());
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.JOIN_FIGHT, player.id() + "", new Object[] {"o"})
+            new GameActionResponse("", ActionType.JOIN_FIGHT, player.id(), "o")
         );
     }
 
@@ -66,7 +66,7 @@ class JoinFightTest extends FightBaseCase {
         action.start(new ActionQueue());
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.JOIN_FIGHT, player.id() + "", new Object[] {"l"})
+            new GameActionResponse("", ActionType.JOIN_FIGHT, player.id(), "l")
         );
     }
 
@@ -77,7 +77,7 @@ class JoinFightTest extends FightBaseCase {
         action.start(new ActionQueue());
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.JOIN_FIGHT, player.id() + "", new Object[] {"p"})
+            new GameActionResponse("", ActionType.JOIN_FIGHT, player.id(), "p")
         );
     }
 
@@ -91,7 +91,7 @@ class JoinFightTest extends FightBaseCase {
         Thread.sleep(5);
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.JOIN_FIGHT, player.id() + "", new Object[] {"t"})
+            new GameActionResponse("", ActionType.JOIN_FIGHT, player.id(), "t")
         );
     }
 

@@ -115,4 +115,11 @@ final public class Error extends InformationMessage {
     static public Error cantDoDuringFight() {
         return new Error(91);
     }
+
+    /**
+     * Cannot move : the player is overweight
+     */
+    static public Error cantMoveOverweight() {
+        return new Error(12);
+    }
 }

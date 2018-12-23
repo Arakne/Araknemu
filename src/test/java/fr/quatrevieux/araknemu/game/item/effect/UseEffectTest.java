@@ -116,7 +116,7 @@ class UseEffectTest extends GameBaseCase {
         effect.applyToTarget(explorationPlayer(), null, 150);
 
         requestStack.assertLast(
-            new GameActionResponse(1, ActionType.FIREWORK, explorationPlayer().id(), "150,2900,11,8,1")
+            new GameActionResponse("1", ActionType.FIREWORK, explorationPlayer().id(), "150,2900,11,8,1")
         );
     }
 

@@ -74,7 +74,7 @@ class AcceptChallengeTest extends GameBaseCase {
         assertFalse(player.interactions().interacting());
         assertFalse(other.interactions().interacting());
 
-        requestStack.assertOne(new GameActionResponse("", ActionType.ACCEPT_CHALLENGE, "" + player.id(), new Object[] {"" + other.id()}));
+        requestStack.assertOne(new GameActionResponse("", ActionType.ACCEPT_CHALLENGE, player.id(), other.id()));
         requestStack.assertOne(new JoinFight(player.player().fighter().fight()));
     }
 }

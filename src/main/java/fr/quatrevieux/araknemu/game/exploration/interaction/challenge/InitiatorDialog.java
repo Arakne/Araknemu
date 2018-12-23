@@ -26,12 +26,7 @@ final public class InitiatorDialog extends ChallengeDialog {
     @Override
     public Interaction start() {
         self().map().send(
-            new GameActionResponse(
-                "",
-                ActionType.CHALLENGE,
-                Integer.toString(self().id()),
-                new Object[] {interlocutor().id()}
-            )
+            new GameActionResponse("", ActionType.CHALLENGE, self().id(), interlocutor().id())
         );
 
         return this;

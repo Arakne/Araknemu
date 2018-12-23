@@ -5,16 +5,23 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.Move;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.PathValidator;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.ValidateWalkable;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.*;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
+import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.player.Restrictions;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
 import fr.quatrevieux.araknemu.game.world.map.path.Path;
 import fr.quatrevieux.araknemu.game.world.map.path.PathException;
+import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
+import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,12 +51,7 @@ class MoveTest extends GameBaseCase {
         player.interactions().push(move);
 
         requestStack.assertLast(
-            new GameActionResponse(
-                1,
-                ActionType.MOVE,
-                gamePlayer().id(),
-                "aexbftdgl"
-            )
+            new GameActionResponse("1", ActionType.MOVE, gamePlayer().id(), "aexbftdgl")
         );
 
         assertTrue(player.interactions().busy());
@@ -106,12 +108,7 @@ class MoveTest extends GameBaseCase {
         player.interactions().push(move);
 
         requestStack.assertLast(
-            new GameActionResponse(
-                1,
-                ActionType.MOVE,
-                gamePlayer().id(),
-                "aexbftdgl"
-            )
+            new GameActionResponse("1", ActionType.MOVE, gamePlayer().id(), "aexbftdgl")
         );
 
         assertTrue(player.interactions().busy());
@@ -136,12 +133,7 @@ class MoveTest extends GameBaseCase {
         player.interactions().push(move);
 
         requestStack.assertLast(
-            new GameActionResponse(
-                1,
-                ActionType.MOVE,
-                gamePlayer().id(),
-                "aexbftdgl"
-            )
+            new GameActionResponse("1", ActionType.MOVE, gamePlayer().id(), "aexbftdgl")
         );
 
         assertTrue(player.interactions().busy());
@@ -165,12 +157,7 @@ class MoveTest extends GameBaseCase {
         player.interactions().push(move);
 
         requestStack.assertLast(
-            new GameActionResponse(
-                1,
-                ActionType.MOVE,
-                gamePlayer().id(),
-                "aexbftdgl"
-            )
+            new GameActionResponse("1", ActionType.MOVE, gamePlayer().id(), "aexbftdgl")
         );
 
         assertTrue(player.interactions().busy());
@@ -196,6 +183,90 @@ class MoveTest extends GameBaseCase {
         player.interactions().push(move);
 
         assertFalse(player.interactions().busy());
-        requestStack.assertEmpty();
+        requestStack.assertLast(GameActionResponse.NOOP);
+    }
+
+    @Test
+    void pathValidationExceptionWithErrorPacket() throws PathException, ContainerException {
+        player.join(container.get(ExplorationMapService.class).load(10340));
+        player.move(player.map().get(169), Direction.SOUTH_EAST);
+        requestStack.clear();
+
+        PathValidator validator = (a, p) -> { throw new PathValidationException("my error"); };
+
+        Move move = new Move(
+            player,
+            new Decoder<>(player.map()).decode("acPfcl", player.map().get(169)),
+            new PathValidator[] {validator}
+        );
+
+        player.interactions().push(move);
+
+        assertFalse(player.interactions().busy());
+        requestStack.assertAll(GameActionResponse.NOOP, "my error");
+    }
+
+    @Test
+    void pathValidationExceptionWithoutErrorPacket() throws PathException, ContainerException {
+        player.join(container.get(ExplorationMapService.class).load(10340));
+        player.move(player.map().get(169), Direction.SOUTH_EAST);
+        requestStack.clear();
+
+        PathValidator validator = (a, p) -> { throw new PathValidationException(null); };
+
+        Move move = new Move(
+            player,
+            new Decoder<>(player.map()).decode("acPfcl", player.map().get(169)),
+            new PathValidator[] {validator}
+        );
+
+        player.interactions().push(move);
+
+        assertFalse(player.interactions().busy());
+        requestStack.assertAll(GameActionResponse.NOOP);
+    }
+
+    @Test
+    void functionalSuccess() throws Exception {
+        handlePacket(new GameActionRequest(ActionType.MOVE.id(), new String[] {"bftdgl"}));
+
+        requestStack.assertLast(
+            new GameActionResponse("1", ActionType.MOVE, player.id(), "aexbftdgl")
+        );
+
+        assertTrue(player.interactions().busy());
+    }
+
+    @Test
+    void functionalOverweight() throws Exception {
+        dataSet.pushItemTemplates();
+
+        player.inventory().add(container.get(ItemService.class).create(39), 1000);
+        requestStack.clear();
+        handlePacket(new GameActionRequest(ActionType.MOVE.id(), new String[] {"bftdgl"}));
+
+        assertFalse(player.interactions().busy());
+        requestStack.assertAll(GameActionResponse.NOOP, Error.cantMoveOverweight());
+    }
+
+    @Test
+    void functionalSuccessWithRestrictedDirections() throws Exception {
+        player.player().restrictions().unset(Restrictions.Restriction.ALLOW_MOVE_ALL_DIRECTION);
+        requestStack.clear();
+
+        handlePacket(new GameActionRequest(ActionType.MOVE.id(), new String[] {"bftdgl"}));
+
+        requestStack.assertLast(new GameActionResponse("1", ActionType.MOVE, player.id(), "aexbftdgl"));
+        assertTrue(player.interactions().busy());
+    }
+
+    @Test
+    void functionalErrorWithRestrictedDirections() throws Exception {
+        player.player().restrictions().unset(Restrictions.Restriction.ALLOW_MOVE_ALL_DIRECTION);
+        requestStack.clear();
+
+        handlePacket(new GameActionRequest(ActionType.MOVE.id(), new String[] {"aey"}));
+
+        requestStack.assertLast(GameActionResponse.NOOP);
     }
 }

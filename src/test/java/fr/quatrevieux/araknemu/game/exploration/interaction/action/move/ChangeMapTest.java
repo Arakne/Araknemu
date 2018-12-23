@@ -81,7 +81,7 @@ class ChangeMapTest extends GameBaseCase {
         assertFalse(lastMap.players().contains(player));
         assertTrue(queue.isBusy());
         requestStack.assertLast(
-            new GameActionResponse(1, ActionType.CHANGE_MAP, player.id(), "5")
+            new GameActionResponse("1", ActionType.CHANGE_MAP, player.id(), "5")
         );
     }
 

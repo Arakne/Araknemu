@@ -55,7 +55,7 @@ class TriggerCellTest extends GameBaseCase {
         assertTrue(explorationPlayer().interactions().busy());
 
         requestStack.assertLast(
-            new GameActionResponse(1, ActionType.CHANGE_MAP, explorationPlayer().id(), "")
+            new GameActionResponse("1", ActionType.CHANGE_MAP, explorationPlayer().id(), "")
         );
     }
 }

@@ -100,7 +100,7 @@ class UseObjectTest extends GameBaseCase {
         handler.handle(session, new ObjectUseRequest(entry.id(), 0, 150, true));
 
         requestStack.assertAll(
-            new GameActionResponse(1, ActionType.FIREWORK, explorationPlayer().id(), "150,2900,11,8,1"),
+            new GameActionResponse("1", ActionType.FIREWORK, explorationPlayer().id(), "150,2900,11,8,1"),
             new ItemQuantity(entry),
             new InventoryWeight(gamePlayer())
         );

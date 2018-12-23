@@ -59,7 +59,7 @@ class InitiatorDialogTest extends GameBaseCase {
         assertFalse(challenger.interactions().interacting());
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.REFUSE_CHALLENGE, "" + initiator.id(), new Object[] {challenger.id()})
+            new GameActionResponse("", ActionType.REFUSE_CHALLENGE, initiator.id(), challenger.id())
         );
     }
 
@@ -71,7 +71,7 @@ class InitiatorDialogTest extends GameBaseCase {
         assertFalse(challenger.interactions().interacting());
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.REFUSE_CHALLENGE, "" + initiator.id(), new Object[] {challenger.id()})
+            new GameActionResponse("", ActionType.REFUSE_CHALLENGE, initiator.id(), challenger.id())
         );
     }
 }

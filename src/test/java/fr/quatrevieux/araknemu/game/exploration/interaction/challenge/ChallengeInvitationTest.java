@@ -55,7 +55,7 @@ class ChallengeInvitationTest extends GameBaseCase {
         assertFalse(challenger.interactions().interacting());
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.JOIN_FIGHT, "" + initiator.id(), new Object[] {"o"})
+            new GameActionResponse("", ActionType.JOIN_FIGHT, initiator.id(), "o")
         );
     }
 
@@ -69,7 +69,7 @@ class ChallengeInvitationTest extends GameBaseCase {
         assertNull(invitation.start());
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.JOIN_FIGHT, "" + initiator.id(), new Object[] {"z"})
+            new GameActionResponse("", ActionType.JOIN_FIGHT, initiator.id(), "z")
         );
     }
 
@@ -80,7 +80,7 @@ class ChallengeInvitationTest extends GameBaseCase {
         assertNull(invitation.start());
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.JOIN_FIGHT, "" + initiator.id(), new Object[] {"i"})
+            new GameActionResponse("", ActionType.JOIN_FIGHT, initiator.id(), "i")
         );
     }
 
@@ -92,7 +92,7 @@ class ChallengeInvitationTest extends GameBaseCase {
         assertNull(invitation.start());
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.JOIN_FIGHT, "" + initiator.id(), new Object[] {"i"})
+            new GameActionResponse("", ActionType.JOIN_FIGHT, initiator.id(), "i")
         );
     }
 
@@ -105,7 +105,7 @@ class ChallengeInvitationTest extends GameBaseCase {
         assertNull(invitation.start());
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.JOIN_FIGHT, "" + initiator.id(), new Object[] {"p"})
+            new GameActionResponse("", ActionType.JOIN_FIGHT, initiator.id(), "p")
         );
     }
 
@@ -117,7 +117,7 @@ class ChallengeInvitationTest extends GameBaseCase {
         assertNull(invitation.start());
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.JOIN_FIGHT, "" + initiator.id(), new Object[] {"p"})
+            new GameActionResponse("", ActionType.JOIN_FIGHT, initiator.id(), "p")
         );
     }
 
@@ -130,7 +130,7 @@ class ChallengeInvitationTest extends GameBaseCase {
         assertInstanceOf(ChallengerDialog.class, challenger.interactions().get(Interaction.class));
 
         requestStack.assertLast(
-            new GameActionResponse("", ActionType.CHALLENGE, "" + initiator.id(), new Object[] {challenger.id()})
+            new GameActionResponse("", ActionType.CHALLENGE, initiator.id(), challenger.id())
         );
     }
 

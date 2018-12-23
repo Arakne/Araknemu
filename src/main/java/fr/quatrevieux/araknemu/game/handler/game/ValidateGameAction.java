@@ -29,7 +29,7 @@ final public class ValidateGameAction implements PacketHandler<GameSession, Game
                 )
             );
         } catch (Exception e) {
-            throw new ErrorPacket(new GameActionResponse(0, ActionType.NONE, 0), e);
+            throw new ErrorPacket(GameActionResponse.NOOP, e);
         }
     }
 

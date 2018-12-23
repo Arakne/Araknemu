@@ -16,5 +16,5 @@ public interface PathValidator {
      *
      * @return The filtered path
      */
-    public Path<ExplorationMapCell> validate(Move move, Path<ExplorationMapCell> path);
+    public Path<ExplorationMapCell> validate(Move move, Path<ExplorationMapCell> path) throws PathValidationException;
 }
