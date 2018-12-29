@@ -7,27 +7,33 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengeInvitation;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
+import fr.quatrevieux.araknemu.game.world.creature.Operation;
 
 /**
  * Ask for challenge
  */
 final public class AskChallenge implements Action {
     final private ExplorationPlayer player;
-    final private ExplorationPlayer challenger;
+    final private int target;
     final private FightService fightService;
 
-    public AskChallenge(ExplorationPlayer player, ExplorationPlayer challenger, FightService fightService) {
+    public AskChallenge(ExplorationPlayer player, int target, FightService fightService) {
         this.player = player;
-        this.challenger = challenger;
+        this.target = target;
         this.fightService = fightService;
     }
 
     @Override
     public void start(ActionQueue queue) {
-        player
-            .interactions()
-            .start(new ChallengeInvitation(player, challenger, fightService.handler(ChallengeBuilder.class)))
-        ;
+        player.map().creature(target).apply(new Operation() {
+            @Override
+            public void onExplorationPlayer(ExplorationPlayer challenger) {
+                player
+                    .interactions()
+                    .start(new ChallengeInvitation(player, challenger, fightService.handler(ChallengeBuilder.class)))
+                ;
+            }
+        });
     }
 
     @Override
@@ -42,6 +48,6 @@ final public class AskChallenge implements Action {
 
     @Override
     public Object[] arguments() {
-        return new Object[] {challenger.id()};
+        return new Object[] {target};
     }
 }

@@ -28,6 +28,16 @@ public interface Sprite {
         public int id() {
             return -ordinal();
         }
+
+        /**
+         * Convert an entity ID to an unique and universal sprite ID
+         * The two last numbers of the ID are the sprite type
+         *
+         * @param entityId The entity ID to convert
+         */
+        public int toSpriteId(int entityId) {
+            return -(100 * entityId + ordinal());
+        }
     }
 
     /**

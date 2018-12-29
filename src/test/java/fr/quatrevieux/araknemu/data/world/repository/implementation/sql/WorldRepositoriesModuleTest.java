@@ -3,10 +3,7 @@ package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
-import fr.quatrevieux.araknemu.data.world.repository.implementation.local.ItemSetRepositoryCache;
-import fr.quatrevieux.araknemu.data.world.repository.implementation.local.ItemTemplateRepositoryCache;
-import fr.quatrevieux.araknemu.data.world.repository.implementation.local.ItemTypeRepositoryCache;
-import fr.quatrevieux.araknemu.data.world.repository.implementation.local.PlayerRaceRepositoryCache;
+import fr.quatrevieux.araknemu.data.world.repository.implementation.local.*;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.Test;
 
@@ -31,6 +28,8 @@ class WorldRepositoriesModuleTest extends GameBaseCase {
         assertInstanceOf(ItemTypeRepositoryCache.class, container.get(fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository.class));
         assertInstanceOf(SpellTemplateRepository.class, container.get(fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository.class));
         assertInstanceOf(PlayerExperienceRepository.class, container.get(fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceRepository.class));
+        assertInstanceOf(NpcRepositoryCache.class, container.get(fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcRepository.class));
+        assertInstanceOf(NpcTemplateRepositoryCache.class, container.get(fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcTemplateRepository.class));
     }
 
     public void assertInstanceOf(Class type, Object obj) {

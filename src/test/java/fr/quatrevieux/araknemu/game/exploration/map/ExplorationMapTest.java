@@ -2,8 +2,13 @@ package fr.quatrevieux.araknemu.game.exploration.map;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.Listener;
+import fr.quatrevieux.araknemu.data.constant.Sex;
+import fr.quatrevieux.araknemu.data.value.Colors;
+import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
+import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
+import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.BasicCell;
@@ -13,12 +18,20 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.MapTriggerServi
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.TriggerCell;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.TriggerLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.event.NewSpriteOnMap;
+import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.listener.map.*;
+import fr.quatrevieux.araknemu.game.world.creature.Creature;
+import fr.quatrevieux.araknemu.game.world.creature.Operation;
+import fr.quatrevieux.araknemu.game.world.map.Direction;
 import fr.quatrevieux.araknemu.network.game.out.game.RemoveSprite;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -93,6 +106,63 @@ class ExplorationMapTest extends GameBaseCase {
     }
 
     @Test
+    void addNpc() throws ContainerException, SQLException {
+        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null));
+        dataSet.pushNpcs();
+
+        AtomicReference<NewSpriteOnMap> ref = new AtomicReference<>();
+
+        Listener<NewSpriteOnMap> listener = new Listener<NewSpriteOnMap>() {
+            @Override
+            public void on(NewSpriteOnMap event) {
+                ref.set(event);
+            }
+
+            @Override
+            public Class<NewSpriteOnMap> event() {
+                return NewSpriteOnMap.class;
+            }
+        };
+
+        ExplorationMap map = new ExplorationMap(template, new CellLoaderAggregate(new CellLoader[0]));
+        map.dispatcher().add(listener);
+
+        assertEquals(0, map.sprites().size());
+        assertEquals(0, map.creatures().size());
+
+        GameNpc npc = new GameNpc(
+            dataSet.refresh(new Npc(457, 0, null, null)),
+            dataSet.refresh(new NpcTemplate(848, 0, 0, 0, null, null, null, 0, 0))
+        );
+
+        map.add(npc);
+
+        assertEquals(1, map.sprites().size());
+        assertEquals(1, map.creatures().size());
+        assertEquals(npc.sprite().toString(), map.sprites().toArray()[0].toString());
+        assertSame(npc, map.creature(-45704));
+        assertCollectionEquals(map.creatures(), npc);
+        assertSame(npc.sprite(), ref.get().sprite());
+    }
+
+    @Test
+    void addAlreadyAdded() throws Exception {
+        ExplorationMap map = explorationPlayer().map();
+        ExplorationPlayer player = makeOtherExplorationPlayer();
+
+        map.add(player);
+        assertThrows(IllegalArgumentException.class, () -> map.add(player));
+    }
+
+    @Test
+    void removeNotExists() throws Exception {
+        ExplorationMap map = explorationPlayer().map();
+        ExplorationPlayer player = makeOtherExplorationPlayer();
+
+        assertThrows(IllegalArgumentException.class, () -> map.remove(player));
+    }
+
+    @Test
     void sendWillSendToPlayers() throws ContainerException, SQLException {
         MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null));
 
@@ -120,22 +190,30 @@ class ExplorationMapTest extends GameBaseCase {
             new RemoveSprite(other.sprite())
         );
 
-        assertTrue(map.players().contains(explorationPlayer()));
-        assertFalse(map.players().contains(other));
+        assertTrue(map.creatures().contains(explorationPlayer()));
+        assertFalse(map.creatures().contains(other));
     }
 
     @Test
-    void getPlayerNotFound() throws SQLException, ContainerException {
+    void creatureNotFound() throws SQLException, ContainerException {
         ExplorationMap map = explorationPlayer().map();
 
-        assertNull(map.getPlayer(-5));
+        assertThrows(NoSuchElementException.class, () -> map.creature(-5));
     }
 
     @Test
-    void getPlayerFound() throws SQLException, ContainerException {
+    void creatureFound() throws SQLException, ContainerException {
         ExplorationMap map = explorationPlayer().map();
 
-        assertSame(explorationPlayer(), map.getPlayer(explorationPlayer().id()));
+        assertSame(explorationPlayer(), map.creature(explorationPlayer().id()));
+    }
+
+    @Test
+    void has() throws SQLException, ContainerException {
+        ExplorationMap map = explorationPlayer().map();
+
+        assertTrue(map.has(explorationPlayer().id()));
+        assertFalse(map.has(-5));
     }
 
     @Test
@@ -181,5 +259,38 @@ class ExplorationMapTest extends GameBaseCase {
         assertEquals(map.get(456), map.get(456));
         assertEquals(456, map.get(456).id());
         assertSame(map, map.get(456).map());
+    }
+
+    @Test
+    void apply() throws Exception {
+        dataSet.pushNpcs();
+        ExplorationMap map = explorationPlayer().map();
+        ExplorationPlayer other = makeOtherExplorationPlayer();
+
+        GameNpc npc = new GameNpc(
+            dataSet.refresh(new Npc(457, 0, null, null)),
+            dataSet.refresh(new NpcTemplate(848, 0, 0, 0, null, null, null, 0, 0))
+        );
+
+        map.add(npc);
+        map.add(other);
+
+        Collection<GameNpc> npcs = new ArrayList<>();
+        Collection<ExplorationPlayer> players = new ArrayList<>();
+
+        map.apply(new Operation() {
+            @Override
+            public void onExplorationPlayer(ExplorationPlayer player) {
+                players.add(player);
+            }
+
+            @Override
+            public void onNpc(GameNpc npc) {
+                npcs.add(npc);
+            }
+        });
+
+        assertEquals(Arrays.asList(explorationPlayer(), other), players);
+        assertEquals(Arrays.asList(npc), npcs);
     }
 }

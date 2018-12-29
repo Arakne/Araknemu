@@ -37,6 +37,6 @@ class LeaveExplorationForFightTest extends FightBaseCase {
 
         assertFalse(player.player().isExploring());
         assertNull(session.exploration());
-        assertFalse(player.map().players().contains(player));
+        assertFalse(player.map().creatures().contains(player));
     }
 }

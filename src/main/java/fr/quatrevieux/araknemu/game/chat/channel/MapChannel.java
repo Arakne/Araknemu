@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.chat.channel;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.chat.event.BroadcastedMessage;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.world.creature.operation.DispatchEvent;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import fr.quatrevieux.araknemu.network.game.out.info.Information;
 
@@ -30,12 +31,7 @@ final public class MapChannel implements Channel {
         );
 
         if (from.isExploring()) {
-            from
-                .exploration()
-                .map()
-                .players()
-                .forEach(player -> player.dispatch(event))
-            ;
+            from.exploration().map().apply(new DispatchEvent(event));
         }
 
         if (from.isFighting()) {

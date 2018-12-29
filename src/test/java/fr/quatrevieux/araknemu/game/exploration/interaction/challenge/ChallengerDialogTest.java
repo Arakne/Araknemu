@@ -91,8 +91,8 @@ class ChallengerDialogTest extends GameBaseCase {
         assertTrue(challenger.player().isFighting());
         assertFalse(challenger.player().isExploring());
 
-        assertFalse(initiator.map().players().contains(initiator));
-        assertFalse(initiator.map().players().contains(challenger));
+        assertFalse(initiator.map().creatures().contains(initiator));
+        assertFalse(initiator.map().creatures().contains(challenger));
 
         assertInstanceOf(ChallengeType.class, initiator.player().fighter().fight().type());
         assertInstanceOf(PlacementState.class, initiator.player().fighter().fight().state());

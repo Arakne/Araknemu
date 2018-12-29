@@ -62,7 +62,7 @@ class ChangeMapTest extends GameBaseCase {
 
         changeMap.start(queue);
 
-        assertFalse(lastMap.players().contains(player));
+        assertFalse(lastMap.creatures().contains(player));
         assertTrue(queue.isBusy());
         requestStack.assertLast(
             new GameActionResponse(changeMap)
@@ -78,7 +78,7 @@ class ChangeMapTest extends GameBaseCase {
 
         changeMap.start(queue);
 
-        assertFalse(lastMap.players().contains(player));
+        assertFalse(lastMap.creatures().contains(player));
         assertTrue(queue.isBusy());
         requestStack.assertLast(
             new GameActionResponse("1", ActionType.CHANGE_MAP, player.id(), "5")

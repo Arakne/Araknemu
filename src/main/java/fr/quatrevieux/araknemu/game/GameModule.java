@@ -15,6 +15,8 @@ import fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceR
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
@@ -55,6 +57,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.ActionFa
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.CellActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.teleport.Teleport;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.teleport.TeleportFactory;
+import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
@@ -113,6 +116,7 @@ final public class GameModule implements ContainerModule {
                 container.get(Logger.class),
                 container.get(ListenerAggregate.class),
                 Arrays.asList(
+                    container.get(NpcService.class),
                     container.get(AreaService.class),
                     container.get(MapTriggerService.class),
                     container.get(ExplorationMapService.class),
@@ -130,7 +134,8 @@ final public class GameModule implements ContainerModule {
                     container.get(SpellBookService.class),
                     container.get(PlayerExperienceService.class),
                     container.get(FightService.class),
-                    container.get(ExplorationService.class)
+                    container.get(ExplorationService.class),
+                    container.get(NpcService.class)
                 )
             )
         );
@@ -456,6 +461,14 @@ final public class GameModule implements ContainerModule {
                     RaulebaqueModule::new,
                     LaunchedSpellsModule::new
                 )
+            )
+        );
+
+        configurator.persist(
+            NpcService.class,
+            container -> new NpcService(
+                container.get(NpcTemplateRepository.class),
+                container.get(NpcRepository.class)
             )
         );
 

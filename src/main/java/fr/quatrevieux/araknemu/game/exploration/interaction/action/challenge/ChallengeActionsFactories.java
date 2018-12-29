@@ -23,11 +23,7 @@ final public class ChallengeActionsFactories implements ExplorationActionRegistr
     }
 
     private AskChallenge ask(ExplorationPlayer player, ActionType action, String[] arguments) {
-        return new AskChallenge(
-            player,
-            player.map().getPlayer(Integer.parseInt(arguments[0])),
-            fightService
-        );
+        return new AskChallenge(player, Integer.parseInt(arguments[0]), fightService);
     }
 
     private AcceptChallenge accept(ExplorationPlayer player, ActionType action, String[] arguments) {

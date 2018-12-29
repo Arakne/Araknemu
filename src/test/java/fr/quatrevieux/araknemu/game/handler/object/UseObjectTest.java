@@ -1,9 +1,12 @@
 package fr.quatrevieux.araknemu.game.handler.object;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
+import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.Restrictions;
@@ -105,6 +108,25 @@ class UseObjectTest extends GameBaseCase {
             new InventoryWeight(gamePlayer())
         );
         assertEquals(99, entry.quantity());
+    }
+
+    @Test
+    void handleForTargetNpc() throws Exception {
+        dataSet.pushNpcs();
+
+        InventoryEntry entry = explorationPlayer().inventory().add(container.get(ItemService.class).create(468));
+
+        GameNpc npc = new GameNpc(
+            dataSet.refresh(new Npc(457, 0, null, null)),
+            dataSet.refresh(new NpcTemplate(848, 0, 0, 0, null, null, null, 0, 0))
+        );
+
+        explorationPlayer().map().add(npc);
+        requestStack.clear();
+
+        handler.handle(session, new ObjectUseRequest(entry.id(), npc.id(), 0, true));
+
+        requestStack.assertAll(new Noop());
     }
 
     @Test

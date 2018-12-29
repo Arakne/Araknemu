@@ -78,7 +78,7 @@ class StopSessionTest extends FightBaseCase {
         assertNull(session.account());
         assertNull(session.player());
         assertNull(session.exploration());
-        assertFalse(player.map().players().contains(player));
+        assertFalse(player.map().creatures().contains(player));
     }
 
     @Test

@@ -69,7 +69,7 @@ public class FunctionalFromExplorationMapTest extends FightBaseCase {
         fight.state(PlacementState.class).joinTeam(otherFighter, fight.team(0));
 
         assertFalse(other.isExploring());
-        assertFalse(map.players().contains(explorationPlayer));
+        assertFalse(map.creatures().contains(explorationPlayer));
         assertTrue(other.isFighting());
         assertContains(otherFighter, fight.fighters());
         assertContains(otherFighter, fight.team(0).fighters());

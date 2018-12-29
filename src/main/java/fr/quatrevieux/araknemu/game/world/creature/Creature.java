@@ -1,7 +1,11 @@
 package fr.quatrevieux.araknemu.game.world.creature;
 
+import fr.quatrevieux.araknemu.game.world.map.Direction;
+
 /**
  * Base interface for Dofus creatures (monsters, players...)
+ *
+ * @todo parametrize for the operation type (ExplorationCreatureOperation / FightCreatureOperation)
  */
 public interface Creature {
     /**
@@ -18,4 +22,14 @@ public interface Creature {
      * Get the creature cell id
      */
     public int cell();
+
+    /**
+     * Get the creature orientation
+     */
+    public Direction orientation();
+
+    /**
+     * Apply the operation on the creature
+     */
+    public void apply(Operation operation);
 }

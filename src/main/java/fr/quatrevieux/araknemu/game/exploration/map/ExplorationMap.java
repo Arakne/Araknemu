@@ -7,17 +7,20 @@ import fr.quatrevieux.araknemu.data.value.Dimensions;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.BasicCell;
-import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.exploration.map.event.NewSpriteOnMap;
 import fr.quatrevieux.araknemu.game.exploration.map.event.SpriteRemoveFromMap;
-import fr.quatrevieux.araknemu.game.listener.map.*;
+import fr.quatrevieux.araknemu.game.world.creature.Creature;
+import fr.quatrevieux.araknemu.game.world.creature.Operation;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import fr.quatrevieux.araknemu.game.world.creature.operation.SendPacket;
 import fr.quatrevieux.araknemu.game.world.map.GameMap;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
@@ -30,7 +33,8 @@ final public class ExplorationMap implements GameMap<ExplorationMapCell>, Dispat
     final private MapTemplate template;
 
     final private Map<Integer, ExplorationMapCell> cells;
-    final private ConcurrentMap<Integer, ExplorationPlayer> players = new ConcurrentHashMap<>();
+    final private ConcurrentMap<Integer, Creature> creatures = new ConcurrentHashMap<>();
+
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
     public ExplorationMap(MapTemplate template, CellLoader loader) {
@@ -42,18 +46,38 @@ final public class ExplorationMap implements GameMap<ExplorationMapCell>, Dispat
         ;
     }
 
+    /**
+     * Get the map id
+     *
+     * filename : data/maps/[id]_[date](X).swf
+     */
     public int id() {
         return template.id();
     }
 
+    /**
+     * Get the map data / version
+     *
+     * filename : data/maps/[id]_[date](X).swf
+     */
     public String date() {
         return template.date();
     }
 
+    /**
+     * Get the map decryption key
+     * Used by map swf which finish with "X.swf"
+     */
     public String key() {
         return template.key();
     }
 
+    /**
+     * Get the map dimensions
+     *
+     * /!\ Because cells are interleaved, the real height of the map is x2,
+     *     and the width is lower one every two lines
+     */
     public Dimensions dimensions() {
         return template.dimensions();
     }
@@ -75,58 +99,67 @@ final public class ExplorationMap implements GameMap<ExplorationMapCell>, Dispat
     }
 
     /**
-     * Add a new player to the map
+     * Add a new creature to the map
      */
-    public void add(ExplorationPlayer player) {
-        if (players.containsKey(player.id())) {
-            throw new IllegalArgumentException("The player is already added");
+    public void add(Creature creature) {
+        if (creatures.containsKey(creature.id())) {
+            throw new IllegalArgumentException("The creature is already added");
         }
 
-        players.put(player.id(), player);
+        creatures.put(creature.id(), creature);
 
-        dispatch(new NewSpriteOnMap(player.sprite()));
+        dispatch(new NewSpriteOnMap(creature.sprite()));
     }
 
     /**
-     * Remove the player from the map
+     * Remove the creature from the map
      */
-    public void remove(ExplorationPlayer player) {
-        if (!players.containsKey(player.id())) {
-            throw new IllegalArgumentException("The player do not exists");
+    public void remove(Creature creature) {
+        if (!creatures.containsKey(creature.id())) {
+            throw new IllegalArgumentException("The creature do not exists");
         }
 
-        players.remove(player.id());
-        dispatch(new SpriteRemoveFromMap(player.sprite()));
+        creatures.remove(creature.id());
+        dispatch(new SpriteRemoveFromMap(creature.sprite()));
     }
 
     /**
      * Get list of map sprites
      */
     public Collection<Sprite> sprites() {
-        return players
-            .values()
-            .stream()
-            .map(ExplorationPlayer::sprite)
+        return creatures.values().stream()
+            .map(Creature::sprite)
             .collect(Collectors.toList())
         ;
     }
 
     /**
-     * Get all players on map
+     * Get all creatures on map
      */
-    public Collection<ExplorationPlayer> players() {
-        return players.values();
+    public Collection<Creature> creatures() {
+        return creatures.values();
     }
 
     /**
-     * Get the player by its id
+     * Get a creature by its id
      *
-     * @param id The player id
-     *
-     * @return The player or null
+     * @param id The creature id
      */
-    public ExplorationPlayer getPlayer(int id) {
-        return players.get(id);
+    public Creature creature(int id) {
+        if (!creatures.containsKey(id)) {
+            throw new NoSuchElementException("The creature " + id + " cannot be found");
+        }
+
+        return creatures.get(id);
+    }
+
+    /**
+     * Check if the map has the creature
+     *
+     * @param id The creature id
+     */
+    public boolean has(int id) {
+        return creatures.containsKey(id);
     }
 
     @Override
@@ -138,11 +171,16 @@ final public class ExplorationMap implements GameMap<ExplorationMapCell>, Dispat
      * Send a packet to the map
      */
     public void send(Object packet) {
-        String str = packet.toString(); // Store string value for optimisation
+        apply(new SendPacket(packet));
+    }
 
-        for (Sender player : players.values()) {
-            player.send(str);
-        }
+    /**
+     * Apply an operation to all creatures in map
+     *
+     * @see Creature#apply(Operation)
+     */
+    public void apply(Operation operation) {
+        creatures.values().forEach(creature -> creature.apply(operation));
     }
 
     /**

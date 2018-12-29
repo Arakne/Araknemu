@@ -15,6 +15,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.sprite.PlayerSprite;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerLife;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
+import fr.quatrevieux.araknemu.game.world.creature.Operation;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import org.junit.jupiter.api.BeforeEach;
@@ -112,7 +113,7 @@ class ExplorationPlayerTest extends GameBaseCase {
 
         player.leave();
 
-        assertFalse(map.players().contains(player));
+        assertFalse(map.creatures().contains(player));
         assertSame(map, ref.get());
     }
 
@@ -210,7 +211,7 @@ class ExplorationPlayerTest extends GameBaseCase {
         player.unregister(session);
 
         assertNull(session.exploration());
-        assertFalse(player.map().players().contains(player));
+        assertFalse(player.map().creatures().contains(player));
     }
 
     @Test
@@ -247,5 +248,14 @@ class ExplorationPlayerTest extends GameBaseCase {
 
         assertSame(player, ref.get().player());
         assertSame(Direction.WEST, ref.get().orientation());
+    }
+
+    @Test
+    void apply() {
+        Operation operation = Mockito.mock(Operation.class);
+
+        player.apply(operation);
+
+        Mockito.verify(operation).onExplorationPlayer(player);
     }
 }

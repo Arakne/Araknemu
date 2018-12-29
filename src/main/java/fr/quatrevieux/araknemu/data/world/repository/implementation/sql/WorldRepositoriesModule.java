@@ -4,10 +4,7 @@ import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.transformer.ImmutableCharacteristicsTransformer;
-import fr.quatrevieux.araknemu.data.world.repository.implementation.local.ItemSetRepositoryCache;
-import fr.quatrevieux.araknemu.data.world.repository.implementation.local.ItemTemplateRepositoryCache;
-import fr.quatrevieux.araknemu.data.world.repository.implementation.local.ItemTypeRepositoryCache;
-import fr.quatrevieux.araknemu.data.world.repository.implementation.local.PlayerRaceRepositoryCache;
+import fr.quatrevieux.araknemu.data.world.repository.implementation.local.*;
 import fr.quatrevieux.araknemu.data.world.transformer.*;
 
 /**
@@ -88,6 +85,16 @@ final public class WorldRepositoriesModule implements ContainerModule {
         configurator.persist(
             fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceRepository.class,
             container -> new PlayerExperienceRepository(connection)
+        );
+
+        configurator.persist(
+            fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcTemplateRepository.class,
+            container -> new NpcTemplateRepositoryCache(new NpcTemplateRepository(connection))
+        );
+
+        configurator.persist(
+            fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcRepository.class,
+            container -> new NpcRepositoryCache(new NpcRepository(connection))
         );
 
         configurator.persist(

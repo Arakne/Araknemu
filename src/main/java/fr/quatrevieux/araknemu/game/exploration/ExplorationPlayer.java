@@ -9,13 +9,14 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.InteractionHandler;
 import fr.quatrevieux.araknemu.game.exploration.interaction.event.PlayerMoveFinished;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
+import fr.quatrevieux.araknemu.game.exploration.sprite.PlayerSprite;
 import fr.quatrevieux.araknemu.game.player.CharacterProperties;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerSessionScope;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
-import fr.quatrevieux.araknemu.game.exploration.sprite.PlayerSprite;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import fr.quatrevieux.araknemu.game.world.creature.Explorer;
+import fr.quatrevieux.araknemu.game.world.creature.Operation;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 import fr.quatrevieux.araknemu.network.game.GameSession;
@@ -98,6 +99,11 @@ final public class ExplorationPlayer implements Creature, Explorer, PlayerSessio
         return player.position();
     }
 
+    @Override
+    public Direction orientation() {
+        return orientation;
+    }
+
     /**
      * @todo Returns Optional<ExplorationMap>
      */
@@ -112,6 +118,11 @@ final public class ExplorationPlayer implements Creature, Explorer, PlayerSessio
         this.orientation = orientation;
 
         map.dispatch(new PlayerMoveFinished(this, cell));
+    }
+
+    @Override
+    public void apply(Operation operation) {
+        operation.onExplorationPlayer(this);
     }
 
     /**
@@ -190,13 +201,6 @@ final public class ExplorationPlayer implements Creature, Explorer, PlayerSessio
      */
     public Restrictions restrictions() {
         return restrictions;
-    }
-
-    /**
-     * Get the exploration player orientation
-     */
-    public Direction orientation() {
-        return orientation;
     }
 
     /**

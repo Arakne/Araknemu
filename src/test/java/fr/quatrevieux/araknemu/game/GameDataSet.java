@@ -19,6 +19,8 @@ import fr.quatrevieux.araknemu.data.world.entity.character.PlayerExperience;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
+import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
+import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemSet;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
@@ -26,6 +28,7 @@ import fr.quatrevieux.araknemu.data.world.transformer.ItemEffectsTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.ItemSetBonusTransformer;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
+import fr.quatrevieux.araknemu.game.world.map.Direction;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -93,6 +96,8 @@ public class GameDataSet extends TestingDataSet {
     }
 
     public GameDataSet pushMaps() throws SQLException, ContainerException {
+        use(NpcTemplate.class);
+        use(Npc.class);
         use(MapTrigger.class);
 
         return
@@ -531,6 +536,77 @@ public class GameDataSet extends TestingDataSet {
                 "(115, \"Fragment d'âme de Shushu\", 6, NULL),\n" +
                 "(116, \"Potion de familier\", 6, NULL)"
         );
+
+        return this;
+    }
+
+    public NpcTemplate pushNpcTemplate(NpcTemplate template) throws SQLException, ContainerException {
+        use(NpcTemplate.class);
+
+        connection.prepare(
+            "INSERT INTO NPC_TEMPLATE (NPC_TEMPLATE_ID, GFXID, SCALE_X, SCALE_Y, SEX, COLOR1, COLOR2, COLOR3, ACCESSORIES, EXTRA_CLIP, CUSTOM_ARTWORK) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            stmt -> {
+                int i = 1;
+
+                stmt.setInt(i++, template.id());
+                stmt.setInt(i++, template.gfxId());
+                stmt.setInt(i++, template.scaleX());
+                stmt.setInt(i++, template.scaleY());
+                stmt.setInt(i++, template.sex().ordinal());
+                stmt.setInt(i++, template.colors().color1());
+                stmt.setInt(i++, template.colors().color2());
+                stmt.setInt(i++, template.colors().color3());
+                stmt.setString(i++, template.accessories());
+                stmt.setInt(i++, template.extraClip());
+                stmt.setInt(i++, template.customArtwork());
+
+                return stmt.executeUpdate();
+            }
+        );
+
+        return template;
+    }
+
+    public Npc pushNpc(Npc npc) throws SQLException, ContainerException {
+        use(Npc.class);
+
+        connection.prepare(
+            "INSERT INTO NPC (NPC_ID, NPC_TEMPLATE_ID, MAP_ID, CELL_ID, ORIENTATION) VALUES (?, ?, ?, ?, ?)",
+            stmt -> {
+                int i = 1;
+
+                stmt.setInt(i++, npc.id());
+                stmt.setInt(i++, npc.templateId());
+                stmt.setInt(i++, npc.position().map());
+                stmt.setInt(i++, npc.position().cell());
+                stmt.setInt(i++, npc.orientation().ordinal());
+
+                return stmt.executeUpdate();
+            }
+        );
+
+        return npc;
+    }
+
+    public GameDataSet pushNpcTemplates() throws SQLException, ContainerException {
+        if (repository(NpcTemplate.class).has(new NpcTemplate(848, 0, 0, 0, null, null, null, 0, 0))) {
+            return this;
+        }
+
+        pushNpcTemplate(new NpcTemplate(848, 30, 100, 100, Sex.MALE, new Colors(394758, 16121664, 13070517), "0,1be7,0,0,0", -1, 9096));
+        pushNpcTemplate(new NpcTemplate(849, 9037, 100, 100, Sex.MALE, new Colors(-1, -1, -1), "0,0,0,0,0", -1, 0));
+        pushNpcTemplate(new NpcTemplate(878, 40, 100, 100, Sex.MALE, new Colors(8158389, 13677665, 3683117), "0,20f9,2a5,1d5e,1b9e", 4, 9092));
+
+
+        return this;
+    }
+
+    public GameDataSet pushNpcs() throws SQLException, ContainerException {
+        pushNpcTemplates();
+
+        pushNpc(new Npc(457, 848, new Position(10302, 220), Direction.SOUTH_EAST));
+        pushNpc(new Npc(458, 849, new Position(10302, 293), Direction.SOUTH_EAST));
+        pushNpc(new Npc(472, 878, new Position(10340, 82), Direction.SOUTH_EAST));
 
         return this;
     }
