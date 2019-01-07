@@ -3,7 +3,7 @@ build:
         tests:
             environment:
                 sdkman:
-                    - java
+                    - java@8.0.192-zulu
                     - maven
                 timezone: FR
 
