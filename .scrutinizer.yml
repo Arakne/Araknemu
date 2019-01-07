@@ -1,0 +1,23 @@
+build:
+    nodes:
+        tests:
+            environment:
+                sdkman:
+                    - java
+                    - maven
+                timezone: FR
+
+            services:
+                mysql: 5.7
+
+            setup:
+                - 'mysql -u root -e "create database araknemu"'
+                - 'mysql -u root -e "create user araknemu@127.0.0.1"'
+                - 'mysql -u root -e "grant all privileges on araknemu.* to araknemu@127.0.0.1"'
+
+           tests:
+               override:
+                    - command: mvn clean package
+                    coverage:
+                        file: 'target/site/jacoco'
+                        format: 'jacoco'
