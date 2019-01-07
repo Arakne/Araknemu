@@ -16,6 +16,6 @@ build:
                     - command: mysql -u root -e "create user araknemu@127.0.0.1"
                     - command: mysql -u root -e "grant all privileges on araknemu.* to araknemu@127.0.0.1"
                     - command: mvn clean package
-                    - coverage:
-                        file: 'target/site/jacoco'
-                        format: 'jacoco'
+                      #                    - coverage:
+                      #  file: 'target/site/jacoco'
+                      #  format: 'jacoco'
