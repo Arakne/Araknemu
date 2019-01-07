@@ -18,6 +18,6 @@ build:
             tests:
                 override:
                     - command: mvn clean package
-                    coverage:
+                    - coverage:
                         file: 'target/site/jacoco'
                         format: 'jacoco'
