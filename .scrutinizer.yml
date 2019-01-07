@@ -10,7 +10,7 @@ build:
             services:
                 mysql: 5.7
 
-            setup:
+            project_setup:
                 - 'mysql -u root -e "create database araknemu"'
                 - 'mysql -u root -e "create user araknemu@127.0.0.1"'
                 - 'mysql -u root -e "grant all privileges on araknemu.* to araknemu@127.0.0.1"'
