@@ -15,8 +15,8 @@ build:
                 - 'mysql -u root -e "create user araknemu@127.0.0.1"'
                 - 'mysql -u root -e "grant all privileges on araknemu.* to araknemu@127.0.0.1"'
 
-           tests:
-               override:
+            tests:
+                override:
                     - command: mvn clean package
                     coverage:
                         file: 'target/site/jacoco'
