@@ -1,6 +1,9 @@
 build:
     nodes:
         tests:
+            resources:
+                cpus: 4
+
             environment:
                 sdkman:
                     - java@8.0.192-zulu
