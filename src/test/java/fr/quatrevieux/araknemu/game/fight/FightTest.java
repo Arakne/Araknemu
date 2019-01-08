@@ -113,7 +113,7 @@ class FightTest extends GameBaseCase {
 
         assertFalse(ab.get());
 
-        Thread.sleep(11);
+        Thread.sleep(15);
         assertTrue(ab.get());
     }
 
@@ -133,7 +133,7 @@ class FightTest extends GameBaseCase {
 
         assertFalse(ab.get());
 
-        Thread.sleep(11);
+        Thread.sleep(15);
         assertTrue(ab.get());
     }
 

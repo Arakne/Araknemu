@@ -88,7 +88,7 @@ class JoinFightTest extends FightBaseCase {
         }
 
         action.start(new ActionQueue());
-        Thread.sleep(5);
+        Thread.sleep(10);
 
         requestStack.assertLast(
             new GameActionResponse("", ActionType.JOIN_FIGHT, player.id(), "t")

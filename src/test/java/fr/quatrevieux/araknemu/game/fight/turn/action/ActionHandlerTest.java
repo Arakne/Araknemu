@@ -125,7 +125,7 @@ class ActionHandlerTest extends FightBaseCase {
 
         Mockito.verify(action, Mockito.never()).end();
 
-        Thread.sleep(11);
+        Thread.sleep(15);
         Mockito.verify(action, Mockito.times(1)).end();
     }
 
@@ -228,7 +228,7 @@ class ActionHandlerTest extends FightBaseCase {
 
         Mockito.when(action.validate()).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
-        Mockito.when(action.duration()).thenReturn(Duration.ofMillis(10));
+        Mockito.when(action.duration()).thenReturn(Duration.ofMillis(1000));
         Mockito.doThrow(new RuntimeException()).when(action).end();
 
         Mockito.when(result.success()).thenReturn(true);

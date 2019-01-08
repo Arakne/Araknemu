@@ -66,7 +66,7 @@ class RefreshConnectionPoolTest {
 
         connection.close();
 
-        Thread.sleep(1);
+        Thread.sleep(10);
 
         Mockito.verify(logger, Mockito.atLeast(1)).info("Refreshing pool");
         Mockito.verify(logger).warn("Closed connection detected");
@@ -83,7 +83,7 @@ class RefreshConnectionPoolTest {
         connection1.close();
         connection2.close();
 
-        Thread.sleep(1);
+        Thread.sleep(10);
 
         Mockito.verify(logger, Mockito.atLeast(1)).info("Refreshing pool");
         Mockito.verify(logger, Mockito.times(2)).warn("Closed connection detected");
