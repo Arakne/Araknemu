@@ -2,7 +2,7 @@ build:
     nodes:
         tests:
             resources:
-                cpus: 4
+                cpus: 2
 
             environment:
                 sdkman:
