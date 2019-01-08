@@ -17,5 +17,5 @@ build:
                     - command: mysql -u root -e "grant all privileges on araknemu.* to araknemu"
                     - command: mvn test
                       coverage:
-                        file: 'target/site/jacoco'
+                        file: 'target/site/jacoco/jacoco.xml'
                         format: 'jacoco'
