@@ -1,13 +1,17 @@
 package fr.quatrevieux.araknemu.game.exploration.npc.dialog;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Question;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.QuestionRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.Action;
+import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersResolver;
+import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.VariableResolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -28,17 +32,20 @@ class NpcQuestionTest extends GameBaseCase {
 
     @Test
     void id() {
-        assertEquals(3596, new NpcQuestion(repository.get(3596), Collections.emptyList()).id());
+        assertEquals(3596, new NpcQuestion(repository.get(3596), Collections.emptyList(), new ParametersResolver(new VariableResolver[0], NOPLogger.NOP_LOGGER)).id());
     }
 
     @Test
     void parameters() throws SQLException, ContainerException {
-        assertArrayEquals(new String[0], new NpcQuestion(repository.get(3596), Collections.emptyList()).parameters(explorationPlayer()));
+        assertArrayEquals(new String[0], new NpcQuestion(repository.get(3596), Collections.emptyList(), container.get(ParametersResolver.class)).parameters(explorationPlayer()));
+        assertArrayEquals(new String[] {"my constant"}, new NpcQuestion(new Question(123, new int[0], new String[] {"my constant"}, ""), Collections.emptyList(), container.get(ParametersResolver.class)).parameters(explorationPlayer()));
+        assertArrayEquals(new String[] {"Bob"}, new NpcQuestion(new Question(123, new int[0], new String[] {"[name]"}, ""), Collections.emptyList(), container.get(ParametersResolver.class)).parameters(explorationPlayer()));
+        assertArrayEquals(new String[] {"const", "Bob", "[undefined]"}, new NpcQuestion(new Question(123, new int[0], new String[] {"const", "[name]", "[undefined]"}, ""), Collections.emptyList(), container.get(ParametersResolver.class)).parameters(explorationPlayer()));
     }
 
     @Test
     void check() throws SQLException, ContainerException {
-        assertTrue(new NpcQuestion(repository.get(3596), Collections.emptyList()).check(explorationPlayer()));
+        assertTrue(new NpcQuestion(repository.get(3596), Collections.emptyList(), new ParametersResolver(new VariableResolver[0], NOPLogger.NOP_LOGGER)).check(explorationPlayer()));
     }
 
     @Test
@@ -58,7 +65,7 @@ class NpcQuestionTest extends GameBaseCase {
         responses.add(new Response(1, Arrays.asList(a1)));
         responses.add(new Response(2, Arrays.asList(a2, a3)));
 
-        NpcQuestion question = new NpcQuestion(repository.get(3596), responses);
+        NpcQuestion question = new NpcQuestion(repository.get(3596), responses, new ParametersResolver(new VariableResolver[0], NOPLogger.NOP_LOGGER));
 
         Collection<Response> actual = question.responses(player);
 

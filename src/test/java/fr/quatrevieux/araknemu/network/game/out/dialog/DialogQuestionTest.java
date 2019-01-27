@@ -52,9 +52,9 @@ class DialogQuestionTest extends GameBaseCase {
 
     @Test
     void generateWithParameters() throws SQLException, ContainerException {
-        dataSet.pushQuestion(new Question(1234, new int[0], new String[] {"a1", "a2"}, ""));
+        dataSet.pushQuestion(new Question(1234, new int[0], new String[] {"[name]", "a2"}, ""));
 
-        assertEquals("DQ1234;a1,a2", new DialogQuestion(question(1234), Collections.emptyList(), player).toString());
+        assertEquals("DQ1234;Bob,a2", new DialogQuestion(question(1234), Collections.emptyList(), player).toString());
     }
 
     private NpcQuestion question(int id) {

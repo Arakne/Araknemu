@@ -10,9 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 /**
  * Question repository implementation for SQL database
@@ -117,15 +115,38 @@ final class QuestionRepository implements fr.quatrevieux.araknemu.data.world.rep
                 return utils.findAll("SELECT * FROM NPC_QUESTION WHERE QUESTION_ID = ?", stmt -> stmt.setInt(1, ids[0]));
 
             default:
-                // @fixme Order may differ from the requested ids
-                return utils.findAll(
+                return sortByIds(utils.findAll(
                     "SELECT * FROM NPC_QUESTION WHERE QUESTION_ID IN(" + StringUtils.repeat("?, ", ids.length - 1) + "?)",
                     rs -> {
                         for (int i = 0; i < ids.length; ++i) {
                             rs.setInt(i + 1, ids[i]);
                         }
                     }
-                );
+                ), ids);
         }
+    }
+
+    /**
+     * Sort the database data by the request ids order
+     *
+     * @param data The database data
+     * @param ids The sorted ids
+     */
+    private Collection<Question> sortByIds(Collection<Question> data, int[] ids) {
+        Collection<Question> sorted = new ArrayList<>(data.size());
+
+        Map<Integer, Question> questions = new HashMap<>();
+
+        data.forEach(question -> questions.put(question.id(), question));
+
+        for (int id : ids) {
+            Question question = questions.get(id);
+
+            if (question != null) {
+                sorted.add(question);
+            }
+        }
+
+        return sorted;
     }
 }

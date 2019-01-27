@@ -2,7 +2,9 @@ package fr.quatrevieux.araknemu.game.exploration.npc.dialog;
 
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Question;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersResolver;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -12,10 +14,12 @@ import java.util.stream.Collectors;
 final public class NpcQuestion {
     final private Question entity;
     final private Collection<Response> responses;
+    final private ParametersResolver parametersResolver;
 
-    public NpcQuestion(Question entity, Collection<Response> responses) {
+    public NpcQuestion(Question entity, Collection<Response> responses, ParametersResolver parametersResolver) {
         this.entity = entity;
         this.responses = responses;
+        this.parametersResolver = parametersResolver;
     }
 
     /**
@@ -41,8 +45,10 @@ final public class NpcQuestion {
      * @return List of parameters. Must be stringifiable
      */
     public Object[] parameters(ExplorationPlayer player) {
-        // @todo parse parameters
-        return entity.parameters();
+        return Arrays.stream(entity.parameters())
+            .map(parameter -> parametersResolver.resolve(parameter, player))
+            .toArray()
+        ;
     }
 
     /**

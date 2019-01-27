@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.ActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.dialog.LeaveDialog;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.dialog.NextQuestion;
+import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersResolver;
 import org.slf4j.Logger;
 
 import java.util.*;
@@ -21,15 +22,17 @@ import java.util.stream.Collectors;
 final public class DialogService implements PreloadableService {
     final private QuestionRepository questionRepository;
     final private ResponseActionRepository responseActionRepository;
+    final private ParametersResolver parametersResolver;
     final private Logger logger;
 
     final private Map<String, ActionFactory> actionFactories = new HashMap<>();
     final private Map<Integer, NpcQuestion> questions = new HashMap<>();
     final private Map<Integer, Response> responses = new HashMap<>();
 
-    public DialogService(QuestionRepository questionRepository, ResponseActionRepository responseActionRepository, ActionFactory[] actionFactories, Logger logger) {
+    public DialogService(QuestionRepository questionRepository, ResponseActionRepository responseActionRepository, ActionFactory[] actionFactories, ParametersResolver parametersResolver, Logger logger) {
         this.questionRepository = questionRepository;
         this.responseActionRepository = responseActionRepository;
+        this.parametersResolver = parametersResolver;
         this.logger = logger;
 
         initActionFactories(actionFactories);
@@ -77,7 +80,8 @@ final public class DialogService implements PreloadableService {
             entity.id(),
             id -> new NpcQuestion(
                 entity,
-                createResponses(responseActionRepository.byQuestion(entity))
+                createResponses(responseActionRepository.byQuestion(entity)),
+                parametersResolver
             )
         );
     }

@@ -8,11 +8,14 @@ import fr.quatrevieux.araknemu.data.world.repository.environment.npc.QuestionRep
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.ResponseActionRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.ActionFactory;
+import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersResolver;
+import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.VariableResolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
+import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -38,6 +41,7 @@ class DialogServiceTest extends GameBaseCase {
             container.get(QuestionRepository.class),
             container.get(ResponseActionRepository.class),
             new ActionFactory[0],
+            new ParametersResolver(new VariableResolver[0], NOPLogger.NOP_LOGGER),
             logger = Mockito.mock(Logger.class)
         );
     }
@@ -127,9 +131,9 @@ class DialogServiceTest extends GameBaseCase {
     void byNpc() throws ContainerException, SQLException {
         dataSet.pushNpcs();
 
-        assertCollectionEquals(
+        assertEquals(
             service.byIds(new int[] {3593, 3588}),
-            service.forNpc(dataSet.refresh(new Npc(457, 0, null, null, null))).toArray()
+            service.forNpc(dataSet.refresh(new Npc(457, 0, null, null, null)))
         );
     }
 }

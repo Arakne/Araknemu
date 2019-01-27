@@ -61,6 +61,9 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.teleport
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.teleport.TeleportFactory;
 import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.DialogService;
+import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.GetterResolver;
+import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersResolver;
+import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.VariableResolver;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
@@ -487,6 +490,17 @@ final public class GameModule implements ContainerModule {
                 container.get(QuestionRepository.class),
                 container.get(ResponseActionRepository.class),
                 new fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.ActionFactory[] {},
+                container.get(ParametersResolver.class),
+                container.get(Logger.class)
+            )
+        );
+
+        configurator.persist(
+            ParametersResolver.class,
+            container -> new ParametersResolver(
+                new VariableResolver[] {
+                    new GetterResolver("name", session -> session.player().name()),
+                },
                 container.get(Logger.class)
             )
         );
