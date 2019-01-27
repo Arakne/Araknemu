@@ -9,6 +9,7 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
+import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
@@ -137,10 +138,7 @@ class LoadExtraInfoTest extends FightBaseCase {
             new AddSprites(
                 Arrays.asList(
                     player.sprite(),
-                    new GameNpc(
-                        new Npc(472, 878, new Position(10340, 82), Direction.SOUTH_EAST),
-                        new NpcTemplate(878, 40, 100, 100, Sex.MALE, new Colors(8158389, 13677665, 3683117), "0,20f9,2a5,1d5e,1b9e", 4, 9092)
-                    ).sprite()
+                    container.get(NpcService.class).get(472).sprite()
                 )
             ),
             new FightsCount(0),

@@ -19,6 +19,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.TriggerCell;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.TriggerLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.event.NewSpriteOnMap;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
+import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
 import fr.quatrevieux.araknemu.game.listener.map.*;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import fr.quatrevieux.araknemu.game.world.creature.Operation;
@@ -130,10 +131,7 @@ class ExplorationMapTest extends GameBaseCase {
         assertEquals(0, map.sprites().size());
         assertEquals(0, map.creatures().size());
 
-        GameNpc npc = new GameNpc(
-            dataSet.refresh(new Npc(457, 0, null, null)),
-            dataSet.refresh(new NpcTemplate(848, 0, 0, 0, null, null, null, 0, 0))
-        );
+        GameNpc npc = container.get(NpcService.class).get(457);
 
         map.add(npc);
 
@@ -267,10 +265,7 @@ class ExplorationMapTest extends GameBaseCase {
         ExplorationMap map = explorationPlayer().map();
         ExplorationPlayer other = makeOtherExplorationPlayer();
 
-        GameNpc npc = new GameNpc(
-            dataSet.refresh(new Npc(457, 0, null, null)),
-            dataSet.refresh(new NpcTemplate(848, 0, 0, 0, null, null, null, 0, 0))
-        );
+        GameNpc npc = container.get(NpcService.class).get(457);
 
         map.add(npc);
         map.add(other);

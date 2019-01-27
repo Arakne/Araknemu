@@ -54,8 +54,9 @@ final public class InteractionHandler {
      *
      * @param interaction The interaction type
      */
+    @SuppressWarnings("unchecked")
     public <T extends Interaction> T get(Class<T> interaction) {
-        if (current == null || !interaction.isInstance(current)) {
+        if (!interaction.isInstance(current)) {
             throw new IllegalArgumentException("Invalid interaction type");
         }
 

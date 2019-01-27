@@ -9,6 +9,8 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
+import fr.quatrevieux.araknemu.game.exploration.npc.dialog.DialogService;
+import fr.quatrevieux.araknemu.game.exploration.npc.dialog.NpcQuestion;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,6 +35,7 @@ class NpcServiceTest extends GameBaseCase {
         dataSet.pushMaps();
 
         service = new NpcService(
+            container.get(DialogService.class),
             container.get(NpcTemplateRepository.class),
             container.get(NpcRepository.class)
         );
@@ -93,5 +97,20 @@ class NpcServiceTest extends GameBaseCase {
         Mockito.verify(logger).info("Loading NPCs...");
         Mockito.verify(logger).info("{} NPC templates loaded", 3);
         Mockito.verify(logger).info("{} NPCs loaded", 3);
+    }
+
+    @Test
+    void get() throws SQLException, ContainerException {
+        dataSet.pushNpcs();
+
+        GameNpc npc = service.get(472);
+
+        assertEquals(-47204, npc.id());
+        assertEquals(82, npc.cell());
+
+        NpcQuestion question = npc.question(explorationPlayer()).get();
+
+        assertEquals(3786, question.id());
+        assertCount(2, question.responses(explorationPlayer()));
     }
 }

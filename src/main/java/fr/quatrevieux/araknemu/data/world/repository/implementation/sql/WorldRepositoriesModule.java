@@ -98,6 +98,16 @@ final public class WorldRepositoriesModule implements ContainerModule {
         );
 
         configurator.persist(
+            fr.quatrevieux.araknemu.data.world.repository.environment.npc.QuestionRepository.class,
+            container -> new QuestionRepository(connection)
+        );
+
+        configurator.persist(
+            fr.quatrevieux.araknemu.data.world.repository.environment.npc.ResponseActionRepository.class,
+            container -> new ResponseActionRepository(connection)
+        );
+
+        configurator.persist(
             RaceBaseStatsTransformer.class,
             container -> new RaceBaseStatsTransformer(
                 new ImmutableCharacteristicsTransformer()

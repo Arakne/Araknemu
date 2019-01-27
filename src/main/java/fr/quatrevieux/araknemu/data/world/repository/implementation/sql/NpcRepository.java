@@ -7,9 +7,11 @@ import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -28,7 +30,10 @@ final class NpcRepository implements fr.quatrevieux.araknemu.data.world.reposito
                     rs.getInt("MAP_ID"),
                     rs.getInt("CELL_ID")
                 ),
-                Direction.values()[rs.getInt("ORIENTATION")]
+                Direction.values()[rs.getInt("ORIENTATION")],
+                Arrays.stream(StringUtils.split(rs.getString("QUESTIONS"), ';'))
+                    .mapToInt(Integer::parseInt)
+                    .toArray()
             );
         }
 
@@ -56,7 +61,8 @@ final class NpcRepository implements fr.quatrevieux.araknemu.data.world.reposito
                     "NPC_TEMPLATE_ID INTEGER," +
                     "MAP_ID INTEGER," +
                     "CELL_ID INTEGER," +
-                    "ORIENTATION TINYINT(1)" +
+                    "ORIENTATION TINYINT(1)," +
+                    "QUESTIONS VARCHAR(32)" +
                 ")"
             );
         } catch (SQLException e) {

@@ -11,12 +11,14 @@ final public class Npc {
     final private int templateId;
     final private Position position;
     final private Direction orientation;
+    final private int[] questions;
 
-    public Npc(int id, int templateId, Position position, Direction orientation) {
+    public Npc(int id, int templateId, Position position, Direction orientation, int[] questions) {
         this.id = id;
         this.templateId = templateId;
         this.position = position;
         this.orientation = orientation;
+        this.questions = questions;
     }
 
     /**
@@ -47,5 +49,14 @@ final public class Npc {
      */
     public Direction orientation() {
         return orientation;
+    }
+
+    /**
+     * Get list of available questions ids on the NPC
+     *
+     * @see Question#id()
+     */
+    public int[] questions() {
+        return questions;
     }
 }

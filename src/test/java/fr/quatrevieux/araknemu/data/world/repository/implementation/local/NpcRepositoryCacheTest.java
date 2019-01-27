@@ -44,21 +44,21 @@ class NpcRepositoryCacheTest extends GameBaseCase {
     @Test
     void getUsingEntity() {
         assertSame(
-            repository.get(new Npc(457, 0, null, null)),
+            repository.get(new Npc(457, 0, null, null, null)),
             repository.get(457)
         );
     }
 
     @Test
     void hasNotLoaded() {
-        assertTrue(repository.has(new Npc(457, 0, null, null)));
-        assertFalse(repository.has(new Npc(-1, 0, null, null)));
+        assertTrue(repository.has(new Npc(457, 0, null, null, null)));
+        assertFalse(repository.has(new Npc(-1, 0, null, null, null)));
     }
 
     @Test
     void hasCached() {
         repository.get(457);
-        assertTrue(repository.has(new Npc(457, 0, null, null)));
+        assertTrue(repository.has(new Npc(457, 0, null, null, null)));
     }
 
     @Test

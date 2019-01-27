@@ -21,6 +21,8 @@ import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
+import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Question;
+import fr.quatrevieux.araknemu.data.world.entity.environment.npc.ResponseAction;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemSet;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
@@ -29,6 +31,7 @@ import fr.quatrevieux.araknemu.data.world.transformer.ItemSetBonusTransformer;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -571,7 +574,7 @@ public class GameDataSet extends TestingDataSet {
         use(Npc.class);
 
         connection.prepare(
-            "INSERT INTO NPC (NPC_ID, NPC_TEMPLATE_ID, MAP_ID, CELL_ID, ORIENTATION) VALUES (?, ?, ?, ?, ?)",
+            "INSERT INTO NPC (NPC_ID, NPC_TEMPLATE_ID, MAP_ID, CELL_ID, ORIENTATION, QUESTIONS) VALUES (?, ?, ?, ?, ?, ?)",
             stmt -> {
                 int i = 1;
 
@@ -580,6 +583,7 @@ public class GameDataSet extends TestingDataSet {
                 stmt.setInt(i++, npc.position().map());
                 stmt.setInt(i++, npc.position().cell());
                 stmt.setInt(i++, npc.orientation().ordinal());
+                stmt.setString(i++, StringUtils.join(npc.questions(), ';'));
 
                 return stmt.executeUpdate();
             }
@@ -603,10 +607,78 @@ public class GameDataSet extends TestingDataSet {
 
     public GameDataSet pushNpcs() throws SQLException, ContainerException {
         pushNpcTemplates();
+        pushQuestions();
+        pushResponseActions();
 
-        pushNpc(new Npc(457, 848, new Position(10302, 220), Direction.SOUTH_EAST));
-        pushNpc(new Npc(458, 849, new Position(10302, 293), Direction.SOUTH_EAST));
-        pushNpc(new Npc(472, 878, new Position(10340, 82), Direction.SOUTH_EAST));
+        pushNpc(new Npc(457, 848, new Position(10302, 220), Direction.SOUTH_EAST, new int[] {3593, 3588}));
+        pushNpc(new Npc(458, 849, new Position(10302, 293), Direction.SOUTH_EAST, new int[] {3596}));
+        pushNpc(new Npc(472, 878, new Position(10340, 82), Direction.SOUTH_EAST, new int[] {3786}));
+
+        return this;
+    }
+
+    public Question pushQuestion(Question question) throws SQLException, ContainerException {
+        use(Question.class);
+
+        connection.prepare(
+            "INSERT INTO NPC_QUESTION (QUESTION_ID, RESPONSE_IDS, PARAMETERS, CONDITIONS) VALUES (?, ?, ?, ?)",
+            stmt -> {
+                int i = 1;
+
+                stmt.setInt(i++, question.id());
+                stmt.setString(i++, StringUtils.join(question.responseIds(), ';'));
+                stmt.setString(i++, StringUtils.join(question.parameters(), ';'));
+                stmt.setString(i++, question.condition());
+
+                return stmt.executeUpdate();
+            }
+        );
+
+        return question;
+    }
+
+    public GameDataSet pushQuestions() throws SQLException, ContainerException {
+        if (repository(Question.class).has(new Question(3596, null, null, null))) {
+            return this;
+        }
+
+        pushQuestion(new Question(3596, new int[] {3182}, new String[] {}, ""));
+        pushQuestion(new Question(3786, new int[] {3323, 3324}, new String[] {}, ""));
+        pushQuestion(new Question(3593, new int[] {}, new String[] {}, "PO!60024"));
+        pushQuestion(new Question(3588, new int[] {}, new String[] {}, ""));
+        pushQuestion(new Question(3597, new int[] {}, new String[] {}, ""));
+        pushQuestion(new Question(3787, new int[] {}, new String[] {}, ""));
+
+        return this;
+    }
+
+    public ResponseAction pushResponseAction(ResponseAction action) throws SQLException, ContainerException {
+        use(ResponseAction.class);
+
+        connection.prepare(
+            "INSERT INTO NPC_RESPONSE_ACTION (RESPONSE_ID, ACTION, ARGUMENTS) VALUES (?, ?, ?)",
+            stmt -> {
+                int i = 1;
+
+                stmt.setInt(i++, action.responseId());
+                stmt.setString(i++, action.action());
+                stmt.setString(i++, action.arguments());
+
+                return stmt.executeUpdate();
+            }
+        );
+
+        return action;
+    }
+
+    public GameDataSet pushResponseActions() throws SQLException, ContainerException {
+        if (repository(ResponseAction.class).has(new ResponseAction(3182, "NEXT", "3597"))) {
+            return this;
+        }
+
+        pushResponseAction(new ResponseAction(3182, "NEXT", "3597"));
+        pushResponseAction(new ResponseAction(3323, "NEXT", "3787"));
+        pushResponseAction(new ResponseAction(3324, "LEAVE", ""));
 
         return this;
     }

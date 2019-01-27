@@ -3,6 +3,9 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.handler.EnsureExploring;
 import fr.quatrevieux.araknemu.game.handler.emote.ChangeOrientation;
+import fr.quatrevieux.araknemu.network.game.in.dialog.ChosenResponse;
+import fr.quatrevieux.araknemu.network.game.in.dialog.CreateDialogRequest;
+import fr.quatrevieux.araknemu.network.game.in.dialog.LeaveDialogRequest;
 import fr.quatrevieux.araknemu.network.game.in.emote.SetOrientationRequest;
 import fr.quatrevieux.araknemu.network.game.in.fight.AskFightDetails;
 import fr.quatrevieux.araknemu.network.game.in.fight.ListFightsRequest;
@@ -37,5 +40,8 @@ class ExploringLoaderTest extends LoaderTestCase {
         assertHandlePacket(ListFightsRequest.class, handlers);
         assertHandlePacket(AskFightDetails.class, handlers);
         assertHandlePacket(SetOrientationRequest.class, handlers);
+        assertHandlePacket(CreateDialogRequest.class, handlers);
+        assertHandlePacket(LeaveDialogRequest.class, handlers);
+        assertHandlePacket(ChosenResponse.class, handlers);
     }
 }

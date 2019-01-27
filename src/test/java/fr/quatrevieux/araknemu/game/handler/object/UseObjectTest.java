@@ -7,6 +7,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
+import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.Restrictions;
@@ -116,10 +117,7 @@ class UseObjectTest extends GameBaseCase {
 
         InventoryEntry entry = explorationPlayer().inventory().add(container.get(ItemService.class).create(468));
 
-        GameNpc npc = new GameNpc(
-            dataSet.refresh(new Npc(457, 0, null, null)),
-            dataSet.refresh(new NpcTemplate(848, 0, 0, 0, null, null, null, 0, 0))
-        );
+        GameNpc npc = container.get(NpcService.class).get(457);
 
         explorationPlayer().map().add(npc);
         requestStack.clear();

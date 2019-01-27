@@ -12,6 +12,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.Challenger
 import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.InitiatorDialog;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
+import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
@@ -66,10 +67,7 @@ class AskChallengeTest extends GameBaseCase {
         dataSet.pushNpcs();
         ExplorationPlayer current = explorationPlayer();
 
-        GameNpc npc = new GameNpc(
-            dataSet.refresh(new Npc(457, 0, null, null)),
-            dataSet.refresh(new NpcTemplate(848, 0, 0, 0, null, null, null, 0, 0))
-        );
+        GameNpc npc = container.get(NpcService.class).get(457);
 
         current.map().add(npc);
         requestStack.clear();

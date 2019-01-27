@@ -17,6 +17,8 @@ import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepo
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcTemplateRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.npc.QuestionRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.npc.ResponseActionRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
@@ -58,6 +60,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.CellActi
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.teleport.Teleport;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.teleport.TeleportFactory;
 import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
+import fr.quatrevieux.araknemu.game.exploration.npc.dialog.DialogService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
@@ -115,7 +118,10 @@ final public class GameModule implements ContainerModule {
                 container.get(Server.class),
                 container.get(Logger.class),
                 container.get(ListenerAggregate.class),
+
+                // Preload
                 Arrays.asList(
+                    container.get(DialogService.class),
                     container.get(NpcService.class),
                     container.get(AreaService.class),
                     container.get(MapTriggerService.class),
@@ -125,6 +131,8 @@ final public class GameModule implements ContainerModule {
                     container.get(PlayerRaceService.class),
                     container.get(PlayerExperienceService.class)
                 ),
+
+                // Subscribers
                 Arrays.asList(
                     container.get(AreaService.class),
                     container.get(ExplorationMapService.class),
@@ -467,8 +475,19 @@ final public class GameModule implements ContainerModule {
         configurator.persist(
             NpcService.class,
             container -> new NpcService(
+                container.get(DialogService.class),
                 container.get(NpcTemplateRepository.class),
                 container.get(NpcRepository.class)
+            )
+        );
+
+        configurator.persist(
+            DialogService.class,
+            container -> new DialogService(
+                container.get(QuestionRepository.class),
+                container.get(ResponseActionRepository.class),
+                new fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.ActionFactory[] {},
+                container.get(Logger.class)
             )
         );
 

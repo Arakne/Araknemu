@@ -5,6 +5,9 @@ import fr.quatrevieux.araknemu.network.game.in.basic.AskDate;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminCommand;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import fr.quatrevieux.araknemu.network.game.in.chat.SubscribeChannels;
+import fr.quatrevieux.araknemu.network.game.in.dialog.ChosenResponse;
+import fr.quatrevieux.araknemu.network.game.in.dialog.CreateDialogRequest;
+import fr.quatrevieux.araknemu.network.game.in.dialog.LeaveDialogRequest;
 import fr.quatrevieux.araknemu.network.game.in.emote.SetOrientationRequest;
 import fr.quatrevieux.araknemu.network.game.in.fight.*;
 import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
@@ -61,6 +64,9 @@ class GameParserLoaderTest {
         assertContainsInstance(AskFightDetails.Parser.class, parsers);
         assertContainsInstance(LeaveFightRequest.Parser.class, parsers);
         assertContainsInstance(SetOrientationRequest.Parser.class, parsers);
+        assertContainsInstance(CreateDialogRequest.Parser.class, parsers);
+        assertContainsInstance(LeaveDialogRequest.Parser.class, parsers);
+        assertContainsInstance(ChosenResponse.Parser.class, parsers);
     }
 
     public void assertContainsInstance(Class type, Collection collection) {

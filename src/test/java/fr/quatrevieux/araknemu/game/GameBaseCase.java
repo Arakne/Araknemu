@@ -32,6 +32,8 @@ import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
+import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Question;
+import fr.quatrevieux.araknemu.data.world.entity.environment.npc.ResponseAction;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemSet;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
@@ -41,6 +43,8 @@ import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepo
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcTemplateRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.npc.QuestionRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.npc.ResponseActionRepository;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.sql.WorldRepositoriesModule;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
@@ -216,6 +220,8 @@ public class GameBaseCase extends DatabaseTestCase {
             .declare(ItemType.class, ItemTypeRepository.class)
             .declare(NpcTemplate.class, NpcTemplateRepository.class)
             .declare(Npc.class, NpcRepository.class)
+            .declare(Question.class, QuestionRepository.class)
+            .declare(ResponseAction.class, ResponseActionRepository.class)
         ;
 
         container.get(GameService.class).subscribe();
