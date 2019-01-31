@@ -39,5 +39,5 @@ public interface BuffHook {
     /**
      * The fighter will take damages
      */
-    default public void onDamage(Buff buff, Damage value) {};
+    default public void onDamage(Buff buff, Damage value) {}
 }

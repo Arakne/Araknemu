@@ -146,7 +146,6 @@ public enum Effect {
     SPELL_ADD_PER_TARGET_CAST(291,  Type.SPECIAL),
     SPELL_SET_DELAY(292,            Type.SPECIAL),
 
-    // @fixme fight effects
     SPELL_ADD_BASE_DAMAGE(293,      Type.SPECIAL),
     SPELL_SUB_RANGE(294,            Type.SPECIAL),
 

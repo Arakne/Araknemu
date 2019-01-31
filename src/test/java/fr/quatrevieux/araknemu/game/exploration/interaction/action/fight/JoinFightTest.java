@@ -88,7 +88,7 @@ class JoinFightTest extends FightBaseCase {
         }
 
         action.start(new ActionQueue());
-        Thread.sleep(10);
+        Thread.sleep(100);
 
         requestStack.assertLast(
             new GameActionResponse("", ActionType.JOIN_FIGHT, player.id(), "t")
@@ -98,7 +98,7 @@ class JoinFightTest extends FightBaseCase {
     @Test
     void success() throws InterruptedException {
         action.start(new ActionQueue());
-        Thread.sleep(5);
+        Thread.sleep(100);
 
         assertTrue(player.isFighting());
         assertFalse(player.isExploring());

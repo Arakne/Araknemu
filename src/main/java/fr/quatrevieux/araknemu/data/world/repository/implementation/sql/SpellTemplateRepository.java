@@ -111,9 +111,6 @@ final class SpellTemplateRepository implements fr.quatrevieux.araknemu.data.worl
 
     @Override
     public Collection<SpellTemplate> load() {
-        return utils.findAll(
-            "SELECT * FROM SPELL",
-            stmt -> {}
-        );
+        return utils.findAll("SELECT * FROM SPELL");
     }
 }

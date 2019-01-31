@@ -33,7 +33,7 @@ final public class TurnMiddle {
                 .append(fighter.characteristics().get(Characteristic.ACTION_POINT)).append(';')
                 .append(fighter.characteristics().get(Characteristic.MOVEMENT_POINT)).append(';')
                 .append(fighter.cell().id()).append(';') // @todo set cell to -1 when hidden
-                .append(';') // @fixme ??
+                .append(';') // Not used by client (line 348)
                 .append(fighter.life().max())
             ;
         }

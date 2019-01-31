@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,7 +37,7 @@ class SimpleTeamTest extends FightBaseCase {
     @Test
     void getters() {
         assertSame(fighter, team.leader());
-        assertEquals(Arrays.asList(fighter), team.fighters());
+        assertEquals(Arrays.asList(fighter), new ArrayList<>(team.fighters())); // Make list copy for equality
         assertEquals(Arrays.asList(123, 456), team.startPlaces());
         assertEquals(1, team.number());
         assertEquals(1, team.id());

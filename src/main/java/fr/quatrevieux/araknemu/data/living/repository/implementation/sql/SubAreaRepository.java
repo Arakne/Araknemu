@@ -85,9 +85,6 @@ final class SubAreaRepository implements fr.quatrevieux.araknemu.data.living.rep
 
     @Override
     public Collection<SubArea> all() {
-        return utils.findAll(
-            "SELECT * FROM SUBAREA",
-            stmt -> {}
-        );
+        return utils.findAll("SELECT * FROM SUBAREA");
     }
 }

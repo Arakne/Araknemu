@@ -93,9 +93,6 @@ final class ItemTypeRepository implements fr.quatrevieux.araknemu.data.world.rep
 
     @Override
     public Collection<ItemType> load() {
-        return utils.findAll(
-            "SELECT * FROM ITEM_TYPE",
-            stmt -> {}
-        );
+        return utils.findAll("SELECT * FROM ITEM_TYPE");
     }
 }

@@ -74,7 +74,7 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
-        public Collection<? extends Fighter> fighters() {
+        public Collection<Fighter> fighters() {
             return fighters;
         }
 

@@ -45,12 +45,12 @@ public class RepositoryUtils<E> {
         /**
          * Do nothing binder
          */
-        final static public Binder NOP_BINDER = rs -> {};
+        final static public Binder NOP_BINDER = statement -> {};
 
         /**
          * Bind data into PreparedStatement
          */
-        public void bind(PreparedStatement rs) throws SQLException;
+        public void bind(PreparedStatement statement) throws SQLException;
     }
 
     final private ConnectionPoolUtils pool;

@@ -105,9 +105,6 @@ final class ItemTemplateRepository implements fr.quatrevieux.araknemu.data.world
 
     @Override
     public Collection<ItemTemplate> load() {
-        return utils.findAll(
-            "SELECT * FROM ITEM_TEMPLATE",
-            stmt -> {}
-        );
+        return utils.findAll("SELECT * FROM ITEM_TEMPLATE");
     }
 }

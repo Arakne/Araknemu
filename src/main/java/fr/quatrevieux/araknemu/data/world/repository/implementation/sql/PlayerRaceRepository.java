@@ -118,9 +118,6 @@ final class PlayerRaceRepository implements fr.quatrevieux.araknemu.data.world.r
 
     @Override
     public Collection<PlayerRace> load() {
-        return utils.findAll(
-            "SELECT * FROM PLAYER_RACE",
-            s -> {}
-        );
+        return utils.findAll("SELECT * FROM PLAYER_RACE");
     }
 }

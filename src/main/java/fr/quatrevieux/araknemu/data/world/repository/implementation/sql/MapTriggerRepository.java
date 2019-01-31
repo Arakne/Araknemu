@@ -101,9 +101,6 @@ final class MapTriggerRepository implements fr.quatrevieux.araknemu.data.world.r
 
     @Override
     public Collection<MapTrigger> all() {
-        return utils.findAll(
-            "SELECT * FROM MAP_TRIGGER",
-            stmt -> {}
-        );
+        return utils.findAll("SELECT * FROM MAP_TRIGGER");
     }
 }

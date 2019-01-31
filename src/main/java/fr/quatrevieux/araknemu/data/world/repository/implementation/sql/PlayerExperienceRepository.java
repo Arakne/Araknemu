@@ -78,9 +78,6 @@ final class PlayerExperienceRepository implements fr.quatrevieux.araknemu.data.w
 
     @Override
     public List<PlayerExperience> all() {
-        return utils.findAll(
-            "SELECT * FROM PLAYER_XP ORDER BY PLAYER_LEVEL ASC",
-            s -> {}
-        );
+        return utils.findAll("SELECT * FROM PLAYER_XP ORDER BY PLAYER_LEVEL ASC");
     }
 }

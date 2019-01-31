@@ -51,7 +51,7 @@ public interface FightTeam extends Sender {
     /**
      * Get the fighter list
      */
-    public Collection<? extends Fighter> fighters();
+    public Collection<Fighter> fighters();
 
     /**
      * Send packet to all players

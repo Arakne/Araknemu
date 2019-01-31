@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -65,8 +66,8 @@ final public class SimpleTeam implements FightTeam {
     }
 
     @Override
-    public Collection<? extends Fighter> fighters() {
-        return fighters;
+    public Collection<Fighter> fighters() {
+        return Collections.unmodifiableCollection(fighters);
     }
 
     @Override

@@ -8,7 +8,6 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.event.FightActionTerminate
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.verification.VerificationMode;
 
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -117,7 +116,7 @@ class ActionHandlerTest extends FightBaseCase {
 
         Mockito.when(action.validate()).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
-        Mockito.when(action.duration()).thenReturn(Duration.ofMillis(10));
+        Mockito.when(action.duration()).thenReturn(Duration.ofMillis(100));
 
         Mockito.when(result.success()).thenReturn(true);
 
@@ -125,7 +124,7 @@ class ActionHandlerTest extends FightBaseCase {
 
         Mockito.verify(action, Mockito.never()).end();
 
-        Thread.sleep(15);
+        Thread.sleep(150);
         Mockito.verify(action, Mockito.times(1)).end();
     }
 
@@ -136,7 +135,7 @@ class ActionHandlerTest extends FightBaseCase {
 
         Mockito.when(action.validate()).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
-        Mockito.when(action.duration()).thenReturn(Duration.ofMillis(10));
+        Mockito.when(action.duration()).thenReturn(Duration.ofMillis(1000));
 
         Mockito.when(result.success()).thenReturn(true);
 
@@ -165,7 +164,7 @@ class ActionHandlerTest extends FightBaseCase {
 
         Mockito.when(action.validate()).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
-        Mockito.when(action.duration()).thenReturn(Duration.ofMillis(10));
+        Mockito.when(action.duration()).thenReturn(Duration.ofMillis(1000));
 
         Mockito.when(result.success()).thenReturn(true);
 
@@ -187,7 +186,7 @@ class ActionHandlerTest extends FightBaseCase {
 
         Mockito.when(action.validate()).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
-        Mockito.when(action.duration()).thenReturn(Duration.ofMillis(20));
+        Mockito.when(action.duration()).thenReturn(Duration.ofMillis(200));
 
         Mockito.when(result.success()).thenReturn(true);
 
@@ -195,7 +194,7 @@ class ActionHandlerTest extends FightBaseCase {
 
         actionHandler.terminate();
 
-        Thread.sleep(25);
+        Thread.sleep(250);
         Mockito.verify(action, Mockito.times(1)).end();
     }
 
@@ -206,7 +205,7 @@ class ActionHandlerTest extends FightBaseCase {
 
         Mockito.when(action.validate()).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
-        Mockito.when(action.duration()).thenReturn(Duration.ofMillis(10));
+        Mockito.when(action.duration()).thenReturn(Duration.ofMillis(1000));
 
         Mockito.when(result.success()).thenReturn(true);
 
@@ -250,7 +249,7 @@ class ActionHandlerTest extends FightBaseCase {
 
         Mockito.when(action.validate()).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
-        Mockito.when(action.duration()).thenReturn(Duration.ofMillis(10));
+        Mockito.when(action.duration()).thenReturn(Duration.ofMillis(1000));
 
         Mockito.when(result.success()).thenReturn(true);
 

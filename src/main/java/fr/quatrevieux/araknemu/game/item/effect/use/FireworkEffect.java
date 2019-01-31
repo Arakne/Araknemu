@@ -12,7 +12,9 @@ final public class FireworkEffect implements UseEffectHandler {
     final private RandomUtil random = new RandomUtil();
 
     @Override
-    public void apply(UseEffect effect, ExplorationPlayer caster) {}
+    public void apply(UseEffect effect, ExplorationPlayer caster) {
+        throw new UnsupportedOperationException("Cannot apply firework on self");
+    }
 
     @Override
     public void applyToTarget(UseEffect effect, ExplorationPlayer caster, ExplorationPlayer target, int cell) {

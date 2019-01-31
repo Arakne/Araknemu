@@ -91,9 +91,6 @@ final class ItemSetRepository implements fr.quatrevieux.araknemu.data.world.repo
 
     @Override
     public Collection<ItemSet> load() {
-        return utils.findAll(
-            "SELECT * FROM ITEM_SET",
-            stmt -> {}
-        );
+        return utils.findAll("SELECT * FROM ITEM_SET");
     }
 }

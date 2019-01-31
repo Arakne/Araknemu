@@ -57,6 +57,13 @@ class FloodGuardChannelTest extends GameBaseCase {
 
         Mockito.verify(inner, Mockito.atMost(1)).send(gamePlayer(), message);
 
-        requestStack.assertLast(Information.chatFlood(30));
+        // Sending packet may take time, and the timer may be decremented
+        String lastPacket = requestStack.channel.getMessages().peek().toString();
+
+        assertTrue(
+            lastPacket.equals(Information.chatFlood(30).toString())
+            || lastPacket.equals(Information.chatFlood(29).toString())
+            || lastPacket.equals(Information.chatFlood(28).toString())
+        );
     }
 }
