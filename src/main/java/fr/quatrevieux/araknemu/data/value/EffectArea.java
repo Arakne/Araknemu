@@ -87,4 +87,9 @@ final public class EffectArea {
             && type == area.type
         ;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(size, type);
+    }
 }

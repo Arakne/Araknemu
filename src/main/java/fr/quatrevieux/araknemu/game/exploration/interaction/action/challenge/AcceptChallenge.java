@@ -4,9 +4,7 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
-import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengeDialog;
 import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengerDialog;
-import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 
 /**
  * Accept the challenge invitation

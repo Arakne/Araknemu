@@ -102,10 +102,7 @@ final class NpcRepository implements fr.quatrevieux.araknemu.data.world.reposito
 
     @Override
     public Collection<Npc> all() throws RepositoryException {
-        return utils.findAll(
-            "SELECT * FROM NPC",
-            rs -> {}
-        );
+        return utils.findAll("SELECT * FROM NPC");
     }
 
     @Override

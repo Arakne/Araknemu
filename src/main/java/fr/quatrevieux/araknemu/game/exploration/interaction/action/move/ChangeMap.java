@@ -7,8 +7,6 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingActio
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 
-import java.util.Arrays;
-
 /**
  * Change current map after a move
  */
@@ -41,7 +39,9 @@ final public class ChangeMap implements BlockingAction {
     }
 
     @Override
-    public void cancel(String argument) {}
+    public void cancel(String argument) {
+        throw new UnsupportedOperationException("Cannot cancel map change");
+    }
 
     @Override
     public void end() {

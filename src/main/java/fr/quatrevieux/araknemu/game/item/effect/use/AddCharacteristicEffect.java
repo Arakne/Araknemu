@@ -32,9 +32,6 @@ final public class AddCharacteristicEffect implements UseEffectHandler {
     }
 
     @Override
-    public void applyToTarget(UseEffect effect, ExplorationPlayer caster, ExplorationPlayer target, int cell) {}
-
-    @Override
     public boolean check(UseEffect effect, ExplorationPlayer caster) {
         return true;
     }

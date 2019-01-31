@@ -1,8 +1,8 @@
 package fr.quatrevieux.araknemu.game.listener.player.spell;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.game.player.event.GameJoined;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.event.GameJoined;
 import fr.quatrevieux.araknemu.game.spell.boost.SpellModifiers;
 import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
 import fr.quatrevieux.araknemu.network.game.out.spell.SpellBoost;

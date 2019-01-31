@@ -14,9 +14,6 @@ final public class NullEffectHandler implements UseEffectHandler {
     public void apply(UseEffect effect, ExplorationPlayer caster) {}
 
     @Override
-    public void applyToTarget(UseEffect effect, ExplorationPlayer caster, ExplorationPlayer target, int cell) {}
-
-    @Override
     public boolean checkTarget(UseEffect effect, ExplorationPlayer caster, ExplorationPlayer target, int cell) {
         return true;
     }

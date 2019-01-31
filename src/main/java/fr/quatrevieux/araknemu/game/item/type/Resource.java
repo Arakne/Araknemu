@@ -52,7 +52,7 @@ final public class Resource implements Item {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj.getClass() != getClass()) {
+        if (obj == null || obj.getClass() != getClass()) {
             return false;
         }
 

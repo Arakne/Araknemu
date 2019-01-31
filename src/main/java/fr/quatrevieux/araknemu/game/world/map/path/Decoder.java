@@ -5,9 +5,6 @@ import fr.quatrevieux.araknemu.game.world.map.GameMap;
 import fr.quatrevieux.araknemu.game.world.map.MapCell;
 import fr.quatrevieux.araknemu.util.Base64;
 
-import java.util.EnumMap;
-import java.util.Map;
-
 /**
  * Decode map data like paths or directions
  */

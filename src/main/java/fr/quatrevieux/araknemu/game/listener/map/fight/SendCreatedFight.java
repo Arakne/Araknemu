@@ -7,8 +7,8 @@ import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.event.FightCreated;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.AddTeamFighters;
-import fr.quatrevieux.araknemu.network.game.out.fight.exploration.ShowFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightsCount;
+import fr.quatrevieux.araknemu.network.game.out.fight.exploration.ShowFight;
 
 /**
  * Send to the exploration map the new created fight

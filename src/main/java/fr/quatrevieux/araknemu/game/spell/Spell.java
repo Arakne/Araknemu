@@ -1,9 +1,6 @@
 package fr.quatrevieux.araknemu.game.spell;
 
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
-import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
-
-import java.util.List;
 
 /**
  * Interface for spells

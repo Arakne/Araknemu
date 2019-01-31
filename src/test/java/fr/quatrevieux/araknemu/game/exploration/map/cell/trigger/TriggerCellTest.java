@@ -49,6 +49,12 @@ class TriggerCellTest extends GameBaseCase {
     }
 
     @Test
+    void hashCodeValue() {
+        assertEquals(cell.hashCode(), cell.hashCode());
+        assertNotEquals(cell.hashCode(), new TriggerCell(321, null, null).hashCode());
+    }
+
+    @Test
     void onStop() throws SQLException, ContainerException {
         cell.onStop(explorationPlayer());
 

@@ -55,6 +55,10 @@ class UsableItemTest extends GameBaseCase {
             container.get(ItemService.class).create(283),
             container.get(ItemService.class).create(800)
         );
+        assertNotEquals(
+            container.get(ItemService.class).create(283),
+            null
+        );
     }
 
     @Test

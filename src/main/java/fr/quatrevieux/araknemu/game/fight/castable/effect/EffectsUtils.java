@@ -5,6 +5,11 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect;
  */
 final public class EffectsUtils {
     /**
+     * Disable constructor
+     */
+    private EffectsUtils() {}
+
+    /**
      * Check if the effect is a damage effect
      *
      * @param id The effect id

@@ -1,11 +1,11 @@
 package fr.quatrevieux.araknemu.game.player.inventory.slot;
 
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
-import fr.quatrevieux.araknemu.game.item.type.Equipment;
-import fr.quatrevieux.araknemu.game.player.inventory.event.EquipmentChanged;
-import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.item.type.Equipment;
+import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import fr.quatrevieux.araknemu.game.player.inventory.event.EquipmentChanged;
 
 import java.util.Optional;
 

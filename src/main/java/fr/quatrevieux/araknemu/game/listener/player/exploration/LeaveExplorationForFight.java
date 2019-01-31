@@ -1,8 +1,8 @@
 package fr.quatrevieux.araknemu.game.listener.player.exploration;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
 
 /**
  * Stop exploration when join fight

@@ -43,6 +43,11 @@ public class RepositoryUtils<E> {
 
     public interface Binder {
         /**
+         * Do nothing binder
+         */
+        final static public Binder NOP_BINDER = rs -> {};
+
+        /**
          * Bind data into PreparedStatement
          */
         public void bind(PreparedStatement rs) throws SQLException;
@@ -96,7 +101,7 @@ public class RepositoryUtils<E> {
     }
 
     /**
-     * Find all entities from connection
+     * Find list of entities from connection
      *
      * util.findAll(
      *     "SELECT * FROM ACCOUNT WHERE PSEUDO LIKE ?",
@@ -133,6 +138,24 @@ public class RepositoryUtils<E> {
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }
+    }
+
+    /**
+     * Find all entities from connection, without set prepared parameters
+     *
+     * util.findAll("SELECT * FROM ACCOUNT WHERE PSEUDO LIKE ?");
+     *
+     * @param query The find query
+     *
+     * @return The found entity
+     *
+     * @throws RepositoryException When error occurs during query execution
+     *
+     * @see RepositoryUtils#findOne(String, Binder) For find only one entity
+     * @see Binder#NOP_BINDER
+     */
+    public List<E> findAll(String query) throws RepositoryException {
+        return findAll(query, Binder.NOP_BINDER);
     }
 
     /**

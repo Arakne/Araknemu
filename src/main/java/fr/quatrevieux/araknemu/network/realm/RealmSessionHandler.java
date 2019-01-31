@@ -7,9 +7,6 @@ import fr.quatrevieux.araknemu.network.in.PacketParser;
 import fr.quatrevieux.araknemu.network.in.SessionClosed;
 import fr.quatrevieux.araknemu.network.in.SessionCreated;
 import fr.quatrevieux.araknemu.network.realm.in.RealmPacketParser;
-import org.apache.mina.core.service.IoHandler;
-import org.apache.mina.core.session.IdleStatus;
-import org.apache.mina.core.session.IoSession;
 
 /**
  * IoHandler for realm

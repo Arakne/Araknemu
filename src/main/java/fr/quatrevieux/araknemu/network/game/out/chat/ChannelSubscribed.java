@@ -3,7 +3,6 @@ package fr.quatrevieux.araknemu.network.game.out.chat;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 
 import java.util.Collection;
-import java.util.Set;
 
 /**
  * List of subscribed chat channels

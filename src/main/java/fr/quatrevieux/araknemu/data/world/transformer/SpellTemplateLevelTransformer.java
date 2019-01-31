@@ -5,7 +5,6 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.data.value.Interval;
 import fr.quatrevieux.araknemu.data.value.SpellTemplateEffect;
 import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
-import fr.quatrevieux.araknemu.util.Base64;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;

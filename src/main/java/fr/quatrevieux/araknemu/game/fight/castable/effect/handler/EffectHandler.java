@@ -1,12 +1,6 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler;
 
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.Castable;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
-
-import java.util.Collection;
 
 /**
  * Handle a fight effect

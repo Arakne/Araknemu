@@ -1,9 +1,8 @@
 package fr.quatrevieux.araknemu.game.player.inventory.slot;
 
-import fr.quatrevieux.araknemu.game.item.type.Equipment;
-import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 
 import java.util.Optional;
 
@@ -33,7 +32,9 @@ final public class NullSlot implements InventorySlot {
     }
 
     @Override
-    public void uncheckedSet(InventoryEntry entry) {}
+    public void uncheckedSet(InventoryEntry entry) {
+        // Cannot store anything an null slot
+    }
 
     @Override
     public InventoryEntry set(InventoryEntry entry) throws InventoryException {

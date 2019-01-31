@@ -1,11 +1,11 @@
 package fr.quatrevieux.araknemu.game.exploration.interaction.challenge;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
+import fr.quatrevieux.araknemu.game.fight.FightHandler;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
-import fr.quatrevieux.araknemu.game.fight.FightHandler;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 
 import java.util.Arrays;
@@ -97,13 +97,12 @@ final public class ChallengeInvitation implements Interaction {
             )
         );
 
-        fightHandler.start(builder -> {
-            builder
+        fightHandler.start(
+            builder -> builder
                 .map(initiator.map())
                 .fighter(initiator.player())
                 .fighter(challenger.player())
-            ;
-        });
+        );
     }
 
     /**

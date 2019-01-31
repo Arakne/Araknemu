@@ -1,7 +1,6 @@
 package fr.quatrevieux.araknemu.game.admin.global;
 
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
-import fr.quatrevieux.araknemu.game.admin.AdminLogger;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.LogType;
 import org.apache.commons.lang3.StringUtils;

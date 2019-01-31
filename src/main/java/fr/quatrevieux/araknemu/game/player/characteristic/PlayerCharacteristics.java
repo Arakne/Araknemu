@@ -1,17 +1,17 @@
 package fr.quatrevieux.araknemu.game.player.characteristic;
 
+import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.value.BoostStatsData;
-import fr.quatrevieux.araknemu.core.event.Dispatcher;
-import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsChanged;
+import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
+import fr.quatrevieux.araknemu.game.item.type.Equipment;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsChanged;
 import fr.quatrevieux.araknemu.game.player.race.GamePlayerRace;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
-import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
-import fr.quatrevieux.araknemu.game.item.type.Equipment;
 
 /**
  * Characteristic map for player
@@ -104,17 +104,17 @@ final public class PlayerCharacteristics implements CharacterCharacteristics {
 
     @Override
     public int initiative() {
-        int base = race.initiative(player.properties().life().max());
+        int value = race.initiative(player.properties().life().max());
 
-        base += get(Characteristic.STRENGTH);
-        base += get(Characteristic.LUCK);
-        base += get(Characteristic.AGILITY);
-        base += get(Characteristic.INTELLIGENCE);
-        base += specials.get(SpecialEffects.Type.INITIATIVE);
+        value += get(Characteristic.STRENGTH);
+        value += get(Characteristic.LUCK);
+        value += get(Characteristic.AGILITY);
+        value += get(Characteristic.INTELLIGENCE);
+        value += specials.get(SpecialEffects.Type.INITIATIVE);
 
-        int init = base * player.properties().life().current() / player.properties().life().max();
+        int init = value * player.properties().life().current() / player.properties().life().max();
 
-        return init < 1 ? 1 : init;
+        return Math.max(1, init);
     }
 
     @Override

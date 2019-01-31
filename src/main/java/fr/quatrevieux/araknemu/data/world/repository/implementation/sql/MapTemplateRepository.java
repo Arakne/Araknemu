@@ -114,9 +114,6 @@ final class MapTemplateRepository implements fr.quatrevieux.araknemu.data.world.
 
     @Override
     public Collection<MapTemplate> all() throws RepositoryException {
-        return utils.findAll(
-            "SELECT * FROM maps",
-            rs -> {}
-        );
+        return utils.findAll("SELECT * FROM maps");
     }
 }

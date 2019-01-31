@@ -39,6 +39,11 @@ final public class TriggerCell implements ExplorationMapCell {
         return obj instanceof TriggerCell && equals((TriggerCell) obj);
     }
 
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
     /**
      * Perform action when a player stops on the cell after a move
      *

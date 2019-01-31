@@ -1,7 +1,6 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
@@ -46,7 +45,6 @@ final public class BuffList implements Iterable<Buff> {
             buff.incrementRemainingTurns();
         }
 
-        // @fixme Use event or not ?
         fighter.fight().send(new AddBuff(buff));
 
         // Add one turn on self-buff

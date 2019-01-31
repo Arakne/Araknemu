@@ -1,8 +1,8 @@
 package fr.quatrevieux.araknemu.game.listener.map;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.game.exploration.map.event.SpriteRemoveFromMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
+import fr.quatrevieux.araknemu.game.exploration.map.event.SpriteRemoveFromMap;
 import fr.quatrevieux.araknemu.network.game.out.game.RemoveSprite;
 
 /**

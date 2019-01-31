@@ -2,7 +2,9 @@ package fr.quatrevieux.araknemu.network.adapter.netty;
 
 import fr.quatrevieux.araknemu.network.adapter.Session;
 import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
-import io.netty.channel.*;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.AttributeKey;
 
 /**

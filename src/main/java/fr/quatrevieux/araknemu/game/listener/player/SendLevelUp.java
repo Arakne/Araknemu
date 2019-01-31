@@ -1,8 +1,8 @@
 package fr.quatrevieux.araknemu.game.listener.player;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.game.player.experience.event.PlayerLevelUp;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.experience.event.PlayerLevelUp;
 import fr.quatrevieux.araknemu.network.game.out.account.NewPlayerLevel;
 import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 

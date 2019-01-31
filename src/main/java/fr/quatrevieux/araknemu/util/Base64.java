@@ -11,6 +11,11 @@ final public class Base64 {
         'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_'};
 
     /**
+     * Disable constructor
+     */
+    private Base64() {}
+
+    /**
      * Get int value of base64 char
      * @param c Char to convert
      */

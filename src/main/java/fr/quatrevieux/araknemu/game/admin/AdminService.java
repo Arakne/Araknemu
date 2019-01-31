@@ -1,7 +1,6 @@
 package fr.quatrevieux.araknemu.game.admin;
 
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
-import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 
 import java.util.Collection;

@@ -2,9 +2,9 @@ package fr.quatrevieux.araknemu.game.item.effect.mapping;
 
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
+import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 import fr.quatrevieux.araknemu.game.item.effect.special.*;
 import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
-import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
 
 import java.util.EnumMap;

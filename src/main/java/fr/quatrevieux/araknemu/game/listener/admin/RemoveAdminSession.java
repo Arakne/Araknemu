@@ -1,7 +1,7 @@
 package fr.quatrevieux.araknemu.game.listener.admin;
 
-import fr.quatrevieux.araknemu.game.admin.AdminUser;
 import fr.quatrevieux.araknemu.core.event.Listener;
+import fr.quatrevieux.araknemu.game.admin.AdminUser;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 
 /**

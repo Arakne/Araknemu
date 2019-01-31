@@ -1,14 +1,14 @@
 package fr.quatrevieux.araknemu.game.player.inventory.slot;
 
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
+import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
+import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.EquipmentLevelConstraint;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.ItemClassConstraint;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SingleItemConstraint;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SlotConstraint;
-import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
-import fr.quatrevieux.araknemu.game.item.type.Weapon;
 
 /**
  * Slot for weapons

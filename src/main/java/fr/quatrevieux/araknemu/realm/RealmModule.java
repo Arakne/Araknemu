@@ -7,12 +7,11 @@ import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.network.adapter.Server;
 import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
-import fr.quatrevieux.araknemu.network.adapter.mina.MinaServer;
 import fr.quatrevieux.araknemu.network.adapter.netty.NettyServer;
 import fr.quatrevieux.araknemu.network.adapter.util.LoggingSessionHandler;
 import fr.quatrevieux.araknemu.network.in.*;
-import fr.quatrevieux.araknemu.network.realm.RealmSessionHandler;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
+import fr.quatrevieux.araknemu.network.realm.RealmSessionHandler;
 import fr.quatrevieux.araknemu.network.realm.in.Credentials;
 import fr.quatrevieux.araknemu.network.realm.in.DofusVersion;
 import fr.quatrevieux.araknemu.network.realm.in.RealmParserLoader;
@@ -46,7 +45,8 @@ final public class RealmModule implements ContainerModule {
             RealmService.class,
             container -> new RealmService(
                 container.get(RealmConfiguration.class),
-                container.get(Server.class)
+                container.get(Server.class),
+                container.get(Logger.class)
             )
         );
 

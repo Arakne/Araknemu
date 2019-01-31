@@ -1,9 +1,7 @@
 package fr.quatrevieux.araknemu.game.handler;
 
 import fr.quatrevieux.araknemu.network.game.GameSession;
-import fr.quatrevieux.araknemu.network.game.in.Ping;
 import fr.quatrevieux.araknemu.network.game.in.QuickPing;
-import fr.quatrevieux.araknemu.network.game.out.Pong;
 import fr.quatrevieux.araknemu.network.game.out.QuickPong;
 import fr.quatrevieux.araknemu.network.in.PacketHandler;
 

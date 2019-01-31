@@ -1,8 +1,8 @@
 package fr.quatrevieux.araknemu.game.account;
 
 import fr.quatrevieux.araknemu.common.account.AbstractLivingAccount;
-import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.common.account.Permission;
+import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.realm.out.ServerList;
 

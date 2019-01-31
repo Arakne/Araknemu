@@ -1,10 +1,7 @@
 package fr.quatrevieux.araknemu.game.spell;
 
 import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
-import fr.quatrevieux.araknemu.game.spell.adapter.SpellLevelAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 /**

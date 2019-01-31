@@ -1,8 +1,8 @@
 package fr.quatrevieux.araknemu.game.listener.player.inventory.itemset;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.game.player.inventory.event.EquipmentChanged;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.inventory.event.EquipmentChanged;
 
 /**
  * Apply the item set's special effects

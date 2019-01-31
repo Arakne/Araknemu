@@ -1,13 +1,12 @@
 package fr.quatrevieux.araknemu.game.player.inventory.slot;
 
-import fr.quatrevieux.araknemu.game.item.type.Equipment;
-import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
-import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.ItemClassConstraint;
-import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SlotConstraint;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.type.UsableItem;
+import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.ItemClassConstraint;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SlotConstraint;
 
 import java.util.Optional;
 

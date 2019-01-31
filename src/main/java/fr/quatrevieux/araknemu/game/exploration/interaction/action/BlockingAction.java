@@ -7,8 +7,11 @@ package fr.quatrevieux.araknemu.game.exploration.interaction.action;
 public interface BlockingAction extends Action {
     /**
      * The action must be stopped Unexpectedly
+     * Note: This method should not raise any exception : it used for {@link ActionQueue#stop()}
+     * After this call, the action is considered as done, and will be destroyed.
+     * So it must let the exploration into a valid state
      *
-     * @param argument The cancel argument
+     * @param argument The cancel argument. Null if called by {@link ActionQueue#stop()}
      */
     public void cancel(String argument);
 

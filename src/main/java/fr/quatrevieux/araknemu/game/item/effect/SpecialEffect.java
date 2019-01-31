@@ -2,8 +2,8 @@ package fr.quatrevieux.araknemu.game.item.effect;
 
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
-import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.item.effect.special.SpecialEffectHandler;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 
 import java.util.Arrays;
 

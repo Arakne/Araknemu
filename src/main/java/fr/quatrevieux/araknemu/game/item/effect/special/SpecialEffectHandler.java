@@ -1,8 +1,8 @@
 package fr.quatrevieux.araknemu.game.item.effect.special;
 
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
-import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 
 /**
  * Handle special effect

@@ -28,7 +28,7 @@ final public class GameActionResponse {
     }
 
     public GameActionResponse(BlockingAction action) {
-        this(action.id() + "", action.type(), makeArguments(action.performer().id(), action.arguments()));
+        this(Integer.toString(action.id()), action.type(), makeArguments(action.performer().id(), action.arguments()));
     }
 
     @Override

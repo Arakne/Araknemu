@@ -1,9 +1,9 @@
 package fr.quatrevieux.araknemu.game.listener.player.inventory;
 
-import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectQuantityChanged;
+import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectQuantityChanged;
 
 /**
  * Save to database the object quantity

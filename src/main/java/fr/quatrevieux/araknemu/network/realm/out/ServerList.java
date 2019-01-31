@@ -2,7 +2,6 @@ package fr.quatrevieux.araknemu.network.realm.out;
 
 import fr.quatrevieux.araknemu.data.value.ServerCharacters;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**

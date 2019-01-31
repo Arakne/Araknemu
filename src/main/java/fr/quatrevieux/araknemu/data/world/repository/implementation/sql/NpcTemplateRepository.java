@@ -106,9 +106,6 @@ final class NpcTemplateRepository implements fr.quatrevieux.araknemu.data.world.
 
     @Override
     public Collection<NpcTemplate> all() throws RepositoryException {
-        return utils.findAll(
-            "SELECT * FROM NPC_TEMPLATE",
-            rs -> {}
-        );
+        return utils.findAll("SELECT * FROM NPC_TEMPLATE");
     }
 }

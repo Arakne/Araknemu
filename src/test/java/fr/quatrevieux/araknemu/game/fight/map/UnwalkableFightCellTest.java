@@ -61,4 +61,13 @@ class UnwalkableFightCellTest extends GameBaseCase {
 
         assertThrows(FightMapException.class, () -> cell.removeFighter());
     }
+
+    @Test
+    void equals() {
+        UnwalkableFightCell cell0 = new UnwalkableFightCell(map, mapTemplate.cells().get(0), 0);
+        UnwalkableFightCell cell1 = new UnwalkableFightCell(map, mapTemplate.cells().get(1), 1);
+
+        assertEquals(cell0, cell0);
+        assertNotEquals(cell0, cell1);
+    }
 }

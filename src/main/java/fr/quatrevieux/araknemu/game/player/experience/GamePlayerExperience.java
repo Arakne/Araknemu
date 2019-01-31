@@ -1,7 +1,7 @@
 package fr.quatrevieux.araknemu.game.player.experience;
 
-import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.player.experience.event.PlayerLevelUp;
 import fr.quatrevieux.araknemu.game.player.experience.event.PlayerXpChanged;
 

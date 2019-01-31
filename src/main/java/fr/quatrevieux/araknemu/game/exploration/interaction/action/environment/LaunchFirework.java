@@ -33,10 +33,15 @@ final public class LaunchFirework implements BlockingAction {
     }
 
     @Override
-    public void cancel(String argument) {}
+    public void cancel(String argument) {
+        // No-op method : nothing is done at end of firework
+        // Because cancel is called when stopping actions, no exception should be thrown
+    }
 
     @Override
-    public void end() {}
+    public void end() {
+        // No-op method : nothing is done at end of firework
+    }
 
     @Override
     public int id() {

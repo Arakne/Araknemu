@@ -1,6 +1,9 @@
 package fr.quatrevieux.araknemu.core.event;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Default implementation for dispatcher, using maps

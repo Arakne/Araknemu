@@ -1,7 +1,6 @@
 package fr.quatrevieux.araknemu.network.adapter.netty;
 
 import fr.quatrevieux.araknemu.network.adapter.Channel;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 
 /**

@@ -65,7 +65,7 @@ final public class FightMap implements GameMap<FightCell> {
     }
 
     private List<FightCell> makeCells(List<MapTemplate.Cell> template) {
-        ArrayList<FightCell> cells = new ArrayList<>(template.size());
+        List<FightCell> cells = new ArrayList<>(template.size());
 
         for (int i = 0; i < template.size(); ++i) {
             MapTemplate.Cell cell = template.get(i);

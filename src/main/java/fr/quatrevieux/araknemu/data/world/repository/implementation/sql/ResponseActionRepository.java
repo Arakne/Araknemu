@@ -10,7 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -95,7 +97,7 @@ final class ResponseActionRepository implements fr.quatrevieux.araknemu.data.wor
     public Map<Integer, List<ResponseAction>> all() throws RepositoryException {
         return
             utils
-                .findAll("SELECT * FROM NPC_RESPONSE_ACTION", rs -> {})
+                .findAll("SELECT * FROM NPC_RESPONSE_ACTION")
                 .stream()
                 .collect(Collectors.groupingBy(ResponseAction::responseId))
         ;

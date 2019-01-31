@@ -94,10 +94,7 @@ final class QuestionRepository implements fr.quatrevieux.araknemu.data.world.rep
 
     @Override
     public Collection<Question> all() throws RepositoryException {
-        return utils.findAll(
-            "SELECT * FROM NPC_QUESTION",
-            rs -> {}
-        );
+        return utils.findAll("SELECT * FROM NPC_QUESTION");
     }
 
     @Override

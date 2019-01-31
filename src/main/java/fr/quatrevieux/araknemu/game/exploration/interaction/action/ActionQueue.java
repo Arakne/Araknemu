@@ -1,6 +1,8 @@
 package fr.quatrevieux.araknemu.game.exploration.interaction.action;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.NoSuchElementException;
+import java.util.Queue;
 
 /**
  * Queue for game actions

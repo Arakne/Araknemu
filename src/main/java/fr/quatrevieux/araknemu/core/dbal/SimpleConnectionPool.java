@@ -3,7 +3,6 @@ package fr.quatrevieux.araknemu.core.dbal;
 import org.slf4j.Logger;
 import org.slf4j.helpers.NOPLogger;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;

@@ -2,19 +2,14 @@ package fr.quatrevieux.araknemu.game.admin.debug;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
-import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.transformer.EffectAreaTransformer;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.AdminUser;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
-import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
-import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
-import fr.quatrevieux.araknemu.game.spell.effect.area.*;
 import fr.quatrevieux.araknemu.game.world.map.MapCell;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
-import fr.quatrevieux.araknemu.util.Base64;
 
 import java.util.ArrayList;
 import java.util.Arrays;

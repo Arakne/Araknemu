@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.realm;
 
 import fr.quatrevieux.araknemu.util.Base64;
 import fr.quatrevieux.araknemu.util.RandomStringUtil;
+
 import java.security.SecureRandom;
 
 /**

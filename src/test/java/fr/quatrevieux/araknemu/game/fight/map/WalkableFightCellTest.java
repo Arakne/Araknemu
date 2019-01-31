@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.game.fight.map;
 
+import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.exception.FightMapException;
@@ -72,5 +73,17 @@ class WalkableFightCellTest extends GameBaseCase {
         cell.removeFighter();
 
         assertFalse(cell.fighter().isPresent());
+    }
+
+    @Test
+    void equals() throws ContainerException {
+        WalkableFightCell other = new WalkableFightCell(
+            map = new FightMap(container.get(MapTemplateRepository.class).get(10340)),
+            container.get(MapTemplateRepository.class).get(10340).cells().get(456),
+            456
+        );
+
+        assertEquals(cell, cell);
+        assertNotEquals(cell, other);
     }
 }

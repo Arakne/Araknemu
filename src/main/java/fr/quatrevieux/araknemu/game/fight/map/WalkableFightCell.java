@@ -74,4 +74,9 @@ final public class WalkableFightCell implements FightCell {
     public int hashCode() {
         return id;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof WalkableFightCell && equals((FightCell) obj);
+    }
 }

@@ -2,7 +2,6 @@ package fr.quatrevieux.araknemu.realm.host;
 
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.value.ServerCharacters;
-import fr.quatrevieux.araknemu.network.realm.out.ServerList;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 
 import java.util.*;

@@ -51,7 +51,8 @@ final public class Move implements Action {
 
     @Override
     public void failed() {
-
+        // @todo Handle tackle
+        throw new UnsupportedOperationException("Tackle not implemented");
     }
 
     @Override
@@ -66,6 +67,6 @@ final public class Move implements Action {
 
     @Override
     public Duration duration() {
-        return Duration.ofMillis(300 * path.size());
+        return Duration.ofMillis(300L * path.size());
     }
 }

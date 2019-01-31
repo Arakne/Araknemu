@@ -4,7 +4,6 @@ import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.value.Colors;
-import fr.quatrevieux.araknemu.game.world.creature.accessory.Accessories;
 
 /**
  * Sprite info for using Player entity

@@ -1,7 +1,6 @@
 package fr.quatrevieux.araknemu.data.world.repository.environment;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.Repository;
-import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 
 import java.util.Collection;

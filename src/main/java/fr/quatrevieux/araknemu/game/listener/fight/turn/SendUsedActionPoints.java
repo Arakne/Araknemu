@@ -3,7 +3,6 @@ package fr.quatrevieux.araknemu.game.listener.fight.turn;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.turn.event.ActionPointsUsed;
-import fr.quatrevieux.araknemu.game.fight.turn.event.MovementPointsUsed;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
 /**

@@ -27,4 +27,14 @@ class EffectAreaTest {
         assertFalse(area.equals(new EffectArea(EffectArea.Type.CIRCLE, 4)));
         assertTrue(area.equals(new EffectArea(EffectArea.Type.CIRCLE, 3)));
     }
+
+    @Test
+    void hashCodeValue() {
+        EffectArea area = new EffectArea(EffectArea.Type.CIRCLE, 3);
+
+        assertEquals(area.hashCode(), area.hashCode());
+        assertEquals(area.hashCode(), new EffectArea(EffectArea.Type.CIRCLE, 3).hashCode());
+        assertNotEquals(area.hashCode(), new EffectArea(EffectArea.Type.RING, 3).hashCode());
+        assertNotEquals(area.hashCode(), new EffectArea(EffectArea.Type.CIRCLE, 4).hashCode());
+    }
 }

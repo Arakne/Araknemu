@@ -25,12 +25,12 @@ final public class UsableFactory implements ItemFactory {
 
     @Override
     public Item create(ItemTemplate template, ItemType type, GameItemSet set, boolean maximize) {
-        return create(template, type, template.effects(), maximize);
+        return create(template, type, template.effects());
     }
 
     @Override
     public Item retrieve(ItemTemplate template, ItemType type, GameItemSet set, List<ItemTemplateEffectEntry> effects) {
-        return create(template, type, effects, false);
+        return create(template, type, effects);
     }
 
     @Override
@@ -38,7 +38,7 @@ final public class UsableFactory implements ItemFactory {
         return SuperType.USABLE;
     }
 
-    private Item create(ItemTemplate template, ItemType type, List<ItemTemplateEffectEntry> effects, boolean maximize) {
+    private Item create(ItemTemplate template, ItemType type, List<ItemTemplateEffectEntry> effects) {
         return new UsableItem(
             template,
             type,

@@ -1,11 +1,11 @@
 package fr.quatrevieux.araknemu.game.player.inventory.slot;
 
-import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
 import fr.quatrevieux.araknemu.game.item.inventory.StackableItemStorage;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 
 import java.util.Optional;
 
@@ -32,7 +32,9 @@ final public class DefaultSlot implements InventorySlot {
     }
 
     @Override
-    public void check(Item item, int quantity) {}
+    public void check(Item item, int quantity) {
+        // Default slot can store all items
+    }
 
     @Override
     public InventoryEntry set(InventoryEntry entry) throws InventoryException {
@@ -59,5 +61,7 @@ final public class DefaultSlot implements InventorySlot {
     }
 
     @Override
-    public void uncheckedSet(InventoryEntry entry) {}
+    public void uncheckedSet(InventoryEntry entry) {
+        // Do not store a single item : do nothing
+    }
 }

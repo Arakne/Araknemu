@@ -119,8 +119,8 @@ final public class CastScope {
         targetMapping = new HashMap<>();
 
         for (EffectScope effect : this.effects) {
-            for (Fighter target : effect.targets) {
-                targetMapping.put(target, target);
+            for (Fighter fighter : effect.targets) {
+                targetMapping.put(fighter, fighter);
             }
         }
 

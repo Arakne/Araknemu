@@ -129,4 +129,21 @@ class WeaponTest extends TestCase {
             )
         );
     }
+
+    @Test
+    void equalsNull() {
+        assertNotEquals(
+            new Weapon(
+                new ItemTemplate(40, 6, "Petite Epée de Boisaille", 1, Arrays.asList(new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")), 20, "CS>4", 0, "4;1;1;50;30;5;0", 200),
+                new ItemType(6, "Épée", SuperType.WEAPON, new EffectArea(EffectArea.Type.CELL, 0)),
+                null,
+                Arrays.asList(new WeaponEffect(Effect.INFLICT_DAMAGE_NEUTRAL, 10, 15, 0)),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new Weapon.WeaponInfo(4, new Interval(1, 1), 50, 30, 5, false),
+                new CellArea()
+            ),
+            null
+        );
+    }
 }

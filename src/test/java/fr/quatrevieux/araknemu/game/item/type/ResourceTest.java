@@ -93,4 +93,12 @@ class ResourceTest extends GameBaseCase {
             new Resource(new ItemTemplate(284, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ItemType(48, "Poudre", SuperType.RESOURCE, null), new ArrayList<>())
         );
     }
+
+    @Test
+    void equalsNull() {
+        assertNotEquals(
+            new Resource(new ItemTemplate(284, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ItemType(48, "Poudre", SuperType.RESOURCE, null), new ArrayList<>()),
+            null
+        );
+    }
 }

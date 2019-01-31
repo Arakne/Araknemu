@@ -5,7 +5,6 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.builder.FightBuilder;
 import fr.quatrevieux.araknemu.game.fight.event.FightCancelled;
 import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
-import fr.quatrevieux.araknemu.game.fight.module.FightModule;
 
 import java.util.function.Consumer;
 

@@ -1,6 +1,8 @@
 package fr.quatrevieux.araknemu.game.admin.player;
 
-import fr.quatrevieux.araknemu.game.admin.*;
+import fr.quatrevieux.araknemu.game.admin.Command;
+import fr.quatrevieux.araknemu.game.admin.Context;
+import fr.quatrevieux.araknemu.game.admin.SimpleContext;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;

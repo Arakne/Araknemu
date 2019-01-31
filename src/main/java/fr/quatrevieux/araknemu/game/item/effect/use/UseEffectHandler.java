@@ -24,7 +24,7 @@ public interface UseEffectHandler {
      * @param target The effect target (can be null)
      * @param cell The target cell
      */
-    public void applyToTarget(UseEffect effect, ExplorationPlayer caster, ExplorationPlayer target, int cell);
+    default public void applyToTarget(UseEffect effect, ExplorationPlayer caster, ExplorationPlayer target, int cell) {}
 
     /**
      * Check if the effect can be used

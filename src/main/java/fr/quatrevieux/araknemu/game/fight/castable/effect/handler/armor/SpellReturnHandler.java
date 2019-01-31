@@ -1,6 +1,5 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor;
 
-import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsUtils;

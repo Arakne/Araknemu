@@ -1,10 +1,10 @@
 package fr.quatrevieux.araknemu.game.listener.player.chat;
 
+import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
-import fr.quatrevieux.araknemu.game.chat.ChannelType;
-import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.account.event.CharacterCreationStarted;
+import fr.quatrevieux.araknemu.game.chat.ChannelType;
 
 import java.util.Set;
 

@@ -1,9 +1,9 @@
 package fr.quatrevieux.araknemu.game.listener.player.spell;
 
-import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
 import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.game.player.spell.event.SpellUpgraded;
+import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.spell.event.SpellUpgraded;
 
 /**
  * Save the upgraded spell

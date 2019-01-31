@@ -7,7 +7,6 @@ import fr.quatrevieux.araknemu.network.in.SinglePacketParser;
 
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.Set;
 
 /**
  * Change channel subscriptions

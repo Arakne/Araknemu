@@ -1,8 +1,8 @@
 package fr.quatrevieux.araknemu.game.listener.player;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.game.exploration.event.MapJoined;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.event.MapJoined;
 import fr.quatrevieux.araknemu.network.game.out.game.MapData;
 
 /**

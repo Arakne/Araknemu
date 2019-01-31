@@ -3,8 +3,7 @@ package fr.quatrevieux.araknemu.realm;
 import fr.quatrevieux.araknemu.core.BootException;
 import fr.quatrevieux.araknemu.core.Service;
 import fr.quatrevieux.araknemu.network.adapter.Server;
-
-import java.io.IOException;
+import org.slf4j.Logger;
 
 /**
  * Service for handling server authentication
@@ -12,10 +11,12 @@ import java.io.IOException;
 final public class RealmService implements Service {
     final private RealmConfiguration configuration;
     final private Server server;
+    final private Logger logger;
 
-    public RealmService(RealmConfiguration configuration, Server server) {
+    public RealmService(RealmConfiguration configuration, Server server, Logger logger) {
         this.configuration = configuration;
         this.server = server;
+        this.logger = logger;
     }
 
     @Override
@@ -29,11 +30,15 @@ final public class RealmService implements Service {
 
     @Override
     public void shutdown() {
+        logger.info("Stopping realm service...");
+
         try {
             server.stop();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error during stopping the realm service", e);
         }
+
+        logger.info("Realm service stopped");
     }
 
     public RealmConfiguration configuration() {
