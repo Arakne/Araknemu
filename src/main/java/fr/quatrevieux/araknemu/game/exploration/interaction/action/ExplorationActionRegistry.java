@@ -24,9 +24,9 @@ final public class ExplorationActionRegistry implements ActionFactory {
     }
 
     @Override
-    public Action create(ExplorationPlayer player, ActionType action, String[] arguments) throws Exception {
+    public Action create(ExplorationPlayer player, ActionType action, String[] arguments) {
         if (!factories.containsKey(action)) {
-            throw new Exception("No factory found for game action : " + action);
+            throw new IllegalArgumentException("No factory found for game action : " + action);
         }
 
         return factories.get(action).create(player, action, arguments);

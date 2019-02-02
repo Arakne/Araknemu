@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.data.world.transformer;
 
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
+import fr.quatrevieux.araknemu.data.transformer.TransformerException;
 import fr.quatrevieux.araknemu.util.Base64;
 import org.apache.commons.lang3.StringUtils;
 
@@ -25,7 +26,7 @@ final public class FightPlacesTransformer implements Transformer<List<Integer>[]
                 .toArray(List[]::new)
             ;
         } catch (RuntimeException e) {
-            throw new RuntimeException("Cannot parse places '" + serialize + "'", e);
+            throw new TransformerException("Cannot parse places '" + serialize + "'", e);
         }
     }
 

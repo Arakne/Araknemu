@@ -15,5 +15,5 @@ public interface ActionFactory {
      *
      * @return The new action
      */
-    public Action create(ExplorationPlayer player, ActionType action, String[] arguments) throws Exception;
+    public Action create(ExplorationPlayer player, ActionType action, String[] arguments);
 }

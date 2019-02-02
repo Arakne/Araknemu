@@ -17,7 +17,7 @@ final public class MoveFactory implements FightActionFactory {
     }
 
     @Override
-    public Action create(ActionType action, String[] arguments) throws Exception {
+    public Action create(ActionType action, String[] arguments) {
         return new Move(
             turn,
             turn.fighter(),

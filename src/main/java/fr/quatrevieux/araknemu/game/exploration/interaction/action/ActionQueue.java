@@ -98,8 +98,6 @@ final public class ActionQueue {
         if (current != null) {
             try {
                 current.cancel(null);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
             } finally {
                 current = null;
             }

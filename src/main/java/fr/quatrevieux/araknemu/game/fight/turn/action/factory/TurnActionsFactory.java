@@ -24,7 +24,7 @@ final public class TurnActionsFactory implements FightActionFactory {
     }
 
     @Override
-    public Action create(ActionType action, String[] arguments) throws Exception {
+    public Action create(ActionType action, String[] arguments) {
         if (!factories.containsKey(action)) {
             throw new FightException("Fight action " + action + " not found");
         }

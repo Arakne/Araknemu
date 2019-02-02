@@ -18,20 +18,14 @@ final public class FireworkEffect implements UseEffectHandler {
 
     @Override
     public void applyToTarget(UseEffect effect, ExplorationPlayer caster, ExplorationPlayer target, int cell) {
-        int size = random.rand(effect.arguments());
-
-        try {
-            caster.interactions().push(
-                new LaunchFirework(
-                    caster,
-                    cell,
-                    effect.arguments()[2],
-                    size
-                )
-            );
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        caster.interactions().push(
+            new LaunchFirework(
+                caster,
+                cell,
+                effect.arguments()[2],
+                random.rand(effect.arguments())
+            )
+        );
     }
 
     @Override

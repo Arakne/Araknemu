@@ -3,7 +3,7 @@ package fr.quatrevieux.araknemu.core.di;
 /**
  * Base exception for container
  */
-public class ContainerException extends Exception {
+public class ContainerException extends RuntimeException {
     public ContainerException() {
     }
 

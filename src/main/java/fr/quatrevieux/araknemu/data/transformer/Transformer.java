@@ -17,6 +17,8 @@ public interface Transformer<T> {
      * Parse the serialized string to the original object value
      *
      * If the value is null, the method should return null
+     *
+     * @throws TransformerException When invalid serialized data is given
      */
-    public T unserialize(String serialize);
+    public T unserialize(String serialize) throws TransformerException;
 }

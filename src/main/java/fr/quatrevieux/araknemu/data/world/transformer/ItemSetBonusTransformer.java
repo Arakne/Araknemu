@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.data.world.transformer;
 
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
+import fr.quatrevieux.araknemu.data.transformer.TransformerException;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import org.apache.commons.lang3.StringUtils;
 
@@ -57,7 +58,7 @@ final public class ItemSetBonusTransformer implements Transformer<List<List<Item
                 );
             }
         } catch (RuntimeException e) {
-            throw new RuntimeException("Cannot parse item set bonus '" + serialize + "'", e);
+            throw new TransformerException("Cannot parse item set bonus '" + serialize + "'", e);
         }
 
         return bonus;

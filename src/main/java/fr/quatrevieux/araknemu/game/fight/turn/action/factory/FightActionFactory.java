@@ -13,5 +13,5 @@ public interface FightActionFactory {
      * @param action The action type
      * @param arguments The action arguments
      */
-    public Action create(ActionType action, String[] arguments) throws Exception;
+    public Action create(ActionType action, String[] arguments);
 }
