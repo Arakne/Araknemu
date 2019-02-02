@@ -1,6 +1,5 @@
 package fr.quatrevieux.araknemu._test;
 
-import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.exception.WritePacket;
 import org.junit.jupiter.api.function.Executable;
 

@@ -70,6 +70,7 @@ import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.in.Dispatcher;
 import fr.quatrevieux.araknemu.network.in.Packet;
+import fr.quatrevieux.araknemu.util.RandomUtil;
 import org.apache.mina.core.filterchain.IoFilterAdapter;
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IoSession;
@@ -171,6 +172,8 @@ public class GameBaseCase extends DatabaseTestCase {
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
+
+        RandomUtil.enableTestingMode();
 
         Configuration conf = new DefaultConfiguration(
             new IniDriver(new Ini(new File("src/test/test_config.ini")))

@@ -16,7 +16,10 @@ final public class EffectValue {
         MAXIMIZED
     }
 
-    final static private RandomUtil RANDOM = new RandomUtil();
+    /**
+     * EffectValue is a short life object, and random is only used 1 time
+     */
+    final static private RandomUtil RANDOM = RandomUtil.createShared();
 
     final private SpellEffect effect;
 

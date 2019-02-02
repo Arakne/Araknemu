@@ -2,14 +2,16 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.util;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-
-import java.util.Random;
+import fr.quatrevieux.araknemu.util.RandomUtil;
 
 /**
  * Base algorithm for compute criticality
  */
 final public class BaseCriticalityStrategy implements CriticalityStrategy {
-    final static private Random RANDOM = new Random();
+    /**
+     * BaseCriticalityStrategy is a short life object, and the random is only used twice per instance
+     */
+    final static private RandomUtil RANDOM = RandomUtil.createShared();
 
     final private Fighter fighter;
 
@@ -41,7 +43,7 @@ final public class BaseCriticalityStrategy implements CriticalityStrategy {
             return false;
         }
 
-        return RANDOM.nextInt(hitRate(baseRate)) == 0;
+        return RANDOM.reverseBool(hitRate(baseRate));
     }
 
     @Override
@@ -51,6 +53,6 @@ final public class BaseCriticalityStrategy implements CriticalityStrategy {
 
     @Override
     public boolean failed(int baseRate) {
-        return baseRate > 0 && RANDOM.nextInt(failureRate(baseRate)) == 0;
+        return baseRate > 0 && RANDOM.reverseBool(failureRate(baseRate));
     }
 }

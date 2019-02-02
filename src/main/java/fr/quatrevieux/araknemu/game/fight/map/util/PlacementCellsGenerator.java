@@ -2,26 +2,34 @@ package fr.quatrevieux.araknemu.game.fight.map.util;
 
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
+import fr.quatrevieux.araknemu.util.RandomUtil;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Generate placement cells on join fight
  */
 final public class PlacementCellsGenerator {
-    final static private Random RANDOM = new Random();
-
     final private FightMap map;
     final private List<Integer> available;
+    final private RandomUtil random;
 
     private int number = -1;
 
+    /**
+     * Construct the generator
+     *
+     * @param map The fight map
+     * @param available List of placement cells
+     */
     public PlacementCellsGenerator(FightMap map, List<Integer> available) {
+        this(map, available, new RandomUtil());
+    }
+
+    private PlacementCellsGenerator(FightMap map, List<Integer> available, RandomUtil random) {
         this.map = map;
         this.available = available;
+        this.random = random;
     }
 
     /**
@@ -56,7 +64,7 @@ final public class PlacementCellsGenerator {
      */
     private FightCell randomFightCell() {
         for (;;) {
-            FightCell cell = map.get(RANDOM.nextInt(map.size()));
+            FightCell cell = map.get(random.integer(map.size()));
 
             if (cell.walkable()) {
                 return cell;
@@ -71,9 +79,8 @@ final public class PlacementCellsGenerator {
      * @param available The available cells
      */
     static public PlacementCellsGenerator randomized(FightMap map, List<Integer> available) {
-        available = new ArrayList<>(available);
-        Collections.shuffle(available);
+        RandomUtil random = new RandomUtil();
 
-        return new PlacementCellsGenerator(map, available);
+        return new PlacementCellsGenerator(map, random.shuffle(available), random);
     }
 }

@@ -10,8 +10,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
-
-import java.util.Random;
+import fr.quatrevieux.araknemu.util.RandomUtil;
 
 /**
  * Handle spell return buff effect
@@ -19,7 +18,7 @@ import java.util.Random;
 final public class SpellReturnHandler implements EffectHandler, BuffHook {
     final private Fight fight;
 
-    final private Random RANDOM = new Random();
+    final private RandomUtil random = new RandomUtil();
 
     public SpellReturnHandler(Fight fight) {
         this.fight = fight;
@@ -94,6 +93,6 @@ final public class SpellReturnHandler implements EffectHandler, BuffHook {
             return true;
         }
 
-        return RANDOM.nextInt(100) < returnEffect.special();
+        return random.bool(returnEffect.special());
     }
 }

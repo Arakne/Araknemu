@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.item.effect.CharacteristicEffect;
+import fr.quatrevieux.araknemu.util.RandomUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,7 +25,7 @@ final public class EffectToCharacteristicMapping implements EffectMapper<Charact
 
     final private Map<Effect, MappedCharacteristic> map = new EnumMap<>(Effect.class);
 
-    final private Random random = new Random();
+    final private RandomUtil random = new RandomUtil();
 
     public EffectToCharacteristicMapping() {
         set(Effect.ADD_COUNTER_DAMAGE,   +1, Characteristic.COUNTER_DAMAGE);
@@ -154,7 +155,7 @@ final public class EffectToCharacteristicMapping implements EffectMapper<Charact
         int value = entry.min();
 
         if (entry.max() > value) {
-            value = random.nextInt(entry.max() - value + 1) + value;
+            value = random.rand(value, entry.max());
         }
 
         return create(entry.effect(), value);

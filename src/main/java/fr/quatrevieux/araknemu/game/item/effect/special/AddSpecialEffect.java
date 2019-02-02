@@ -10,9 +10,9 @@ import fr.quatrevieux.araknemu.util.RandomUtil;
  * Add special effect to player {@link SpecialEffects}
  */
 final public class AddSpecialEffect implements SpecialEffectHandler {
-    final static private RandomUtil RANDOM = new RandomUtil();
-
     final private SpecialEffects.Type type;
+
+    final private RandomUtil random = new RandomUtil();
 
     public AddSpecialEffect(SpecialEffects.Type type) {
         this.type = type;
@@ -32,7 +32,7 @@ final public class AddSpecialEffect implements SpecialEffectHandler {
     public SpecialEffect create(ItemTemplateEffectEntry entry, boolean maximize) {
         int value = maximize
             ? Math.max(entry.min(), entry.max())
-            : RANDOM.rand(entry.min(), entry.max())
+            : random.rand(entry.min(), entry.max())
         ;
 
         return new SpecialEffect(this, entry.effect(), new int[] {value, 0, entry.special()}, "0d0+" + value);

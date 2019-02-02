@@ -1,8 +1,7 @@
 package fr.quatrevieux.araknemu.game.account.generator;
 
 import fr.quatrevieux.araknemu.game.GameConfiguration;
-
-import java.util.Random;
+import fr.quatrevieux.araknemu.util.RandomUtil;
 
 /**
  * Simple generator for character names switching between consonants and vowels
@@ -12,20 +11,20 @@ final public class SimpleNameGenerator implements NameGenerator {
     final static private char[] VOWELS     = new char[] {'a', 'e', 'i', 'o', 'u', 'y'};
 
     final private GameConfiguration.PlayerConfiguration configuration;
-    final private Random random;
+    final private RandomUtil random;
 
     public SimpleNameGenerator(GameConfiguration.PlayerConfiguration configuration) {
         this.configuration = configuration;
-        this.random = new Random();
+        this.random = new RandomUtil();
     }
 
     @Override
     public String generate() {
-        int length = random.nextInt(configuration.maxNameGeneratedLength() - configuration.minNameGeneratedLength()) + configuration.minNameGeneratedLength();
+        int length = random.rand(configuration.minNameGeneratedLength(), configuration.maxNameGeneratedLength());
 
         StringBuilder sb = new StringBuilder(length);
 
-        boolean isVowel = random.nextBoolean();
+        boolean isVowel = random.bool();
 
         for (int i = 0; i < length; ++i) {
             sb.append(isVowel ? randomVowel() : randomConsonant());
@@ -36,10 +35,10 @@ final public class SimpleNameGenerator implements NameGenerator {
     }
 
     private char randomVowel() {
-        return VOWELS[random.nextInt(VOWELS.length)];
+        return random.of(VOWELS);
     }
 
     private char randomConsonant() {
-        return CONSONANTS[random.nextInt(CONSONANTS.length)];
+        return random.of(CONSONANTS);
     }
 }

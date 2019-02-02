@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.util.RandomUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,7 +35,10 @@ final public class CastScope {
         }
     }
 
-    final static private Random RANDOM = new Random();
+    /**
+     * Cast scope is a temporary object, and the random is rarely used (only for "probable effects")
+     */
+    final static private RandomUtil RANDOM = RandomUtil.createShared();
 
     final private Castable action;
     final private Fighter caster;
@@ -149,7 +153,7 @@ final public class CastScope {
             return withEffects(effects);
         }
 
-        int dice = RANDOM.nextInt(100);
+        int dice = RANDOM.integer(100);
 
         for (SpellEffect effect : probableEffects) {
             dice -= effect.probability();
