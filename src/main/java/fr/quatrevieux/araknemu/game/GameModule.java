@@ -2,7 +2,6 @@ package fr.quatrevieux.araknemu.game;
 
 import fr.quatrevieux.araknemu.Araknemu;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
-import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;

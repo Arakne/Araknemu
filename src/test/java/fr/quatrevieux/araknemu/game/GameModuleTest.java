@@ -3,8 +3,8 @@ package fr.quatrevieux.araknemu.game;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
-import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.LivingRepositoriesModule;
-import fr.quatrevieux.araknemu.data.world.repository.implementation.sql.WorldRepositoriesModule;
+import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.SqlLivingRepositoriesModule;
+import fr.quatrevieux.araknemu.data.world.repository.implementation.sql.SqlWorldRepositoriesModule;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
@@ -62,8 +62,8 @@ class GameModuleTest extends GameBaseCase {
         Container container = new ItemPoolContainer();
 
         container.register(new ConnectorModule());
-        container.register(new LivingRepositoriesModule(app.database().get("game")));
-        container.register(new WorldRepositoriesModule(app.database().get("game")));
+        container.register(new SqlLivingRepositoriesModule(app.database().get("game")));
+        container.register(new SqlWorldRepositoriesModule(app.database().get("game")));
         container.register(new GameModule(app));
 
         assertInstanceOf(GameService.class, container.get(GameService.class));

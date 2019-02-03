@@ -16,7 +16,7 @@ import fr.quatrevieux.araknemu.data.living.entity.environment.SubArea;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
-import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.LivingRepositoriesModule;
+import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.SqlLivingRepositoriesModule;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
@@ -45,7 +45,7 @@ import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcReposito
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.QuestionRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.ResponseActionRepository;
-import fr.quatrevieux.araknemu.data.world.repository.implementation.sql.WorldRepositoriesModule;
+import fr.quatrevieux.araknemu.data.world.repository.implementation.sql.SqlWorldRepositoriesModule;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
@@ -80,7 +80,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
 import org.slf4j.helpers.NOPLogger;
 
 import java.io.File;
@@ -189,10 +188,10 @@ public class GameBaseCase extends DatabaseTestCase {
         container = new ItemPoolContainer();
         container.register(new ConnectorModule());
         container.register(new GameModule(app));
-        container.register(new LivingRepositoriesModule(
+        container.register(new SqlLivingRepositoriesModule(
             app.database().get("game")
         ));
-        container.register(new WorldRepositoriesModule(
+        container.register(new SqlWorldRepositoriesModule(
             app.database().get("game")
         ));
 

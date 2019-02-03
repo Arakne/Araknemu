@@ -12,7 +12,7 @@ import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
-import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.LivingRepositoriesModule;
+import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.SqlLivingRepositoriesModule;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
@@ -118,7 +118,7 @@ public class RealmBaseCase extends DatabaseTestCase {
 
         container = new ItemPoolContainer();
         container.register(new RealmModule(app));
-        container.register(new LivingRepositoriesModule(
+        container.register(new SqlLivingRepositoriesModule(
             app.database().get("realm")
         ));
 
