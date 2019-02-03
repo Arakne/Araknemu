@@ -32,6 +32,11 @@ import java.util.List;
  * Startup class
  */
 public class Araknemu {
+    /**
+     * Get the current version of the server (retrieved from pom.xml)
+     */
+    final static public String VERSION = Araknemu.class.getPackage().getImplementationVersion();
+
     final private Logger logger = LoggerFactory.getLogger(getClass());
 
     final private Configuration configuration;
@@ -47,6 +52,7 @@ public class Araknemu {
      * Boot all services
      */
     public void boot() throws BootException {
+        logger.info("Starting Araknemu v{}", VERSION);
         logger.info("Booting services");
 
         for (Service service : services) {

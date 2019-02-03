@@ -11,7 +11,7 @@
 
     <groupId>fr.quatrevieux.araknemu</groupId>
     <artifactId>araknemu</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.4-alpha</version>
     <dependencies>
         <dependency>
             <groupId>org.apache.mina</groupId>
@@ -91,6 +91,8 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <mainClass>fr.quatrevieux.araknemu.Araknemu</mainClass>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                     </archive>
                 </configuration>
@@ -101,6 +103,8 @@
                     <archive>
                         <manifest>
                             <mainClass>fr.quatrevieux.araknemu.Araknemu</mainClass>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                     </archive>
                     <descriptorRefs>
