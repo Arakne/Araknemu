@@ -6,6 +6,7 @@ package fr.quatrevieux.araknemu.game.spell;
 public interface SpellList {
     /**
      * Get one spell by its id
+     * {@link SpellList#has(int)} must be called before, and returns true. If not undefined behavior can occurs
      *
      * @param spellId The spell id
      */

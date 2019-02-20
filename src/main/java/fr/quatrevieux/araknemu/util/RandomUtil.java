@@ -1,5 +1,7 @@
 package fr.quatrevieux.araknemu.util;
 
+import fr.quatrevieux.araknemu.data.value.Interval;
+
 import java.util.*;
 
 /**
@@ -36,7 +38,7 @@ final public class RandomUtil {
      * If max if lower than min, min is returned
      */
     public int rand(int min, int max) {
-        if (max < min) {
+        if (max <= min) {
             return min;
         }
 
@@ -45,6 +47,14 @@ final public class RandomUtil {
         }
 
         return random.nextInt((max - min) + 1) + min;
+    }
+
+    /**
+     * Get random number into given interval
+     * The interval is inclusive
+     */
+    public int rand(Interval interval) {
+        return rand(interval.min(), interval.max());
     }
 
     /**
@@ -128,6 +138,18 @@ final public class RandomUtil {
      */
     public char of(char[] values) {
         return values[random.nextInt(values.length)];
+    }
+
+    /**
+     * Get a random value from a list of values
+     * All elements has the same selection probability
+     *
+     * @param values The provided values
+     *
+     * @return One of the element of the list
+     */
+    public<T> T of(List<T> values) {
+        return values.get(random.nextInt(values.size()));
     }
 
     /**

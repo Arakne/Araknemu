@@ -4,6 +4,9 @@ import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.local.*;
+import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
+import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupPositionRepository;
+import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.Test;
 
@@ -32,6 +35,9 @@ class SqlWorldRepositoriesModuleTest extends GameBaseCase {
         assertInstanceOf(NpcTemplateRepositoryCache.class, container.get(fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcTemplateRepository.class));
         assertInstanceOf(SqlQuestionRepository.class, container.get(fr.quatrevieux.araknemu.data.world.repository.environment.npc.QuestionRepository.class));
         assertInstanceOf(SqlResponseActionRepository.class, container.get(fr.quatrevieux.araknemu.data.world.repository.environment.npc.ResponseActionRepository.class));
+        assertInstanceOf(SqlMonsterTemplateRepository.class, container.get(MonsterTemplateRepository.class));
+        assertInstanceOf(SqlMonsterGroupDataRepository.class, container.get(MonsterGroupDataRepository.class));
+        assertInstanceOf(SqlMonsterGroupPositionRepository.class, container.get(MonsterGroupPositionRepository.class));
     }
 
     public void assertInstanceOf(Class type, Object obj) {

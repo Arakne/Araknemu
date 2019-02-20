@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.exploration.map.cell;
 
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
+import fr.quatrevieux.araknemu.game.world.creature.Creature;
 
 /**
  * Simple cell type
@@ -30,6 +31,22 @@ final public class BasicCell implements ExplorationMapCell {
     @Override
     public boolean walkable() {
         return template.active() && template.movement() > 1;
+    }
+
+    @Override
+    public boolean free() {
+        // @todo check movement value
+        if (!walkable()) {
+            return false;
+        }
+
+        for (Creature creature : map.creatures()) {
+            if (creature.cell() == id) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override

@@ -39,6 +39,7 @@ class TriggerCellTest extends GameBaseCase {
         assertEquals(123, cell.id());
         assertTrue(cell.walkable());
         assertSame(container.get(ExplorationMapService.class).load(10300), cell.map());
+        assertFalse(cell.free());
     }
 
     @Test

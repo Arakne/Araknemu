@@ -35,6 +35,11 @@ final public class TriggerCell implements ExplorationMapCell {
     }
 
     @Override
+    public boolean free() {
+        return false;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         return obj instanceof TriggerCell && equals((TriggerCell) obj);
     }

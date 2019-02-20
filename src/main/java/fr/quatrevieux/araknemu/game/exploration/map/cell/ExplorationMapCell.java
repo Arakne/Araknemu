@@ -9,4 +9,10 @@ import fr.quatrevieux.araknemu.game.world.map.MapCell;
 public interface ExplorationMapCell extends MapCell {
     @Override
     public ExplorationMap map();
+
+    /**
+     * Does the cell is free ?
+     * A cell is free is a new sprite can be added on, and no other objects is present
+     */
+    public boolean free();
 }

@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.exploration.map.cell;
 
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,5 +65,24 @@ class BasicCellTest extends GameBaseCase {
         assertEquals(cell, new BasicCell(185, repository.get(10340).cells().get(185), service.load(10340)));
         assertNotEquals(cell, new BasicCell(180, repository.get(10340).cells().get(180), service.load(10340)));
         assertNotEquals(cell, new Object());
+    }
+
+    @Test
+    void free() {
+        assertTrue(new BasicCell(185, repository.get(10340).cells().get(185), service.load(10340)).free());
+        assertFalse(new BasicCell(209, repository.get(10340).cells().get(209), service.load(10340)).free());
+    }
+
+    @Test
+    void freeWithCreature() throws Exception {
+        ExplorationPlayer player = makeOtherExplorationPlayer();
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
+        player.join(map);
+
+        player.changeCell(185);
+        assertFalse(new BasicCell(185, repository.get(10340).cells().get(185), service.load(10340)).free());
+
+        player.changeCell(186);
+        assertTrue(new BasicCell(185, repository.get(10340).cells().get(185), service.load(10340)).free());
     }
 }

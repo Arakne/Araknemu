@@ -23,6 +23,9 @@ import fr.quatrevieux.araknemu.data.world.repository.environment.npc.ResponseAct
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
+import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
+import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupPositionRepository;
+import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterTemplateRepository;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
@@ -76,6 +79,12 @@ import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.SuperType;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.*;
 import fr.quatrevieux.araknemu.game.item.factory.*;
+import fr.quatrevieux.araknemu.game.monster.MonsterService;
+import fr.quatrevieux.araknemu.game.monster.environment.MonsterEnvironmentService;
+import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
+import fr.quatrevieux.araknemu.game.monster.group.generator.FixedMonsterListGenerator;
+import fr.quatrevieux.araknemu.game.monster.group.generator.MonsterListGeneratorSwitch;
+import fr.quatrevieux.araknemu.game.monster.group.generator.RandomMonsterListGenerator;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
@@ -125,8 +134,10 @@ final public class GameModule implements ContainerModule {
                 Arrays.asList(
                     container.get(DialogService.class),
                     container.get(NpcService.class),
+                    container.get(MonsterEnvironmentService.class),
                     container.get(AreaService.class),
                     container.get(MapTriggerService.class),
+                    container.get(MonsterService.class),
                     container.get(ExplorationMapService.class),
                     container.get(ItemService.class),
                     container.get(SpellService.class),
@@ -145,7 +156,8 @@ final public class GameModule implements ContainerModule {
                     container.get(PlayerExperienceService.class),
                     container.get(FightService.class),
                     container.get(ExplorationService.class),
-                    container.get(NpcService.class)
+                    container.get(NpcService.class),
+                    container.get(MonsterEnvironmentService.class)
                 )
             )
         );
@@ -489,6 +501,23 @@ final public class GameModule implements ContainerModule {
         );
 
         configurator.persist(
+            MonsterService.class,
+            container -> new MonsterService(
+                container.get(SpellService.class),
+                container.get(MonsterTemplateRepository.class)
+            )
+        );
+
+        configurator.persist(
+            MonsterEnvironmentService.class,
+            container -> new MonsterEnvironmentService(
+                container.get(MonsterGroupFactory.class),
+                container.get(MonsterGroupPositionRepository.class),
+                container.get(MonsterGroupDataRepository.class)
+            )
+        );
+
+        configurator.persist(
             ParametersResolver.class,
             container -> new ParametersResolver(
                 new VariableResolver[] {
@@ -556,6 +585,16 @@ final public class GameModule implements ContainerModule {
                 new WearableFactory(SuperType.HELMET, container.get(EffectMappers.class)),
                 new WearableFactory(SuperType.MANTLE, container.get(EffectMappers.class)),
                 new WearableFactory(SuperType.DOFUS, container.get(EffectMappers.class))
+            )
+        );
+
+        configurator.persist(
+            MonsterGroupFactory.class,
+            container -> new MonsterGroupFactory(
+                new MonsterListGeneratorSwitch(
+                    new RandomMonsterListGenerator(container.get(MonsterService.class)),
+                    new FixedMonsterListGenerator(container.get(MonsterService.class))
+                )
             )
         );
     }

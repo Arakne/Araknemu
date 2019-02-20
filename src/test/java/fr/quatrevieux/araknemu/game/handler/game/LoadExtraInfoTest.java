@@ -1,19 +1,16 @@
 package fr.quatrevieux.araknemu.game.handler.game;
 
-import fr.quatrevieux.araknemu.data.constant.Sex;
-import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
-import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
-import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
+import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
-import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
-import fr.quatrevieux.araknemu.game.world.map.Direction;
+import fr.quatrevieux.araknemu.game.monster.environment.MonsterEnvironmentService;
+import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.AddTeamFighters;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightsCount;
@@ -139,6 +136,38 @@ class LoadExtraInfoTest extends FightBaseCase {
                 Arrays.asList(
                     player.sprite(),
                     container.get(NpcService.class).get(472).sprite()
+                )
+            ),
+            new FightsCount(0),
+            new MapReady()
+        );
+    }
+
+    @Test
+    void handleWithMonsters() throws Exception {
+        dataSet
+            .pushMonsterSpells()
+            .pushMonsterGroups()
+            .pushMonsterTemplates()
+        ;
+
+        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, -1), 1));
+
+        ExplorationPlayer player = explorationPlayer();
+        player.join(container.get(ExplorationMapService.class).load(10340));
+
+        requestStack.clear();
+
+        handler.handle(session, new AskExtraInfo());
+
+        List<MonsterGroup> groups = container.get(MonsterEnvironmentService.class).byMap(10340).stream().findFirst().get().available();
+
+        requestStack.assertAll(
+            new AddSprites(
+                Arrays.asList(
+                    player.sprite(),
+                    groups.get(0).sprite(),
+                    groups.get(1).sprite()
                 )
             ),
             new FightsCount(0),

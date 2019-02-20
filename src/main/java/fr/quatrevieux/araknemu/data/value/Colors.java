@@ -6,6 +6,8 @@ import java.util.Arrays;
  * Colors value type
  */
 final public class Colors {
+    final static public Colors DEFAULT = new Colors(-1, -1, -1);
+
     final private int color1;
     final private int color2;
     final private int color3;

@@ -1,9 +1,11 @@
 package fr.quatrevieux.araknemu.util;
 
 import fr.quatrevieux.araknemu._test.TestCase;
+import fr.quatrevieux.araknemu.data.value.Interval;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,6 +51,11 @@ class RandomUtilTest extends TestCase {
     @Test
     void randArray() {
         assertBetween(12, 23, util.rand(new int[] {12, 23}));
+    }
+
+    @Test
+    void randIntervalObject() {
+        assertBetween(15, 23, util.rand(new Interval(15, 23)));
     }
 
     @Test
@@ -130,6 +137,15 @@ class RandomUtilTest extends TestCase {
     @Test
     void ofObjects() {
         String[] strings = new String[] {"Hello", "World", "!"};
+
+        assertEquals("Hello", util.of(strings));
+        assertEquals("World", util.of(strings));
+        assertEquals("World", util.of(strings));
+    }
+
+    @Test
+    void ofList() {
+        List<String> strings = Arrays.asList("Hello", "World", "!");
 
         assertEquals("Hello", util.of(strings));
         assertEquals("World", util.of(strings));

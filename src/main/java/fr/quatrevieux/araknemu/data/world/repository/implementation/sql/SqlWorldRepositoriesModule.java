@@ -17,6 +17,9 @@ import fr.quatrevieux.araknemu.data.world.repository.implementation.local.*;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
+import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
+import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupPositionRepository;
+import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.transformer.*;
 
 /**
@@ -120,9 +123,31 @@ final public class SqlWorldRepositoriesModule implements ContainerModule {
         );
 
         configurator.persist(
+            MonsterTemplateRepository.class,
+            container -> new SqlMonsterTemplateRepository(
+                connection,
+                container.get(ColorsTransformer.class),
+                container.get(ImmutableCharacteristicsTransformer.class)
+            )
+        );
+
+        configurator.persist(
+            MonsterGroupDataRepository.class,
+            container -> new SqlMonsterGroupDataRepository(
+                connection,
+                container.get(MonsterListTransformer.class)
+            )
+        );
+
+        configurator.persist(
+            MonsterGroupPositionRepository.class,
+            container -> new SqlMonsterGroupPositionRepository(connection)
+        );
+
+        configurator.persist(
             RaceBaseStatsTransformer.class,
             container -> new RaceBaseStatsTransformer(
-                new ImmutableCharacteristicsTransformer()
+                container.get(ImmutableCharacteristicsTransformer.class)
             )
         );
 
@@ -161,6 +186,21 @@ final public class SqlWorldRepositoriesModule implements ContainerModule {
         configurator.persist(
             EffectAreaTransformer.class,
             container -> new EffectAreaTransformer()
+        );
+
+        configurator.persist(
+            ColorsTransformer.class,
+            container -> new ColorsTransformer()
+        );
+
+        configurator.persist(
+            ImmutableCharacteristicsTransformer.class,
+            container -> new ImmutableCharacteristicsTransformer()
+        );
+
+        configurator.persist(
+            MonsterListTransformer.class,
+            container -> new MonsterListTransformer()
         );
     }
 }

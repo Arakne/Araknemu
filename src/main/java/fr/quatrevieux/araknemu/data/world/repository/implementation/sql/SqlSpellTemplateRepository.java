@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
+import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
@@ -96,10 +97,14 @@ final class SqlSpellTemplateRepository implements SpellTemplateRepository {
 
     @Override
     public SpellTemplate get(int id) {
-        return utils.findOne(
-            "SELECT * FROM SPELL WHERE SPELL_ID = ?",
-            stmt -> stmt.setInt(1, id)
-        );
+        try {
+            return utils.findOne(
+                "SELECT * FROM SPELL WHERE SPELL_ID = ?",
+                stmt -> stmt.setInt(1, id)
+            );
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException("Spell " + id + " is not found");
+        }
     }
 
     @Override
