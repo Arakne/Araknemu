@@ -4,6 +4,8 @@ import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
+import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.FightRewardsSheet;
 import fr.quatrevieux.araknemu.game.fight.event.*;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.exception.FightMapException;
@@ -20,6 +22,7 @@ import fr.quatrevieux.araknemu.game.listener.fight.StartFightWhenAllReady;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.ClearFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterRemoved;
 
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -61,6 +64,10 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
         fight.dispatcher().register(this);
         startTime = System.currentTimeMillis();
         addFighters(fight.fighters(false));
+
+        if (fight.type().hasPlacementTimeLimit()) {
+            fight.schedule(this::startFight, Duration.ofMillis(remainingTime()));
+        }
     }
 
     @Override
@@ -137,10 +144,13 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
             throw new InvalidFightStateException(getClass());
         }
 
-        // @todo leave not cancellable
-        if (fight.type().canCancel()) {
-            leaveOnCancellableFight(fighter);
+        // Not allowed to leave the fight : punish the fighter
+        if (!fight.type().canCancel()) {
+            punishDeserter(fighter);
         }
+
+        // Remove fighter
+        leaveFromFight(fighter);
     }
 
     /**
@@ -156,9 +166,12 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
     }
 
     /**
-     * Leave from a cancellable fight
+     * Leave from a fight :
+     * - If the fighter is the team leader, the team is dissolved
+     * - The fighter is removed
+     * - Check if the fight is valid (has at least two teams)
      */
-    private void leaveOnCancellableFight(Fighter fighter) {
+    private void leaveFromFight(Fighter fighter) {
         // The team leader quit the fight => Dissolve team
         if (fighter.isTeamLeader()) {
             fight.teams().remove(fighter.team());
@@ -169,6 +182,21 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
         }
 
         checkFightValid();
+    }
+
+    /**
+     * Punish the deserter fighter
+     */
+    private void punishDeserter(Fighter fighter) {
+        FightRewardsSheet rewardsSheet = fight.type().rewards().generate(
+            new EndFightResults(
+                fight,
+                Collections.emptyList(),
+                Collections.singletonList(fighter)
+            )
+        );
+
+        fighter.dispatch(new FightLeaved(rewardsSheet.rewards().get(0)));
     }
 
     private void addFighters(Collection<Fighter> fighters) {
@@ -186,7 +214,7 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
     }
 
     /**
-     *
+     * Notify fight that a fighter has leave
      */
     private void removeFighter(Fighter fighter) {
         fighter.dispatch(new FightLeaved());
@@ -197,7 +225,7 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
      * Check if the fight is valid after fighter leaved
      */
     private void checkFightValid() {
-        if (fight.teams().size() <= 1) {
+        if (fight.teams().stream().filter(FightTeam::alive).count() <= 1) {
             fight.cancel();
         }
     }

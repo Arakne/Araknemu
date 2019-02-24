@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class JoinFightTest extends FightBaseCase {
     @Override
@@ -24,5 +25,12 @@ class JoinFightTest extends FightBaseCase {
             "GJK2|1|1|0||0",
             new JoinFight(fight).toString()
         );
+    }
+
+    @Test
+    void generateForPvm() throws Exception {
+        Fight fight = createPvmFight();
+
+        assertRegex("GJK2\\|0\\|1\\|0\\|[0-9]{5}\\|4", new JoinFight(fight).toString());
     }
 }

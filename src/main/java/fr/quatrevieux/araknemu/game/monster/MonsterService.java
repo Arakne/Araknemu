@@ -7,12 +7,9 @@ import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import org.slf4j.Logger;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.stream.Collectors;
 
 /**
  * Handle loading monsters
@@ -62,11 +59,13 @@ final public class MonsterService implements PreloadableService {
      * @param template The template to load
      */
     private GradeSet createMonsterGrades(MonsterTemplate template) {
-        GradeSet grades = new GradeSet(
-            Arrays.stream(template.grades())
-                .map(grade -> createMonster(template, grade))
-                .collect(Collectors.toList())
-        );
+        List<Monster> monsterGrades = new ArrayList<>(template.grades().length);
+
+        for (int grade = 0; grade < template.grades().length; ++grade) {
+            monsterGrades.add(createMonster(template, grade));
+        }
+
+        GradeSet grades = new GradeSet(monsterGrades);
 
         monsters.put(template.id(), grades);
 
@@ -76,13 +75,15 @@ final public class MonsterService implements PreloadableService {
     /**
      * Create a single monster level
      */
-    private Monster createMonster(MonsterTemplate template, MonsterTemplate.Grade grade) {
-        Map<Integer, Spell> spells = new HashMap<>(grade.spells().size());
+    private Monster createMonster(MonsterTemplate template, int grade) {
+        final MonsterTemplate.Grade gradeData = template.grades()[grade];
 
-        for (Map.Entry<Integer, Integer> entry : grade.spells().entrySet()) {
+        Map<Integer, Spell> spells = new HashMap<>(gradeData.spells().size());
+
+        for (Map.Entry<Integer, Integer> entry : gradeData.spells().entrySet()) {
             spells.put(entry.getKey(), spellService.get(entry.getKey()).level(entry.getValue()));
         }
 
-        return new Monster(template, grade, new MonsterSpellList(spells));
+        return new Monster(template, new MonsterSpellList(spells), grade);
     }
 }

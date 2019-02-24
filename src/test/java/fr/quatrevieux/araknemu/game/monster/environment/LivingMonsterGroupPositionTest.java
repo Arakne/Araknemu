@@ -6,13 +6,19 @@ import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
+import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,9 +42,10 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
         map = container.get(ExplorationMapService.class).load(10340);
 
         monsterGroupPosition = new LivingMonsterGroupPosition(
+            container.get(MonsterGroupFactory.class),
+            container.get(FightService.class),
             new MonsterGroupPosition(new Position(10340, -1), 1),
-            container.get(MonsterGroupDataRepository.class).get(1),
-            container.get(MonsterGroupFactory.class)
+            container.get(MonsterGroupDataRepository.class).get(1)
         );
     }
 
@@ -75,15 +82,18 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
     @Test
     void fixedGroup() {
         monsterGroupPosition = new LivingMonsterGroupPosition(
+            container.get(MonsterGroupFactory.class),
+            container.get(FightService.class),
             new MonsterGroupPosition(new Position(10340, 123), 3),
             new MonsterGroupData(3, 0, 0, 1, Arrays.asList(
                 new MonsterGroupData.Monster(36, new Interval(5, 5)),
                 new MonsterGroupData.Monster(31, new Interval(2, 2))
-            ), ""),
-            container.get(MonsterGroupFactory.class)
+            ), "")
         );
 
         monsterGroupPosition.populate(map);
+
+        assertEquals(123, monsterGroupPosition.cell());
 
         assertCount(1, monsterGroupPosition.available());
         MonsterGroup group = monsterGroupPosition.available().get(0);
@@ -93,5 +103,32 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
         assertEquals(5, group.monsters().get(0).level());
         assertEquals(31, group.monsters().get(1).id());
         assertEquals(2, group.monsters().get(1).level());
+    }
+
+    @Test
+    void cell() {
+        monsterGroupPosition.populate(map);
+
+        assertNotEquals(monsterGroupPosition.cell(), monsterGroupPosition.cell());
+        assertTrue(map.get(monsterGroupPosition.cell()).free());
+    }
+
+    @Test
+    void startFight() throws SQLException {
+        monsterGroupPosition.populate(map);
+
+        ExplorationPlayer player = explorationPlayer();
+        player.join(map);
+
+        MonsterGroup group = monsterGroupPosition.available().get(0);
+        Fight fight = monsterGroupPosition.startFight(group, player);
+
+        assertFalse(map.creatures().contains(group));
+        assertFalse(map.creatures().contains(player));
+
+        assertCount(group.monsters().size() + 1, fight.fighters());
+        assertContainsType(MonsterFighter.class, fight.fighters());
+        assertContains(player.player().fighter(), fight.fighters());
+        assertInstanceOf(PvmType.class, fight.type());
     }
 }

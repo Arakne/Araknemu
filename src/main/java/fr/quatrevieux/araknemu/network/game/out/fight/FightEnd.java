@@ -38,18 +38,18 @@ final public class FightEnd {
         }
 
         private String formatExperience(Fighter fighter) {
-            GamePlayer player = PlayerFighter.class.cast(fighter).player();
-
-            return player.properties().experience().min() + ";" + player.properties().experience().current() + ";" + player.properties().experience().max();
+//            GamePlayer player = PlayerFighter.class.cast(fighter).player();
+//
+//            return player.properties().experience().min() + ";" + player.properties().experience().current() + ";" + player.properties().experience().max();
 
             // @todo handle other fighters types
-//            if (fighter instanceof PlayerFighter) {
-//                GamePlayer player = ((PlayerFighter) fighter).player();
-//
-//                return player.experience().min() + ";" + player.experience().current() + ";" + player.experience().max();
-//            }
-//
-//            return "0;0;0";
+            if (fighter instanceof PlayerFighter) {
+                GamePlayer player = ((PlayerFighter) fighter).player();
+
+                return player.properties().experience().min() + ";" + player.properties().experience().current() + ";" + player.properties().experience().max();
+            }
+
+            return "0;0;0";
         }
     }
 

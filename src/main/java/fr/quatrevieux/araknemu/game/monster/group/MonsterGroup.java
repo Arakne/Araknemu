@@ -1,6 +1,9 @@
 package fr.quatrevieux.araknemu.game.monster.group;
 
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.monster.Monster;
+import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import fr.quatrevieux.araknemu.game.world.creature.Operation;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
@@ -13,6 +16,7 @@ import java.util.List;
  * The group is the only creature which can be found on exploration for interacting with {@link Monster}
  */
 final public class MonsterGroup implements Creature {
+    final private LivingMonsterGroupPosition handler;
     final private int id;
     final private List<Monster> monsters;
 
@@ -21,7 +25,8 @@ final public class MonsterGroup implements Creature {
     private Direction orientation;
     private int cell;
 
-    public MonsterGroup(int id, List<Monster> monsters, Direction orientation, int cell) {
+    public MonsterGroup(LivingMonsterGroupPosition handler, int id, List<Monster> monsters, Direction orientation, int cell) {
+        this.handler = handler;
         this.id = id;
         this.monsters = monsters;
         this.orientation = orientation;
@@ -52,7 +57,7 @@ final public class MonsterGroup implements Creature {
 
     @Override
     public void apply(Operation operation) {
-        // @todo
+        operation.onMonsterGroup(this);
     }
 
     /**
@@ -60,5 +65,26 @@ final public class MonsterGroup implements Creature {
      */
     public List<Monster> monsters() {
         return monsters;
+    }
+
+    /**
+     * Get the group position handler
+     */
+    public LivingMonsterGroupPosition handler() {
+        return handler;
+    }
+
+    /**
+     * Attack the group and start a PvM fight
+     * After this call, the monster group and the player will be removed from map to join the fight
+     *
+     * @param player The attacker
+     *
+     * @return The created fight
+     *
+     * @see fr.quatrevieux.araknemu.game.fight.type.PvmType
+     */
+    public Fight startFight(ExplorationPlayer player) {
+        return handler.startFight(this, player);
     }
 }

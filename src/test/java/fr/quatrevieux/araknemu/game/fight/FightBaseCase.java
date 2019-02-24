@@ -1,10 +1,15 @@
 package fr.quatrevieux.araknemu.game.fight;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.data.value.Interval;
+import fr.quatrevieux.araknemu.data.value.Position;
+import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
+import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
+import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilder;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -14,11 +19,17 @@ import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.module.StatesModule;
 import fr.quatrevieux.araknemu.game.fight.state.*;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
+import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
+import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.monster.MonsterService;
+import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
+import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
+import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.WeaponSlot;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -26,6 +37,7 @@ import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
+import fr.quatrevieux.araknemu.game.world.map.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 
@@ -80,6 +92,32 @@ public class FightBaseCase extends GameBaseCase {
         return fight;
     }
 
+    public Fight createPvmFight() throws Exception {
+        Fight fight = new Fight(
+            1,
+            new PvmType(),
+            container.get(FightService.class).map(
+                container.get(ExplorationMapService.class).load(10340)
+            ),
+            new ArrayList<>(Arrays.asList(
+                createTeam0(),
+                createMonsterTeam()
+            )),
+            new StatesFlow(
+                new NullState(),
+                new InitialiseState(),
+                new PlacementState(false),
+                new ActiveState(),
+                new FinishState()
+            )
+        );
+
+        fight.register(new StatesModule(fight));
+        fight.nextState();
+
+        return fight;
+    }
+
     public Fight createFight() throws Exception {
         return createFight(true);
     }
@@ -97,6 +135,35 @@ public class FightBaseCase extends GameBaseCase {
             makePlayerFighter(other),
             Arrays.asList(125, 126, 127),
             0
+        );
+    }
+
+    public FightTeam createMonsterTeam() throws ContainerException, SQLException {
+        MonsterService service = container.get(MonsterService.class);
+
+        dataSet
+            .pushMonsterSpells()
+            .pushMonsterTemplates()
+        ;
+
+        return new MonsterGroupTeam(
+            new MonsterGroup(
+                new LivingMonsterGroupPosition(
+                    container.get(MonsterGroupFactory.class),
+                    container.get(FightService.class),
+                    new MonsterGroupPosition(new Position(10340, -1), 3),
+                    new MonsterGroupData(3, 60000, 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100)), new MonsterGroupData.Monster(34, new Interval(1, 100)), new MonsterGroupData.Monster(36, new Interval(1, 100))), "")
+                ),
+                5,
+                Arrays.asList(
+                    service.load(31).all().get(2),
+                    service.load(34).all().get(3)
+                ),
+                Direction.WEST,
+                123
+            ),
+            Arrays.asList(125, 126, 127),
+            1
         );
     }
 

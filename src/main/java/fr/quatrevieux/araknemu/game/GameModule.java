@@ -68,6 +68,7 @@ import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersR
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.VariableResolver;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
+import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
@@ -469,7 +470,8 @@ final public class GameModule implements ContainerModule {
                 container.get(MapTemplateRepository.class),
                 container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class),
                 Arrays.asList(
-                    new ChallengeBuilderFactory(container.get(FighterFactory.class))
+                    new ChallengeBuilderFactory(container.get(FighterFactory.class)),
+                    new PvmBuilderFactory(container.get(FighterFactory.class))
                 ),
                 Arrays.asList(
                     CommonEffectsModule::new,
@@ -511,6 +513,7 @@ final public class GameModule implements ContainerModule {
         configurator.persist(
             MonsterEnvironmentService.class,
             container -> new MonsterEnvironmentService(
+                container.get(FightService.class),
                 container.get(MonsterGroupFactory.class),
                 container.get(MonsterGroupPositionRepository.class),
                 container.get(MonsterGroupDataRepository.class)

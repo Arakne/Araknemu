@@ -2,7 +2,11 @@ package fr.quatrevieux.araknemu.game.monster.environment;
 
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilder;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
 import fr.quatrevieux.araknemu.util.RandomUtil;
@@ -17,16 +21,20 @@ import java.util.stream.Stream;
 final public class LivingMonsterGroupPosition {
     final static private RandomUtil RANDOM = RandomUtil.createShared();
 
+    final private MonsterGroupFactory factory;
+    final private FightService fightService;
+
     final private MonsterGroupPosition position;
     final private MonsterGroupData data;
-    final private MonsterGroupFactory factory;
 
     private ExplorationMap map;
 
-    public LivingMonsterGroupPosition(MonsterGroupPosition position, MonsterGroupData data, MonsterGroupFactory factory) {
+    public LivingMonsterGroupPosition(MonsterGroupFactory factory, FightService fightService, MonsterGroupPosition position, MonsterGroupData data) {
+        this.factory = factory;
+        this.fightService = fightService;
+
         this.position = position;
         this.data = data;
-        this.factory = factory;
     }
 
     /**
@@ -49,7 +57,7 @@ final public class LivingMonsterGroupPosition {
      * Note: this method will not check the max count of monsters : if called manually, the group count can exceed max count
      */
     public void spawn() {
-        map.add(factory.create(data, spawnCell()));
+        map.add(factory.create(data, this));
     }
 
     /**
@@ -67,7 +75,7 @@ final public class LivingMonsterGroupPosition {
      *
      * @see fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell#free()
      */
-    private int spawnCell() {
+    public int cell() {
         if (position.position().cell() != -1) {
             return position.position().cell();
         }
@@ -84,12 +92,34 @@ final public class LivingMonsterGroupPosition {
     }
 
     /**
+     * Start a fight with the group
+     *
+     * @todo push respawn timer
+     *
+     * @param group The monster group. Must be handled by the current instance
+     * @param player The player
+     *
+     * @return The created fight
+     */
+    public Fight startFight(MonsterGroup group, ExplorationPlayer player) {
+        map.remove(group);
+
+        return fightService.handler(PvmBuilder.class).start(
+            builder -> builder
+                .map(map)
+                .initiator(player.player())
+                .monsterGroup(group)
+        );
+    }
+
+    /**
      * Get stream of groups related to the current group position
      */
     private Stream<MonsterGroup> groupStream() {
         return map.creatures().stream()
             .filter(MonsterGroup.class::isInstance)
             .map(creature -> (MonsterGroup) creature)
+            .filter(group -> this.equals(group.handler()))
         ;
     }
 }

@@ -10,6 +10,8 @@ import java.time.Duration;
 public interface FightType {
     /**
      * The type id
+     *
+     * https://github.com/Emudofus/Dofus/blob/1.29/dofus/managers/GameManager.as#L1255
      */
     public int id();
 
@@ -30,6 +32,8 @@ public interface FightType {
      * This value must be used only, and only if hasPlacementTimeLimit is set to true
      *
      * @see FightType#hasPlacementTimeLimit()
+     *
+     * @todo Return duration instead of int
      */
     public int placementTime();
 

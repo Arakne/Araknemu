@@ -8,10 +8,15 @@ import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRep
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupPositionRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
+import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.listener.map.monster.LaunchMonsterFight;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
 import org.slf4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
@@ -21,6 +26,7 @@ import java.util.stream.Collectors;
  * Handle environment interactions with monsters
  */
 final public class MonsterEnvironmentService implements EventsSubscriber, PreloadableService {
+    final private FightService fightService;
     final private MonsterGroupFactory factory;
     final private MonsterGroupPositionRepository positionRepository;
     final private MonsterGroupDataRepository dataRepository;
@@ -37,7 +43,8 @@ final public class MonsterEnvironmentService implements EventsSubscriber, Preloa
     private boolean preloaded = false;
 
 
-    public MonsterEnvironmentService(MonsterGroupFactory factory, MonsterGroupPositionRepository positionRepository, MonsterGroupDataRepository dataRepository) {
+    public MonsterEnvironmentService(FightService fightService, MonsterGroupFactory factory, MonsterGroupPositionRepository positionRepository, MonsterGroupDataRepository dataRepository) {
+        this.fightService = fightService;
         this.factory = factory;
         this.positionRepository = positionRepository;
         this.dataRepository = dataRepository;
@@ -58,7 +65,7 @@ final public class MonsterEnvironmentService implements EventsSubscriber, Preloa
         for (MonsterGroupPosition position : positionRepository.all()) {
             groupsByMap
                 .computeIfAbsent(position.position().map(), mapId -> new ArrayList<>())
-                .add(new LivingMonsterGroupPosition(position, groupsData.get(position.groupId()), factory))
+                .add(new LivingMonsterGroupPosition(factory, fightService, position, groupsData.get(position.groupId())))
             ;
         }
 
@@ -74,6 +81,7 @@ final public class MonsterEnvironmentService implements EventsSubscriber, Preloa
                 @Override
                 public void on(MapLoaded event) {
                     byMap(event.map().id()).forEach(group -> group.populate(event.map()));
+                    event.map().dispatcher().add(new LaunchMonsterFight());
                 }
 
                 @Override
@@ -101,7 +109,7 @@ final public class MonsterEnvironmentService implements EventsSubscriber, Preloa
         Collection<LivingMonsterGroupPosition> groups = new ArrayList<>();
 
         for (MonsterGroupPosition position : positionRepository.byMap(mapId)) {
-            groups.add(new LivingMonsterGroupPosition(position, dataRepository.get(position.groupId()), factory));
+            groups.add(new LivingMonsterGroupPosition(factory, fightService, position, dataRepository.get(position.groupId())));
         }
 
         groupsByMap.put(mapId, groups);

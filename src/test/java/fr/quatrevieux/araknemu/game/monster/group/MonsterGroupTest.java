@@ -1,17 +1,34 @@
 package fr.quatrevieux.araknemu.game.monster.group;
 
+import fr.quatrevieux.araknemu.data.value.Interval;
+import fr.quatrevieux.araknemu.data.value.Position;
+import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
+import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
+import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
+import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
+import fr.quatrevieux.araknemu.game.world.creature.Operation;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class MonsterGroupTest extends GameBaseCase {
     private MonsterGroup group;
+    private LivingMonsterGroupPosition handler;
+    private ExplorationMap map;
 
     @Override
     @BeforeEach
@@ -21,11 +38,19 @@ class MonsterGroupTest extends GameBaseCase {
         dataSet
             .pushMonsterSpells()
             .pushMonsterTemplates()
+            .pushMaps()
         ;
 
         MonsterService service = container.get(MonsterService.class);
 
+        map = container.get(ExplorationMapService.class).load(10340);
         group = new MonsterGroup(
+            handler = new LivingMonsterGroupPosition(
+                container.get(MonsterGroupFactory.class),
+                container.get(FightService.class),
+                new MonsterGroupPosition(new Position(10340, -1), 3),
+                new MonsterGroupData(3, 60000, 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100)), new MonsterGroupData.Monster(34, new Interval(1, 100)), new MonsterGroupData.Monster(36, new Interval(1, 100))), "")
+            ),
             5,
             Arrays.asList(
                 service.load(31).all().get(2),
@@ -36,6 +61,9 @@ class MonsterGroupTest extends GameBaseCase {
             Direction.WEST,
             123
         );
+
+        handler.populate(map);
+        map.add(group);
     }
 
     @Test
@@ -43,6 +71,7 @@ class MonsterGroupTest extends GameBaseCase {
         assertEquals(123, group.cell());
         assertEquals(Direction.WEST, group.orientation());
         assertCount(4, group.monsters());
+        assertSame(handler, group.handler());
     }
 
     @Test
@@ -55,5 +84,30 @@ class MonsterGroupTest extends GameBaseCase {
     @Test
     void id() {
         assertEquals(-503, group.id());
+    }
+
+    @Test
+    void apply() {
+        Operation operation = Mockito.mock(Operation.class);
+
+        group.apply(operation);
+
+        Mockito.verify(operation).onMonsterGroup(group);
+    }
+
+    @Test
+    void startFight() throws SQLException {
+        ExplorationPlayer player = explorationPlayer();
+        player.join(map);
+
+        Fight fight = group.startFight(player);
+
+        assertFalse(map.creatures().contains(group));
+        assertFalse(map.creatures().contains(player));
+
+        assertCount(5, fight.fighters());
+        assertContainsType(MonsterFighter.class, fight.fighters());
+        assertContains(player.player().fighter(), fight.fighters());
+        assertInstanceOf(PvmType.class, fight.type());
     }
 }

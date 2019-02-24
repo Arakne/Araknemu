@@ -1,52 +1,31 @@
 package fr.quatrevieux.araknemu.game.fight.fighter.player;
 
-import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
+import fr.quatrevieux.araknemu.game.fight.fighter.AbstractFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
-import fr.quatrevieux.araknemu.game.fight.fighter.States;
-import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
-import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerSessionScope;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.WeaponSlot;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
-import fr.quatrevieux.araknemu.game.world.map.Direction;
 import fr.quatrevieux.araknemu.network.game.GameSession;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Fighter for a player
  */
-final public class PlayerFighter implements Fighter, PlayerSessionScope {
+final public class PlayerFighter extends AbstractFighter implements Fighter, PlayerSessionScope {
     final private GamePlayer player;
-
-    final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
     final private PlayerFighterProperties properties;
-    final private BuffList buffs = new BuffList(this);
-    final private States states = new States(this);
-    final private Map<Object, Object> attachments = new HashMap<>();
-
-    private FightCell cell;
-    private FightTeam team;
-    private Fight fight;
-    private FightTurn turn;
-    private Direction orientation = Direction.SOUTH_EAST;
 
     private boolean ready = false;
     private CastableWeapon weapon;
+    private FightTeam team;
 
     public PlayerFighter(GamePlayer player) {
         this.player = player;
@@ -57,35 +36,7 @@ final public class PlayerFighter implements Fighter, PlayerSessionScope {
     public void init() {
         properties.life().init();
 
-        fight.dispatch(new FighterInitialized(this));
-    }
-
-    @Override
-    public FightCell cell() {
-        return cell;
-    }
-
-    @Override
-    public Direction orientation() {
-        return orientation;
-    }
-
-    @Override
-    public void setOrientation(Direction orientation) {
-        this.orientation = orientation;
-    }
-
-    @Override
-    public void move(FightCell cell) {
-        if (this.cell != null) {
-            this.cell.removeFighter();
-        }
-
-        if (cell != null) {
-            cell.set(this);
-        }
-
-        this.cell = cell;
+        super.init();
     }
 
     /**
@@ -112,11 +63,6 @@ final public class PlayerFighter implements Fighter, PlayerSessionScope {
     }
 
     @Override
-    public boolean dead() {
-        return properties.life().dead();
-    }
-
-    @Override
     public FighterCharacteristics characteristics() {
         return properties.characteristics();
     }
@@ -137,11 +83,6 @@ final public class PlayerFighter implements Fighter, PlayerSessionScope {
     @Override
     public void dispatch(Object event) {
         player.dispatch(event);
-    }
-
-    @Override
-    public ListenerAggregate dispatcher() {
-        return dispatcher;
     }
 
     @Override
@@ -171,16 +112,6 @@ final public class PlayerFighter implements Fighter, PlayerSessionScope {
     }
 
     @Override
-    public BuffList buffs() {
-        return buffs;
-    }
-
-    @Override
-    public States states() {
-        return states;
-    }
-
-    @Override
     public int level() {
         return player.properties().experience().level();
     }
@@ -203,45 +134,8 @@ final public class PlayerFighter implements Fighter, PlayerSessionScope {
     }
 
     @Override
-    public Fight fight() {
-        return fight;
-    }
-
-    @Override
-    public void joinFight(Fight fight, FightCell startCell) {
-        if (this.fight != null) {
-            throw new IllegalStateException("A fight is already defined");
-        }
-
-        this.fight = fight;
-        this.cell = startCell;
-        startCell.set(this);
-    }
-
-    @Override
     public boolean ready() {
         return ready;
-    }
-
-    @Override
-    public void play(FightTurn turn) {
-        this.turn = turn;
-    }
-
-    @Override
-    public void stop() {
-        turn = null;
-    }
-
-    /**
-     * Get the current fighter turn
-     */
-    public FightTurn turn() {
-        if (turn == null) {
-            throw new FightException("It's not your turn");
-        }
-
-        return turn;
     }
 
     /**
@@ -249,39 +143,6 @@ final public class PlayerFighter implements Fighter, PlayerSessionScope {
      */
     public void setReady(boolean ready) {
         this.ready = ready;
-        fight.dispatch(new FighterReadyStateChanged(this));
-    }
-
-    @Override
-    public void attach(Object key, Object value) {
-        attachments.put(key, value);
-    }
-
-    @Override
-    public Object attachment(Object key) {
-        return attachments.get(key);
-    }
-
-    @Override
-    public boolean isOnFight() {
-        return fight != null && cell != null;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj != null && getClass().equals(obj.getClass()) && id() == ((PlayerFighter) obj).id();
-    }
-
-    @Override
-    public int hashCode() {
-        return id();
-    }
-
-    /**
-     * Clear fighter data
-     */
-    public void destroy() {
-        this.fight = null;
-        this.attachments.clear();
+        fight().dispatch(new FighterReadyStateChanged(this));
     }
 }

@@ -161,7 +161,9 @@ public interface Fighter extends Dispatcher {
     /**
      * Check if the player is dead
      */
-    public boolean dead();
+    default public boolean dead() {
+        return life().dead();
+    }
 
     /**
      * Start to play the turn

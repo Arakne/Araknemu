@@ -1,7 +1,13 @@
 package fr.quatrevieux.araknemu.game.monster.group;
 
+import fr.quatrevieux.araknemu.data.value.Interval;
+import fr.quatrevieux.araknemu.data.value.Position;
+import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
+import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
+import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +34,12 @@ class MonsterGroupSpriteTest extends GameBaseCase {
         MonsterService service = container.get(MonsterService.class);
 
         group = new MonsterGroup(
+            new LivingMonsterGroupPosition(
+                container.get(MonsterGroupFactory.class),
+                container.get(FightService.class),
+                new MonsterGroupPosition(new Position(10340, -1), 3),
+                new MonsterGroupData(3, 60000, 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100)), new MonsterGroupData.Monster(34, new Interval(1, 100)), new MonsterGroupData.Monster(36, new Interval(1, 100))), "")
+            ),
             5,
             Arrays.asList(
                 service.load(31).all().get(2),

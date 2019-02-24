@@ -2,7 +2,6 @@ package fr.quatrevieux.araknemu.data.world.transformer;
 
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.transformer.TransformerException;
-import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Interval;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import org.apache.commons.lang3.StringUtils;

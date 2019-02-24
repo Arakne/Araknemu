@@ -2,7 +2,9 @@ package fr.quatrevieux.araknemu.game.monster;
 
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterTemplate;
+import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 
 /**
  * Monster grade data
@@ -12,13 +14,13 @@ import fr.quatrevieux.araknemu.game.spell.SpellList;
  */
 final public class Monster {
     final private MonsterTemplate template;
-    final private MonsterTemplate.Grade grade;
     final private SpellList spellList;
+    final private int grade;
 
-    public Monster(MonsterTemplate template, MonsterTemplate.Grade grade, SpellList spellList) {
+    public Monster(MonsterTemplate template, SpellList spellList, int grade) {
         this.template = template;
-        this.grade = grade;
         this.spellList = spellList;
+        this.grade = grade;
     }
 
     /**
@@ -35,11 +37,15 @@ final public class Monster {
         return template.gfxId();
     }
 
+    public int gradeNumber() {
+        return grade + 1;
+    }
+
     /**
      * The grade level
      */
     public int level() {
-        return grade.level();
+        return template.grades()[grade].level();
     }
 
     /**
@@ -54,5 +60,29 @@ final public class Monster {
      */
     public SpellList spells() {
         return spellList;
+    }
+
+    /**
+     * Get life points of the monster
+     */
+    public int life() {
+        return template.grades()[grade].life();
+    }
+
+    /**
+     * Get characteristics of the monster
+     */
+    public Characteristics characteristics() {
+        return template.grades()[grade].characteristics();
+    }
+
+    /**
+     * Get the initiative value of the monster on fight
+     *
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics#initiative()
+     */
+    public int initiative() {
+        return template.grades()[grade].initiative();
     }
 }

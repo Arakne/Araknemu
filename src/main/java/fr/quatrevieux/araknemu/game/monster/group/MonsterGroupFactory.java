@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.monster.group;
 
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
+import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
 import fr.quatrevieux.araknemu.game.monster.group.generator.MonsterListGenerator;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 
@@ -24,12 +25,13 @@ final public class MonsterGroupFactory {
     /**
      * Create the monster group from data
      */
-    public MonsterGroup create(MonsterGroupData data, int cell) {
+    public MonsterGroup create(MonsterGroupData data, LivingMonsterGroupPosition handler) {
         return new MonsterGroup(
+            handler,
             lastGroupId.incrementAndGet(),
             generator.generate(data),
             Direction.SOUTH_EAST,
-            cell
+            handler.cell()
         );
     }
 }

@@ -30,6 +30,8 @@ public interface FightTeam extends Sender {
 
     /**
      * Get the team type
+     *
+     * https://github.com/Emudofus/Dofus/blob/1.29/dofus/Constants.as#L25
      */
     public int type();
 

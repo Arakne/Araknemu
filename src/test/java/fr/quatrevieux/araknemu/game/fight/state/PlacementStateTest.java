@@ -1,7 +1,6 @@
 package fr.quatrevieux.araknemu.game.fight.state;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
-import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
@@ -17,20 +16,20 @@ import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
+import fr.quatrevieux.araknemu.game.fight.type.FightType;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFighterPositions;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFighterReadyState;
 import fr.quatrevieux.araknemu.game.listener.fight.SendNewFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.StartFightWhenAllReady;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.ClearFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterRemoved;
-import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
-import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.out.fight.CancelFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.RemoveSprite;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -104,6 +103,33 @@ class PlacementStateTest extends FightBaseCase {
         assertNotNull(fight.fighters().get(1).cell());
         assertEquals(fight.team(1), fight.fighters().get(1).team());
         assertEquals(fight, fight.fighters().get(1).fight());
+    }
+
+    @Test
+    void startWithPlacementTimeLimitShouldStartsFightOnTimeOut() throws InterruptedException {
+        FightType type = Mockito.mock(FightType.class);
+
+        Mockito.when(type.hasPlacementTimeLimit()).thenReturn(true);
+        Mockito.when(type.placementTime()).thenReturn(0);
+
+        fight = new Fight(
+            1,
+            type,
+            container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
+            new ArrayList<>(Arrays.asList(
+                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(123, 222), 0),
+                new SimpleTeam(makePlayerFighter(other), Arrays.asList(321), 1)
+            )),
+            new StatesFlow(
+                state = new PlacementState(false),
+                new ActiveState()
+            )
+        );
+
+        state.start(fight);
+        Thread.sleep(100);
+
+        assertInstanceOf(ActiveState.class, fight.state());
     }
 
     @Test

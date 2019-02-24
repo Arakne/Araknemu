@@ -36,7 +36,7 @@ class SqlWorldRepositoriesModuleTest extends GameBaseCase {
         assertInstanceOf(SqlQuestionRepository.class, container.get(fr.quatrevieux.araknemu.data.world.repository.environment.npc.QuestionRepository.class));
         assertInstanceOf(SqlResponseActionRepository.class, container.get(fr.quatrevieux.araknemu.data.world.repository.environment.npc.ResponseActionRepository.class));
         assertInstanceOf(SqlMonsterTemplateRepository.class, container.get(MonsterTemplateRepository.class));
-        assertInstanceOf(SqlMonsterGroupDataRepository.class, container.get(MonsterGroupDataRepository.class));
+        assertInstanceOf(MonsterGroupDataRepositoryCache.class, container.get(MonsterGroupDataRepository.class));
         assertInstanceOf(SqlMonsterGroupPositionRepository.class, container.get(MonsterGroupPositionRepository.class));
     }
 

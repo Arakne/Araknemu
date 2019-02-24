@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
+import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
@@ -39,6 +40,7 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
         ;
 
         service = new MonsterEnvironmentService(
+            container.get(FightService.class),
             container.get(MonsterGroupFactory.class),
             container.get(MonsterGroupPositionRepository.class),
             container.get(MonsterGroupDataRepository.class)

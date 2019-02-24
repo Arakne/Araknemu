@@ -133,9 +133,11 @@ final public class SqlWorldRepositoriesModule implements ContainerModule {
 
         configurator.persist(
             MonsterGroupDataRepository.class,
-            container -> new SqlMonsterGroupDataRepository(
-                connection,
-                container.get(MonsterListTransformer.class)
+            container -> new MonsterGroupDataRepositoryCache(
+                new SqlMonsterGroupDataRepository(
+                    connection,
+                    container.get(MonsterListTransformer.class)
+                )
             )
         );
 

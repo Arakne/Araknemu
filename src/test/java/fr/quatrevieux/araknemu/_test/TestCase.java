@@ -74,4 +74,8 @@ public class TestCase {
             assertEquals(excpectedPacket.toString(), WritePacket.class.cast(e).packet().toString(), "Invalid packet");
         }
     }
+
+    public void assertRegex(String pattern, String value) {
+        assertTrue(value.matches(pattern), value + " do not match with regex " + pattern);
+    }
 }
