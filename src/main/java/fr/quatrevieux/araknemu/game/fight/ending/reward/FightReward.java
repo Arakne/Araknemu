@@ -17,7 +17,12 @@ public interface FightReward {
     public RewardType type();
 
     /**
-     * Apply reward visitor to the current reward
+     * Apply the reward to the fighter
      */
-    public void apply(FightRewardVisitor visitor);
+    public void apply();
+
+    /**
+     * Render the reward line for {@link fr.quatrevieux.araknemu.network.game.out.fight.FightEnd} packet
+     */
+    public String render();
 }

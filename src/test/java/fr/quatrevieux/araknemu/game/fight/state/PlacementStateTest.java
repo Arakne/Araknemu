@@ -287,4 +287,12 @@ class PlacementStateTest extends FightBaseCase {
         assertSame(fight, ref.get().fight());
         requestStack.assertLast(new CancelFight());
     }
+
+    @Test
+    void leaveNotLeavableShouldPunishDeserter() throws Exception {
+        fight = createPvmFight();
+        fight.state(PlacementState.class).leave(player.fighter());
+
+        assertEquals(0, player.properties().life().current());
+    }
 }

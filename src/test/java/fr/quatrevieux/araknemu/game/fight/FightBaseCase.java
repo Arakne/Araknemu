@@ -95,7 +95,7 @@ public class FightBaseCase extends GameBaseCase {
     public Fight createPvmFight() throws Exception {
         Fight fight = new Fight(
             1,
-            new PvmType(),
+            container.get(PvmType.class),
             container.get(FightService.class).map(
                 container.get(ExplorationMapService.class).load(10340)
             ),

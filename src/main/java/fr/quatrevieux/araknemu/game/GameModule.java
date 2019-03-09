@@ -69,12 +69,17 @@ import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.VariableRes
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilderFactory;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.AddExperience;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.SetDead;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.SynchronizeLife;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.PvmRewardsGenerator;
 import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.module.LaunchedSpellsModule;
 import fr.quatrevieux.araknemu.game.fight.module.RaulebaqueModule;
 import fr.quatrevieux.araknemu.game.fight.module.StatesModule;
+import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.handler.loader.*;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.SuperType;
@@ -471,7 +476,10 @@ final public class GameModule implements ContainerModule {
                 container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class),
                 Arrays.asList(
                     new ChallengeBuilderFactory(container.get(FighterFactory.class)),
-                    new PvmBuilderFactory(container.get(FighterFactory.class))
+                    new PvmBuilderFactory(
+                        container.get(FighterFactory.class),
+                        container.get(PvmType.class)
+                    )
                 ),
                 Arrays.asList(
                     CommonEffectsModule::new,
@@ -597,6 +605,16 @@ final public class GameModule implements ContainerModule {
                 new MonsterListGeneratorSwitch(
                     new RandomMonsterListGenerator(container.get(MonsterService.class)),
                     new FixedMonsterListGenerator(container.get(MonsterService.class))
+                )
+            )
+        );
+
+        configurator.persist(
+            PvmType.class,
+            container -> new PvmType(
+                new PvmRewardsGenerator(
+                    Arrays.asList(new AddExperience(), new SynchronizeLife()),
+                    Arrays.asList(new SetDead())
                 )
             )
         );

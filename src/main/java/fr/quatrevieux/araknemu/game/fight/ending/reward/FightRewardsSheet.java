@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.fight.ending.reward;
 
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 
 import java.util.List;
 

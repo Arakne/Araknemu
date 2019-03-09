@@ -1,6 +1,5 @@
 package fr.quatrevieux.araknemu.game.fight.type;
 
-import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.ChallengeRewardsGenerator;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.RewardsGenerator;
 
 import java.time.Duration;
@@ -9,6 +8,12 @@ import java.time.Duration;
  * Fight type for PvM
  */
 final public class PvmType implements FightType {
+    final private RewardsGenerator rewardsGenerator;
+
+    public PvmType(RewardsGenerator rewardsGenerator) {
+        this.rewardsGenerator = rewardsGenerator;
+    }
+
     @Override
     public int id() {
         return 4;
@@ -36,6 +41,6 @@ final public class PvmType implements FightType {
 
     @Override
     public RewardsGenerator rewards() {
-        return new ChallengeRewardsGenerator();
+        return rewardsGenerator;
     }
 }

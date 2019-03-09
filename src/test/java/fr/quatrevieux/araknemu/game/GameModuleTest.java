@@ -31,6 +31,7 @@ import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersR
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.*;
 import fr.quatrevieux.araknemu.game.item.factory.DefaultItemFactory;
@@ -107,6 +108,7 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(MonsterService.class, container.get(MonsterService.class));
         assertInstanceOf(MonsterGroupFactory.class, container.get(MonsterGroupFactory.class));
         assertInstanceOf(MonsterEnvironmentService.class, container.get(MonsterEnvironmentService.class));
+        assertInstanceOf(PvmType.class, container.get(PvmType.class));
 
         assertSame(
             container.get(ListenerAggregate.class),

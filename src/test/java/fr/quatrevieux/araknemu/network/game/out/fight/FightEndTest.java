@@ -3,7 +3,7 @@ package fr.quatrevieux.araknemu.network.game.out.fight;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.DropReward;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.FightRewardsSheet;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -65,7 +65,7 @@ class FightEndTest extends FightBaseCase {
                     ),
                     FightRewardsSheet.Type.NORMAL,
                     Arrays.asList(
-                        new DropReward(RewardType.WINNER, winner, 1145, 250),
+                        new DropReward(RewardType.WINNER, winner, Collections.emptyList(), 1145, 250),
                         new DropReward(RewardType.LOOSER, looser)
                     )
                 )

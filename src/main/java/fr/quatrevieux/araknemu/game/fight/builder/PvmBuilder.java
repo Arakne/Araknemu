@@ -28,25 +28,22 @@ final public class PvmBuilder implements FightBuilder {
     final private FightService service;
     final private FighterFactory fighterFactory;
     final private RandomUtil random;
+    final private PvmType type;
 
     private PlayerFighter initiator;
     private MonsterGroup monsterGroup;
     private FightMap map;
 
-    public PvmBuilder(FightService service, FighterFactory fighterFactory, RandomUtil random) {
+    public PvmBuilder(FightService service, FighterFactory fighterFactory, RandomUtil random, PvmType type) {
         this.service = service;
         this.fighterFactory = fighterFactory;
         this.random = random;
+        this.type = type;
     }
 
     @Override
     public Fight build(int fightId) {
-        return new Fight(
-            fightId,
-            new PvmType(),
-            map,
-            buildTeams()
-        );
+        return new Fight(fightId, type, map, buildTeams());
     }
 
     /**

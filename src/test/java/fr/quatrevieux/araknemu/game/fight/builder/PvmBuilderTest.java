@@ -45,7 +45,12 @@ class PvmBuilderTest extends GameBaseCase {
             .pushMonsterTemplates()
         ;
 
-        builder = new PvmBuilder(container.get(FightService.class), container.get(FighterFactory.class), new RandomUtil());
+        builder = new PvmBuilder(
+            container.get(FightService.class),
+            container.get(FighterFactory.class),
+            new RandomUtil(),
+            container.get(PvmType.class)
+        );
 
         MonsterService service = container.get(MonsterService.class);
 
