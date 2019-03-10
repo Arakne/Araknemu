@@ -91,6 +91,7 @@ class InventoryServiceTest extends GameBaseCase {
         assertTrue(gamePlayer().dispatcher().has(SendItemSetChange.class));
         assertTrue(gamePlayer().dispatcher().has(InitializeItemSets.class));
         assertTrue(gamePlayer().dispatcher().has(ApplyItemSetSpecialEffects.class));
+        assertTrue(gamePlayer().dispatcher().has(SendKamas.class));
 
         for (Listener listener : new SendWeight(gamePlayer()).listeners()) {
             assertTrue(gamePlayer().dispatcher().has(listener.getClass()));

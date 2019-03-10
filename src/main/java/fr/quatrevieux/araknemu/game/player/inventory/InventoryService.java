@@ -58,6 +58,8 @@ final public class InventoryService implements EventsSubscriber {
                 public void on(PlayerLoaded event) {
                     ListenerAggregate dispatcher = event.player().dispatcher();
 
+                    dispatcher.add(new SendKamas(event.player()));
+
                     dispatcher.add(new SendItemData(event.player()));
                     dispatcher.add(new SendItemPosition(event.player()));
                     dispatcher.add(new SendItemQuantity(event.player()));
@@ -118,6 +120,7 @@ final public class InventoryService implements EventsSubscriber {
      */
     public PlayerInventory load(Player player) {
         return new PlayerInventory(
+            player,
             repository.byPlayer(player)
                 .stream()
                 .map(

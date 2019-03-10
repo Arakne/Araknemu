@@ -52,6 +52,9 @@ final public class CharactersService {
         character.character().setPosition(
             playerRaceRepository.get(character.character().race()).startPosition()
         );
+        character.character().setSavedPosition(
+            playerRaceRepository.get(character.character().race()).startPosition()
+        );
 
         try {
             dispatcher.dispatch(new CharacterCreationStarted(character));

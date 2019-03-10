@@ -20,6 +20,7 @@ import fr.quatrevieux.araknemu.game.player.inventory.slot.AmuletSlot;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.BootsSlot;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.HelmetSlot;
 import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
+import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import fr.quatrevieux.araknemu.network.game.out.object.*;
 import fr.quatrevieux.araknemu.network.game.out.spell.SpellBoost;
 import org.junit.jupiter.api.BeforeEach;
@@ -549,5 +550,15 @@ public class FunctionalTest extends FightBaseCase {
 
         assertEquals(150, player.fighter().characteristics().get(Characteristic.INTELLIGENCE));
         assertEquals(50, player.fighter().characteristics().get(Characteristic.STRENGTH));
+    }
+
+    @Test
+    void addKamas() {
+        assertEquals(15225, inventory.kamas());
+
+        inventory.addKamas(300);
+        assertEquals(15525, inventory.kamas());
+
+        requestStack.assertLast(new Stats(player.properties()));
     }
 }

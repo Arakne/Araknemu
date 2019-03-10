@@ -69,9 +69,7 @@ import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.VariableRes
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilderFactory;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.AddExperience;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.SetDead;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.SynchronizeLife;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.*;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.PvmRewardsGenerator;
 import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
@@ -613,8 +611,8 @@ final public class GameModule implements ContainerModule {
             PvmType.class,
             container -> new PvmType(
                 new PvmRewardsGenerator(
-                    Arrays.asList(new AddExperience(), new SynchronizeLife()),
-                    Arrays.asList(new SetDead())
+                    Arrays.asList(new AddExperience(), new SynchronizeLife(), new AddKamas()),
+                    Arrays.asList(new SetDead(), new ReturnToSavePosition())
                 )
             )
         );

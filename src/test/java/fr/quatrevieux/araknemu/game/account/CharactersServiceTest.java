@@ -170,6 +170,8 @@ class CharactersServiceTest extends GameBaseCase {
         assertEquals(Sex.MALE, db.sex());
         assertArrayEquals(new int[]{123, 456, 789}, db.colors().toArray());
         assertEquals(new Position(10300, 320), db.position());
+        assertEquals(new Position(10300, 320), db.savedPosition());
+        assertEquals(0, db.kamas());
         assertNotNull(reference.get());
         assertEquals("Bob", reference.get().character().name());
         assertSame(created, ref2.get());

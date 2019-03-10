@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.constant.Effect;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
@@ -18,6 +19,7 @@ import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundExcepti
 import fr.quatrevieux.araknemu.game.item.type.Resource;
 import fr.quatrevieux.araknemu.game.player.inventory.accessory.InventoryAccessories;
 import fr.quatrevieux.araknemu.game.player.inventory.event.EquipmentChanged;
+import fr.quatrevieux.araknemu.game.player.inventory.event.KamasChanged;
 import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectAdded;
 import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectDeleted;
 import fr.quatrevieux.araknemu.game.player.inventory.itemset.PlayerItemSet;
@@ -35,12 +37,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class PlayerInventoryTest extends GameBaseCase {
     private ListenerAggregate dispatcher;
     private PlayerInventory inventory;
+    private Player player;
 
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
         inventory = new PlayerInventory(
+            player = dataSet.refresh(new Player(gamePlayer().id())),
             Collections.emptyList()
         );
 
@@ -101,6 +105,7 @@ class PlayerInventoryTest extends GameBaseCase {
         Item i1, i2;
 
         inventory = new PlayerInventory(
+            dataSet.refresh(new Player(gamePlayer().id())),
             Arrays.asList(
                 new InventoryService.LoadedItem(
                     new PlayerItem(1, 2, 5, new ArrayList<>(), 5, -1),
@@ -302,5 +307,38 @@ class PlayerInventoryTest extends GameBaseCase {
         inventory.refreshWeight();
 
         assertTrue(inventory.overweight());
+    }
+
+    @Test
+    void kamas() {
+        player.setKamas(1450);
+        assertEquals(1450, inventory.kamas());
+    }
+
+    @Test
+    void addKamas() throws SQLException {
+        player.setKamas(1000);
+
+        AtomicReference<KamasChanged> ref = new AtomicReference<>();
+        gamePlayer().dispatcher().add(KamasChanged.class, ref::set);
+
+        inventory.addKamas(250);
+
+        assertEquals(1250, inventory.kamas());
+        assertEquals(1000, ref.get().lastQuantity());
+        assertEquals(1250, ref.get().newQuantity());
+    }
+
+    @Test
+    void addKamasWithNegativeAmountShouldRaiseException() throws SQLException {
+        player.setKamas(1000);
+
+        AtomicReference<KamasChanged> ref = new AtomicReference<>();
+        gamePlayer().dispatcher().add(KamasChanged.class, ref::set);
+
+        assertThrows(IllegalArgumentException.class, () -> inventory.addKamas(-250));
+
+        assertEquals(1000, inventory.kamas());
+        assertNull(ref.get());
     }
 }

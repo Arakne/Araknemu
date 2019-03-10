@@ -21,7 +21,7 @@ final public class Stats {
 
         sb
             .append(player.experience().current()).append(',').append(player.experience().min()).append(',').append(player.experience().max()).append('|')
-            .append("1000|") // Kamas
+            .append(player.kamas()).append("|") // Kamas
             .append(player.characteristics().boostPoints()).append("|")
             .append(player.spells().upgradePoints()).append("|")
             .append('|') // Align

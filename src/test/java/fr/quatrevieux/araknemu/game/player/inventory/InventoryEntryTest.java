@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.player.inventory;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.ItemService;
@@ -32,7 +33,10 @@ class InventoryEntryTest extends GameBaseCase {
 
         dataSet.pushItemTemplates();
 
-        inventory = new PlayerInventory(Collections.emptyList());
+        inventory = new PlayerInventory(
+            dataSet.refresh(new Player(gamePlayer().id())),
+            Collections.emptyList()
+        );
 
         inventory.attach(gamePlayer(true));
         dispatcher = gamePlayer().dispatcher();

@@ -52,7 +52,7 @@ class GamePlayerTest extends GameBaseCase {
         characteristics.set(Characteristic.INTELLIGENCE, 150);
         characteristics.set(Characteristic.VITALITY, 50);
 
-        entity = dataSet.push(new Player(5, 2, 1, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1), 50, characteristics, new Position(10300, 308), EnumSet.allOf(ChannelType.class), 0, 0, -1, 0));
+        entity = dataSet.push(new Player(5, 2, 1, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1), 50, characteristics, new Position(10300, 308), EnumSet.allOf(ChannelType.class), 0, 0, -1, 0, new Position(10300, 308), 0));
 
         player = new GamePlayer(
             new GameAccount(
@@ -220,5 +220,13 @@ class GamePlayerTest extends GameBaseCase {
         assertTrue(player.restrictions().canMoveAllDirections());
         assertFalse(player.restrictions().canBeMerchant());
         assertFalse(player.restrictions().canExchange());
+    }
+
+    @Test
+    void savedPosition() {
+        assertEquals(new Position(10300, 308), player.savedPosition());
+
+        player.setSavedPosition(new Position(10340, 255));
+        assertEquals(new Position(10340, 255), player.savedPosition());
     }
 }

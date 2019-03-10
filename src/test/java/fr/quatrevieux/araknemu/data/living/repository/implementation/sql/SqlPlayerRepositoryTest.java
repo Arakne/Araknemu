@@ -173,7 +173,7 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
 
     @Test
     void insertWithPoints() {
-        Player player = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(123, 456), EnumSet.noneOf(ChannelType.class), 10, 15, 75, 125));
+        Player player = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(123, 456), EnumSet.noneOf(ChannelType.class), 10, 15, 75, 125, new Position(321, 251), 127));
 
         player = repository.get(player);
 
@@ -181,6 +181,16 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
         assertEquals(15, player.spellPoints());
         assertEquals(75, player.life());
         assertEquals(125, player.experience());
+    }
+
+    @Test
+    void insertWithSavedPositionAndKamas() {
+        Player player = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(123, 456), EnumSet.noneOf(ChannelType.class), 10, 15, 75, 125, new Position(321, 251), 127));
+
+        player = repository.get(player);
+
+        assertEquals(new Position(321, 251), player.savedPosition());
+        assertEquals(127, player.kamas());
     }
 
     @Test
@@ -218,6 +228,8 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
         player.setBoostPoints(15);
         player.setLife(36);
         player.setExperience(741);
+        player.setKamas(4589);
+        player.setSavedPosition(new Position(4568, 123));
 
         repository.save(player);
 
@@ -229,5 +241,7 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
         assertEquals(15, savedPlayer.boostPoints());
         assertEquals(36, savedPlayer.life());
         assertEquals(741, savedPlayer.experience());
+        assertEquals(4589, savedPlayer.kamas());
+        assertEquals(new Position(4568, 123), savedPlayer.savedPosition());
     }
 }

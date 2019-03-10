@@ -113,6 +113,20 @@ final public class GamePlayer implements PlayerSessionScope {
     }
 
     /**
+     * Get the player saved position (teleport when die)
+     */
+    public Position savedPosition() {
+        return entity.savedPosition();
+    }
+
+    /**
+     * Set saved position (teleport when die)
+     */
+    public void setSavedPosition(Position position) {
+        entity.setSavedPosition(position);
+    }
+
+    /**
      * Get the player race
      */
     public GamePlayerRace race() {

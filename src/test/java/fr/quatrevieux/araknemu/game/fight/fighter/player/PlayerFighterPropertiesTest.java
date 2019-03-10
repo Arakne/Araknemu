@@ -24,5 +24,6 @@ class PlayerFighterPropertiesTest extends FightBaseCase {
         assertInstanceOf(PlayerFighterLife.class, properties.life());
         assertEquals(player.properties().spells(), properties.spells());
         assertEquals(player.properties().experience(), properties.experience());
+        assertEquals(player.properties().kamas(), properties.kamas());
     }
 }

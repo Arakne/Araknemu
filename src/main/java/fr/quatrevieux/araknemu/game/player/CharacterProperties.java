@@ -28,4 +28,11 @@ public interface CharacterProperties {
      * Get the player level and experience
      */
     public GamePlayerExperience experience();
+
+    /**
+     * Current kamas quantity of the player
+     *
+     * @see fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory#kamas()
+     */
+    public long kamas();
 }

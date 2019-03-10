@@ -41,4 +41,9 @@ final public class PlayerFighterProperties implements CharacterProperties {
     public GamePlayerExperience experience() {
         return baseProperties.experience();
     }
+
+    @Override
+    public long kamas() {
+        return baseProperties.kamas();
+    }
 }
