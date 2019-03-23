@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupPositionRepository;
+import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterRewardRepository;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterTemplateRepository;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
@@ -71,6 +72,8 @@ import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.*;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.PvmRewardsGenerator;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.compute.PvmKamasFormula;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.compute.PvmXpFormula;
 import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
@@ -89,6 +92,7 @@ import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
 import fr.quatrevieux.araknemu.game.monster.group.generator.FixedMonsterListGenerator;
 import fr.quatrevieux.araknemu.game.monster.group.generator.MonsterListGeneratorSwitch;
 import fr.quatrevieux.araknemu.game.monster.group.generator.RandomMonsterListGenerator;
+import fr.quatrevieux.araknemu.game.monster.reward.MonsterRewardService;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
@@ -141,6 +145,7 @@ final public class GameModule implements ContainerModule {
                     container.get(MonsterEnvironmentService.class),
                     container.get(AreaService.class),
                     container.get(MapTriggerService.class),
+                    container.get(MonsterRewardService.class),
                     container.get(MonsterService.class),
                     container.get(ExplorationMapService.class),
                     container.get(ItemService.class),
@@ -512,6 +517,7 @@ final public class GameModule implements ContainerModule {
             MonsterService.class,
             container -> new MonsterService(
                 container.get(SpellService.class),
+                container.get(MonsterRewardService.class),
                 container.get(MonsterTemplateRepository.class)
             )
         );
@@ -524,6 +530,11 @@ final public class GameModule implements ContainerModule {
                 container.get(MonsterGroupPositionRepository.class),
                 container.get(MonsterGroupDataRepository.class)
             )
+        );
+
+        configurator.persist(
+            MonsterRewardService.class,
+            container -> new MonsterRewardService(container.get(MonsterRewardRepository.class))
         );
 
         configurator.persist(
@@ -612,7 +623,9 @@ final public class GameModule implements ContainerModule {
             container -> new PvmType(
                 new PvmRewardsGenerator(
                     Arrays.asList(new AddExperience(), new SynchronizeLife(), new AddKamas()),
-                    Arrays.asList(new SetDead(), new ReturnToSavePosition())
+                    Arrays.asList(new SetDead(), new ReturnToSavePosition()),
+                    new PvmXpFormula(),
+                    new PvmKamasFormula()
                 )
             )
         );

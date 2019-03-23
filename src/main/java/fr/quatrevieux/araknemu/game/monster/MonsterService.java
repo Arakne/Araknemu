@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.monster;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterTemplateRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;
+import fr.quatrevieux.araknemu.game.monster.reward.MonsterRewardService;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 final public class MonsterService implements PreloadableService {
     final private SpellService spellService;
+    final private MonsterRewardService rewardService;
     final private MonsterTemplateRepository repository;
 
     /**
@@ -23,8 +25,9 @@ final public class MonsterService implements PreloadableService {
      */
     final private ConcurrentMap<Integer, GradeSet> monsters = new ConcurrentHashMap<>();
 
-    public MonsterService(SpellService spellService, MonsterTemplateRepository repository) {
+    public MonsterService(SpellService spellService, MonsterRewardService rewardService, MonsterTemplateRepository repository) {
         this.spellService = spellService;
+        this.rewardService = rewardService;
         this.repository = repository;
     }
 
@@ -84,6 +87,11 @@ final public class MonsterService implements PreloadableService {
             spells.put(entry.getKey(), spellService.get(entry.getKey()).level(entry.getValue()));
         }
 
-        return new Monster(template, new MonsterSpellList(spells), grade);
+        return new Monster(
+            template,
+            new MonsterSpellList(spells),
+            rewardService.get(template.id(), grade + 1),
+            grade
+        );
     }
 }

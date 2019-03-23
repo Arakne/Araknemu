@@ -11,7 +11,9 @@ import fr.quatrevieux.araknemu.network.game.out.fight.FightEnd;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -60,5 +62,50 @@ class FinishStateTest extends FightBaseCase {
                 )
             )
         );
+    }
+
+    @Test
+    void startOnWinningPvmFight() throws Exception {
+        fight = createPvmFight();
+        fight.nextState();
+
+        Collection<Fighter> monsters = fight.team(1).fighters();
+
+        long lastXp = player.properties().experience().current();
+        long lastKamas = player.inventory().kamas();
+
+        monsters.forEach(fighter -> fighter.life().kill(fighter));
+
+        state.start(fight);
+
+        assertFalse(player.isFighting());
+        assertCount(0, fight.teams());
+        assertEquals(0, fight.map().size());
+
+        assertBetween(100, 140, player.inventory().kamas() - lastKamas);
+        assertEquals(241, player.properties().experience().current() - lastXp);
+    }
+
+    @Test
+    void startOnLoosingPvmFight() throws Exception {
+        fight = createPvmFight();
+        fight.nextState();
+
+
+        long lastXp = player.properties().experience().current();
+        long lastKamas = player.inventory().kamas();
+
+        player.fighter().life().kill(player.fighter());
+
+        state.start(fight);
+
+        assertFalse(player.isFighting());
+        assertCount(0, fight.teams());
+        assertEquals(0, fight.map().size());
+
+        assertEquals(player.inventory().kamas(), lastKamas);
+        assertEquals(player.properties().experience().current(), lastXp);
+        assertEquals(0, player.properties().life().current());
+        assertEquals(player.savedPosition(), player.position());
     }
 }

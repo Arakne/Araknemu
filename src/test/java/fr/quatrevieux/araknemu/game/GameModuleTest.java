@@ -39,6 +39,7 @@ import fr.quatrevieux.araknemu.game.item.factory.ItemFactory;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.monster.environment.MonsterEnvironmentService;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
+import fr.quatrevieux.araknemu.game.monster.reward.MonsterRewardService;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
@@ -108,6 +109,7 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(MonsterService.class, container.get(MonsterService.class));
         assertInstanceOf(MonsterGroupFactory.class, container.get(MonsterGroupFactory.class));
         assertInstanceOf(MonsterEnvironmentService.class, container.get(MonsterEnvironmentService.class));
+        assertInstanceOf(MonsterRewardService.class, container.get(MonsterRewardService.class));
         assertInstanceOf(PvmType.class, container.get(PvmType.class));
 
         assertSame(

@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.monster.Monster;
+import fr.quatrevieux.araknemu.game.monster.reward.MonsterReward;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 
@@ -86,5 +87,14 @@ final public class MonsterFighter extends AbstractFighter {
 
         // @todo Start AI
         fight().schedule(turn::stop, Duration.ofMillis(500));
+    }
+
+    /**
+     * Get the end fight rewards
+     *
+     * @see Monster#reward()
+     */
+    public MonsterReward reward() {
+        return monster.reward();
     }
 }

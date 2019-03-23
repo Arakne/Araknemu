@@ -2,7 +2,7 @@ package fr.quatrevieux.araknemu.game.monster;
 
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterTemplate;
-import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
+import fr.quatrevieux.araknemu.game.monster.reward.MonsterReward;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 
@@ -15,11 +15,13 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristi
 final public class Monster {
     final private MonsterTemplate template;
     final private SpellList spellList;
+    final private MonsterReward reward;
     final private int grade;
 
-    public Monster(MonsterTemplate template, SpellList spellList, int grade) {
+    public Monster(MonsterTemplate template, SpellList spellList, MonsterReward reward, int grade) {
         this.template = template;
         this.spellList = spellList;
+        this.reward = reward;
         this.grade = grade;
     }
 
@@ -74,6 +76,13 @@ final public class Monster {
      */
     public Characteristics characteristics() {
         return template.grades()[grade].characteristics();
+    }
+
+    /**
+     * Get the end fight rewards of the monster
+     */
+    public MonsterReward reward() {
+        return reward;
     }
 
     /**

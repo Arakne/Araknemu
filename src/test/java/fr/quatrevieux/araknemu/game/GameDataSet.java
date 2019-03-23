@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
+import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterRewardData;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterTemplate;
 import fr.quatrevieux.araknemu.data.world.transformer.ItemEffectsTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.ItemSetBonusTransformer;
@@ -718,6 +719,27 @@ public class GameDataSet extends TestingDataSet {
                 "(34, 'Larve Verte', 1568, '-1,-1,-1', '1', '6@v:6;13:5;1f:-a;17:6;1b:a;s:5;t:4;a:2g;f:2g;d:2g;8:5;9:3;|7@v:7;13:6;1f:-9;17:7;1b:b;s:6;t:5;a:2l;f:2l;d:2l;8:5;9:3;|8@v:8;13:7;1f:-8;17:8;1b:c;s:7;t:6;a:2q;f:2q;d:2q;8:5;9:3;|9@v:9;13:8;1f:-7;17:9;1b:d;s:8;t:7;a:2v;f:2v;d:2v;8:5;9:3;|10@v:a;13:9;1f:-6;17:a;1b:e;s:9;t:8;a:34;f:34;d:34;8:5;9:3;', '20|35|50|65|80', '20|25|35|40|50', '215@1;213@1;212@1|215@2;213@2;212@2|215@3;213@3;212@3|215@4;213@4;212@4|215@5;213@5;212@5|')," +
                 "(36, 'Bouftou', 1566, '-1,-1,-1', '1', '1@v:p;1f:-c;17:6;1b:-1i;s:f;t:f;a:2g;c:1s;f:2g;d:2g;e:26;8:5;9:3;|2@v:u;1f:-a;17:7;1b:-1d;s:g;t:g;a:2l;c:21;f:2l;d:2l;e:2b;8:5;9:3;|3@v:13;1f:-9;17:8;1b:-18;s:h;t:h;a:2q;c:26;f:2q;d:2q;e:2b;8:5;9:3;|4@v:18;1f:-8;17:9;1b:-13;s:i;t:i;a:2v;c:2l;f:2v;d:2v;e:2b;8:5;9:3;|5@v:1d;1f:-7;17:a;1b:-u;s:k;t:k;a:34;c:2q;f:34;d:34;e:2g;8:5;9:4;|6@v:1i;1f:-6;17:c;1b:-p;s:p;t:p;a:4m;c:4m;f:4m;d:7q;e:7q;8:6;9:4;', '30|40|50|60|70|140', '12|15|20|21|23|25', '2000@1;202@1;1709@1|2000@2;202@2;1709@2|2000@3;202@3;1709@3|2000@4;202@4;1709@4|2000@5;202@5;1709@5|2000@6;1709@6')"
         );
+
+        use(MonsterRewardData.class);
+
+        connection.query(
+            "INSERT INTO `MONSTER_REWARD` (`MONSTER_ID`, `MIN_KAMAS`, `MAX_KAMAS`, `EXPERIENCES`) VALUES " +
+                "(31, 50, 70, '3|7|12|18|26')," +
+                "(34, 50, 70, '18|35|58|84|115')," +
+                "(36, 65, 95, '5|7|9|12|14|16')"
+        );
+
+        return this;
+    }
+
+    public GameDataSet pushMonsterTemplateWithoutRewards() throws SQLException, ContainerException {
+        if (repository(MonsterTemplate.class).has(new MonsterTemplate(400, null, 0, null, null, null))) {
+            return this;
+        }
+
+        connection.query(
+            "INSERT INTO `MONSTER_TEMPLATE` (`MONSTER_ID`, `MONSTER_NAME`, `GFXID`, `COLORS`, `AI`, `CHARACTERISTICS`, `LIFE_POINTS`, `INITIATIVES`, `SPELLS`) VALUES " +
+                "(400, 'Larve Bleue', 1563, '-1,-1,-1', '1', '2@v:1;13:5;1f:5;17:-9;1b:-9;s:5;t:3;a:2g;f:2g;d:2g;8:4;9:2;|3@v:2;13:6;1f:6;17:-8;1b:-8;s:6;t:4;a:2l;f:2l;d:2l;8:4;9:2;|4@v:3;13:7;1f:7;17:-7;1b:-7;s:7;t:5;a:2q;f:2q;d:2q;8:4;9:2;|5@v:4;13:8;1f:8;17:-6;1b:-6;s:8;t:6;a:2v;f:2v;d:2v;8:4;9:2;|6@v:5;13:9;1f:9;17:-5;1b:-5;s:9;t:7;a:34;f:34;d:34;8:4;9:2;', '10|15|20|25|30', '20|25|35|40|50', '213@1;212@1|213@2;212@2|213@3;212@3|213@4;212@4|213@5;212@5')"        );
 
         return this;
     }

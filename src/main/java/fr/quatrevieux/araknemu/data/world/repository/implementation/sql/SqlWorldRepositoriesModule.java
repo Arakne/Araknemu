@@ -19,6 +19,7 @@ import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupPositionRepository;
+import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterRewardRepository;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.transformer.*;
 
@@ -144,6 +145,11 @@ final public class SqlWorldRepositoriesModule implements ContainerModule {
         configurator.persist(
             MonsterGroupPositionRepository.class,
             container -> new SqlMonsterGroupPositionRepository(connection)
+        );
+
+        configurator.persist(
+            MonsterRewardRepository.class,
+            container -> new SqlMonsterRewardRepository(connection)
         );
 
         configurator.persist(

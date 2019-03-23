@@ -39,6 +39,7 @@ import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
+import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterRewardData;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceRepository;
@@ -56,6 +57,7 @@ import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupPositionRepository;
+import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterRewardRepository;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterTemplateRepository;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
@@ -233,6 +235,7 @@ public class GameBaseCase extends DatabaseTestCase {
             .declare(MonsterTemplate.class, MonsterTemplateRepository.class)
             .declare(MonsterGroupData.class, MonsterGroupDataRepository.class)
             .declare(MonsterGroupPosition.class, MonsterGroupPositionRepository.class)
+            .declare(MonsterRewardData.class, MonsterRewardRepository.class)
         ;
 
         container.get(GameService.class).subscribe();

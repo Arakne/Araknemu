@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.monster;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.value.Colors;
+import fr.quatrevieux.araknemu.data.value.Interval;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,5 +37,8 @@ class MonsterTest extends GameBaseCase {
 
         assertEquals(5, monster.characteristics().get(Characteristic.ACTION_POINT));
         assertEquals(3, monster.characteristics().get(Characteristic.MOVEMENT_POINT));
+
+        assertEquals(new Interval(50, 70), monster.reward().kamas());
+        assertEquals(58, monster.reward().experience());
     }
 }

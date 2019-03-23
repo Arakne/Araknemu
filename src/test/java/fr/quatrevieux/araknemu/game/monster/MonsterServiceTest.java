@@ -2,13 +2,17 @@ package fr.quatrevieux.araknemu.game.monster;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.data.value.Colors;
+import fr.quatrevieux.araknemu.data.value.Interval;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.monster.reward.MonsterRewardService;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
+
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,6 +31,7 @@ class MonsterServiceTest extends GameBaseCase {
 
         service = new MonsterService(
             container.get(SpellService.class),
+            container.get(MonsterRewardService.class),
             container.get(MonsterTemplateRepository.class)
         );
     }
@@ -52,9 +57,31 @@ class MonsterServiceTest extends GameBaseCase {
         assertEquals(1, first.spells().get(213).level());
         assertEquals(1, first.spells().get(212).level());
 
+        assertEquals(new Interval(50, 70), first.reward().kamas());
+        assertEquals(3, first.reward().experience());
+
         assertSame(service.load(31), service.load(31));
         assertSame(service.load(34), service.load(34));
         assertNotSame(service.load(31), service.load(34));
+    }
+
+    @Test
+    void loadWithoutRewards() throws SQLException {
+        dataSet.pushMonsterTemplateWithoutRewards();
+
+        GradeSet grades = service.load(400);
+
+        assertCount(5, grades.all());
+        assertArrayEquals(
+            new int[] {2, 3, 4, 5, 6},
+            grades.all().stream().mapToInt(Monster::level).toArray()
+        );
+
+        Monster first = grades.all().get(0);
+
+        assertEquals(400, first.id());
+        assertEquals(new Interval(0, 0), first.reward().kamas());
+        assertEquals(0, first.reward().experience());
     }
 
     @Test

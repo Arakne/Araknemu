@@ -77,6 +77,9 @@ class MonsterFighterTest extends FightBaseCase {
         assertInstanceOf(States.class, fighter.states());
         assertTrue(fighter.ready());
         assertEquals(4, fighter.level());
+
+        assertEquals(new Interval(50, 70), fighter.reward().kamas());
+        assertEquals(12, fighter.reward().experience());
     }
 
     @Test
