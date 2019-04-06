@@ -1,6 +1,6 @@
 package fr.quatrevieux.araknemu.game.fight.type;
 
-import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.RewardsGenerator;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardsGenerator;
 
 import java.time.Duration;
 

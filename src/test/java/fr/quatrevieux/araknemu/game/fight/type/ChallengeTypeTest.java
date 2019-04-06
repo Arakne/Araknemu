@@ -1,7 +1,7 @@
 package fr.quatrevieux.araknemu.game.fight.type;
 
 import fr.quatrevieux.araknemu._test.TestCase;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.ChallengeRewardsGenerator;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.ChallengeRewardsGenerator;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;

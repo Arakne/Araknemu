@@ -1,8 +1,10 @@
-package fr.quatrevieux.araknemu.game.fight.ending.reward.generator.compute;
+package fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,8 +16,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-class PvmKamasFormulaTest extends FightBaseCase {
-    private PvmKamasFormula formula;
+class PvmKamasProviderTest extends FightBaseCase {
+    private PvmKamasProvider formula;
     private Fight fight;
     private List<Fighter> monsterFighters;
 
@@ -26,7 +28,7 @@ class PvmKamasFormulaTest extends FightBaseCase {
 
         dataSet.pushMonsterTemplates();
 
-        formula = new PvmKamasFormula();
+        formula = new PvmKamasProvider();
         fight = createPvmFight();
 
         monsterFighters = new ArrayList<>(fight.team(1).fighters());
@@ -40,11 +42,16 @@ class PvmKamasFormulaTest extends FightBaseCase {
             Collections.singletonList(monsterFighters.get(0))
         );
 
-        assertBetween(50, 70, formula.initialize(results).compute(player.fighter()));
-        assertNotEquals(
-            formula.initialize(results).compute(player.fighter()),
-            formula.initialize(results).compute(player.fighter())
-        );
+
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+        formula.initialize(results).provide(reward);
+
+        assertBetween(50, 70, reward.kamas());
+
+        DropReward otherReward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+        formula.initialize(results).provide(otherReward);
+
+        assertNotEquals(reward.kamas(), otherReward.kamas());
     }
 
     @Test
@@ -55,11 +62,15 @@ class PvmKamasFormulaTest extends FightBaseCase {
             monsterFighters
         );
 
-        assertBetween(100, 140, formula.initialize(results).compute(player.fighter()));
-        assertNotEquals(
-            formula.initialize(results).compute(player.fighter()),
-            formula.initialize(results).compute(player.fighter())
-        );
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+        formula.initialize(results).provide(reward);
+
+        assertBetween(100, 140, reward.kamas());
+
+        DropReward otherReward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+        formula.initialize(results).provide(otherReward);
+
+        assertNotEquals(reward.kamas(), otherReward.kamas());
     }
 
     @Test
@@ -70,6 +81,9 @@ class PvmKamasFormulaTest extends FightBaseCase {
             Collections.singletonList(player.fighter())
         );
 
-        assertEquals(0, formula.initialize(results).compute(player.fighter()));
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+        formula.initialize(results).provide(reward);
+
+        assertEquals(0, reward.kamas());
     }
 }

@@ -1,7 +1,8 @@
-package fr.quatrevieux.araknemu.game.fight.ending.reward.generator.compute;
+package fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider;
 
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterRewardItem;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.util.RandomUtil;
@@ -11,7 +12,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.*;
 
 /**
- * Formula for compute dropped items on a Pvm fight
+ * Provider for dropped items on a Pvm fight
  *
  * - get all item rewards from monsters
  * - filters items with a discernment rate higher than the team discernment
@@ -21,8 +22,8 @@ import java.util.*;
  *
  * Note: each winners can only have one occurrence of an item, per monster
  */
-final public class PvmItemDropFormula implements ItemDropFormula {
-    private class Scope implements ItemDropFormula.Scope {
+final public class PvmItemDropProvider implements DropRewardProvider {
+    private class Scope implements DropRewardProvider.Scope {
         final private List<Pair<MonsterRewardItem, Integer>> dropsAndQuantity;
         final private int maxPerFighter;
 
@@ -32,9 +33,7 @@ final public class PvmItemDropFormula implements ItemDropFormula {
         }
 
         @Override
-        public Map<Integer, Integer> compute(Fighter fighter) {
-            Map<Integer, Integer> droppedItems = new HashMap<>();
-
+        public void provide(DropReward reward) {
             ItemDropIterator iterator = new ItemDropIterator(dropsAndQuantity);
 
             for (int count = maxPerFighter; count > 0 && iterator.hasNext(); --count) {
@@ -45,13 +44,8 @@ final public class PvmItemDropFormula implements ItemDropFormula {
                     continue;
                 }
 
-                droppedItems.put(
-                    drop.itemTemplateId(),
-                    droppedItems.getOrDefault(drop.itemTemplateId(), 0) + 1
-                );
+                reward.addItem(drop.itemTemplateId());
             }
-
-            return droppedItems;
         }
     }
 
@@ -91,7 +85,7 @@ final public class PvmItemDropFormula implements ItemDropFormula {
     final private RandomUtil random = new RandomUtil();
 
     @Override
-    public ItemDropFormula.Scope initialize(EndFightResults results) {
+    public DropRewardProvider.Scope initialize(EndFightResults results) {
         final int totalDiscernment = results.winners().stream().mapToInt(fighter -> fighter.characteristics().discernment()).sum();
 
         List<Pair<MonsterRewardItem, Integer>> dropsAndQuantity = new ArrayList<>();

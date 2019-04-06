@@ -2,11 +2,12 @@ package fr.quatrevieux.araknemu.game.fight.ending.reward.drop;
 
 import fr.quatrevieux.araknemu.game.fight.ending.reward.FightReward;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.DropRewardAction;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -19,21 +20,16 @@ final public class DropReward implements FightReward {
     final private Fighter fighter;
     final private List<DropRewardAction> actions;
 
-    final private long xp;
-    final private int kamas;
-    final private Map<Integer, Integer> items;
+    private long xp = 0;
+    private long mountXp = 0;
+    private long guildXp = 0;
+    private int kamas = 0;
+    private Map<Integer, Integer> items = new HashMap<>();
 
-    public DropReward(RewardType type, Fighter fighter) {
-        this(type, fighter, Collections.emptyList(), 0, 0, Collections.emptyMap());
-    }
-
-    public DropReward(RewardType type, Fighter fighter, List<DropRewardAction> actions, long xp, int kamas, Map<Integer, Integer> items) {
+    public DropReward(RewardType type, Fighter fighter, List<DropRewardAction> actions) {
         this.type = type;
         this.fighter = fighter;
         this.actions = actions;
-        this.xp = xp;
-        this.kamas = kamas;
-        this.items = items;
     }
 
     @Override
@@ -70,18 +66,30 @@ final public class DropReward implements FightReward {
         ;
     }
 
+    /**
+     * Get player win xp
+     */
     public long xp() {
         return xp;
     }
 
+    /**
+     * Xp given to the player's guild
+     */
     public long guildXp() {
-        return 0;
+        return guildXp;
     }
 
+    /**
+     * Xp given to the player's mount
+     */
     public long mountXp() {
-        return 0;
+        return mountXp;
     }
 
+    /**
+     * Win kamas
+     */
     public int kamas() {
         return kamas;
     }
@@ -94,6 +102,65 @@ final public class DropReward implements FightReward {
      */
     public Map<Integer, Integer> items() {
         return items;
+    }
+
+    /**
+     * Set the player win XP
+     *
+     * @see DropReward#xp()
+     */
+    public void setXp(long xp) {
+        this.xp = xp;
+    }
+
+    /**
+     * Set xp give to mount
+     *
+     * @see DropReward#mountXp()
+     */
+    public void setMountXp(long mountXp) {
+        this.mountXp = mountXp;
+    }
+
+    /**
+     * Set the xp give to guild
+     *
+     * @see DropReward#guildXp()
+     */
+    public void setGuildXp(long guildXp) {
+        this.guildXp = guildXp;
+    }
+
+    /**
+     * Set win kamas
+     *
+     * @see DropReward#kamas()
+     */
+    public void setKamas(int kamas) {
+        this.kamas = kamas;
+    }
+
+    /**
+     * Add an item to the win items
+     *
+     * @param itemId The item template id
+     * @param quantity Quantity of the item to add
+     *
+     * @see fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate#id()
+     */
+    public void addItem(int itemId, int quantity) {
+        items.put(itemId, items.getOrDefault(itemId, 0) + quantity);
+    }
+    /**
+     * Add one item to the win items
+     *
+     * @param itemId The item template id
+     *
+     * @see fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate#id()
+     * @see DropReward#addItem(int, int)
+     */
+    public void addItem(int itemId) {
+        addItem(itemId, 1);
     }
 
     /**

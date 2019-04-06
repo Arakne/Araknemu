@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.ReturnToSavePosition;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +35,7 @@ class ReturnToSavePositionTest extends FightBaseCase {
     void applyOnPlayerFighter() {
         player.setSavedPosition(new Position(123, 456));
 
-        DropReward reward = new DropReward(RewardType.LOOSER, fighter, Collections.emptyList(), 0, 0, Collections.emptyMap());
+        DropReward reward = new DropReward(RewardType.LOOSER, fighter, Collections.emptyList());
 
         action.apply(reward, fighter);
 
@@ -45,7 +46,7 @@ class ReturnToSavePositionTest extends FightBaseCase {
     void applyOnMonster() {
         MonsterFighter fighter = (MonsterFighter) fight.team(1).fighters().stream().findFirst().get();
 
-        DropReward reward = new DropReward(RewardType.LOOSER, fighter, Collections.emptyList(), 0, 1000, Collections.emptyMap());
+        DropReward reward = new DropReward(RewardType.LOOSER, fighter, Collections.emptyList());
 
         action.apply(reward, fighter);
     }

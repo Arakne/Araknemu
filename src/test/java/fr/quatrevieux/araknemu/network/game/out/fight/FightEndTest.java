@@ -36,8 +36,8 @@ class FightEndTest extends FightBaseCase {
                     ),
                     FightRewardsSheet.Type.NORMAL,
                     Arrays.asList(
-                        new DropReward(RewardType.WINNER, winner),
-                        new DropReward(RewardType.LOOSER, looser)
+                        new DropReward(RewardType.WINNER, winner, Collections.emptyList()),
+                        new DropReward(RewardType.LOOSER, looser, Collections.emptyList())
                     )
                 )
             ).toString()
@@ -54,6 +54,10 @@ class FightEndTest extends FightBaseCase {
         Fighter winner = player.fighter();
         Fighter looser = other.fighter();
 
+        DropReward winnerReward = new DropReward(RewardType.WINNER, winner, Collections.emptyList());
+        winnerReward.setKamas(250);
+        winnerReward.setXp(1145);
+
         assertEquals(
             "GE" + fight.duration() + "|1|0|2;1;Bob;50;0;5350000;5481459;5860000;1145;;;;250|0;2;Other;1;1;0;0;110;;;;;",
             new FightEnd(
@@ -64,10 +68,7 @@ class FightEndTest extends FightBaseCase {
                         Collections.singletonList(looser)
                     ),
                     FightRewardsSheet.Type.NORMAL,
-                    Arrays.asList(
-                        new DropReward(RewardType.WINNER, winner, Collections.emptyList(), 1145, 250, Collections.emptyMap()),
-                        new DropReward(RewardType.LOOSER, looser)
-                    )
+                    Arrays.asList(winnerReward, new DropReward(RewardType.LOOSER, looser, Collections.emptyList()))
                 )
             ).toString()
         );

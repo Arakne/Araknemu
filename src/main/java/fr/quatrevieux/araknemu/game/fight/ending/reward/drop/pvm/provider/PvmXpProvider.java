@@ -1,15 +1,16 @@
-package fr.quatrevieux.araknemu.game.fight.ending.reward.generator.compute;
+package fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 
 /**
  * Base formula for compute the Pvm experience
  */
-final public class PvmXpFormula implements XpFormula {
-    private static class Scope implements XpFormula.Scope {
+final public class PvmXpProvider implements DropRewardProvider {
+    private static class Scope implements DropRewardProvider.Scope {
         final private long totalXp;
         final private double teamsLevelsRate;
         final private double teamLevelDeviationBonus;
@@ -23,19 +24,21 @@ final public class PvmXpFormula implements XpFormula {
         }
 
         @Override
-        public long compute(Fighter fighter) {
-            return (long) (
+        public void provide(DropReward reward) {
+            long winXp = (long) (
                 totalXp
                 * teamsLevelsRate
                 * teamLevelDeviationBonus
-                * (1 + ((double) fighter.level() / winnersLevel))
-                * (1 + (double) fighter.characteristics().get(Characteristic.WISDOM) / 100)
+                * (1 + ((double) reward.fighter().level() / winnersLevel))
+                * (1 + (double) reward.fighter().characteristics().get(Characteristic.WISDOM) / 100)
             );
+
+            reward.setXp(winXp);
         }
     }
 
     @Override
-    public XpFormula.Scope initialize(EndFightResults results) {
+    public DropRewardProvider.Scope initialize(EndFightResults results) {
         return new Scope(
             totalXp(results),
             teamsLevelsRate(results),

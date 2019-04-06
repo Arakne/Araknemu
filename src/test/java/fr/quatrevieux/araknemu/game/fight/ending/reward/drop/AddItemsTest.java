@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.fight.ending.reward.drop;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddItems;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.ItemService;
@@ -36,7 +37,7 @@ class AddItemsTest extends FightBaseCase {
 
     @Test
     void applyWithoutItems() {
-        DropReward reward = new DropReward(RewardType.WINNER, fighter);
+        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList());
 
         action.apply(reward, fighter);
         assertEquals(0, player.inventory().weight());
@@ -47,7 +48,8 @@ class AddItemsTest extends FightBaseCase {
         Map<Integer, Integer> items = new HashMap<>();
         items.put(39, 1);
 
-        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 0, 0, items);
+        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList());
+        reward.addItem(39);
 
         action.apply(reward, fighter);
         assertEquals(4, player.inventory().weight());
@@ -57,10 +59,8 @@ class AddItemsTest extends FightBaseCase {
 
     @Test
     void applyWithTwoSameItemsWithStats() {
-        Map<Integer, Integer> items = new HashMap<>();
-        items.put(2411, 2);
-
-        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 0, 0, items);
+        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList());
+        reward.addItem(2411, 2);
 
         action.apply(reward, fighter);
         assertEquals(20, player.inventory().weight());
@@ -72,12 +72,10 @@ class AddItemsTest extends FightBaseCase {
 
     @Test
     void applyWithMultipleItems() {
-        Map<Integer, Integer> items = new HashMap<>();
-        items.put(39, 1);
-        items.put(40, 1);
-        items.put(2425, 1);
-
-        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 0, 0, items);
+        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList());
+        reward.addItem(39);
+        reward.addItem(40);
+        reward.addItem(2425);
 
         action.apply(reward, fighter);
         assertEquals(39, player.inventory().get(1).item().template().id());
@@ -89,10 +87,8 @@ class AddItemsTest extends FightBaseCase {
     void applyOnMonster() {
         MonsterFighter fighter = (MonsterFighter) fight.team(1).fighters().stream().findFirst().get();
 
-        Map<Integer, Integer> items = new HashMap<>();
-        items.put(39, 1);
-
-        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 0, 0, items);
+        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList());
+        reward.addItem(39);
 
         action.apply(reward, fighter);
     }

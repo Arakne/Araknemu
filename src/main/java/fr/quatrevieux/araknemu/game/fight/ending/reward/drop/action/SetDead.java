@@ -1,21 +1,18 @@
-package fr.quatrevieux.araknemu.game.fight.ending.reward.drop;
+package fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action;
 
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 
 /**
- * Add kamas to fighter
+ * Remove all life point of looser fighter
  */
-final public class AddKamas implements DropRewardAction {
+final public class SetDead implements DropRewardAction {
     @Override
     public void apply(DropReward reward, Fighter fighter) {
-        if (reward.kamas() == 0) {
-            return;
-        }
-
         // @todo use visitor on fighter
         if (fighter instanceof PlayerFighter) {
-            ((PlayerFighter) fighter).player().inventory().addKamas(reward.kamas());
+            ((PlayerFighter) fighter).player().properties().life().set(0);
         }
     }
 }

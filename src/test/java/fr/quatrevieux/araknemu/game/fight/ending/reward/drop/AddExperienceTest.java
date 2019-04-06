@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.fight.ending.reward.drop;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddExperience;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +32,7 @@ class AddExperienceTest extends FightBaseCase {
 
     @Test
     void applyWithoutXp() {
-        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 0, 0, Collections.emptyMap());
+        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList());
 
         long lastXp = player.properties().experience().current();
 
@@ -42,7 +43,8 @@ class AddExperienceTest extends FightBaseCase {
 
     @Test
     void applyWithXp() {
-        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 1000, 0, Collections.emptyMap());
+        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList());
+        reward.setXp(1000);
 
         long lastXp = player.properties().experience().current();
 
@@ -55,7 +57,8 @@ class AddExperienceTest extends FightBaseCase {
     void applyOnMonster() {
         MonsterFighter fighter = (MonsterFighter) fight.team(1).fighters().stream().findFirst().get();
 
-        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 1000, 0, Collections.emptyMap());
+        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList());
+        reward.setXp(1000);
 
         action.apply(reward, fighter);
     }

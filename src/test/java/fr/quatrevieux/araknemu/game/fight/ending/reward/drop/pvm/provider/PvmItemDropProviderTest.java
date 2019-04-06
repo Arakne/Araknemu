@@ -1,9 +1,11 @@
-package fr.quatrevieux.araknemu.game.fight.ending.reward.generator.compute;
+package fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider;
 
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterRewardItem;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
@@ -14,8 +16,8 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PvmItemDropFormulaTest extends FightBaseCase {
-    private PvmItemDropFormula formula;
+class PvmItemDropProviderTest extends FightBaseCase {
+    private PvmItemDropProvider formula;
     private Fight fight;
     private List<MonsterFighter> monsterFighters;
 
@@ -26,7 +28,7 @@ class PvmItemDropFormulaTest extends FightBaseCase {
 
         dataSet.pushMonsterTemplates();
 
-        formula = new PvmItemDropFormula();
+        formula = new PvmItemDropProvider();
         fight = createPvmFight();
 
         monsterFighters = new ArrayList<>();
@@ -49,7 +51,11 @@ class PvmItemDropFormulaTest extends FightBaseCase {
             Collections.singletonList(monsterFighters.get(0))
         );
 
-        Map<Integer, Integer> items = formula.initialize(results).compute(player.fighter());
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+
+        formula.initialize(results).provide(reward);
+
+        Map<Integer, Integer> items = reward.items();
 
         assertEquals(2, items.size());
         assertEquals(1, (int) items.get(12));
@@ -71,7 +77,10 @@ class PvmItemDropFormulaTest extends FightBaseCase {
         int count = 0;
 
         for (int i = 0; i < 1000; ++i) {
-            count += formula.initialize(results).compute(player.fighter()).getOrDefault(12, 0);
+            DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+
+            formula.initialize(results).provide(reward);
+            count += reward.items().getOrDefault(12, 0);
         }
 
         assertBetween(90, 110, count);
@@ -92,7 +101,9 @@ class PvmItemDropFormulaTest extends FightBaseCase {
             Collections.singletonList(monsterFighters.get(0))
         );
 
-        Map<Integer, Integer> items = formula.initialize(results).compute(player.fighter());
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+        formula.initialize(results).provide(reward);
+        Map<Integer, Integer> items = reward.items();
 
         assertEquals(1, items.size());
         assertEquals(1, (int) items.get(13));
@@ -113,21 +124,27 @@ class PvmItemDropFormulaTest extends FightBaseCase {
             Collections.singletonList(monsterFighters.get(0))
         );
 
-        ItemDropFormula.Scope scope = formula.initialize(results);
+        DropRewardProvider.Scope scope = formula.initialize(results);
 
-        Map<Integer, Integer> items = scope.compute(player.fighter());
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+        scope.provide(reward);
+        Map<Integer, Integer> items = reward.items();
 
         assertEquals(2, items.size());
         assertTrue(items.containsKey(12));
         assertTrue(items.containsKey(15));
 
-        items = scope.compute(player.fighter());
+        reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+        scope.provide(reward);
+        items = reward.items();
 
         assertEquals(2, items.size());
         assertTrue(items.containsKey(12));
         assertTrue(items.containsKey(13));
 
-        items = scope.compute(player.fighter());
+        reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+        scope.provide(reward);
+        items = reward.items();
 
         assertEquals(1, items.size());
         assertTrue(items.containsKey(14));
@@ -147,7 +164,10 @@ class PvmItemDropFormulaTest extends FightBaseCase {
             Arrays.asList(monsterFighters.get(0), monsterFighters.get(1))
         );
 
-        Map<Integer, Integer> items = formula.initialize(results).compute(player.fighter());
+
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+        formula.initialize(results).provide(reward);
+        Map<Integer, Integer> items = reward.items();
 
         assertEquals(2, items.size());
         assertEquals(2, (int) items.get(12));

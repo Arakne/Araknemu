@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.fight.ending.reward.drop;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.SetDead;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ class SetDeadTest extends FightBaseCase {
 
     @Test
     void applyOnPlayer() {
-        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList(), 0, 0, Collections.emptyMap());
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
 
         action.apply(reward, player.fighter());
 
@@ -38,7 +39,7 @@ class SetDeadTest extends FightBaseCase {
     void applyOnMonster() {
         MonsterFighter fighter = (MonsterFighter) fight.team(1).fighters().stream().findFirst().get();
 
-        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 1000, 0, Collections.emptyMap());
+        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList());
 
         action.apply(reward, fighter);
     }

@@ -1,5 +1,6 @@
-package fr.quatrevieux.araknemu.game.fight.ending.reward.drop;
+package fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action;
 
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.ItemService;

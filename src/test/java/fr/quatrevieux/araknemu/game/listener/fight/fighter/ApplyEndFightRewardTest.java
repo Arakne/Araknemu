@@ -2,7 +2,7 @@ package fr.quatrevieux.araknemu.game.listener.fight.fighter;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.AddExperience;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddExperience;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
 import fr.quatrevieux.araknemu.game.fight.event.FightFinished;
@@ -29,7 +29,7 @@ class ApplyEndFightRewardTest extends FightBaseCase {
 
     @Test
     void onFightFinishedWithoutReward() {
-        listener.on(new FightFinished(new DropReward(RewardType.WINNER, player.fighter())));
+        listener.on(new FightFinished(new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList())));
 
         assertFalse(player.isFighting());
     }
@@ -38,7 +38,10 @@ class ApplyEndFightRewardTest extends FightBaseCase {
     void onFightFinishedWithXpReward() {
         long lastXp = player.properties().experience().current();
 
-        listener.on(new FightFinished(new DropReward(RewardType.WINNER, player.fighter(), Arrays.asList(new AddExperience()), 1000, 0, Collections.emptyMap())));
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Arrays.asList(new AddExperience()));
+        reward.setXp(1000);
+
+        listener.on(new FightFinished(reward));
 
         assertFalse(player.isFighting());
         assertEquals(lastXp + 1000, player.properties().experience().current());

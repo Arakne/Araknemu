@@ -1,7 +1,6 @@
-package fr.quatrevieux.araknemu.game.fight.ending.reward.generator;
+package fr.quatrevieux.araknemu.game.fight.ending.reward;
 
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.FightRewardsSheet;
 
 /**
  * Generate rewards for end fight

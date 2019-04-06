@@ -1,12 +1,8 @@
 package fr.quatrevieux.araknemu.game.fight.type;
 
 import fr.quatrevieux.araknemu._test.TestCase;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.ChallengeRewardsGenerator;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.PvmRewardsGenerator;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.RewardsGenerator;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.compute.PvmItemDropFormula;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.compute.PvmKamasFormula;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.compute.PvmXpFormula;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.PvmRewardsGenerator;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardsGenerator;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -17,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class PvmTypeTest extends TestCase {
     @Test
     void values() {
-        RewardsGenerator generator = new PvmRewardsGenerator(Collections.emptyList(), Collections.emptyList(), new PvmXpFormula(), new PvmKamasFormula(), new PvmItemDropFormula());
+        RewardsGenerator generator = new PvmRewardsGenerator(Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
         PvmType type = new PvmType(generator);
 
         assertEquals(4, type.id());

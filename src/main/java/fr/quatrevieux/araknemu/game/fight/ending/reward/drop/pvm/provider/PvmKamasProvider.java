@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.fight.ending.reward.generator.compute;
+package fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider;
 
 import fr.quatrevieux.araknemu.data.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
@@ -7,16 +7,16 @@ import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.util.RandomUtil;
 
 /**
- * Compute win kamas on Pvm fight
+ * Provide win kamas on Pvm fight
  */
-final public class PvmKamasFormula implements KamasFormula {
+final public class PvmKamasProvider implements DropRewardProvider {
     final private RandomUtil random = new RandomUtil();
 
     @Override
     public Scope initialize(EndFightResults results) {
         final Interval totalKamas = totalKamas(results);
 
-        return (fighter) -> random.rand(totalKamas);
+        return reward -> reward.setKamas(random.rand(totalKamas));
     }
 
     private Interval totalKamas(EndFightResults results) {

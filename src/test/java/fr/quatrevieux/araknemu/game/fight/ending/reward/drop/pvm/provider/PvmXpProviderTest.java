@@ -1,22 +1,23 @@
-package fr.quatrevieux.araknemu.game.fight.ending.reward.generator.compute;
+package fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PvmXpFormulaTest extends FightBaseCase {
-    private PvmXpFormula formula;
+class PvmXpProviderTest extends FightBaseCase {
+    private PvmXpProvider formula;
     private Fight fight;
     private List<Fighter> monsterFighters;
 
@@ -27,7 +28,7 @@ class PvmXpFormulaTest extends FightBaseCase {
 
         dataSet.pushMonsterTemplates();
 
-        formula = new PvmXpFormula();
+        formula = new PvmXpProvider();
         fight = createPvmFight();
 
         monsterFighters = new ArrayList<>(fight.team(1).fighters());
@@ -41,7 +42,10 @@ class PvmXpFormulaTest extends FightBaseCase {
             Collections.singletonList(monsterFighters.get(0))
         );
 
-        assertEquals(25, formula.initialize(results).compute(player.fighter()));
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+        formula.initialize(results).provide(reward);
+
+        assertEquals(25, reward.xp());
     }
 
     @Test
@@ -52,7 +56,10 @@ class PvmXpFormulaTest extends FightBaseCase {
             Collections.emptyList()
         );
 
-        assertEquals(0, formula.initialize(results).compute(player.fighter()));
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+        formula.initialize(results).provide(reward);
+
+        assertEquals(0, reward.xp());
     }
 
     @Test
@@ -63,7 +70,11 @@ class PvmXpFormulaTest extends FightBaseCase {
             monsterFighters
         );
 
-        assertEquals(241, formula.initialize(results).compute(player.fighter()));
+
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+        formula.initialize(results).provide(reward);
+
+        assertEquals(241, reward.xp());
     }
 
     @Test
@@ -99,7 +110,10 @@ class PvmXpFormulaTest extends FightBaseCase {
             Collections.singletonList(monsterFighters.get(0))
         );
 
-        assertEquals(51, formula.initialize(results).compute(player.fighter()));
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+        formula.initialize(results).provide(reward);
+
+        assertEquals(51, reward.xp());
     }
 
     private long xpForMultipleWinners(int nbWinners) {
@@ -115,7 +129,10 @@ class PvmXpFormulaTest extends FightBaseCase {
             Collections.singletonList(monsterFighters.get(0))
         );
 
-        return formula.initialize(results).compute(player.fighter());
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+        formula.initialize(results).provide(reward);
+
+        return reward.xp();
     }
 
     private long xpForMultipleMonsters(int nbMonsters) {
@@ -131,6 +148,9 @@ class PvmXpFormulaTest extends FightBaseCase {
             monsters
         );
 
-        return formula.initialize(results).compute(player.fighter());
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+        formula.initialize(results).provide(reward);
+
+        return reward.xp();
     }
 }

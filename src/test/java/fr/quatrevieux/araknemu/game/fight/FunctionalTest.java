@@ -373,8 +373,8 @@ public class FunctionalTest extends GameBaseCase {
                     new EndFightResults(fight, Collections.singletonList(winner), Collections.singletonList(looser)),
                     FightRewardsSheet.Type.NORMAL,
                     Arrays.asList(
-                        new DropReward(RewardType.WINNER, winner),
-                        new DropReward(RewardType.LOOSER, looser)
+                        new DropReward(RewardType.WINNER, winner, Collections.emptyList()),
+                        new DropReward(RewardType.LOOSER, looser, Collections.emptyList())
                     )
                 )
             )

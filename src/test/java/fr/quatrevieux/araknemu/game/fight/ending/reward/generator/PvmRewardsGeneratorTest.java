@@ -6,9 +6,10 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.FightRewardsSheet;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.compute.PvmItemDropFormula;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.compute.PvmKamasFormula;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.compute.PvmXpFormula;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.PvmRewardsGenerator;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider.PvmItemDropProvider;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider.PvmKamasProvider;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider.PvmXpProvider;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,9 +35,7 @@ class PvmRewardsGeneratorTest extends FightBaseCase {
         generator = new PvmRewardsGenerator(
             Collections.emptyList(),
             Collections.emptyList(),
-            new PvmXpFormula(),
-            new PvmKamasFormula(),
-            new PvmItemDropFormula()
+            Arrays.asList(new PvmXpProvider(), new PvmKamasProvider(), new PvmItemDropProvider())
         );
     }
 
