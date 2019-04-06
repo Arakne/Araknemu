@@ -34,7 +34,7 @@ class ReturnToSavePositionTest extends FightBaseCase {
     void applyOnPlayerFighter() {
         player.setSavedPosition(new Position(123, 456));
 
-        DropReward reward = new DropReward(RewardType.LOOSER, fighter, Collections.emptyList(), 0, 0);
+        DropReward reward = new DropReward(RewardType.LOOSER, fighter, Collections.emptyList(), 0, 0, Collections.emptyMap());
 
         action.apply(reward, fighter);
 
@@ -45,7 +45,7 @@ class ReturnToSavePositionTest extends FightBaseCase {
     void applyOnMonster() {
         MonsterFighter fighter = (MonsterFighter) fight.team(1).fighters().stream().findFirst().get();
 
-        DropReward reward = new DropReward(RewardType.LOOSER, fighter, Collections.emptyList(), 0, 1000);
+        DropReward reward = new DropReward(RewardType.LOOSER, fighter, Collections.emptyList(), 0, 1000, Collections.emptyMap());
 
         action.apply(reward, fighter);
     }

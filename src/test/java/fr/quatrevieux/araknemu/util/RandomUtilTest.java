@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class RandomUtilTest extends TestCase {
     private RandomUtil util;
@@ -178,5 +179,15 @@ class RandomUtilTest extends TestCase {
         assertEquals(8, r1.integer(10));
         assertEquals(0, r2.integer(10));
         assertEquals(8, r2.integer(10));
+    }
+
+    @Test
+    void decimal() {
+        for (int i = 0; i < 1000; ++i) {
+            double value = util.decimal(10);
+
+            assertBetween(0d, 10d, value);
+            assertNotEquals(value, (double) (int) value);
+        }
     }
 }

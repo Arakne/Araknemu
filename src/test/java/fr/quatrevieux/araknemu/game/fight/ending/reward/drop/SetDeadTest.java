@@ -27,7 +27,7 @@ class SetDeadTest extends FightBaseCase {
 
     @Test
     void applyOnPlayer() {
-        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList(), 0, 0);
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList(), 0, 0, Collections.emptyMap());
 
         action.apply(reward, player.fighter());
 
@@ -38,7 +38,7 @@ class SetDeadTest extends FightBaseCase {
     void applyOnMonster() {
         MonsterFighter fighter = (MonsterFighter) fight.team(1).fighters().stream().findFirst().get();
 
-        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 1000, 0);
+        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 1000, 0, Collections.emptyMap());
 
         action.apply(reward, fighter);
     }

@@ -65,7 +65,7 @@ class FightEndTest extends FightBaseCase {
                     ),
                     FightRewardsSheet.Type.NORMAL,
                     Arrays.asList(
-                        new DropReward(RewardType.WINNER, winner, Collections.emptyList(), 1145, 250),
+                        new DropReward(RewardType.WINNER, winner, Collections.emptyList(), 1145, 250, Collections.emptyMap()),
                         new DropReward(RewardType.LOOSER, looser)
                     )
                 )

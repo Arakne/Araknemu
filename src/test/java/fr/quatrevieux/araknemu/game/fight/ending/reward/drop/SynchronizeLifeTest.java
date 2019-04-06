@@ -30,7 +30,7 @@ class SynchronizeLifeTest extends FightBaseCase {
     void applyOnPlayer() {
         player.fighter().life().alter(player.fighter(), -100);
 
-        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList(), 0, 0);
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList(), 0, 0, Collections.emptyMap());
 
         action.apply(reward, player.fighter());
 
@@ -39,7 +39,7 @@ class SynchronizeLifeTest extends FightBaseCase {
 
     @Test
     void applyOnPlayerFullLife() {
-        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList(), 0, 0);
+        DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList(), 0, 0, Collections.emptyMap());
 
         action.apply(reward, player.fighter());
 
@@ -50,7 +50,7 @@ class SynchronizeLifeTest extends FightBaseCase {
     void applyOnMonster() {
         MonsterFighter fighter = (MonsterFighter) fight.team(1).fighters().stream().findFirst().get();
 
-        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 1000, 0);
+        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 1000, 0, Collections.emptyMap());
 
         action.apply(reward, fighter);
     }

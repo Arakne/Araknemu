@@ -167,6 +167,11 @@ class AlternateTeamFighterOrderTest extends TestCase {
                 }
 
                 @Override
+                public int discernment() {
+                    return 0;
+                }
+
+                @Override
                 public int get(Characteristic characteristic) {
                     return 0;
                 }

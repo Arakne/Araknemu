@@ -64,6 +64,11 @@ public class TestCase {
         assertTrue(value >= min, "Expected between " + min + " and " + max + " but get " + value);
     }
 
+    public void assertBetween(double min, double max, double value) {
+        assertTrue(value <= max, "Expected between " + min + " and " + max + " but get " + value);
+        assertTrue(value >= min, "Expected between " + min + " and " + max + " but get " + value);
+    }
+
     public void assertBetween(long min, long max, long value) {
         assertTrue(value <= max, "Expected between " + min + " and " + max + " but get " + value);
         assertTrue(value >= min, "Expected between " + min + " and " + max + " but get " + value);

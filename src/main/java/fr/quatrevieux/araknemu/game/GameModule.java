@@ -23,10 +23,7 @@ import fr.quatrevieux.araknemu.data.world.repository.environment.npc.ResponseAct
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
-import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
-import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupPositionRepository;
-import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterRewardRepository;
-import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterTemplateRepository;
+import fr.quatrevieux.araknemu.data.world.repository.monster.*;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
@@ -72,6 +69,7 @@ import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.*;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.PvmRewardsGenerator;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.compute.PvmItemDropFormula;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.compute.PvmKamasFormula;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.generator.compute.PvmXpFormula;
 import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
@@ -534,7 +532,10 @@ final public class GameModule implements ContainerModule {
 
         configurator.persist(
             MonsterRewardService.class,
-            container -> new MonsterRewardService(container.get(MonsterRewardRepository.class))
+            container -> new MonsterRewardService(
+                container.get(MonsterRewardRepository.class),
+                container.get(MonsterRewardItemRepository.class)
+            )
         );
 
         configurator.persist(
@@ -622,10 +623,11 @@ final public class GameModule implements ContainerModule {
             PvmType.class,
             container -> new PvmType(
                 new PvmRewardsGenerator(
-                    Arrays.asList(new AddExperience(), new SynchronizeLife(), new AddKamas()),
+                    Arrays.asList(new AddExperience(), new SynchronizeLife(), new AddKamas(), new AddItems(container.get(ItemService.class))),
                     Arrays.asList(new SetDead(), new ReturnToSavePosition()),
                     new PvmXpFormula(),
-                    new PvmKamasFormula()
+                    new PvmKamasFormula(),
+                    new PvmItemDropFormula()
                 )
             )
         );

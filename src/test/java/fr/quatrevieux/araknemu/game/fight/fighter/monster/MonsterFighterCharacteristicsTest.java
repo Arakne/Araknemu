@@ -71,6 +71,11 @@ class MonsterFighterCharacteristicsTest extends FightBaseCase {
     }
 
     @Test
+    void discernment() {
+        assertEquals(0, characteristics.discernment());
+    }
+
+    @Test
     void get() {
         assertEquals(90, characteristics.get(Characteristic.STRENGTH));
         assertEquals(4, characteristics.get(Characteristic.ACTION_POINT));

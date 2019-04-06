@@ -67,6 +67,15 @@ final public class RandomUtil {
     }
 
     /**
+     * Get a random double between interval [0, max[
+     *
+     * @param max The maximum value (exclusive)
+     */
+    public double decimal(double max) {
+        return random.nextDouble() * max;
+    }
+
+    /**
      * Get a random number from an interval
      */
     public int rand(int[] interval) {

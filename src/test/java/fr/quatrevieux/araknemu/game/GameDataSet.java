@@ -26,10 +26,8 @@ import fr.quatrevieux.araknemu.data.world.entity.environment.npc.ResponseAction;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemSet;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
-import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
-import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
-import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterRewardData;
-import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterTemplate;
+import fr.quatrevieux.araknemu.data.world.entity.monster.*;
+import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterRewardItemRepository;
 import fr.quatrevieux.araknemu.data.world.transformer.ItemEffectsTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.ItemSetBonusTransformer;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
@@ -729,6 +727,8 @@ public class GameDataSet extends TestingDataSet {
                 "(36, 65, 95, '5|7|9|12|14|16')"
         );
 
+        pushRewardItems();
+
         return this;
     }
 
@@ -740,6 +740,44 @@ public class GameDataSet extends TestingDataSet {
         connection.query(
             "INSERT INTO `MONSTER_TEMPLATE` (`MONSTER_ID`, `MONSTER_NAME`, `GFXID`, `COLORS`, `AI`, `CHARACTERISTICS`, `LIFE_POINTS`, `INITIATIVES`, `SPELLS`) VALUES " +
                 "(400, 'Larve Bleue', 1563, '-1,-1,-1', '1', '2@v:1;13:5;1f:5;17:-9;1b:-9;s:5;t:3;a:2g;f:2g;d:2g;8:4;9:2;|3@v:2;13:6;1f:6;17:-8;1b:-8;s:6;t:4;a:2l;f:2l;d:2l;8:4;9:2;|4@v:3;13:7;1f:7;17:-7;1b:-7;s:7;t:5;a:2q;f:2q;d:2q;8:4;9:2;|5@v:4;13:8;1f:8;17:-6;1b:-6;s:8;t:6;a:2v;f:2v;d:2v;8:4;9:2;|6@v:5;13:9;1f:9;17:-5;1b:-5;s:9;t:7;a:34;f:34;d:34;8:4;9:2;', '10|15|20|25|30', '20|25|35|40|50', '213@1;212@1|213@2;212@2|213@3;212@3|213@4;212@4|213@5;212@5')"        );
+
+        return this;
+    }
+
+    public MonsterRewardItem pushRewardItem(MonsterRewardItem item) throws SQLException, ContainerException {
+        use(MonsterRewardItem.class);
+
+        connection.prepare(
+            "INSERT INTO MONSTER_REWARD_ITEM (MONSTER_ID, ITEM_TEMPLATE_ID, QUANTITY, DISCERNMENT, RATE) VALUES (?, ?, ?, ?, ?)",
+            stmt -> {
+                int i = 1;
+
+                stmt.setInt(i++, item.monsterId());
+                stmt.setInt(i++, item.itemTemplateId());
+                stmt.setInt(i++, item.quantity());
+                stmt.setInt(i++, item.discernment());
+                stmt.setDouble(i++, item.rate());
+
+                return stmt.executeUpdate();
+            }
+        );
+
+        return item;
+    }
+
+    public GameDataSet pushRewardItems() throws SQLException, ContainerException {
+        if (!((MonsterRewardItemRepository) repository(MonsterRewardItem.class)).byMonster(36).isEmpty()) {
+            return this;
+        }
+
+        pushItemTemplates();
+
+        pushRewardItem(new MonsterRewardItem(31, 39, 1, 200, 15));
+        pushRewardItem(new MonsterRewardItem(34, 40, 1, 200, 5));
+
+        pushRewardItem(new MonsterRewardItem(36, 2416, 2, 100, 1));
+        pushRewardItem(new MonsterRewardItem(36, 2422, 1, 300, 1));
+        pushRewardItem(new MonsterRewardItem(36, 2428, 1, 400, 1));
 
         return this;
     }

@@ -31,7 +31,7 @@ class AddKamasTest extends FightBaseCase {
 
     @Test
     void applyWithoutKamas() {
-        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 0, 0);
+        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 0, 0, Collections.emptyMap());
 
         long lastKamas = player.properties().kamas();
 
@@ -42,7 +42,7 @@ class AddKamasTest extends FightBaseCase {
 
     @Test
     void applyWithKamas() {
-        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 0, 1000);
+        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 0, 1000, Collections.emptyMap());
 
         long lastKamas = player.properties().kamas();
 
@@ -55,7 +55,7 @@ class AddKamasTest extends FightBaseCase {
     void applyOnMonster() {
         MonsterFighter fighter = (MonsterFighter) fight.team(1).fighters().stream().findFirst().get();
 
-        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 0, 1000);
+        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 0, 1000, Collections.emptyMap());
 
         action.apply(reward, fighter);
     }

@@ -28,6 +28,11 @@ final public class MonsterFighterCharacteristics implements FighterCharacteristi
     }
 
     @Override
+    public int discernment() {
+        return 0; // monster do not have discernment
+    }
+
+    @Override
     public int get(Characteristic characteristic) {
         return monster.characteristics().get(characteristic) + buffs.get(characteristic);
     }

@@ -1,6 +1,9 @@
 package fr.quatrevieux.araknemu.game.monster.reward;
 
 import fr.quatrevieux.araknemu.data.value.Interval;
+import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterRewardItem;
+
+import java.util.List;
 
 /**
  * Store rewards for all monster grades
@@ -10,6 +13,11 @@ public interface MonsterGradesReward {
      * The win kamas interface
      */
     public Interval kamas();
+
+    /**
+     * List of dropped items
+     */
+    public List<MonsterRewardItem> items();
 
     /**
      * Get the base experience for the given grade

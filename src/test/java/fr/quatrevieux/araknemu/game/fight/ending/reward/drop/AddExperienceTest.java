@@ -31,7 +31,7 @@ class AddExperienceTest extends FightBaseCase {
 
     @Test
     void applyWithoutXp() {
-        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 0, 0);
+        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 0, 0, Collections.emptyMap());
 
         long lastXp = player.properties().experience().current();
 
@@ -42,7 +42,7 @@ class AddExperienceTest extends FightBaseCase {
 
     @Test
     void applyWithXp() {
-        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 1000, 0);
+        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 1000, 0, Collections.emptyMap());
 
         long lastXp = player.properties().experience().current();
 
@@ -55,7 +55,7 @@ class AddExperienceTest extends FightBaseCase {
     void applyOnMonster() {
         MonsterFighter fighter = (MonsterFighter) fight.team(1).fighters().stream().findFirst().get();
 
-        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 1000, 0);
+        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList(), 1000, 0, Collections.emptyMap());
 
         action.apply(reward, fighter);
     }

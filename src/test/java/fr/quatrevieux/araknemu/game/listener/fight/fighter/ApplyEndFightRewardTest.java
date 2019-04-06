@@ -38,7 +38,7 @@ class ApplyEndFightRewardTest extends FightBaseCase {
     void onFightFinishedWithXpReward() {
         long lastXp = player.properties().experience().current();
 
-        listener.on(new FightFinished(new DropReward(RewardType.WINNER, player.fighter(), Arrays.asList(new AddExperience()), 1000, 0)));
+        listener.on(new FightFinished(new DropReward(RewardType.WINNER, player.fighter(), Arrays.asList(new AddExperience()), 1000, 0, Collections.emptyMap())));
 
         assertFalse(player.isFighting());
         assertEquals(lastXp + 1000, player.properties().experience().current());

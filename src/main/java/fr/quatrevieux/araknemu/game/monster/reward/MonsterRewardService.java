@@ -1,10 +1,14 @@
 package fr.quatrevieux.araknemu.game.monster.reward;
 
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterRewardData;
+import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterRewardItem;
+import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterRewardItemRepository;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterRewardRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;
 import org.slf4j.Logger;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,19 +17,29 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 final public class MonsterRewardService implements PreloadableService {
     final private MonsterRewardRepository repository;
+    final private MonsterRewardItemRepository itemRepository;
 
     final private Map<Integer, MonsterGradesReward> rewards = new ConcurrentHashMap<>();
 
-    public MonsterRewardService(MonsterRewardRepository repository) {
+    public MonsterRewardService(MonsterRewardRepository repository, MonsterRewardItemRepository itemRepository) {
         this.repository = repository;
+        this.itemRepository = itemRepository;
     }
 
     @Override
     public void preload(Logger logger) {
         logger.info("Loading monsters rewards...");
 
+        Map<Integer, List<MonsterRewardItem>> itemDrops = itemRepository.all();
+
         for (MonsterRewardData data : repository.all()) {
-            rewards.put(data.id(), new DefaultMonsterGradesReward(data));
+            rewards.put(
+                data.id(),
+                new DefaultMonsterGradesReward(
+                    data,
+                    itemDrops.getOrDefault(data.id(), Collections.emptyList())
+                )
+            );
         }
 
         logger.info("{} monsters rewards loaded", rewards.size());
@@ -40,7 +54,7 @@ final public class MonsterRewardService implements PreloadableService {
     public MonsterReward get(int monsterId, int gradeNumber) {
         return rewards
             .computeIfAbsent(monsterId, id -> repository.get(id)
-                .<MonsterGradesReward>map(DefaultMonsterGradesReward::new)
+                .<MonsterGradesReward>map(data -> new DefaultMonsterGradesReward(data, itemRepository.byMonster(monsterId)))
                 .orElse(NullMonsterGradesReward.INSTANCE)
             )
             .grade(gradeNumber)

@@ -1,6 +1,10 @@
 package fr.quatrevieux.araknemu.game.monster.reward;
 
 import fr.quatrevieux.araknemu.data.value.Interval;
+import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterRewardItem;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Null object for rewards
@@ -17,6 +21,11 @@ final public class NullMonsterGradesReward implements MonsterGradesReward {
         public long experience() {
             return 0;
         }
+
+        @Override
+        public List<MonsterRewardItem> items() {
+            return Collections.emptyList();
+        }
     };
 
     final static public NullMonsterGradesReward INSTANCE = new NullMonsterGradesReward();
@@ -29,6 +38,11 @@ final public class NullMonsterGradesReward implements MonsterGradesReward {
     @Override
     public long experience(int gradeNumber) {
         return 0;
+    }
+
+    @Override
+    public List<MonsterRewardItem> items() {
+        return Collections.emptyList();
     }
 
     @Override

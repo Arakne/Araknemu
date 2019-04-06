@@ -13,6 +13,11 @@ public interface FighterCharacteristics extends Characteristics {
     public int initiative();
 
     /**
+     * Get the total discernment of the fighter
+     */
+    public int discernment();
+
+    /**
      * Change a buff characteristic
      *
      * @param characteristic Characteristic to add

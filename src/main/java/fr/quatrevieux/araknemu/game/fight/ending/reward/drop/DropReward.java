@@ -8,6 +8,8 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Reward for drop
@@ -17,19 +19,21 @@ final public class DropReward implements FightReward {
     final private Fighter fighter;
     final private List<DropRewardAction> actions;
 
-    private long xp;
-    private int kamas;
+    final private long xp;
+    final private int kamas;
+    final private Map<Integer, Integer> items;
 
     public DropReward(RewardType type, Fighter fighter) {
-        this(type, fighter, Collections.emptyList(), 0, 0);
+        this(type, fighter, Collections.emptyList(), 0, 0, Collections.emptyMap());
     }
 
-    public DropReward(RewardType type, Fighter fighter, List<DropRewardAction> actions, long xp, int kamas) {
+    public DropReward(RewardType type, Fighter fighter, List<DropRewardAction> actions, long xp, int kamas, Map<Integer, Integer> items) {
         this.type = type;
         this.fighter = fighter;
         this.actions = actions;
         this.xp = xp;
         this.kamas = kamas;
+        this.items = items;
     }
 
     @Override
@@ -59,7 +63,9 @@ final public class DropReward implements FightReward {
             (xp() != 0 ? xp() : "") + ";" +
             (guildXp() != 0 ? guildXp() : "") + ";" +
             (mountXp() != 0 ? mountXp() : "") + ";" +
-            ";" + // @todo items
+            items.entrySet().stream()
+                .map(entry -> entry.getKey() + "~" + entry.getValue())
+                .collect(Collectors.joining(",")) + ";" +
             (kamas() != 0 ? kamas() : "")
         ;
     }
@@ -78,6 +84,16 @@ final public class DropReward implements FightReward {
 
     public int kamas() {
         return kamas;
+    }
+
+    /**
+     * Get list of win items
+     *
+     * The key is the item id
+     * The value is the item quantity
+     */
+    public Map<Integer, Integer> items() {
+        return items;
     }
 
     /**

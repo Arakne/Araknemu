@@ -37,10 +37,7 @@ import fr.quatrevieux.araknemu.data.world.entity.environment.npc.ResponseAction;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemSet;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
-import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
-import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
-import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterRewardData;
-import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterTemplate;
+import fr.quatrevieux.araknemu.data.world.entity.monster.*;
 import fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
@@ -55,10 +52,7 @@ import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceReposit
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
-import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
-import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupPositionRepository;
-import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterRewardRepository;
-import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterTemplateRepository;
+import fr.quatrevieux.araknemu.data.world.repository.monster.*;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
@@ -236,6 +230,7 @@ public class GameBaseCase extends DatabaseTestCase {
             .declare(MonsterGroupData.class, MonsterGroupDataRepository.class)
             .declare(MonsterGroupPosition.class, MonsterGroupPositionRepository.class)
             .declare(MonsterRewardData.class, MonsterRewardRepository.class)
+            .declare(MonsterRewardItem.class, MonsterRewardItemRepository.class)
         ;
 
         container.get(GameService.class).subscribe();

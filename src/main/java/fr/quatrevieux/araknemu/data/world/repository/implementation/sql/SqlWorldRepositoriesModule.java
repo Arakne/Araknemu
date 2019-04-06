@@ -17,10 +17,7 @@ import fr.quatrevieux.araknemu.data.world.repository.implementation.local.*;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
-import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
-import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupPositionRepository;
-import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterRewardRepository;
-import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterTemplateRepository;
+import fr.quatrevieux.araknemu.data.world.repository.monster.*;
 import fr.quatrevieux.araknemu.data.world.transformer.*;
 
 /**
@@ -150,6 +147,11 @@ final public class SqlWorldRepositoriesModule implements ContainerModule {
         configurator.persist(
             MonsterRewardRepository.class,
             container -> new SqlMonsterRewardRepository(connection)
+        );
+
+        configurator.persist(
+            MonsterRewardItemRepository.class,
+            container -> new SqlMonsterRewardItemRepository(connection)
         );
 
         configurator.persist(
