@@ -561,4 +561,17 @@ public class FunctionalTest extends FightBaseCase {
 
         requestStack.assertLast(new Stats(player.properties()));
     }
+
+    @Test
+    void removeAndAddSameItem() {
+        Item item = itemService.create(39);
+
+        InventoryEntry entry = inventory.add(item);
+        entry.remove(1);
+
+        InventoryEntry newEntry = inventory.add(item);
+
+        assertEquals(0, entry.quantity());
+        assertEquals(1, newEntry.quantity());
+    }
 }

@@ -43,7 +43,7 @@ final public class StackableItemStorage<E extends ItemEntry> implements ItemStor
         if (position == stackPosition) {
             E entry = stackMap.get(item);
 
-            if (entry != null && entry.position() == stackPosition) {
+            if (checkStackedEntry(entry)) {
                 entry.add(quantity);
 
                 return entry;
@@ -85,7 +85,7 @@ final public class StackableItemStorage<E extends ItemEntry> implements ItemStor
     public Optional<E> find(Item item) {
         E entry = stackMap.get(item);
 
-        if (entry == null || entry.position() != stackPosition) {
+        if (!checkStackedEntry(entry)) {
             return Optional.empty();
         }
 
@@ -99,5 +99,14 @@ final public class StackableItemStorage<E extends ItemEntry> implements ItemStor
      */
     public void indexing(E entry) {
         stackMap.put(entry.item(), entry);
+    }
+
+    /**
+     * Check if the stacked entry is valid
+     *
+     * Issue #73 : Quantity must be checked, the entry may be deleted without remove from index
+     */
+    private boolean checkStackedEntry(E entry) {
+        return entry != null && entry.position() == stackPosition && entry.quantity() > 0;
     }
 }

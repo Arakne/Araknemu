@@ -197,7 +197,7 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry>, Dispa
      * @param position The new position
      *
      * @return true if the entry change position
-     *         false if the entry is detroyed (like stacking or eat)
+     *         false if the entry is destroyed (like stacking or eat)
      */
     boolean move(InventoryEntry entry, int position) throws InventoryException {
         InventorySlot target = slots.get(position);
