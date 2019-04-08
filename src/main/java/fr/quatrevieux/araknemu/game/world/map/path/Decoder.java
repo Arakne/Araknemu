@@ -5,6 +5,8 @@ import fr.quatrevieux.araknemu.game.world.map.GameMap;
 import fr.quatrevieux.araknemu.game.world.map.MapCell;
 import fr.quatrevieux.araknemu.util.Base64;
 
+import java.util.Optional;
+
 /**
  * Decode map data like paths or directions
  */
@@ -17,15 +19,16 @@ final public class Decoder<C extends MapCell> {
 
     /**
      * Get the immediately next cell if we move by the given direction
+     * If the next cell is out of the map, an empty optional is returned
      */
-    public C nextCellByDirection(C start, Direction direction) throws PathException {
+    public Optional<C> nextCellByDirection(C start, Direction direction) {
         int nextId = start.id() + direction.nextCellIncrement(map.dimensions().width());
 
-        if (nextId >= map.size()) {
-            throw new PathException("Invalid path : out of limit");
+        if (nextId >= map.size() || nextId < 0) {
+            return Optional.empty();
         }
 
-        return map.get(nextId);
+        return Optional.of(map.get(nextId));
     }
 
     /**
@@ -96,11 +99,18 @@ final public class Decoder<C extends MapCell> {
         return encoded.toString();
     }
 
+    /**
+     * Get the pathfinder related to this decoder
+     */
+    public Pathfinder<C> pathfinder() {
+        return new Pathfinder<>(this);
+    }
+
     private void expandRectilinearMove(Path<C> path, C start, C target, Direction direction) throws PathException {
         int stepsLimit =  2 * map.dimensions().width() + 1;
 
         while (!start.equals(target)) {
-            start = nextCellByDirection(start, direction);
+            start = nextCellByDirection(start, direction).orElseThrow(() -> new PathException("Invalid cell number"));
             path.add(new PathStep<>(start, direction));
 
             if (--stepsLimit < 0) {

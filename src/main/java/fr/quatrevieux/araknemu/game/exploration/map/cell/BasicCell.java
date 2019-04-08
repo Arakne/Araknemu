@@ -53,4 +53,9 @@ final public class BasicCell implements ExplorationMapCell {
     public boolean equals(Object obj) {
         return obj instanceof BasicCell && equals((BasicCell) obj);
     }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
 }

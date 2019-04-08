@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,19 +29,19 @@ class DecoderTest extends GameBaseCase {
 
     @Test
     void nextCellByDirection() throws PathException {
-        assertEquals(map.get(101), decoder.nextCellByDirection(map.get(100), Direction.EAST));
-        assertEquals(map.get(115), decoder.nextCellByDirection(map.get(100), Direction.SOUTH_EAST));
-        assertEquals(map.get(129), decoder.nextCellByDirection(map.get(100), Direction.SOUTH));
-        assertEquals(map.get(114), decoder.nextCellByDirection(map.get(100), Direction.SOUTH_WEST));
-        assertEquals(map.get(99), decoder.nextCellByDirection(map.get(100), Direction.WEST));
-        assertEquals(map.get(85), decoder.nextCellByDirection(map.get(100), Direction.NORTH_WEST));
-        assertEquals(map.get(71), decoder.nextCellByDirection(map.get(100), Direction.NORTH));
-        assertEquals(map.get(86), decoder.nextCellByDirection(map.get(100), Direction.NORTH_EAST));
+        assertEquals(map.get(101), decoder.nextCellByDirection(map.get(100), Direction.EAST).get());
+        assertEquals(map.get(115), decoder.nextCellByDirection(map.get(100), Direction.SOUTH_EAST).get());
+        assertEquals(map.get(129), decoder.nextCellByDirection(map.get(100), Direction.SOUTH).get());
+        assertEquals(map.get(114), decoder.nextCellByDirection(map.get(100), Direction.SOUTH_WEST).get());
+        assertEquals(map.get(99), decoder.nextCellByDirection(map.get(100), Direction.WEST).get());
+        assertEquals(map.get(85), decoder.nextCellByDirection(map.get(100), Direction.NORTH_WEST).get());
+        assertEquals(map.get(71), decoder.nextCellByDirection(map.get(100), Direction.NORTH).get());
+        assertEquals(map.get(86), decoder.nextCellByDirection(map.get(100), Direction.NORTH_EAST).get());
     }
 
     @Test
     void nextCellByDirectionOutOfLimit() {
-        assertThrows(PathException.class, () -> decoder.nextCellByDirection(map.get(470), Direction.SOUTH));
+        assertFalse(decoder.nextCellByDirection(map.get(470), Direction.SOUTH).isPresent());
     }
 
     @Test
@@ -163,5 +162,10 @@ class DecoderTest extends GameBaseCase {
         assertEquals(map.get(99), path.get(1).cell());
         assertEquals(map.get(98), path.get(2).cell());
         assertEquals(map.get(69), path.get(3).cell());
+    }
+
+    @Test
+    void pathfinder() {
+        assertInstanceOf(Pathfinder.class, decoder.pathfinder());
     }
 }

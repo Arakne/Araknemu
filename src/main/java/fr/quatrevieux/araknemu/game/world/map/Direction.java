@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.game.world.map;
 
+import java.util.Arrays;
 import java.util.function.Function;
 
 /**
@@ -14,6 +15,11 @@ public enum Direction {
     NORTH_WEST(width -> -width),
     NORTH(width -> -(2 * width - 1)),
     NORTH_EAST(width -> -(width - 1));
+
+    /**
+     * Array of restricted directions (can be used on fight)
+     */
+    final static public Direction[] RESTRICTED = Arrays.stream(values()).filter(Direction::restricted).toArray(Direction[]::new);
 
     final private Function<Integer, Integer> computeNextCell;
 
