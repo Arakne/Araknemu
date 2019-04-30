@@ -21,7 +21,9 @@ import org.apache.commons.lang3.time.StopWatch;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -38,6 +40,7 @@ final public class Fight implements Dispatcher, Sender {
     final private List<FightTeam> teams;
     final private StatesFlow statesFlow;
     final private List<FightModule> modules = new ArrayList<>();
+    final private Map<Class, Object> attachments = new HashMap<>();
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
     final private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
@@ -268,6 +271,21 @@ final public class Fight implements Dispatcher, Sender {
      */
     public boolean active() {
         return duration.isStarted();
+    }
+
+    /**
+     * Attach an object to the fight
+     */
+    public void attach(Object object) {
+        attachments.put(object.getClass(), object);
+    }
+
+    /**
+     * Get an attachment by its type
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T attachment(Class<T> type) {
+        return (T) attachments.get(type);
     }
 
     /**

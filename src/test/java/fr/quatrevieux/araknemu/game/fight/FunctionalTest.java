@@ -136,7 +136,7 @@ public class FunctionalTest extends GameBaseCase {
         requestStack.assertOne(new BeginFight());
         requestStack.assertOne(new FighterTurnOrder(fight.turnList()));
 
-        Thread.sleep(210);
+        Thread.sleep(300);
         requestStack.assertOne(new TurnMiddle(fight.fighters()));
         requestStack.assertOne(new StartTurn(fight.turnList().current().get()));
         requestStack.clear();

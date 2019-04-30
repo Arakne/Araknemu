@@ -134,6 +134,14 @@ final public class FightTurn {
     }
 
     /**
+     * Execute the action when the current is terminated
+     * If there is no pending action, the action is immediately executed
+     */
+    public void later(Runnable nextAction) {
+        actionHandler.terminated(nextAction);
+    }
+
+    /**
      * Terminate the current action
      */
     public void terminate() {

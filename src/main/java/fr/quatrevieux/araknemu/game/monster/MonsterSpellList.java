@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.monster;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -26,5 +27,10 @@ final public class MonsterSpellList implements SpellList {
     @Override
     public boolean has(int spellId) {
         return spells.containsKey(spellId);
+    }
+
+    @Override
+    public Iterator<Spell> iterator() {
+        return spells.values().iterator();
     }
 }

@@ -3,7 +3,7 @@ package fr.quatrevieux.araknemu.game.spell;
 /**
  * List of spells
  */
-public interface SpellList {
+public interface SpellList extends Iterable<Spell> {
     /**
      * Get one spell by its id
      * {@link SpellList#has(int)} must be called before, and returns true. If not undefined behavior can occurs

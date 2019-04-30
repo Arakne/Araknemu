@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
@@ -65,6 +66,12 @@ import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.GetterResol
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersResolver;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.VariableResolver;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.ai.AI;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.MonsterAiFactory;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Aggressive;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Runaway;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.*;
@@ -74,10 +81,8 @@ import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider.PvmKam
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider.PvmXpProvider;
 import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
-import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
-import fr.quatrevieux.araknemu.game.fight.module.LaunchedSpellsModule;
-import fr.quatrevieux.araknemu.game.fight.module.RaulebaqueModule;
-import fr.quatrevieux.araknemu.game.fight.module.StatesModule;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.module.*;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.handler.loader.*;
 import fr.quatrevieux.araknemu.game.item.ItemService;
@@ -109,6 +114,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * Module for game service
@@ -486,7 +492,8 @@ final public class GameModule implements ContainerModule {
                     CommonEffectsModule::new,
                     StatesModule::new,
                     RaulebaqueModule::new,
-                    LaunchedSpellsModule::new
+                    LaunchedSpellsModule::new,
+                    fight -> new AiModule(fight, container.get(AiFactory.class))
                 )
             )
         );
@@ -628,6 +635,26 @@ final public class GameModule implements ContainerModule {
                     Arrays.asList(new PvmXpProvider(), new PvmKamasProvider(), new PvmItemDropProvider())
                 )
             )
+        );
+
+        configurator.persist(
+            AiFactory.class,
+            container -> new ChainAiFactory(
+                container.get(MonsterAiFactory.class)
+            )
+        );
+
+        configurator.persist(
+            MonsterAiFactory.class,
+            container -> {
+                MonsterAiFactory factory = new MonsterAiFactory();
+
+                factory.register("AGGRESSIVE", new Aggressive());
+                factory.register("RUNAWAY", new Runaway());
+                factory.register("SUPPORT", new Runaway());
+
+                return factory;
+            }
         );
     }
 }

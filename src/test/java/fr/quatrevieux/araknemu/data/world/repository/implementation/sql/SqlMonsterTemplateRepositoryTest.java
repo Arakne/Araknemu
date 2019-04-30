@@ -42,7 +42,7 @@ class SqlMonsterTemplateRepositoryTest extends GameBaseCase {
         assertEquals(31, template.id());
         assertEquals("Larve Bleue", template.name());
         assertEquals(1563, template.gfxId());
-        assertEquals("1", template.ai());
+        assertEquals("AGGRESSIVE", template.ai());
         assertCount(5, template.grades());
         assertEquals(-1, template.colors().color1());
         assertEquals(-1, template.colors().color2());
@@ -102,7 +102,7 @@ class SqlMonsterTemplateRepositoryTest extends GameBaseCase {
         assertEquals(31, template.id());
         assertEquals("Larve Bleue", template.name());
         assertEquals(1563, template.gfxId());
-        assertEquals("1", template.ai());
+        assertEquals("AGGRESSIVE", template.ai());
         assertCount(5, template.grades());
     }
 

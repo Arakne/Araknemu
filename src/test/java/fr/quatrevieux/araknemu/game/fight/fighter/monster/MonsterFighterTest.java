@@ -14,6 +14,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
+import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
@@ -77,6 +78,7 @@ class MonsterFighterTest extends FightBaseCase {
         assertInstanceOf(States.class, fighter.states());
         assertTrue(fighter.ready());
         assertEquals(4, fighter.level());
+        assertInstanceOf(Monster.class, fighter.monster());
 
         assertEquals(new Interval(50, 70), fighter.reward().kamas());
         assertEquals(12, fighter.reward().experience());

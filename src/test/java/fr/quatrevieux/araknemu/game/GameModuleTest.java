@@ -3,6 +3,8 @@ package fr.quatrevieux.araknemu.game;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
+import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.SqlLivingRepositoriesModule;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.sql.SqlWorldRepositoriesModule;
 import fr.quatrevieux.araknemu.game.account.AccountService;
@@ -13,12 +15,10 @@ import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
 import fr.quatrevieux.araknemu.game.admin.AdminService;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.connector.ConnectorService;
-import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
+import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ExplorationActionRegistry;
-import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoaderAggregate;
@@ -29,11 +29,14 @@ import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.DialogService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersResolver;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.MonsterAiFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.item.ItemService;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.*;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
 import fr.quatrevieux.araknemu.game.item.factory.DefaultItemFactory;
 import fr.quatrevieux.araknemu.game.item.factory.ItemFactory;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
@@ -59,7 +62,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class GameModuleTest extends GameBaseCase {
     @Test
@@ -111,6 +114,8 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(MonsterEnvironmentService.class, container.get(MonsterEnvironmentService.class));
         assertInstanceOf(MonsterRewardService.class, container.get(MonsterRewardService.class));
         assertInstanceOf(PvmType.class, container.get(PvmType.class));
+        assertInstanceOf(ChainAiFactory.class, container.get(AiFactory.class));
+        assertInstanceOf(MonsterAiFactory.class, container.get(MonsterAiFactory.class));
 
         assertSame(
             container.get(ListenerAggregate.class),

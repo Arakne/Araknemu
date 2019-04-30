@@ -98,6 +98,19 @@ final public class Path<C extends MapCell> implements Collection<PathStep<C>> {
         return newPath;
     }
 
+    /**
+     * Truncate the path, to the new size
+     *
+     * @return The new path instance
+     */
+    public Path<C> truncate(int newSize) {
+        if (newSize > size()) {
+            return this;
+        }
+
+        return new Path<>(decoder, steps.subList(0, newSize));
+    }
+
     @Override
     public int size() {
         return steps.size();

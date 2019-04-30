@@ -12,6 +12,7 @@ import fr.quatrevieux.araknemu.game.spell.boost.SimpleSpellsBoosts;
 import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
@@ -59,6 +60,15 @@ final public class SpellBook implements SpellList, Dispatcher {
         dispatcher.dispatch(event);
     }
 
+    @Override
+    public Iterator<Spell> iterator() {
+        return entries.values().stream()
+            .map(SpellBookEntry::spell)
+            .filter(spell -> spell.minPlayerLevel() <= player.level())
+            .iterator()
+        ;
+    }
+
     /**
      * Get all available spells
      */
@@ -86,7 +96,7 @@ final public class SpellBook implements SpellList, Dispatcher {
      */
     @Override
     public boolean has(int spellId) {
-        return entries.containsKey(spellId);
+        return entries.containsKey(spellId) && entries.get(spellId).spell().minPlayerLevel() <= player.level();
     }
 
     /**

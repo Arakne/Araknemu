@@ -6,13 +6,10 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
-import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.monster.reward.MonsterReward;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
-
-import java.time.Duration;
 
 /**
  * Fighter for a monster
@@ -81,14 +78,6 @@ final public class MonsterFighter extends AbstractFighter {
         return true;
     }
 
-    @Override
-    public void play(FightTurn turn) {
-        super.play(turn);
-
-        // @todo Start AI
-        fight().schedule(turn::stop, Duration.ofMillis(500));
-    }
-
     /**
      * Get the end fight rewards
      *
@@ -96,5 +85,12 @@ final public class MonsterFighter extends AbstractFighter {
      */
     public MonsterReward reward() {
         return monster.reward();
+    }
+
+    /**
+     * Get the monster data for the fighter
+     */
+    public Monster monster() {
+        return monster;
     }
 }

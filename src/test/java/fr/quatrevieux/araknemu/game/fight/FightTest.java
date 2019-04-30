@@ -236,4 +236,12 @@ class FightTest extends GameBaseCase {
 
         Mockito.verify(module).stateChanged(fight.state());
     }
+
+    @Test
+    void attach() {
+        Object attachment = new Object();
+        fight.attach(attachment);
+
+        assertSame(attachment, fight.attachment(Object.class));
+    }
 }

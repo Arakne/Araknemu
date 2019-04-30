@@ -17,6 +17,7 @@ import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.time.Duration;
@@ -277,5 +278,36 @@ class FightTurnTest extends FightBaseCase {
 
         turn.stop();
         Mockito.verify(hook).onEndTurn(buff);
+    }
+
+    @Test
+    void laterNoPendingAction() {
+        Runnable runnable = Mockito.mock(Runnable.class);
+
+        turn.later(runnable);
+
+        Mockito.verify(runnable).run();
+    }
+
+    @Test
+    void laterWithPendingAction() {
+        Action action = Mockito.mock(Action.class);
+        ActionResult result = Mockito.mock(ActionResult.class);
+
+        Mockito.when(action.validate()).thenReturn(true);
+        Mockito.when(action.start()).thenReturn(result);
+        Mockito.when(result.success()).thenReturn(true);
+        Mockito.when(action.duration()).thenReturn(Duration.ofSeconds(30));
+
+        Runnable runnable = Mockito.mock(Runnable.class);
+
+        turn.start();
+        turn.perform(action);
+
+        turn.later(runnable);
+        Mockito.verify(runnable, Mockito.never()).run();
+
+        turn.terminate();
+        Mockito.verify(runnable).run();
     }
 }

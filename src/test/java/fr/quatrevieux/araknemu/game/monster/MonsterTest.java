@@ -34,6 +34,7 @@ class MonsterTest extends GameBaseCase {
         assertEquals(Colors.DEFAULT, monster.colors());
         assertEquals(50, monster.life());
         assertEquals(35, monster.initiative());
+        assertEquals("AGGRESSIVE", monster.ai());
 
         assertEquals(5, monster.characteristics().get(Characteristic.ACTION_POINT));
         assertEquals(3, monster.characteristics().get(Characteristic.MOVEMENT_POINT));

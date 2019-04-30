@@ -16,11 +16,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.StreamSupport;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -87,6 +85,19 @@ class SpellBookTest extends GameBaseCase {
         assertTrue(book.has(3));
         assertTrue(book.has(6));
         assertFalse(book.has(123));
+    }
+
+    @Test
+    void hasTooHighLevel() throws SQLException {
+        dataSet.pushHighLevelSpells();
+
+        List<SpellBookEntry> entries = Collections.singletonList(
+            new SpellBookEntry(new PlayerSpell(1, 1908, true, 1, 1), service.get(1908))
+        );
+
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, entries);
+
+        assertFalse(book.has(1908));
     }
 
     @Test
@@ -227,5 +238,25 @@ class SpellBookTest extends GameBaseCase {
         assertEquals(11, book.get(3).effects().get(0).max());
         assertEquals(50, book.get(3).effects().get(0).boost());
         assertEquals(2, book.get(3).apCost());
+    }
+
+    @Test
+    void iterator() throws SQLException {
+        dataSet.pushHighLevelSpells();
+
+        List<SpellBookEntry> entries = Arrays.asList(
+            new SpellBookEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3)),
+            new SpellBookEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6)),
+            new SpellBookEntry(new PlayerSpell(1, 1908, true, 1, 63), service.get(1908))
+        );
+
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, entries);
+
+        assertArrayEquals(
+            new int[] {3, 6},
+            StreamSupport.stream(book.spliterator(), true)
+                .mapToInt(Spell::id)
+                .toArray()
+        );
     }
 }

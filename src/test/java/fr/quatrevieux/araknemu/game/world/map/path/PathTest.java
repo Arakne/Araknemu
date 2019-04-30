@@ -77,4 +77,15 @@ class PathTest extends GameBaseCase {
         assertEquals(path.get(1), newPath.get(1));
         assertEquals(path.get(2), newPath.get(2));
     }
+
+    @Test
+    void truncate() {
+        Path newPath = path.truncate(2);
+
+        assertEquals(2, newPath.size());
+        assertEquals(path.get(0), newPath.get(0));
+        assertEquals(path.get(1), newPath.get(1));
+
+        assertSame(path, path.truncate(100));
+    }
 }

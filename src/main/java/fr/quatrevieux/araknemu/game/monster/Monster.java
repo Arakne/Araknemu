@@ -94,4 +94,11 @@ final public class Monster {
     public int initiative() {
         return template.grades()[grade].initiative();
     }
+
+    /**
+     * Get the AI type of the monster
+     */
+    public String ai() {
+        return template.ai();
+    }
 }

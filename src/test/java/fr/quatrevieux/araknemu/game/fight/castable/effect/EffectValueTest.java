@@ -35,6 +35,34 @@ class EffectValueTest extends TestCase {
     }
 
     @Test
+    void mean() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(5);
+        Mockito.when(effect.max()).thenReturn(10);
+
+        EffectValue value = new EffectValue(effect);
+
+        value.mean();
+
+        assertEquals(7, value.value());
+    }
+
+    @Test
+    void meanWithFixedEffect() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(5);
+        Mockito.when(effect.max()).thenReturn(0);
+
+        EffectValue value = new EffectValue(effect);
+
+        value.mean();
+
+        assertEquals(5, value.value());
+    }
+
+    @Test
     void defaultsWithFixedEffect() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
 

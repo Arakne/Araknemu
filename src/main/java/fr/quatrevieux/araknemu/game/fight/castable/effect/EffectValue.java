@@ -13,7 +13,8 @@ final public class EffectValue {
     enum State {
         MINIMIZED,
         RANDOMIZED,
-        MAXIMIZED
+        MAXIMIZED,
+        MEAN
     }
 
     /**
@@ -56,6 +57,15 @@ final public class EffectValue {
      */
     public EffectValue randomize() {
         state = State.RANDOMIZED;
+
+        return this;
+    }
+
+    /**
+     * Compute the mean value (i.e. (min + max) / 2)
+     */
+    public EffectValue mean() {
+        state = State.MEAN;
 
         return this;
     }
@@ -125,6 +135,12 @@ final public class EffectValue {
 
             case MAXIMIZED:
                 return effect.max() < effect.min() ? effect.min() : effect.max();
+
+            case MEAN:
+                return effect.max() < effect.min()
+                    ? effect.min()
+                    : (effect.min() + effect.max()) / 2
+                ;
 
             case RANDOMIZED:
             default:

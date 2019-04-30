@@ -1,0 +1,114 @@
+package fr.quatrevieux.araknemu.game.fight.ai.action;
+
+import fr.quatrevieux.araknemu.game.fight.ai.AI;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
+import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.spell.Spell;
+import fr.quatrevieux.araknemu.game.world.map.util.CoordinateCell;
+
+import java.util.Optional;
+
+/**
+ * Try to move for perform an attack
+ *
+ * The nearest cell for perform an attack is selected.
+ * If the current cell permit to attack, the fighter will not perform any move.
+ *
+ * For select the cell, the generator will iterates over all reachable cells
+ * with the current amount of MPs, sort them by distance,
+ * and check all spells on all available cells.
+ * The first matching cell is selected.
+ *
+ * Note: This selected cell is not the best cell for perform an attack, but the nearest cell.
+ *       So, it do not perform the best move for maximize damage.
+ */
+final public class MoveToAttack implements ActionGenerator {
+    final private Movement movement;
+    final private Simulator simulator;
+
+    private SpellConstraintsValidator validator;
+    private Fighter fighter;
+    private CoordinateCell<FightCell> currentCell;
+    private AI ai;
+
+    public MoveToAttack(Simulator simulator) {
+        this.simulator = simulator;
+        this.movement = new Movement(
+            coordinates -> coordinates.distance(currentCell),
+            scoredCell -> canAttackFromCell(scoredCell.coordinates().cell())
+        );
+    }
+
+    @Override
+    public void initialize(AI ai) {
+        movement.initialize(ai);
+
+        this.fighter = ai.fighter();
+        this.validator = new SpellConstraintsValidator(ai.turn());
+    }
+
+    @Override
+    public Optional<Action> generate(AI ai) {
+        this.ai = ai;
+        final int movementPoints = ai.turn().points().movementPoints();
+
+        // Cannot move or attack
+        if (movementPoints < 1 || ai.turn().points().actionPoints() < 1) {
+            return Optional.empty();
+        }
+
+        // No needs move : can attack from the current cell
+        if (canAttackFromCell(fighter.cell())) {
+            return Optional.empty();
+        }
+
+        currentCell = new CoordinateCell<>(fighter.cell());
+
+        return movement.generate(ai);
+    }
+
+    /**
+     * Simulate possible attacks from the given cell
+     */
+    private boolean canAttackFromCell(FightCell cell) {
+        final FightCell lastCell = fighter.cell();
+        final int actionPoints = ai.turn().points().actionPoints();
+
+        try {
+            // @todo refactor cast validation system
+            fighter.move(cell);
+
+            for (Spell spell : fighter.spells()) {
+                if (spell.apCost() > actionPoints) {
+                    continue;
+                }
+
+                for (int cellId = 0; cellId < ai.fight().map().size(); ++cellId) {
+                    FightCell targetCell = ai.fight().map().get(cellId);
+
+                    // Target or launch is not valid
+                    if (!targetCell.walkableIgnoreFighter() || validator.validate(spell, targetCell) != null) {
+                        continue;
+                    }
+
+                    // Simulate spell effects
+                    CastSimulation simulation = simulator.simulate(spell, fighter, targetCell);
+
+                    // The spell cause damage
+                    if (simulation.enemiesLife() < 0) {
+                        return true;
+                    }
+                }
+            }
+        } finally {
+            // @todo refactor cast validation system
+            fighter.move(lastCell);
+        }
+
+        return false;
+    }
+}

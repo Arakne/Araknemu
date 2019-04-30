@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.data.value.Interval;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.monster.reward.MonsterRewardService;
+import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 
 import java.sql.SQLException;
+import java.util.stream.StreamSupport;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,6 +58,11 @@ class MonsterServiceTest extends GameBaseCase {
         assertFalse(first.spells().has(215));
         assertEquals(1, first.spells().get(213).level());
         assertEquals(1, first.spells().get(212).level());
+
+        assertArrayEquals(
+            new int[] {212, 213},
+            StreamSupport.stream(first.spells().spliterator(), false).mapToInt(Spell::id).toArray()
+        );
 
         assertEquals(new Interval(50, 70), first.reward().kamas());
         assertEquals(3, first.reward().experience());
