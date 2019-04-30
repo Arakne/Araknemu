@@ -67,16 +67,9 @@ class AiModuleTest extends FightBaseCase {
         FightTurn turn = fight.turnList().current().get();
 
         assertTrue(turn.active());
-
-        Thread.sleep(20);
-
-        // Check if there is a pending action
-        Runnable action = Mockito.mock(Runnable.class);
-        turn.later(action);
-
-        Mockito.verify(action, Mockito.never()).run();
+        Thread.sleep(100);
 
         // Move action started
-        requestStack.assertLast("GA0;1;-2;ab-fbGdbU");
+        requestStack.assertOne("GA0;1;-2;ab-fbGdbU");
     }
 }
