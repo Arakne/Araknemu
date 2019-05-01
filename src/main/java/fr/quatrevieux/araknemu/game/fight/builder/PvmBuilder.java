@@ -4,19 +4,13 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
-import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.fight.map.FightMap;
-import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.util.RandomUtil;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import org.slf4j.Logger;
 
 /**
  * Builder for pvm fight
@@ -25,32 +19,24 @@ import java.util.List;
  * @see PvmType
  */
 final public class PvmBuilder implements FightBuilder {
-    final private FightService service;
+    final private BaseBuilder builder;
     final private FighterFactory fighterFactory;
-    final private RandomUtil random;
-    final private PvmType type;
 
-    private PlayerFighter initiator;
-    private MonsterGroup monsterGroup;
-    private FightMap map;
-
-    public PvmBuilder(FightService service, FighterFactory fighterFactory, RandomUtil random, PvmType type) {
-        this.service = service;
+    public PvmBuilder(FightService service, FighterFactory fighterFactory, RandomUtil random, PvmType type, Logger logger) {
+        this.builder = new BaseBuilder(service, random, type, logger);
         this.fighterFactory = fighterFactory;
-        this.random = random;
-        this.type = type;
     }
 
     @Override
     public Fight build(int fightId) {
-        return new Fight(fightId, type, map, buildTeams());
+        return builder.build(fightId);
     }
 
     /**
      * Set the fight map
      */
     public PvmBuilder map(ExplorationMap map) {
-        this.map = service.map(map);
+        builder.map(map);
 
         return this;
     }
@@ -59,7 +45,11 @@ final public class PvmBuilder implements FightBuilder {
      * Set the initiator fighter
      */
     public PvmBuilder initiator(GamePlayer initiator) {
-        this.initiator = fighterFactory.create(initiator);
+        builder.addTeam((number, startPlaces) -> new SimpleTeam(
+            fighterFactory.create(initiator),
+            startPlaces,
+            number
+        ));
 
         return this;
     }
@@ -68,20 +58,8 @@ final public class PvmBuilder implements FightBuilder {
      * Set the attacked group
      */
     public PvmBuilder monsterGroup(MonsterGroup monsterGroup) {
-        this.monsterGroup = monsterGroup;
+        builder.addTeam((number, startPlaces) -> new MonsterGroupTeam(monsterGroup, startPlaces, number));
 
         return this;
-    }
-
-    private List<FightTeam> buildTeams() {
-        int playerTeamNumber = random.integer(2);
-        int monstersTeamNumber = 1 - playerTeamNumber;
-
-        FightTeam[] teams = new FightTeam[2];
-
-        teams[playerTeamNumber] = new SimpleTeam(initiator, map.startPlaces(playerTeamNumber), playerTeamNumber);
-        teams[monstersTeamNumber] = new MonsterGroupTeam(monsterGroup, map.startPlaces(monstersTeamNumber), monstersTeamNumber);
-
-        return new ArrayList<>(Arrays.asList(teams));
     }
 }

@@ -9,8 +9,10 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
+import fr.quatrevieux.araknemu.util.RandomUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.helpers.NOPLogger;
 
 import java.util.ArrayList;
 
@@ -26,7 +28,7 @@ class ChallengeBuilderTest extends GameBaseCase {
 
         dataSet.pushMaps();
 
-        builder = new ChallengeBuilder(container.get(FightService.class), container.get(FighterFactory.class));
+        builder = new ChallengeBuilder(container.get(FightService.class), container.get(FighterFactory.class), new RandomUtil(), NOPLogger.NOP_LOGGER);
     }
 
     @Test

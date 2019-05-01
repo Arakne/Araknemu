@@ -4,47 +4,34 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
-import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.fight.map.FightMap;
-import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import fr.quatrevieux.araknemu.util.RandomUtil;
+import org.slf4j.Logger;
 
 /**
  * Builder for challenge fight
  */
 final public class ChallengeBuilder implements FightBuilder {
-    final private FightService service;
+    final private BaseBuilder builder;
     final private FighterFactory fighterFactory;
 
-    final private List<PlayerFighter> challengers = new ArrayList<>();
-    private FightMap map;
-
-    public ChallengeBuilder(FightService service, FighterFactory fighterFactory) {
-        this.service = service;
+    public ChallengeBuilder(FightService service, FighterFactory fighterFactory, RandomUtil random, Logger logger) {
+        this.builder = new BaseBuilder(service, random, new ChallengeType(), logger);
         this.fighterFactory = fighterFactory;
     }
 
     @Override
     public Fight build(int fightId) {
-        return new Fight(
-            fightId,
-            new ChallengeType(),
-            map,
-            buildTeams()
-        );
+        return builder.build(fightId);
     }
 
     /**
      * Set the fight map
      */
     public ChallengeBuilder map(ExplorationMap map) {
-        this.map = service.map(map);
+        builder.map(map);
 
         return this;
     }
@@ -53,26 +40,12 @@ final public class ChallengeBuilder implements FightBuilder {
      * Add new fighter
      */
     public ChallengeBuilder fighter(GamePlayer player) {
-        challengers.add(fighterFactory.create(player));
+        builder.addTeam((number, startPlaces) -> new SimpleTeam(
+            fighterFactory.create(player),
+            startPlaces,
+            number
+        ));
 
         return this;
-    }
-
-    private List<FightTeam> buildTeams() {
-        List<FightTeam> teams = new ArrayList<>(challengers.size());
-
-        Collections.shuffle(challengers);
-
-        for (int number = 0; number < challengers.size(); ++number) {
-            teams.add(
-                new SimpleTeam(
-                    challengers.get(number),
-                    map.startPlaces(number),
-                    number
-                )
-            );
-        }
-
-        return teams;
     }
 }

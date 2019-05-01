@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.slf4j.helpers.NOPLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,8 @@ class StatesFlowTest extends GameBaseCase {
                 new MapTemplate(0, "", new Dimensions(0, 0), "", new ArrayList<>(), new List[0])
             ),
             new ArrayList<>(),
-            new StatesFlow()
+            new StatesFlow(),
+            NOPLogger.NOP_LOGGER
         );
 
         flow.next(fight);

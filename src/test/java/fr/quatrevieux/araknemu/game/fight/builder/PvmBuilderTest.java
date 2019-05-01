@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.world.map.Direction;
 import fr.quatrevieux.araknemu.util.RandomUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.helpers.NOPLogger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,7 +50,8 @@ class PvmBuilderTest extends GameBaseCase {
             container.get(FightService.class),
             container.get(FighterFactory.class),
             new RandomUtil(),
-            container.get(PvmType.class)
+            container.get(PvmType.class),
+            NOPLogger.NOP_LOGGER
         );
 
         MonsterService service = container.get(MonsterService.class);
@@ -92,9 +94,19 @@ class PvmBuilderTest extends GameBaseCase {
 
     @Test
     void buildTeamOrderShouldBeRandomized() throws Exception {
+        RandomUtil random = new RandomUtil();
+
         int playerTeamIsFirstTeam = 0;
 
         for (int i = 0; i < 100; ++i) {
+            builder = new PvmBuilder(
+                container.get(FightService.class),
+                container.get(FighterFactory.class),
+                random,
+                container.get(PvmType.class),
+                NOPLogger.NOP_LOGGER
+            );
+
             Fight fight = builder
                 .initiator(gamePlayer())
                 .monsterGroup(group)

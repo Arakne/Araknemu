@@ -5,15 +5,13 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.event.FightCancelled;
-import fr.quatrevieux.araknemu.game.fight.event.FightLeaved;
 import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
 import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.module.FightModule;
-import fr.quatrevieux.araknemu.game.fight.state.NullState;
-import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
+import fr.quatrevieux.araknemu.game.fight.state.*;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
@@ -21,6 +19,7 @@ import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -35,6 +34,7 @@ class FightTest extends GameBaseCase {
     private Fight fight;
     private FightMap map;
     private List<FightTeam> teams;
+    private Logger logger;
 
     private PlayerFighter fighter1, fighter2;
 
@@ -52,7 +52,15 @@ class FightTest extends GameBaseCase {
             teams = new ArrayList<>(Arrays.asList(
                 new SimpleTeam(fighter1 = new PlayerFighter(gamePlayer(true)), Arrays.asList(123), 0),
                 new SimpleTeam(fighter2 = new PlayerFighter(makeOtherPlayer()), Arrays.asList(321), 1)
-            ))
+            )),
+            new StatesFlow(
+                new NullState(),
+                new InitialiseState(),
+                new PlacementState(),
+                new ActiveState(),
+                new FinishState()
+            ),
+            logger = Mockito.mock(Logger.class)
         );
     }
 
@@ -135,6 +143,28 @@ class FightTest extends GameBaseCase {
 
         Thread.sleep(15);
         assertTrue(ab.get());
+    }
+
+    @Test
+    void executeWithExceptionShouldBeLogged() throws InterruptedException {
+        RuntimeException raisedException = new RuntimeException("my error");
+
+        fight.execute(() -> { throw raisedException; });
+
+        Thread.sleep(10);
+
+        Mockito.verify(logger).error("Error on fight executor : my error", raisedException);
+    }
+
+    @Test
+    void scheduleWithExceptionShouldBeLogged() throws InterruptedException {
+        RuntimeException raisedException = new RuntimeException("my error");
+
+        fight.schedule(() -> { throw raisedException; }, Duration.ZERO);
+
+        Thread.sleep(10);
+
+        Mockito.verify(logger).error("Error on fight executor : my error", raisedException);
     }
 
     @Test

@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.network.game.out.game.RemoveSprite;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -62,7 +63,8 @@ class PlacementStateTest extends FightBaseCase {
                 new InitialiseState(),
                 state = new PlacementState(false),
                 new ActiveState()
-            )
+            ),
+            NOPLogger.NOP_LOGGER
         );
     }
 
@@ -123,7 +125,8 @@ class PlacementStateTest extends FightBaseCase {
             new StatesFlow(
                 state = new PlacementState(false),
                 new ActiveState()
-            )
+            ),
+            NOPLogger.NOP_LOGGER
         );
 
         state.start(fight);

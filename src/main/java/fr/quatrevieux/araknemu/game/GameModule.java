@@ -478,10 +478,14 @@ final public class GameModule implements ContainerModule {
                 container.get(MapTemplateRepository.class),
                 container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class),
                 Arrays.asList(
-                    new ChallengeBuilderFactory(container.get(FighterFactory.class)),
+                    new ChallengeBuilderFactory(
+                        container.get(FighterFactory.class),
+                        container.get(Logger.class) // @todo fight logger
+                    ),
                     new PvmBuilderFactory(
                         container.get(FighterFactory.class),
-                        container.get(PvmType.class)
+                        container.get(PvmType.class),
+                        container.get(Logger.class) // @todo fight logger
                     )
                 ),
                 Arrays.asList(

@@ -12,12 +12,14 @@ import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.module.FightModule;
-import fr.quatrevieux.araknemu.game.fight.state.*;
+import fr.quatrevieux.araknemu.game.fight.state.FightState;
+import fr.quatrevieux.araknemu.game.fight.state.StatesFlow;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurnList;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 import org.apache.commons.lang3.time.StopWatch;
+import org.slf4j.Logger;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ final public class Fight implements Dispatcher, Sender {
     final private FightMap map;
     final private List<FightTeam> teams;
     final private StatesFlow statesFlow;
+    final private Logger logger;
     final private List<FightModule> modules = new ArrayList<>();
     final private Map<Class, Object> attachments = new HashMap<>();
 
@@ -49,22 +52,13 @@ final public class Fight implements Dispatcher, Sender {
 
     final private StopWatch duration = new StopWatch();
 
-    public Fight(int id, FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow) {
+    public Fight(int id, FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow, Logger logger) {
         this.id = id;
         this.type = type;
         this.map = map;
         this.teams = teams;
         this.statesFlow = statesFlow;
-    }
-
-    public Fight(int id, FightType type, FightMap map, List<FightTeam> teams) {
-        this(id, type, map, teams, new StatesFlow(
-            new NullState(),
-            new InitialiseState(),
-            new PlacementState(),
-            new ActiveState(),
-            new FinishState()
-        ));
+        this.logger = logger;
     }
 
     /**
@@ -205,7 +199,17 @@ final public class Fight implements Dispatcher, Sender {
      * @param delay The delay
      */
     public ScheduledFuture schedule(Runnable action, Duration delay) {
-        return executor.schedule(action, delay.toMillis(), TimeUnit.MILLISECONDS);
+        return executor.schedule(
+            () -> {
+                try {
+                    action.run();
+                } catch (Throwable e) {
+                    logger.error("Error on fight executor : " + e.getMessage(), e);
+                }
+            },
+            delay.toMillis(),
+            TimeUnit.MILLISECONDS
+        );
     }
 
     /**
@@ -214,7 +218,13 @@ final public class Fight implements Dispatcher, Sender {
      * @param action Action to execute
      */
     public void execute(Runnable action) {
-        executor.execute(action);
+        executor.execute(() -> {
+            try {
+                action.run();
+            } catch (Throwable e) {
+                logger.error("Error on fight executor : " + e.getMessage(), e);
+            }
+        });
     }
 
     /**

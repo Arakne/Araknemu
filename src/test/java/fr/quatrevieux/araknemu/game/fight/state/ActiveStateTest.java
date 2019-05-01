@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -57,7 +58,8 @@ class ActiveStateTest extends GameBaseCase {
                 new NullState(),
                 new PlacementState(false),
                 state = new ActiveState()
-            )
+            ),
+            NOPLogger.NOP_LOGGER
         );
 
         fight.nextState();

@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.event.ExplorationPlayerCreated;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.fight.builder.BaseBuilder;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.event.FightCreated;
@@ -18,8 +19,10 @@ import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.listener.player.exploration.LeaveExplorationForFight;
 import fr.quatrevieux.araknemu.game.listener.player.fight.AttachFighter;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
+import fr.quatrevieux.araknemu.util.RandomUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -42,7 +45,7 @@ class FightServiceTest extends FightBaseCase {
             container.get(MapTemplateRepository.class),
             dispatcher = new DefaultListenerAggregate(),
             Arrays.asList(
-                new ChallengeBuilderFactory(container.get(FighterFactory.class))
+                new ChallengeBuilderFactory(container.get(FighterFactory.class), NOPLogger.NOP_LOGGER)
             ),
             Arrays.asList(
                 RaulebaqueModule::new
@@ -147,7 +150,9 @@ class FightServiceTest extends FightBaseCase {
 
     @Test
     void modules() throws ContainerException {
-        Fight fight = new Fight(1, new ChallengeType(), service.map(container.get(ExplorationMapService.class).load(10340)), new ArrayList<>());
+        BaseBuilder builder = new BaseBuilder(service, new RandomUtil(), new ChallengeType(), NOPLogger.NOP_LOGGER);
+        builder.map(container.get(ExplorationMapService.class).load(10340));
+        Fight fight = builder.build(1);
 
         Collection<FightModule> modules = service.modules(fight);
 

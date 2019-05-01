@@ -40,6 +40,7 @@ import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
+import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -80,7 +81,8 @@ public class FightBaseCase extends GameBaseCase {
                 new PlacementState(false),
                 new ActiveState(),
                 new FinishState()
-            )
+            ),
+            NOPLogger.NOP_LOGGER
         );
 
         fight.register(new StatesModule(fight));
@@ -109,7 +111,8 @@ public class FightBaseCase extends GameBaseCase {
                 new PlacementState(false),
                 new ActiveState(),
                 new FinishState()
-            )
+            ),
+            NOPLogger.NOP_LOGGER
         );
 
         fight.register(new StatesModule(fight));

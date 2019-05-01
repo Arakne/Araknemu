@@ -19,9 +19,11 @@ import fr.quatrevieux.araknemu.network.game.out.fight.exploration.AddTeamFighter
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightsCount;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.HideFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.ShowFight;
+import fr.quatrevieux.araknemu.util.RandomUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -46,7 +48,7 @@ class FightHandlerTest extends GameBaseCase {
     void withChallengeFight() throws ContainerException {
         FightHandler<ChallengeBuilder> handler = new FightHandler<>(
             container.get(FightService.class),
-            new ChallengeBuilder(container.get(FightService.class), container.get(FighterFactory.class))
+            new ChallengeBuilder(container.get(FightService.class), container.get(FighterFactory.class), new RandomUtil(), NOPLogger.NOP_LOGGER)
         );
 
         Fight fight = handler.start(
@@ -78,7 +80,7 @@ class FightHandlerTest extends GameBaseCase {
 
         FightHandler<ChallengeBuilder> handler = new FightHandler<>(
             service,
-            new ChallengeBuilder(service, container.get(FighterFactory.class))
+            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), NOPLogger.NOP_LOGGER)
         );
 
         Fight fight = handler.start(
@@ -121,7 +123,7 @@ class FightHandlerTest extends GameBaseCase {
 
         FightHandler<ChallengeBuilder> handler = new FightHandler<>(
             service,
-            new ChallengeBuilder(service, container.get(FighterFactory.class))
+            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), NOPLogger.NOP_LOGGER)
         );
 
         Fight fight = handler.start(
@@ -154,13 +156,13 @@ class FightHandlerTest extends GameBaseCase {
                 container.get(MapTemplateRepository.class),
                 dispatcher,
                 Arrays.asList(
-                    new ChallengeBuilderFactory(container.get(FighterFactory.class))
+                    new ChallengeBuilderFactory(container.get(FighterFactory.class), NOPLogger.NOP_LOGGER)
                 ),
                 Arrays.asList(
                     (fight) -> module
                 )
             ),
-            new ChallengeBuilder(service, container.get(FighterFactory.class))
+            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), NOPLogger.NOP_LOGGER)
         );
 
         Fight fight = handler.start(
