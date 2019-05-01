@@ -52,6 +52,8 @@ class PlayerFighterLifeTest extends FightBaseCase {
 
         assertEquals(100, life.current());
         assertEquals(gamePlayer().properties().life().max(), life.max());
+        assertThrows(IllegalStateException.class, () -> life.alter(fighter, -10));
+        assertThrows(IllegalStateException.class, () -> life.kill(fighter));
     }
 
     @Test

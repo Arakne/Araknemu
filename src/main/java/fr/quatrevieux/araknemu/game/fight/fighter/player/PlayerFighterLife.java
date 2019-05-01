@@ -2,8 +2,7 @@ package fr.quatrevieux.araknemu.game.fight.fighter.player;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
-import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
-import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterLifeChanged;
+import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
 import fr.quatrevieux.araknemu.game.world.creature.Life;
 
 /**
@@ -15,10 +14,7 @@ final public class PlayerFighterLife implements FighterLife {
     final private Life baseLife;
     final private Fighter fighter;
 
-    private int max;
-    private int current;
-    private boolean initialised = false;
-    private boolean dead = false;
+    private BaseFighterLife delegate;
 
     public PlayerFighterLife(Life baseLife, Fighter fighter) {
         this.baseLife = baseLife;
@@ -27,61 +23,45 @@ final public class PlayerFighterLife implements FighterLife {
 
     @Override
     public int current() {
-        return initialised ? current : baseLife.current();
+        return delegate != null ? delegate.current() : baseLife.current();
     }
 
     @Override
     public int max() {
-        return initialised ? max : baseLife.max();
+        return delegate != null ? delegate.max() : baseLife.max();
     }
 
     @Override
     public boolean dead() {
-        return dead;
+        return delegate != null && delegate.dead();
     }
 
     @Override
     public int alter(Fighter caster, int value) {
-        if (dead) {
-            return 0;
+        if (delegate == null) {
+            throw new IllegalStateException("PlayerFighterLife must be initialized");
         }
 
-        if (value < -current) {
-            value = -current;
-        } else if (value > max - current) {
-            value = max - current;
-        }
-
-        current += value;
-
-        fighter.fight().dispatch(new FighterLifeChanged(fighter, caster, value));
-
-        if (current == 0) {
-            dead = true;
-            fighter.fight().dispatch(new FighterDie(fighter, caster));
-        }
-
-        return value;
+        return delegate.alter(caster, value);
     }
 
     @Override
     public void kill(Fighter caster) {
-        current = 0;
-        dead = true;
-        fighter.fight().dispatch(new FighterDie(fighter, caster));
+        if (delegate == null) {
+            throw new IllegalStateException("PlayerFighterLife must be initialized");
+        }
+
+        delegate.kill(caster);
     }
 
     /**
      * Initialise the fighter life when fight is started
      */
     public void init() {
-        if (initialised) {
+        if (delegate != null) {
             throw new IllegalStateException("Player fighter life is already initialised");
         }
 
-        max = baseLife.max();
-        current = baseLife.current();
-
-        initialised = true;
+        delegate = new BaseFighterLife(fighter, baseLife.current(), baseLife.max());
     }
 }

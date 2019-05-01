@@ -339,6 +339,7 @@ class CastScopeTest extends FightBaseCase {
 
         scope.withEffects(Collections.singletonList(effect));
 
+        target.init();
         target.life().kill(caster);
 
         assertContainsAll(scope.effects().get(0).targets(), caster);

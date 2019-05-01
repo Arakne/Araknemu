@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.fighter.AbstractFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
+import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.monster.Monster;
@@ -19,7 +20,7 @@ final public class MonsterFighter extends AbstractFighter {
     final private Monster monster;
     final private MonsterGroupTeam team;
 
-    final private MonsterFighterLife life;
+    final private BaseFighterLife life;
     final private MonsterFighterCharacteristics characteristics;
     final private MonsterFighterSprite sprite;
 
@@ -28,7 +29,7 @@ final public class MonsterFighter extends AbstractFighter {
         this.monster = monster;
         this.team = team;
 
-        this.life = new MonsterFighterLife(this, monster.life());
+        this.life = new BaseFighterLife(this, monster.life());
         this.characteristics = new MonsterFighterCharacteristics(monster, this);
         this.sprite = new MonsterFighterSprite(this, monster);
     }

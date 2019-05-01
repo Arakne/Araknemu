@@ -1,24 +1,26 @@
-package fr.quatrevieux.araknemu.game.fight.fighter.monster;
+package fr.quatrevieux.araknemu.game.fight.fighter;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterLifeChanged;
 
 /**
- * Handle life points for {@link MonsterFighter}
+ * Handle life points for fighters
  */
-final public class MonsterFighterLife implements FighterLife {
+final public class BaseFighterLife implements FighterLife {
     final private Fighter fighter;
 
     private int max;
     private int current;
     private boolean dead = false;
 
-    public MonsterFighterLife(Fighter fighter, int life) {
-        this.max = life;
+    public BaseFighterLife(Fighter fighter, int life, int max) {
+        this.max = max;
         this.current = life;
         this.fighter = fighter;
+    }
+
+    public BaseFighterLife(Fighter fighter, int life) {
+        this(fighter, life, life);
     }
 
     @Override

@@ -2,9 +2,7 @@ build:
     nodes:
         tests:
             environment:
-                sdkman:
-                    - java@8.0.192-zulu
-                    - maven
+                java: 'java-8-oracle'
                 timezone: FR
 
             services:

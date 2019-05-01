@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.fight.fighter.monster;
+package fr.quatrevieux.araknemu.game.fight.fighter;
 
 import fr.quatrevieux.araknemu.data.value.Interval;
 import fr.quatrevieux.araknemu.data.value.Position;
@@ -7,9 +7,9 @@ import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterLifeChanged;
+import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
@@ -26,8 +26,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MonsterFighterLifeTest extends FightBaseCase {
-    private MonsterFighterLife life;
+class BaseFighterLifeTest extends FightBaseCase {
+    private BaseFighterLife life;
     private Fight fight;
     private MonsterFighter fighter;
 
@@ -65,7 +65,7 @@ class MonsterFighterLifeTest extends FightBaseCase {
 
         fighter.joinFight(fight, fight.map().get(123));
 
-        life = new MonsterFighterLife(fighter, 100);
+        life = new BaseFighterLife(fighter, 100);
     }
 
     @Test
