@@ -82,7 +82,7 @@ class UseObjectTest extends GameBaseCase {
 
         GamePlayer other = makeOtherPlayer();
         ExplorationPlayer otherPlayer = new ExplorationPlayer(other);
-        explorationPlayer().map().add(otherPlayer);
+        otherPlayer.join(explorationPlayer().map());
         other.properties().life().set(10);
         requestStack.clear();
 
@@ -118,8 +118,8 @@ class UseObjectTest extends GameBaseCase {
         InventoryEntry entry = explorationPlayer().inventory().add(container.get(ItemService.class).create(468));
 
         GameNpc npc = container.get(NpcService.class).get(457);
+        npc.join(explorationPlayer().map());
 
-        explorationPlayer().map().add(npc);
         requestStack.clear();
 
         handler.handle(session, new ObjectUseRequest(entry.id(), npc.id(), 0, true));

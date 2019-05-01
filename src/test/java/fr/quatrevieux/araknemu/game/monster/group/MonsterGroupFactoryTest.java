@@ -6,6 +6,8 @@ import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
@@ -21,6 +23,7 @@ class MonsterGroupFactoryTest extends GameBaseCase {
     private MonsterGroupFactory factory;
     private MonsterGroupDataRepository repository;
     private LivingMonsterGroupPosition living;
+    private ExplorationMap map;
 
     @Override
     @BeforeEach
@@ -28,6 +31,7 @@ class MonsterGroupFactoryTest extends GameBaseCase {
         super.setUp();
 
         dataSet
+            .pushMaps()
             .pushMonsterTemplates()
             .pushMonsterSpells()
             .pushMonsterGroups()
@@ -45,6 +49,7 @@ class MonsterGroupFactoryTest extends GameBaseCase {
             new MonsterGroupPosition(new Position(10340, 123), 3),
             new MonsterGroupData(3, 60000, 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100)), new MonsterGroupData.Monster(34, new Interval(1, 100)), new MonsterGroupData.Monster(36, new Interval(1, 100))), "")
         );
+        living.populate(map = container.get(ExplorationMapService.class).load(10340));
 
         repository = container.get(MonsterGroupDataRepository.class);
     }
@@ -54,7 +59,7 @@ class MonsterGroupFactoryTest extends GameBaseCase {
         MonsterGroup group = factory.create(repository.get(1), living);
 
         assertEquals(-103, group.id());
-        assertEquals(123, group.cell());
+        assertEquals(map.get(123), group.cell());
         assertBetween(1, 4, group.monsters().size());
     }
 

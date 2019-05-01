@@ -69,7 +69,7 @@ class AskChallengeTest extends GameBaseCase {
 
         GameNpc npc = container.get(NpcService.class).get(457);
 
-        current.map().add(npc);
+        npc.join(current.map());
         requestStack.clear();
 
         AskChallenge action = new AskChallenge(current, npc.id(), container.get(FightService.class));

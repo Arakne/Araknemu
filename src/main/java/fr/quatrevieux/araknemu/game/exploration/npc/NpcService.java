@@ -47,7 +47,7 @@ final public class NpcService implements EventsSubscriber, PreloadableService {
                 public void on(MapLoaded event) {
                     npcRepository.byMapId(event.map().id()).stream()
                         .map(NpcService.this::createByEntity)
-                        .forEach(npc -> event.map().add(npc))
+                        .forEach(npc -> npc.join(event.map()))
                     ;
                 }
 

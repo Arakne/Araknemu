@@ -30,7 +30,7 @@ public interface ExplorationMapCell extends MapCell {
         }
 
         for (Creature creature : map().creatures()) {
-            if (creature.cell() == id()) {
+            if (equals(creature.cell())) {
                 creature.apply(operation);
             }
         }

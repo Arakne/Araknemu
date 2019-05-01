@@ -83,7 +83,7 @@ class ExplorationPlayerTest extends GameBaseCase {
 
         player.move(map.get(123), Direction.EAST);
 
-        assertEquals(123, player.cell());
+        assertEquals(map.get(123), player.cell());
         assertEquals(123, player.position().cell());
         assertEquals(player.orientation(), Direction.EAST);
 
@@ -122,9 +122,10 @@ class ExplorationPlayerTest extends GameBaseCase {
         ExplorationMap map = container.get(ExplorationMapService.class).load(10300);
         player.join(map);
 
-        player.changeCell(741);
+        player.changeCell(147);
 
-        assertEquals(741, player.position().cell());
+        assertEquals(147, player.position().cell());
+        assertEquals(map.get(147), player.cell());
 
         requestStack.assertLast(
             new AddSprites(
@@ -163,6 +164,7 @@ class ExplorationPlayerTest extends GameBaseCase {
         assertSame(map, player.map());
         assertSame(map, ref1.get().map());
         assertSame(map, ref2.get().map());
+        assertEquals(map.get(85), player.cell());
         assertEquals(new Position(10300, 85), player.position());
     }
 

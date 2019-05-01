@@ -71,7 +71,7 @@ class PvmBuilderTest extends GameBaseCase {
                 service.load(36).all().get(5)
             ),
             Direction.WEST,
-            123
+            container.get(ExplorationMapService.class).load(10340).get(123)
         );
     }
 

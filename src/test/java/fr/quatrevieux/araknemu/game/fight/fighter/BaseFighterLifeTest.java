@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.data.value.Interval;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
@@ -54,7 +55,7 @@ class BaseFighterLifeTest extends FightBaseCase {
                 5,
                 Collections.singletonList(service.load(31).all().get(2)),
                 Direction.WEST,
-                123
+                container.get(ExplorationMapService.class).load(10340).get(123)
             ),
             Collections.singletonList(123),
             1

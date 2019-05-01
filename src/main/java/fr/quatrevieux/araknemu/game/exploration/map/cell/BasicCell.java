@@ -41,7 +41,7 @@ final public class BasicCell implements ExplorationMapCell {
         }
 
         for (Creature creature : map.creatures()) {
-            if (creature.cell() == id) {
+            if (equals(creature.cell())) {
                 return false;
             }
         }

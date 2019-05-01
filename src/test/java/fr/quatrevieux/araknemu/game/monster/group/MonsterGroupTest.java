@@ -59,7 +59,7 @@ class MonsterGroupTest extends GameBaseCase {
                 service.load(36).all().get(5)
             ),
             Direction.WEST,
-            123
+            map.get(123)
         );
 
         handler.populate(map);
@@ -68,7 +68,7 @@ class MonsterGroupTest extends GameBaseCase {
 
     @Test
     void values() {
-        assertEquals(123, group.cell());
+        assertEquals(map.get(123), group.cell());
         assertEquals(Direction.WEST, group.orientation());
         assertCount(4, group.monsters());
         assertSame(handler, group.handler());

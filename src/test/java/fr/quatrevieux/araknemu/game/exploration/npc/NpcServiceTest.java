@@ -59,7 +59,7 @@ class NpcServiceTest extends GameBaseCase {
 
         GameNpc npc = (GameNpc) creature;
 
-        assertEquals(82, npc.cell());
+        assertEquals(map.get(82), npc.cell());
         assertEquals(Direction.SOUTH_EAST, npc.orientation());
         assertEquals(-47204, npc.id());
         assertEquals(878, npc.template().id());
@@ -106,7 +106,7 @@ class NpcServiceTest extends GameBaseCase {
         GameNpc npc = service.get(472);
 
         assertEquals(-47204, npc.id());
-        assertEquals(82, npc.cell());
+        assertEquals(82, npc.position().cell());
 
         NpcQuestion question = npc.question(explorationPlayer()).get();
 

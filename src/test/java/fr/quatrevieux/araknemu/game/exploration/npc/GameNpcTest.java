@@ -8,6 +8,8 @@ import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Question;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.DialogService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.NpcQuestion;
 import fr.quatrevieux.araknemu.game.world.creature.Operation;
@@ -48,10 +50,22 @@ class GameNpcTest extends GameBaseCase {
     @Test
     void getters() {
         assertInstanceOf(NpcSprite.class, npc.sprite());
-        assertEquals(82, npc.cell());
+        assertEquals(82, npc.position().cell());
+        assertEquals(10340, npc.position().map());
         assertEquals(-47204, npc.id());
         assertEquals(Direction.SOUTH_EAST, npc.orientation());
         assertEquals(878, npc.template().id());
+    }
+
+    @Test
+    void join() throws SQLException {
+        dataSet.pushMaps();
+
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
+        npc.join(map);
+
+        assertEquals(map.get(82), npc.cell());
+        assertTrue(map.creatures().contains(npc));
     }
 
     @Test

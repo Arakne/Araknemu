@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilder;
@@ -75,16 +76,18 @@ final public class LivingMonsterGroupPosition {
      *
      * @see fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell#free()
      */
-    public int cell() {
+    public ExplorationMapCell cell() {
         if (position.position().cell() != -1) {
-            return position.position().cell();
+            return map.get(position.position().cell());
         }
 
         for (int i = 0; i < 128; ++i) {
             int cellId = RANDOM.integer(map.size());
 
-            if (map.get(cellId).free()) {
-                return cellId;
+            final ExplorationMapCell cell = map.get(cellId);
+
+            if (cell.free()) {
+                return cell;
             }
         }
 

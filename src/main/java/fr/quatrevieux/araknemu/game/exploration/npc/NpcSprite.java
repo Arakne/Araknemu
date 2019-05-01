@@ -23,7 +23,7 @@ final public class NpcSprite implements Sprite {
 
     @Override
     public int cell() {
-        return npc.cell();
+        return npc.position().cell();
     }
 
     @Override

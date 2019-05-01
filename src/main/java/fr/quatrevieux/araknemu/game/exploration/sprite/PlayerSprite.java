@@ -26,7 +26,7 @@ final public class PlayerSprite implements Sprite {
 
     @Override
     public int cell() {
-        return exploration.cell();
+        return exploration.position().cell();
     }
 
     @Override

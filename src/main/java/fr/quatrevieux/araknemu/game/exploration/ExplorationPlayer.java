@@ -33,6 +33,7 @@ final public class ExplorationPlayer implements Creature, Explorer, PlayerSessio
     final private Sprite sprite;
 
     private ExplorationMap map;
+    private ExplorationMapCell cell;
     private Direction orientation = Direction.SOUTH_EAST;
 
     public ExplorationPlayer(GamePlayer player) {
@@ -90,8 +91,8 @@ final public class ExplorationPlayer implements Creature, Explorer, PlayerSessio
     }
 
     @Override
-    public int cell() {
-        return position().cell();
+    public ExplorationMapCell cell() {
+        return cell;
     }
 
     @Override
@@ -115,6 +116,7 @@ final public class ExplorationPlayer implements Creature, Explorer, PlayerSessio
     @Override
     public void move(ExplorationMapCell cell, Direction orientation) {
         player.setPosition(player.position().newCell(cell.id()));
+        this.cell = cell;
         this.orientation = orientation;
 
         map.dispatch(new PlayerMoveFinished(this, cell));
@@ -130,6 +132,7 @@ final public class ExplorationPlayer implements Creature, Explorer, PlayerSessio
      */
     public void join(ExplorationMap map) {
         this.map = map;
+        this.cell = map.get(position().cell());
         map.add(this);
 
         dispatch(new MapJoined(map));
@@ -158,9 +161,8 @@ final public class ExplorationPlayer implements Creature, Explorer, PlayerSessio
      * @see ExplorationPlayer#changeMap(ExplorationMap, int) For changing the map and cell
      */
     public void changeCell(int cell) {
-        player.setPosition(
-            player.position().newCell(cell)
-        );
+        player.setPosition(player.position().newCell(cell));
+        this.cell = map.get(cell);
 
         map.dispatch(new CellChanged(this, cell));
     }

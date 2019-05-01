@@ -43,7 +43,7 @@ final public class Move implements BlockingAction {
             return;
         }
 
-        if (path.target().id() == player.cell()) {
+        if (path.target().equals(player.cell())) {
             player.send(GameActionResponse.NOOP);
             return;
         }

@@ -25,6 +25,8 @@ public interface FightTeam extends Sender {
 
     /**
      * Get the team cell id on the map
+     *
+     * @todo return cell object ?
      */
     public int cell();
 

@@ -31,7 +31,7 @@ final public class MonsterGroupSprite implements Sprite {
 
     @Override
     public int cell() {
-        return group.cell();
+        return group.cell().id();
     }
 
     @Override

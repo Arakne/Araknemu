@@ -1,8 +1,11 @@
 package fr.quatrevieux.araknemu.game.exploration.npc;
 
+import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.NpcQuestion;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import fr.quatrevieux.araknemu.game.world.creature.Operation;
@@ -21,6 +24,8 @@ final public class GameNpc implements Creature {
     final private Collection<NpcQuestion> questions;
 
     final private Sprite sprite;
+
+    private ExplorationMapCell cell;
 
     public GameNpc(Npc entity, NpcTemplate template, Collection<NpcQuestion> questions) {
         this.entity = entity;
@@ -41,8 +46,8 @@ final public class GameNpc implements Creature {
     }
 
     @Override
-    public int cell() {
-        return entity.position().cell();
+    public ExplorationMapCell cell() {
+        return cell;
     }
 
     @Override
@@ -53,6 +58,23 @@ final public class GameNpc implements Creature {
     @Override
     public void apply(Operation operation) {
         operation.onNpc(this);
+    }
+
+    /**
+     * Join the given map
+     *
+     * The cell will be set, and the npc will be added to the map
+     */
+    public void join(ExplorationMap map) {
+        cell = map.get(entity.position().cell());
+        map.add(this);
+    }
+
+    /**
+     * Get the npc position
+     */
+    public Position position() {
+        return entity.position();
     }
 
     /**

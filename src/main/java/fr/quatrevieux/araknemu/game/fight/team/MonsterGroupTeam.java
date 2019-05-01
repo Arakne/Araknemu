@@ -46,7 +46,7 @@ final public class MonsterGroupTeam implements FightTeam {
 
     @Override
     public int cell() {
-        return monsterGroup.cell();
+        return monsterGroup.cell().id();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.monster.group;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
@@ -23,9 +24,9 @@ final public class MonsterGroup implements Creature {
     final private MonsterGroupSprite sprite;
 
     private Direction orientation;
-    private int cell;
+    private ExplorationMapCell cell;
 
-    public MonsterGroup(LivingMonsterGroupPosition handler, int id, List<Monster> monsters, Direction orientation, int cell) {
+    public MonsterGroup(LivingMonsterGroupPosition handler, int id, List<Monster> monsters, Direction orientation, ExplorationMapCell cell) {
         this.handler = handler;
         this.id = id;
         this.monsters = monsters;
@@ -46,7 +47,7 @@ final public class MonsterGroup implements Creature {
     }
 
     @Override
-    public int cell() {
+    public ExplorationMapCell cell() {
         return cell;
     }
 

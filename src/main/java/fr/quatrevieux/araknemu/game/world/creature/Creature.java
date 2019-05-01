@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.game.world.creature;
 
+import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 
 /**
@@ -19,9 +20,9 @@ public interface Creature {
     public int id();
 
     /**
-     * Get the creature cell id
+     * Get the creature cell
      */
-    public int cell();
+    public ExplorationMapCell cell();
 
     /**
      * Get the creature orientation

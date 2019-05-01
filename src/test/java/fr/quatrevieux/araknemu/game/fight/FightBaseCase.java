@@ -163,7 +163,7 @@ public class FightBaseCase extends GameBaseCase {
                     service.load(34).all().get(3)
                 ),
                 Direction.WEST,
-                123
+                container.get(ExplorationMapService.class).load(10340).get(123)
             ),
             Arrays.asList(125, 126, 127),
             1

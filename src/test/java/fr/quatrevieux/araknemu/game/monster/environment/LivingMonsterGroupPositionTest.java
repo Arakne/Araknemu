@@ -93,12 +93,12 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
 
         monsterGroupPosition.populate(map);
 
-        assertEquals(123, monsterGroupPosition.cell());
+        assertEquals(map.get(123), monsterGroupPosition.cell());
 
         assertCount(1, monsterGroupPosition.available());
         MonsterGroup group = monsterGroupPosition.available().get(0);
 
-        assertEquals(123, group.cell());
+        assertEquals(map.get(123), group.cell());
         assertEquals(36, group.monsters().get(0).id());
         assertEquals(5, group.monsters().get(0).level());
         assertEquals(31, group.monsters().get(1).id());
@@ -110,7 +110,7 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
         monsterGroupPosition.populate(map);
 
         assertNotEquals(monsterGroupPosition.cell(), monsterGroupPosition.cell());
-        assertTrue(map.get(monsterGroupPosition.cell()).free());
+        assertTrue(monsterGroupPosition.cell().free());
     }
 
     @Test
