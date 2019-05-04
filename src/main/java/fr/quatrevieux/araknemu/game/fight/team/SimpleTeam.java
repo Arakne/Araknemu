@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.data.constant.Alignment;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 
 import java.util.ArrayList;
@@ -82,22 +83,26 @@ final public class SimpleTeam implements FightTeam {
 
     @Override
     public void join(Fighter fighter) throws JoinFightException {
-        if (!(fighter instanceof PlayerFighter)) {
-            throw new JoinFightException(JoinFightError.TEAM_CLOSED);
-        }
+        fighter.apply(new FighterOperation() {
+            @Override
+            public void onPlayer(PlayerFighter fighter) {
+                if (fighters.size() >= startPlaces.size()) {
+                    throw new JoinFightException(JoinFightError.TEAM_FULL);
+                }
 
-        PlayerFighter playerFighter = (PlayerFighter) fighter;
+                fighter.setTeam(SimpleTeam.this);
+                fighters.add(fighter);
+            }
 
-        if (fighters.size() >= startPlaces.size()) {
-            throw new JoinFightException(JoinFightError.TEAM_FULL);
-        }
-
-        playerFighter.setTeam(this);
-        fighters.add(playerFighter);
+            @Override
+            public void onGenericFighter(Fighter fighter) {
+                throw new JoinFightException(JoinFightError.TEAM_CLOSED);
+            }
+        });
     }
 
     @Override
     public void kick(Fighter fighter) {
-        fighters.remove(PlayerFighter.class.cast(fighter));
+        fighters.remove(fighter);
     }
 }

@@ -3,7 +3,7 @@ package fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterRewardItem;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.util.RandomUtil;
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -82,30 +82,40 @@ final public class PvmItemDropProvider implements DropRewardProvider {
         }
     }
 
-    final private RandomUtil random = new RandomUtil();
+    static private class ExtractDrops implements FighterOperation {
+        final private int discernment;
 
-    @Override
-    public DropRewardProvider.Scope initialize(EndFightResults results) {
-        final int totalDiscernment = results.winners().stream().mapToInt(fighter -> fighter.characteristics().discernment()).sum();
+        final private List<Pair<MonsterRewardItem, Integer>> dropsAndQuantity = new ArrayList<>();
 
-        List<Pair<MonsterRewardItem, Integer>> dropsAndQuantity = new ArrayList<>();
+        public ExtractDrops(int discernment) {
+            this.discernment = discernment;
+        }
 
-        for (Fighter fighter : results.loosers()) {
-            // @todo visitor
-            if (!(fighter instanceof MonsterFighter)) {
-                continue;
-            }
-
-            for (MonsterRewardItem item : ((MonsterFighter) fighter).reward().items()) {
-                if (totalDiscernment >= item.discernment()) {
+        @Override
+        public void onMonster(MonsterFighter fighter) {
+            for (MonsterRewardItem item : fighter.reward().items()) {
+                if (discernment >= item.discernment()) {
                     dropsAndQuantity.add(new MutablePair<>(item, item.quantity()));
                 }
             }
         }
+    }
+
+    final private RandomUtil random = new RandomUtil();
+
+    @Override
+    public DropRewardProvider.Scope initialize(EndFightResults results) {
+        ExtractDrops operation = new ExtractDrops(
+            results.winners().stream()
+                .mapToInt(fighter -> fighter.characteristics().discernment())
+                .sum()
+        );
+
+        results.applyToLoosers(operation);
 
         return new Scope(
-            random.shuffle(dropsAndQuantity),
-            (int) Math.ceil((double) dropsAndQuantity.size() / (double) results.winners().size())
+            random.shuffle(operation.dropsAndQuantity),
+            (int) Math.ceil((double) operation.dropsAndQuantity.size() / (double) results.winners().size())
         );
     }
 }

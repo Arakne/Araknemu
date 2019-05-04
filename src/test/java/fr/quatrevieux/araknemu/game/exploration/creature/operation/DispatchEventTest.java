@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.world.creature.operation;
+package fr.quatrevieux.araknemu.game.exploration.creature.operation;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;

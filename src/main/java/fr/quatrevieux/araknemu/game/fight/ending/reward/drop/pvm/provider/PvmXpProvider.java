@@ -4,13 +4,14 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 
 /**
  * Base formula for compute the Pvm experience
  */
 final public class PvmXpProvider implements DropRewardProvider {
-    private static class Scope implements DropRewardProvider.Scope {
+    static private class Scope implements DropRewardProvider.Scope {
         final private long totalXp;
         final private double teamsLevelsRate;
         final private double teamLevelDeviationBonus;
@@ -37,6 +38,19 @@ final public class PvmXpProvider implements DropRewardProvider {
         }
     }
 
+    static private class ExtractXp implements FighterOperation {
+        private long xp;
+
+        @Override
+        public void onMonster(MonsterFighter fighter) {
+            xp += fighter.reward().experience();
+        }
+
+        public long get() {
+            return xp;
+        }
+    }
+
     @Override
     public DropRewardProvider.Scope initialize(EndFightResults results) {
         return new Scope(
@@ -48,18 +62,7 @@ final public class PvmXpProvider implements DropRewardProvider {
     }
 
     private long totalXp(EndFightResults results) {
-        long xp = 0;
-
-        for (Fighter looser : results.loosers()) {
-            // @todo visitor
-            if (looser instanceof MonsterFighter) {
-                MonsterFighter monsterFighter = (MonsterFighter) looser;
-
-                xp += monsterFighter.reward().experience();
-            }
-        }
-
-        return xp;
+        return results.applyToLoosers(new ExtractXp()).get();
     }
 
     private double teamLevelDeviationBonus(EndFightResults results) {

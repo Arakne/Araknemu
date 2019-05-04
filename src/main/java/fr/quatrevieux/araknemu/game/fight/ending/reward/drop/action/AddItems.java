@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action;
 
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
@@ -18,16 +19,16 @@ final public class AddItems implements DropRewardAction {
 
     @Override
     public void apply(DropReward reward, Fighter fighter) {
-        // @todo use visitor on fighter
-        if (!(fighter instanceof PlayerFighter)) {
-            return;
-        }
+        fighter.apply(new FighterOperation() {
+            @Override
+            public void onPlayer(PlayerFighter fighter) {
+                final PlayerInventory inventory = fighter.player().inventory();
 
-        final PlayerInventory inventory = ((PlayerFighter) fighter).player().inventory();
-
-        reward.items().forEach((itemId, quantity) -> {
-            for (; quantity > 0; --quantity) {
-                inventory.add(service.create(itemId));
+                reward.items().forEach((itemId, quantity) -> {
+                    for (; quantity > 0; --quantity) {
+                        inventory.add(service.create(itemId));
+                    }
+                });
             }
         });
     }

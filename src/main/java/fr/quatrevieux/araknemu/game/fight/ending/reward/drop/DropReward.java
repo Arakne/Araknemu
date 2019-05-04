@@ -4,8 +4,8 @@ import fr.quatrevieux.araknemu.game.fight.ending.reward.FightReward;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.DropRewardAction;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.player.GamePlayer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -55,7 +55,7 @@ final public class DropReward implements FightReward {
             fighter().sprite().name() + ";" +
             fighter().level() + ";" +
             (fighter().dead() ? "1" : "0") + ";" +
-            formatExperience(fighter()) + ";" +
+            fighter().apply(new FormatExperience()).format() + ";" +
             (xp() != 0 ? xp() : "") + ";" +
             (guildXp() != 0 ? guildXp() : "") + ";" +
             (mountXp() != 0 ? mountXp() : "") + ";" +
@@ -166,14 +166,16 @@ final public class DropReward implements FightReward {
     /**
      * Format the experience string for the reward line
      */
-    static private String formatExperience(Fighter fighter) {
-        // @todo handle other fighters types (visitor on fighter)
-        if (fighter instanceof PlayerFighter) {
-            GamePlayer player = ((PlayerFighter) fighter).player();
+    static private class FormatExperience implements FighterOperation {
+        private String format = "0;0;0";
 
-            return player.properties().experience().min() + ";" + player.properties().experience().current() + ";" + player.properties().experience().max();
+        @Override
+        public void onPlayer(PlayerFighter fighter) {
+            format = fighter.properties().experience().min() + ";" + fighter.properties().experience().current() + ";" + fighter.properties().experience().max();
         }
 
-        return "0;0;0";
+        public String format() {
+            return format;
+        }
     }
 }

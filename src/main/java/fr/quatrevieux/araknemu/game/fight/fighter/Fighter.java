@@ -4,39 +4,22 @@ import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
+import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
-import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 
 /**
  * Base fighter
- *
- * @todo extends Creature
  */
-public interface Fighter extends Dispatcher {
+public interface Fighter extends Creature<FightCell>, Dispatcher {
     /**
      * Initialise the fighter when fight started
      */
     public void init();
-
-    /**
-     * Get the fighter ID
-     * This value is unique on the fight
-     */
-    public int id();
-
-    /**
-     * Get the current player cell
-     */
-    public FightCell cell();
-
-    /**
-     * Get the fighter orientation
-     */
-    public Direction orientation();
 
     /**
      * Change the fighter orientation
@@ -47,11 +30,6 @@ public interface Fighter extends Dispatcher {
      * Go to the given cell
      */
     public void move(FightCell cell);
-
-    /**
-     * Get the fighter sprite
-     */
-    public Sprite sprite();
 
     /**
      * Get the fighter life
@@ -181,6 +159,18 @@ public interface Fighter extends Dispatcher {
      * Check if the fighter is on the fight (The fight is set and is on a cell)
      */
     public boolean isOnFight();
+
+    /**
+     * Apply the operation on the fighter
+     *
+     * This method will call the corresponding method on the given operation object
+     * Implements the visitor pattern
+     *
+     * @param <O> The operation type
+     *
+     * @return The given operation
+     */
+    public <O extends FighterOperation> O apply(O operation);
 
     /**
      * Check if the fighter is the team leader

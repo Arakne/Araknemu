@@ -7,10 +7,13 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -69,7 +72,17 @@ class SimpleTeamTest extends FightBaseCase {
 
     @Test
     void joinNotPlayerFighter() {
-        assertThrows(JoinFightException.class, () -> team.join(Mockito.mock(Fighter.class)));
+        Fighter fighter = Mockito.mock(Fighter.class);
+
+        Mockito.when(fighter.apply(Mockito.any()))
+            .then(invocation -> {
+                invocation.<FighterOperation>getArgument(0).onGenericFighter(fighter);
+
+                return null;
+            })
+        ;
+
+        assertThrows(JoinFightException.class, () -> team.join(fighter));
     }
 
     @Test

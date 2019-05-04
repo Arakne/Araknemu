@@ -1,8 +1,8 @@
-package fr.quatrevieux.araknemu.game.world.creature.operation;
+package fr.quatrevieux.araknemu.game.exploration.creature.operation;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
-import fr.quatrevieux.araknemu.game.world.creature.Operation;
+import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 
 /**
  * Dispatch event to the creature if supports

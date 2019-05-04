@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.fight.fighter;
+package fr.quatrevieux.araknemu.game.fight.fighter.player;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;

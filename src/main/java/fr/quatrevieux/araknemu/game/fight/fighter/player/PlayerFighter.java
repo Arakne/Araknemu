@@ -3,10 +3,8 @@ package fr.quatrevieux.araknemu.game.fight.fighter.player;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
-import fr.quatrevieux.araknemu.game.fight.fighter.AbstractFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
+import fr.quatrevieux.araknemu.game.fight.fighter.*;
+import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
@@ -22,6 +20,7 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 final public class PlayerFighter extends AbstractFighter implements Fighter, PlayerSessionScope {
     final private GamePlayer player;
     final private PlayerFighterProperties properties;
+    final private PlayerFighterSprite sprite;
 
     private boolean ready = false;
     private CastableWeapon weapon;
@@ -30,6 +29,7 @@ final public class PlayerFighter extends AbstractFighter implements Fighter, Pla
     public PlayerFighter(GamePlayer player) {
         this.player = player;
         this.properties = new PlayerFighterProperties(this, player.properties());
+        this.sprite = new PlayerFighterSprite(this, player.spriteInfo());
     }
 
     @Override
@@ -53,8 +53,7 @@ final public class PlayerFighter extends AbstractFighter implements Fighter, Pla
 
     @Override
     public Sprite sprite() {
-        // @todo Save the sprite ?
-        return new PlayerFighterSprite(this, player.spriteInfo());
+        return sprite;
     }
 
     @Override
@@ -136,6 +135,13 @@ final public class PlayerFighter extends AbstractFighter implements Fighter, Pla
     @Override
     public boolean ready() {
         return ready;
+    }
+
+    @Override
+    public <O extends FighterOperation> O apply(O operation) {
+        operation.onPlayer(this);
+
+        return operation;
     }
 
     /**

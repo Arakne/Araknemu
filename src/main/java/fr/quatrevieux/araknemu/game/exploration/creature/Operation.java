@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.world.creature;
+package fr.quatrevieux.araknemu.game.exploration.creature;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;

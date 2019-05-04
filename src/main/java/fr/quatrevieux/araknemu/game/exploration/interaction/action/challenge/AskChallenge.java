@@ -7,7 +7,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengeInvitation;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
-import fr.quatrevieux.araknemu.game.world.creature.Operation;
+import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 
 /**
  * Ask for challenge

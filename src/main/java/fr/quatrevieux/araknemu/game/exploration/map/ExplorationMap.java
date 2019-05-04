@@ -5,15 +5,15 @@ import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.value.Dimensions;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
+import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.BasicCell;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.exploration.map.event.NewSpriteOnMap;
 import fr.quatrevieux.araknemu.game.exploration.map.event.SpriteRemoveFromMap;
-import fr.quatrevieux.araknemu.game.world.creature.Creature;
-import fr.quatrevieux.araknemu.game.world.creature.Operation;
+import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
-import fr.quatrevieux.araknemu.game.world.creature.operation.SendPacket;
+import fr.quatrevieux.araknemu.game.exploration.creature.operation.SendPacket;
 import fr.quatrevieux.araknemu.game.world.map.GameMap;
 
 import java.util.Collection;
@@ -31,7 +31,7 @@ final public class ExplorationMap implements GameMap<ExplorationMapCell>, Dispat
     final private MapTemplate template;
 
     final private Map<Integer, ExplorationMapCell> cells;
-    final private ConcurrentMap<Integer, Creature> creatures = new ConcurrentHashMap<>();
+    final private ConcurrentMap<Integer, ExplorationCreature> creatures = new ConcurrentHashMap<>();
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
@@ -99,7 +99,7 @@ final public class ExplorationMap implements GameMap<ExplorationMapCell>, Dispat
     /**
      * Add a new creature to the map
      */
-    public void add(Creature creature) {
+    public void add(ExplorationCreature creature) {
         if (creatures.containsKey(creature.id())) {
             throw new IllegalArgumentException("The creature is already added");
         }
@@ -112,7 +112,7 @@ final public class ExplorationMap implements GameMap<ExplorationMapCell>, Dispat
     /**
      * Remove the creature from the map
      */
-    public void remove(Creature creature) {
+    public void remove(ExplorationCreature creature) {
         if (!creatures.containsKey(creature.id())) {
             throw new IllegalArgumentException("The creature do not exists");
         }
@@ -126,7 +126,7 @@ final public class ExplorationMap implements GameMap<ExplorationMapCell>, Dispat
      */
     public Collection<Sprite> sprites() {
         return creatures.values().stream()
-            .map(Creature::sprite)
+            .map(ExplorationCreature::sprite)
             .collect(Collectors.toList())
         ;
     }
@@ -134,7 +134,7 @@ final public class ExplorationMap implements GameMap<ExplorationMapCell>, Dispat
     /**
      * Get all creatures on map
      */
-    public Collection<Creature> creatures() {
+    public Collection<ExplorationCreature> creatures() {
         return creatures.values();
     }
 
@@ -143,7 +143,7 @@ final public class ExplorationMap implements GameMap<ExplorationMapCell>, Dispat
      *
      * @param id The creature id
      */
-    public Creature creature(int id) {
+    public ExplorationCreature creature(int id) {
         if (!creatures.containsKey(id)) {
             throw new NoSuchElementException("The creature " + id + " cannot be found");
         }
@@ -175,7 +175,7 @@ final public class ExplorationMap implements GameMap<ExplorationMapCell>, Dispat
     /**
      * Apply an operation to all creatures in map
      *
-     * @see Creature#apply(Operation)
+     * @see ExplorationCreature#apply(Operation)
      */
     public void apply(Operation operation) {
         creatures.values().forEach(creature -> creature.apply(operation));

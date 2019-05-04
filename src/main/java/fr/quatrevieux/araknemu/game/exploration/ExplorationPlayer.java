@@ -4,6 +4,7 @@ import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.event.*;
 import fr.quatrevieux.araknemu.game.exploration.interaction.InteractionHandler;
 import fr.quatrevieux.araknemu.game.exploration.interaction.event.PlayerMoveFinished;
@@ -14,9 +15,8 @@ import fr.quatrevieux.araknemu.game.player.CharacterProperties;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerSessionScope;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
-import fr.quatrevieux.araknemu.game.world.creature.Creature;
-import fr.quatrevieux.araknemu.game.world.creature.Explorer;
-import fr.quatrevieux.araknemu.game.world.creature.Operation;
+import fr.quatrevieux.araknemu.game.exploration.creature.Explorer;
+import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 import fr.quatrevieux.araknemu.network.game.GameSession;
@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 /**
  * Player for exploration game session
  */
-final public class ExplorationPlayer implements Creature, Explorer, PlayerSessionScope {
+final public class ExplorationPlayer implements ExplorationCreature, Explorer, PlayerSessionScope {
     final private GamePlayer player;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();

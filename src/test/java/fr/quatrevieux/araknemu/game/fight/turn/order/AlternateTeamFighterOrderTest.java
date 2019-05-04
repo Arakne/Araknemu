@@ -8,14 +8,11 @@ import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
-import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
-import fr.quatrevieux.araknemu.game.fight.fighter.States;
+import fr.quatrevieux.araknemu.game.fight.fighter.*;
+import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
-import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
@@ -23,7 +20,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -233,6 +229,11 @@ class AlternateTeamFighterOrderTest extends TestCase {
         @Override
         public Object attachment(Object key) {
             return null;
+        }
+
+        @Override
+        public <O extends FighterOperation> O apply(O operation) {
+            return operation;
         }
     }
 

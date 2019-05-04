@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.cast;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.operation.SendPacket;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
@@ -53,9 +54,7 @@ final public class Cast implements Action {
         ;
 
         if (error != null) {
-            if (caster instanceof Sender) {
-                Sender.class.cast(caster).send(error);
-            }
+            caster.apply(new SendPacket(error));
 
             return false;
         }

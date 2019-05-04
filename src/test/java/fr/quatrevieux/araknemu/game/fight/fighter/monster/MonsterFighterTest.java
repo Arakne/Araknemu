@@ -13,6 +13,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.spell.LaunchedSpells;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
+import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.monster.Monster;
@@ -23,6 +24,7 @@ import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.sql.SQLException;
 import java.time.Duration;
@@ -242,5 +244,13 @@ class MonsterFighterTest extends FightBaseCase {
         fighter.stop();
 
         assertThrows(FightException.class, () -> fighter.turn());
+    }
+
+    @Test
+    void apply() {
+        FighterOperation operation = Mockito.mock(FighterOperation.class);
+
+        assertSame(operation, fighter.apply(operation));
+        Mockito.verify(operation).onMonster(fighter);
     }
 }

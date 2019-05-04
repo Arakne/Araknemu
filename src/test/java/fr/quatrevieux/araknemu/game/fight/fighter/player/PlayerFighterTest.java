@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.fight.fighter;
+package fr.quatrevieux.araknemu.game.fight.fighter.player;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
@@ -11,7 +11,9 @@ import fr.quatrevieux.araknemu.game.fight.castable.spell.LaunchedSpells;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
+import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
+import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighterProperties;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighterSprite;
@@ -23,6 +25,7 @@ import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.sql.SQLException;
 import java.time.Duration;
@@ -273,5 +276,13 @@ class PlayerFighterTest extends FightBaseCase {
 
         fighter.setOrientation(Direction.NORTH_EAST);
         assertEquals(Direction.NORTH_EAST, fighter.orientation());
+    }
+
+    @Test
+    void apply() {
+        FighterOperation operation = Mockito.mock(FighterOperation.class);
+
+        assertSame(operation, fighter.apply(operation));
+        Mockito.verify(operation).onPlayer(fighter);
     }
 }

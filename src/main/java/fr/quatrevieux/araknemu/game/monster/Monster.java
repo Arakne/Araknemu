@@ -9,8 +9,6 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristi
 /**
  * Monster grade data
  * This object is immutable, and shared between "real" creatures (fighters and groups)
- *
- * @todo implement creature ? Not necessary because MonsterGroup is already the creature
  */
 final public class Monster {
     final private MonsterTemplate template;

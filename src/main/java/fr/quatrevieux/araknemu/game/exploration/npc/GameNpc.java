@@ -3,12 +3,12 @@ package fr.quatrevieux.araknemu.game.exploration.npc;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
+import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.NpcQuestion;
-import fr.quatrevieux.araknemu.game.world.creature.Creature;
-import fr.quatrevieux.araknemu.game.world.creature.Operation;
+import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 
@@ -18,7 +18,7 @@ import java.util.Optional;
 /**
  * Living NPC
  */
-final public class GameNpc implements Creature {
+final public class GameNpc implements ExplorationCreature {
     final private Npc entity;
     final private NpcTemplate template;
     final private Collection<NpcQuestion> questions;

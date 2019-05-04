@@ -2,7 +2,7 @@ package fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider;
 
 import fr.quatrevieux.araknemu.data.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.util.RandomUtil;
 
@@ -12,27 +12,27 @@ import fr.quatrevieux.araknemu.util.RandomUtil;
 final public class PvmKamasProvider implements DropRewardProvider {
     final private RandomUtil random = new RandomUtil();
 
-    @Override
-    public Scope initialize(EndFightResults results) {
-        final Interval totalKamas = totalKamas(results);
+    static private class ExtractKamas implements FighterOperation {
+        private int minKamas = 0;
+        private int maxKamas = 0;
 
-        return reward -> reward.setKamas(random.rand(totalKamas));
-    }
-
-    private Interval totalKamas(EndFightResults results) {
-        int minKamas = 0;
-        int maxKamas = 0;
-
-        for (Fighter looser : results.loosers()) {
-            // @todo visitor
-            if (looser instanceof MonsterFighter) {
-                MonsterFighter monsterFighter = (MonsterFighter) looser;
-
-                minKamas += monsterFighter.reward().kamas().min();
-                maxKamas += monsterFighter.reward().kamas().max();
-            }
+        @Override
+        public void onMonster(MonsterFighter fighter) {
+            minKamas += fighter.reward().kamas().min();
+            maxKamas += fighter.reward().kamas().max();
         }
 
-        return new Interval(minKamas, maxKamas);
+        public Interval get() {
+            return new Interval(minKamas, maxKamas);
+        }
+    }
+
+    @Override
+    public Scope initialize(EndFightResults results) {
+        return reward -> reward.setKamas(
+            random.rand(
+                results.applyToLoosers(new ExtractKamas()).get()
+            )
+        );
     }
 }

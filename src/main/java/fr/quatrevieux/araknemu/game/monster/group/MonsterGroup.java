@@ -1,12 +1,12 @@
 package fr.quatrevieux.araknemu.game.monster.group;
 
+import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
-import fr.quatrevieux.araknemu.game.world.creature.Creature;
-import fr.quatrevieux.araknemu.game.world.creature.Operation;
+import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 
@@ -16,7 +16,7 @@ import java.util.List;
  * Group of monsters
  * The group is the only creature which can be found on exploration for interacting with {@link Monster}
  */
-final public class MonsterGroup implements Creature {
+final public class MonsterGroup implements ExplorationCreature {
     final private LivingMonsterGroupPosition handler;
     final private int id;
     final private List<Monster> monsters;

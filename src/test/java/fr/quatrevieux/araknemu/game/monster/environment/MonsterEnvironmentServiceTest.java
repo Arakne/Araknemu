@@ -7,13 +7,13 @@ import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupPositionRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
-import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -58,7 +58,7 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
 
         dispatcher.dispatch(new MapLoaded(map));
 
-        Collection<Creature> creatures = map.creatures();
+        Collection<ExplorationCreature> creatures = map.creatures();
 
         assertCount(2, creatures);
         assertContainsOnly(MonsterGroup.class, creatures);

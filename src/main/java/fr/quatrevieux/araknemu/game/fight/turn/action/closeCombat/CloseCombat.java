@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.WeaponConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.operation.SendPacket;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
@@ -45,9 +46,7 @@ final public class CloseCombat implements Action {
         Error error = validator.validate(caster.weapon(), target);
 
         if (error != null) {
-            if (caster instanceof Sender) {
-                Sender.class.cast(caster).send(error);
-            }
+            caster.apply(new SendPacket(error));
 
             return false;
         }

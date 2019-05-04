@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.world.creature.operation;
+package fr.quatrevieux.araknemu.game.exploration.creature.operation;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
@@ -8,8 +8,6 @@ import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class SendPacketTest extends GameBaseCase {
     @Test

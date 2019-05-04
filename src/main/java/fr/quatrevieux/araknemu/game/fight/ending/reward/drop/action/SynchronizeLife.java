@@ -2,23 +2,23 @@ package fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action;
 
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.player.GamePlayer;
 
 /**
  * Synchronize exploration player life points with the fighter
  */
-final public class SynchronizeLife implements DropRewardAction {
+final public class SynchronizeLife implements DropRewardAction, FighterOperation {
     @Override
     public void apply(DropReward reward, Fighter fighter) {
-        // @todo use visitor on fighter
-        if (fighter instanceof PlayerFighter) {
-            final GamePlayer player = ((PlayerFighter) fighter).player();
+        fighter.apply(this);
+    }
 
-            // @todo set percent
-            player.properties().life().set(
-                player.properties().life().max() * fighter.life().current() / fighter.life().max()
-            );
-        }
+    @Override
+    public void onPlayer(PlayerFighter fighter) {
+        // @todo set percent
+        fighter.player().properties().life().set(
+            fighter.player().properties().life().max() * fighter.life().current() / fighter.life().max()
+        );
     }
 }
