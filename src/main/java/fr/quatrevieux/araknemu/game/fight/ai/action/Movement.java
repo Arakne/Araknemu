@@ -3,14 +3,15 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
 import fr.quatrevieux.araknemu.game.world.map.path.Path;
 import fr.quatrevieux.araknemu.game.world.map.path.PathException;
 import fr.quatrevieux.araknemu.game.world.map.path.Pathfinder;
 import fr.quatrevieux.araknemu.game.world.map.util.CoordinateCell;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -73,7 +74,7 @@ final public class Movement implements ActionGenerator {
                 continue;
             }
 
-            return Optional.of(new Move(ai.turn(), ai.fighter(), path));
+            return Optional.of(ai.turn().actions().move().create(path));
         }
 
         return Optional.empty();

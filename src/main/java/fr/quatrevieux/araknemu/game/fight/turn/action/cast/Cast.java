@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.cast;
 
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.SendPacket;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -28,16 +29,16 @@ final public class Cast implements Action {
     final private Fighter caster;
     final private Spell spell;
     final private FightCell target;
-    final private SpellConstraintsValidator validator;
+    final private CastConstraintValidator<Spell> validator;
     final private CriticalityStrategy criticalityStrategy;
 
     private CastSuccess result;
 
     public Cast(FightTurn turn, Fighter caster, Spell spell, FightCell target) {
-        this(turn, caster, spell, target, new SpellConstraintsValidator(turn), new BaseCriticalityStrategy(caster));
+        this(turn, caster, spell, target, new SpellConstraintsValidator(), new BaseCriticalityStrategy(caster));
     }
 
-    public Cast(FightTurn turn, Fighter caster, Spell spell, FightCell target, SpellConstraintsValidator validator, CriticalityStrategy criticalityStrategy) {
+    public Cast(FightTurn turn, Fighter caster, Spell spell, FightCell target, CastConstraintValidator<Spell> validator, CriticalityStrategy criticalityStrategy) {
         this.turn = turn;
         this.caster = caster;
         this.spell = spell;
@@ -50,7 +51,7 @@ final public class Cast implements Action {
     public boolean validate() {
         Error error = spell == null
             ? Error.cantCastNotFound()
-            : validator.validate(spell, target)
+            : validator.validate(turn, spell, target)
         ;
 
         if (error != null) {

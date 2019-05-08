@@ -1,8 +1,10 @@
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
+import fr.quatrevieux.araknemu.game.fight.ai.util.SpellCaster;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
@@ -19,12 +21,12 @@ import java.util.Optional;
  * Try to teleport near enemy
  */
 final public class TeleportNearEnemy implements ActionGenerator {
-    private SpellConstraintsValidator validator;
+    private SpellCaster caster;
     private List<Spell> teleportSpells;
 
     @Override
     public void initialize(AI ai) {
-        validator = new SpellConstraintsValidator(ai.turn());
+        caster = new SpellCaster(ai);
         teleportSpells = new ArrayList<>();
 
         for (Spell spell : ai.fighter().spells()) {
@@ -74,7 +76,7 @@ final public class TeleportNearEnemy implements ActionGenerator {
                 FightCell testCell = ai.fight().map().get(cellId);
 
                 // Target or launch is not valid
-                if (!testCell.walkable() || validator.validate(spell, testCell) != null) {
+                if (!testCell.walkable() || !caster.validate(spell, testCell)) {
                     continue;
                 }
 
@@ -97,6 +99,6 @@ final public class TeleportNearEnemy implements ActionGenerator {
             return Optional.empty();
         }
 
-        return Optional.of(new Cast(ai.turn(), ai.fighter(), bestSpell, bestCell));
+        return Optional.of(caster.create(bestSpell, bestCell));
     }
 }

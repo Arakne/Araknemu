@@ -108,7 +108,7 @@ class CastTest extends FightBaseCase {
             fighter,
             fighter.spells().get(3),
             fight.map().get(186),
-            new SpellConstraintsValidator(turn, new CastConstraintValidator[0]),
+            new SpellConstraintsValidator(new CastConstraintValidator[0]),
             new CriticalityStrategy() {
                 public int hitRate(int base) { return 0; }
                 public int failureRate(int base) { return 0; }
@@ -138,7 +138,7 @@ class CastTest extends FightBaseCase {
             fighter,
             fighter.spells().get(3),
             fighter.cell(),
-            new SpellConstraintsValidator(turn, new CastConstraintValidator[0]),
+            new SpellConstraintsValidator(new CastConstraintValidator[0]),
             new CriticalityStrategy() {
                 public int hitRate(int base) { return 0; }
                 public int failureRate(int base) { return 0; }
@@ -158,7 +158,7 @@ class CastTest extends FightBaseCase {
             fighter,
             fighter.spells().get(3),
             fight.map().get(186),
-            new SpellConstraintsValidator(turn, new CastConstraintValidator[0]),
+            new SpellConstraintsValidator(new CastConstraintValidator[0]),
             new CriticalityStrategy() {
                 public int hitRate(int base) { return 0; }
                 public int failureRate(int base) { return 0; }
@@ -186,7 +186,7 @@ class CastTest extends FightBaseCase {
             fighter,
             fighter.spells().get(3),
             fight.map().get(186),
-            new SpellConstraintsValidator(turn, new CastConstraintValidator[0]),
+            new SpellConstraintsValidator(new CastConstraintValidator[0]),
             new CriticalityStrategy() {
                 public int hitRate(int base) { return 0; }
                 public int failureRate(int base) { return 0; }
@@ -262,7 +262,7 @@ class CastTest extends FightBaseCase {
             fighter,
             fighter.spells().get(3),
             fight.map().get(186),
-            new SpellConstraintsValidator(turn, new CastConstraintValidator[0]),
+            new SpellConstraintsValidator(new CastConstraintValidator[0]),
             new CriticalityStrategy() {
                 public int hitRate(int base) { return 0; }
                 public int failureRate(int base) { return 0; }
@@ -296,7 +296,7 @@ class CastTest extends FightBaseCase {
             fighter,
             fighter.spells().get(3),
             fight.map().get(186),
-            new SpellConstraintsValidator(turn, new CastConstraintValidator[0]),
+            new SpellConstraintsValidator(new CastConstraintValidator[0]),
             new CriticalityStrategy() {
                 public int hitRate(int base) { return 0; }
                 public int failureRate(int base) { return 0; }

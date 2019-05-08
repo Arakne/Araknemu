@@ -10,8 +10,12 @@ public interface FightActionFactory {
     /**
      * Create the action
      *
-     * @param action The action type
      * @param arguments The action arguments
      */
-    public Action create(ActionType action, String[] arguments);
+    public Action create(String[] arguments);
+
+    /**
+     * Get the related action type
+     */
+    public ActionType type();
 }

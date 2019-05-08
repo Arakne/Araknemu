@@ -14,21 +14,53 @@ import java.util.Map;
 /**
  * Action factory for all turn actions
  */
-final public class TurnActionsFactory implements FightActionFactory {
+final public class TurnActionsFactory {
+    final private CastFactory castFactory;
+    final private CloseCombatFactory closeCombatFactory;
+    final private MoveFactory moveFactory;
+
     final private Map<ActionType, FightActionFactory> factories = new EnumMap<>(ActionType.class);
 
     public TurnActionsFactory(FightTurn turn) {
-        factories.put(ActionType.MOVE, new MoveFactory(turn));
-        factories.put(ActionType.CAST, new CastFactory(turn));
-        factories.put(ActionType.CLOSE_COMBAT, new CloseCombatFactory(turn));
+        this.moveFactory = new MoveFactory(turn);
+        this.castFactory = new CastFactory(turn);
+        this.closeCombatFactory = new CloseCombatFactory(turn);
+
+        register(moveFactory);
+        register(castFactory);
+        register(closeCombatFactory);
     }
 
-    @Override
     public Action create(ActionType action, String[] arguments) {
         if (!factories.containsKey(action)) {
             throw new FightException("Fight action " + action + " not found");
         }
 
-        return factories.get(action).create(action, arguments);
+        return factories.get(action).create(arguments);
+    }
+
+    /**
+     * Get the factory for spell cast action
+     */
+    public CastFactory cast() {
+        return castFactory;
+    }
+
+    /**
+     * Get the factory for close combat action
+     */
+    public CloseCombatFactory closeCombat() {
+        return closeCombatFactory;
+    }
+
+    /**
+     * Get the factory for move action
+     */
+    public MoveFactory move() {
+        return moveFactory;
+    }
+
+    private void register(FightActionFactory factory) {
+        factories.put(factory.type(), factory);
     }
 }

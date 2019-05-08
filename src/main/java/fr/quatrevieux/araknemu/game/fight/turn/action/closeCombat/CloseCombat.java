@@ -30,7 +30,7 @@ final public class CloseCombat implements Action {
     private CloseCombatSuccess result;
 
     public CloseCombat(FightTurn turn, Fighter caster, FightCell target) {
-        this(turn, caster, target, new WeaponConstraintsValidator(turn), new BaseCriticalityStrategy(caster));
+        this(turn, caster, target, new WeaponConstraintsValidator(), new BaseCriticalityStrategy(caster));
     }
 
     public CloseCombat(FightTurn turn, Fighter caster, FightCell target, WeaponConstraintsValidator validator, CriticalityStrategy criticalityStrategy) {
@@ -43,7 +43,7 @@ final public class CloseCombat implements Action {
 
     @Override
     public boolean validate() {
-        Error error = validator.validate(caster.weapon(), target);
+        Error error = validator.validate(turn, caster.weapon(), target);
 
         if (error != null) {
             caster.apply(new SendPacket(error));

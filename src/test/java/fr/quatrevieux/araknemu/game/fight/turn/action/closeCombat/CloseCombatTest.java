@@ -120,7 +120,7 @@ class CloseCombatTest extends FightBaseCase {
             turn,
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(turn),
+            new WeaponConstraintsValidator(),
             new CriticalityStrategy() {
                 public int hitRate(int base) { return 0; }
                 public int failureRate(int base) { return 0; }
@@ -146,7 +146,7 @@ class CloseCombatTest extends FightBaseCase {
             turn,
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(turn),
+            new WeaponConstraintsValidator(),
             new CriticalityStrategy() {
                 public int hitRate(int base) { return 0; }
                 public int failureRate(int base) { return 0; }
@@ -174,7 +174,7 @@ class CloseCombatTest extends FightBaseCase {
             turn,
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(turn),
+            new WeaponConstraintsValidator(),
             new CriticalityStrategy() {
                 public int hitRate(int base) { return 0; }
                 public int failureRate(int base) { return 0; }
@@ -202,7 +202,7 @@ class CloseCombatTest extends FightBaseCase {
             turn,
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(turn),
+            new WeaponConstraintsValidator(),
             new CriticalityStrategy() {
                 public int hitRate(int base) { return 0; }
                 public int failureRate(int base) { return 0; }
@@ -233,7 +233,7 @@ class CloseCombatTest extends FightBaseCase {
             turn,
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(turn),
+            new WeaponConstraintsValidator(),
             new CriticalityStrategy() {
                 public int hitRate(int base) { return 0; }
                 public int failureRate(int base) { return 0; }
@@ -286,7 +286,7 @@ class CloseCombatTest extends FightBaseCase {
             turn,
             fighter,
             fight.map().get(186),
-            new WeaponConstraintsValidator(turn),
+            new WeaponConstraintsValidator(),
             new CriticalityStrategy() {
                 public int hitRate(int base) { return 0; }
                 public int failureRate(int base) { return 0; }

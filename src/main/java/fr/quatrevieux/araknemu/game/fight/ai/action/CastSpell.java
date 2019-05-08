@@ -3,11 +3,10 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
-import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
+import fr.quatrevieux.araknemu.game.fight.ai.util.SpellCaster;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 
 import java.util.Optional;
@@ -34,7 +33,7 @@ final public class CastSpell implements ActionGenerator {
     final private Simulator simulator;
     final private SimulationSelector selector;
 
-    private SpellConstraintsValidator validator;
+    private SpellCaster caster;
 
     public CastSpell(Simulator simulator, SimulationSelector selector) {
         this.simulator = simulator;
@@ -43,7 +42,7 @@ final public class CastSpell implements ActionGenerator {
 
     @Override
     public void initialize(AI ai) {
-        validator = new SpellConstraintsValidator(ai.turn());
+        caster = new SpellCaster(ai);
     }
 
     @Override
@@ -71,7 +70,7 @@ final public class CastSpell implements ActionGenerator {
                 FightCell targetCell = ai.fight().map().get(cellId);
 
                 // Target or launch is not valid
-                if (!targetCell.walkableIgnoreFighter() || validator.validate(spell, targetCell) != null) {
+                if (!targetCell.walkableIgnoreFighter() || !caster.validate(spell, targetCell)) {
                     continue;
                 }
 
@@ -90,10 +89,9 @@ final public class CastSpell implements ActionGenerator {
             }
         }
 
-        // @todo cast factory
         return Optional
             .ofNullable(bestSimulation)
-            .map(simulation -> new Cast(ai.turn(), ai.fighter(), simulation.spell(), simulation.target()))
+            .map(simulation -> caster.create(simulation.spell(), simulation.target()))
         ;
     }
 }

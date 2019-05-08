@@ -4,7 +4,6 @@ import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
 import fr.quatrevieux.araknemu.game.world.map.path.Pathfinder;
@@ -42,7 +41,7 @@ final public class MoveNearEnemy implements ActionGenerator {
         return ai.enemy()
             .map(enemy -> pathfinder.findPath(ai.fighter().cell(), enemy.cell()).truncate(movementPoints + 1))
             .filter(path -> path.size() > 1)
-            .map(path -> new Move(ai.turn(), ai.fighter(), path))
+            .map(path -> ai.turn().actions().move().create(path))
         ;
     }
 

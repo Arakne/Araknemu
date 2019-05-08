@@ -26,7 +26,7 @@ final public class FightTurn {
     final private Duration duration;
 
     final private ActionHandler actionHandler;
-    final private FightActionFactory actionFactory;
+    final private TurnActionsFactory actionFactory;
 
     private ScheduledFuture timer;
     private FighterTurnPoints points;
@@ -151,7 +151,7 @@ final public class FightTurn {
     /**
      * Get the actions factory
      */
-    public FightActionFactory actions() {
+    public TurnActionsFactory actions() {
         return actionFactory;
     }
 

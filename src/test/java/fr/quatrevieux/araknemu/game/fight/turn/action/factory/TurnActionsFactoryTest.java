@@ -2,12 +2,16 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.factory;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
+import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombat;
+import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombatFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -53,5 +57,13 @@ class TurnActionsFactoryTest extends FightBaseCase {
     @Test
     void createCloseCombat() throws Exception {
         assertInstanceOf(CloseCombat.class, factory.create(ActionType.CLOSE_COMBAT, new String[] {"123"}));
+    }
+
+    @Test
+    void getters() {
+        assertInstanceOf(CastFactory.class, factory.cast());
+        assertInstanceOf(CloseCombatFactory.class, factory.closeCombat());
+        assertInstanceOf(MoveFactory.class, factory.move());
+        assertInstanceOf(SpellConstraintsValidator.class, factory.cast().validator());
     }
 }

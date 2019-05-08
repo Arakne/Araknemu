@@ -8,12 +8,11 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 /**
  * Validate weapon cast constraints
  */
-final public class WeaponConstraintsValidator {
-    final private FightTurn turn;
-    final private CastConstraintValidator<? super CastableWeapon>[] validators;
+final public class WeaponConstraintsValidator implements CastConstraintValidator<CastableWeapon> {
+    final private CastConstraintValidator<CastableWeapon> validator;
 
-    public WeaponConstraintsValidator(FightTurn turn) {
-        this(turn, new CastConstraintValidator[] {
+    public WeaponConstraintsValidator() {
+        this(new CastConstraintValidator[] {
             new ApCostValidator(),
             new TargetCellValidator(),
             new StatesValidator(),
@@ -21,28 +20,12 @@ final public class WeaponConstraintsValidator {
         });
     }
 
-    public WeaponConstraintsValidator(FightTurn turn, CastConstraintValidator<? super CastableWeapon>[] validators) {
-        this.turn = turn;
-        this.validators = validators;
+    public WeaponConstraintsValidator(CastConstraintValidator<? super CastableWeapon>[] validators) {
+        this.validator = new ConstraintsAggregateValidator<>(validators);
     }
 
-    /**
-     * Validate the weapon cast
-     *
-     * @param weapon Weapon to cast
-     * @param target The target cell
-     *
-     * @return The error if cannot cast the weapon, or null on success
-     */
-    public Error validate(CastableWeapon weapon, FightCell target) {
-        for (CastConstraintValidator<? super CastableWeapon> validator : validators) {
-            Error error = validator.validate(turn, weapon, target);
-
-            if (error != null) {
-                return error;
-            }
-        }
-
-        return null;
+    @Override
+    public Error validate(FightTurn turn, CastableWeapon weapon, FightCell target) {
+        return validator.validate(turn, weapon, target);
     }
 }

@@ -17,7 +17,7 @@ final public class CloseCombatFactory implements FightActionFactory {
     final private CriticalityStrategy criticalityStrategy;
 
     public CloseCombatFactory(FightTurn turn) {
-        this(turn, new WeaponConstraintsValidator(turn), new BaseCriticalityStrategy(turn.fighter()));
+        this(turn, new WeaponConstraintsValidator(), new BaseCriticalityStrategy(turn.fighter()));
     }
 
     public CloseCombatFactory(FightTurn turn, WeaponConstraintsValidator validator, CriticalityStrategy criticalityStrategy) {
@@ -27,7 +27,7 @@ final public class CloseCombatFactory implements FightActionFactory {
     }
 
     @Override
-    public Action create(ActionType action, String[] arguments) {
+    public Action create(String[] arguments) {
         return new CloseCombat(
             turn,
             turn.fighter(),
@@ -35,5 +35,10 @@ final public class CloseCombatFactory implements FightActionFactory {
             validator,
             criticalityStrategy
         );
+    }
+
+    @Override
+    public ActionType type() {
+        return ActionType.CLOSE_COMBAT;
     }
 }

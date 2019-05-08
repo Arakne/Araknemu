@@ -319,7 +319,7 @@ public class FunctionalTest extends FightBaseCase {
             currentTurn.fighter(),
             spell,
             target,
-            new SpellConstraintsValidator(currentTurn),
+            new SpellConstraintsValidator(),
 
             // Ensure no critical hit / fail
             new CriticalityStrategy() {

@@ -22,10 +22,12 @@ final public class EffectMappers {
      *
      * @param type The requested item type
      */
+    @SuppressWarnings("unchecked")
     public <E extends ItemEffect> EffectMapper<E> get(Class<E> type) {
         return mappers.get(type);
     }
 
+    @SuppressWarnings("unchecked")
     private void register(EffectMapper mapper) {
         mappers.put(mapper.type(), mapper);
     }

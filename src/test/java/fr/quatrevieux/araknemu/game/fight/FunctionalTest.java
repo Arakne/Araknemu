@@ -293,7 +293,7 @@ public class FunctionalTest extends GameBaseCase {
                 other.fighter().turn(),
                 other.fighter(),
                 player.fighter().cell(),
-                new WeaponConstraintsValidator(other.fighter().turn()),
+                new WeaponConstraintsValidator(),
                 new CriticalityStrategy() {
                     public int hitRate(int base) { return 0; }
                     public int failureRate(int base) { return 0; }
@@ -403,7 +403,7 @@ public class FunctionalTest extends GameBaseCase {
             currentTurn.fighter(),
             currentTurn.fighter().spells().get(spellId),
             target,
-            new SpellConstraintsValidator(currentTurn),
+            new SpellConstraintsValidator(),
 
             // Ensure no critical hit / fail
             new CriticalityStrategy() {
@@ -423,7 +423,7 @@ public class FunctionalTest extends GameBaseCase {
             currentTurn.fighter(),
             currentTurn.fighter().spells().get(spellId),
             target,
-            new SpellConstraintsValidator(currentTurn),
+            new SpellConstraintsValidator(),
             new CriticalityStrategy() {
                 public int hitRate(int base) { return 0; }
                 public int failureRate(int base) { return 0; }
@@ -441,7 +441,7 @@ public class FunctionalTest extends GameBaseCase {
             currentTurn.fighter(),
             currentTurn.fighter().spells().get(spellId),
             target,
-            new SpellConstraintsValidator(currentTurn),
+            new SpellConstraintsValidator(),
             new CriticalityStrategy() {
                 public int hitRate(int base) { return 0; }
                 public int failureRate(int base) { return 0; }

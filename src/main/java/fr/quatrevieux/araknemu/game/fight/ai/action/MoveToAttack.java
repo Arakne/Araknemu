@@ -3,7 +3,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
-import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
+import fr.quatrevieux.araknemu.game.fight.ai.util.SpellCaster;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
@@ -30,7 +30,7 @@ final public class MoveToAttack implements ActionGenerator {
     final private Movement movement;
     final private Simulator simulator;
 
-    private SpellConstraintsValidator validator;
+    private SpellCaster caster;
     private Fighter fighter;
     private CoordinateCell<FightCell> currentCell;
     private AI ai;
@@ -48,7 +48,7 @@ final public class MoveToAttack implements ActionGenerator {
         movement.initialize(ai);
 
         this.fighter = ai.fighter();
-        this.validator = new SpellConstraintsValidator(ai.turn());
+        this.caster = new SpellCaster(ai);
     }
 
     @Override
@@ -91,7 +91,7 @@ final public class MoveToAttack implements ActionGenerator {
                     FightCell targetCell = ai.fight().map().get(cellId);
 
                     // Target or launch is not valid
-                    if (!targetCell.walkableIgnoreFighter() || validator.validate(spell, targetCell) != null) {
+                    if (!targetCell.walkableIgnoreFighter() || !caster.validate(spell, targetCell)) {
                         continue;
                     }
 
