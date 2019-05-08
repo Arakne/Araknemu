@@ -6,6 +6,8 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Iterator;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class FightMapTest extends GameBaseCase {
@@ -26,6 +28,15 @@ class FightMapTest extends GameBaseCase {
     @Test
     void getters() {
         assertEquals(10340, map.id());
+    }
+
+    @Test
+    void iterator() {
+        Iterator<FightCell> it = map.iterator();
+
+        assertSame(map.get(0), it.next());
+        assertSame(map.get(1), it.next());
+        assertSame(map.get(2), it.next());
     }
 
     @Test

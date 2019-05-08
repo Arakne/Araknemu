@@ -5,12 +5,13 @@ import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.game.world.map.GameMap;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * Map for the fight
  */
-final public class FightMap implements GameMap<FightCell> {
+final public class FightMap implements GameMap<FightCell>, Iterable<FightCell> {
     final private MapTemplate template;
     final private List<FightCell> cells;
 
@@ -51,6 +52,11 @@ final public class FightMap implements GameMap<FightCell> {
     @Override
     public int size() {
         return cells.size();
+    }
+
+    @Override
+    public Iterator<FightCell> iterator() {
+        return cells.iterator();
     }
 
     /**

@@ -87,9 +87,7 @@ final public class Movement implements ActionGenerator {
         final CoordinateCell<FightCell> currentCell = new CoordinateCell<>(ai.fighter().cell());
         final List<ScoredCell> selectedCells = new ArrayList<>();
 
-        for (int cellId = 0; cellId < ai.fight().map().size(); ++cellId) {
-            FightCell cell = ai.fight().map().get(cellId);
-
+        for (FightCell cell : ai.fight().map()) {
             if (!cell.walkable()) {
                 continue;
             }

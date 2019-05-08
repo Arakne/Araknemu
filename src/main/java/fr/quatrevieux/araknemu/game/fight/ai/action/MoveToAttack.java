@@ -87,9 +87,7 @@ final public class MoveToAttack implements ActionGenerator {
                     continue;
                 }
 
-                for (int cellId = 0; cellId < ai.fight().map().size(); ++cellId) {
-                    FightCell targetCell = ai.fight().map().get(cellId);
-
+                for (FightCell targetCell : ai.fight().map()) {
                     // Target or launch is not valid
                     if (!targetCell.walkableIgnoreFighter() || !caster.validate(spell, targetCell)) {
                         continue;

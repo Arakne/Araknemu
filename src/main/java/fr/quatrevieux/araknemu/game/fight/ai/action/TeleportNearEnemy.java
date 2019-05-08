@@ -3,12 +3,9 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.util.SpellCaster;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
-import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
-import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.world.map.util.CoordinateCell;
 
@@ -23,6 +20,53 @@ import java.util.Optional;
 final public class TeleportNearEnemy implements ActionGenerator {
     private SpellCaster caster;
     private List<Spell> teleportSpells;
+
+    /**
+     * Select the best spell and cell couple for teleport
+     */
+    private class Selector {
+        final private CoordinateCell<FightCell> enemyCell;
+        private int distance;
+        private FightCell cell;
+        private Spell spell;
+
+        public Selector(FightCell enemyCell, FightCell currentCell) {
+            this.enemyCell = new CoordinateCell<>(enemyCell);
+            this.distance = this.enemyCell.distance(new CoordinateCell<>(currentCell));
+        }
+
+        /**
+         * Check if the current cell is adjacent to the enemy cell
+         */
+        public boolean adjacent() {
+            return distance == 1;
+        }
+
+        /**
+         * Push the teleport parameters and check if there are better than the previous
+         */
+        public void push(Spell spell, FightCell cell) {
+            int currentDistance = new CoordinateCell<>(cell).distance(enemyCell);
+
+            if (currentDistance < distance) {
+                this.spell = spell;
+                this.cell = cell;
+                this.distance = currentDistance;
+            }
+        }
+
+        /**
+         * Get the best cast action
+         * May return an empty optional if no teleport spell can be found, or if the fighter is already on the best cell
+         */
+        public Optional<Action> action() {
+            if (spell == null) {
+                return Optional.empty();
+            }
+
+            return Optional.of(caster.create(spell, cell));
+        }
+    }
 
     @Override
     public void initialize(AI ai) {
@@ -56,49 +100,33 @@ final public class TeleportNearEnemy implements ActionGenerator {
             return Optional.empty();
         }
 
-        final CoordinateCell<FightCell> targetCell = new CoordinateCell<>(enemy.get().cell());
-        int bestDistance = new CoordinateCell<>(ai.fighter().cell()).distance(targetCell);
+        final Selector selector = new Selector(enemy.get().cell(), ai.fighter().cell());
 
         // Already at adjacent cell of the enemy
-        if (bestDistance <= 1) {
+        if (selector.adjacent()) {
             return Optional.empty();
         }
-
-        FightCell bestCell = ai.fighter().cell();
-        Spell bestSpell = null;
 
         for (Spell spell : teleportSpells) {
             if (spell.apCost() > actionPoints) {
                 continue;
             }
 
-            for (int cellId = 0; cellId < ai.fight().map().size(); ++cellId) {
-                FightCell testCell = ai.fight().map().get(cellId);
-
+            for (FightCell cell : ai.fight().map()) {
                 // Target or launch is not valid
-                if (!testCell.walkable() || !caster.validate(spell, testCell)) {
+                if (!cell.walkable() || !caster.validate(spell, cell)) {
                     continue;
                 }
 
-                int distance = new CoordinateCell<>(testCell).distance(targetCell);
-
-                if (distance < bestDistance) {
-                    bestSpell = spell;
-                    bestCell = testCell;
-                    bestDistance = distance;
-                }
+                selector.push(spell, cell);
 
                 // Adjacent cell found : no need to continue
-                if (distance == 1) {
+                if (selector.adjacent()) {
                     break;
                 }
             }
         }
 
-        if (bestSpell == null) {
-            return Optional.empty();
-        }
-
-        return Optional.of(caster.create(bestSpell, bestCell));
+        return selector.action();
     }
 }
