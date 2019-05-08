@@ -10,7 +10,9 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
+import fr.quatrevieux.araknemu.game.monster.environment.FixedCellSelector;
 import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
+import fr.quatrevieux.araknemu.game.monster.environment.RandomCellSelector;
 import fr.quatrevieux.araknemu.game.monster.group.generator.RandomMonsterListGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,8 +48,8 @@ class MonsterGroupFactoryTest extends GameBaseCase {
         living = new LivingMonsterGroupPosition(
             container.get(MonsterGroupFactory.class),
             container.get(FightService.class),
-            new MonsterGroupPosition(new Position(10340, 123), 3),
-            new MonsterGroupData(3, 60000, 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100)), new MonsterGroupData.Monster(34, new Interval(1, 100)), new MonsterGroupData.Monster(36, new Interval(1, 100))), "")
+            new MonsterGroupData(3, 60000, 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100)), new MonsterGroupData.Monster(34, new Interval(1, 100)), new MonsterGroupData.Monster(36, new Interval(1, 100))), ""),
+            new FixedCellSelector(new Position(10340, 123))
         );
         living.populate(map = container.get(ExplorationMapService.class).load(10340));
 

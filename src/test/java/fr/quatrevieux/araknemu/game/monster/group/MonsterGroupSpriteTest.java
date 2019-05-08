@@ -9,6 +9,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
+import fr.quatrevieux.araknemu.game.monster.environment.RandomCellSelector;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,8 +40,8 @@ class MonsterGroupSpriteTest extends GameBaseCase {
             new LivingMonsterGroupPosition(
                 container.get(MonsterGroupFactory.class),
                 container.get(FightService.class),
-                new MonsterGroupPosition(new Position(10340, -1), 3),
-                new MonsterGroupData(3, 60000, 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100)), new MonsterGroupData.Monster(34, new Interval(1, 100)), new MonsterGroupData.Monster(36, new Interval(1, 100))), "")
+                new MonsterGroupData(3, 60000, 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100)), new MonsterGroupData.Monster(34, new Interval(1, 100)), new MonsterGroupData.Monster(36, new Interval(1, 100))), ""),
+                new RandomCellSelector()
             ),
             5,
             Arrays.asList(

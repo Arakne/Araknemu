@@ -122,7 +122,7 @@ final public class TeleportNearEnemy implements ActionGenerator {
 
                 // Adjacent cell found : no need to continue
                 if (selector.adjacent()) {
-                    break;
+                    return selector.action();
                 }
             }
         }

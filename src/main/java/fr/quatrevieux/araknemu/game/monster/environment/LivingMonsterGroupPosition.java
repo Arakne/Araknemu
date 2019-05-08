@@ -10,7 +10,6 @@ import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilder;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
-import fr.quatrevieux.araknemu.util.RandomUtil;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,22 +19,19 @@ import java.util.stream.Stream;
  * Handle a monster group configuration on map and cell
  */
 final public class LivingMonsterGroupPosition {
-    final static private RandomUtil RANDOM = RandomUtil.createShared();
-
     final private MonsterGroupFactory factory;
     final private FightService fightService;
 
-    final private MonsterGroupPosition position;
     final private MonsterGroupData data;
+    final private SpawnCellSelector cellSelector;
 
     private ExplorationMap map;
 
-    public LivingMonsterGroupPosition(MonsterGroupFactory factory, FightService fightService, MonsterGroupPosition position, MonsterGroupData data) {
+    public LivingMonsterGroupPosition(MonsterGroupFactory factory, FightService fightService, MonsterGroupData data, SpawnCellSelector cellSelector) {
         this.factory = factory;
         this.fightService = fightService;
-
-        this.position = position;
         this.data = data;
+        this.cellSelector = cellSelector;
     }
 
     /**
@@ -46,6 +42,7 @@ final public class LivingMonsterGroupPosition {
      */
     public void populate(ExplorationMap map) {
         this.map = map;
+        this.cellSelector.setMap(map);
 
         for (long i = groupStream().count(); i < data.maxCount(); ++i) {
             spawn();
@@ -75,23 +72,10 @@ final public class LivingMonsterGroupPosition {
      * If not, a random free (without creatures, objects, and walkable) cell is returned
      *
      * @see fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell#free()
+     * @see SpawnCellSelector#cell()
      */
     public ExplorationMapCell cell() {
-        if (position.position().cell() != -1) {
-            return map.get(position.position().cell());
-        }
-
-        for (int i = 0; i < 128; ++i) {
-            int cellId = RANDOM.integer(map.size());
-
-            final ExplorationMapCell cell = map.get(cellId);
-
-            if (cell.free()) {
-                return cell;
-            }
-        }
-
-        throw new IllegalStateException("Cannot found a free cell on map " + map.id());
+        return cellSelector.cell();
     }
 
     /**

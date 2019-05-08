@@ -65,7 +65,12 @@ final public class MonsterEnvironmentService implements EventsSubscriber, Preloa
         for (MonsterGroupPosition position : positionRepository.all()) {
             groupsByMap
                 .computeIfAbsent(position.position().map(), mapId -> new ArrayList<>())
-                .add(new LivingMonsterGroupPosition(factory, fightService, position, groupsData.get(position.groupId())))
+                .add(new LivingMonsterGroupPosition(
+                    factory,
+                    fightService,
+                    groupsData.get(position.groupId()),
+                    SpawnCellSelector.forPosition(position.position())
+                ))
             ;
         }
 
@@ -109,7 +114,12 @@ final public class MonsterEnvironmentService implements EventsSubscriber, Preloa
         Collection<LivingMonsterGroupPosition> groups = new ArrayList<>();
 
         for (MonsterGroupPosition position : positionRepository.byMap(mapId)) {
-            groups.add(new LivingMonsterGroupPosition(factory, fightService, position, dataRepository.get(position.groupId())));
+            groups.add(new LivingMonsterGroupPosition(
+                factory,
+                fightService,
+                dataRepository.get(position.groupId()),
+                SpawnCellSelector.forPosition(position.position())
+            ));
         }
 
         groupsByMap.put(mapId, groups);

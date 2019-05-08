@@ -12,6 +12,7 @@ import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
+import fr.quatrevieux.araknemu.game.monster.environment.RandomCellSelector;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
@@ -44,8 +45,8 @@ class MonsterFighterSpriteTest extends FightBaseCase {
                 new LivingMonsterGroupPosition(
                     container.get(MonsterGroupFactory.class),
                     container.get(FightService.class),
-                    new MonsterGroupPosition(new Position(10340, -1), 3),
-                    new MonsterGroupData(3, 60000, 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100)), new MonsterGroupData.Monster(34, new Interval(1, 100)), new MonsterGroupData.Monster(36, new Interval(1, 100))), "")
+                    new MonsterGroupData(3, 60000, 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100)), new MonsterGroupData.Monster(34, new Interval(1, 100)), new MonsterGroupData.Monster(36, new Interval(1, 100))), ""),
+                    new RandomCellSelector()
                 ),
                 5,
                 Collections.singletonList(service.load(31).all().get(2)),

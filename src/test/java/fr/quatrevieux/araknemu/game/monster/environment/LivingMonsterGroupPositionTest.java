@@ -44,8 +44,8 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
         monsterGroupPosition = new LivingMonsterGroupPosition(
             container.get(MonsterGroupFactory.class),
             container.get(FightService.class),
-            new MonsterGroupPosition(new Position(10340, -1), 1),
-            container.get(MonsterGroupDataRepository.class).get(1)
+            container.get(MonsterGroupDataRepository.class).get(1),
+            new RandomCellSelector()
         );
     }
 
@@ -84,11 +84,11 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
         monsterGroupPosition = new LivingMonsterGroupPosition(
             container.get(MonsterGroupFactory.class),
             container.get(FightService.class),
-            new MonsterGroupPosition(new Position(10340, 123), 3),
             new MonsterGroupData(3, 0, 0, 1, Arrays.asList(
                 new MonsterGroupData.Monster(36, new Interval(5, 5)),
                 new MonsterGroupData.Monster(31, new Interval(2, 2))
-            ), "")
+            ), ""),
+            new FixedCellSelector(new Position(10340, 123))
         );
 
         monsterGroupPosition.populate(map);
