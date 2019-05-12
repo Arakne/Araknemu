@@ -38,4 +38,9 @@ class GameConfigurationTest extends GameBaseCase {
         assertEquals(1, configuration.player().spellBoostPointsOnLevelUp());
         assertEquals(5, configuration.player().characteristicPointsOnLevelUp());
     }
+
+    @Test
+    void activity() {
+        assertEquals(1, configuration.activity().threadsCount());
+    }
 }

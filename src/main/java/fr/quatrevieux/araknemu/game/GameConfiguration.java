@@ -103,6 +103,15 @@ final public class GameConfiguration implements ConfigurationModule {
         }
     }
 
+    final public class ActivityConfiguration {
+        /**
+         * Number of threads to use for the activity service
+         */
+        public int threadsCount() {
+            return pool.integer("activity.threadsCount", 1);
+        }
+    }
+
     private PoolUtils pool;
 
     @Override
@@ -148,5 +157,12 @@ final public class GameConfiguration implements ConfigurationModule {
      */
     public ChatConfiguration chat() {
         return new ChatConfiguration();
+    }
+
+    /**
+     * Get the configuration for the game activity
+     */
+    public ActivityConfiguration activity() {
+        return new ActivityConfiguration();
     }
 }

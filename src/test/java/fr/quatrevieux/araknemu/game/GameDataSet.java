@@ -786,14 +786,15 @@ public class GameDataSet extends TestingDataSet {
     }
 
     public GameDataSet pushMonsterGroups() throws SQLException, ContainerException {
-        if (repository(MonsterGroupData.class).has(new MonsterGroupData(1, 0, 0, 0, null, null))) {
+        if (repository(MonsterGroupData.class).has(new MonsterGroupData(1, null, 0, 0, null, null))) {
             return this;
         }
 
         connection.query(
             "INSERT INTO `MONSTER_GROUP` (`MONSTER_GROUP_ID`, `MONSTERS`, `MAX_SIZE`, `MAX_COUNT`, `RESPAWN_TIME`, `COMMENT`) VALUES" +
                 "(1, '31|34,10', 4, 2, 30000, 'larves')," +
-                "(2, '36,3,6', 6, 3, 75000, 'bouftous');"
+                "(2, '36,3,6', 6, 3, 75000, 'bouftous')," +
+                "(3, '36', 1, 1, 100, 'reswpan');"
         );
 
         return this;

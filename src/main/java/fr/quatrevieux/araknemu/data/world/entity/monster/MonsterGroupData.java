@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.data.world.entity.monster;
 
 import fr.quatrevieux.araknemu.data.value.Interval;
 
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -35,13 +36,13 @@ final public class MonsterGroupData {
     }
 
     final private int id;
-    final private long respawnTime;
+    final private Duration respawnTime;
     final private int maxSize;
     final private int maxCount;
     final private List<Monster> monsters;
     final private String comment;
 
-    public MonsterGroupData(int id, long respawnTime, int maxSize, int maxCount, List<Monster> monsters, String comment) {
+    public MonsterGroupData(int id, Duration respawnTime, int maxSize, int maxCount, List<Monster> monsters, String comment) {
         this.id = id;
         this.respawnTime = respawnTime;
         this.maxSize = maxSize;
@@ -59,10 +60,12 @@ final public class MonsterGroupData {
     }
 
     /**
-     * Get the group respawn time in milliseconds
+     * Get the group respawn time
      * The respawn timer will starts when group disappear (a fight is started)
+     *
+     * Note: The data is stored as long integer for duration in milliseconds
      */
-    public long respawnTime() {
+    public Duration respawnTime() {
         return respawnTime;
     }
 

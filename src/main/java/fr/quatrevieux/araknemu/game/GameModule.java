@@ -31,6 +31,7 @@ import fr.quatrevieux.araknemu.game.account.generator.CamelizeName;
 import fr.quatrevieux.araknemu.game.account.generator.NameCheckerGenerator;
 import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
 import fr.quatrevieux.araknemu.game.account.generator.SimpleNameGenerator;
+import fr.quatrevieux.araknemu.game.activity.ActivityService;
 import fr.quatrevieux.araknemu.game.admin.AdminService;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
 import fr.quatrevieux.araknemu.game.admin.debug.DebugContextResolver;
@@ -530,6 +531,7 @@ final public class GameModule implements ContainerModule {
         configurator.persist(
             MonsterEnvironmentService.class,
             container -> new MonsterEnvironmentService(
+                container.get(ActivityService.class),
                 container.get(FightService.class),
                 container.get(MonsterGroupFactory.class),
                 container.get(MonsterGroupPositionRepository.class),
@@ -542,6 +544,14 @@ final public class GameModule implements ContainerModule {
             container -> new MonsterRewardService(
                 container.get(MonsterRewardRepository.class),
                 container.get(MonsterRewardItemRepository.class)
+            )
+        );
+
+        configurator.persist(
+            ActivityService.class,
+            container -> new ActivityService(
+                container.get(GameConfiguration.class).activity(),
+                container.get(Logger.class) // @todo custom logger ?
             )
         );
 

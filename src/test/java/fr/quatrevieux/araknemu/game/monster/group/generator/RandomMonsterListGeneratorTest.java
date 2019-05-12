@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +34,7 @@ class RandomMonsterListGeneratorTest  extends GameBaseCase {
 
     @Test
     void groupSize1() {
-        MonsterGroupData data = new MonsterGroupData(1, 0, 1, 1, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(3, 3))), "");
+        MonsterGroupData data = new MonsterGroupData(1, Duration.ZERO, 1, 1, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(3, 3))), "");
 
         assertCount(1, generator.generate(data));
     }
@@ -116,7 +117,7 @@ class RandomMonsterListGeneratorTest  extends GameBaseCase {
     }
 
     private Map<Integer, Integer> countsForMaxSize(int maxSize) {
-        MonsterGroupData data = new MonsterGroupData(1, 0, maxSize, 1, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(3, 3))), "");
+        MonsterGroupData data = new MonsterGroupData(1, Duration.ZERO, maxSize, 1, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(3, 3))), "");
 
         Map<Integer, Integer> counts = new HashMap<>();
 

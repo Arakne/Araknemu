@@ -11,6 +11,7 @@ import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilder;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,15 +22,17 @@ import java.util.stream.Stream;
 final public class LivingMonsterGroupPosition {
     final private MonsterGroupFactory factory;
     final private FightService fightService;
+    final private MonsterEnvironmentService environmentService;
 
     final private MonsterGroupData data;
     final private SpawnCellSelector cellSelector;
 
     private ExplorationMap map;
 
-    public LivingMonsterGroupPosition(MonsterGroupFactory factory, FightService fightService, MonsterGroupData data, SpawnCellSelector cellSelector) {
+    public LivingMonsterGroupPosition(MonsterGroupFactory factory, MonsterEnvironmentService environmentService, FightService fightService, MonsterGroupData data, SpawnCellSelector cellSelector) {
         this.factory = factory;
         this.fightService = fightService;
+        this.environmentService = environmentService;
         this.data = data;
         this.cellSelector = cellSelector;
     }
@@ -81,8 +84,6 @@ final public class LivingMonsterGroupPosition {
     /**
      * Start a fight with the group
      *
-     * @todo push respawn timer
-     *
      * @param group The monster group. Must be handled by the current instance
      * @param player The player
      *
@@ -90,6 +91,7 @@ final public class LivingMonsterGroupPosition {
      */
     public Fight startFight(MonsterGroup group, ExplorationPlayer player) {
         map.remove(group);
+        environmentService.respawn(this, data.respawnTime());
 
         return fightService.handler(PvmBuilder.class).start(
             builder -> builder

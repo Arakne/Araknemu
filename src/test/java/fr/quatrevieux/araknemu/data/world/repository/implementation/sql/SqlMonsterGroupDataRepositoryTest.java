@@ -8,6 +8,8 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class SqlMonsterGroupDataRepositoryTest extends GameBaseCase {
@@ -38,7 +40,7 @@ class SqlMonsterGroupDataRepositoryTest extends GameBaseCase {
         assertEquals(1, data.id());
         assertEquals(4, data.maxSize());
         assertEquals(2, data.maxCount());
-        assertEquals(30000L, data.respawnTime());
+        assertEquals(Duration.ofMillis(30000), data.respawnTime());
         assertEquals("larves", data.comment());
 
         assertCount(2, data.monsters());
@@ -50,12 +52,12 @@ class SqlMonsterGroupDataRepositoryTest extends GameBaseCase {
 
     @Test
     void getByEntity() {
-        MonsterGroupData data = repository.get(new MonsterGroupData(1, 0, 0, 0, null, null));
+        MonsterGroupData data = repository.get(new MonsterGroupData(1, null, 0, 0, null, null));
 
         assertEquals(1, data.id());
         assertEquals(4, data.maxSize());
         assertEquals(2, data.maxCount());
-        assertEquals(30000L, data.respawnTime());
+        assertEquals(Duration.ofMillis(30000), data.respawnTime());
         assertEquals("larves", data.comment());
 
         assertCount(2, data.monsters());
@@ -67,14 +69,14 @@ class SqlMonsterGroupDataRepositoryTest extends GameBaseCase {
 
     @Test
     void has() {
-        assertTrue(repository.has(new MonsterGroupData(1, 0, 0, 0, null, null)));
-        assertFalse(repository.has(new MonsterGroupData(-5, 0, 0, 0, null, null)));
+        assertTrue(repository.has(new MonsterGroupData(1, null, 0, 0, null, null)));
+        assertFalse(repository.has(new MonsterGroupData(-5, null, 0, 0, null, null)));
     }
 
     @Test
     void all() {
         assertArrayEquals(
-            new int[] {1, 2},
+            new int[] {1, 2, 3},
             repository.all().stream().mapToInt(MonsterGroupData::id).toArray()
         );
     }

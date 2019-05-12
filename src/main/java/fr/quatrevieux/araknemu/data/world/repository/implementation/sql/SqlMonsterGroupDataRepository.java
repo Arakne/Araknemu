@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRep
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ final class SqlMonsterGroupDataRepository implements MonsterGroupDataRepository 
         public MonsterGroupData create(ResultSet rs) throws SQLException {
             return new MonsterGroupData(
                 rs.getInt("MONSTER_GROUP_ID"),
-                rs.getLong("RESPAWN_TIME"),
+                Duration.ofMillis(rs.getLong("RESPAWN_TIME")),
                 rs.getInt("MAX_SIZE"),
                 rs.getInt("MAX_COUNT"),
                 monstersTransformer.unserialize(rs.getString("MONSTERS")),

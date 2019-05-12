@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,6 +44,7 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
 
         monsterGroupPosition = new LivingMonsterGroupPosition(
             container.get(MonsterGroupFactory.class),
+            container.get(MonsterEnvironmentService.class),
             container.get(FightService.class),
             container.get(MonsterGroupDataRepository.class).get(1),
             new RandomCellSelector()
@@ -83,8 +85,9 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
     void fixedGroup() {
         monsterGroupPosition = new LivingMonsterGroupPosition(
             container.get(MonsterGroupFactory.class),
+            container.get(MonsterEnvironmentService.class),
             container.get(FightService.class),
-            new MonsterGroupData(3, 0, 0, 1, Arrays.asList(
+            new MonsterGroupData(3, Duration.ZERO, 0, 1, Arrays.asList(
                 new MonsterGroupData.Monster(36, new Interval(5, 5)),
                 new MonsterGroupData.Monster(31, new Interval(2, 2))
             ), ""),
@@ -130,5 +133,30 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
         assertContainsType(MonsterFighter.class, fight.fighters());
         assertContains(player.player().fighter(), fight.fighters());
         assertInstanceOf(PvmType.class, fight.type());
+    }
+
+    @Test
+    void startFightShouldRespawnGroup() throws SQLException, InterruptedException {
+        monsterGroupPosition = new LivingMonsterGroupPosition(
+            container.get(MonsterGroupFactory.class),
+            container.get(MonsterEnvironmentService.class),
+            container.get(FightService.class),
+            container.get(MonsterGroupDataRepository.class).get(3),
+            new RandomCellSelector()
+        );
+
+        monsterGroupPosition.populate(map);
+
+
+        ExplorationPlayer player = explorationPlayer();
+        player.join(map);
+
+        MonsterGroup group = monsterGroupPosition.available().get(0);
+        monsterGroupPosition.startFight(group, player);
+
+        assertEquals(0, monsterGroupPosition.available().size());
+
+        Thread.sleep(200);
+        assertEquals(1, monsterGroupPosition.available().size());
     }
 }
