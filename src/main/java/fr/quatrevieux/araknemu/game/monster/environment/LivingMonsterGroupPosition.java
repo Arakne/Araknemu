@@ -11,7 +11,7 @@ import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilder;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
 
-import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -65,6 +65,10 @@ final public class LivingMonsterGroupPosition {
      * Get list of available monster groups on the map
      */
     public List<MonsterGroup> available() {
+        if (map == null) {
+            return Collections.emptyList();
+        }
+
         return groupStream().collect(Collectors.toList());
     }
 

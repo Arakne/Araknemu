@@ -159,4 +159,9 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
         Thread.sleep(200);
         assertEquals(1, monsterGroupPosition.available().size());
     }
+
+    @Test
+    void availableWithoutPopulate() {
+        assertCount(0, monsterGroupPosition.available());
+    }
 }

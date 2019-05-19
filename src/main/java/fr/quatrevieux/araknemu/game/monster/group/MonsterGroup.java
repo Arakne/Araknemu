@@ -1,14 +1,16 @@
 package fr.quatrevieux.araknemu.game.monster.group;
 
-import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
+import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
+import fr.quatrevieux.araknemu.game.exploration.map.event.CreatureMoving;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
-import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
+import fr.quatrevieux.araknemu.game.world.map.path.Path;
 
 import java.util.List;
 
@@ -87,5 +89,16 @@ final public class MonsterGroup implements ExplorationCreature {
      */
     public Fight startFight(ExplorationPlayer player) {
         return handler.startFight(this, player);
+    }
+
+    /**
+     * Move the group
+     * The cell will be set at the path target
+     *
+     * @param path The move path
+     */
+    public void move(Path<ExplorationMapCell> path) {
+        cell = path.target();
+        cell.map().dispatch(new CreatureMoving(this, path));
     }
 }

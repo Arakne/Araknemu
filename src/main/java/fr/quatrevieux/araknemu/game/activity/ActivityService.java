@@ -21,14 +21,16 @@ final public class ActivityService {
 
     /**
      * Execute the task
+     * If the task failed to execute, it will be retried
      */
     public void execute(Task task) {
         executor.schedule(
             () -> {
                 try {
+                    final long startTime = System.currentTimeMillis();
                     logger.info("Start task {}", task);
                     task.execute(logger);
-                    logger.info("End task {}", task);
+                    logger.info("End task {} in {}ms", task, System.currentTimeMillis() - startTime);
                 } catch (RuntimeException e) {
                     logger.error("Execution failed : " + e.getMessage() + " for task " + task, e);
 
@@ -39,6 +41,29 @@ final public class ActivityService {
                     }
                 }
             },
+            task.delay().toMillis(),
+            TimeUnit.MILLISECONDS
+        );
+    }
+
+    /**
+     * Execute a periodic task
+     * The period time is the {@link Task#delay()}
+     * A failed task will not be retried
+     */
+    public void periodic(Task task) {
+        executor.scheduleAtFixedRate(
+            () -> {
+                try {
+                    final long startTime = System.currentTimeMillis();
+                    logger.info("Start task {}", task);
+                    task.execute(logger);
+                    logger.info("End task {} in {}ms", task, System.currentTimeMillis() - startTime);
+                } catch (RuntimeException e) {
+                    logger.error("Execution failed : " + e.getMessage() + " for task " + task, e);
+                }
+            },
+            task.delay().toMillis(),
             task.delay().toMillis(),
             TimeUnit.MILLISECONDS
         );

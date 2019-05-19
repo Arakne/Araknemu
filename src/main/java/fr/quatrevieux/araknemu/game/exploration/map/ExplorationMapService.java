@@ -12,10 +12,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.event.FightCreated;
-import fr.quatrevieux.araknemu.game.listener.map.SendNewSprite;
-import fr.quatrevieux.araknemu.game.listener.map.SendPlayerChangeCell;
-import fr.quatrevieux.araknemu.game.listener.map.SendPlayerChangeOrientation;
-import fr.quatrevieux.araknemu.game.listener.map.SendSpriteRemoved;
+import fr.quatrevieux.araknemu.game.listener.map.*;
 import fr.quatrevieux.araknemu.game.listener.map.fight.*;
 import fr.quatrevieux.araknemu.game.listener.player.SendMapData;
 import org.slf4j.Logger;
@@ -109,6 +106,7 @@ final public class ExplorationMapService implements PreloadableService, EventsSu
         map.dispatcher().add(new SendSpriteRemoved(map));
         map.dispatcher().add(new SendPlayerChangeCell(map));
         map.dispatcher().add(new SendPlayerChangeOrientation(map));
+        map.dispatcher().add(new SendCreatureMove(map));
 
         dispatcher.dispatch(new MapLoaded(map));
 

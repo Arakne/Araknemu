@@ -7,8 +7,8 @@ import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupPositionRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.activity.ActivityService;
-import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
@@ -21,13 +21,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
+import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class MonsterEnvironmentServiceTest extends GameBaseCase {
     private MonsterEnvironmentService service;
@@ -49,7 +51,8 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
             container.get(FightService.class),
             container.get(MonsterGroupFactory.class),
             container.get(MonsterGroupPositionRepository.class),
-            container.get(MonsterGroupDataRepository.class)
+            container.get(MonsterGroupDataRepository.class),
+            container.get(GameConfiguration.class).activity()
         );
     }
 
@@ -126,5 +129,17 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
         MonsterGroup lastGroup = monsterGroupPosition.available().get(1);
 
         requestStack.assertLast(new AddSprites(Collections.singleton(lastGroup.sprite())));
+    }
+
+    @Test
+    void groups() throws SQLException {
+        assertEquals(0, service.groups().count());
+
+        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, -1), 1));
+        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10300, 123), 2));
+        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10300, 125), 2));
+
+        service.preload(NOPLogger.NOP_LOGGER);
+        assertEquals(3, service.groups().count());
     }
 }

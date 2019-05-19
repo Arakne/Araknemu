@@ -1,23 +1,26 @@
 package fr.quatrevieux.araknemu.game.monster.group;
 
 import fr.quatrevieux.araknemu.data.value.Interval;
-import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
-import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
+import fr.quatrevieux.araknemu.game.exploration.map.event.CreatureMoving;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
-import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.monster.environment.MonsterEnvironmentService;
 import fr.quatrevieux.araknemu.game.monster.environment.RandomCellSelector;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
+import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
+import fr.quatrevieux.araknemu.game.world.map.path.Path;
+import fr.quatrevieux.araknemu.game.world.map.path.PathStep;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -25,6 +28,7 @@ import org.mockito.Mockito;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -113,5 +117,24 @@ class MonsterGroupTest extends GameBaseCase {
         assertContainsType(MonsterFighter.class, fight.fighters());
         assertContains(player.player().fighter(), fight.fighters());
         assertInstanceOf(PvmType.class, fight.type());
+    }
+
+    @Test
+    void move() {
+        AtomicReference<CreatureMoving> ref = new AtomicReference<>();
+        map.dispatcher().add(CreatureMoving.class, ref::set);
+
+        Path<ExplorationMapCell> path = new Path<>(
+            new Decoder<>(map),
+            Arrays.asList(
+                new PathStep<>(map.get(123), Direction.EAST),
+                new PathStep<>(map.get(138), Direction.SOUTH_EAST)
+            )
+        );
+
+        group.move(path);
+        assertEquals(map.get(138), group.cell());
+        assertSame(group, ref.get().creature());
+        assertSame(path, ref.get().path());
     }
 }

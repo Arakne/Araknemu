@@ -36,7 +36,7 @@ class ActivityServiceTest extends GameBaseCase {
 
         Mockito.verify(action).accept(logger);
         Mockito.verify(logger).info("Start task {}", task);
-        Mockito.verify(logger).info("End task {}", task);
+        Mockito.verify(logger).info(Mockito.eq("End task {} in {}ms"), Mockito.eq(task), Mockito.anyLong());
     }
 
     @Test
@@ -73,5 +73,32 @@ class ActivityServiceTest extends GameBaseCase {
         Mockito.verify(action, Mockito.times(3)).accept(logger);
         Mockito.verify(logger, Mockito.times(2)).info("Retry execute the task {}", task);
         Mockito.verify(logger, Mockito.times(3)).error("Execution failed : my error for task my task", exception);
+    }
+
+    @Test
+    void periodic() throws InterruptedException {
+        Consumer<Logger> action = Mockito.mock(Consumer.class);
+
+        Task task = new SimpleTask(action).setDelay(Duration.ofMillis(10));
+
+        service.periodic(task);
+
+        Thread.sleep(100);
+        Mockito.verify(action, Mockito.atLeast(2)).accept(logger);
+    }
+
+    @Test
+    void periodicWithException() throws InterruptedException {
+        RuntimeException exception = new RuntimeException("my error");
+
+        Consumer<Logger> action = Mockito.mock(Consumer.class);
+        Mockito.doThrow(exception).when(action).accept(logger);
+
+        Task task = new SimpleTask(action).setDelay(Duration.ofMillis(10)).setName("my task");
+
+        service.periodic(task);
+
+        Thread.sleep(100);
+        Mockito.verify(logger, Mockito.atLeast(2)).error("Execution failed : my error for task my task", exception);
     }
 }

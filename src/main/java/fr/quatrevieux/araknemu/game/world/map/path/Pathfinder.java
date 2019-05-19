@@ -194,6 +194,10 @@ final public class Pathfinder<C extends MapCell> {
                 throw new PathException("Cannot find any valid path between " + source.cell().id() + " and " + target.cell().id());
             }
 
+            if (explored.size() > exploredCellLimit) {
+                throw new PathException("Limit exceeded for finding path");
+            }
+
             current = movements.poll();
             explored.add(current.cell.cell());
         }
@@ -267,6 +271,12 @@ final public class Pathfinder<C extends MapCell> {
      */
     private Direction[] directions = Direction.RESTRICTED;
 
+    /**
+     * Maximum number of explored cells
+     * Allow to fail when finding too complex path
+     */
+    private int exploredCellLimit = Integer.MAX_VALUE;
+
     public Pathfinder(Decoder<C> decoder) {
         this.decoder = decoder;
     }
@@ -336,6 +346,22 @@ final public class Pathfinder<C extends MapCell> {
      */
     public Pathfinder<C> directions(Direction[] directions) {
         this.directions = directions;
+
+        return this;
+    }
+
+    /**
+     * Define the maximum number of cells to explore before fail
+     *
+     * A lower limit will fail faster, but do not permit complex path
+     * The limit cannot be higher than walkable cells number
+     *
+     * @param limit The cells number. Must be a positive integer
+     *
+     * @return this instance
+     */
+    public Pathfinder<C> exploredCellLimit(int limit) {
+        this.exploredCellLimit = limit;
 
         return this;
     }

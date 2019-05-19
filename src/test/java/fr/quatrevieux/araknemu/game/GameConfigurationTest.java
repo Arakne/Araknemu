@@ -42,5 +42,7 @@ class GameConfigurationTest extends GameBaseCase {
     @Test
     void activity() {
         assertEquals(1, configuration.activity().threadsCount());
+        assertEquals(120, configuration.activity().monsterMoveInterval());
+        assertEquals(25, configuration.activity().monsterMovePercent());
     }
 }

@@ -110,6 +110,23 @@ final public class GameConfiguration implements ConfigurationModule {
         public int threadsCount() {
             return pool.integer("activity.threadsCount", 1);
         }
+
+        /**
+         * Number of seconds for move monster groups
+         * By default 120s = 2min
+         */
+        public int monsterMoveInterval() {
+            return pool.integer("activity.monsters.moveInterval", 120);
+        }
+
+        /**
+         * Percent of chance that a monster group on a map move
+         * The value must be an integer value between ]0, 100]
+         * By default 25%
+         */
+        public int monsterMovePercent() {
+            return pool.integer("activity.monsters.movePercent", 25);
+        }
     }
 
     private PoolUtils pool;

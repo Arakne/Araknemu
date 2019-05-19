@@ -6,10 +6,10 @@ import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupPositionRepository;
+import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.game.activity.ActivityService;
 import fr.quatrevieux.araknemu.game.activity.SimpleTask;
-import fr.quatrevieux.araknemu.game.activity.Task;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.listener.map.monster.LaunchMonsterFight;
@@ -25,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Handle environment interactions with monsters
@@ -35,6 +36,7 @@ final public class MonsterEnvironmentService implements EventsSubscriber, Preloa
     final private MonsterGroupFactory factory;
     final private MonsterGroupPositionRepository positionRepository;
     final private MonsterGroupDataRepository dataRepository;
+    final private GameConfiguration.ActivityConfiguration configuration;
 
     /**
      * Groups indexed by map id
@@ -48,12 +50,13 @@ final public class MonsterEnvironmentService implements EventsSubscriber, Preloa
     private boolean preloaded = false;
 
 
-    public MonsterEnvironmentService(ActivityService activityService, FightService fightService, MonsterGroupFactory factory, MonsterGroupPositionRepository positionRepository, MonsterGroupDataRepository dataRepository) {
+    public MonsterEnvironmentService(ActivityService activityService, FightService fightService, MonsterGroupFactory factory, MonsterGroupPositionRepository positionRepository, MonsterGroupDataRepository dataRepository, GameConfiguration.ActivityConfiguration configuration) {
         this.activityService = activityService;
         this.fightService = fightService;
         this.factory = factory;
         this.positionRepository = positionRepository;
         this.dataRepository = dataRepository;
+        this.configuration = configuration;
     }
 
     @Override
@@ -84,6 +87,14 @@ final public class MonsterEnvironmentService implements EventsSubscriber, Preloa
         logger.info("{} Map positions loaded", groupsByMap.size());
 
         preloaded = true;
+
+        activityService.periodic(
+            new MoveMonsters(
+                this,
+                Duration.ofSeconds(configuration.monsterMoveInterval()),
+                configuration.monsterMovePercent()
+            )
+        );
     }
 
     @Override
@@ -145,5 +156,12 @@ final public class MonsterEnvironmentService implements EventsSubscriber, Preloa
                 .setMaxTries(2)
                 .setName("Respawn")
         );
+    }
+
+    /**
+     * Get all loaded groups
+     */
+    Stream<LivingMonsterGroupPosition> groups() {
+        return groupsByMap.values().stream().flatMap(Collection::stream);
     }
 }

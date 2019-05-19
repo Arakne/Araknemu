@@ -8,8 +8,6 @@ import fr.quatrevieux.araknemu.game.world.map.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class PathfinderTest extends GameBaseCase {
@@ -165,5 +163,10 @@ class PathfinderTest extends GameBaseCase {
     @Test
     void encodePath() {
         assertEquals("afqffbheZfevhcLbddhc1beadeQbfidga", pathfinder.findPath(map.get(336), map.get(384)).encode());
+    }
+
+    @Test
+    void exploredCellLimit() {
+        assertThrows(PathException.class, () -> pathfinder.exploredCellLimit(10).findPath(map.get(336), map.get(384)).encode());
     }
 }

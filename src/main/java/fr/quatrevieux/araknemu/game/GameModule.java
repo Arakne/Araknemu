@@ -535,7 +535,8 @@ final public class GameModule implements ContainerModule {
                 container.get(FightService.class),
                 container.get(MonsterGroupFactory.class),
                 container.get(MonsterGroupPositionRepository.class),
-                container.get(MonsterGroupDataRepository.class)
+                container.get(MonsterGroupDataRepository.class),
+                container.get(GameConfiguration.class).activity()
             )
         );
 
