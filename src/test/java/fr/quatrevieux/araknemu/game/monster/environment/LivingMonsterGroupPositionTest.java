@@ -88,8 +88,8 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
             container.get(MonsterEnvironmentService.class),
             container.get(FightService.class),
             new MonsterGroupData(3, Duration.ZERO, 0, 1, Arrays.asList(
-                new MonsterGroupData.Monster(36, new Interval(5, 5)),
-                new MonsterGroupData.Monster(31, new Interval(2, 2))
+                new MonsterGroupData.Monster(36, new Interval(5, 5), 1),
+                new MonsterGroupData.Monster(31, new Interval(2, 2), 1)
             ), ""),
             new FixedCellSelector(new Position(10340, 123))
         );

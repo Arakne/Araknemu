@@ -48,7 +48,7 @@ class MonsterFighterSpriteTest extends FightBaseCase {
                     container.get(MonsterGroupFactory.class),
                     container.get(MonsterEnvironmentService.class),
                     container.get(FightService.class),
-                    new MonsterGroupData(3, Duration.ofMillis(60000), 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100)), new MonsterGroupData.Monster(34, new Interval(1, 100)), new MonsterGroupData.Monster(36, new Interval(1, 100))), ""),
+                    new MonsterGroupData(3, Duration.ofMillis(60000), 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100), 1), new MonsterGroupData.Monster(34, new Interval(1, 100), 1), new MonsterGroupData.Monster(36, new Interval(1, 100), 1)), ""),
                     new RandomCellSelector()
                 ),
                 5,

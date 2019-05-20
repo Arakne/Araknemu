@@ -112,4 +112,26 @@ class PvmRewardsGeneratorTest extends FightBaseCase {
         assertEquals(0, sheet.rewards().get(0).xp());
         assertEquals(0, sheet.rewards().get(0).kamas());
     }
+
+    @Test
+    void generateFunctional() throws Exception {
+        long lastXp = player.properties().experience().current();
+        long lastKamas = player.inventory().kamas();
+
+        dataSet.pushItemSets();
+
+        Fight fight = createPvmFight();
+        fight.nextState();
+
+        fight.team(1).fighters().forEach(fighter -> fighter.life().kill(player.fighter()));
+        requestStack.clear();
+        fight.nextState();
+
+        assertBetween(100, 140, player.inventory().kamas() - lastKamas);
+        assertEquals(241, player.properties().experience().current() - lastXp);
+        assertEquals(8213, player.inventory().get(1).item().template().id());
+        assertEquals(1, player.inventory().get(1).quantity());
+        assertEquals(8219, player.inventory().get(2).item().template().id());
+        assertEquals(1, player.inventory().get(2).quantity());
+    }
 }

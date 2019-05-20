@@ -13,15 +13,18 @@ import java.util.List;
  * Transform database monster list
  *
  * Format :
- * [id 1],[level min 1],[level max 1]|[id 2],[level min 2],[level max 2]
+ * [id 1],[level min 1],[level max 1]x[rate1]|[id 2],[level min 2],[level max 2]x[rate2]
  *
  * Monsters are separated by pipe "|"
  * Monster properties are separated by comma ","
+ * Monster spawn rate is an integer that follow "x"
  *
  * Levels are not required :
  * - If not set, all available levels are used
  * - If only one is set, the level is constant
  * - If interval is set, only grades into the interval are used
+ *
+ * The spawn rate is not required, and by default, its value is 1
  *
  * @see MonsterGroupData#monsters()
  * @see MonsterGroupData.Monster
@@ -39,7 +42,14 @@ final public class MonsterListTransformer implements Transformer<List<MonsterGro
         List<MonsterGroupData.Monster> monsters = new ArrayList<>(monstersStr.length);
 
         for (String monsterStr : monstersStr) {
-            String[] data = StringUtils.split(monsterStr, ",", 3);
+            String[] dataAndRate = StringUtils.split(monsterStr, "x", 2);
+            String[] data = StringUtils.split(dataAndRate[0], ",", 3);
+
+            int rate = 1;
+
+            if (dataAndRate.length == 2) {
+                rate = Integer.parseInt(dataAndRate[1]);
+            }
 
             int monsterId = Integer.parseInt(data[0]);
             int minLevel = 1;
@@ -53,7 +63,7 @@ final public class MonsterListTransformer implements Transformer<List<MonsterGro
                 maxLevel = Integer.parseInt(data[2]);
             }
 
-            monsters.add(new MonsterGroupData.Monster(monsterId, new Interval(minLevel, maxLevel)));
+            monsters.add(new MonsterGroupData.Monster(monsterId, new Interval(minLevel, maxLevel), rate));
         }
 
         return monsters;

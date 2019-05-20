@@ -40,9 +40,7 @@ final public class RandomMonsterListGenerator implements MonsterListGenerator {
         List<Monster> monsters = new ArrayList<>(size);
 
         for (int i = size; i > 0; --i) {
-            MonsterGroupData.Monster monsterData = random.of(data.monsters());
-
-            monsters.add(service.load(monsterData.id()).random(monsterData.level()));
+            monsters.add(monster(data));
         }
 
         return monsters;
@@ -70,5 +68,22 @@ final public class RandomMonsterListGenerator implements MonsterListGenerator {
         }
 
         throw new IllegalArgumentException("Invalid group size " + maxSize);
+    }
+
+    /**
+     * Select a random monster from the group data, considering the rate
+     */
+    private Monster monster(MonsterGroupData data) {
+        int value = random.integer(data.totalRate());
+
+        for (MonsterGroupData.Monster monsterData : data.monsters()) {
+            value -= monsterData.rate();
+
+            if (value < 0) {
+                return service.load(monsterData.id()).random(monsterData.level());
+            }
+        }
+
+        throw new IllegalArgumentException("Invalid group monsters");
     }
 }

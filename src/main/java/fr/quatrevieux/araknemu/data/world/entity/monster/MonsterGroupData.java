@@ -12,10 +12,12 @@ final public class MonsterGroupData {
     final static public class Monster {
         final private int id;
         final private Interval level;
+        final private int rate;
 
-        public Monster(int id, Interval level) {
+        public Monster(int id, Interval level, int rate) {
             this.id = id;
             this.level = level;
+            this.rate = rate;
         }
 
         /**
@@ -33,6 +35,22 @@ final public class MonsterGroupData {
         public Interval level() {
             return level;
         }
+
+        /**
+         * Get the spawn chance of the monster
+         *
+         * This rate is relative to all monsters of the group
+         * Higher the rate is, higher the spawn chance is
+         * A monster with a rate of 10 has a probability of two times more than a rate of 5
+         *
+         * The rate of all monsters of the group are added for compute the probability
+         * By default the rate is 1
+         *
+         * @see MonsterGroupData#totalRate()
+         */
+        public int rate() {
+            return rate;
+        }
     }
 
     final private int id;
@@ -42,6 +60,8 @@ final public class MonsterGroupData {
     final private List<Monster> monsters;
     final private String comment;
 
+    final private int totalRate;
+
     public MonsterGroupData(int id, Duration respawnTime, int maxSize, int maxCount, List<Monster> monsters, String comment) {
         this.id = id;
         this.respawnTime = respawnTime;
@@ -49,6 +69,8 @@ final public class MonsterGroupData {
         this.maxCount = maxCount;
         this.monsters = monsters;
         this.comment = comment;
+
+        this.totalRate = monsters != null ? monsters.stream().mapToInt(Monster::rate).sum() : 0;
     }
 
     /**
@@ -105,5 +127,14 @@ final public class MonsterGroupData {
      */
     public int maxCount() {
         return maxCount;
+    }
+
+    /**
+     * Get the sum of all rates of monsters
+     *
+     * @see Monster#rate()
+     */
+    public int totalRate() {
+        return totalRate;
     }
 }

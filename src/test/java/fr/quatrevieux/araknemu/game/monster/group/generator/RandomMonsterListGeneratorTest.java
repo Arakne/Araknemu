@@ -34,7 +34,7 @@ class RandomMonsterListGeneratorTest  extends GameBaseCase {
 
     @Test
     void groupSize1() {
-        MonsterGroupData data = new MonsterGroupData(1, Duration.ZERO, 1, 1, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(3, 3))), "");
+        MonsterGroupData data = new MonsterGroupData(1, Duration.ZERO, 1, 1, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(3, 3), 1)), "");
 
         assertCount(1, generator.generate(data));
     }
@@ -116,8 +116,24 @@ class RandomMonsterListGeneratorTest  extends GameBaseCase {
         assertBetween(80, 100, counts.get(8));
     }
 
+    @Test
+    void rate() {
+        MonsterGroupData data = new MonsterGroupData(1, Duration.ZERO, 1, 1, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(0, 100), 2), new MonsterGroupData.Monster(34, new Interval(0, 100), 1)), "");
+
+        Map<Integer, Integer> idsCounts = new HashMap<>();
+
+        for (int i = 0; i < 100; ++i) {
+            int id = generator.generate(data).get(0).id();
+
+            idsCounts.put(id, idsCounts.getOrDefault(id, 0) + 1);
+        }
+
+        assertBetween(56, 76, idsCounts.get(31));
+        assertBetween(23, 43, idsCounts.get(34));
+    }
+
     private Map<Integer, Integer> countsForMaxSize(int maxSize) {
-        MonsterGroupData data = new MonsterGroupData(1, Duration.ZERO, maxSize, 1, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(3, 3))), "");
+        MonsterGroupData data = new MonsterGroupData(1, Duration.ZERO, maxSize, 1, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(3, 3), 1)), "");
 
         Map<Integer, Integer> counts = new HashMap<>();
 

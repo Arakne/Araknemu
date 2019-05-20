@@ -46,8 +46,11 @@ class SqlMonsterGroupDataRepositoryTest extends GameBaseCase {
         assertCount(2, data.monsters());
         assertEquals(31, data.monsters().get(0).id());
         assertEquals(new Interval(1, Integer.MAX_VALUE), data.monsters().get(0).level());
+        assertEquals(1, data.monsters().get(0).rate());
         assertEquals(34, data.monsters().get(1).id());
         assertEquals(new Interval(10, 10), data.monsters().get(1).level());
+        assertEquals(1, data.monsters().get(1).rate());
+        assertEquals(2, data.totalRate());
     }
 
     @Test
