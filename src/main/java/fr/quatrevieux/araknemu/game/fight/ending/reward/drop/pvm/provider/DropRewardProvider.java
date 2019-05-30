@@ -12,6 +12,11 @@ public interface DropRewardProvider {
      */
     public interface Scope {
         /**
+         * No-operation scope instance
+         */
+        final static public Scope NOOP = reward -> {};
+
+        /**
          * Provide the reward data
          */
         public void provide(DropReward reward);

@@ -90,7 +90,7 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
             new MonsterGroupData(3, Duration.ZERO, 0, 1, Arrays.asList(
                 new MonsterGroupData.Monster(36, new Interval(5, 5), 1),
                 new MonsterGroupData.Monster(31, new Interval(2, 2), 1)
-            ), ""),
+            ), "", new Position(0, 0)),
             new FixedCellSelector(new Position(10340, 123))
         );
 

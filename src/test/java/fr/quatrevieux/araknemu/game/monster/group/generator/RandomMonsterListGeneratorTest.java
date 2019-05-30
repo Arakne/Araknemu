@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.monster.group.generator;
 
 import fr.quatrevieux.araknemu.data.value.Interval;
+import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
@@ -34,7 +35,7 @@ class RandomMonsterListGeneratorTest  extends GameBaseCase {
 
     @Test
     void groupSize1() {
-        MonsterGroupData data = new MonsterGroupData(1, Duration.ZERO, 1, 1, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(3, 3), 1)), "");
+        MonsterGroupData data = new MonsterGroupData(1, Duration.ZERO, 1, 1, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(3, 3), 1)), "", new Position(0, 0));
 
         assertCount(1, generator.generate(data));
     }
@@ -118,7 +119,7 @@ class RandomMonsterListGeneratorTest  extends GameBaseCase {
 
     @Test
     void rate() {
-        MonsterGroupData data = new MonsterGroupData(1, Duration.ZERO, 1, 1, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(0, 100), 2), new MonsterGroupData.Monster(34, new Interval(0, 100), 1)), "");
+        MonsterGroupData data = new MonsterGroupData(1, Duration.ZERO, 1, 1, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(0, 100), 2), new MonsterGroupData.Monster(34, new Interval(0, 100), 1)), "", new Position(0, 0));
 
         Map<Integer, Integer> idsCounts = new HashMap<>();
 
@@ -133,7 +134,7 @@ class RandomMonsterListGeneratorTest  extends GameBaseCase {
     }
 
     private Map<Integer, Integer> countsForMaxSize(int maxSize) {
-        MonsterGroupData data = new MonsterGroupData(1, Duration.ZERO, maxSize, 1, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(3, 3), 1)), "");
+        MonsterGroupData data = new MonsterGroupData(1, Duration.ZERO, maxSize, 1, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(3, 3), 1)), "", new Position(0, 0));
 
         Map<Integer, Integer> counts = new HashMap<>();
 

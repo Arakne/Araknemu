@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
+import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
 
@@ -26,7 +27,11 @@ final class SqlMonsterGroupDataRepository implements MonsterGroupDataRepository 
                 rs.getInt("MAX_SIZE"),
                 rs.getInt("MAX_COUNT"),
                 monstersTransformer.unserialize(rs.getString("MONSTERS")),
-                rs.getString("COMMENT")
+                rs.getString("COMMENT"),
+                new Position(
+                    rs.getInt("WIN_FIGHT_TELEPORT_MAP_ID"),
+                    rs.getInt("WIN_FIGHT_TELEPORT_CELL_ID")
+                )
             );
         }
 
@@ -52,12 +57,14 @@ final class SqlMonsterGroupDataRepository implements MonsterGroupDataRepository 
         try {
             pool.query(
                 "CREATE TABLE `MONSTER_GROUP` (" +
-                    "  `MONSTER_GROUP_ID` INTEGER PRIMARY KEY," +
-                    "  `RESPAWN_TIME` INTEGER," +
-                    "  `MAX_SIZE` INTEGER," +
-                    "  `MAX_COUNT` INTEGER," +
-                    "  `MONSTERS` TEXT," +
-                    "  `COMMENT` VARCHAR(24)" +
+                    "`MONSTER_GROUP_ID` INTEGER PRIMARY KEY," +
+                    "`RESPAWN_TIME` INTEGER," +
+                    "`MAX_SIZE` INTEGER," +
+                    "`MAX_COUNT` INTEGER," +
+                    "`MONSTERS` TEXT," +
+                    "`COMMENT` VARCHAR(24)," +
+                    "`WIN_FIGHT_TELEPORT_MAP_ID` INTEGER," +
+                    "`WIN_FIGHT_TELEPORT_CELL_ID` INTEGER" +
                 ")"
             );
         } catch (SQLException e) {

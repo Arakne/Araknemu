@@ -3,7 +3,6 @@ package fr.quatrevieux.araknemu.game.monster.group;
 import fr.quatrevieux.araknemu.data.value.Interval;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
-import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
@@ -13,7 +12,6 @@ import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.monster.environment.FixedCellSelector;
 import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
 import fr.quatrevieux.araknemu.game.monster.environment.MonsterEnvironmentService;
-import fr.quatrevieux.araknemu.game.monster.environment.RandomCellSelector;
 import fr.quatrevieux.araknemu.game.monster.group.generator.RandomMonsterListGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +19,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Duration;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MonsterGroupFactoryTest extends GameBaseCase {
     private MonsterGroupFactory factory;
@@ -51,7 +49,7 @@ class MonsterGroupFactoryTest extends GameBaseCase {
             container.get(MonsterGroupFactory.class),
             container.get(MonsterEnvironmentService.class),
             container.get(FightService.class),
-            new MonsterGroupData(3, Duration.ofMillis(60000), 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100), 1), new MonsterGroupData.Monster(34, new Interval(1, 100), 1), new MonsterGroupData.Monster(36, new Interval(1, 100), 1)), ""),
+            new MonsterGroupData(3, Duration.ofMillis(60000), 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100), 1), new MonsterGroupData.Monster(34, new Interval(1, 100), 1), new MonsterGroupData.Monster(36, new Interval(1, 100), 1)), "", new Position(0, 0)),
             new FixedCellSelector(new Position(10340, 123))
         );
         living.populate(map = container.get(ExplorationMapService.class).load(10340));

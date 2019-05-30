@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -124,6 +125,23 @@ class DropRewardTest extends FightBaseCase {
         DropRewardAction action = Mockito.mock(DropRewardAction.class);
 
         DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.singletonList(action));
+
+        reward.apply();
+
+        Mockito.verify(action).apply(reward, fighter);
+    }
+
+    @Test
+    void addAction() throws Exception {
+        Fight fight = createFight();
+        fight.nextState();
+
+        Fighter fighter = player.fighter();
+        DropRewardAction action = Mockito.mock(DropRewardAction.class);
+
+        DropReward reward = new DropReward(RewardType.WINNER, fighter, Collections.emptyList());
+
+        reward.addAction(action);
 
         reward.apply();
 

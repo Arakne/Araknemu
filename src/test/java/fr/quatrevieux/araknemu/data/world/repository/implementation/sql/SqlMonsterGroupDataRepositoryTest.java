@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.data.value.Interval;
+import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.data.world.transformer.MonsterListTransformer;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
@@ -51,11 +52,17 @@ class SqlMonsterGroupDataRepositoryTest extends GameBaseCase {
         assertEquals(new Interval(10, 10), data.monsters().get(1).level());
         assertEquals(1, data.monsters().get(1).rate());
         assertEquals(2, data.totalRate());
+        assertEquals(new Position(0, 0), data.winFightTeleport());
+    }
+
+    @Test
+    void getWithWinFightTeleport() {
+        assertEquals(new Position(10340, 125), repository.get(3).winFightTeleport());
     }
 
     @Test
     void getByEntity() {
-        MonsterGroupData data = repository.get(new MonsterGroupData(1, null, 0, 0, null, null));
+        MonsterGroupData data = repository.get(new MonsterGroupData(1, null, 0, 0, null, null, null));
 
         assertEquals(1, data.id());
         assertEquals(4, data.maxSize());
@@ -72,8 +79,8 @@ class SqlMonsterGroupDataRepositoryTest extends GameBaseCase {
 
     @Test
     void has() {
-        assertTrue(repository.has(new MonsterGroupData(1, null, 0, 0, null, null)));
-        assertFalse(repository.has(new MonsterGroupData(-5, null, 0, 0, null, null)));
+        assertTrue(repository.has(new MonsterGroupData(1, null, 0, 0, null, null, null)));
+        assertFalse(repository.has(new MonsterGroupData(-5, null, 0, 0, null, null, null)));
     }
 
     @Test

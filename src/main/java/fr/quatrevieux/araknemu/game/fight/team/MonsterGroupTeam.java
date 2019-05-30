@@ -95,6 +95,13 @@ final public class MonsterGroupTeam implements FightTeam {
     }
 
     /**
+     * Get the monster group related to this team
+     */
+    public MonsterGroup group() {
+        return monsterGroup;
+    }
+
+    /**
      * Creates fighters from monsters of the group
      * Ids of monsters are negative integer sequence (starting at -1 for the first monster)
      */

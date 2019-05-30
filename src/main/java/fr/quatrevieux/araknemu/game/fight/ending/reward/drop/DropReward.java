@@ -6,9 +6,10 @@ import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.DropRewardAc
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.util.CopyOnFirstWriteCollection;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -18,18 +19,19 @@ import java.util.stream.Collectors;
 final public class DropReward implements FightReward {
     final private RewardType type;
     final private Fighter fighter;
-    final private List<DropRewardAction> actions;
+
+    final private Map<Integer, Integer> items = new HashMap<>();
+    final private Collection<DropRewardAction> actions;
 
     private long xp = 0;
     private long mountXp = 0;
     private long guildXp = 0;
     private int kamas = 0;
-    private Map<Integer, Integer> items = new HashMap<>();
 
-    public DropReward(RewardType type, Fighter fighter, List<DropRewardAction> actions) {
+    public DropReward(RewardType type, Fighter fighter, Collection<DropRewardAction> actions) {
         this.type = type;
         this.fighter = fighter;
-        this.actions = actions;
+        this.actions = new CopyOnFirstWriteCollection<>(actions);
     }
 
     @Override
@@ -161,6 +163,13 @@ final public class DropReward implements FightReward {
      */
     public void addItem(int itemId) {
         addItem(itemId, 1);
+    }
+
+    /**
+     * Add an end fight action
+     */
+    public void addAction(DropRewardAction action) {
+        actions.add(action);
     }
 
     /**

@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.game.monster.group;
 
+import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
@@ -22,18 +23,20 @@ final public class MonsterGroup implements ExplorationCreature {
     final private LivingMonsterGroupPosition handler;
     final private int id;
     final private List<Monster> monsters;
+    final private Position winFightTeleportPosition;
 
     final private MonsterGroupSprite sprite;
 
     private Direction orientation;
     private ExplorationMapCell cell;
 
-    public MonsterGroup(LivingMonsterGroupPosition handler, int id, List<Monster> monsters, Direction orientation, ExplorationMapCell cell) {
+    public MonsterGroup(LivingMonsterGroupPosition handler, int id, List<Monster> monsters, Direction orientation, ExplorationMapCell cell, Position winFightTeleportPosition) {
         this.handler = handler;
         this.id = id;
         this.monsters = monsters;
         this.orientation = orientation;
         this.cell = cell;
+        this.winFightTeleportPosition = winFightTeleportPosition;
 
         this.sprite = new MonsterGroupSprite(this);
     }
@@ -100,5 +103,16 @@ final public class MonsterGroup implements ExplorationCreature {
     public void move(Path<ExplorationMapCell> path) {
         cell = path.target();
         cell.map().dispatch(new CreatureMoving(this, path));
+    }
+
+    /**
+     * Get the teleport position when win a fight with the group
+     * The position may be null, to not teleport after the fight
+     *
+     * @see Position#isNull()
+     * @see fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData#winFightTeleport()
+     */
+    public Position winFightTeleportPosition() {
+        return winFightTeleportPosition;
     }
 }

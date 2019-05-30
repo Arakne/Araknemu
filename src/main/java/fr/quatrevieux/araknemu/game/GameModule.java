@@ -75,6 +75,7 @@ import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.*;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.PvmRewardsGenerator;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider.PvmEndFightActionProvider;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider.PvmItemDropProvider;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider.PvmKamasProvider;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider.PvmXpProvider;
@@ -643,7 +644,7 @@ final public class GameModule implements ContainerModule {
                 new PvmRewardsGenerator(
                     Arrays.asList(new AddExperience(), new SynchronizeLife(), new AddKamas(), new AddItems(container.get(ItemService.class))),
                     Arrays.asList(new SetDead(), new ReturnToSavePosition()),
-                    Arrays.asList(new PvmXpProvider(), new PvmKamasProvider(), new PvmItemDropProvider())
+                    Arrays.asList(new PvmXpProvider(), new PvmKamasProvider(), new PvmItemDropProvider(), new PvmEndFightActionProvider())
                 )
             )
         );

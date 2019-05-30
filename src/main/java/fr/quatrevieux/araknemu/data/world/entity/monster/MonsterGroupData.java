@@ -1,9 +1,11 @@
 package fr.quatrevieux.araknemu.data.world.entity.monster;
 
 import fr.quatrevieux.araknemu.data.value.Interval;
+import fr.quatrevieux.araknemu.data.value.Position;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Store information for generate monster groups
@@ -59,16 +61,18 @@ final public class MonsterGroupData {
     final private int maxCount;
     final private List<Monster> monsters;
     final private String comment;
+    final private Position winFightTeleport;
 
     final private int totalRate;
 
-    public MonsterGroupData(int id, Duration respawnTime, int maxSize, int maxCount, List<Monster> monsters, String comment) {
+    public MonsterGroupData(int id, Duration respawnTime, int maxSize, int maxCount, List<Monster> monsters, String comment, Position winFightTeleport) {
         this.id = id;
         this.respawnTime = respawnTime;
         this.maxSize = maxSize;
         this.maxCount = maxCount;
         this.monsters = monsters;
         this.comment = comment;
+        this.winFightTeleport = winFightTeleport;
 
         this.totalRate = monsters != null ? monsters.stream().mapToInt(Monster::rate).sum() : 0;
     }
@@ -127,6 +131,16 @@ final public class MonsterGroupData {
      */
     public int maxCount() {
         return maxCount;
+    }
+
+    /**
+     * Get the teleport position when win a fight with the group
+     * The position may be null, to not teleport after the fight
+     *
+     * @see Position#isNull()
+     */
+    public Position winFightTeleport() {
+        return winFightTeleport;
     }
 
     /**

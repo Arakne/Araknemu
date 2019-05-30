@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MonsterGroupTeamTest extends FightBaseCase {
     private MonsterGroupTeam team;
+    private MonsterGroup group;
 
     @Override
     @BeforeEach
@@ -44,12 +45,12 @@ class MonsterGroupTeamTest extends FightBaseCase {
         ;
 
         team = new MonsterGroupTeam(
-            new MonsterGroup(
+            group = new MonsterGroup(
                 new LivingMonsterGroupPosition(
                     container.get(MonsterGroupFactory.class),
                     container.get(MonsterEnvironmentService.class),
                     container.get(FightService.class),
-                    new MonsterGroupData(3, Duration.ofMillis(60000), 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100), 1), new MonsterGroupData.Monster(34, new Interval(1, 100), 1), new MonsterGroupData.Monster(36, new Interval(1, 100), 1)), ""),
+                    new MonsterGroupData(3, Duration.ofMillis(60000), 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100), 1), new MonsterGroupData.Monster(34, new Interval(1, 100), 1), new MonsterGroupData.Monster(36, new Interval(1, 100), 1)), "", new Position(0, 0)),
                     new RandomCellSelector()
                 ),
                 5,
@@ -58,7 +59,8 @@ class MonsterGroupTeamTest extends FightBaseCase {
                     service.load(34).all().get(3)
                 ),
                 Direction.WEST,
-                container.get(ExplorationMapService.class).load(10340).get(123)
+                container.get(ExplorationMapService.class).load(10340).get(123),
+                new Position(0, 0)
             ),
             Arrays.asList(123, 321),
             1
@@ -74,6 +76,7 @@ class MonsterGroupTeamTest extends FightBaseCase {
         assertEquals(Alignment.NONE, team.alignment());
         assertEquals(1, team.number());
         assertTrue(team.alive());
+        assertSame(group, team.group());
     }
 
     @Test

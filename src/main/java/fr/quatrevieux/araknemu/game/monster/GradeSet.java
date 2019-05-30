@@ -58,7 +58,7 @@ final public class GradeSet {
 
         switch (matching.size()) {
             case 0:
-                throw new NoSuchElementException("Cannot found any valid grade");
+                throw new NoSuchElementException("Cannot found any valid grade for monster " + grades.get(0).id());
 
             case 1:
                 return matching.get(0);

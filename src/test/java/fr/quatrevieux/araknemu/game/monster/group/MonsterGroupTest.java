@@ -1,6 +1,7 @@
 package fr.quatrevieux.araknemu.game.monster.group;
 
 import fr.quatrevieux.araknemu.data.value.Interval;
+import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
@@ -56,7 +57,7 @@ class MonsterGroupTest extends GameBaseCase {
                 container.get(MonsterGroupFactory.class),
                 container.get(MonsterEnvironmentService.class),
                 container.get(FightService.class),
-                new MonsterGroupData(3, Duration.ofMillis(60000), 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100), 1), new MonsterGroupData.Monster(34, new Interval(1, 100), 1), new MonsterGroupData.Monster(36, new Interval(1, 100), 1)), ""),
+                new MonsterGroupData(3, Duration.ofMillis(60000), 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100), 1), new MonsterGroupData.Monster(34, new Interval(1, 100), 1), new MonsterGroupData.Monster(36, new Interval(1, 100), 1)), "", new Position(0, 0)),
                 new RandomCellSelector()
             ),
             5,
@@ -67,7 +68,8 @@ class MonsterGroupTest extends GameBaseCase {
                 service.load(36).all().get(5)
             ),
             Direction.WEST,
-            map.get(123)
+            map.get(123),
+            new Position(10340, 125)
         );
 
         handler.populate(map);
@@ -80,6 +82,7 @@ class MonsterGroupTest extends GameBaseCase {
         assertEquals(Direction.WEST, group.orientation());
         assertCount(4, group.monsters());
         assertSame(handler, group.handler());
+        assertEquals(new Position(10340, 125), group.winFightTeleportPosition());
     }
 
     @Test

@@ -31,7 +31,8 @@ final public class MonsterGroupFactory {
             lastGroupId.incrementAndGet(),
             generator.generate(data),
             Direction.SOUTH_EAST,
-            handler.cell()
+            handler.cell(),
+            data.winFightTeleport()
         );
     }
 }
