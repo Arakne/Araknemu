@@ -31,7 +31,8 @@ final class SqlMonsterGroupDataRepository implements MonsterGroupDataRepository 
                 new Position(
                     rs.getInt("WIN_FIGHT_TELEPORT_MAP_ID"),
                     rs.getInt("WIN_FIGHT_TELEPORT_CELL_ID")
-                )
+                ),
+                rs.getBoolean("FIXED_TEAM_NUMBER")
             );
         }
 
@@ -64,7 +65,8 @@ final class SqlMonsterGroupDataRepository implements MonsterGroupDataRepository 
                     "`MONSTERS` TEXT," +
                     "`COMMENT` VARCHAR(24)," +
                     "`WIN_FIGHT_TELEPORT_MAP_ID` INTEGER," +
-                    "`WIN_FIGHT_TELEPORT_CELL_ID` INTEGER" +
+                    "`WIN_FIGHT_TELEPORT_CELL_ID` INTEGER," +
+                    "`FIXED_TEAM_NUMBER` INTEGER" +
                 ")"
             );
         } catch (SQLException e) {

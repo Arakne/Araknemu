@@ -42,21 +42,21 @@ class MonsterGroupDataRepositoryCacheTest extends GameBaseCase {
     @Test
     void getUsingEntity() {
         assertSame(
-            repository.get(new MonsterGroupData(2, null, 0, 0, null, null, null)),
+            repository.get(new MonsterGroupData(2, null, 0, 0, null, null, null, false)),
             repository.get(2)
         );
     }
 
     @Test
     void hasNotLoaded() {
-        assertTrue(repository.has(new MonsterGroupData(2, null, 0, 0, null, null, null)));
-        assertFalse(repository.has(new MonsterGroupData(-2, null, 0, 0, null, null, null)));
+        assertTrue(repository.has(new MonsterGroupData(2, null, 0, 0, null, null, null, false)));
+        assertFalse(repository.has(new MonsterGroupData(-2, null, 0, 0, null, null, null, false)));
     }
 
     @Test
     void hasCached() {
         repository.get(2);
-        assertTrue(repository.has(new MonsterGroupData(2, null, 0, 0, null, null, null)));
+        assertTrue(repository.has(new MonsterGroupData(2, null, 0, 0, null, null, null, false)));
     }
 
     @Test

@@ -99,6 +99,7 @@ final public class LivingMonsterGroupPosition {
 
         return fightService.handler(PvmBuilder.class).start(
             builder -> builder
+                .randomize(!data.fixedTeamNumber())
                 .map(map)
                 .initiator(player.player())
                 .monsterGroup(group)

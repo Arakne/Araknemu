@@ -61,8 +61,14 @@ class SqlMonsterGroupDataRepositoryTest extends GameBaseCase {
     }
 
     @Test
+    void getWithFixedTeamNumber() {
+        assertFalse(repository.get(1).fixedTeamNumber());
+        assertTrue(repository.get(2).fixedTeamNumber());
+    }
+
+    @Test
     void getByEntity() {
-        MonsterGroupData data = repository.get(new MonsterGroupData(1, null, 0, 0, null, null, null));
+        MonsterGroupData data = repository.get(new MonsterGroupData(1, null, 0, 0, null, null, null, false));
 
         assertEquals(1, data.id());
         assertEquals(4, data.maxSize());
@@ -79,8 +85,8 @@ class SqlMonsterGroupDataRepositoryTest extends GameBaseCase {
 
     @Test
     void has() {
-        assertTrue(repository.has(new MonsterGroupData(1, null, 0, 0, null, null, null)));
-        assertFalse(repository.has(new MonsterGroupData(-5, null, 0, 0, null, null, null)));
+        assertTrue(repository.has(new MonsterGroupData(1, null, 0, 0, null, null, null, false)));
+        assertFalse(repository.has(new MonsterGroupData(-5, null, 0, 0, null, null, null, false)));
     }
 
     @Test

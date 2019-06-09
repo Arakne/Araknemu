@@ -3,17 +3,13 @@ package fr.quatrevieux.araknemu.game.fight.builder;
 import fr.quatrevieux.araknemu.data.value.Interval;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
-import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
-import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
-import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
@@ -28,11 +24,10 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.helpers.NOPLogger;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PvmBuilderTest extends GameBaseCase {
     private PvmBuilder builder;
@@ -64,7 +59,7 @@ class PvmBuilderTest extends GameBaseCase {
                 container.get(MonsterGroupFactory.class),
                 container.get(MonsterEnvironmentService.class),
                 container.get(FightService.class),
-                new MonsterGroupData(3, Duration.ofMillis(60000), 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100), 1), new MonsterGroupData.Monster(34, new Interval(1, 100), 1), new MonsterGroupData.Monster(36, new Interval(1, 100), 1)), "", new Position(0, 0)),
+                new MonsterGroupData(3, Duration.ofMillis(60000), 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100), 1), new MonsterGroupData.Monster(34, new Interval(1, 100), 1), new MonsterGroupData.Monster(36, new Interval(1, 100), 1)), "", new Position(0, 0), false),
                 new RandomCellSelector()
             ),
             5,
@@ -125,5 +120,27 @@ class PvmBuilderTest extends GameBaseCase {
         }
 
         assertBetween(40, 60, playerTeamIsFirstTeam);
+    }
+
+    @Test
+    void buildNotRandomized() throws Exception {
+        builder = new PvmBuilder(
+            container.get(FightService.class),
+            container.get(FighterFactory.class),
+            null,
+            container.get(PvmType.class),
+            NOPLogger.NOP_LOGGER
+        );
+
+        for (int i = 0; i < 100; ++i) {
+            Fight fight = builder
+                .initiator(gamePlayer())
+                .monsterGroup(group)
+                .map(container.get(ExplorationMapService.class).load(10340))
+                .build(1)
+            ;
+
+            assertTrue(fight.team(0) instanceof SimpleTeam);
+        }
     }
 }

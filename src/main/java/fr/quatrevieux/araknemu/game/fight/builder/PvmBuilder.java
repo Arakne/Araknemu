@@ -19,16 +19,37 @@ import org.slf4j.Logger;
  * @see PvmType
  */
 final public class PvmBuilder implements FightBuilder {
-    final private BaseBuilder builder;
+    final private FightService service;
     final private FighterFactory fighterFactory;
+    final private RandomUtil random;
+    final private PvmType type;
+    final private Logger logger;
+
+    private ExplorationMap map;
+    private GamePlayer initiator;
+    private MonsterGroup group;
+    private boolean randomize = true;
 
     public PvmBuilder(FightService service, FighterFactory fighterFactory, RandomUtil random, PvmType type, Logger logger) {
-        this.builder = new BaseBuilder(service, random, type, logger);
+        this.service = service;
         this.fighterFactory = fighterFactory;
+        this.random = random;
+        this.type = type;
+        this.logger = logger;
     }
 
     @Override
     public Fight build(int fightId) {
+        BaseBuilder builder = new BaseBuilder(service, randomize ? random : null, type, logger);
+
+        builder.map(map);
+        builder.addTeam((number, startPlaces) -> new SimpleTeam(
+            fighterFactory.create(initiator),
+            startPlaces,
+            number
+        ));
+        builder.addTeam((number, startPlaces) -> new MonsterGroupTeam(group, startPlaces, number));
+
         return builder.build(fightId);
     }
 
@@ -36,7 +57,7 @@ final public class PvmBuilder implements FightBuilder {
      * Set the fight map
      */
     public PvmBuilder map(ExplorationMap map) {
-        builder.map(map);
+        this.map = map;
 
         return this;
     }
@@ -45,11 +66,7 @@ final public class PvmBuilder implements FightBuilder {
      * Set the initiator fighter
      */
     public PvmBuilder initiator(GamePlayer initiator) {
-        builder.addTeam((number, startPlaces) -> new SimpleTeam(
-            fighterFactory.create(initiator),
-            startPlaces,
-            number
-        ));
+        this.initiator = initiator;
 
         return this;
     }
@@ -58,7 +75,17 @@ final public class PvmBuilder implements FightBuilder {
      * Set the attacked group
      */
     public PvmBuilder monsterGroup(MonsterGroup monsterGroup) {
-        builder.addTeam((number, startPlaces) -> new MonsterGroupTeam(monsterGroup, startPlaces, number));
+        this.group = monsterGroup;
+
+        return this;
+    }
+
+    /**
+     * Does the teams should be randomized or not
+     * If not, the initiator will always join the team 0, and the monster group, the team 1
+     */
+    public PvmBuilder randomize(boolean randomize) {
+        this.randomize = randomize;
 
         return this;
     }

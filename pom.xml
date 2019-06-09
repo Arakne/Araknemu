@@ -11,7 +11,7 @@
 
     <groupId>fr.quatrevieux.araknemu</groupId>
     <artifactId>araknemu</artifactId>
-    <version>0.4-alpha</version>
+    <version>0.5-alpha</version>
     <dependencies>
         <dependency>
             <groupId>org.apache.mina</groupId>

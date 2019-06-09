@@ -90,4 +90,24 @@ class BaseBuilderTest extends GameBaseCase {
         assertNotEquals(0, nbTeam0);
         assertNotEquals(100, nbTeam0);
     }
+
+    @Test
+    void buildWithoutRandomizeTeam() throws Exception {
+        builder = new BaseBuilder(container.get(FightService.class), null, type, NOPLogger.NOP_LOGGER);
+
+        PlayerFighter fighter = new PlayerFighter(gamePlayer());
+        PlayerFighter other = new PlayerFighter(makeOtherPlayer());
+
+        builder.addTeam((number, startPlaces) -> new SimpleTeam(fighter, startPlaces, number));
+        builder.addTeam((number, startPlaces) -> new SimpleTeam(other, startPlaces, number));
+        builder.map(container.get(ExplorationMapService.class).load(10340));
+
+        for (int i = 0; i < 100; ++i) {
+            Fight fight = builder.build(1);
+
+            Fighter firstFighter = new ArrayList<>(fight.team(0).fighters()).get(0);
+
+            assertEquals(gamePlayer().id(), firstFighter.id());
+        }
+    }
 }

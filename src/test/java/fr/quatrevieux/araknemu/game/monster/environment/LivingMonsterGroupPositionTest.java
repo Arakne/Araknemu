@@ -12,6 +12,8 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
+import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
+import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
@@ -90,7 +92,7 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
             new MonsterGroupData(3, Duration.ZERO, 0, 1, Arrays.asList(
                 new MonsterGroupData.Monster(36, new Interval(5, 5), 1),
                 new MonsterGroupData.Monster(31, new Interval(2, 2), 1)
-            ), "", new Position(0, 0)),
+            ), "", new Position(0, 0), false),
             new FixedCellSelector(new Position(10340, 123))
         );
 
@@ -133,6 +135,28 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
         assertContainsType(MonsterFighter.class, fight.fighters());
         assertContains(player.player().fighter(), fight.fighters());
         assertInstanceOf(PvmType.class, fight.type());
+    }
+
+    @Test
+    void startFightWithFixedTeamNumber() throws SQLException {
+        monsterGroupPosition = new LivingMonsterGroupPosition(
+            container.get(MonsterGroupFactory.class),
+            container.get(MonsterEnvironmentService.class),
+            container.get(FightService.class),
+            container.get(MonsterGroupDataRepository.class).get(2),
+            new RandomCellSelector()
+        );
+
+        monsterGroupPosition.populate(map);
+
+        ExplorationPlayer player = explorationPlayer();
+        player.join(map);
+
+        MonsterGroup group = monsterGroupPosition.available().get(0);
+        Fight fight = monsterGroupPosition.startFight(group, player);
+
+        assertInstanceOf(SimpleTeam.class, fight.team(0));
+        assertInstanceOf(MonsterGroupTeam.class, fight.team(1));
     }
 
     @Test

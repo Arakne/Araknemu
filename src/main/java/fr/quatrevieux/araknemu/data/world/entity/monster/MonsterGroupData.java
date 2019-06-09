@@ -5,7 +5,6 @@ import fr.quatrevieux.araknemu.data.value.Position;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Store information for generate monster groups
@@ -62,10 +61,11 @@ final public class MonsterGroupData {
     final private List<Monster> monsters;
     final private String comment;
     final private Position winFightTeleport;
+    final private boolean fixedTeamNumber;
 
     final private int totalRate;
 
-    public MonsterGroupData(int id, Duration respawnTime, int maxSize, int maxCount, List<Monster> monsters, String comment, Position winFightTeleport) {
+    public MonsterGroupData(int id, Duration respawnTime, int maxSize, int maxCount, List<Monster> monsters, String comment, Position winFightTeleport, boolean fixedTeamNumber) {
         this.id = id;
         this.respawnTime = respawnTime;
         this.maxSize = maxSize;
@@ -73,6 +73,7 @@ final public class MonsterGroupData {
         this.monsters = monsters;
         this.comment = comment;
         this.winFightTeleport = winFightTeleport;
+        this.fixedTeamNumber = fixedTeamNumber;
 
         this.totalRate = monsters != null ? monsters.stream().mapToInt(Monster::rate).sum() : 0;
     }
@@ -150,5 +151,17 @@ final public class MonsterGroupData {
      */
     public int totalRate() {
         return totalRate;
+    }
+
+    /**
+     * Does the fight team number is fixed or not ?
+     *
+     * If this value is false, a random team will be choose for the monster group and the player
+     * If this value is true, the monster group will always join fight on team 1 (second team)
+     *
+     * This value should be true for dungeon groups
+     */
+    public boolean fixedTeamNumber() {
+        return fixedTeamNumber;
     }
 }
