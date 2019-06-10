@@ -9,18 +9,17 @@ import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
-import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.exception.CloseWithPacket;
 import fr.quatrevieux.araknemu.network.game.in.account.ChoosePlayingCharacter;
 import fr.quatrevieux.araknemu.network.game.out.chat.ChannelSubscribed;
+import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.helpers.NOPLogger;
 
 import java.util.EnumSet;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SelectCharacterTest extends GameBaseCase {
     private SelectCharacter handler;
@@ -61,6 +60,7 @@ class SelectCharacterTest extends GameBaseCase {
         handler.handle(session, new ChoosePlayingCharacter(id));
 
         requestStack.assertOne("ASK|1|Bob|23||0|10|7b|1c8|315|");
+        requestStack.assertLast(Error.welcome());
     }
 
     @Test

@@ -8,6 +8,7 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.account.ChoosePlayingCharacter;
 import fr.quatrevieux.araknemu.network.game.out.account.CharacterSelected;
 import fr.quatrevieux.araknemu.network.game.out.account.CharacterSelectionError;
+import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import fr.quatrevieux.araknemu.network.in.PacketHandler;
 
 /**
@@ -30,6 +31,7 @@ final public class SelectCharacter implements PacketHandler<GameSession, ChooseP
 
         session.write(new CharacterSelected(session.player()));
         session.player().dispatch(new GameJoined());
+        session.write(Error.welcome());
     }
 
     @Override

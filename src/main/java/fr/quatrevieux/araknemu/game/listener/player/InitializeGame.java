@@ -5,7 +5,6 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.event.StartExploration;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.network.game.out.account.Stats;
-import fr.quatrevieux.araknemu.network.game.out.info.Error;
 
 /**
  * Initialize game for the player
@@ -26,8 +25,6 @@ final public class InitializeGame implements Listener<StartExploration> {
         player.join(
             mapService.load(player.position().map()) // @todo handle entity not found
         );
-
-        player.send(Error.welcome());
     }
 
     @Override
