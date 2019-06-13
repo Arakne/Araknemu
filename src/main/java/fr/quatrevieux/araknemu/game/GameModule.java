@@ -62,6 +62,8 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.teleport
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.teleport.TeleportFactory;
 import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.DialogService;
+import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.object.RemoveObject;
+import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.teleport.GoToAstrub;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.GetterResolver;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersResolver;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.VariableResolver;
@@ -514,7 +516,13 @@ final public class GameModule implements ContainerModule {
             container -> new DialogService(
                 container.get(QuestionRepository.class),
                 container.get(ResponseActionRepository.class),
-                new fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.ActionFactory[] {},
+                new fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.ActionFactory[] {
+                    new fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.teleport.Teleport.Factory(
+                        container.get(ExplorationMapService.class)
+                    ),
+                    new GoToAstrub.Factory(container.get(ExplorationMapService.class)),
+                    new RemoveObject.Factory()
+                },
                 container.get(ParametersResolver.class),
                 container.get(Logger.class)
             )

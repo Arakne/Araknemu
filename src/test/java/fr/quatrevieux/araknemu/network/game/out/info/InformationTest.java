@@ -49,4 +49,12 @@ class InformationTest {
             Information.cannotPostItemOnChannel().toString()
         );
     }
+
+    @Test
+    void positionSaved() {
+        assertEquals(
+            "Im06;",
+            Information.positionSaved().toString()
+        );
+    }
 }

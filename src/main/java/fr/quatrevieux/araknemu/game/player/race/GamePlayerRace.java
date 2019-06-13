@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.player.race;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.value.BoostStatsData;
+import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.game.spell.SpellLevels;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
@@ -102,5 +103,12 @@ final public class GamePlayerRace {
 
     public Collection<SpellLevels> spells() {
         return spells.values();
+    }
+
+    /**
+     * The Astrub statue position
+     */
+    public Position astrubPosition() {
+        return entity.astrubPosition();
     }
 }

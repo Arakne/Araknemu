@@ -4,6 +4,9 @@ import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
 
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
 /**
  * Base type for store items
  */
@@ -72,4 +75,11 @@ public interface ItemStorage<E extends ItemEntry> extends Iterable<E> {
      * @throws ItemNotFoundException If the entry cannot be found on the storage
      */
     public E delete(int id) throws InventoryException;
+
+    /**
+     * Get a stream from the storage
+     */
+    default public Stream<E> stream() {
+        return StreamSupport.stream(spliterator(), false);
+    }
 }

@@ -76,4 +76,11 @@ final public class Information extends InformationMessage {
 
         return null;
     }
+
+    /**
+     * The position of the player is saved
+     */
+    static public Information positionSaved() {
+        return new Information(6);
+    }
 }

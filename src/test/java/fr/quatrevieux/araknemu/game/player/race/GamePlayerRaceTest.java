@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.player.race;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Race;
+import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.spell.SpellLevels;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
@@ -97,5 +98,10 @@ class GamePlayerRaceTest extends GameBaseCase {
         assertEquals(1, characteristics.get(Characteristic.MAX_SUMMONED_CREATURES));
 
         assertSame(characteristics, race.baseStats(150));
+    }
+
+    @Test
+    void astrubPosition() {
+        assertEquals(new Position(10340, 250), service.get(Race.ENUTROF).astrubPosition());
     }
 }

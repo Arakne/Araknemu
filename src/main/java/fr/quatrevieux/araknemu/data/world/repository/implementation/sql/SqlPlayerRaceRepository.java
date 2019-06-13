@@ -39,6 +39,10 @@ final class SqlPlayerRaceRepository implements PlayerRaceRepository {
                     rs.getInt("MAP_ID"),
                     rs.getInt("CELL_ID")
                 ),
+                new Position(
+                    rs.getInt("ASTRUB_MAP_ID"),
+                    rs.getInt("ASTRUB_CELL_ID")
+                ),
                 Arrays.stream(StringUtils.split(rs.getString("RACE_SPELLS"), "|"))
                     .mapToInt(Integer::parseInt)
                     .toArray()
@@ -79,7 +83,9 @@ final class SqlPlayerRaceRepository implements PlayerRaceRepository {
                     "STATS_BOOST VARCHAR(255)," +
                     "RACE_SPELLS VARCHAR(255)," +
                     "MAP_ID INTEGER," +
-                    "CELL_ID INTEGER" +
+                    "CELL_ID INTEGER," +
+                    "ASTRUB_MAP_ID INTEGER," +
+                    "ASTRUB_CELL_ID INTEGER" +
                 ")"
             );
         } catch (SQLException e) {

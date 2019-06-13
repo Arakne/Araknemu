@@ -101,6 +101,19 @@ class PlayerInventoryTest extends GameBaseCase {
     }
 
     @Test
+    void stream() throws InventoryException {
+        Item item1 = new Resource(new ItemTemplate(284, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ItemType(48, "Poudre", SuperType.RESOURCE, null), new ArrayList<>());
+        Item item2 = new Resource(new ItemTemplate(285, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ItemType(48, "Poudre", SuperType.RESOURCE, null), new ArrayList<>());
+        Item item3 = new Resource(new ItemTemplate(288, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10), new ItemType(48, "Poudre", SuperType.RESOURCE, null), new ArrayList<>());
+
+        inventory.add(item1, 5);
+        inventory.add(item2, 5);
+        inventory.add(item3, 5);
+
+        assertEquals(15, inventory.stream().mapToInt(InventoryEntry::quantity).sum());
+    }
+
+    @Test
     void createWithItems() throws ItemNotFoundException, SQLException, ContainerException {
         Item i1, i2;
 

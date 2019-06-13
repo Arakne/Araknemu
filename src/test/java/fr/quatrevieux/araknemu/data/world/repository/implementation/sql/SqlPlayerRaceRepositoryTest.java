@@ -48,6 +48,7 @@ class SqlPlayerRaceRepositoryTest extends GameBaseCase {
         assertContainsOnly(DefaultCharacteristics.class, race.baseStats().values());
         assertEquals(6, race.baseStats().get(1).get(Characteristic.ACTION_POINT));
         assertEquals(new Position(10300, 320), race.startPosition());
+        assertEquals(new Position(10340, 250), race.astrubPosition());
         assertEquals(2, race.boostStats().get(Characteristic.STRENGTH, 15).cost());
         assertEquals(100, race.startDiscernment());
         assertEquals(1000, race.startPods());
