@@ -7,6 +7,12 @@ import fr.quatrevieux.araknemu.network.game.in.dialog.ChosenResponse;
 import fr.quatrevieux.araknemu.network.game.in.dialog.CreateDialogRequest;
 import fr.quatrevieux.araknemu.network.game.in.dialog.LeaveDialogRequest;
 import fr.quatrevieux.araknemu.network.game.in.emote.SetOrientationRequest;
+import fr.quatrevieux.araknemu.network.game.in.exchange.AcceptExchangeRequest;
+import fr.quatrevieux.araknemu.network.game.in.exchange.ExchangeReady;
+import fr.quatrevieux.araknemu.network.game.in.exchange.ExchangeRequest;
+import fr.quatrevieux.araknemu.network.game.in.exchange.LeaveExchangeRequest;
+import fr.quatrevieux.araknemu.network.game.in.exchange.movement.ItemsMovement;
+import fr.quatrevieux.araknemu.network.game.in.exchange.movement.KamasMovement;
 import fr.quatrevieux.araknemu.network.game.in.fight.AskFightDetails;
 import fr.quatrevieux.araknemu.network.game.in.fight.ListFightsRequest;
 import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
@@ -43,5 +49,11 @@ class ExploringLoaderTest extends LoaderTestCase {
         assertHandlePacket(CreateDialogRequest.class, handlers);
         assertHandlePacket(LeaveDialogRequest.class, handlers);
         assertHandlePacket(ChosenResponse.class, handlers);
+        assertHandlePacket(ExchangeRequest.class, handlers);
+        assertHandlePacket(LeaveExchangeRequest.class, handlers);
+        assertHandlePacket(AcceptExchangeRequest.class, handlers);
+        assertHandlePacket(KamasMovement.class, handlers);
+        assertHandlePacket(ItemsMovement.class, handlers);
+        assertHandlePacket(ExchangeReady.class, handlers);
     }
 }

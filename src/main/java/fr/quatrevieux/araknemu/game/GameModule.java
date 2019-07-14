@@ -43,6 +43,7 @@ import fr.quatrevieux.araknemu.game.connector.ConnectorService;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeFactory;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ExplorationActionRegistry;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.challenge.ChallengeActionsFactories;
@@ -676,5 +677,7 @@ final public class GameModule implements ContainerModule {
                 return factory;
             }
         );
+
+        configurator.persist(ExchangeFactory.class, container -> new ExchangeFactory());
     }
 }

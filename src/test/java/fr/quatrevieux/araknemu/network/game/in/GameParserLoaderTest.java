@@ -9,6 +9,12 @@ import fr.quatrevieux.araknemu.network.game.in.dialog.ChosenResponse;
 import fr.quatrevieux.araknemu.network.game.in.dialog.CreateDialogRequest;
 import fr.quatrevieux.araknemu.network.game.in.dialog.LeaveDialogRequest;
 import fr.quatrevieux.araknemu.network.game.in.emote.SetOrientationRequest;
+import fr.quatrevieux.araknemu.network.game.in.exchange.AcceptExchangeRequest;
+import fr.quatrevieux.araknemu.network.game.in.exchange.ExchangeReady;
+import fr.quatrevieux.araknemu.network.game.in.exchange.ExchangeRequest;
+import fr.quatrevieux.araknemu.network.game.in.exchange.LeaveExchangeRequest;
+import fr.quatrevieux.araknemu.network.game.in.exchange.movement.ItemsMovement;
+import fr.quatrevieux.araknemu.network.game.in.exchange.movement.KamasMovement;
 import fr.quatrevieux.araknemu.network.game.in.fight.*;
 import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
@@ -67,6 +73,12 @@ class GameParserLoaderTest {
         assertContainsInstance(CreateDialogRequest.Parser.class, parsers);
         assertContainsInstance(LeaveDialogRequest.Parser.class, parsers);
         assertContainsInstance(ChosenResponse.Parser.class, parsers);
+        assertContainsInstance(ExchangeRequest.Parser.class, parsers);
+        assertContainsInstance(LeaveExchangeRequest.Parser.class, parsers);
+        assertContainsInstance(AcceptExchangeRequest.Parser.class, parsers);
+        assertContainsInstance(KamasMovement.Parser.class, parsers);
+        assertContainsInstance(ItemsMovement.Parser.class, parsers);
+        assertContainsInstance(ExchangeReady.Parser.class, parsers);
     }
 
     public void assertContainsInstance(Class type, Collection collection) {

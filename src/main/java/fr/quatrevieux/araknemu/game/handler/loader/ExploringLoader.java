@@ -2,12 +2,19 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeFactory;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.handler.EnsureExploring;
 import fr.quatrevieux.araknemu.game.handler.dialog.PerformResponseAction;
 import fr.quatrevieux.araknemu.game.handler.dialog.StartDialog;
 import fr.quatrevieux.araknemu.game.handler.dialog.StopDialog;
 import fr.quatrevieux.araknemu.game.handler.emote.ChangeOrientation;
+import fr.quatrevieux.araknemu.game.handler.exchange.AcceptExchange;
+import fr.quatrevieux.araknemu.game.handler.exchange.AskExchange;
+import fr.quatrevieux.araknemu.game.handler.exchange.LeaveExchange;
+import fr.quatrevieux.araknemu.game.handler.exchange.StartExchange;
+import fr.quatrevieux.araknemu.game.handler.exchange.movement.SetExchangeItems;
+import fr.quatrevieux.araknemu.game.handler.exchange.movement.SetExchangeKamas;
 import fr.quatrevieux.araknemu.game.handler.fight.ListFights;
 import fr.quatrevieux.araknemu.game.handler.fight.ShowFightDetails;
 import fr.quatrevieux.araknemu.game.handler.game.CancelGameAction;
@@ -34,6 +41,12 @@ final public class ExploringLoader extends AbstractLoader {
             new StartDialog(),
             new StopDialog(),
             new PerformResponseAction(),
+            new AskExchange(container.get(ExchangeFactory.class)),
+            new LeaveExchange(),
+            new StartExchange(),
+            new SetExchangeKamas(),
+            new SetExchangeItems(),
+            new AcceptExchange(),
         };
     }
 }

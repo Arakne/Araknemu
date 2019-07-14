@@ -46,13 +46,13 @@ class RestrictionsTest extends GameBaseCase {
 
         assertTrue(restrictions.canAssault());
         assertTrue(restrictions.canChallenge());
-        assertFalse(restrictions.canExchange());
+        assertTrue(restrictions.canExchange());
         assertFalse(restrictions.canAttack());
         assertFalse(restrictions.forceWalk());
         assertFalse(restrictions.isSlow());
         assertFalse(restrictions.isTomb());
 
-        assertEquals(12, restrictions.toInt());
+        assertEquals(8, restrictions.toInt());
     }
 
     @Test

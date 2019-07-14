@@ -219,7 +219,7 @@ class GamePlayerTest extends GameBaseCase {
     void restrictionsDefaults() {
         assertTrue(player.restrictions().canMoveAllDirections());
         assertFalse(player.restrictions().canBeMerchant());
-        assertFalse(player.restrictions().canExchange());
+        assertTrue(player.restrictions().canExchange());
     }
 
     @Test

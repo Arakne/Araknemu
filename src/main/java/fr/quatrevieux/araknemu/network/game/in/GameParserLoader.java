@@ -9,6 +9,12 @@ import fr.quatrevieux.araknemu.network.game.in.dialog.ChosenResponse;
 import fr.quatrevieux.araknemu.network.game.in.dialog.CreateDialogRequest;
 import fr.quatrevieux.araknemu.network.game.in.dialog.LeaveDialogRequest;
 import fr.quatrevieux.araknemu.network.game.in.emote.SetOrientationRequest;
+import fr.quatrevieux.araknemu.network.game.in.exchange.AcceptExchangeRequest;
+import fr.quatrevieux.araknemu.network.game.in.exchange.ExchangeReady;
+import fr.quatrevieux.araknemu.network.game.in.exchange.ExchangeRequest;
+import fr.quatrevieux.araknemu.network.game.in.exchange.LeaveExchangeRequest;
+import fr.quatrevieux.araknemu.network.game.in.exchange.movement.ItemsMovement;
+import fr.quatrevieux.araknemu.network.game.in.exchange.movement.KamasMovement;
 import fr.quatrevieux.araknemu.network.game.in.fight.*;
 import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
@@ -70,7 +76,13 @@ final public class GameParserLoader implements ParserLoader {
             new SetOrientationRequest.Parser(),
             new CreateDialogRequest.Parser(),
             new LeaveDialogRequest.Parser(),
-            new ChosenResponse.Parser()
+            new ChosenResponse.Parser(),
+            new ExchangeRequest.Parser(),
+            new LeaveExchangeRequest.Parser(),
+            new AcceptExchangeRequest.Parser(),
+            new KamasMovement.Parser(),
+            new ItemsMovement.Parser(),
+            new ExchangeReady.Parser()
         );
     }
 }

@@ -33,7 +33,7 @@ class RestrictionsTest extends GameBaseCase {
 
         assertTrue(restrictions.canAssault());
         assertTrue(restrictions.canChallenge());
-        assertFalse(restrictions.canExchange());
+        assertTrue(restrictions.canExchange());
         assertFalse(restrictions.canAttack());
         assertTrue(restrictions.canChat());
         assertFalse(restrictions.canBeMerchant());
@@ -46,7 +46,7 @@ class RestrictionsTest extends GameBaseCase {
         assertFalse(restrictions.canAttackMonsterWhenMutant());
         assertTrue(restrictions.canInteractWithPrism());
 
-        assertEquals(8192 | 4 | 32, restrictions.toInt());
+        assertEquals(8192 | 32, restrictions.toInt());
     }
 
     @Test

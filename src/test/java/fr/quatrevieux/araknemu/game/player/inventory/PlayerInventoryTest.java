@@ -354,4 +354,31 @@ class PlayerInventoryTest extends GameBaseCase {
         assertEquals(1000, inventory.kamas());
         assertNull(ref.get());
     }
+
+    @Test
+    void removeKamas() throws SQLException {
+        player.setKamas(1000);
+
+        AtomicReference<KamasChanged> ref = new AtomicReference<>();
+        gamePlayer().dispatcher().add(KamasChanged.class, ref::set);
+
+        inventory.removeKamas(250);
+
+        assertEquals(750, inventory.kamas());
+        assertEquals(1000, ref.get().lastQuantity());
+        assertEquals(750, ref.get().newQuantity());
+    }
+
+    @Test
+    void removeKamasWithNegativeAmountShouldRaiseException() throws SQLException {
+        player.setKamas(1000);
+
+        AtomicReference<KamasChanged> ref = new AtomicReference<>();
+        gamePlayer().dispatcher().add(KamasChanged.class, ref::set);
+
+        assertThrows(IllegalArgumentException.class, () -> inventory.removeKamas(-250));
+
+        assertEquals(1000, inventory.kamas());
+        assertNull(ref.get());
+    }
 }

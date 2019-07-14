@@ -43,14 +43,14 @@ class FightTurnTest extends FightBaseCase {
         fight.dispatcher().add(new RefreshBuffs());
         fight.dispatcher().add(new RefreshStates());
 
-        turn = new FightTurn(player.fighter(), fight, Duration.ofMillis(50));
+        turn = new FightTurn(player.fighter(), fight, Duration.ofMillis(250));
     }
 
     @Test
     void getters() {
         assertSame(player.fighter(), turn.fighter());
         assertSame(fight, turn.fight());
-        assertEquals(Duration.ofMillis(50), turn.duration());
+        assertEquals(Duration.ofMillis(250), turn.duration());
         assertFalse(turn.active());
         assertInstanceOf(TurnActionsFactory.class, turn.actions());
     }
@@ -86,7 +86,7 @@ class FightTurnTest extends FightBaseCase {
         turn.start();
         assertTrue(turn.active());
 
-        Thread.sleep(55);
+        Thread.sleep(400);
         assertFalse(turn.active());
     }
 

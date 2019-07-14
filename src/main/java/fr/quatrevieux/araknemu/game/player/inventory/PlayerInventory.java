@@ -184,10 +184,27 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry>, Dispa
             throw new IllegalArgumentException("Quantity must be a positive number");
         }
 
-        final long last = player.kamas();
+        updateKamas(quantity);
+    }
 
-        player.setKamas(last + quantity);
-        owner.dispatch(new KamasChanged(last, player.kamas()));
+    /**
+     * Remove kamas from the inventory
+     * Will dispatch event {@link KamasChanged}
+     *
+     * @param quantity Quantity of kamas to remove. Must be positive (and not zero)
+     *
+     * @throws IllegalArgumentException When an invalid quantity is given
+     */
+    public void removeKamas(long quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be a positive number");
+        }
+
+        if (quantity > player.kamas()) {
+            throw new IllegalArgumentException("Quantity is too high");
+        }
+
+        updateKamas(-quantity);
     }
 
     /**
@@ -206,5 +223,17 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry>, Dispa
 
         slots.get(entry.position()).unset();
         return entry == target.set(entry);
+    }
+
+    /**
+     * Update quantity of kamas, and trigger {@link KamasChanged} event
+     *
+     * @param quantity The change quantity. Positive for adding, negative for remove
+     */
+    private void updateKamas(long quantity) {
+        final long last = player.kamas();
+
+        player.setKamas(last + quantity);
+        owner.dispatch(new KamasChanged(last, player.kamas()));
     }
 }

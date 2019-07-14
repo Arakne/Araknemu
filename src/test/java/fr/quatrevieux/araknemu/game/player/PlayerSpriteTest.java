@@ -44,7 +44,7 @@ class PlayerSpriteTest extends GameBaseCase {
     @Test
     void generateString() throws SQLException, ContainerException {
         assertEquals(
-            "200;1;0;1;Bob;1;10^100x100;0;;7b;1c8;315;,,,,;;;;;;c;",
+            "200;1;0;1;Bob;1;10^100x100;0;;7b;1c8;315;,,,,;;;;;;8;",
             new PlayerSprite(new ExplorationPlayer(gamePlayer())).toString()
         );
     }
@@ -58,7 +58,7 @@ class PlayerSpriteTest extends GameBaseCase {
         );
 
         assertEquals(
-            "279;1;0;1;Bob;1;10^100x100;0;;7b;1c8;315;,,,,;;;;;;f;",
+            "279;1;0;1;Bob;1;10^100x100;0;;7b;1c8;315;,,,,;;;;;;b;",
             new PlayerSprite(exploration).toString()
         );
     }
@@ -70,7 +70,7 @@ class PlayerSpriteTest extends GameBaseCase {
         gamePlayer().inventory().add(container.get(ItemService.class).create(2416), 1, 1);
 
         assertEquals(
-            "200;1;0;1;Bob;1;10^100x100;0;;7b;1c8;315;970,96b,96e,,;;;;;;c;",
+            "200;1;0;1;Bob;1;10^100x100;0;;7b;1c8;315;970,96b,96e,,;;;;;;8;",
             new PlayerSprite(new ExplorationPlayer(gamePlayer())).toString()
         );
     }
@@ -82,7 +82,7 @@ class PlayerSpriteTest extends GameBaseCase {
         exploration.setOrientation(Direction.WEST);
 
         assertEquals(
-            "200;4;0;1;Bob;1;10^100x100;0;;7b;1c8;315;,,,,;;;;;;c;",
+            "200;4;0;1;Bob;1;10^100x100;0;;7b;1c8;315;,,,,;;;;;;8;",
             new PlayerSprite(exploration).toString()
         );
     }

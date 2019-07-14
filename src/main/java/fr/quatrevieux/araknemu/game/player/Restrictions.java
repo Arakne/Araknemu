@@ -192,7 +192,6 @@ final public class Restrictions {
         set.set(Restriction.ALLOW_MOVE_ALL_DIRECTION);
 
         // @todo to remove when implemented
-        set.set(Restriction.DENY_EXCHANGE);
         set.set(Restriction.DENY_MERCHANT);
     }
 }

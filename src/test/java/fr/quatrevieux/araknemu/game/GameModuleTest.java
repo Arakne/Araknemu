@@ -18,6 +18,7 @@ import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.connector.ConnectorService;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeFactory;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ExplorationActionRegistry;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
@@ -118,6 +119,7 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(ChainAiFactory.class, container.get(AiFactory.class));
         assertInstanceOf(MonsterAiFactory.class, container.get(MonsterAiFactory.class));
         assertInstanceOf(ActivityService.class, container.get(ActivityService.class));
+        assertInstanceOf(ExchangeFactory.class, container.get(ExchangeFactory.class));
 
         assertSame(
             container.get(ListenerAggregate.class),

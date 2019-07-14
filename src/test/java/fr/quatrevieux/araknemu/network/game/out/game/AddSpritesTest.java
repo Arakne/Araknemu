@@ -24,7 +24,7 @@ class AddSpritesTest extends GameBaseCase {
         p1.inventory().add(container.get(ItemService.class).create(2416), 1, 1);
 
         assertEquals(
-            "GM|+279;1;0;1;Bob;1;10^100x100;0;;7b;1c8;315;970,,,,;;;;;;c;|+210;1;0;2;Other;9;90^100x100;0;;-1;-1;-1;,,,,;;;;;;c;",
+            "GM|+279;1;0;1;Bob;1;10^100x100;0;;7b;1c8;315;970,,,,;;;;;;8;|+210;1;0;2;Other;9;90^100x100;0;;-1;-1;-1;,,,,;;;;;;8;",
             new AddSprites(Arrays.asList(p1.sprite(), p2.sprite())).toString()
         );
     }
