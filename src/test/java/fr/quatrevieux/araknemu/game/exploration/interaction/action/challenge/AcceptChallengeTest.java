@@ -5,8 +5,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.challenge.AcceptChallenge;
-import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengeInvitation;
+import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengeInvitationHandler;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
@@ -45,9 +44,7 @@ class AcceptChallengeTest extends GameBaseCase {
 
     @Test
     void badTarget() throws Exception {
-        other.interactions().start(
-            new ChallengeInvitation(other, player, container.get(FightService.class).handler(ChallengeBuilder.class))
-        );
+        other.interactions().start(invitationHandler().invitation(other, player));
 
         AcceptChallenge action = new AcceptChallenge(explorationPlayer(), -5);
 
@@ -56,7 +53,7 @@ class AcceptChallengeTest extends GameBaseCase {
 
     @Test
     void initiatorCannotAccept() throws Exception {
-        explorationPlayer().interactions().start(new ChallengeInvitation(player, other, container.get(FightService.class).handler(ChallengeBuilder.class)));
+        explorationPlayer().interactions().start(invitationHandler().invitation(player, other));
 
         AcceptChallenge action = new AcceptChallenge(player, player.id());
 
@@ -64,8 +61,8 @@ class AcceptChallengeTest extends GameBaseCase {
     }
 
     @Test
-    void successFromChallenger() throws Exception {
-        other.interactions().start(new ChallengeInvitation(other, player, container.get(FightService.class).handler(ChallengeBuilder.class)));
+    void successFromChallenger() {
+        other.interactions().start(invitationHandler().invitation(other, player));
 
         AcceptChallenge action = new AcceptChallenge(player, other.id());
 
@@ -76,5 +73,9 @@ class AcceptChallengeTest extends GameBaseCase {
 
         requestStack.assertOne(new GameActionResponse("", ActionType.ACCEPT_CHALLENGE, player.id(), other.id()));
         requestStack.assertOne(new JoinFight(player.player().fighter().fight()));
+    }
+
+    private ChallengeInvitationHandler invitationHandler() {
+        return new ChallengeInvitationHandler(container.get(FightService.class).handler(ChallengeBuilder.class));
     }
 }

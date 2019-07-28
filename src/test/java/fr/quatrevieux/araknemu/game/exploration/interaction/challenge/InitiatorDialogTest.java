@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.exploration.interaction.challenge;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.request.Invitation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 class InitiatorDialogTest extends GameBaseCase {
     private ExplorationPlayer initiator;
     private ExplorationPlayer challenger;
-    private ChallengeInvitation invitation;
+    private Invitation invitation;
     private InitiatorDialog dialog;
 
     @Override
@@ -30,7 +31,7 @@ class InitiatorDialogTest extends GameBaseCase {
         initiator.join(container.get(ExplorationMapService.class).load(10340));
         challenger.join(initiator.map());
 
-        invitation = new ChallengeInvitation(initiator, challenger, container.get(FightService.class).handler(ChallengeBuilder.class));
+        invitation = new ChallengeInvitationHandler(container.get(FightService.class).handler(ChallengeBuilder.class)).invitation(initiator, challenger);
         initiator.interactions().start(invitation);
 
         dialog = new InitiatorDialog(invitation);
@@ -44,11 +45,6 @@ class InitiatorDialogTest extends GameBaseCase {
     @Test
     void interlocutor() {
         assertSame(challenger, dialog.interlocutor());
-    }
-
-    @Test
-    void initiator() {
-        assertSame(initiator, dialog.initiator());
     }
 
     @Test

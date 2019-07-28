@@ -1,13 +1,13 @@
 package fr.quatrevieux.araknemu.game.exploration.interaction.action.challenge;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
-import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengeInvitation;
+import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengeInvitationHandler;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
-import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 
 /**
  * Ask for challenge
@@ -30,7 +30,7 @@ final public class AskChallenge implements Action {
             public void onExplorationPlayer(ExplorationPlayer challenger) {
                 player
                     .interactions()
-                    .start(new ChallengeInvitation(player, challenger, fightService.handler(ChallengeBuilder.class)))
+                    .start(new ChallengeInvitationHandler(fightService.handler(ChallengeBuilder.class)).invitation(player, challenger))
                 ;
             }
         });

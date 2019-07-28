@@ -4,7 +4,7 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
-import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengeDialog;
+import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengeRequestDialog;
 
 /**
  * Refuse or cancel the challenge invitation
@@ -20,7 +20,7 @@ final public class RefuseChallenge implements Action {
 
     @Override
     public void start(ActionQueue queue) {
-        ChallengeDialog dialog = player.interactions().get(ChallengeDialog.class);
+        ChallengeRequestDialog dialog = player.interactions().get(ChallengeRequestDialog.class);
 
         if (dialog.initiator().id() != target) {
             throw new IllegalArgumentException("Invalid challenge target");

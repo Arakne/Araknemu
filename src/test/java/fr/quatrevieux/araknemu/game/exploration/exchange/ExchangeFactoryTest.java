@@ -4,7 +4,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeInteraction;
-import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.PlayerExchangeRequest;
+import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player.PlayerExchangeRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -30,7 +30,6 @@ class ExchangeFactoryTest extends GameBaseCase {
         ExchangeInteraction interaction = factory.create(ExchangeType.PLAYER_EXCHANGE, player, other);
 
         assertInstanceOf(PlayerExchangeRequest.class, interaction);
-        assertCollectionEquals(((PlayerExchangeRequest) interaction).interlocutors(), player, other);
     }
 
     @Test

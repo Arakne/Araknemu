@@ -1,34 +1,19 @@
 package fr.quatrevieux.araknemu.game.exploration.interaction.challenge;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
-import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
+import fr.quatrevieux.araknemu.game.exploration.interaction.request.AbstractInitiatorRequestDialog;
+import fr.quatrevieux.araknemu.game.exploration.interaction.request.Invitation;
 
 /**
  * Dialog for challenge initiator
  */
-final public class InitiatorDialog extends ChallengeDialog {
-    public InitiatorDialog(ChallengeInvitation invitation) {
+final public class InitiatorDialog extends AbstractInitiatorRequestDialog implements ChallengeRequestDialog {
+    public InitiatorDialog(Invitation invitation) {
         super(invitation);
     }
 
     @Override
-    public ExplorationPlayer self() {
+    public ExplorationPlayer initiator() {
         return invitation.initiator();
-    }
-
-    @Override
-    public ExplorationPlayer interlocutor() {
-        return invitation.challenger();
-    }
-
-    @Override
-    public Interaction start() {
-        self().map().send(
-            new GameActionResponse("", ActionType.CHALLENGE, self().id(), interlocutor().id())
-        );
-
-        return this;
     }
 }

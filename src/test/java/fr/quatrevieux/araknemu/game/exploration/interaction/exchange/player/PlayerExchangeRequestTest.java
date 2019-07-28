@@ -1,13 +1,16 @@
-package fr.quatrevieux.araknemu.game.exploration.interaction.exchange;
+package fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
+import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeInteraction;
+import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player.InitiatorExchangeRequestDialog;
+import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player.PlayerExchangeRequest;
+import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player.TargetExchangeRequestDialog;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.Restrictions;
-import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeCreated;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeLeaved;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeRequestError;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeRequested;
@@ -43,7 +46,7 @@ class PlayerExchangeRequestTest extends GameBaseCase {
 
         requestStack.assertLast(new ExchangeRequested(player, other, ExchangeType.PLAYER_EXCHANGE));
 
-        assertInstanceOf(ExchangeRequestDialog.class, player.interactions().get(ExchangeInteraction.class));
+        assertInstanceOf(InitiatorExchangeRequestDialog.class, player.interactions().get(ExchangeInteraction.class));
         assertInstanceOf(TargetExchangeRequestDialog.class, other.interactions().get(ExchangeInteraction.class));
     }
 
@@ -137,24 +140,12 @@ class PlayerExchangeRequestTest extends GameBaseCase {
     }
 
     @Test
-    void accept() {
+    void stop() {
         player.interactions().start(request);
-        request.accept();
 
-        requestStack.assertLast(new ExchangeCreated(ExchangeType.PLAYER_EXCHANGE));
+        request.stop();
 
-        assertInstanceOf(ExchangeDialog.class, player.interactions().get(Interaction.class));
-        assertInstanceOf(ExchangeDialog.class, other.interactions().get(Interaction.class));
-    }
-
-    @Test
-    void fromOther() {
-        request = new PlayerExchangeRequest(other, player);
-
-        other.interactions().start(request);
-        requestStack.assertLast(new ExchangeRequested(other, player, ExchangeType.PLAYER_EXCHANGE));
-
-        request.accept();
-        requestStack.assertLast(new ExchangeCreated(ExchangeType.PLAYER_EXCHANGE));
+        assertFalse(player.interactions().busy());
+        assertFalse(other.interactions().busy());
     }
 }

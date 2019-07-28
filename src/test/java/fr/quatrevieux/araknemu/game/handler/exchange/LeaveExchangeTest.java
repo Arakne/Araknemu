@@ -3,7 +3,7 @@ package fr.quatrevieux.araknemu.game.handler.exchange;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.exchange.PlayerExchangeParty;
-import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.PlayerExchangeRequest;
+import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player.PlayerExchangeRequest;
 import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.game.in.exchange.LeaveExchangeRequest;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeLeaved;

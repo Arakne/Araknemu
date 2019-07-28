@@ -1,18 +1,21 @@
-package fr.quatrevieux.araknemu.game.exploration.interaction.exchange;
+package fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player.InitiatorExchangeRequestDialog;
+import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player.PlayerExchangeRequest;
+import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player.TargetExchangeRequestDialog;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeLeaved;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ExchangeRequestDialogTest extends GameBaseCase {
+class InitiatorExchangeRequestDialogTest extends GameBaseCase {
     private ExplorationPlayer player;
     private ExplorationPlayer other;
 
-    private ExchangeRequestDialog dialog;
+    private InitiatorExchangeRequestDialog dialog;
 
     @Override
     @BeforeEach
@@ -26,9 +29,9 @@ class ExchangeRequestDialogTest extends GameBaseCase {
 
         PlayerExchangeRequest request = new PlayerExchangeRequest(player, other);
 
-        dialog = new ExchangeRequestDialog(request);
+        dialog = new InitiatorExchangeRequestDialog(request.invitation(player, other));
         player.interactions().start(dialog);
-        other.interactions().start(new TargetExchangeRequestDialog(request));
+        other.interactions().start(new TargetExchangeRequestDialog(request.invitation(player, other)));
     }
 
     @Test

@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
+import fr.quatrevieux.araknemu.game.exploration.interaction.request.Invitation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
@@ -16,10 +17,11 @@ import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ChallengeInvitationTest extends GameBaseCase {
+class ChallengeInvitationHandlerTest extends GameBaseCase {
+    private ChallengeInvitationHandler handler;
     private ExplorationPlayer initiator;
     private ExplorationPlayer challenger;
-    private ChallengeInvitation invitation;
+    private Invitation invitation;
 
     @Override
     @BeforeEach
@@ -33,15 +35,14 @@ class ChallengeInvitationTest extends GameBaseCase {
         initiator.join(container.get(ExplorationMapService.class).load(10340));
         challenger.join(initiator.map());
 
-        invitation = new ChallengeInvitation(initiator, challenger, container.get(FightService.class).handler(ChallengeBuilder.class));
+        handler = new ChallengeInvitationHandler(container.get(FightService.class).handler(ChallengeBuilder.class));
+        invitation = handler.invitation(initiator, challenger);
     }
 
     @Test
     void getters() {
         assertSame(initiator, invitation.initiator());
-        assertSame(challenger, invitation.challenger());
-
-        assertCollectionEquals(invitation.interlocutors(), initiator, challenger);
+        assertSame(challenger, invitation.target());
     }
 
     @Test

@@ -5,7 +5,7 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeDialog;
-import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.PlayerExchangeRequest;
+import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player.PlayerExchangeRequest;
 import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.game.in.exchange.AcceptExchangeRequest;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeCreated;

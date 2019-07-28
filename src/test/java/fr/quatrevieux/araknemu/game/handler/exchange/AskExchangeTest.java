@@ -5,8 +5,8 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeFactory;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
-import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeRequestDialog;
-import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.TargetExchangeRequestDialog;
+import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player.InitiatorExchangeRequestDialog;
+import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player.TargetExchangeRequestDialog;
 import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.in.exchange.ExchangeRequest;
@@ -41,7 +41,7 @@ class AskExchangeTest extends GameBaseCase {
 
         requestStack.assertLast(new ExchangeRequested(player, other, ExchangeType.PLAYER_EXCHANGE));
 
-        assertInstanceOf(ExchangeRequestDialog.class, player.interactions().get(Interaction.class));
+        assertInstanceOf(InitiatorExchangeRequestDialog.class, player.interactions().get(Interaction.class));
         assertInstanceOf(TargetExchangeRequestDialog.class, other.interactions().get(Interaction.class));
     }
 
@@ -66,7 +66,7 @@ class AskExchangeTest extends GameBaseCase {
     void functional() throws Exception {
         handlePacket(new ExchangeRequest(ExchangeType.PLAYER_EXCHANGE, other.id(), null));
 
-        assertInstanceOf(ExchangeRequestDialog.class, player.interactions().get(Interaction.class));
+        assertInstanceOf(InitiatorExchangeRequestDialog.class, player.interactions().get(Interaction.class));
         assertInstanceOf(TargetExchangeRequestDialog.class, other.interactions().get(Interaction.class));
     }
 }

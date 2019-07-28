@@ -5,8 +5,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.challenge.RefuseChallenge;
-import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengeInvitation;
+import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengeInvitationHandler;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
@@ -16,7 +15,8 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RefuseChallengeTest extends GameBaseCase {
     private ExplorationPlayer player;
@@ -43,9 +43,7 @@ class RefuseChallengeTest extends GameBaseCase {
 
     @Test
     void badTarget() throws Exception {
-        player.interactions().start(
-            new ChallengeInvitation(other, player, container.get(FightService.class).handler(ChallengeBuilder.class))
-        );
+        player.interactions().start(invitationHandler().invitation(other, player));
 
         RefuseChallenge action = new RefuseChallenge(explorationPlayer(), -5);
 
@@ -54,7 +52,7 @@ class RefuseChallengeTest extends GameBaseCase {
 
     @Test
     void successFromInitiator() throws Exception {
-        explorationPlayer().interactions().start(new ChallengeInvitation(player, other, container.get(FightService.class).handler(ChallengeBuilder.class)));
+        explorationPlayer().interactions().start(invitationHandler().invitation(player, other));
 
         RefuseChallenge action = new RefuseChallenge(player, player.id());
 
@@ -69,8 +67,8 @@ class RefuseChallengeTest extends GameBaseCase {
     }
 
     @Test
-    void successFromChallenger() throws Exception {
-        other.interactions().start(new ChallengeInvitation(other, player, container.get(FightService.class).handler(ChallengeBuilder.class)));
+    void successFromChallenger() {
+        other.interactions().start(invitationHandler().invitation(other, player));
 
         RefuseChallenge action = new RefuseChallenge(player, other.id());
 
@@ -82,5 +80,9 @@ class RefuseChallengeTest extends GameBaseCase {
         requestStack.assertLast(
             new GameActionResponse("", ActionType.REFUSE_CHALLENGE, player.id(), other.id())
         );
+    }
+
+    private ChallengeInvitationHandler invitationHandler() {
+        return new ChallengeInvitationHandler(container.get(FightService.class).handler(ChallengeBuilder.class));
     }
 }

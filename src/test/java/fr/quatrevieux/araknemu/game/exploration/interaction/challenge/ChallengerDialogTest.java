@@ -2,8 +2,8 @@ package fr.quatrevieux.araknemu.game.exploration.interaction.challenge;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.request.Invitation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
@@ -13,14 +13,13 @@ import fr.quatrevieux.araknemu.network.game.out.fight.JoinFight;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.helpers.NOPLogger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ChallengerDialogTest extends GameBaseCase {
     private ExplorationPlayer initiator;
     private ExplorationPlayer challenger;
-    private ChallengeInvitation invitation;
+    private Invitation invitation;
     private ChallengerDialog dialog;
 
     @Override
@@ -34,7 +33,7 @@ class ChallengerDialogTest extends GameBaseCase {
         initiator.join(container.get(ExplorationMapService.class).load(10340));
         challenger.join(initiator.map());
 
-        invitation = new ChallengeInvitation(initiator, challenger, container.get(FightService.class).handler(ChallengeBuilder.class));
+        invitation = new ChallengeInvitationHandler(container.get(FightService.class).handler(ChallengeBuilder.class)).invitation(initiator, challenger);
         initiator.interactions().start(invitation);
 
         dialog = new ChallengerDialog(invitation);
@@ -48,11 +47,6 @@ class ChallengerDialogTest extends GameBaseCase {
     @Test
     void interlocutor() {
         assertSame(initiator, dialog.interlocutor());
-    }
-
-    @Test
-    void initiator() {
-        assertSame(initiator, dialog.initiator());
     }
 
     @Test
