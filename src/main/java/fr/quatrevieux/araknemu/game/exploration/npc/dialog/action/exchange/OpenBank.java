@@ -1,16 +1,16 @@
 package fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.exchange;
 
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.ResponseAction;
+import fr.quatrevieux.araknemu.game.account.bank.Bank;
 import fr.quatrevieux.araknemu.game.account.bank.BankService;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.exchange.BankExchangeParty;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.ActionFactory;
+import fr.quatrevieux.araknemu.network.game.out.info.Information;
+import fr.quatrevieux.araknemu.network.out.ServerMessage;
 
 /**
  * Action for open the bank
- *
- * @todo bank cost
  */
 final public class OpenBank implements Action {
     final static public class Factory implements ActionFactory {
@@ -39,11 +39,63 @@ final public class OpenBank implements Action {
 
     @Override
     public boolean check(ExplorationPlayer player) {
+        // Always true ?
         return true;
     }
 
     @Override
     public void apply(ExplorationPlayer player) {
-        new BankExchangeParty(player, service.load(player.account())).start();
+        Bank bank = service.load(player.account());
+
+        if (payBankTax(player, bank)) {
+            bank.exchange(player).start();
+        }
+    }
+
+    /**
+     * Try to pay the bank tax
+     *
+     * Check, in order, if has enough kamas :
+     * - The player
+     * - The bank
+     * - The bank + player kamas
+     *
+     * Send information message when payed
+     *
+     * @return True on success, or false if there not enough kamas
+     */
+    private boolean payBankTax(ExplorationPlayer player, Bank bank) {
+        final long cost = bank.cost();
+
+        if (cost == 0) {
+            return true;
+        }
+
+        if (player.inventory().kamas() >= cost) {
+            player.inventory().removeKamas(cost);
+            player.send(Information.bankTaxPayed(cost));
+
+            return true;
+        }
+
+        if (bank.kamas() >= cost) {
+            bank.removeKamas(cost);
+
+            return true;
+        }
+
+        if (player.inventory().kamas() + bank.kamas() < cost) {
+            player.send(ServerMessage.notEnoughKamasForBank(cost));
+
+            return false;
+        }
+
+        final long payedByPlayer = cost - bank.kamas();
+
+        bank.removeKamas(bank.kamas());
+        player.inventory().removeKamas(payedByPlayer);
+        player.send(Information.bankTaxPayed(payedByPlayer));
+
+        return true;
     }
 }

@@ -57,4 +57,12 @@ class InformationTest {
             Information.positionSaved().toString()
         );
     }
+
+    @Test
+    void bankTaxPayed() {
+        assertEquals(
+            "Im020;42",
+            Information.bankTaxPayed(42).toString()
+        );
+    }
 }

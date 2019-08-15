@@ -82,4 +82,19 @@ class BankServiceTest extends GameBaseCase {
         assertEquals(bank.get(2).item(), items.get(1).item());
         assertEquals(1, items.get(1).quantity());
     }
+
+    @Test
+    void costEmpty() throws SQLException {
+        assertEquals(0, service.cost(explorationPlayer().account()));
+    }
+
+    @Test
+    void costNotEmpty() throws SQLException {
+        Bank bank = service.load(explorationPlayer().account());
+
+        bank.add(container.get(ItemService.class).create(39), 2);
+        bank.add(container.get(ItemService.class).create(2422));
+
+        assertEquals(2, service.cost(explorationPlayer().account()));
+    }
 }

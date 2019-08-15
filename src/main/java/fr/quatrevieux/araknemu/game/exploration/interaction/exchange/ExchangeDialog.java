@@ -3,7 +3,6 @@ package fr.quatrevieux.araknemu.game.exploration.interaction.exchange;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeParty;
 import fr.quatrevieux.araknemu.game.exploration.interaction.Accaptable;
 import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
-import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeCreated;
 
 /**

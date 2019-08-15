@@ -163,6 +163,16 @@ final public class GameConfiguration implements ConfigurationModule {
     }
 
     /**
+     * The bank cost per item entries
+     * The value must be a positive integer
+     * Default to 1
+     * Set to 0 to disable the bank cost
+     */
+    public int bankCostPerEntry() {
+        return pool.integer("bank.costPerEntry", 1);
+    }
+
+    /**
      * Get player configuration
      */
     public PlayerConfiguration player() {

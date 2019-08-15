@@ -1,6 +1,5 @@
 package fr.quatrevieux.araknemu.game.exploration.exchange;
 
-import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 

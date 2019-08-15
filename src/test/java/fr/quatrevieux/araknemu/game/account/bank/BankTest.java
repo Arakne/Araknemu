@@ -3,6 +3,7 @@ package fr.quatrevieux.araknemu.game.account.bank;
 import fr.quatrevieux.araknemu.data.living.entity.account.AccountBank;
 import fr.quatrevieux.araknemu.data.living.entity.account.BankItem;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.exchange.BankExchangeParty;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
@@ -12,6 +13,7 @@ import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectDeleted;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -97,5 +99,18 @@ class BankTest extends GameBaseCase {
         bank.save();
 
         assertEquals(5000, dataSet.refresh(bank.entity()).kamas());
+    }
+
+    @Test
+    void cost() {
+        dataSet.push(new BankItem(1, 1, 1, 39, new ArrayList<>(), 5));
+        dataSet.push(new BankItem(1, 1, 2, 40, new ArrayList<>(), 3));
+
+        assertEquals(2, bank.cost());
+    }
+
+    @Test
+    void exchange() throws SQLException {
+        assertInstanceOf(BankExchangeParty.class, bank.exchange(explorationPlayer()));
     }
 }

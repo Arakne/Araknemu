@@ -38,6 +38,13 @@ final public class BankService {
         return bank;
     }
 
+    /**
+     * Get the cost for open the bank account
+     */
+    public long cost(GameAccount account) {
+        return cost(new AccountBank(account.id(), configuration.id(), 0));
+    }
+
     void save(Bank bank) {
         bankRepository.add(bank.entity());
     }
@@ -52,5 +59,12 @@ final public class BankService {
             .map(entity -> new BankEntry(bank, entity, itemService.retrieve(entity.itemTemplateId(), entity.effects())))
             .collect(Collectors.toList())
         ;
+    }
+
+    /**
+     * Get the cost for open the bank account
+     */
+    long cost(AccountBank bank) {
+        return itemRepository.count(bank) * configuration.bankCostPerEntry();
     }
 }

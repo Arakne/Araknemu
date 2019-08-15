@@ -5,6 +5,9 @@ import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.living.entity.account.AccountBank;
 import fr.quatrevieux.araknemu.data.living.entity.account.BankItem;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.exchange.BankExchangeParty;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeParty;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.item.inventory.*;
@@ -86,6 +89,22 @@ final public class Bank implements Inventory<BankEntry>, Dispatcher {
      */
     public void save() {
         service.save(this);
+    }
+
+    /**
+     * Get the cost for open the current bank
+     */
+    public long cost() {
+        return service.cost(entity);
+    }
+
+    /**
+     * Create an exchange for the current bank account
+     *
+     * @param player The interacting player
+     */
+    public ExchangeParty exchange(ExplorationPlayer player) {
+        return new BankExchangeParty(player, this);
     }
 
     /**

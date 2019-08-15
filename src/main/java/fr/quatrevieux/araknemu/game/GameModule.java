@@ -69,6 +69,7 @@ import fr.quatrevieux.araknemu.game.exploration.npc.dialog.DialogService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.exchange.OpenBank;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.object.RemoveObject;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.teleport.GoToAstrub;
+import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.BankCostResolver;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.GetterResolver;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersResolver;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.VariableResolver;
@@ -586,6 +587,7 @@ final public class GameModule implements ContainerModule {
             container -> new ParametersResolver(
                 new VariableResolver[] {
                     new GetterResolver("name", session -> session.player().name()),
+                    new BankCostResolver(container.get(BankService.class))
                 },
                 container.get(Logger.class)
             )

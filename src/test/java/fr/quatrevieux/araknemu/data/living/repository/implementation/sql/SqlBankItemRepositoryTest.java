@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.data.constant.Effect;
+import fr.quatrevieux.araknemu.data.living.entity.account.AccountBank;
 import fr.quatrevieux.araknemu.data.living.entity.account.BankItem;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.transformer.ItemEffectsTransformer;
@@ -143,5 +144,17 @@ class SqlBankItemRepositoryTest extends GameBaseCase {
                 5
             )
         ));
+    }
+
+    @Test
+    void count() {
+        AccountBank bank = new AccountBank(1, 2, 0);
+
+        assertEquals(0, repository.count(bank));
+
+        repository.add(new BankItem(1, 2, 3, 39, Arrays.asList(), 5));
+        repository.add(new BankItem(1, 2, 4, 40, Arrays.asList(), 2));
+
+        assertEquals(2, repository.count(bank));
     }
 }

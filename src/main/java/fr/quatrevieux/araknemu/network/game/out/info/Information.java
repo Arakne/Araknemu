@@ -83,4 +83,13 @@ final public class Information extends InformationMessage {
     static public Information positionSaved() {
         return new Information(6);
     }
+
+    /**
+     * The bank tax has been payed
+     *
+     * @param cost The kamas given by the player
+     */
+    static public Information bankTaxPayed(long cost) {
+        return new Information(20, cost);
+    }
 }

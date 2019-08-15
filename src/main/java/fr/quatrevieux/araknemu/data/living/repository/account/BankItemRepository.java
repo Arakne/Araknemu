@@ -36,4 +36,13 @@ public interface BankItemRepository extends MutableRepository<BankItem> {
      * @throws EntityNotFoundException When cannot found entity to delete
      */
     public void delete(BankItem item);
+
+    /**
+     * Count the number of stored item entries into the bank
+     *
+     * @param bank The bank account
+     *
+     * @return The number of item entries
+     */
+    public int count(AccountBank bank);
 }

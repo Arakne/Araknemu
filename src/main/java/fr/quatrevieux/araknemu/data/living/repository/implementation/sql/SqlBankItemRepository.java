@@ -161,4 +161,15 @@ final class SqlBankItemRepository implements BankItemRepository {
             }
         );
     }
+
+    @Override
+    public int count(AccountBank bank) throws RepositoryException {
+        return utils.aggregate(
+            "SELECT COUNT(*) FROM BANK_ITEM WHERE ACCOUNT_ID = ? AND SERVER_ID = ?",
+            stmt -> {
+                stmt.setInt(1, bank.accountId());
+                stmt.setInt(2, bank.serverId());
+            }
+        );
+    }
 }
