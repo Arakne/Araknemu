@@ -1,14 +1,14 @@
-package fr.quatrevieux.araknemu.game.player.inventory.event;
+package fr.quatrevieux.araknemu.game.item.inventory.event;
 
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 
 /**
- * The object quantity is changed
+ * Event sent when an inventory entry is moved
  */
-final public class ObjectQuantityChanged {
+final public class ObjectMoved {
     final private ItemEntry entry;
 
-    public ObjectQuantityChanged(ItemEntry entry) {
+    public ObjectMoved(ItemEntry entry) {
         this.entry = entry;
     }
 

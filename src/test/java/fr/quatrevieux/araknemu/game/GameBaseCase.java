@@ -12,9 +12,13 @@ import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
 import fr.quatrevieux.araknemu.core.di.*;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Sex;
+import fr.quatrevieux.araknemu.data.living.entity.account.AccountBank;
+import fr.quatrevieux.araknemu.data.living.entity.account.BankItem;
 import fr.quatrevieux.araknemu.data.living.entity.environment.SubArea;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
+import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
+import fr.quatrevieux.araknemu.data.living.repository.account.BankItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
 import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.SqlLivingRepositoriesModule;
 import fr.quatrevieux.araknemu.data.constant.Race;
@@ -231,6 +235,8 @@ public class GameBaseCase extends DatabaseTestCase {
             .declare(MonsterGroupPosition.class, MonsterGroupPositionRepository.class)
             .declare(MonsterRewardData.class, MonsterRewardRepository.class)
             .declare(MonsterRewardItem.class, MonsterRewardItemRepository.class)
+            .declare(AccountBank.class, AccountBankRepository.class)
+            .declare(BankItem.class, BankItemRepository.class)
         ;
 
         container.get(GameService.class).subscribe();

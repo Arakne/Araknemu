@@ -46,11 +46,19 @@ public interface ItemEntry {
 
     /**
      * Add the quantity to the entry
+     *
+     * @param quantity The quantity to add. Must be a strictly positive integer
+     *
+     * @throws InventoryException When invalid quantity given
      */
     public void add(int quantity);
 
     /**
      * Remove the quantity to the entry
+     *
+     * @param quantity The quantity to remove. Must be a strictly positive integer, less or equals than current quantity
+     *
+     * @throws InventoryException When invalid quantity given
      */
     public void remove(int quantity) throws InventoryException;
 

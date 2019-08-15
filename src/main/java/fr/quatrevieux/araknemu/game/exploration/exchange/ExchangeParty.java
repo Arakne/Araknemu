@@ -43,8 +43,8 @@ public interface ExchangeParty extends Sender {
     /**
      * Add or remove an item on the exchange
      *
-     * @param entry The item to move
+     * @param itemEntryId The id of item to move
      * @param quantity The quantity. May be negative for remove item
      */
-    public void item(ItemEntry entry, int quantity);
+    public void item(int itemEntryId, int quantity);
 }

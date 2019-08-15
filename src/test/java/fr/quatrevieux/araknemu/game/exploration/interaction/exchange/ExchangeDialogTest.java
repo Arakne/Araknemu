@@ -108,7 +108,7 @@ class ExchangeDialogTest extends GameBaseCase {
 
         InventoryEntry entry = player.inventory().add(container.get(ItemService.class).create(2422));
 
-        dialog.item(entry, 1);
+        dialog.item(entry.id(), 1);
         requestStack.assertLast(new LocalExchangeObject(entry, 1));
     }
 }

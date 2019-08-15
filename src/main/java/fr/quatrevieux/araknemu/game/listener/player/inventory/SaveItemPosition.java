@@ -3,7 +3,7 @@ package fr.quatrevieux.araknemu.game.listener.player.inventory;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
-import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectMoved;
+import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectMoved;
 
 /**
  * Save to database the object position

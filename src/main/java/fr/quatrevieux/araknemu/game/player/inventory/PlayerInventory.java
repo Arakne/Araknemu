@@ -3,14 +3,12 @@ package fr.quatrevieux.araknemu.game.player.inventory;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.item.Item;
-import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
-import fr.quatrevieux.araknemu.game.item.inventory.SimpleItemStorage;
+import fr.quatrevieux.araknemu.game.item.inventory.*;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
 import fr.quatrevieux.araknemu.game.item.type.Equipment;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.accessory.InventoryAccessories;
-import fr.quatrevieux.araknemu.game.player.inventory.event.KamasChanged;
 import fr.quatrevieux.araknemu.game.player.inventory.itemset.ItemSets;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlot;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
@@ -24,9 +22,10 @@ import java.util.stream.Collectors;
 /**
  * Inventory for player
  */
-final public class PlayerInventory implements ItemStorage<InventoryEntry>, Dispatcher {
+final public class PlayerInventory implements Inventory<InventoryEntry>, Dispatcher {
     final private Player player;
     final private ItemStorage<InventoryEntry> storage;
+    final private Wallet wallet;
     final private InventorySlots slots;
     final private Accessories accessories;
     final private ItemSets itemSets;
@@ -45,6 +44,7 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry>, Dispa
                 .collect(Collectors.toList())
         );
 
+        wallet = new SimpleWallet(player, this);
         slots = new InventorySlots(this, storage);
         accessories = new InventoryAccessories(slots);
         itemSets = new ItemSets(this);
@@ -164,47 +164,19 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry>, Dispa
         }
     }
 
-    /**
-     * Get the kamas quantity on the inventory
-     */
+    @Override
     public long kamas() {
         return player.kamas();
     }
 
-    /**
-     * Add kamas to the inventory
-     * Will dispatch event {@link KamasChanged}
-     *
-     * @param quantity Quantity of kamas to add. Must be positive
-     *
-     * @throws IllegalArgumentException When a null or negative quantity is given
-     */
+    @Override
     public void addKamas(long quantity) {
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be a positive number");
-        }
-
-        updateKamas(quantity);
+        wallet.addKamas(quantity);
     }
 
-    /**
-     * Remove kamas from the inventory
-     * Will dispatch event {@link KamasChanged}
-     *
-     * @param quantity Quantity of kamas to remove. Must be positive (and not zero)
-     *
-     * @throws IllegalArgumentException When an invalid quantity is given
-     */
+    @Override
     public void removeKamas(long quantity) {
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be a positive number");
-        }
-
-        if (quantity > player.kamas()) {
-            throw new IllegalArgumentException("Quantity is too high");
-        }
-
-        updateKamas(-quantity);
+        wallet.removeKamas(quantity);
     }
 
     /**
@@ -223,17 +195,5 @@ final public class PlayerInventory implements ItemStorage<InventoryEntry>, Dispa
 
         slots.get(entry.position()).unset();
         return entry == target.set(entry);
-    }
-
-    /**
-     * Update quantity of kamas, and trigger {@link KamasChanged} event
-     *
-     * @param quantity The change quantity. Positive for adding, negative for remove
-     */
-    private void updateKamas(long quantity) {
-        final long last = player.kamas();
-
-        player.setKamas(last + quantity);
-        owner.dispatch(new KamasChanged(last, player.kamas()));
     }
 }

@@ -103,7 +103,9 @@ final public class PlayerExchangeParty implements ExchangeParty {
     }
 
     @Override
-    public void item(ItemEntry entry, int quantity) {
+    public void item(int itemEntryId, int quantity) {
+        final ItemEntry entry = player.inventory().get(itemEntryId);
+
         synchronized (lock) {
             assertNotAccepted();
 

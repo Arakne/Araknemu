@@ -10,6 +10,7 @@ import fr.quatrevieux.araknemu.data.world.repository.implementation.sql.SqlWorld
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
+import fr.quatrevieux.araknemu.game.account.bank.BankService;
 import fr.quatrevieux.araknemu.game.account.generator.NameCheckerGenerator;
 import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
 import fr.quatrevieux.araknemu.game.activity.ActivityService;
@@ -120,6 +121,7 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(MonsterAiFactory.class, container.get(MonsterAiFactory.class));
         assertInstanceOf(ActivityService.class, container.get(ActivityService.class));
         assertInstanceOf(ExchangeFactory.class, container.get(ExchangeFactory.class));
+        assertInstanceOf(BankService.class, container.get(BankService.class));
 
         assertSame(
             container.get(ListenerAggregate.class),

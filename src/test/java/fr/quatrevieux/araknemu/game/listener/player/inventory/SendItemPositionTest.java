@@ -2,7 +2,7 @@ package fr.quatrevieux.araknemu.game.listener.player.inventory;
 
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectMoved;
+import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectMoved;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.network.game.out.object.ItemPosition;
 import org.junit.jupiter.api.BeforeEach;

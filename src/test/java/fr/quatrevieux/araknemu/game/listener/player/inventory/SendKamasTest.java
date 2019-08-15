@@ -1,7 +1,7 @@
 package fr.quatrevieux.araknemu.game.listener.player.inventory;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.player.inventory.event.KamasChanged;
+import fr.quatrevieux.araknemu.game.item.inventory.event.KamasChanged;
 import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

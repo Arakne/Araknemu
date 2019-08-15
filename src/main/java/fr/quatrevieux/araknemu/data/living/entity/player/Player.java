@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.data.living.entity.player;
 
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
+import fr.quatrevieux.araknemu.data.living.entity.WalletEntity;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
@@ -14,7 +15,7 @@ import java.util.Set;
 /**
  * Entity class for player
  */
-final public class Player {
+final public class Player implements WalletEntity {
     final private int id;
     final private int accountId;
     final private int serverId;
@@ -157,10 +158,12 @@ final public class Player {
         this.savedPosition = savedPosition;
     }
 
+    @Override
     public long kamas() {
         return kamas;
     }
 
+    @Override
     public void setKamas(long kamas) {
         this.kamas = kamas;
     }

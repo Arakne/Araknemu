@@ -152,7 +152,7 @@ class PlayerExchangePartyTest extends GameBaseCase {
             container.get(ItemService.class).create(2422)
         );
 
-        assertThrows(IllegalStateException.class, () -> local.item(entry, 1));
+        assertThrows(IllegalStateException.class, () -> local.item(entry.id(), 1));
     }
 
     @Test
@@ -162,13 +162,13 @@ class PlayerExchangePartyTest extends GameBaseCase {
             10
         );
 
-        local.item(entry, 2);
+        local.item(entry.id(), 2);
         requestStack.assertLast(new LocalExchangeObject(entry, 2));
 
-        local.item(entry, 1);
+        local.item(entry.id(), 1);
         requestStack.assertLast(new LocalExchangeObject(entry, 3));
 
-        local.item(entry, -2);
+        local.item(entry.id(), -2);
         requestStack.assertLast(new LocalExchangeObject(entry, 1));
     }
 
@@ -179,10 +179,10 @@ class PlayerExchangePartyTest extends GameBaseCase {
             10
         );
 
-        local.item(entry, 2);
+        local.item(entry.id(), 2);
         requestStack.assertLast(new LocalExchangeObject(entry, 2));
 
-        local.item(entry, -2);
+        local.item(entry.id(), -2);
         requestStack.assertLast(new LocalExchangeObject(entry, 0));
     }
 
@@ -193,10 +193,10 @@ class PlayerExchangePartyTest extends GameBaseCase {
             2
         );
 
-        local.item(entry, 3);
+        local.item(entry.id(), 3);
         requestStack.assertLast(new LocalExchangeObject(entry, 2));
 
-        local.item(entry, -10);
+        local.item(entry.id(), -10);
         requestStack.assertLast(new LocalExchangeObject(entry, 0));
     }
 
@@ -210,7 +210,7 @@ class PlayerExchangePartyTest extends GameBaseCase {
         local.toggleAccept();
         requestStack.clear();
 
-        local.item(entry, 1);
+        local.item(entry.id(), 1);
         requestStack.assertOne(new ExchangeAccepted(false, player));
     }
 
@@ -224,7 +224,7 @@ class PlayerExchangePartyTest extends GameBaseCase {
         distant.toggleAccept();
         requestStack.clear();
 
-        local.item(entry, 1);
+        local.item(entry.id(), 1);
         requestStack.assertOne(new ExchangeAccepted(false, other));
     }
 
@@ -270,7 +270,7 @@ class PlayerExchangePartyTest extends GameBaseCase {
             10
         );
 
-        local.item(entry, 3);
+        local.item(entry.id(), 3);
 
         local.toggleAccept();
         distant.toggleAccept();
@@ -289,7 +289,7 @@ class PlayerExchangePartyTest extends GameBaseCase {
 
         InventoryEntry entry = player.inventory().add(container.get(ItemService.class).create(2422));
 
-        local.item(entry, 1);
+        local.item(entry.id(), 1);
 
         local.toggleAccept();
         distant.toggleAccept();
@@ -311,7 +311,7 @@ class PlayerExchangePartyTest extends GameBaseCase {
         InventoryEntry localEntry = player.inventory().add(item, 10);
         InventoryEntry distantEntry = other.inventory().add(item, 10);
 
-        local.item(localEntry, 3);
+        local.item(localEntry.id(), 3);
 
         local.toggleAccept();
         distant.toggleAccept();
@@ -347,10 +347,10 @@ class PlayerExchangePartyTest extends GameBaseCase {
         distant.start();
 
         local.kamas(5000);
-        local.item(localEntry1, 1);
-        local.item(localEntry2, 1);
+        local.item(localEntry1.id(), 1);
+        local.item(localEntry2.id(), 1);
 
-        distant.item(distantEntry, 1);
+        distant.item(distantEntry.id(), 1);
 
         local.toggleAccept();
         distant.toggleAccept();
@@ -427,7 +427,7 @@ class PlayerExchangePartyTest extends GameBaseCase {
             10
         );
 
-        local.item(entry, 3);
+        local.item(entry.id(), 3);
         entry.remove(8);
         requestStack.clear();
 
@@ -455,7 +455,7 @@ class PlayerExchangePartyTest extends GameBaseCase {
             10
         );
 
-        distant.item(entry, 3);
+        distant.item(entry.id(), 3);
         entry.remove(8);
         requestStack.clear();
 

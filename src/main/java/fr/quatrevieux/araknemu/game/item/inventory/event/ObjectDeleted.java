@@ -1,4 +1,4 @@
-package fr.quatrevieux.araknemu.game.player.inventory.event;
+package fr.quatrevieux.araknemu.game.item.inventory.event;
 
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 

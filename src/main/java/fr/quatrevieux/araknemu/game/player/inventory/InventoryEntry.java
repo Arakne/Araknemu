@@ -1,79 +1,33 @@
 package fr.quatrevieux.araknemu.game.player.inventory;
 
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
-import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
-import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
+import fr.quatrevieux.araknemu.game.item.inventory.AbstractItemEntry;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
-import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectMoved;
-import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectQuantityChanged;
+import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectMoved;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * Entry for player repository
  */
-final public class InventoryEntry implements ItemEntry {
+final public class InventoryEntry extends AbstractItemEntry {
     final private PlayerInventory inventory;
     final private PlayerItem entity;
     final private Item item;
 
     public InventoryEntry(PlayerInventory inventory, PlayerItem entity, Item item) {
+        super(inventory, entity, item, inventory);
+
         this.inventory = inventory;
         this.entity = entity;
         this.item = item;
     }
 
     @Override
-    public int id() {
-        return entity.entryId();
-    }
-
-    @Override
     public int position() {
         return entity.position();
-    }
-
-    @Override
-    public Item item() {
-        return item;
-    }
-
-    @Override
-    public int quantity() {
-        return entity.quantity();
-    }
-
-    @Override
-    public List<ItemTemplateEffectEntry> effects() {
-        return entity.effects();
-    }
-
-    @Override
-    public int templateId() {
-        return entity.itemTemplateId();
-    }
-
-    @Override
-    public void add(int quantity) {
-        changeQuantity(quantity() + quantity);
-    }
-
-    @Override
-    public void remove(int quantity) throws InventoryException {
-        if (quantity > quantity() || quantity <= 0) {
-            throw new InventoryException("Invalid quantity given");
-        }
-
-        if (quantity == quantity()) {
-            entity.setQuantity(0);
-            inventory.delete(this);
-            return;
-        }
-
-        changeQuantity(quantity() - quantity);
     }
 
     /**
@@ -104,11 +58,6 @@ final public class InventoryEntry implements ItemEntry {
      */
     public PlayerItem entity() {
         return entity;
-    }
-
-    private void changeQuantity(int quantity) {
-        entity.setQuantity(quantity);
-        inventory.dispatch(new ObjectQuantityChanged(this));
     }
 
     private void changePosition(int position) {

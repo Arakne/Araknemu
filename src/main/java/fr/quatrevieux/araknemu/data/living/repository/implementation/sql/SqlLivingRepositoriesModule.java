@@ -3,7 +3,9 @@ package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
+import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
+import fr.quatrevieux.araknemu.data.living.repository.account.BankItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
@@ -58,6 +60,19 @@ final public class SqlLivingRepositoriesModule implements ContainerModule {
         configurator.persist(
             PlayerSpellRepository.class,
             container -> new SqlPlayerSpellRepository(connection)
+        );
+
+        configurator.persist(
+            AccountBankRepository.class,
+            container -> new SqlAccountBankRepository(connection)
+        );
+
+        configurator.persist(
+            BankItemRepository.class,
+            container -> new SqlBankItemRepository(
+                connection,
+                container.get(ItemEffectsTransformer.class)
+            )
         );
 
         configurator.persist(

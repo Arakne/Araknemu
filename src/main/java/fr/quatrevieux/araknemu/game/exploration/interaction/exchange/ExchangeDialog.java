@@ -48,7 +48,7 @@ final public class ExchangeDialog implements ExchangeInteraction, Accaptable {
     /**
      * Set an item on the exchange
      */
-    public void item(ItemEntry item, int quantity) {
-        exchange.item(item, quantity);
+    public void item(int itemEntryId, int quantity) {
+        exchange.item(itemEntryId, quantity);
     }
 }

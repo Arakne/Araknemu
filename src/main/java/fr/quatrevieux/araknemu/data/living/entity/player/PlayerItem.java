@@ -1,5 +1,6 @@
 package fr.quatrevieux.araknemu.data.living.entity.player;
 
+import fr.quatrevieux.araknemu.data.living.entity.Item;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 /**
  * Inventory entry entity
  */
-final public class PlayerItem {
+final public class PlayerItem implements Item {
     final private int playerId;
     final private int entryId;
     final private int itemTemplateId;
@@ -28,18 +29,22 @@ final public class PlayerItem {
         return playerId;
     }
 
+    @Override
     public int entryId() {
         return entryId;
     }
 
+    @Override
     public int itemTemplateId() {
         return itemTemplateId;
     }
 
+    @Override
     public List<ItemTemplateEffectEntry> effects() {
         return effects;
     }
 
+    @Override
     public int quantity() {
         return quantity;
     }
@@ -48,6 +53,7 @@ final public class PlayerItem {
         return position;
     }
 
+    @Override
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }

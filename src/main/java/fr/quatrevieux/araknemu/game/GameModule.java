@@ -6,7 +6,9 @@ import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
+import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
+import fr.quatrevieux.araknemu.data.living.repository.account.BankItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
@@ -27,6 +29,7 @@ import fr.quatrevieux.araknemu.data.world.repository.monster.*;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
+import fr.quatrevieux.araknemu.game.account.bank.BankService;
 import fr.quatrevieux.araknemu.game.account.generator.CamelizeName;
 import fr.quatrevieux.araknemu.game.account.generator.NameCheckerGenerator;
 import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
@@ -63,6 +66,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.teleport
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.teleport.TeleportFactory;
 import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.DialogService;
+import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.exchange.OpenBank;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.object.RemoveObject;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.teleport.GoToAstrub;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.GetterResolver;
@@ -522,7 +526,8 @@ final public class GameModule implements ContainerModule {
                         container.get(ExplorationMapService.class)
                     ),
                     new GoToAstrub.Factory(container.get(ExplorationMapService.class)),
-                    new RemoveObject.Factory()
+                    new RemoveObject.Factory(),
+                    new OpenBank.Factory(container.get(BankService.class)),
                 },
                 container.get(ParametersResolver.class),
                 container.get(Logger.class)
@@ -563,6 +568,16 @@ final public class GameModule implements ContainerModule {
             container -> new ActivityService(
                 container.get(GameConfiguration.class).activity(),
                 container.get(Logger.class) // @todo custom logger ?
+            )
+        );
+
+        configurator.persist(
+            BankService.class,
+            container -> new BankService(
+                container.get(ItemService.class),
+                container.get(AccountBankRepository.class),
+                container.get(BankItemRepository.class),
+                container.get(GameConfiguration.class)
             )
         );
 

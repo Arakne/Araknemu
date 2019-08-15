@@ -19,9 +19,9 @@ import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundExcepti
 import fr.quatrevieux.araknemu.game.item.type.Resource;
 import fr.quatrevieux.araknemu.game.player.inventory.accessory.InventoryAccessories;
 import fr.quatrevieux.araknemu.game.player.inventory.event.EquipmentChanged;
-import fr.quatrevieux.araknemu.game.player.inventory.event.KamasChanged;
-import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectAdded;
-import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectDeleted;
+import fr.quatrevieux.araknemu.game.item.inventory.event.KamasChanged;
+import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectAdded;
+import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectDeleted;
 import fr.quatrevieux.araknemu.game.player.inventory.itemset.PlayerItemSet;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.AccessoryType;
 import org.junit.jupiter.api.BeforeEach;

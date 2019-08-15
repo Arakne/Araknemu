@@ -10,10 +10,10 @@ import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
-import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectAdded;
-import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectDeleted;
-import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectMoved;
-import fr.quatrevieux.araknemu.game.player.inventory.event.ObjectQuantityChanged;
+import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectAdded;
+import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectDeleted;
+import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectMoved;
+import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectQuantityChanged;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
