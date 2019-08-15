@@ -37,7 +37,7 @@ class BankCostResolverTest extends GameBaseCase {
 
     @Test
     void valueEmpty() throws SQLException {
-        assertEquals(0, resolver.value(explorationPlayer()));
+        assertEquals(0L, resolver.value(explorationPlayer()));
     }
 
     @Test
@@ -47,6 +47,6 @@ class BankCostResolverTest extends GameBaseCase {
         bank.add(container.get(ItemService.class).create(2422));
         bank.add(container.get(ItemService.class).create(39), 4);
 
-        assertEquals(2, resolver.value(explorationPlayer()));
+        assertEquals(2L, resolver.value(explorationPlayer()));
     }
 }
