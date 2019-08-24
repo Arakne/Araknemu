@@ -21,7 +21,6 @@ class GameConfigurationTest extends GameBaseCase {
         assertEquals(2, configuration.id());
         assertEquals(456, configuration.port());
         assertEquals("10.0.0.5", configuration.ip());
-        assertEquals(1, configuration.bankCostPerEntry());
     }
 
     @Test
@@ -45,5 +44,11 @@ class GameConfigurationTest extends GameBaseCase {
         assertEquals(1, configuration.activity().threadsCount());
         assertEquals(120, configuration.activity().monsterMoveInterval());
         assertEquals(25, configuration.activity().monsterMovePercent());
+    }
+
+    @Test
+    void economy() {
+        assertEquals(0.1, configuration.economy().npcSellPriceMultiplier());
+        assertEquals(1, configuration.economy().bankCostPerEntry());
     }
 }

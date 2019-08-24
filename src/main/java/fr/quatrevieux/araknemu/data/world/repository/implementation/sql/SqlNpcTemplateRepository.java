@@ -8,9 +8,11 @@ import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcTemplateRepository;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -20,6 +22,8 @@ final class SqlNpcTemplateRepository implements NpcTemplateRepository {
     private class Loader implements RepositoryUtils.Loader<NpcTemplate> {
         @Override
         public NpcTemplate create(ResultSet rs) throws SQLException {
+            final String store = rs.getString("STORE_ITEMS");
+
             return new NpcTemplate(
                 rs.getInt("NPC_TEMPLATE_ID"),
                 rs.getInt("GFXID"),
@@ -33,7 +37,12 @@ final class SqlNpcTemplateRepository implements NpcTemplateRepository {
                 ),
                 rs.getString("ACCESSORIES"),
                 rs.getInt("EXTRA_CLIP"),
-                rs.getInt("CUSTOM_ARTWORK")
+                rs.getInt("CUSTOM_ARTWORK"),
+                store == null
+                    ? null
+                    : Arrays.stream(StringUtils.split(store, ","))
+                        .mapToInt(Integer::parseInt)
+                        .toArray()
             );
         }
 
@@ -67,7 +76,8 @@ final class SqlNpcTemplateRepository implements NpcTemplateRepository {
                     "COLOR3 INTEGER," +
                     "ACCESSORIES VARCHAR(30)," +
                     "EXTRA_CLIP TINYINT(1)," +
-                    "CUSTOM_ARTWORK INTEGER" +
+                    "CUSTOM_ARTWORK INTEGER," +
+                    "STORE_ITEMS TEXT" +
                 ")"
             );
         } catch (SQLException e) {

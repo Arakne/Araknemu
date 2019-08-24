@@ -1,8 +1,10 @@
-package fr.quatrevieux.araknemu.game.exploration.exchange;
+package fr.quatrevieux.araknemu.game.exploration.exchange.player;
 
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeParty;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
 import fr.quatrevieux.araknemu.game.exploration.exchange.event.AcceptChanged;
 import fr.quatrevieux.araknemu.game.exploration.exchange.event.ItemMoved;
 import fr.quatrevieux.araknemu.game.exploration.exchange.event.KamasChanged;

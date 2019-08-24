@@ -129,6 +129,28 @@ final public class GameConfiguration implements ConfigurationModule {
         }
     }
 
+    final public class EconomyConfiguration{
+        /**
+         * Get the selling item to an NPC price multiplier
+         * By default 0.1
+         *
+         * Should corresponds to "C.SELL_PRICE_MULTIPLICATOR" in lang_xx_xxx.swf
+         */
+        public double npcSellPriceMultiplier() {
+            return pool.decimal("economy.npc.sellPriceMultiplier", .1d);
+        }
+
+        /**
+         * The bank cost per item entries
+         * The value must be a positive double
+         * Default to 1
+         * Set to 0 to disable the bank cost
+         */
+        public double bankCostPerEntry() {
+            return pool.decimal("economy.bank.costPerEntry", 1);
+        }
+    }
+
     private PoolUtils pool;
 
     @Override
@@ -163,16 +185,6 @@ final public class GameConfiguration implements ConfigurationModule {
     }
 
     /**
-     * The bank cost per item entries
-     * The value must be a positive integer
-     * Default to 1
-     * Set to 0 to disable the bank cost
-     */
-    public int bankCostPerEntry() {
-        return pool.integer("bank.costPerEntry", 1);
-    }
-
-    /**
      * Get player configuration
      */
     public PlayerConfiguration player() {
@@ -191,5 +203,12 @@ final public class GameConfiguration implements ConfigurationModule {
      */
     public ActivityConfiguration activity() {
         return new ActivityConfiguration();
+    }
+
+    /**
+     * Get the configuration for the Dofus economy
+     */
+    public EconomyConfiguration economy() {
+        return new EconomyConfiguration();
     }
 }

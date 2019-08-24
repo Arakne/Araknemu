@@ -3,6 +3,8 @@ package fr.quatrevieux.araknemu.data.world.entity.environment.npc;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.value.Colors;
 
+import java.util.Optional;
+
 /**
  * Store the NPC template data
  */
@@ -16,8 +18,9 @@ final public class NpcTemplate {
     final private String accessories;
     final private int extraClip;
     final private int customArtwork;
+    final private int[] storeItems;
 
-    public NpcTemplate(int id, int gfxId, int scaleX, int scaleY, Sex sex, Colors colors, String accessories, int extraClip, int customArtwork) {
+    public NpcTemplate(int id, int gfxId, int scaleX, int scaleY, Sex sex, Colors colors, String accessories, int extraClip, int customArtwork, int[] storeItems) {
         this.id = id;
         this.gfxId = gfxId;
         this.scaleX = scaleX;
@@ -27,6 +30,7 @@ final public class NpcTemplate {
         this.accessories = accessories;
         this.extraClip = extraClip;
         this.customArtwork = customArtwork;
+        this.storeItems = storeItems;
     }
 
     /**
@@ -97,5 +101,12 @@ final public class NpcTemplate {
      */
     public int customArtwork() {
         return customArtwork;
+    }
+
+    /**
+     * Get the items template ids for the store of the npc
+     */
+    public Optional<int[]> storeItems() {
+        return Optional.ofNullable(storeItems);
     }
 }

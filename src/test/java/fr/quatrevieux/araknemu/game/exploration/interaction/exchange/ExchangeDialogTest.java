@@ -4,7 +4,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeParty;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
-import fr.quatrevieux.araknemu.game.exploration.exchange.PlayerExchangeParty;
+import fr.quatrevieux.araknemu.game.exploration.exchange.player.PlayerExchangeParty;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeAccepted;

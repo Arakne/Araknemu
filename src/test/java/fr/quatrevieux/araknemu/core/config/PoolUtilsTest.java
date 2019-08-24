@@ -21,6 +21,7 @@ class PoolUtilsTest {
                     map.put("test_bool", "yes");
                     map.put("test_int", "774");
                     map.put("test_string", "foo");
+                    map.put("test_double", "1.5");
                 }
 
                 @Override
@@ -72,5 +73,14 @@ class PoolUtilsTest {
 
         assertEquals("foo", pool.string("test_string", "bar"));
         assertEquals("bar", pool.string("not_found", "bar"));
+    }
+
+    @Test
+    void decimal() {
+        assertEquals(1.5, pool.decimal("test_double"));
+        assertEquals(0, pool.decimal("not_found"));
+
+        assertEquals(1.5, pool.decimal("test_double", 2));
+        assertEquals(2, pool.decimal("not_found", 2));
     }
 }

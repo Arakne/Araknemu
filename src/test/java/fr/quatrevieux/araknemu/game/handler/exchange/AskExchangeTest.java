@@ -5,14 +5,20 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeFactory;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
+import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.npc.StoreDialog;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player.InitiatorExchangeRequestDialog;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player.TargetExchangeRequestDialog;
+import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
+import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
 import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.in.exchange.ExchangeRequest;
+import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeCreated;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeRequested;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -43,6 +49,19 @@ class AskExchangeTest extends GameBaseCase {
 
         assertInstanceOf(InitiatorExchangeRequestDialog.class, player.interactions().get(Interaction.class));
         assertInstanceOf(TargetExchangeRequestDialog.class, other.interactions().get(Interaction.class));
+    }
+
+    @Test
+    void successWithNpcStore() throws ErrorPacket, SQLException {
+        dataSet.pushNpcWithStore();
+
+        GameNpc npc = container.get(NpcService.class).get(10001);
+        player.map().add(npc);
+
+        handler.handle(session, new ExchangeRequest(ExchangeType.NPC_STORE, npc.id(), null));
+
+        requestStack.assertOne(new ExchangeCreated(ExchangeType.NPC_STORE, npc));
+        assertInstanceOf(StoreDialog.class, player.interactions().get(Interaction.class));
     }
 
     @Test

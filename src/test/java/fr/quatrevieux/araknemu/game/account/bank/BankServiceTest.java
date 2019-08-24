@@ -32,7 +32,7 @@ class BankServiceTest extends GameBaseCase {
             container.get(ItemService.class),
             container.get(AccountBankRepository.class),
             container.get(BankItemRepository.class),
-            configuration
+            configuration.economy()
         );
     }
 

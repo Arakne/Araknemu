@@ -52,8 +52,25 @@ final public class ItemService implements PreloadableService {
      * @param maximize Maximize item stats ?
      */
     public Item create(int id, boolean maximize) {
-        ItemTemplate template = repository.get(id);
+        return create(repository.get(id), maximize);
+    }
 
+    /**
+     * Create a new item
+     *
+     * @param id The item template id
+     */
+    public Item create(int id) {
+        return create(id, false);
+    }
+
+    /**
+     * Create a new item by its template
+     *
+     * @param template The item template
+     * @param maximize Maximize item stats ?
+     */
+    public Item create(ItemTemplate template, boolean maximize) {
         return factory.create(
             template,
             itemTypeRepository.get(template.type()),
@@ -66,12 +83,12 @@ final public class ItemService implements PreloadableService {
     }
 
     /**
-     * Create a new item
+     * Create a new item by its template
      *
-     * @param id The item template id
+     * @param template The item template
      */
-    public Item create(int id) {
-        return create(id, false);
+    public Item create(ItemTemplate template) {
+        return create(template, false);
     }
 
     /**

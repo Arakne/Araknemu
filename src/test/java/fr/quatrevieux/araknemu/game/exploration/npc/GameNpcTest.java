@@ -12,6 +12,8 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.DialogService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.NpcQuestion;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
+import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStore;
+import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,8 +42,9 @@ class GameNpcTest extends GameBaseCase {
         entity = new Npc(472, 878, new Position(10340, 82), Direction.SOUTH_EAST, new int[] {3786});
         npc = new GameNpc(
             entity,
-            template = new NpcTemplate(878, 40, 100, 100, Sex.MALE, new Colors(8158389, 13677665, 3683117), "0,20f9,2a5,1d5e,1b9e", 4, 9092),
-            container.get(DialogService.class).forNpc(entity)
+            template = new NpcTemplate(878, 40, 100, 100, Sex.MALE, new Colors(8158389, 13677665, 3683117), "0,20f9,2a5,1d5e,1b9e", 4, 9092, null),
+            container.get(DialogService.class).forNpc(entity),
+            null
         );
     }
 
@@ -85,8 +88,23 @@ class GameNpcTest extends GameBaseCase {
 
     @Test
     void questionNotFound() throws SQLException, ContainerException {
-        npc = new GameNpc(entity, template, Collections.emptyList());
+        npc = new GameNpc(entity, template, Collections.emptyList(), null);
 
         assertFalse(npc.question(explorationPlayer()).isPresent());
+    }
+
+    @Test
+    void store() throws ContainerException {
+        NpcStore store = new NpcStore(container.get(ItemService.class), configuration.economy(), Collections.emptyList());
+        npc = new GameNpc(entity, template, Collections.emptyList(), store);
+
+        assertSame(store, npc.store());
+    }
+
+    @Test
+    void storeNotAvailable() throws ContainerException {
+        npc = new GameNpc(entity, template, Collections.emptyList(), null);
+
+        assertThrows(UnsupportedOperationException.class, () -> npc.store());
     }
 }

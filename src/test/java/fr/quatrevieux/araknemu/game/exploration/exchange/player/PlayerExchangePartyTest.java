@@ -1,7 +1,9 @@
-package fr.quatrevieux.araknemu.game.exploration.exchange;
+package fr.quatrevieux.araknemu.game.exploration.exchange.player;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
+import fr.quatrevieux.araknemu.game.exploration.exchange.player.PlayerExchangeParty;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeDialog;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.ItemService;
@@ -13,6 +15,7 @@ import fr.quatrevieux.araknemu.network.game.out.exchange.movement.distant.Distan
 import fr.quatrevieux.araknemu.network.game.out.exchange.movement.distant.DistantExchangeObject;
 import fr.quatrevieux.araknemu.network.game.out.exchange.movement.local.LocalExchangeKamas;
 import fr.quatrevieux.araknemu.network.game.out.exchange.movement.local.LocalExchangeObject;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +49,7 @@ class PlayerExchangePartyTest extends GameBaseCase {
 
     @Test
     void getters() {
-        assertEquals(ExchangeType.PLAYER_EXCHANGE, local.type());
+        Assertions.assertEquals(ExchangeType.PLAYER_EXCHANGE, local.type());
         assertEquals(ExchangeType.PLAYER_EXCHANGE, distant.type());
 
         assertEquals(player, local.actor());

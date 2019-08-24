@@ -15,6 +15,8 @@ import fr.quatrevieux.araknemu.game.handler.exchange.LeaveExchange;
 import fr.quatrevieux.araknemu.game.handler.exchange.StartExchange;
 import fr.quatrevieux.araknemu.game.handler.exchange.movement.SetExchangeItems;
 import fr.quatrevieux.araknemu.game.handler.exchange.movement.SetExchangeKamas;
+import fr.quatrevieux.araknemu.game.handler.exchange.store.BuyItem;
+import fr.quatrevieux.araknemu.game.handler.exchange.store.SellItem;
 import fr.quatrevieux.araknemu.game.handler.fight.ListFights;
 import fr.quatrevieux.araknemu.game.handler.fight.ShowFightDetails;
 import fr.quatrevieux.araknemu.game.handler.game.CancelGameAction;
@@ -47,6 +49,8 @@ final public class ExploringLoader extends AbstractLoader {
             new SetExchangeKamas(),
             new SetExchangeItems(),
             new AcceptExchange(),
+            new BuyItem(),
+            new SellItem(),
         };
     }
 }

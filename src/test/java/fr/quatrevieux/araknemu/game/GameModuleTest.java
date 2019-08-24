@@ -31,6 +31,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.CellActi
 import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.DialogService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersResolver;
+import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStoreService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
@@ -122,6 +123,7 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(ActivityService.class, container.get(ActivityService.class));
         assertInstanceOf(ExchangeFactory.class, container.get(ExchangeFactory.class));
         assertInstanceOf(BankService.class, container.get(BankService.class));
+        assertInstanceOf(NpcStoreService.class, container.get(NpcStoreService.class));
 
         assertSame(
             container.get(ListenerAggregate.class),

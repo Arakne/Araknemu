@@ -18,9 +18,9 @@ final public class BankService {
     final private ItemService itemService;
     final private AccountBankRepository bankRepository;
     final private BankItemRepository itemRepository;
-    final private GameConfiguration configuration;
+    final private GameConfiguration.EconomyConfiguration configuration;
 
-    public BankService(ItemService itemService, AccountBankRepository bankRepository, BankItemRepository itemRepository, GameConfiguration configuration) {
+    public BankService(ItemService itemService, AccountBankRepository bankRepository, BankItemRepository itemRepository, GameConfiguration.EconomyConfiguration configuration) {
         this.itemService = itemService;
         this.bankRepository = bankRepository;
         this.itemRepository = itemRepository;
@@ -31,7 +31,7 @@ final public class BankService {
      * Load the bank for the given account
      */
     public Bank load(GameAccount account) {
-        Bank bank = new Bank(this, bankRepository.get(new AccountBank(account.id(), configuration.id(), 0)));
+        Bank bank = new Bank(this, bankRepository.get(new AccountBank(account.id(), account.serverId(), 0)));
 
         bank.dispatcher().register(new SaveBank(itemRepository));
 
@@ -42,7 +42,7 @@ final public class BankService {
      * Get the cost for open the bank account
      */
     public long cost(GameAccount account) {
-        return cost(new AccountBank(account.id(), configuration.id(), 0));
+        return cost(new AccountBank(account.id(), account.serverId(), 0));
     }
 
     void save(Bank bank) {
@@ -65,6 +65,6 @@ final public class BankService {
      * Get the cost for open the bank account
      */
     long cost(AccountBank bank) {
-        return itemRepository.count(bank) * configuration.bankCostPerEntry();
+        return (long) (itemRepository.count(bank) * configuration.bankCostPerEntry());
     }
 }

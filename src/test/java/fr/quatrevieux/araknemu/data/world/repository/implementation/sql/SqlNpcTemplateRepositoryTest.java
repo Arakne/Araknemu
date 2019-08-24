@@ -8,6 +8,8 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class SqlNpcTemplateRepositoryTest extends GameBaseCase {
@@ -18,9 +20,9 @@ class SqlNpcTemplateRepositoryTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushNpcTemplate(new NpcTemplate(23, 9013, 100, 100, Sex.FEMALE, new Colors(8017470, 12288585, 16770534), "0,0,0,0,0", -1, 0));
-        dataSet.pushNpcTemplate(new NpcTemplate(40, 9025, 100, 100, Sex.MALE, new Colors(-1, -1, -1), "0,0,0,0,0", -1, 0));
-        dataSet.pushNpcTemplate(new NpcTemplate(878, 40, 100, 100, Sex.MALE, new Colors(8158389, 13677665, 3683117), "0,20f9,2a5,1d5e,1b9e", 4, 9092));
+        dataSet.pushNpcTemplate(new NpcTemplate(23, 9013, 100, 100, Sex.FEMALE, new Colors(8017470, 12288585, 16770534), "0,0,0,0,0", -1, 0, null));
+        dataSet.pushNpcTemplate(new NpcTemplate(40, 9025, 100, 100, Sex.MALE, new Colors(-1, -1, -1), "0,0,0,0,0", -1, 0, null));
+        dataSet.pushNpcTemplate(new NpcTemplate(878, 40, 100, 100, Sex.MALE, new Colors(8158389, 13677665, 3683117), "0,20f9,2a5,1d5e,1b9e", 4, 9092, null));
 
         repository = new SqlNpcTemplateRepository(app.database().get("game"));
     }
@@ -43,11 +45,21 @@ class SqlNpcTemplateRepositoryTest extends GameBaseCase {
         assertEquals("0,0,0,0,0", template.accessories());
         assertEquals(-1, template.extraClip());
         assertEquals(0, template.customArtwork());
+        assertFalse(template.storeItems().isPresent());
+    }
+
+    @Test
+    void getWithStore() throws SQLException {
+        dataSet.pushNpcWithStore();
+
+        NpcTemplate template = repository.get(10001);
+
+        assertArrayEquals(new int[] {39, 2425}, template.storeItems().get());
     }
 
     @Test
     void getByEntity() {
-        NpcTemplate template = repository.get(new NpcTemplate(23, 0, 0, 0, null, null, null, 0, 0));
+        NpcTemplate template = repository.get(new NpcTemplate(23, 0, 0, 0, null, null, null, 0, 0, null));
 
         assertEquals(23, template.id());
         assertEquals(9013, template.gfxId());
@@ -62,10 +74,10 @@ class SqlNpcTemplateRepositoryTest extends GameBaseCase {
 
     @Test
     void has() {
-        assertTrue(repository.has(new NpcTemplate(23, 0, 0, 0, null, null, null, 0, 0)));
-        assertTrue(repository.has(new NpcTemplate(40, 0, 0, 0, null, null, null, 0, 0)));
-        assertTrue(repository.has(new NpcTemplate(878, 0, 0, 0, null, null, null, 0, 0)));
-        assertFalse(repository.has(new NpcTemplate(-5, 0, 0, 0, null, null, null, 0, 0)));
+        assertTrue(repository.has(new NpcTemplate(23, 0, 0, 0, null, null, null, 0, 0, null)));
+        assertTrue(repository.has(new NpcTemplate(40, 0, 0, 0, null, null, null, 0, 0, null)));
+        assertTrue(repository.has(new NpcTemplate(878, 0, 0, 0, null, null, null, 0, 0, null)));
+        assertFalse(repository.has(new NpcTemplate(-5, 0, 0, 0, null, null, null, 0, 0, null)));
     }
 
     @Test

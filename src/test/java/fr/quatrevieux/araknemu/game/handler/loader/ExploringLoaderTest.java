@@ -2,7 +2,6 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.handler.EnsureExploring;
-import fr.quatrevieux.araknemu.game.handler.emote.ChangeOrientation;
 import fr.quatrevieux.araknemu.network.game.in.dialog.ChosenResponse;
 import fr.quatrevieux.araknemu.network.game.in.dialog.CreateDialogRequest;
 import fr.quatrevieux.araknemu.network.game.in.dialog.LeaveDialogRequest;
@@ -13,13 +12,12 @@ import fr.quatrevieux.araknemu.network.game.in.exchange.ExchangeRequest;
 import fr.quatrevieux.araknemu.network.game.in.exchange.LeaveExchangeRequest;
 import fr.quatrevieux.araknemu.network.game.in.exchange.movement.ItemsMovement;
 import fr.quatrevieux.araknemu.network.game.in.exchange.movement.KamasMovement;
+import fr.quatrevieux.araknemu.network.game.in.exchange.store.BuyRequest;
+import fr.quatrevieux.araknemu.network.game.in.exchange.store.SellRequest;
 import fr.quatrevieux.araknemu.network.game.in.fight.AskFightDetails;
 import fr.quatrevieux.araknemu.network.game.in.fight.ListFightsRequest;
 import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
-import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionCancel;
-import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
-import fr.quatrevieux.araknemu.network.game.in.object.ObjectUseRequest;
 import fr.quatrevieux.araknemu.network.in.PacketHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,5 +53,7 @@ class ExploringLoaderTest extends LoaderTestCase {
         assertHandlePacket(KamasMovement.class, handlers);
         assertHandlePacket(ItemsMovement.class, handlers);
         assertHandlePacket(ExchangeReady.class, handlers);
+        assertHandlePacket(BuyRequest.class, handlers);
+        assertHandlePacket(SellRequest.class, handlers);
     }
 }

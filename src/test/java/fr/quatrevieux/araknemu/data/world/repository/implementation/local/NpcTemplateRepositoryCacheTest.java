@@ -42,21 +42,21 @@ class NpcTemplateRepositoryCacheTest extends GameBaseCase {
     @Test
     void getUsingEntity() {
         assertSame(
-            repository.get(new NpcTemplate(848, 0, 0, 0, null, null, null, 0, 0)),
+            repository.get(new NpcTemplate(848, 0, 0, 0, null, null, null, 0, 0, null)),
             repository.get(848)
         );
     }
 
     @Test
     void hasNotLoaded() {
-        assertTrue(repository.has(new NpcTemplate(848, 0, 0, 0, null, null, null, 0, 0)));
-        assertFalse(repository.has(new NpcTemplate(-1, 0, 0, 0, null, null, null, 0, 0)));
+        assertTrue(repository.has(new NpcTemplate(848, 0, 0, 0, null, null, null, 0, 0, null)));
+        assertFalse(repository.has(new NpcTemplate(-1, 0, 0, 0, null, null, null, 0, 0, null)));
     }
 
     @Test
     void hasCached() {
         repository.get(848);
-        assertTrue(repository.has(new NpcTemplate(848, 0, 0, 0, null, null, null, 0, 0)));
+        assertTrue(repository.has(new NpcTemplate(848, 0, 0, 0, null, null, null, 0, 0, null)));
     }
 
     @Test

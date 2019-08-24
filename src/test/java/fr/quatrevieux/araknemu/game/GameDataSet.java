@@ -19,10 +19,7 @@ import fr.quatrevieux.araknemu.data.world.entity.character.PlayerExperience;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
-import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
-import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
-import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Question;
-import fr.quatrevieux.araknemu.data.world.entity.environment.npc.ResponseAction;
+import fr.quatrevieux.araknemu.data.world.entity.environment.npc.*;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemSet;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
@@ -36,6 +33,7 @@ import fr.quatrevieux.araknemu.game.world.map.Direction;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -573,7 +571,7 @@ public class GameDataSet extends TestingDataSet {
         use(NpcTemplate.class);
 
         connection.prepare(
-            "INSERT INTO NPC_TEMPLATE (NPC_TEMPLATE_ID, GFXID, SCALE_X, SCALE_Y, SEX, COLOR1, COLOR2, COLOR3, ACCESSORIES, EXTRA_CLIP, CUSTOM_ARTWORK) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO NPC_TEMPLATE (NPC_TEMPLATE_ID, GFXID, SCALE_X, SCALE_Y, SEX, COLOR1, COLOR2, COLOR3, ACCESSORIES, EXTRA_CLIP, CUSTOM_ARTWORK, STORE_ITEMS) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             stmt -> {
                 int i = 1;
 
@@ -588,6 +586,12 @@ public class GameDataSet extends TestingDataSet {
                 stmt.setString(i++, template.accessories());
                 stmt.setInt(i++, template.extraClip());
                 stmt.setInt(i++, template.customArtwork());
+
+                if (template.storeItems().isPresent()) {
+                    stmt.setString(i, StringUtils.join(template.storeItems().get(), ','));
+                } else {
+                    stmt.setNull(i, Types.VARCHAR);
+                }
 
                 return stmt.executeUpdate();
             }
@@ -619,13 +623,13 @@ public class GameDataSet extends TestingDataSet {
     }
 
     public GameDataSet pushNpcTemplates() throws SQLException, ContainerException {
-        if (repository(NpcTemplate.class).has(new NpcTemplate(848, 0, 0, 0, null, null, null, 0, 0))) {
+        if (repository(NpcTemplate.class).has(new NpcTemplate(848, 0, 0, 0, null, null, null, 0, 0, null))) {
             return this;
         }
 
-        pushNpcTemplate(new NpcTemplate(848, 30, 100, 100, Sex.MALE, new Colors(394758, 16121664, 13070517), "0,1be7,0,0,0", -1, 9096));
-        pushNpcTemplate(new NpcTemplate(849, 9037, 100, 100, Sex.MALE, new Colors(-1, -1, -1), "0,0,0,0,0", -1, 0));
-        pushNpcTemplate(new NpcTemplate(878, 40, 100, 100, Sex.MALE, new Colors(8158389, 13677665, 3683117), "0,20f9,2a5,1d5e,1b9e", 4, 9092));
+        pushNpcTemplate(new NpcTemplate(848, 30, 100, 100, Sex.MALE, new Colors(394758, 16121664, 13070517), "0,1be7,0,0,0", -1, 9096, null));
+        pushNpcTemplate(new NpcTemplate(849, 9037, 100, 100, Sex.MALE, new Colors(-1, -1, -1), "0,0,0,0,0", -1, 0, null));
+        pushNpcTemplate(new NpcTemplate(878, 40, 100, 100, Sex.MALE, new Colors(8158389, 13677665, 3683117), "0,20f9,2a5,1d5e,1b9e", 4, 9092, null));
 
 
         return this;
@@ -639,6 +643,19 @@ public class GameDataSet extends TestingDataSet {
         pushNpc(new Npc(457, 848, new Position(10302, 220), Direction.SOUTH_EAST, new int[] {3593, 3588}));
         pushNpc(new Npc(458, 849, new Position(10302, 293), Direction.SOUTH_EAST, new int[] {3596}));
         pushNpc(new Npc(472, 878, new Position(10340, 82), Direction.SOUTH_EAST, new int[] {3786}));
+
+        return this;
+    }
+
+    /**
+     * Add an npc with a store (id: 10001)
+     */
+    public GameDataSet pushNpcWithStore() throws SQLException {
+        pushItemTemplates();
+        pushItemSets();
+
+        pushNpcTemplate(new NpcTemplate(10001, 9037, 100, 100, Sex.MALE, new Colors(-1, -1, -1), "0,0,0,0,0", -1, 0, new int[] {39, 2425}));
+        pushNpc(new Npc(10001, 10001, new Position(10340, 125), Direction.SOUTH_EAST, new int[] {}));
 
         return this;
     }

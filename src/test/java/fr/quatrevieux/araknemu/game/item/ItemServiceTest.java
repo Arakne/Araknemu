@@ -2,6 +2,7 @@ package fr.quatrevieux.araknemu.game.item;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Effect;
+import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
@@ -92,6 +93,24 @@ class ItemServiceTest extends GameBaseCase {
         assertEquals(10, wearable.characteristics().get(0).boost());
         assertEquals(Characteristic.STRENGTH, wearable.characteristics().get(1).characteristic());
         assertEquals(10, wearable.characteristics().get(1).boost());
+    }
+
+    @Test
+    void createWithItemTemplate() {
+        ItemTemplate template = container.get(ItemTemplateRepository.class).get(39);
+
+        Item item = service.create(template);
+
+        assertSame(template, item.template());
+        assertInstanceOf(Wearable.class, item);
+        assertEquals(1, item.type().id());
+        assertEquals(SuperType.AMULET, item.type().superType());
+        assertCount(1, item.effects());
+
+        Wearable wearable = (Wearable) item;
+
+        assertEquals(Characteristic.INTELLIGENCE, wearable.characteristics().get(0).characteristic());
+        assertEquals(2, wearable.characteristics().get(0).boost());
     }
 
     @Test

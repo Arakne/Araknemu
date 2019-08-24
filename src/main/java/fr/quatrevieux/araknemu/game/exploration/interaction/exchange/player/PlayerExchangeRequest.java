@@ -3,7 +3,7 @@ package fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeParty;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
-import fr.quatrevieux.araknemu.game.exploration.exchange.PlayerExchangeParty;
+import fr.quatrevieux.araknemu.game.exploration.exchange.player.PlayerExchangeParty;
 import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeInteraction;
 import fr.quatrevieux.araknemu.game.exploration.interaction.request.Invitation;

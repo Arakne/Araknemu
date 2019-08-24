@@ -3,12 +3,13 @@ package fr.quatrevieux.araknemu.game.exploration.npc;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
-import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
+import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.NpcQuestion;
-import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
+import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStore;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 
@@ -22,15 +23,17 @@ final public class GameNpc implements ExplorationCreature {
     final private Npc entity;
     final private NpcTemplate template;
     final private Collection<NpcQuestion> questions;
+    final private NpcStore store;
 
     final private Sprite sprite;
 
     private ExplorationMapCell cell;
 
-    public GameNpc(Npc entity, NpcTemplate template, Collection<NpcQuestion> questions) {
+    public GameNpc(Npc entity, NpcTemplate template, Collection<NpcQuestion> questions, NpcStore store) {
         this.entity = entity;
         this.template = template;
         this.questions = questions;
+        this.store = store;
 
         this.sprite = new NpcSprite(this);
     }
@@ -89,6 +92,19 @@ final public class GameNpc implements ExplorationCreature {
             .filter(question -> question.check(player))
             .findFirst()
         ;
+    }
+
+    /**
+     * Get the npc's store
+     *
+     * @throws UnsupportedOperationException When store is not available
+     */
+    public NpcStore store() {
+        if (store == null) {
+            throw new UnsupportedOperationException("Store is not available");
+        }
+
+        return store;
     }
 
     NpcTemplate template() {

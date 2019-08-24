@@ -3,11 +3,13 @@ package fr.quatrevieux.araknemu.game.exploration.npc;
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
+import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcTemplateRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.DialogService;
+import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStoreService;
 import org.slf4j.Logger;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,13 +20,15 @@ import java.util.concurrent.ConcurrentMap;
  */
 final public class NpcService implements EventsSubscriber, PreloadableService {
     final private DialogService dialogService;
+    final private NpcStoreService exchangeService;
     final private NpcTemplateRepository templateRepository;
     final private NpcRepository npcRepository;
 
     final private ConcurrentMap<Integer, GameNpc> npcByEntityId = new ConcurrentHashMap<>();
 
-    public NpcService(DialogService dialogService, NpcTemplateRepository templateRepository, NpcRepository npcRepository) {
+    public NpcService(DialogService dialogService, NpcStoreService exchangeService, NpcTemplateRepository templateRepository, NpcRepository npcRepository) {
         this.dialogService = dialogService;
+        this.exchangeService = exchangeService;
         this.templateRepository = templateRepository;
         this.npcRepository = npcRepository;
     }
@@ -82,10 +86,13 @@ final public class NpcService implements EventsSubscriber, PreloadableService {
             return npcByEntityId.get(entity.id());
         }
 
+        NpcTemplate template = templateRepository.get(entity.templateId());
+
         GameNpc npc = new GameNpc(
             entity,
-            templateRepository.get(entity.templateId()),
-            dialogService.forNpc(entity)
+            template,
+            dialogService.forNpc(entity),
+            exchangeService.load(template).orElse(null)
         );
 
         npcByEntityId.put(entity.id(), npc);

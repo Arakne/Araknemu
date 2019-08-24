@@ -61,4 +61,15 @@ final public class PoolUtils implements Pool {
     public String string(String key) {
         return string(key, "");
     }
+
+    public double decimal(String key, double defaultValue) {
+        return pool.has(key)
+            ? Double.parseDouble(pool.get(key))
+            : defaultValue
+        ;
+    }
+
+    public double decimal(String key) {
+        return decimal(key, 0d);
+    }
 }

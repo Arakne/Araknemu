@@ -62,8 +62,9 @@ class NpcDialogTest extends GameBaseCase {
     void startNoQuestionFound() throws ContainerException {
         GameNpc npc = new GameNpc(
             dataSet.refresh(new Npc(472, 0, null, null, null)),
-            dataSet.refresh(new NpcTemplate(878, 0, 0, 0, null, null, null, 0, 0)),
-            Collections.emptyList()
+            dataSet.refresh(new NpcTemplate(878, 0, 0, 0, null, null, null, 0, 0, null)),
+            Collections.emptyList(),
+            null
         );
         player.interactions().start(new NpcDialog(player, npc));
 

@@ -11,6 +11,8 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.DialogService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.NpcQuestion;
+import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStore;
+import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStoreService;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
-import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,6 +37,7 @@ class NpcServiceTest extends GameBaseCase {
 
         service = new NpcService(
             container.get(DialogService.class),
+            container.get(NpcStoreService.class),
             container.get(NpcTemplateRepository.class),
             container.get(NpcRepository.class)
         );
@@ -112,5 +114,17 @@ class NpcServiceTest extends GameBaseCase {
 
         assertEquals(3786, question.id());
         assertCount(2, question.responses(explorationPlayer()));
+    }
+
+    @Test
+    void getWithStore() throws SQLException, ContainerException {
+        dataSet.pushNpcWithStore();
+
+        GameNpc npc = service.get(10001);
+
+        NpcStore store = npc.store();
+
+        assertTrue(store.has(39));
+        assertTrue(store.has(2425));
     }
 }

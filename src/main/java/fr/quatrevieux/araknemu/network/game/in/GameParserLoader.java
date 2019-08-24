@@ -15,6 +15,8 @@ import fr.quatrevieux.araknemu.network.game.in.exchange.ExchangeRequest;
 import fr.quatrevieux.araknemu.network.game.in.exchange.LeaveExchangeRequest;
 import fr.quatrevieux.araknemu.network.game.in.exchange.movement.ItemsMovement;
 import fr.quatrevieux.araknemu.network.game.in.exchange.movement.KamasMovement;
+import fr.quatrevieux.araknemu.network.game.in.exchange.store.BuyRequest;
+import fr.quatrevieux.araknemu.network.game.in.exchange.store.SellRequest;
 import fr.quatrevieux.araknemu.network.game.in.fight.*;
 import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
@@ -82,7 +84,9 @@ final public class GameParserLoader implements ParserLoader {
             new AcceptExchangeRequest.Parser(),
             new KamasMovement.Parser(),
             new ItemsMovement.Parser(),
-            new ExchangeReady.Parser()
+            new ExchangeReady.Parser(),
+            new BuyRequest.Parser(),
+            new SellRequest.Parser()
         );
     }
 }
