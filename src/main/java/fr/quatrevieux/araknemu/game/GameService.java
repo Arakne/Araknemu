@@ -5,6 +5,7 @@ import fr.quatrevieux.araknemu.core.Service;
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
+import fr.quatrevieux.araknemu.game.event.GameStarted;
 import fr.quatrevieux.araknemu.network.adapter.Server;
 import fr.quatrevieux.araknemu.realm.host.GameHost;
 import org.slf4j.Logger;
@@ -67,6 +68,7 @@ final public class GameService implements Service {
             true
         );
 
+        dispatcher.dispatch(new GameStarted(this));
         logger.info("Game server {} started in {}ms", configuration.id(), System.currentTimeMillis() - startTime);
     }
 

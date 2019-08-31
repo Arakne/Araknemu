@@ -20,6 +20,7 @@ final public class MonsterRewardService implements PreloadableService {
     final private MonsterRewardItemRepository itemRepository;
 
     final private Map<Integer, MonsterGradesReward> rewards = new ConcurrentHashMap<>();
+    private boolean preloading = false;
 
     public MonsterRewardService(MonsterRewardRepository repository, MonsterRewardItemRepository itemRepository) {
         this.repository = repository;
@@ -42,6 +43,7 @@ final public class MonsterRewardService implements PreloadableService {
             );
         }
 
+        preloading = true;
         logger.info("{} monsters rewards loaded", rewards.size());
     }
 
@@ -53,9 +55,11 @@ final public class MonsterRewardService implements PreloadableService {
      */
     public MonsterReward get(int monsterId, int gradeNumber) {
         return rewards
-            .computeIfAbsent(monsterId, id -> repository.get(id)
-                .<MonsterGradesReward>map(data -> new DefaultMonsterGradesReward(data, itemRepository.byMonster(monsterId)))
-                .orElse(NullMonsterGradesReward.INSTANCE)
+            .computeIfAbsent(monsterId, id -> preloading
+                ? NullMonsterGradesReward.INSTANCE
+                : repository.get(id)
+                    .<MonsterGradesReward>map(data -> new DefaultMonsterGradesReward(data, itemRepository.byMonster(monsterId)))
+                    .orElse(NullMonsterGradesReward.INSTANCE)
             )
             .grade(gradeNumber)
         ;

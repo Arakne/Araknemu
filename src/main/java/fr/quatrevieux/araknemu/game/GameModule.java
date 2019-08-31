@@ -154,15 +154,19 @@ final public class GameModule implements ContainerModule {
                 // Preload
                 Arrays.asList(
                     container.get(ItemService.class),
+                    container.get(SpellService.class),
+
                     container.get(DialogService.class),
                     container.get(NpcService.class),
-                    container.get(MonsterEnvironmentService.class),
-                    container.get(AreaService.class),
-                    container.get(MapTriggerService.class),
+
                     container.get(MonsterRewardService.class),
                     container.get(MonsterService.class),
+                    container.get(MonsterEnvironmentService.class),
+
+                    container.get(AreaService.class),
+                    container.get(MapTriggerService.class),
                     container.get(ExplorationMapService.class),
-                    container.get(SpellService.class),
+
                     container.get(PlayerRaceService.class),
                     container.get(PlayerExperienceService.class)
                 ),

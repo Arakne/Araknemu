@@ -11,9 +11,11 @@ import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.ActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.dialog.LeaveDialog;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.dialog.NextQuestion;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersResolver;
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -26,8 +28,9 @@ final public class DialogService implements PreloadableService {
     final private Logger logger;
 
     final private Map<String, ActionFactory> actionFactories = new HashMap<>();
-    final private Map<Integer, NpcQuestion> questions = new HashMap<>();
-    final private Map<Integer, Response> responses = new HashMap<>();
+    final private Map<Integer, NpcQuestion> questions = new ConcurrentHashMap<>();
+    final private Map<Integer, Response> responses = new ConcurrentHashMap<>();
+
 
     public DialogService(QuestionRepository questionRepository, ResponseActionRepository responseActionRepository, ActionFactory[] actionFactories, ParametersResolver parametersResolver, Logger logger) {
         this.questionRepository = questionRepository;
@@ -45,7 +48,7 @@ final public class DialogService implements PreloadableService {
         logger.info("{} responses loaded", responses.size());
 
         logger.info("Loading dialogs questions...");
-        questionRepository.all().forEach(this::createQuestion);
+        questionRepository.all().forEach(question -> createQuestion(question, false));
         logger.info("{} questions loaded", questions.size());
     }
 
@@ -74,15 +77,13 @@ final public class DialogService implements PreloadableService {
 
     /**
      * Create or retrieve a NpcQuestion from an entity
+     *
+     * @param fromDatabase Allows loading responses from database ? false during preloading
      */
-    private NpcQuestion createQuestion(Question entity) {
+    private NpcQuestion createQuestion(Question entity, boolean fromDatabase) {
         return questions.computeIfAbsent(
             entity.id(),
-            id -> new NpcQuestion(
-                entity,
-                createResponses(responseActionRepository.byQuestion(entity)),
-                parametersResolver
-            )
+            id -> new NpcQuestion(entity, responsesByQuestion(entity, fromDatabase), parametersResolver)
         );
     }
 
@@ -110,7 +111,7 @@ final public class DialogService implements PreloadableService {
     private Collection<NpcQuestion> loadQuestionFromDatabase(int[] ids) {
         Collection<NpcQuestion> questions = questionRepository.byIds(ids)
             .stream()
-            .map(this::createQuestion)
+            .map(question -> createQuestion(question, true))
             .collect(Collectors.toList())
         ;
 
@@ -125,6 +126,33 @@ final public class DialogService implements PreloadableService {
         }
 
         return questions;
+    }
+
+    /**
+     * Load responses for a question
+     *
+     * @param question The question entity
+     * @param fromDatabase Allows loading responses from database ? false during preloading
+     *
+     * @return The list of responses
+     */
+    private Collection<Response> responsesByQuestion(Question question, boolean fromDatabase) {
+        // Disallow loading from database : only retrieve loaded questions
+        if (!fromDatabase) {
+            return Arrays.stream(question.responseIds())
+                .filter(responses::containsKey)
+                .mapToObj(responses::get)
+                .collect(Collectors.toList())
+            ;
+        }
+
+        // Check if all responses are already loaded
+        if (responses.keySet().containsAll(Arrays.asList(ArrayUtils.toObject(question.responseIds())))) {
+            return Arrays.stream(question.responseIds()).mapToObj(responses::get).collect(Collectors.toList());
+        }
+
+        // Load an creates responses
+        return createResponses(responseActionRepository.byQuestion(question));
     }
 
     /**
