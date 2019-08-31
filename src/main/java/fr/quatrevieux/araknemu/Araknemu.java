@@ -1,3 +1,22 @@
+/*
+ * This file is part of Araknemu.
+ *
+ * Araknemu is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Araknemu is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Copyright (c) 2017-2019 Vincent Quatrevieux
+ */
+
 package fr.quatrevieux.araknemu;
 
 import fr.quatrevieux.araknemu.core.BootException;
@@ -36,6 +55,9 @@ public class Araknemu {
      * Get the current version of the server (retrieved from pom.xml)
      */
     final static public String VERSION = Araknemu.class.getPackage().getImplementationVersion();
+    final static public String NAME = "Araknemu";
+    final static public String YEAR = "2017-2019";
+    final static public String AUTHOR = "Vincent Quatrevieux";
 
     final private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -52,7 +74,11 @@ public class Araknemu {
      * Boot all services
      */
     public void boot() throws BootException {
-        logger.info("Starting Araknemu v{}", VERSION);
+        System.out.println(NAME + " Copyright (c) " + YEAR + " " + AUTHOR);
+        System.out.println("This program comes with ABSOLUTELY NO WARRANTY.");
+        System.out.println("This is free software, and you are welcome to redistribute it under certain conditions.");
+
+        logger.info("Starting {} v{}", NAME, VERSION);
         logger.info("Booting services");
 
         for (Service service : services) {
