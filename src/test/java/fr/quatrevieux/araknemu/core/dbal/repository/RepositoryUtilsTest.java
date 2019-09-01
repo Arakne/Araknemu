@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
 import fr.quatrevieux.araknemu.core.dbal.DatabaseConfiguration;
 import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,11 +67,11 @@ class RepositoryUtilsTest {
     }
 
     private RepositoryUtils<Person> utils;
-    private ConnectionPoolUtils pool;
+    private ConnectionPoolExecutor pool;
 
     @BeforeEach
     void setUp() throws IOException, SQLException {
-        pool = new ConnectionPoolUtils(
+        pool = new ConnectionPoolExecutor(
             new DefaultDatabaseHandler(
                 new DefaultConfiguration(
                     new IniDriver(

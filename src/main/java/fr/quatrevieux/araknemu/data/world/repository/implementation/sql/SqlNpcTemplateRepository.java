@@ -19,10 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
@@ -71,19 +70,19 @@ final class SqlNpcTemplateRepository implements NpcTemplateRepository {
         }
     }
 
-    final private ConnectionPoolUtils pool;
+    final private QueryExecutor executor;
     final private RepositoryUtils<NpcTemplate> utils;
 
-    public SqlNpcTemplateRepository(ConnectionPool pool) {
-        this.pool = new ConnectionPoolUtils(pool);
+    public SqlNpcTemplateRepository(QueryExecutor executor) {
+        this.executor = executor;
 
-        utils = new RepositoryUtils<>(this.pool, new Loader());
+        utils = new RepositoryUtils<>(this.executor, new Loader());
     }
 
     @Override
     public void initialize() throws RepositoryException {
         try {
-            pool.query(
+            executor.query(
                 "CREATE TABLE NPC_TEMPLATE(" +
                     "NPC_TEMPLATE_ID INTEGER PRIMARY KEY," +
                     "GFXID INTEGER," +
@@ -107,7 +106,7 @@ final class SqlNpcTemplateRepository implements NpcTemplateRepository {
     @Override
     public void destroy() throws RepositoryException {
         try {
-            pool.query("DROP TABLE NPC_TEMPLATE");
+            executor.query("DROP TABLE NPC_TEMPLATE");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }

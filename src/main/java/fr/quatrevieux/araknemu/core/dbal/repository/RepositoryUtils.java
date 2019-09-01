@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.core.dbal.repository;
 
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -72,11 +72,11 @@ public class RepositoryUtils<E> {
         public void bind(PreparedStatement statement) throws SQLException;
     }
 
-    final private ConnectionPoolUtils pool;
+    final private QueryExecutor executor;
     final private Loader<E> loader;
 
-    public RepositoryUtils(ConnectionPoolUtils pool, Loader<E> loader) {
-        this.pool = pool;
+    public RepositoryUtils(QueryExecutor executor, Loader<E> loader) {
+        this.executor = executor;
         this.loader = loader;
     }
 
@@ -100,7 +100,7 @@ public class RepositoryUtils<E> {
      */
     public E findOne(String query, Binder binder) throws RepositoryException {
         try {
-            return pool.prepare(
+            return executor.prepare(
                 query,
                 statement -> {
                     binder.bind(statement);
@@ -138,7 +138,7 @@ public class RepositoryUtils<E> {
      */
     public List<E> findAll(String query, Binder binder) throws RepositoryException {
         try {
-            return pool.prepare(
+            return executor.prepare(
                 query,
                 statement -> {
                     binder.bind(statement);
@@ -195,7 +195,7 @@ public class RepositoryUtils<E> {
      */
     public int aggregate(String query, Binder binder) throws RepositoryException {
         try {
-            return pool.prepare(
+            return executor.prepare(
                 query,
                 statement -> {
                     binder.bind(statement);
@@ -234,7 +234,7 @@ public class RepositoryUtils<E> {
      */
     public int update(String query, Binder binder) throws RepositoryException {
         try {
-            return pool.prepare(
+            return executor.prepare(
                 query,
                 statement -> {
                     binder.bind(statement);
@@ -267,7 +267,7 @@ public class RepositoryUtils<E> {
      */
     public E update(String query, Binder binder, E entity) throws RepositoryException {
         try {
-            return pool.prepare(
+            return executor.prepare(
                 query,
                 statement -> {
                     binder.bind(statement);

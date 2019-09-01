@@ -19,10 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.Dimensions;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
@@ -70,23 +69,23 @@ final class SqlMapTemplateRepository implements MapTemplateRepository {
         }
     }
 
-    final private ConnectionPoolUtils pool;
+    final private QueryExecutor executor;
     final private RepositoryUtils<MapTemplate> utils;
     final private Transformer<MapTemplate.Cell> cellTransformer;
     final private Transformer<List<Integer>[]> fightPlacesTransformer;
 
-    public SqlMapTemplateRepository(ConnectionPool pool, Transformer<MapTemplate.Cell> cellTransformer, Transformer<List<Integer>[]> fightPlacesTransformer) {
-        this.pool = new ConnectionPoolUtils(pool);
+    public SqlMapTemplateRepository(QueryExecutor executor, Transformer<MapTemplate.Cell> cellTransformer, Transformer<List<Integer>[]> fightPlacesTransformer) {
+        this.executor = executor;
         this.cellTransformer = cellTransformer;
         this.fightPlacesTransformer = fightPlacesTransformer;
 
-        utils = new RepositoryUtils<>(this.pool, new Loader());
+        utils = new RepositoryUtils<>(this.executor, new Loader());
     }
 
     @Override
     public void initialize() throws RepositoryException {
         try {
-            pool.query(
+            executor.query(
                 "CREATE TABLE maps(" +
                     "id INTEGER PRIMARY KEY," +
                     "date VARCHAR(12)," +
@@ -105,7 +104,7 @@ final class SqlMapTemplateRepository implements MapTemplateRepository {
     @Override
     public void destroy() throws RepositoryException {
         try {
-            pool.query("DROP TABLE maps");
+            executor.query("DROP TABLE maps");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }

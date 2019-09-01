@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
 import fr.quatrevieux.araknemu.data.world.transformer.SpellTemplateLevelTransformer;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
@@ -39,7 +40,7 @@ class SqlSpellTemplateRepositoryTest extends GameBaseCase {
         dataSet.pushSpells();
 
         repository = new SqlSpellTemplateRepository(
-            app.database().get("game"),
+            new ConnectionPoolExecutor(app.database().get("game")),
             container.get(SpellTemplateLevelTransformer.class)
         );
     }

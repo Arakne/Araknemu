@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
@@ -46,7 +47,7 @@ class SqlItemTemplateRepositoryTest extends GameBaseCase {
         dataSet.pushItemTemplate(new ItemTemplate(284, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10));
 
         repository = new SqlItemTemplateRepository(
-            app.database().get("game"),
+            new ConnectionPoolExecutor(app.database().get("game")),
             container.get(ItemEffectsTransformer.class)
         );
     }

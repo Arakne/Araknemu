@@ -19,11 +19,10 @@
 
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
@@ -86,23 +85,23 @@ final class SqlPlayerRepository implements PlayerRepository {
         }
     }
 
-    final private ConnectionPoolUtils pool;
+    final private QueryExecutor executor;
     final private Transformer<MutableCharacteristics> characteristicsTransformer;
     final private Transformer<Set<ChannelType>> channelsTransformer;
 
     final private RepositoryUtils<Player> utils;
 
-    public SqlPlayerRepository(ConnectionPool pool, Transformer<MutableCharacteristics> characteristicsTransformer, Transformer<Set<ChannelType>> channelsTransformer) {
-        this.pool = new ConnectionPoolUtils(pool);
+    public SqlPlayerRepository(QueryExecutor executor, Transformer<MutableCharacteristics> characteristicsTransformer, Transformer<Set<ChannelType>> channelsTransformer) {
+        this.executor = executor;
         this.characteristicsTransformer = characteristicsTransformer;
         this.channelsTransformer = channelsTransformer;
-        this.utils = new RepositoryUtils<>(this.pool, new SqlPlayerRepository.Loader());
+        this.utils = new RepositoryUtils<>(this.executor, new SqlPlayerRepository.Loader());
     }
 
     @Override
     public void initialize() throws RepositoryException {
         try {
-            pool.query(
+            executor.query(
                 "CREATE TABLE PLAYER (" +
                     "PLAYER_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "ACCOUNT_ID INTEGER," +
@@ -129,7 +128,7 @@ final class SqlPlayerRepository implements PlayerRepository {
                 ")"
             );
 
-            pool.query("CREATE INDEX IDX_ACC_SRV ON PLAYER (ACCOUNT_ID, SERVER_ID)");
+            executor.query("CREATE INDEX IDX_ACC_SRV ON PLAYER (ACCOUNT_ID, SERVER_ID)");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }
@@ -138,7 +137,7 @@ final class SqlPlayerRepository implements PlayerRepository {
     @Override
     public void destroy() throws RepositoryException {
         try {
-            pool.query("DROP TABLE PLAYER");
+            executor.query("DROP TABLE PLAYER");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }
@@ -235,7 +234,7 @@ final class SqlPlayerRepository implements PlayerRepository {
     @Override
     public Collection<ServerCharacters> accountCharactersCount(int accountId) {
         try {
-            return pool.prepare(
+            return executor.prepare(
                 "SELECT SERVER_ID, COUNT(*) FROM PLAYER WHERE ACCOUNT_ID = ? GROUP BY SERVER_ID",
                 stmt -> {
                     stmt.setInt(1, accountId);

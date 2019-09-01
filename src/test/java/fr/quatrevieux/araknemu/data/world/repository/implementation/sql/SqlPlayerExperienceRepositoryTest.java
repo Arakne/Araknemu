@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerExperience;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,7 +40,7 @@ class SqlPlayerExperienceRepositoryTest extends GameBaseCase {
 
         dataSet.pushExperience();
 
-        repository = new SqlPlayerExperienceRepository(app.database().get("game"));
+        repository = new SqlPlayerExperienceRepository(new ConnectionPoolExecutor(app.database().get("game")));
     }
 
     @Test

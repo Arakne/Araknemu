@@ -19,11 +19,10 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository;
@@ -66,21 +65,21 @@ final class SqlSpellTemplateRepository implements SpellTemplateRepository {
         }
     }
 
-    final private ConnectionPoolUtils pool;
+    final private QueryExecutor executor;
     final private RepositoryUtils<SpellTemplate> utils;
 
     final private Transformer<SpellTemplate.Level> levelTransformer;
 
-    public SqlSpellTemplateRepository(ConnectionPool pool, Transformer<SpellTemplate.Level> levelTransformer) {
+    public SqlSpellTemplateRepository(QueryExecutor executor, Transformer<SpellTemplate.Level> levelTransformer) {
+        this.executor = executor;
         this.levelTransformer = levelTransformer;
-        this.pool = new ConnectionPoolUtils(pool);
-        utils = new RepositoryUtils<>(this.pool, new SqlSpellTemplateRepository.Loader());
+        utils = new RepositoryUtils<>(this.executor, new SqlSpellTemplateRepository.Loader());
     }
 
     @Override
     public void initialize() throws RepositoryException {
         try {
-            pool.query(
+            executor.query(
                 "CREATE TABLE `SPELL` (" +
                     "`SPELL_ID` INTEGER PRIMARY KEY," +
                     "`SPELL_NAME` VARCHAR(100)," +
@@ -103,7 +102,7 @@ final class SqlSpellTemplateRepository implements SpellTemplateRepository {
     @Override
     public void destroy() throws RepositoryException {
         try {
-            pool.query("DROP TABLE SPELL");
+            executor.query("DROP TABLE SPELL");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }

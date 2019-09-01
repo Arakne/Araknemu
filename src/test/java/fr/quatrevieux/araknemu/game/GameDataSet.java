@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game;
 
 import fr.quatrevieux.araknemu.TestingDataSet;
 import fr.quatrevieux.araknemu.core.dbal.repository.Repository;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Alignment;
@@ -58,9 +58,9 @@ import java.util.Arrays;
 import java.util.EnumSet;
 
 public class GameDataSet extends TestingDataSet {
-    final private ConnectionPoolUtils connection;
+    final private ConnectionPoolExecutor connection;
 
-    public GameDataSet(Container repositories, ConnectionPoolUtils connection) {
+    public GameDataSet(Container repositories, ConnectionPoolExecutor connection) {
         super(repositories);
 
         this.connection = connection;

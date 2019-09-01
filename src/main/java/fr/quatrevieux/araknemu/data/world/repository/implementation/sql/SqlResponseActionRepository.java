@@ -19,10 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Question;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.ResponseAction;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.ResponseActionRepository;
@@ -57,19 +56,19 @@ final class SqlResponseActionRepository implements ResponseActionRepository {
         }
     }
 
-    final private ConnectionPoolUtils pool;
+    final private QueryExecutor executor;
     final private RepositoryUtils<ResponseAction> utils;
 
-    public SqlResponseActionRepository(ConnectionPool pool) {
-        this.pool = new ConnectionPoolUtils(pool);
+    public SqlResponseActionRepository(QueryExecutor executor) {
+        this.executor = executor;
 
-        utils = new RepositoryUtils<>(this.pool, new Loader());
+        utils = new RepositoryUtils<>(this.executor, new Loader());
     }
 
     @Override
     public void initialize() throws RepositoryException {
         try {
-            pool.query(
+            executor.query(
                 "CREATE TABLE NPC_RESPONSE_ACTION(" +
                     "RESPONSE_ID INTEGER," +
                     "ACTION VARCHAR(12)," +
@@ -85,7 +84,7 @@ final class SqlResponseActionRepository implements ResponseActionRepository {
     @Override
     public void destroy() throws RepositoryException {
         try {
-            pool.query("DROP TABLE NPC_RESPONSE_ACTION");
+            executor.query("DROP TABLE NPC_RESPONSE_ACTION");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }

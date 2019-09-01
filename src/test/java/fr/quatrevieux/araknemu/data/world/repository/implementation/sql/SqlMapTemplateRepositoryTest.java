@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.data.value.Dimensions;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.transformer.FightPlacesTransformer;
@@ -42,7 +43,7 @@ class SqlMapTemplateRepositoryTest extends GameBaseCase {
         super.setUp();
 
         repository = new SqlMapTemplateRepository(
-            app.database().get("game"),
+            new ConnectionPoolExecutor(app.database().get("game")),
             new MapCellTransformer(),
             new FightPlacesTransformer()
         );

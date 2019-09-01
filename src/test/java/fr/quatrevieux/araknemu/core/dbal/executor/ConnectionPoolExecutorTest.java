@@ -17,7 +17,7 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.core.dbal.util;
+package fr.quatrevieux.araknemu.core.dbal.executor;
 
 import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
@@ -38,12 +38,12 @@ import java.sql.Statement;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ConnectionPoolUtilsTest {
-    private ConnectionPoolUtils utils;
+class ConnectionPoolExecutorTest {
+    private ConnectionPoolExecutor utils;
 
     @BeforeEach
     void setUp() throws IOException, SQLException {
-        utils = new ConnectionPoolUtils(
+        utils = new ConnectionPoolExecutor(
             new DefaultDatabaseHandler(
                 new DefaultConfiguration(
                     new IniDriver(

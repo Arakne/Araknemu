@@ -19,10 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
@@ -60,21 +59,21 @@ final class SqlItemTemplateRepository implements ItemTemplateRepository {
         }
     }
 
-    final private ConnectionPoolUtils pool;
+    final private QueryExecutor executor;
     final private RepositoryUtils<ItemTemplate> utils;
 
     final private Transformer<List<ItemTemplateEffectEntry>> effectsTransformer;
 
-    public SqlItemTemplateRepository(ConnectionPool pool, Transformer<List<ItemTemplateEffectEntry>> effectsTransformer) {
+    public SqlItemTemplateRepository(QueryExecutor executor, Transformer<List<ItemTemplateEffectEntry>> effectsTransformer) {
+        this.executor = executor;
         this.effectsTransformer = effectsTransformer;
-        this.pool = new ConnectionPoolUtils(pool);
-        utils = new RepositoryUtils<>(this.pool, new SqlItemTemplateRepository.Loader());
+        utils = new RepositoryUtils<>(this.executor, new SqlItemTemplateRepository.Loader());
     }
 
     @Override
     public void initialize() throws RepositoryException {
         try {
-            pool.query(
+            executor.query(
                 "CREATE TABLE `ITEM_TEMPLATE` (" +
                     "  `ITEM_TEMPLATE_ID` INTEGER PRIMARY KEY," +
                     "  `ITEM_TYPE` INTEGER," +
@@ -96,7 +95,7 @@ final class SqlItemTemplateRepository implements ItemTemplateRepository {
     @Override
     public void destroy() throws RepositoryException {
         try {
-            pool.query("DROP TABLE ITEM_TEMPLATE");
+            executor.query("DROP TABLE ITEM_TEMPLATE");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }

@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.DatabaseTestCase;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.transformer.PermissionsTransformer;
 import fr.quatrevieux.araknemu.common.account.Permission;
@@ -41,7 +42,7 @@ class SqlAccountRepositoryTest extends DatabaseTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        repository = new SqlAccountRepository(connection, new PermissionsTransformer());
+        repository = new SqlAccountRepository(new ConnectionPoolExecutor(connection), new PermissionsTransformer());
         repository.initialize();
     }
 

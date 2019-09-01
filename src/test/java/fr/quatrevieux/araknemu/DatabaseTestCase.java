@@ -26,12 +26,9 @@ import fr.quatrevieux.araknemu.core.config.IniDriver;
 import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.DatabaseConfiguration;
 import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.platform.commons.logging.LoggerFactory;
-import org.mockito.Mockito;
-import org.slf4j.Logger;
 import org.slf4j.helpers.NOPLogger;
 
 import java.io.File;
@@ -41,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class DatabaseTestCase extends TestCase {
     protected ConnectionPool connection;
-    protected ConnectionPoolUtils poolUtils;
+    protected ConnectionPoolExecutor poolUtils;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -54,7 +51,7 @@ public class DatabaseTestCase extends TestCase {
             NOPLogger.NOP_LOGGER
         ).get("realm");
 
-        poolUtils = new ConnectionPoolUtils(connection);
+        poolUtils = new ConnectionPoolExecutor(connection);
     }
 
     public void assertTableExists(String tableName) throws SQLException {

@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.transformer.ImmutableCharacteristicsTransformer;
@@ -47,7 +48,7 @@ class SqlPlayerRaceRepositoryTest extends GameBaseCase {
         dataSet.pushRaces();
 
         repository = new SqlPlayerRaceRepository(
-            app.database().get("game"),
+            new ConnectionPoolExecutor(app.database().get("game")),
             new RaceBaseStatsTransformer(new ImmutableCharacteristicsTransformer()),
             new BoostStatsDataTransformer()
         );

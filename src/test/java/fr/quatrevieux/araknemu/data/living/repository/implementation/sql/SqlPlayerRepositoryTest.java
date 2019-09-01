@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.DatabaseTestCase;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
@@ -51,7 +52,7 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
         super.setUp();
 
         repository = new SqlPlayerRepository(
-            connection,
+            new ConnectionPoolExecutor(connection),
             new MutableCharacteristicsTransformer(),
             new ChannelsTransformer()
         );

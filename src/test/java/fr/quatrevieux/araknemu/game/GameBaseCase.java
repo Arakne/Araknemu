@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
 import fr.quatrevieux.araknemu.core.dbal.DatabaseConfiguration;
 import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.core.di.*;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Race;
@@ -228,7 +228,7 @@ public class GameBaseCase extends DatabaseTestCase {
 
         dataSet = new GameDataSet(
             container,
-            new ConnectionPoolUtils(app.database().get("game"))
+            new ConnectionPoolExecutor(app.database().get("game"))
         );
 
         dataSet

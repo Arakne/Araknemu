@@ -19,10 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
 
@@ -52,18 +51,18 @@ final class SqlMapTriggerRepository implements MapTriggerRepository {
         }
     }
 
-    final private ConnectionPoolUtils pool;
+    final private QueryExecutor executor;
     final private RepositoryUtils<MapTrigger> utils;
 
-    public SqlMapTriggerRepository(ConnectionPool pool) {
-        this.pool = new ConnectionPoolUtils(pool);
-        this.utils = new RepositoryUtils<>(this.pool, new Loader());
+    public SqlMapTriggerRepository(QueryExecutor executor) {
+        this.executor = executor;
+        this.utils = new RepositoryUtils<>(this.executor, new Loader());
     }
 
     @Override
     public void initialize() throws RepositoryException {
         try {
-            pool.query(
+            executor.query(
                 "CREATE TABLE MAP_TRIGGER (" +
                     "MAP_ID INTEGER," +
                     "CELL_ID INTEGER," +
@@ -74,7 +73,7 @@ final class SqlMapTriggerRepository implements MapTriggerRepository {
                 ")"
             );
 
-            pool.query("CREATE INDEX IDX_MAP ON MAP_TRIGGER (MAP_ID)");
+            executor.query("CREATE INDEX IDX_MAP ON MAP_TRIGGER (MAP_ID)");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }
@@ -83,7 +82,7 @@ final class SqlMapTriggerRepository implements MapTriggerRepository {
     @Override
     public void destroy() throws RepositoryException {
         try {
-            pool.query("DROP TABLE MAP_TRIGGER");
+            executor.query("DROP TABLE MAP_TRIGGER");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }

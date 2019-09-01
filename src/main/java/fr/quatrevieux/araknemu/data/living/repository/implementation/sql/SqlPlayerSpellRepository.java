@@ -19,11 +19,10 @@
 
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
@@ -54,18 +53,18 @@ final class SqlPlayerSpellRepository implements PlayerSpellRepository {
         }
     }
 
-    final private ConnectionPoolUtils pool;
+    final private QueryExecutor executor;
     final private RepositoryUtils<PlayerSpell> utils;
 
-    public SqlPlayerSpellRepository(ConnectionPool pool) {
-        this.pool = new ConnectionPoolUtils(pool);
-        this.utils = new RepositoryUtils<>(this.pool, new Loader());
+    public SqlPlayerSpellRepository(QueryExecutor executor) {
+        this.executor = executor;
+        this.utils = new RepositoryUtils<>(this.executor, new Loader());
     }
 
     @Override
     public void initialize() throws RepositoryException {
         try {
-            pool.query(
+            executor.query(
                 "CREATE TABLE PLAYER_SPELL (" +
                     "PLAYER_ID INTEGER," +
                     "SPELL_ID INTEGER," +
@@ -83,7 +82,7 @@ final class SqlPlayerSpellRepository implements PlayerSpellRepository {
     @Override
     public void destroy() throws RepositoryException {
         try {
-            pool.query("DROP TABLE PLAYER_SPELL");
+            executor.query("DROP TABLE PLAYER_SPELL");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }

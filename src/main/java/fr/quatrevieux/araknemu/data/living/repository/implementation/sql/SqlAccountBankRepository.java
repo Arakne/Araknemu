@@ -19,11 +19,10 @@
 
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.living.entity.account.AccountBank;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
 
@@ -50,18 +49,18 @@ final class SqlAccountBankRepository implements AccountBankRepository {
         }
     }
 
-    final private ConnectionPoolUtils pool;
+    final private QueryExecutor executor;
     final private RepositoryUtils<AccountBank> utils;
 
-    public SqlAccountBankRepository(ConnectionPool pool) {
-        this.pool = new ConnectionPoolUtils(pool);
-        this.utils = new RepositoryUtils<>(this.pool, new Loader());
+    public SqlAccountBankRepository(QueryExecutor executor) {
+        this.executor = executor;
+        this.utils = new RepositoryUtils<>(this.executor, new Loader());
     }
 
     @Override
     public void initialize() throws RepositoryException {
         try {
-            pool.query(
+            executor.query(
                 "CREATE TABLE BANK (" +
                     "ACCOUNT_ID INTEGER," +
                     "SERVER_ID INTEGER," +
@@ -77,7 +76,7 @@ final class SqlAccountBankRepository implements AccountBankRepository {
     @Override
     public void destroy() throws RepositoryException {
         try {
-            pool.query("DROP TABLE BANK");
+            executor.query("DROP TABLE BANK");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }

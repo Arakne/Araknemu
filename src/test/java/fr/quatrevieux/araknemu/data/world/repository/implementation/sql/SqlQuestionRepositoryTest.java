@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Question;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
@@ -39,7 +40,7 @@ class SqlQuestionRepositoryTest extends GameBaseCase {
         dataSet.pushQuestion(new Question(3596, new int[] {3182}, new String[] {}, ""));
         dataSet.pushQuestion(new Question(3786, new int[] {3323, 3324}, new String[] {}, ""));
 
-        repository = new SqlQuestionRepository(app.database().get("game"));
+        repository = new SqlQuestionRepository(new ConnectionPoolExecutor(app.database().get("game")));
     }
 
     @Test

@@ -17,7 +17,7 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.core.dbal.util;
+package fr.quatrevieux.araknemu.core.dbal.executor;
 
 import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 
@@ -29,14 +29,10 @@ import java.sql.Statement;
 /**
  * Utility class for connection pool queries
  */
-final public class ConnectionPoolUtils implements ConnectionPool {
-    public interface PreparedTask<T> {
-        public T execute(PreparedStatement statement) throws SQLException;
-    }
-
+final public class ConnectionPoolExecutor implements ConnectionPool, QueryExecutor {
     final private ConnectionPool pool;
 
-    public ConnectionPoolUtils(ConnectionPool pool) {
+    public ConnectionPoolExecutor(ConnectionPool pool) {
         this.pool = pool;
     }
 
@@ -60,25 +56,7 @@ final public class ConnectionPoolUtils implements ConnectionPool {
         return pool.size();
     }
 
-    /**
-     * Prepare SQL query
-     *
-     * util.prepare("SELECT * FROM ACCOUNT WHERE ACCOUNT_ID = ?", stmt -> {
-     *     stmt.setString(1, 123);
-     *     ResultSet rs = stmt.executeQuery();
-     *
-     *     return load(rs);
-     * }, false);
-     *
-     * @param sql SQL query to prepare
-     * @param task Task to execute
-     * @param returnGeneratedKeys Set true to return generated keys (like auto increment)
-     * @param <T> The result type
-     *
-     * @return The result of the task
-     *
-     * @throws SQLException When error occurs during execution
-     */
+    @Override
     public <T> T prepare(String sql, PreparedTask<T> task, boolean returnGeneratedKeys) throws SQLException {
         return execute(connection -> {
             try (PreparedStatement stmt = connection.prepareStatement(
@@ -92,35 +70,7 @@ final public class ConnectionPoolUtils implements ConnectionPool {
         });
     }
 
-    /**
-     * Prepare SQL query
-     *
-     * util.prepare("SELECT * FROM ACCOUNT WHERE ACCOUNT_ID = ?", stmt -> {
-     *     stmt.setString(1, 123);
-     *     ResultSet rs = stmt.executeQuery();
-     *
-     *     return load(rs);
-     * }, false);
-     *
-     * @param sql SQL query to prepare
-     * @param task Task to execute
-     * @param <T> The result type
-     *
-     * @return The result of the task
-     *
-     * @throws SQLException When error occurs during execution
-     */
-    public <T> T prepare(String sql, PreparedTask<T> task) throws SQLException {
-        return prepare(sql, task, false);
-    }
-
-    /**
-     * Execute simple SQL query
-     *
-     * @param sql Query to execute
-     *
-     * @throws SQLException When error occurs during execution
-     */
+    @Override
     public void query(String sql) throws SQLException {
         execute(connection -> {
             try (Statement statement = connection.createStatement()){

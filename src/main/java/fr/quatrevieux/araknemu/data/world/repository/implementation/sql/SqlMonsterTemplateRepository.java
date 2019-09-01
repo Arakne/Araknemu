@@ -19,11 +19,10 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.transformer.TransformerException;
 import fr.quatrevieux.araknemu.data.value.Colors;
@@ -34,7 +33,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * SQL implementation for monster template repository
@@ -101,24 +102,24 @@ final class SqlMonsterTemplateRepository implements MonsterTemplateRepository {
         }
     }
 
-    final private ConnectionPoolUtils pool;
+    final private QueryExecutor executor;
     final private RepositoryUtils<MonsterTemplate> utils;
     final private Transformer<Colors> colorsTransformer;
     final private Transformer<Characteristics> characteristicsTransformer;
 
-    public SqlMonsterTemplateRepository(ConnectionPool pool, Transformer<Colors> colorsTransformer, Transformer<Characteristics> characteristicsTransformer) {
-        this.pool = new ConnectionPoolUtils(pool);
+    public SqlMonsterTemplateRepository(QueryExecutor executor, Transformer<Colors> colorsTransformer, Transformer<Characteristics> characteristicsTransformer) {
+        this.executor = executor;
 
         this.colorsTransformer = colorsTransformer;
         this.characteristicsTransformer = characteristicsTransformer;
 
-        utils = new RepositoryUtils<>(this.pool, new SqlMonsterTemplateRepository.Loader());
+        utils = new RepositoryUtils<>(this.executor, new SqlMonsterTemplateRepository.Loader());
     }
 
     @Override
     public void initialize() throws RepositoryException {
         try {
-            pool.query(
+            executor.query(
                 "CREATE TABLE `MONSTER_TEMPLATE` (" +
                     "  `MONSTER_ID` INTEGER PRIMARY KEY," +
                     "  `MONSTER_NAME` VARCHAR(100)," +
@@ -139,7 +140,7 @@ final class SqlMonsterTemplateRepository implements MonsterTemplateRepository {
     @Override
     public void destroy() throws RepositoryException {
         try {
-            pool.query("DROP TABLE MONSTER_TEMPLATE");
+            executor.query("DROP TABLE MONSTER_TEMPLATE");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }

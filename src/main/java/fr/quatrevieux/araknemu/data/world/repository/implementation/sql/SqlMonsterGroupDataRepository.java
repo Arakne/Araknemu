@@ -19,10 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
@@ -61,21 +60,21 @@ final class SqlMonsterGroupDataRepository implements MonsterGroupDataRepository 
         }
     }
 
-    final private ConnectionPoolUtils pool;
+    final private QueryExecutor executor;
     final private RepositoryUtils<MonsterGroupData> utils;
     final private Transformer<List<MonsterGroupData.Monster>> monstersTransformer;
 
-    public SqlMonsterGroupDataRepository(ConnectionPool pool, Transformer<List<MonsterGroupData.Monster>> monstersTransformer) {
-        this.pool = new ConnectionPoolUtils(pool);
+    public SqlMonsterGroupDataRepository(QueryExecutor executor, Transformer<List<MonsterGroupData.Monster>> monstersTransformer) {
+        this.executor = executor;
         this.monstersTransformer = monstersTransformer;
 
-        utils = new RepositoryUtils<>(this.pool, new SqlMonsterGroupDataRepository.Loader());
+        utils = new RepositoryUtils<>(this.executor, new SqlMonsterGroupDataRepository.Loader());
     }
 
     @Override
     public void initialize() throws RepositoryException {
         try {
-            pool.query(
+            executor.query(
                 "CREATE TABLE `MONSTER_GROUP` (" +
                     "`MONSTER_GROUP_ID` INTEGER PRIMARY KEY," +
                     "`RESPAWN_TIME` INTEGER," +
@@ -96,7 +95,7 @@ final class SqlMonsterGroupDataRepository implements MonsterGroupDataRepository 
     @Override
     public void destroy() throws RepositoryException {
         try {
-            pool.query("DROP TABLE MONSTER_GROUP");
+            executor.query("DROP TABLE MONSTER_GROUP");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }
