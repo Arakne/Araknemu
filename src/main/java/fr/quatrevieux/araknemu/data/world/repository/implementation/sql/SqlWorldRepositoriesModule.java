@@ -20,6 +20,9 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
+import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
+import fr.quatrevieux.araknemu.core.dbal.executor.LoggedQueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.transformer.ImmutableCharacteristicsTransformer;
@@ -38,15 +41,19 @@ import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
 import fr.quatrevieux.araknemu.data.world.repository.monster.*;
 import fr.quatrevieux.araknemu.data.world.transformer.*;
+import org.slf4j.LoggerFactory;
 
 /**
  * DI module for world repositories
  */
 final public class SqlWorldRepositoriesModule implements ContainerModule {
-    final private ConnectionPool connection;
+    final private QueryExecutor executor;
 
     public SqlWorldRepositoriesModule(ConnectionPool connection) {
-        this.connection = connection;
+        this.executor = new LoggedQueryExecutor(
+            new ConnectionPoolExecutor(connection),
+            LoggerFactory.getLogger(SqlWorldRepositoriesModule.class)
+        );
     }
 
     @Override
@@ -55,7 +62,7 @@ final public class SqlWorldRepositoriesModule implements ContainerModule {
             PlayerRaceRepository.class,
             container -> new PlayerRaceRepositoryCache(
                 new SqlPlayerRaceRepository(
-                    connection,
+                    executor,
                     container.get(RaceBaseStatsTransformer.class),
                     container.get(BoostStatsDataTransformer.class)
                 )
@@ -65,7 +72,7 @@ final public class SqlWorldRepositoriesModule implements ContainerModule {
         configurator.persist(
             MapTemplateRepository.class,
             container -> new SqlMapTemplateRepository(
-                connection,
+                executor,
                 container.get(MapCellTransformer.class),
                 container.get(FightPlacesTransformer.class)
             )
@@ -73,14 +80,14 @@ final public class SqlWorldRepositoriesModule implements ContainerModule {
 
         configurator.persist(
             MapTriggerRepository.class,
-            container -> new SqlMapTriggerRepository(connection)
+            container -> new SqlMapTriggerRepository(executor)
         );
 
         configurator.persist(
             ItemTemplateRepository.class,
             container -> new ItemTemplateRepositoryCache(
                     new SqlItemTemplateRepository(
-                    connection,
+                    executor,
                     container.get(ItemEffectsTransformer.class)
                 )
             )
@@ -90,7 +97,7 @@ final public class SqlWorldRepositoriesModule implements ContainerModule {
             ItemSetRepository.class,
             container -> new ItemSetRepositoryCache(
                     new SqlItemSetRepository(
-                    connection,
+                    executor,
                     container.get(ItemSetBonusTransformer.class)
                 )
             )
@@ -100,7 +107,7 @@ final public class SqlWorldRepositoriesModule implements ContainerModule {
             ItemTypeRepository.class,
             container -> new ItemTypeRepositoryCache(
                     new SqlItemTypeRepository(
-                    connection,
+                    executor,
                     container.get(EffectAreaTransformer.class)
                 )
             )
@@ -109,40 +116,40 @@ final public class SqlWorldRepositoriesModule implements ContainerModule {
         configurator.persist(
             SpellTemplateRepository.class,
             container -> new SqlSpellTemplateRepository(
-                connection,
+                executor,
                 container.get(SpellTemplateLevelTransformer.class)
             )
         );
 
         configurator.persist(
             PlayerExperienceRepository.class,
-            container -> new SqlPlayerExperienceRepository(connection)
+            container -> new SqlPlayerExperienceRepository(executor)
         );
 
         configurator.persist(
             NpcTemplateRepository.class,
-            container -> new NpcTemplateRepositoryCache(new SqlNpcTemplateRepository(connection))
+            container -> new NpcTemplateRepositoryCache(new SqlNpcTemplateRepository(executor))
         );
 
         configurator.persist(
             NpcRepository.class,
-            container -> new NpcRepositoryCache(new SqlNpcRepository(connection))
+            container -> new NpcRepositoryCache(new SqlNpcRepository(executor))
         );
 
         configurator.persist(
             QuestionRepository.class,
-            container -> new SqlQuestionRepository(connection)
+            container -> new SqlQuestionRepository(executor)
         );
 
         configurator.persist(
             ResponseActionRepository.class,
-            container -> new SqlResponseActionRepository(connection)
+            container -> new SqlResponseActionRepository(executor)
         );
 
         configurator.persist(
             MonsterTemplateRepository.class,
             container -> new SqlMonsterTemplateRepository(
-                connection,
+                executor,
                 container.get(ColorsTransformer.class),
                 container.get(ImmutableCharacteristicsTransformer.class)
             )
@@ -152,7 +159,7 @@ final public class SqlWorldRepositoriesModule implements ContainerModule {
             MonsterGroupDataRepository.class,
             container -> new MonsterGroupDataRepositoryCache(
                 new SqlMonsterGroupDataRepository(
-                    connection,
+                    executor,
                     container.get(MonsterListTransformer.class)
                 )
             )
@@ -160,17 +167,17 @@ final public class SqlWorldRepositoriesModule implements ContainerModule {
 
         configurator.persist(
             MonsterGroupPositionRepository.class,
-            container -> new SqlMonsterGroupPositionRepository(connection)
+            container -> new SqlMonsterGroupPositionRepository(executor)
         );
 
         configurator.persist(
             MonsterRewardRepository.class,
-            container -> new SqlMonsterRewardRepository(connection)
+            container -> new SqlMonsterRewardRepository(executor)
         );
 
         configurator.persist(
             MonsterRewardItemRepository.class,
-            container -> new SqlMonsterRewardItemRepository(connection)
+            container -> new SqlMonsterRewardItemRepository(executor)
         );
 
         configurator.persist(

@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Alignment;
 import fr.quatrevieux.araknemu.data.living.entity.environment.SubArea;
@@ -41,7 +42,7 @@ class SqlSubAreaRepositoryTest extends GameBaseCase {
         super.setUp();
 
         dataSet.use(SubArea.class);
-        repository = new SqlSubAreaRepository(app.database().get("game"));
+        repository = new SqlSubAreaRepository(new ConnectionPoolExecutor(app.database().get("game")));
     }
 
     @Test

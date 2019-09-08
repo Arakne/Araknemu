@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.living.entity.account.AccountBank;
 import fr.quatrevieux.araknemu.data.living.entity.account.BankItem;
@@ -44,7 +45,7 @@ class SqlBankItemRepositoryTest extends GameBaseCase {
         dataSet.use(BankItem.class);
 
         repository = new SqlBankItemRepository(
-            app.database().get("game"),
+            new ConnectionPoolExecutor(app.database().get("game")),
             new ItemEffectsTransformer()
         );
     }

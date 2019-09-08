@@ -19,10 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Question;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.QuestionRepository;
@@ -57,19 +56,19 @@ final class SqlQuestionRepository implements QuestionRepository {
         }
     }
 
-    final private ConnectionPoolUtils pool;
+    final private QueryExecutor executor;
     final private RepositoryUtils<Question> utils;
 
-    public SqlQuestionRepository(ConnectionPool pool) {
-        this.pool = new ConnectionPoolUtils(pool);
+    public SqlQuestionRepository(QueryExecutor executor) {
+        this.executor = executor;
 
-        utils = new RepositoryUtils<>(this.pool, new Loader());
+        utils = new RepositoryUtils<>(this.executor, new Loader());
     }
 
     @Override
     public void initialize() throws RepositoryException {
         try {
-            pool.query(
+            executor.query(
                 "CREATE TABLE NPC_QUESTION(" +
                     "QUESTION_ID INTEGER PRIMARY KEY," +
                     "RESPONSE_IDS VARCHAR(100)," +
@@ -85,7 +84,7 @@ final class SqlQuestionRepository implements QuestionRepository {
     @Override
     public void destroy() throws RepositoryException {
         try {
-            pool.query("DROP TABLE NPC_QUESTION");
+            executor.query("DROP TABLE NPC_QUESTION");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }

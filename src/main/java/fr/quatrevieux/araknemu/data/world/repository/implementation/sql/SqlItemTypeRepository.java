@@ -19,10 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
@@ -54,21 +53,21 @@ final class SqlItemTypeRepository implements ItemTypeRepository {
         }
     }
 
-    final private ConnectionPoolUtils pool;
+    final private QueryExecutor executor;
     final private RepositoryUtils<ItemType> utils;
 
     final private Transformer<EffectArea> areaTransformer;
 
-    public SqlItemTypeRepository(ConnectionPool pool, Transformer<EffectArea> areaTransformer) {
+    public SqlItemTypeRepository(QueryExecutor executor, Transformer<EffectArea> areaTransformer) {
+        this.executor = executor;
         this.areaTransformer = areaTransformer;
-        this.pool = new ConnectionPoolUtils(pool);
-        utils = new RepositoryUtils<>(this.pool, new SqlItemTypeRepository.Loader());
+        utils = new RepositoryUtils<>(this.executor, new SqlItemTypeRepository.Loader());
     }
 
     @Override
     public void initialize() throws RepositoryException {
         try {
-            pool.query(
+            executor.query(
                 "CREATE TABLE `ITEM_TYPE` (" +
                     "`TYPE_ID` INTEGER PRIMARY KEY," +
                     "`TYPE_NAME` VARCHAR(32)," +
@@ -84,7 +83,7 @@ final class SqlItemTypeRepository implements ItemTypeRepository {
     @Override
     public void destroy() throws RepositoryException {
         try {
-            pool.query("DROP TABLE ITEM_TYPE");
+            executor.query("DROP TABLE ITEM_TYPE");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }

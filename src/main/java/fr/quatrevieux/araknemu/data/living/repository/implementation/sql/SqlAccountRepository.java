@@ -19,10 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.transformer.PermissionsTransformer;
@@ -59,20 +58,20 @@ final class SqlAccountRepository implements AccountRepository {
         }
     }
 
-    final private ConnectionPoolUtils pool;
+    final private QueryExecutor executor;
     final private RepositoryUtils<Account> utils;
     final private PermissionsTransformer permissionsTransformer;
 
-    public SqlAccountRepository(ConnectionPool pool, PermissionsTransformer permissionsTransformer) {
-        this.pool = new ConnectionPoolUtils(pool);
-        this.utils = new RepositoryUtils<>(this.pool, new Loader(permissionsTransformer));
+    public SqlAccountRepository(QueryExecutor executor, PermissionsTransformer permissionsTransformer) {
+        this.executor = executor;
+        this.utils = new RepositoryUtils<>(this.executor, new Loader(permissionsTransformer));
         this.permissionsTransformer = permissionsTransformer;
     }
 
     @Override
     public void initialize() throws RepositoryException {
         try {
-            pool.query(
+            executor.query(
                 "CREATE TABLE ACCOUNT (" +
                     "ACCOUNT_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "USERNAME VARCHAR(32) UNIQUE," +
@@ -91,7 +90,7 @@ final class SqlAccountRepository implements AccountRepository {
     @Override
     public void destroy() throws RepositoryException {
         try {
-            pool.query("DROP TABLE ACCOUNT");
+            executor.query("DROP TABLE ACCOUNT");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }

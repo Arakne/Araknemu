@@ -19,10 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerExperience;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceRepository;
 
@@ -49,18 +48,18 @@ final class SqlPlayerExperienceRepository implements PlayerExperienceRepository 
         }
     }
 
-    final private ConnectionPoolUtils pool;
+    final private QueryExecutor executor;
     final private RepositoryUtils<PlayerExperience> utils;
 
-    public SqlPlayerExperienceRepository(ConnectionPool connection) {
-        pool  = new ConnectionPoolUtils(connection);
-        utils = new RepositoryUtils<>(pool, new Loader());
+    public SqlPlayerExperienceRepository(QueryExecutor executor) {
+        this.executor = executor;
+        utils = new RepositoryUtils<>(executor, new Loader());
     }
 
     @Override
     public void initialize() throws RepositoryException {
         try {
-            pool.query(
+            executor.query(
                 "CREATE TABLE PLAYER_XP (" +
                     "PLAYER_LEVEL SMALLINT PRIMARY KEY," +
                     "EXPERIENCE BIGINT" +
@@ -74,7 +73,7 @@ final class SqlPlayerExperienceRepository implements PlayerExperienceRepository 
     @Override
     public void destroy() throws RepositoryException {
         try {
-            pool.query("DROP TABLE PLAYER_XP");
+            executor.query("DROP TABLE PLAYER_XP");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }

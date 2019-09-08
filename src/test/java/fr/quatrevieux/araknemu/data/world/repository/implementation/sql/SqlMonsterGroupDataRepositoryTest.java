@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.data.value.Interval;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
@@ -43,7 +44,7 @@ class SqlMonsterGroupDataRepositoryTest extends GameBaseCase {
         dataSet.pushMonsterGroups();
 
         repository = new SqlMonsterGroupDataRepository(
-            app.database().get("game"),
+            new ConnectionPoolExecutor(app.database().get("game")),
             container.get(MonsterListTransformer.class)
         );
     }

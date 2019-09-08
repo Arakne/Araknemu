@@ -19,11 +19,10 @@
 
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
@@ -61,20 +60,20 @@ final class SqlPlayerItemRepository implements PlayerItemRepository {
         }
     }
 
-    final private ConnectionPoolUtils pool;
+    final private QueryExecutor executor;
     final private RepositoryUtils<PlayerItem> utils;
     final private Transformer<List<ItemTemplateEffectEntry>> effectsTransformer;
 
-    public SqlPlayerItemRepository(ConnectionPool pool, Transformer<List<ItemTemplateEffectEntry>> effectsTransformer) {
-        this.pool = new ConnectionPoolUtils(pool);
+    public SqlPlayerItemRepository(QueryExecutor executor, Transformer<List<ItemTemplateEffectEntry>> effectsTransformer) {
+        this.executor = executor;
         this.effectsTransformer = effectsTransformer;
-        this.utils = new RepositoryUtils<>(this.pool, new Loader());
+        this.utils = new RepositoryUtils<>(this.executor, new Loader());
     }
 
     @Override
     public void initialize() throws RepositoryException {
         try {
-            pool.query(
+            executor.query(
                 "CREATE TABLE PLAYER_ITEM (" +
                     "PLAYER_ID INTEGER," +
                     "ITEM_ENTRY_ID INTEGER," +
@@ -93,7 +92,7 @@ final class SqlPlayerItemRepository implements PlayerItemRepository {
     @Override
     public void destroy() throws RepositoryException {
         try {
-            pool.query("DROP TABLE PLAYER_ITEM");
+            executor.query("DROP TABLE PLAYER_ITEM");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }

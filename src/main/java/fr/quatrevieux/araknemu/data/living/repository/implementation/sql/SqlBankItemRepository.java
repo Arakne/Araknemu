@@ -19,11 +19,10 @@
 
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.living.entity.account.AccountBank;
 import fr.quatrevieux.araknemu.data.living.entity.account.BankItem;
 import fr.quatrevieux.araknemu.data.living.repository.account.BankItemRepository;
@@ -58,20 +57,20 @@ final class SqlBankItemRepository implements BankItemRepository {
         }
     }
 
-    final private ConnectionPoolUtils pool;
+    final private QueryExecutor executor;
     final private RepositoryUtils<BankItem> utils;
     final private Transformer<List<ItemTemplateEffectEntry>> effectsTransformer;
 
-    public SqlBankItemRepository(ConnectionPool pool, Transformer<List<ItemTemplateEffectEntry>> effectsTransformer) {
-        this.pool = new ConnectionPoolUtils(pool);
+    public SqlBankItemRepository(QueryExecutor executor, Transformer<List<ItemTemplateEffectEntry>> effectsTransformer) {
+        this.executor = executor;
         this.effectsTransformer = effectsTransformer;
-        this.utils = new RepositoryUtils<>(this.pool, new Loader());
+        this.utils = new RepositoryUtils<>(this.executor, new Loader());
     }
 
     @Override
     public void initialize() throws RepositoryException {
         try {
-            pool.query(
+            executor.query(
                 "CREATE TABLE BANK_ITEM (" +
                     "ACCOUNT_ID INTEGER," +
                     "SERVER_ID INTEGER," +
@@ -90,7 +89,7 @@ final class SqlBankItemRepository implements BankItemRepository {
     @Override
     public void destroy() throws RepositoryException {
         try {
-            pool.query("DROP TABLE BANK_ITEM");
+            executor.query("DROP TABLE BANK_ITEM");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }

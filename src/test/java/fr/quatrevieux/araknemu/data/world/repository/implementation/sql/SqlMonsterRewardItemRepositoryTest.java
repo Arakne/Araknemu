@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
+import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterRewardItem;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +41,7 @@ class SqlMonsterRewardItemRepositoryTest extends GameBaseCase {
 
         dataSet.pushMonsterTemplates();
 
-        repository = new SqlMonsterRewardItemRepository(app.database().get("game"));
+        repository = new SqlMonsterRewardItemRepository(new ConnectionPoolExecutor(app.database().get("game")));
     }
 
     @Test

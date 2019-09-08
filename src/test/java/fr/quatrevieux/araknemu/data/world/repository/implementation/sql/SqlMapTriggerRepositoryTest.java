@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
@@ -41,7 +42,7 @@ class SqlMapTriggerRepositoryTest extends GameBaseCase {
         super.setUp();
 
         repository = new SqlMapTriggerRepository(
-            app.database().get("game")
+            new ConnectionPoolExecutor(app.database().get("game"))
         );
 
         dataSet.use(MapTrigger.class);

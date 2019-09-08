@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
+import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Question;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.ResponseAction;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
@@ -44,7 +45,7 @@ class SqlResponseActionRepositoryTest extends GameBaseCase {
         dataSet.pushResponseAction(new ResponseAction(2, "LEAVE", ""));
         dataSet.pushResponseAction(new ResponseAction(2, "ADDITEM", "1124;1"));
 
-        repository = new SqlResponseActionRepository(app.database().get("game"));
+        repository = new SqlResponseActionRepository(new ConnectionPoolExecutor(app.database().get("game")));
     }
 
     @Test

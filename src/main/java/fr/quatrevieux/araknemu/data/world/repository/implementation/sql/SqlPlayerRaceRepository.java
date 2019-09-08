@@ -19,10 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.BoostStatsData;
@@ -74,23 +73,23 @@ final class SqlPlayerRaceRepository implements PlayerRaceRepository {
         }
     }
 
-    final private ConnectionPoolUtils pool;
+    final private QueryExecutor executor;
     final private RepositoryUtils<PlayerRace> utils;
     final private Transformer<SortedMap<Integer, Characteristics>> characteristicsTransformer;
     final private Transformer<BoostStatsData> boostStatsDataTransformer;
 
-    public SqlPlayerRaceRepository(ConnectionPool connection, Transformer<SortedMap<Integer, Characteristics>> characteristicsTransformer, Transformer<BoostStatsData> boostStatsDataTransformer) {
+    public SqlPlayerRaceRepository(QueryExecutor executor, Transformer<SortedMap<Integer, Characteristics>> characteristicsTransformer, Transformer<BoostStatsData> boostStatsDataTransformer) {
         this.characteristicsTransformer = characteristicsTransformer;
         this.boostStatsDataTransformer = boostStatsDataTransformer;
 
-        pool = new ConnectionPoolUtils(connection);
-        utils = new RepositoryUtils<>(pool, new Loader());
+        this.executor = executor;
+        utils = new RepositoryUtils<>(executor, new Loader());
     }
 
     @Override
     public void initialize() throws RepositoryException {
         try {
-            pool.query(
+            executor.query(
                 "CREATE TABLE PLAYER_RACE (" +
                     "RACE_ID INTEGER PRIMARY KEY," +
                     "RACE_NAME VARCHAR(32)," +
@@ -115,7 +114,7 @@ final class SqlPlayerRaceRepository implements PlayerRaceRepository {
     @Override
     public void destroy() throws RepositoryException {
         try {
-            pool.query("DROP TABLE PLAYER_RACE");
+            executor.query("DROP TABLE PLAYER_RACE");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }

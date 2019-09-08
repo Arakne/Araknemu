@@ -20,6 +20,9 @@
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
+import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
+import fr.quatrevieux.araknemu.core.dbal.executor.LoggedQueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
@@ -33,15 +36,19 @@ import fr.quatrevieux.araknemu.data.living.transformer.ChannelsTransformer;
 import fr.quatrevieux.araknemu.data.living.transformer.PermissionsTransformer;
 import fr.quatrevieux.araknemu.data.transformer.MutableCharacteristicsTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.ItemEffectsTransformer;
+import org.slf4j.LoggerFactory;
 
 /**
  * DI module for living repositories
  */
 final public class SqlLivingRepositoriesModule implements ContainerModule {
-    final private ConnectionPool connection;
+    final private QueryExecutor executor;
 
     public SqlLivingRepositoriesModule(ConnectionPool connection) {
-        this.connection = connection;
+        this.executor = new LoggedQueryExecutor(
+            new ConnectionPoolExecutor(connection),
+            LoggerFactory.getLogger(SqlLivingRepositoriesModule.class)
+        );
     }
 
     @Override
@@ -49,7 +56,7 @@ final public class SqlLivingRepositoriesModule implements ContainerModule {
         configurator.persist(
             AccountRepository.class,
             container -> new SqlAccountRepository(
-                connection,
+                executor,
                 container.get(PermissionsTransformer.class)
             )
         );
@@ -57,7 +64,7 @@ final public class SqlLivingRepositoriesModule implements ContainerModule {
         configurator.persist(
             PlayerRepository.class,
             container -> new SqlPlayerRepository(
-                connection,
+                executor,
                 container.get(MutableCharacteristicsTransformer.class),
                 container.get(ChannelsTransformer.class)
             )
@@ -65,31 +72,31 @@ final public class SqlLivingRepositoriesModule implements ContainerModule {
 
         configurator.persist(
             SubAreaRepository.class,
-            container -> new SqlSubAreaRepository(connection)
+            container -> new SqlSubAreaRepository(executor)
         );
 
         configurator.persist(
             PlayerItemRepository.class,
             container -> new SqlPlayerItemRepository(
-                connection,
+                executor,
                 container.get(ItemEffectsTransformer.class)
             )
         );
 
         configurator.persist(
             PlayerSpellRepository.class,
-            container -> new SqlPlayerSpellRepository(connection)
+            container -> new SqlPlayerSpellRepository(executor)
         );
 
         configurator.persist(
             AccountBankRepository.class,
-            container -> new SqlAccountBankRepository(connection)
+            container -> new SqlAccountBankRepository(executor)
         );
 
         configurator.persist(
             BankItemRepository.class,
             container -> new SqlBankItemRepository(
-                connection,
+                executor,
                 container.get(ItemEffectsTransformer.class)
             )
         );

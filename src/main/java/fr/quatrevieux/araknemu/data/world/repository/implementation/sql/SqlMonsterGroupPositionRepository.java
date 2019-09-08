@@ -19,10 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupPositionRepository;
@@ -53,19 +52,19 @@ final class SqlMonsterGroupPositionRepository implements MonsterGroupPositionRep
         }
     }
 
-    final private ConnectionPoolUtils pool;
+    final private QueryExecutor executor;
     final private RepositoryUtils<MonsterGroupPosition> utils;
 
-    public SqlMonsterGroupPositionRepository(ConnectionPool pool) {
-        this.pool = new ConnectionPoolUtils(pool);
+    public SqlMonsterGroupPositionRepository(QueryExecutor executor) {
+        this.executor = executor;
 
-        utils = new RepositoryUtils<>(this.pool, new SqlMonsterGroupPositionRepository.Loader());
+        utils = new RepositoryUtils<>(this.executor, new SqlMonsterGroupPositionRepository.Loader());
     }
 
     @Override
     public void initialize() throws RepositoryException {
         try {
-            pool.query(
+            executor.query(
                 "CREATE TABLE `MONSTER_GROUP_POSITION` (" +
                     "`MAP_ID` INTEGER," +
                     "`CELL_ID` INTEGER," +
@@ -81,7 +80,7 @@ final class SqlMonsterGroupPositionRepository implements MonsterGroupPositionRep
     @Override
     public void destroy() throws RepositoryException {
         try {
-            pool.query("DROP TABLE MONSTER_GROUP_POSITION");
+            executor.query("DROP TABLE MONSTER_GROUP_POSITION");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }

@@ -19,10 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
-import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.util.ConnectionPoolUtils;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemSet;
@@ -53,21 +52,21 @@ final class SqlItemSetRepository implements ItemSetRepository {
         }
     }
 
-    final private ConnectionPoolUtils pool;
+    final private QueryExecutor executor;
     final private RepositoryUtils<ItemSet> utils;
 
     final private Transformer<List<List<ItemTemplateEffectEntry>>> bonusTransformer;
 
-    public SqlItemSetRepository(ConnectionPool pool, Transformer<List<List<ItemTemplateEffectEntry>>> bonusTransformer) {
+    public SqlItemSetRepository(QueryExecutor executor, Transformer<List<List<ItemTemplateEffectEntry>>> bonusTransformer) {
+        this.executor = executor;
         this.bonusTransformer = bonusTransformer;
-        this.pool = new ConnectionPoolUtils(pool);
-        utils = new RepositoryUtils<>(this.pool, new SqlItemSetRepository.Loader());
+        utils = new RepositoryUtils<>(this.executor, new SqlItemSetRepository.Loader());
     }
 
     @Override
     public void initialize() throws RepositoryException {
         try {
-            pool.query(
+            executor.query(
                 "CREATE TABLE `ITEM_SET` (" +
                     "`ITEM_SET_ID` INTEGER PRIMARY KEY," +
                     "`ITEM_SET_NAME` VARCHAR(50)," +
@@ -82,7 +81,7 @@ final class SqlItemSetRepository implements ItemSetRepository {
     @Override
     public void destroy() throws RepositoryException {
         try {
-            pool.query("DROP TABLE ITEM_SET");
+            executor.query("DROP TABLE ITEM_SET");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }

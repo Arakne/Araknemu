@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.DatabaseTestCase;
+import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.data.living.entity.account.AccountBank;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +38,7 @@ class SqlAccountBankRepositoryTest extends DatabaseTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        repository = new SqlAccountBankRepository(connection);
+        repository = new SqlAccountBankRepository(new ConnectionPoolExecutor(connection));
         repository.initialize();
     }
 
