@@ -17,28 +17,40 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.data.world.repository.item;
+package fr.quatrevieux.araknemu.game.exploration.exchange;
 
-import fr.quatrevieux.araknemu.core.dbal.repository.Repository;
-import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
+import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 
-import java.util.Collection;
+import java.util.Map;
 
 /**
- * Repository for {@link ItemTemplate}
- *
- * @todo getAll
+ * Base type for store data of an exchange
  */
-public interface ItemTemplateRepository extends Repository<ItemTemplate> {
+public interface ExchangeStorage {
     /**
-     * Get an itemtemplate by its id
-     *
-     * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException When cannot found the entity
+     * Get the current items on the exchange
      */
-    public ItemTemplate get(int id);
+    public Map<ItemEntry, Integer> items();
 
     /**
-     * Load all item templates
+     * Get the current kamas quantity on the exchange
      */
-    public Collection<ItemTemplate> load();
+    public long kamas();
+
+    /**
+     * Get the accept state
+     */
+    public boolean accepted();
+
+    /**
+     * Get the dispatcher
+     */
+    public ListenerAggregate dispatcher();
+
+    /**
+     * Get the owner of the current exchange
+     */
+    public ExplorationCreature owner();
 }

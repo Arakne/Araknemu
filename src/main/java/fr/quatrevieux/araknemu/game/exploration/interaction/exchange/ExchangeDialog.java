@@ -41,7 +41,7 @@ final public class ExchangeDialog implements ExchangeInteraction, Accaptable {
 
     @Override
     public Interaction start() {
-        exchange.send(new ExchangeCreated(exchange.type()));
+        exchange.send(new ExchangeCreated(exchange.type(), exchange.target()));
 
         return this;
     }

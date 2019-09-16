@@ -17,28 +17,16 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.data.world.repository.item;
+package fr.quatrevieux.araknemu.game.exploration.exchange.event;
 
-import fr.quatrevieux.araknemu.core.dbal.repository.Repository;
-import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
-
-import java.util.Collection;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeStorage;
 
 /**
- * Repository for {@link ItemTemplate}
- *
- * @todo getAll
+ * Base event for exchange changes
  */
-public interface ItemTemplateRepository extends Repository<ItemTemplate> {
+public interface ExchangeEvent {
     /**
-     * Get an itemtemplate by its id
-     *
-     * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException When cannot found the entity
+     * Get the exchanged items and kamas
      */
-    public ItemTemplate get(int id);
-
-    /**
-     * Load all item templates
-     */
-    public Collection<ItemTemplate> load();
+    public ExchangeStorage storage();
 }

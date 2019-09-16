@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.NpcQuestion;
+import fr.quatrevieux.araknemu.game.exploration.npc.exchange.GameNpcExchange;
 import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStore;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
@@ -43,16 +44,18 @@ final public class GameNpc implements ExplorationCreature {
     final private NpcTemplate template;
     final private Collection<NpcQuestion> questions;
     final private NpcStore store;
+    final private GameNpcExchange exchange;
 
     final private Sprite sprite;
 
     private ExplorationMapCell cell;
 
-    public GameNpc(Npc entity, NpcTemplate template, Collection<NpcQuestion> questions, NpcStore store) {
+    public GameNpc(Npc entity, NpcTemplate template, Collection<NpcQuestion> questions, NpcStore store, GameNpcExchange exchange) {
         this.entity = entity;
         this.template = template;
         this.questions = questions;
         this.store = store;
+        this.exchange = exchange;
 
         this.sprite = new NpcSprite(this);
     }
@@ -124,6 +127,19 @@ final public class GameNpc implements ExplorationCreature {
         }
 
         return store;
+    }
+
+    /**
+     * Get the npc's exchange
+     *
+     * @throws UnsupportedOperationException When exchange is not available
+     */
+    public GameNpcExchange exchange() {
+        if (exchange == null) {
+            throw new UnsupportedOperationException("Exchange is not available");
+        }
+
+        return exchange;
     }
 
     NpcTemplate template() {

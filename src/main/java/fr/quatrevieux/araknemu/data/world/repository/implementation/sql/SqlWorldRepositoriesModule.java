@@ -31,10 +31,7 @@ import fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceR
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
-import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcRepository;
-import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcTemplateRepository;
-import fr.quatrevieux.araknemu.data.world.repository.environment.npc.QuestionRepository;
-import fr.quatrevieux.araknemu.data.world.repository.environment.npc.ResponseActionRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.npc.*;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.local.*;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
@@ -147,6 +144,11 @@ final public class SqlWorldRepositoriesModule implements ContainerModule {
         );
 
         configurator.persist(
+            NpcExchangeRepository.class,
+            container -> new SqlNpcExchangeRepository(executor, container.get(ExchangeItemsTransformer.class))
+        );
+
+        configurator.persist(
             MonsterTemplateRepository.class,
             container -> new SqlMonsterTemplateRepository(
                 executor,
@@ -237,6 +239,11 @@ final public class SqlWorldRepositoriesModule implements ContainerModule {
         configurator.persist(
             MonsterListTransformer.class,
             container -> new MonsterListTransformer()
+        );
+
+        configurator.persist(
+            ExchangeItemsTransformer.class,
+            container -> new ExchangeItemsTransformer()
         );
     }
 }

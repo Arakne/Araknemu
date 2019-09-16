@@ -37,6 +37,13 @@ public interface ExchangeParty extends Sender {
     public Creature actor();
 
     /**
+     * Get the target creature of the exchange
+     *
+     * @return The creature, or null if there is no other party on the exchange
+     */
+    public Creature target();
+
+    /**
      * Start the exchange (will start an interaction)
      */
     public void start();

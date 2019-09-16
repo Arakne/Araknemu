@@ -25,7 +25,6 @@ import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -75,15 +74,7 @@ final public class NpcStore {
      * @return Map of generated item, associated with quantity
      */
     public Map<Item, Integer> get(int id, int quantity) {
-        Map<Item, Integer> items = new HashMap<>();
-
-        for (; quantity > 0; --quantity) {
-            Item generated = itemService.create(itemTemplates.get(id));
-
-            items.put(generated, items.getOrDefault(generated, 0) + 1);
-        }
-
-        return items;
+        return itemService.createBulk(itemTemplates.get(id), quantity);
     }
 
     /**

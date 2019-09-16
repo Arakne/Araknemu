@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
+import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcExchange;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
@@ -31,6 +32,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.DialogService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.NpcQuestion;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
+import fr.quatrevieux.araknemu.game.exploration.npc.exchange.GameNpcExchange;
 import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStore;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
@@ -63,7 +65,7 @@ class GameNpcTest extends GameBaseCase {
             entity,
             template = new NpcTemplate(878, 40, 100, 100, Sex.MALE, new Colors(8158389, 13677665, 3683117), "0,20f9,2a5,1d5e,1b9e", 4, 9092, null),
             container.get(DialogService.class).forNpc(entity),
-            null
+            null, null
         );
     }
 
@@ -107,7 +109,7 @@ class GameNpcTest extends GameBaseCase {
 
     @Test
     void questionNotFound() throws SQLException, ContainerException {
-        npc = new GameNpc(entity, template, Collections.emptyList(), null);
+        npc = new GameNpc(entity, template, Collections.emptyList(), null, null);
 
         assertFalse(npc.question(explorationPlayer()).isPresent());
     }
@@ -115,15 +117,30 @@ class GameNpcTest extends GameBaseCase {
     @Test
     void store() throws ContainerException {
         NpcStore store = new NpcStore(container.get(ItemService.class), configuration.economy(), Collections.emptyList());
-        npc = new GameNpc(entity, template, Collections.emptyList(), store);
+        npc = new GameNpc(entity, template, Collections.emptyList(), store, null);
 
         assertSame(store, npc.store());
     }
 
     @Test
     void storeNotAvailable() throws ContainerException {
-        npc = new GameNpc(entity, template, Collections.emptyList(), null);
+        npc = new GameNpc(entity, template, Collections.emptyList(), null, null);
 
         assertThrows(UnsupportedOperationException.class, () -> npc.store());
+    }
+
+    @Test
+    void exchangeNotAvailable() throws ContainerException {
+        npc = new GameNpc(entity, template, Collections.emptyList(), null, null);
+
+        assertThrows(UnsupportedOperationException.class, () -> npc.exchange());
+    }
+
+    @Test
+    void exchange() {
+        GameNpcExchange exchange = new GameNpcExchange(Collections.emptyList());
+        npc = new GameNpc(entity, template, Collections.emptyList(), null, exchange);
+
+        assertSame(exchange, npc.exchange());
     }
 }

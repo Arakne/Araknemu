@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcTemplate
 import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.DialogService;
+import fr.quatrevieux.araknemu.game.exploration.npc.exchange.NpcExchangeService;
 import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStoreService;
 import org.slf4j.Logger;
 
@@ -39,14 +40,16 @@ import java.util.concurrent.ConcurrentMap;
  */
 final public class NpcService implements EventsSubscriber, PreloadableService {
     final private DialogService dialogService;
-    final private NpcStoreService exchangeService;
+    final private NpcStoreService storeService;
+    final private NpcExchangeService exchangeService;
     final private NpcTemplateRepository templateRepository;
     final private NpcRepository npcRepository;
 
     final private ConcurrentMap<Integer, GameNpc> npcByEntityId = new ConcurrentHashMap<>();
 
-    public NpcService(DialogService dialogService, NpcStoreService exchangeService, NpcTemplateRepository templateRepository, NpcRepository npcRepository) {
+    public NpcService(DialogService dialogService, NpcStoreService storeService, NpcExchangeService exchangeService, NpcTemplateRepository templateRepository, NpcRepository npcRepository) {
         this.dialogService = dialogService;
+        this.storeService = storeService;
         this.exchangeService = exchangeService;
         this.templateRepository = templateRepository;
         this.npcRepository = npcRepository;
@@ -111,6 +114,7 @@ final public class NpcService implements EventsSubscriber, PreloadableService {
             entity,
             template,
             dialogService.forNpc(entity),
+            storeService.load(template).orElse(null),
             exchangeService.load(template).orElse(null)
         );
 

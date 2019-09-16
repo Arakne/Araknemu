@@ -19,18 +19,21 @@
 
 package fr.quatrevieux.araknemu.game.exploration.exchange.event;
 
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeStorage;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 
 /**
  * An item has been moved on the exchange
  */
-final public class ItemMoved {
+final public class ItemMoved implements ExchangeEvent {
     final private ItemEntry entry;
     final private int quantity;
+    final private ExchangeStorage storage;
 
-    public ItemMoved(ItemEntry entry, int quantity) {
+    public ItemMoved(ItemEntry entry, int quantity, ExchangeStorage storage) {
         this.entry = entry;
         this.quantity = quantity;
+        this.storage = storage;
     }
 
     /**
@@ -45,5 +48,10 @@ final public class ItemMoved {
      */
     public int quantity() {
         return quantity;
+    }
+
+    @Override
+    public ExchangeStorage storage() {
+        return storage;
     }
 }

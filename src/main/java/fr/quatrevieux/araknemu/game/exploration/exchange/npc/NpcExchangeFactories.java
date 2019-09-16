@@ -19,7 +19,10 @@
 
 package fr.quatrevieux.araknemu.game.exploration.exchange.npc;
 
-import fr.quatrevieux.araknemu.game.exploration.exchange.*;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeFactoryAggregate;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeTypeFactory;
+import fr.quatrevieux.araknemu.game.exploration.exchange.SimpleExchangeTypeFactory;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 
 /**
@@ -31,5 +34,6 @@ final public class NpcExchangeFactories extends ExchangeFactoryAggregate<GameNpc
         super(factories);
 
         register(new SimpleExchangeTypeFactory<>(ExchangeType.NPC_STORE, (initiator, target) -> new NpcStoreExchange(initiator, target, target.store()).dialog()));
+        register(new SimpleExchangeTypeFactory<>(ExchangeType.NPC_EXCHANGE, (initiator, target) -> new NpcExchangeParty(initiator, target, target.exchange()).dialog()));
     }
 }

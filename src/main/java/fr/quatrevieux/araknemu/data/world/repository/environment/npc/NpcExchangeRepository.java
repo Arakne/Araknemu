@@ -17,28 +17,26 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.data.world.repository.item;
+package fr.quatrevieux.araknemu.data.world.repository.environment.npc;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.Repository;
-import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
+import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcExchange;
+import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
- * Repository for {@link ItemTemplate}
- *
- * @todo getAll
+ * Repository for load NPC exchanges
  */
-public interface ItemTemplateRepository extends Repository<ItemTemplate> {
+public interface NpcExchangeRepository extends Repository<NpcExchange> {
     /**
-     * Get an itemtemplate by its id
-     *
-     * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException When cannot found the entity
+     * Get the exchanges for the given npc template
      */
-    public ItemTemplate get(int id);
+    public List<NpcExchange> byNpcTemplate(NpcTemplate template);
 
     /**
-     * Load all item templates
+     * Get all exchanges
      */
-    public Collection<ItemTemplate> load();
+    public Collection<NpcExchange> all();
 }

@@ -21,7 +21,6 @@ package fr.quatrevieux.araknemu.game.listener.player.exchange;
 
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeParty;
 import fr.quatrevieux.araknemu.game.exploration.exchange.event.AcceptChanged;
 import fr.quatrevieux.araknemu.game.exploration.exchange.event.ItemMoved;
 import fr.quatrevieux.araknemu.game.exploration.exchange.event.KamasChanged;
@@ -35,11 +34,9 @@ import fr.quatrevieux.araknemu.network.game.out.exchange.movement.distant.Distan
  */
 final public class SendDistantPackets implements EventsSubscriber {
     final private Sender output;
-    final private ExchangeParty distant;
 
-    public SendDistantPackets(Sender output, ExchangeParty distant) {
+    public SendDistantPackets(Sender output) {
         this.output = output;
-        this.distant = distant;
     }
 
     @Override
@@ -70,7 +67,7 @@ final public class SendDistantPackets implements EventsSubscriber {
             new Listener<AcceptChanged>() {
                 @Override
                 public void on(AcceptChanged event) {
-                    output.send(new ExchangeAccepted(event.accepted(), distant.actor()));
+                    output.send(new ExchangeAccepted(event.accepted(), event.storage().owner()));
                 }
 
                 @Override

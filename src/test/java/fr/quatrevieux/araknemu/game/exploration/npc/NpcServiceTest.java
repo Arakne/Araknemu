@@ -30,6 +30,8 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.DialogService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.NpcQuestion;
+import fr.quatrevieux.araknemu.game.exploration.npc.exchange.GameNpcExchange;
+import fr.quatrevieux.araknemu.game.exploration.npc.exchange.NpcExchangeService;
 import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStore;
 import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStoreService;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
@@ -57,6 +59,7 @@ class NpcServiceTest extends GameBaseCase {
         service = new NpcService(
             container.get(DialogService.class),
             container.get(NpcStoreService.class),
+            container.get(NpcExchangeService.class),
             container.get(NpcTemplateRepository.class),
             container.get(NpcRepository.class)
         );
@@ -145,5 +148,19 @@ class NpcServiceTest extends GameBaseCase {
 
         assertTrue(store.has(39));
         assertTrue(store.has(2425));
+    }
+
+    @Test
+    void getWithExchange() throws SQLException, ContainerException {
+        dataSet
+            .pushNpcs()
+            .pushItemTemplates()
+            .pushItemSets()
+            .pushNpcExchange(1, 878, 100, "39:2", 10, "2422")
+        ;
+
+        GameNpc npc = service.get(472);
+
+        assertInstanceOf(GameNpcExchange.class, npc.exchange());
     }
 }

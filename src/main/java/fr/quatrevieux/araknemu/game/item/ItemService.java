@@ -33,7 +33,9 @@ import fr.quatrevieux.araknemu.game.item.factory.ItemFactory;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -108,6 +110,26 @@ final public class ItemService implements PreloadableService {
      */
     public Item create(ItemTemplate template) {
         return create(template, false);
+    }
+
+    /**
+     * Creates many times an item, with random stats on each creation
+     *
+     * @param template The item template to generates
+     * @param quantity The desired quantity
+     *
+     * @return Map of item associated with the quantity
+     */
+    public Map<Item, Integer> createBulk(ItemTemplate template, int quantity) {
+        Map<Item, Integer> items = new HashMap<>();
+
+        for (; quantity > 0; --quantity) {
+            Item generated = create(template);
+
+            items.put(generated, items.getOrDefault(generated, 0) + 1);
+        }
+
+        return items;
     }
 
     /**

@@ -19,14 +19,18 @@
 
 package fr.quatrevieux.araknemu.game.exploration.exchange.event;
 
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeStorage;
+
 /**
  * The acceptation state has changed
  */
-final public class AcceptChanged {
+final public class AcceptChanged implements ExchangeEvent {
     final private boolean accepted;
+    final private ExchangeStorage storage;
 
-    public AcceptChanged(boolean accepted) {
+    public AcceptChanged(boolean accepted, ExchangeStorage storage) {
         this.accepted = accepted;
+        this.storage = storage;
     }
 
     /**
@@ -34,5 +38,10 @@ final public class AcceptChanged {
      */
     public boolean accepted() {
         return accepted;
+    }
+
+    @Override
+    public ExchangeStorage storage() {
+        return storage;
     }
 }

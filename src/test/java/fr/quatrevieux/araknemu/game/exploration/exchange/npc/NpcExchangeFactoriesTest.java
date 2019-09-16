@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.exploration.exchange.npc;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeDialog;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeInteraction;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.npc.StoreDialog;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
@@ -43,6 +44,7 @@ class NpcExchangeFactoriesTest extends GameBaseCase {
         dataSet
             .pushNpcs()
             .pushNpcWithStore()
+            .pushNpcExchange(1, 878, 100, "39:2", 0, "2422")
         ;
 
         service = container.get(NpcService.class);
@@ -59,5 +61,15 @@ class NpcExchangeFactoriesTest extends GameBaseCase {
 
         player.interactions().start(interaction);
         requestStack.assertOne(new ExchangeCreated(ExchangeType.NPC_STORE, npc));
+    }
+
+    @Test
+    void createNpcExchange() {
+        GameNpc npc = service.get(472);
+        ExchangeInteraction interaction = factories.create(ExchangeType.NPC_EXCHANGE, player, npc);
+
+        assertInstanceOf(ExchangeDialog.class, interaction);
+        player.interactions().start(interaction);
+        requestStack.assertOne(new ExchangeCreated(ExchangeType.NPC_EXCHANGE, npc));
     }
 }

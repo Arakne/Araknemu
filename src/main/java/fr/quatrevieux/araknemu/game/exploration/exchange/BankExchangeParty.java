@@ -53,6 +53,12 @@ final public class BankExchangeParty implements ExchangeParty {
     }
 
     @Override
+    public Creature target() {
+        // Bank do not have target
+        return null;
+    }
+
+    @Override
     public void start() {
         bank.dispatcher().register(new SendStoragePackets(this));
         player.interactions().start(new ExchangeDialog(this));

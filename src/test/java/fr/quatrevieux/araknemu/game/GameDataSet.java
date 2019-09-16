@@ -588,6 +588,7 @@ public class GameDataSet extends TestingDataSet {
 
     public NpcTemplate pushNpcTemplate(NpcTemplate template) throws SQLException, ContainerException {
         use(NpcTemplate.class);
+        use(NpcExchange.class);
 
         connection.prepare(
             "INSERT INTO NPC_TEMPLATE (NPC_TEMPLATE_ID, GFXID, SCALE_X, SCALE_Y, SEX, COLOR1, COLOR2, COLOR3, ACCESSORIES, EXTRA_CLIP, CUSTOM_ARTWORK, STORE_ITEMS) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -743,6 +744,26 @@ public class GameDataSet extends TestingDataSet {
         pushResponseAction(new ResponseAction(3324, "LEAVE", ""));
 
         return this;
+    }
+
+    public NpcExchange pushNpcExchange(int id, int npcTemplateId, long requiredKamas, String requiredItems, long exchangedKamas, String exchangedItems) throws SQLException {
+        Repository<NpcExchange> repository = repository(NpcExchange.class);
+
+        connection.prepare(
+            "INSERT INTO NPC_EXCHANGE (NPC_EXCHANGE_ID, NPC_TEMPLATE_ID, REQUIRED_KAMAS, REQUIRED_ITEMS, EXCHANGED_KAMAS, EXCHANGED_ITEMS) VALUES(?, ?, ?, ?, ?, ?)",
+            statement -> {
+                statement.setInt(1, id);
+                statement.setInt(2, npcTemplateId);
+                statement.setLong(3, requiredKamas);
+                statement.setString(4, requiredItems);
+                statement.setLong(5, exchangedKamas);
+                statement.setString(6, exchangedItems);
+
+                return statement.executeUpdate();
+            }
+        );
+
+        return repository.get(new NpcExchange(id, 0, 0, null, 0, null));
     }
 
     public GameDataSet pushMonsterTemplates() throws SQLException, ContainerException {
