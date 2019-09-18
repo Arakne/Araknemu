@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.game.exploration.exchange.player;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeParty;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeProcessor;
+import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeDialog;
+import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeInteraction;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 
 /**
@@ -49,6 +51,11 @@ abstract public class AbstractPlayerExchangeParty implements ExchangeParty {
     @Override
     final public ExplorationPlayer actor() {
         return player;
+    }
+
+    @Override
+    final public ExchangeInteraction dialog() {
+        return new ExchangeDialog(this);
     }
 
     @Override

@@ -22,12 +22,14 @@ package fr.quatrevieux.araknemu.game.exploration.exchange.npc;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangePartyProcessor;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
 import fr.quatrevieux.araknemu.game.exploration.exchange.event.AcceptChanged;
 import fr.quatrevieux.araknemu.game.exploration.exchange.event.ItemMoved;
 import fr.quatrevieux.araknemu.game.exploration.exchange.event.KamasChanged;
 import fr.quatrevieux.araknemu.game.exploration.exchange.player.PlayerExchangeStorage;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
+import fr.quatrevieux.araknemu.game.exploration.npc.exchange.GameNpcExchange;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,7 +63,7 @@ class NpcExchangePartyProcessorTest extends GameBaseCase {
 
         npc = container.get(NpcService.class).get(472);
 
-        processor = new NpcExchangePartyProcessor(npc, npc.exchange());
+        processor = new NpcExchangePartyProcessor(npc, (GameNpcExchange) npc.exchangeFactory(ExchangeType.NPC_EXCHANGE));
     }
 
     @Test

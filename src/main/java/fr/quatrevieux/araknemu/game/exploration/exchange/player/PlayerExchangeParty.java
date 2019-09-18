@@ -23,7 +23,6 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangePartyProcessor;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeProcessor;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
-import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeDialog;
 import fr.quatrevieux.araknemu.game.listener.player.exchange.SendDistantPackets;
 import fr.quatrevieux.araknemu.game.listener.player.exchange.SendLocalPackets;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
@@ -49,9 +48,11 @@ final public class PlayerExchangeParty extends AbstractPlayerExchangeParty {
         return null;
     }
 
-    @Override
+    /**
+     * Start the exchange interaction
+     */
     public void start() {
-        actor().interactions().start(new ExchangeDialog(this));
+        actor().interactions().start(dialog());
     }
 
     /**

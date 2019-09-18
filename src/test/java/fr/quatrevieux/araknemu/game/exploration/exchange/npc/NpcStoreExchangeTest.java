@@ -21,13 +21,15 @@ package fr.quatrevieux.araknemu.game.exploration.exchange.npc;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.exchange.npc.NpcStoreExchange;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.npc.StoreDialog;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
+import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStore;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeCreated;
 import fr.quatrevieux.araknemu.network.game.out.exchange.store.NpcStoreList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,6 +40,7 @@ class NpcStoreExchangeTest extends GameBaseCase {
     private NpcStoreExchange exchange;
     private GameNpc npc;
     private ExplorationPlayer player;
+    private NpcStore store;
 
     @Override
     @BeforeEach
@@ -48,7 +51,8 @@ class NpcStoreExchangeTest extends GameBaseCase {
 
         player = explorationPlayer();
         npc = container.get(NpcService.class).get(10001);
-        exchange = new NpcStoreExchange(player, npc, npc.store());
+        store = (NpcStore) npc.exchangeFactory(ExchangeType.NPC_STORE);
+        exchange = new NpcStoreExchange(player, npc, store);
     }
 
     @Test
@@ -59,10 +63,21 @@ class NpcStoreExchangeTest extends GameBaseCase {
     }
 
     @Test
-    void start() {
-        exchange.start();
+    void initialize() {
+        exchange.initialize();
 
-        requestStack.assertLast(new NpcStoreList(npc.store().available()));
+        requestStack.assertLast(new NpcStoreList(store.available()));
+    }
+
+    @Test
+    void start() {
+        requestStack.clear();
+        player.interactions().start(exchange.dialog());
+
+        requestStack.assertAll(
+            new ExchangeCreated(ExchangeType.NPC_STORE, npc),
+            new NpcStoreList(store.available())
+        );
     }
 
     @Test

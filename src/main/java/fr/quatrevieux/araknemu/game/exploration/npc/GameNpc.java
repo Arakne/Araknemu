@@ -25,16 +25,15 @@ import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
+import fr.quatrevieux.araknemu.game.exploration.exchange.Exchange;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.NpcQuestion;
-import fr.quatrevieux.araknemu.game.exploration.npc.exchange.GameNpcExchange;
-import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStore;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Living NPC
@@ -43,21 +42,19 @@ final public class GameNpc implements ExplorationCreature {
     final private Npc entity;
     final private NpcTemplate template;
     final private Collection<NpcQuestion> questions;
-    final private NpcStore store;
-    final private GameNpcExchange exchange;
+    final private Map<ExchangeType, ExchangeProvider.Factory> exchangeFactoriesByType = new EnumMap<>(ExchangeType.class);
 
     final private Sprite sprite;
 
     private ExplorationMapCell cell;
 
-    public GameNpc(Npc entity, NpcTemplate template, Collection<NpcQuestion> questions, NpcStore store, GameNpcExchange exchange) {
+    public GameNpc(Npc entity, NpcTemplate template, Collection<NpcQuestion> questions, Collection<ExchangeProvider.Factory> exchangeFactories) {
         this.entity = entity;
         this.template = template;
         this.questions = questions;
-        this.store = store;
-        this.exchange = exchange;
 
         this.sprite = new NpcSprite(this);
+        exchangeFactories.forEach(factory -> exchangeFactoriesByType.put(factory.type(), factory));
     }
 
     @Override
@@ -117,29 +114,32 @@ final public class GameNpc implements ExplorationCreature {
     }
 
     /**
-     * Get the npc's store
+     * Get an exchange on the npc
      *
-     * @throws UnsupportedOperationException When store is not available
+     * @param type The exchange type
+     * @param initiator The player who initiate the exchange
+     *
+     * @return The exchange
+     *
+     * @throws NoSuchElementException When the npc do not supports the exchange type
      */
-    public NpcStore store() {
-        if (store == null) {
-            throw new UnsupportedOperationException("Store is not available");
-        }
-
-        return store;
+    public Exchange exchange(ExchangeType type, ExplorationPlayer initiator) {
+        return exchangeFactory(type).create(initiator, this);
     }
 
     /**
-     * Get the npc's exchange
+     * Get an exchange factory
      *
-     * @throws UnsupportedOperationException When exchange is not available
+     * @param type The exchange type
+     *
+     * @throws NoSuchElementException When the npc do not supports the exchange type
      */
-    public GameNpcExchange exchange() {
-        if (exchange == null) {
-            throw new UnsupportedOperationException("Exchange is not available");
+    public ExchangeProvider.Factory exchangeFactory(ExchangeType type) {
+        if (!exchangeFactoriesByType.containsKey(type)) {
+            throw new NoSuchElementException("Exchange " + type + " is not supported by the npc " + template.id());
         }
 
-        return exchange;
+        return exchangeFactoriesByType.get(type);
     }
 
     NpcTemplate template() {

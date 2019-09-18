@@ -62,6 +62,7 @@ import fr.quatrevieux.araknemu.game.connector.ConnectorService;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
+import fr.quatrevieux.araknemu.game.exploration.exchange.DefaultExchangeFactory;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeFactory;
 import fr.quatrevieux.araknemu.game.exploration.exchange.npc.NpcExchangeFactories;
 import fr.quatrevieux.araknemu.game.exploration.exchange.player.PlayerExchangeFactories;
@@ -538,10 +539,12 @@ final public class GameModule implements ContainerModule {
             NpcService.class,
             container -> new NpcService(
                 container.get(DialogService.class),
-                container.get(NpcStoreService.class),
-                container.get(NpcExchangeService.class),
                 container.get(NpcTemplateRepository.class),
-                container.get(NpcRepository.class)
+                container.get(NpcRepository.class),
+                Arrays.asList(
+                    container.get(NpcStoreService.class),
+                    container.get(NpcExchangeService.class)
+                )
             )
         );
 
@@ -741,7 +744,7 @@ final public class GameModule implements ContainerModule {
             }
         );
 
-        configurator.persist(ExchangeFactory.class, container -> new ExchangeFactory(
+        configurator.persist(ExchangeFactory.class, container -> new DefaultExchangeFactory(
             new PlayerExchangeFactories(),
             new NpcExchangeFactories()
         ));

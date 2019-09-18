@@ -23,6 +23,12 @@ import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcExchangeRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.exchange.Exchange;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
+import fr.quatrevieux.araknemu.game.exploration.exchange.npc.NpcExchangeParty;
+import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
+import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
@@ -91,5 +97,20 @@ class GameNpcExchangeTest extends GameBaseCase {
         assertEquals(1, generated.size());
         assertEquals(2422, new ArrayList<>(generated.keySet()).get(0).template().id());
         assertEquals(1, (int) generated.get(new ArrayList<>(generated.keySet()).get(0)));
+    }
+
+    @Test
+    void factory() throws SQLException {
+        dataSet.pushNpcs();
+
+        assertSame(ExchangeType.NPC_EXCHANGE, exchange.type());
+
+        ExplorationPlayer player = explorationPlayer();
+        GameNpc npc = container.get(NpcService.class).get(472);
+
+        NpcExchangeParty createdExchange = exchange.create(player, npc);
+
+        assertSame(player, createdExchange.actor());
+        assertSame(npc, createdExchange.target());
     }
 }

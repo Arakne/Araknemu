@@ -36,15 +36,15 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ExchangeFactoryTest extends GameBaseCase {
-    private ExchangeFactory factory;
+class DefaultExchangeFactoryTest extends GameBaseCase {
+    private DefaultExchangeFactory factory;
 
     @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
-        factory = new ExchangeFactory(
+        factory = new DefaultExchangeFactory(
             new PlayerExchangeFactories(),
             new NpcExchangeFactories()
         );

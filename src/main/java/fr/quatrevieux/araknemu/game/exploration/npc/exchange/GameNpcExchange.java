@@ -19,6 +19,11 @@
 
 package fr.quatrevieux.araknemu.game.exploration.npc.exchange;
 
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
+import fr.quatrevieux.araknemu.game.exploration.exchange.npc.NpcExchangeParty;
+import fr.quatrevieux.araknemu.game.exploration.npc.ExchangeProvider;
+import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 
 import java.util.HashMap;
@@ -28,11 +33,21 @@ import java.util.Map;
 /**
  * Exchange data for an Npc
  */
-final public class GameNpcExchange {
+final public class GameNpcExchange implements ExchangeProvider.Factory {
     final private List<NpcExchangeEntry> entries;
 
     public GameNpcExchange(List<NpcExchangeEntry> entries) {
         this.entries = entries;
+    }
+
+    @Override
+    public NpcExchangeParty create(ExplorationPlayer initiator, GameNpc npc) {
+        return new NpcExchangeParty(initiator, npc, this);
+    }
+
+    @Override
+    public ExchangeType type() {
+        return ExchangeType.NPC_EXCHANGE;
     }
 
     /**

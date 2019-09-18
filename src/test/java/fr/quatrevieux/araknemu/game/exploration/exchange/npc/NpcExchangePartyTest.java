@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeDialog;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
+import fr.quatrevieux.araknemu.game.exploration.npc.exchange.GameNpcExchange;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeAccepted;
@@ -62,7 +63,7 @@ class NpcExchangePartyTest extends GameBaseCase {
 
         npc = container.get(NpcService.class).get(472);
         player = explorationPlayer();
-        exchangeParty = new NpcExchangeParty(player, npc, npc.exchange());
+        exchangeParty = new NpcExchangeParty(player, npc, (GameNpcExchange) npc.exchangeFactory(ExchangeType.NPC_EXCHANGE));
     }
 
     @Test

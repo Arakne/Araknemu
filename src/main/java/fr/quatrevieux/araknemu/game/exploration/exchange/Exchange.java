@@ -17,20 +17,24 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.exploration.exchange.npc;
+package fr.quatrevieux.araknemu.game.exploration.exchange;
 
-import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeFactory;
-import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeInteraction;
-import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 
 /**
- * Factories for npc exchanges
+ * Base exchange type
  */
-final public class NpcExchangeFactories implements ExchangeFactory<GameNpc> {
-    @Override
-    public ExchangeInteraction create(ExchangeType type, ExplorationPlayer initiator, GameNpc target) {
-        return target.exchange(type, initiator).dialog();
-    }
+public interface Exchange {
+    /**
+     * Get the dialog interaction for the current exchange
+     * For start the exchange, you could simply do `player.interactions().start(exchange.dialog());`
+     */
+    public ExchangeInteraction dialog();
+
+    /**
+     * Initialize the exchange
+     * Send all required packets, and register listeners
+     * This method is called when the exchange dialog starts
+     */
+    default public void initialize() {}
 }

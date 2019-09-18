@@ -25,7 +25,6 @@ import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
 import fr.quatrevieux.araknemu.game.exploration.exchange.player.AbstractPlayerExchangeParty;
 import fr.quatrevieux.araknemu.game.exploration.exchange.player.PlayerExchangePartyProcessor;
 import fr.quatrevieux.araknemu.game.exploration.exchange.player.PlayerExchangeStorage;
-import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeDialog;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.exploration.npc.exchange.GameNpcExchange;
 import fr.quatrevieux.araknemu.game.listener.player.exchange.SendDistantPackets;
@@ -59,18 +58,6 @@ final public class NpcExchangeParty extends AbstractPlayerExchangeParty {
     @Override
     public Creature target() {
         return npc;
-    }
-
-    @Override
-    public void start() {
-        // @todo ?
-    }
-
-    /**
-     * Get the related exchange dialog for the current party
-     */
-    public ExchangeDialog dialog() {
-        return new ExchangeDialog(this);
     }
 
     private NpcExchangeParty(ExplorationPlayer player, GameNpc npc, NpcExchangePartyProcessor npcExchangePartyProcessor, PlayerExchangeStorage storage) {

@@ -72,8 +72,20 @@ class BankExchangePartyTest extends GameBaseCase {
     }
 
     @Test
+    void dialog() {
+        assertInstanceOf(ExchangeDialog.class, party.dialog());
+    }
+
+    @Test
+    void initialize() {
+        party.initialize();
+
+        requestStack.assertAll(new StorageList(bank));
+    }
+
+    @Test
     void start() {
-        party.start();
+        player.interactions().start(party.dialog());
 
         requestStack.assertAll(
             new ExchangeCreated(ExchangeType.BANK),
@@ -88,7 +100,7 @@ class BankExchangePartyTest extends GameBaseCase {
     void leaveShouldSaveBank() {
         bank.addKamas(1000);
 
-        party.start();
+        player.interactions().start(party.dialog());
         party.leave();
 
         assertFalse(player.interactions().busy());
@@ -103,7 +115,7 @@ class BankExchangePartyTest extends GameBaseCase {
 
     @Test
     void kamasPositive() {
-        party.start();
+        player.interactions().start(party.dialog());
 
         party.kamas(1000);
 
@@ -120,7 +132,7 @@ class BankExchangePartyTest extends GameBaseCase {
 
     @Test
     void kamasPositiveTooHighShouldLimitToCurrentKamasAmount() {
-        party.start();
+        player.interactions().start(party.dialog());
 
         party.kamas(100000);
 
@@ -132,7 +144,7 @@ class BankExchangePartyTest extends GameBaseCase {
     @Test
     void kamasNegative() {
         bank.addKamas(5000);
-        party.start();
+        player.interactions().start(party.dialog());
 
         party.kamas(-1000);
 
@@ -150,7 +162,7 @@ class BankExchangePartyTest extends GameBaseCase {
     @Test
     void kamasNegativeTooHighShouldLimitWithBankKamasQuantity() {
         bank.addKamas(5000);
-        party.start();
+        player.interactions().start(party.dialog());
 
         party.kamas(-10000);
 
@@ -161,7 +173,7 @@ class BankExchangePartyTest extends GameBaseCase {
 
     @Test
     void kamasZero() {
-        party.start();
+        player.interactions().start(party.dialog());
         party.kamas(0);
 
         requestStack.assertLast(new StorageMovementError());
@@ -170,7 +182,7 @@ class BankExchangePartyTest extends GameBaseCase {
     @Test
     void itemPositive() {
         ItemEntry entry = player.inventory().add(itemService.create(39), 5);
-        party.start();
+        player.interactions().start(party.dialog());
 
         party.item(entry.id(), 3);
 
@@ -188,7 +200,7 @@ class BankExchangePartyTest extends GameBaseCase {
     @Test
     void itemPositiveTooHighShouldLimitWithItemQuantity() {
         ItemEntry entry = player.inventory().add(itemService.create(39), 5);
-        party.start();
+        player.interactions().start(party.dialog());
 
         party.item(entry.id(), 10);
 
@@ -200,7 +212,7 @@ class BankExchangePartyTest extends GameBaseCase {
     @Test
     void itemPositiveEquipedItemShouldFailed() {
         ItemEntry entry = player.inventory().add(itemService.create(39), 1, AmuletSlot.SLOT_ID);
-        party.start();
+        player.interactions().start(party.dialog());
 
         party.item(entry.id(), 1);
 
@@ -211,7 +223,7 @@ class BankExchangePartyTest extends GameBaseCase {
     @Test
     void itemNegative() {
         ItemEntry entry = bank.add(itemService.create(39), 5);
-        party.start();
+        player.interactions().start(party.dialog());
 
         party.item(entry.id(), -3);
 
@@ -229,7 +241,7 @@ class BankExchangePartyTest extends GameBaseCase {
     @Test
     void itemNegativeTooHighShouldLimitWithItemQuantity() {
         ItemEntry entry = bank.add(itemService.create(39), 5);
-        party.start();
+        player.interactions().start(party.dialog());
 
         party.item(entry.id(), -10);
 
@@ -240,7 +252,7 @@ class BankExchangePartyTest extends GameBaseCase {
 
     @Test
     void itemInvalid() {
-        party.start();
+        player.interactions().start(party.dialog());
         party.item(404, 1);
 
         requestStack.assertLast(new StorageMovementError());
@@ -249,7 +261,7 @@ class BankExchangePartyTest extends GameBaseCase {
     @Test
     void itemZeroQuantity() {
         ItemEntry entry = player.inventory().add(itemService.create(39), 5);
-        party.start();
+        player.interactions().start(party.dialog());
 
         party.item(entry.id(), 0);
 

@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
@@ -43,6 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -58,10 +60,12 @@ class NpcServiceTest extends GameBaseCase {
 
         service = new NpcService(
             container.get(DialogService.class),
-            container.get(NpcStoreService.class),
-            container.get(NpcExchangeService.class),
             container.get(NpcTemplateRepository.class),
-            container.get(NpcRepository.class)
+            container.get(NpcRepository.class),
+            Arrays.asList(
+                container.get(NpcStoreService.class),
+                container.get(NpcExchangeService.class)
+            )
         );
     }
 
@@ -144,7 +148,7 @@ class NpcServiceTest extends GameBaseCase {
 
         GameNpc npc = service.get(10001);
 
-        NpcStore store = npc.store();
+        NpcStore store = (NpcStore) npc.exchangeFactory(ExchangeType.NPC_STORE);
 
         assertTrue(store.has(39));
         assertTrue(store.has(2425));
@@ -161,6 +165,6 @@ class NpcServiceTest extends GameBaseCase {
 
         GameNpc npc = service.get(472);
 
-        assertInstanceOf(GameNpcExchange.class, npc.exchange());
+        assertInstanceOf(GameNpcExchange.class, npc.exchangeFactory(ExchangeType.NPC_EXCHANGE));
     }
 }

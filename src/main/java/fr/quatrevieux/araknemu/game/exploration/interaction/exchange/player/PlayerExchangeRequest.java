@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeParty;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
 import fr.quatrevieux.araknemu.game.exploration.exchange.player.PlayerExchangeParty;
 import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
@@ -72,7 +71,7 @@ final public class PlayerExchangeRequest implements ExchangeInteraction, Invitat
 
     @Override
     public void accept(Invitation invitation, TargetRequestDialog dialog) {
-        for(ExchangeParty party : PlayerExchangeParty.make(invitation.initiator(), invitation.target())) {
+        for(PlayerExchangeParty party : PlayerExchangeParty.make(invitation.initiator(), invitation.target())) {
             party.start();
         }
     }

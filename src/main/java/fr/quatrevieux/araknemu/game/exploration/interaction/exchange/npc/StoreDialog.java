@@ -50,7 +50,7 @@ final public class StoreDialog implements ExchangeInteraction {
     @Override
     public Interaction start() {
         exchange.send(new ExchangeCreated(ExchangeType.NPC_STORE, exchange.seller()));
-        exchange.start();
+        exchange.initialize();
 
         return this;
     }

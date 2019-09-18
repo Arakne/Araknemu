@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcExchange
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.game.event.GameStarted;
+import fr.quatrevieux.araknemu.game.exploration.npc.ExchangeProvider;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import org.slf4j.Logger;
 
@@ -41,7 +42,7 @@ import java.util.stream.Collectors;
 /**
  * Manage the npc exchanges
  */
-final public class NpcExchangeService implements PreloadableService, EventsSubscriber {
+final public class NpcExchangeService implements PreloadableService, EventsSubscriber, ExchangeProvider {
     final private ItemService itemService;
     final private NpcExchangeRepository repository;
     final private ItemTemplateRepository templateRepository;
@@ -86,13 +87,7 @@ final public class NpcExchangeService implements PreloadableService, EventsSubsc
         };
     }
 
-    /**
-     * Load exchange for an Npc template, if available
-     *
-     * @param template The npc template to load
-     *
-     * @return The exchange, if available, or empty optional
-     */
+    @Override
     public Optional<GameNpcExchange> load(NpcTemplate template) {
         if (exchangeByTemplateId.containsKey(template.id())) {
             return Optional.of(exchangeByTemplateId.get(template.id()));

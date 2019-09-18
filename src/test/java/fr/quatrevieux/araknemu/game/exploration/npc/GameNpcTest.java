@@ -24,14 +24,17 @@ import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
-import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcExchange;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
+import fr.quatrevieux.araknemu.game.exploration.exchange.Exchange;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
+import fr.quatrevieux.araknemu.game.exploration.exchange.npc.NpcExchangeParty;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.DialogService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.NpcQuestion;
-import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.npc.exchange.GameNpcExchange;
 import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStore;
 import fr.quatrevieux.araknemu.game.item.ItemService;
@@ -42,6 +45,7 @@ import org.mockito.Mockito;
 
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -65,7 +69,7 @@ class GameNpcTest extends GameBaseCase {
             entity,
             template = new NpcTemplate(878, 40, 100, 100, Sex.MALE, new Colors(8158389, 13677665, 3683117), "0,20f9,2a5,1d5e,1b9e", 4, 9092, null),
             container.get(DialogService.class).forNpc(entity),
-            null, null
+            Collections.emptyList()
         );
     }
 
@@ -109,38 +113,56 @@ class GameNpcTest extends GameBaseCase {
 
     @Test
     void questionNotFound() throws SQLException, ContainerException {
-        npc = new GameNpc(entity, template, Collections.emptyList(), null, null);
+        npc = new GameNpc(entity, template, Collections.emptyList(), Collections.emptyList());
 
         assertFalse(npc.question(explorationPlayer()).isPresent());
     }
 
     @Test
-    void store() throws ContainerException {
+    void exchangeFactoryWithStore() throws ContainerException {
         NpcStore store = new NpcStore(container.get(ItemService.class), configuration.economy(), Collections.emptyList());
-        npc = new GameNpc(entity, template, Collections.emptyList(), store, null);
+        npc = new GameNpc(entity, template, Collections.emptyList(), Collections.singleton(store));
 
-        assertSame(store, npc.store());
+        assertSame(store, npc.exchangeFactory(ExchangeType.NPC_STORE));
     }
 
     @Test
     void storeNotAvailable() throws ContainerException {
-        npc = new GameNpc(entity, template, Collections.emptyList(), null, null);
+        npc = new GameNpc(entity, template, Collections.emptyList(), Collections.emptyList());
 
-        assertThrows(UnsupportedOperationException.class, () -> npc.store());
+        assertThrows(NoSuchElementException.class, () -> npc.exchangeFactory(ExchangeType.NPC_STORE));
     }
 
     @Test
     void exchangeNotAvailable() throws ContainerException {
-        npc = new GameNpc(entity, template, Collections.emptyList(), null, null);
+        npc = new GameNpc(entity, template, Collections.emptyList(), Collections.emptyList());
 
-        assertThrows(UnsupportedOperationException.class, () -> npc.exchange());
+        assertThrows(NoSuchElementException.class, () -> npc.exchangeFactory(ExchangeType.NPC_EXCHANGE));
     }
 
     @Test
-    void exchange() {
+    void exchangeFactoryWithExchange() {
         GameNpcExchange exchange = new GameNpcExchange(Collections.emptyList());
-        npc = new GameNpc(entity, template, Collections.emptyList(), null, exchange);
+        npc = new GameNpc(entity, template, Collections.emptyList(), Collections.singleton(exchange));
 
-        assertSame(exchange, npc.exchange());
+        assertSame(exchange, npc.exchangeFactory(ExchangeType.NPC_EXCHANGE));
+    }
+
+    @Test
+    void exchange() throws SQLException {
+        GameNpcExchange npcExchange = new GameNpcExchange(Collections.emptyList());
+        npc = new GameNpc(entity, template, Collections.emptyList(), Collections.singleton(npcExchange));
+        ExplorationPlayer player = explorationPlayer();
+
+        Exchange exchange = npc.exchange(ExchangeType.NPC_EXCHANGE, player);
+
+        assertInstanceOf(NpcExchangeParty.class, exchange);
+        assertSame(player, ((NpcExchangeParty) exchange).actor());
+        assertSame(npc, ((NpcExchangeParty) exchange).target());
+    }
+
+    @Test
+    void exchangeNotSupported() {
+        assertThrows(NoSuchElementException.class, () -> npc.exchange(ExchangeType.PLAYER_EXCHANGE, explorationPlayer()));
     }
 }
