@@ -21,13 +21,10 @@ package fr.quatrevieux.araknemu.network.realm;
 
 import fr.quatrevieux.araknemu.network.adapter.Channel;
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
-import fr.quatrevieux.araknemu.network.in.PacketParser;
-import org.apache.mina.core.session.DummySession;
-import org.apache.mina.core.session.IoSession;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class RealmSessionTest {
     @Test

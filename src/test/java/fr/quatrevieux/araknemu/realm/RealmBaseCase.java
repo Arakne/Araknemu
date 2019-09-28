@@ -42,9 +42,6 @@ import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 import fr.quatrevieux.araknemu.realm.host.GameConnector;
 import fr.quatrevieux.araknemu.realm.host.GameHost;
 import fr.quatrevieux.araknemu.realm.host.HostService;
-import org.apache.mina.core.filterchain.IoFilterAdapter;
-import org.apache.mina.core.session.IoSession;
-import org.apache.mina.core.write.WriteRequest;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -54,16 +51,11 @@ import java.io.File;
 import java.util.Arrays;
 
 public class RealmBaseCase extends DatabaseTestCase {
-    static public class SendingRequestStack extends IoFilterAdapter {
+    static public class SendingRequestStack {
         final public DummyChannel channel;
 
         public SendingRequestStack(DummyChannel channel) {
             this.channel = channel;
-        }
-
-        @Override
-        public void messageSent(NextFilter nextFilter, IoSession session, WriteRequest writeRequest) throws Exception {
-            channel.getMessages().push(writeRequest.getMessage());
         }
 
         public void assertLast(Object packet) {
