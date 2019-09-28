@@ -96,10 +96,6 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.in.Dispatcher;
 import fr.quatrevieux.araknemu.network.in.Packet;
 import fr.quatrevieux.araknemu.util.RandomUtil;
-import org.apache.mina.core.filterchain.IoFilterAdapter;
-import org.apache.mina.core.service.IoHandler;
-import org.apache.mina.core.session.IoSession;
-import org.apache.mina.core.write.WriteRequest;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -114,16 +110,11 @@ import java.util.Arrays;
 import java.util.EnumSet;
 
 public class GameBaseCase extends DatabaseTestCase {
-    static public class SendingRequestStack extends IoFilterAdapter {
+    static public class SendingRequestStack {
         final public DummyChannel channel;
 
         public SendingRequestStack(DummyChannel channel) {
             this.channel = channel;
-        }
-
-        @Override
-        public void messageSent(NextFilter nextFilter, IoSession session, WriteRequest writeRequest) throws Exception {
-            channel.getMessages().push(writeRequest.getMessage());
         }
 
         public void assertLast(Object packet) {
@@ -189,7 +180,6 @@ public class GameBaseCase extends DatabaseTestCase {
     protected DummyChannel channel;
     protected GameSession session;
     protected SendingRequestStack requestStack;
-    protected IoHandler ioHandler;
     protected Araknemu app;
     protected GameDataSet dataSet;
 

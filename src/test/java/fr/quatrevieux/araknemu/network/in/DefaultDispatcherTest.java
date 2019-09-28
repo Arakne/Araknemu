@@ -21,7 +21,6 @@ package fr.quatrevieux.araknemu.network.in;
 
 import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
-import org.apache.mina.core.session.DummySession;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
