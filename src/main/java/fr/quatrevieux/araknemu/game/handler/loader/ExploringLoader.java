@@ -52,6 +52,7 @@ final public class ExploringLoader extends AbstractLoader {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public PacketHandler<GameSession, ?>[] handlers(Container container) throws ContainerException {
         return new PacketHandler[] {
             new LoadExtraInfo(container.get(FightService.class)),

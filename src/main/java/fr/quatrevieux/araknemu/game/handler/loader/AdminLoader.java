@@ -36,6 +36,7 @@ final public class AdminLoader extends AbstractLoader {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected PacketHandler<GameSession, ?>[] handlers(Container container) throws ContainerException {
         return new PacketHandler[] {
             new ExecuteCommand(

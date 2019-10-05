@@ -113,14 +113,6 @@ final public class PlayerCharacteristics implements CharacterCharacteristics {
         return entity.boostPoints();
     }
 
-    /**
-     * @todo DO NOT USE : temporary method !
-     */
-    @Deprecated
-    public void setBoostPoints(int points) {
-        entity.setBoostPoints(points);
-    }
-
     @Override
     public int initiative() {
         int value = race.initiative(player.properties().life().max());

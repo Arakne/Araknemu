@@ -39,6 +39,7 @@ final public class AggregateLoader implements Loader {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public PacketHandler<GameSession, ?>[] load(Container container) throws ContainerException {
         Collection<PacketHandler<GameSession, ?>> handlers = new ArrayList<>();
 

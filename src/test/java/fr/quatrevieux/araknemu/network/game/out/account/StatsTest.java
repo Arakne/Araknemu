@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.network.game.out.account;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.ItemService;
@@ -37,8 +38,10 @@ class StatsTest extends GameBaseCase {
 
         GamePlayer player = makeOtherPlayer();
 
-        player.properties().characteristics().setBoostPoints(13);
-        player.properties().spells().setUpgradePoints(7);
+        Player entity = readField(player, "entity");
+
+        entity.setBoostPoints(13);
+        entity.setSpellPoints(7);
 
         assertEquals(
             "As0,0,110|0|13|7||50,50|10000,10000|12|100|6,0,0,0|3,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|1,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|",
@@ -67,7 +70,7 @@ class StatsTest extends GameBaseCase {
 
         GamePlayer player = makeOtherPlayer(10);
 
-        player.properties().characteristics().setBoostPoints(13);
+        this.<Player>readField(player, "entity").setBoostPoints(13);
         player.inventory().add(container.get(ItemService.class).create(2425, true), 1, 0);
         player.inventory().add(container.get(ItemService.class).create(2414, true), 1, 7);
         player.properties().characteristics().rebuildSpecialEffects();

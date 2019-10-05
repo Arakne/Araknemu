@@ -45,6 +45,7 @@ final public class PlayingLoader extends AbstractLoader {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected PacketHandler<GameSession, ?>[] handlers(Container container) throws ContainerException {
         return new PacketHandler[] {
             new CreateGame(

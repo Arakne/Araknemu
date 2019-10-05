@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu._test;
 import fr.quatrevieux.araknemu.network.exception.WritePacket;
 import org.junit.jupiter.api.function.Executable;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -106,5 +107,13 @@ public class TestCase {
 
     public void assertRegex(String pattern, String value) {
         assertTrue(value.matches(pattern), value + " do not match with regex " + pattern);
+    }
+
+    public <T> T readField(Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        Field field = object.getClass().getDeclaredField(fieldName);
+
+        field.setAccessible(true);
+
+        return (T) field.get(object);
     }
 }

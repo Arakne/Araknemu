@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.handler.account;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.network.game.in.account.AskBoost;
@@ -51,7 +52,7 @@ class BoostCharacteristicTest extends FightBaseCase {
 
     @Test
     void handleSuccess() throws Exception {
-        gamePlayer().properties().characteristics().setBoostPoints(10);
+        this.<Player>readField(gamePlayer(), "entity").setBoostPoints(10);
         requestStack.clear();
 
         handler.handle(session, new AskBoost(Characteristic.INTELLIGENCE));
@@ -66,8 +67,8 @@ class BoostCharacteristicTest extends FightBaseCase {
     }
 
     @Test
-    void handleError() throws SQLException, ContainerException {
-        gamePlayer().properties().characteristics().setBoostPoints(0);
+    void handleError() throws SQLException, ContainerException, NoSuchFieldException, IllegalAccessException {
+        this.<Player>readField(gamePlayer(), "entity").setBoostPoints(0);
 
         assertThrows(IllegalArgumentException.class, () -> handler.handle(session, new AskBoost(Characteristic.INTELLIGENCE)));
 
@@ -76,7 +77,7 @@ class BoostCharacteristicTest extends FightBaseCase {
 
     @Test
     void functionalInActiveFight() throws Exception {
-        player.properties().characteristics().setBoostPoints(10);
+        this.<Player>readField(gamePlayer(), "entity").setBoostPoints(10);
 
         Fight fight = createFight();
         fight.start();
@@ -86,7 +87,7 @@ class BoostCharacteristicTest extends FightBaseCase {
 
     @Test
     void functionalSuccess() throws Exception {
-        player.properties().characteristics().setBoostPoints(10);
+        this.<Player>readField(gamePlayer(), "entity").setBoostPoints(10);
         requestStack.clear();
 
         handlePacket(new AskBoost(Characteristic.INTELLIGENCE));
@@ -102,7 +103,7 @@ class BoostCharacteristicTest extends FightBaseCase {
 
     @Test
     void functionalSuccessDuringPlacement() throws Exception {
-        player.properties().characteristics().setBoostPoints(10);
+        this.<Player>readField(gamePlayer(), "entity").setBoostPoints(10);
 
         Fight fight = createFight();
 
