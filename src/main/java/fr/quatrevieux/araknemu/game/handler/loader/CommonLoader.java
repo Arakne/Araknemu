@@ -37,6 +37,7 @@ import fr.quatrevieux.araknemu.network.in.PacketHandler;
  */
 final public class CommonLoader implements Loader {
     @Override
+    @SuppressWarnings("unchecked")
     public PacketHandler<GameSession, ?>[] load(Container container) throws ContainerException {
         return new PacketHandler[] {
             new StartSession(),

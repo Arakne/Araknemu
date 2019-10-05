@@ -63,7 +63,7 @@ class UpgradeSpellTest extends FightBaseCase {
 
     @Test
     void upgradeNotEnoughPoints() throws Exception {
-        gamePlayer().properties().spells().setUpgradePoints(0);
+        this.<Player>readField(gamePlayer(), "entity").setSpellPoints(0);
 
         try {
             handler.handle(session, new SpellUpgrade(3));
@@ -76,7 +76,7 @@ class UpgradeSpellTest extends FightBaseCase {
 
     @Test
     void upgradeSuccess() throws Exception {
-        gamePlayer().properties().spells().setUpgradePoints(5);
+        this.<Player>readField(gamePlayer(), "entity").setSpellPoints(5);
 
         handler.handle(session, new SpellUpgrade(3));
 
@@ -95,7 +95,7 @@ class UpgradeSpellTest extends FightBaseCase {
 
     @Test
     void functionalErrorOnActiveFight() throws Exception {
-        player.properties().spells().setUpgradePoints(5);
+        this.<Player>readField(gamePlayer(), "entity").setSpellPoints(5);
 
         Fight fight = createFight();
         fight.start();
@@ -105,7 +105,7 @@ class UpgradeSpellTest extends FightBaseCase {
 
     @Test
     void functionalSuccess() throws Exception {
-        gamePlayer().properties().spells().setUpgradePoints(5);
+        this.<Player>readField(gamePlayer(), "entity").setSpellPoints(5);
 
         handlePacket(new SpellUpgrade(3));
 

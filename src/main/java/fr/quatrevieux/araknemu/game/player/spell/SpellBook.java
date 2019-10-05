@@ -152,14 +152,6 @@ final public class SpellBook implements SpellList, Dispatcher {
     }
 
     /**
-     * @todo DO NOT USE : temporary method !
-     */
-    @Deprecated
-    public void setUpgradePoints(int points) {
-        player.setSpellPoints(points);
-    }
-
-    /**
      * Get the spells boosts
      */
     public SpellsBoosts boosts() {

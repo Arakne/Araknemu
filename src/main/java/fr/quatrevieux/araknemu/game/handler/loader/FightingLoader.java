@@ -37,6 +37,7 @@ final public class FightingLoader extends AbstractLoader {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public PacketHandler<GameSession, ?>[] handlers(Container container) {
         return new PacketHandler[] {
             new ChangeFighterStartPlace(),

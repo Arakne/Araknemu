@@ -40,6 +40,7 @@ abstract public class AbstractLoader implements Loader {
     abstract protected PacketHandler<GameSession, ?>[] handlers(Container container) throws ContainerException;
 
     @Override
+    @SuppressWarnings("unchecked")
     public PacketHandler<GameSession, ?>[] load(Container container) throws ContainerException {
         return Arrays.stream(handlers(container))
             .map(wrapper)

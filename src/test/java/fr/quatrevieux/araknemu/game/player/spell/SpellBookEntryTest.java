@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.player.spell;
 
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
@@ -146,8 +147,8 @@ class SpellBookEntryTest extends GameBaseCase {
     }
 
     @Test
-    void upgradeTooLowLevel() {
-        book.setUpgradePoints(100);
+    void upgradeTooLowLevel() throws NoSuchFieldException, IllegalAccessException {
+        this.<Player>readField(book, "player").setSpellPoints(100);
 
         assertThrows(IllegalStateException.class, () -> entry.upgrade(), "Cannot upgrade spell");
     }
@@ -163,8 +164,8 @@ class SpellBookEntryTest extends GameBaseCase {
     }
 
     @Test
-    void upgradeNotEnoughPoints() {
-        book.setUpgradePoints(0);
+    void upgradeNotEnoughPoints() throws NoSuchFieldException, IllegalAccessException {
+        this.<Player>readField(book, "player").setSpellPoints(0);
 
         entry = new SpellBookEntry(
             new PlayerSpell(1, 202, false),
@@ -175,8 +176,8 @@ class SpellBookEntryTest extends GameBaseCase {
     }
 
     @Test
-    void upgradeSuccessWillDispatchEvent() {
-        book.setUpgradePoints(10);
+    void upgradeSuccessWillDispatchEvent() throws NoSuchFieldException, IllegalAccessException {
+        this.<Player>readField(book, "player").setSpellPoints(10);
 
         AtomicReference<SpellUpgraded> ref = new AtomicReference<>();
         dispatcher.add(SpellUpgraded.class, ref::set);
@@ -192,8 +193,8 @@ class SpellBookEntryTest extends GameBaseCase {
     }
 
     @Test
-    void upgradeToLevel2() {
-        book.setUpgradePoints(10);
+    void upgradeToLevel2() throws NoSuchFieldException, IllegalAccessException {
+        this.<Player>readField(book, "player").setSpellPoints(10);
 
         entry = new SpellBookEntry(
             new PlayerSpell(1, 202, false, 1, 63),
@@ -207,8 +208,8 @@ class SpellBookEntryTest extends GameBaseCase {
     }
 
     @Test
-    void upgradeToLevel3() {
-        book.setUpgradePoints(10);
+    void upgradeToLevel3() throws NoSuchFieldException, IllegalAccessException {
+        this.<Player>readField(book, "player").setSpellPoints(10);
 
         entry = new SpellBookEntry(
             new PlayerSpell(1, 202, false, 2, 63),
@@ -222,8 +223,8 @@ class SpellBookEntryTest extends GameBaseCase {
     }
 
     @Test
-    void upgradeToLevel4() {
-        book.setUpgradePoints(10);
+    void upgradeToLevel4() throws NoSuchFieldException, IllegalAccessException {
+        this.<Player>readField(book, "player").setSpellPoints(10);
 
         entry = new SpellBookEntry(
             new PlayerSpell(1, 202, false, 3, 63),
@@ -237,8 +238,8 @@ class SpellBookEntryTest extends GameBaseCase {
     }
 
     @Test
-    void upgradeToLevel5() {
-        book.setUpgradePoints(10);
+    void upgradeToLevel5() throws NoSuchFieldException, IllegalAccessException {
+        this.<Player>readField(book, "player").setSpellPoints(10);
 
         entry = new SpellBookEntry(
             new PlayerSpell(1, 202, false, 4, 63),

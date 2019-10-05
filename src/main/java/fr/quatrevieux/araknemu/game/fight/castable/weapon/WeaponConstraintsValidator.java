@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 final public class WeaponConstraintsValidator implements CastConstraintValidator<CastableWeapon> {
     final private CastConstraintValidator<CastableWeapon> validator;
 
+    @SuppressWarnings("unchecked")
     public WeaponConstraintsValidator() {
         this(new CastConstraintValidator[] {
             new ApCostValidator(),

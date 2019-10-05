@@ -49,11 +49,11 @@ class SaveUpgradedSpellTest extends GameBaseCase {
     }
 
     @Test
-    void onSpellUpgraded() throws ContainerException, SQLException {
+    void onSpellUpgraded() throws ContainerException, SQLException, NoSuchFieldException, IllegalAccessException {
         PlayerSpell spell = dataSet.push(new PlayerSpell(1, 202, false, 2, 3));
 
         spell.setLevel(3);
-        gamePlayer().properties().spells().setUpgradePoints(5);
+        this.<Player>readField(gamePlayer(), "entity").setSpellPoints(5);
 
         SpellBookEntry entry = new SpellBookEntry(spell, container.get(SpellService.class).get(202));
 

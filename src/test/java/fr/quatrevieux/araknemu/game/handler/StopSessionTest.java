@@ -101,11 +101,11 @@ class StopSessionTest extends FightBaseCase {
     }
 
     @Test
-    void withPlayerWillSaveThePlayer() throws SQLException, ContainerException {
+    void withPlayerWillSaveThePlayer() throws SQLException, ContainerException, NoSuchFieldException, IllegalAccessException {
         GamePlayer player = gamePlayer(true);
 
         player.setPosition(new Position(1234, 56));
-        player.properties().characteristics().setBoostPoints(12);
+        this.<Player>readField(player, "entity").setBoostPoints(12);
 
         int playerid = gamePlayer().id();
 
