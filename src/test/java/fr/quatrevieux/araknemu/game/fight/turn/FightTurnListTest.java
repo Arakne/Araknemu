@@ -81,6 +81,14 @@ class FightTurnListTest extends FightBaseCase {
     }
 
     @Test
+    void startAlreadyStartedShouldRaiseException() {
+        turnList.init(new AlternateTeamFighterOrder());
+        turnList.start();
+
+        assertThrows(IllegalStateException.class, turnList::start);
+    }
+
+    @Test
     void nextWillStartNextFighterTurn() {
         turnList.init(new AlternateTeamFighterOrder());
         turnList.start();

@@ -36,6 +36,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -100,7 +101,7 @@ class JoinFightTest extends FightBaseCase {
         );
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void fullTeam() throws SQLException, ContainerException, JoinFightException, InterruptedException {
         for (int i = 10; fight.team(0).fighters().size() < fight.team(0).startPlaces().size(); ++i) {
             fight.team(0).join(makePlayerFighter(makeSimpleGamePlayer(i)));
@@ -114,7 +115,7 @@ class JoinFightTest extends FightBaseCase {
         );
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void success() throws InterruptedException {
         action.start(new ActionQueue());
         Thread.sleep(100);

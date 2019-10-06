@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.event.FightActionStarted;
 import fr.quatrevieux.araknemu.game.fight.turn.action.event.FightActionTerminated;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -128,7 +129,7 @@ class ActionHandlerTest extends FightBaseCase {
         Mockito.verify(action).failed();
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void startSuccessTerminateActionWhenDurationIsReached() throws InterruptedException {
         Action action = Mockito.mock(Action.class);
         ActionResult result = Mockito.mock(ActionResult.class);
@@ -198,7 +199,7 @@ class ActionHandlerTest extends FightBaseCase {
         assertSame(action, ref.get().action());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void terminateSuccessWillCancelTimer() throws InterruptedException {
         Action action = Mockito.mock(Action.class);
         ActionResult result = Mockito.mock(ActionResult.class);

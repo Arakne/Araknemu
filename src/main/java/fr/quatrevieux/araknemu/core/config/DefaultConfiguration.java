@@ -35,6 +35,7 @@ final public class DefaultConfiguration implements Configuration {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <M extends ConfigurationModule> M module(Class<M> moduleClass) {
         if (modules.containsKey(moduleClass)) {
             return (M) modules.get(moduleClass);

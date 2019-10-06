@@ -42,6 +42,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.helpers.NOPLogger;
@@ -85,7 +86,7 @@ class ActiveStateTest extends GameBaseCase {
         requestStack.clear();
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void start() throws InterruptedException {
         state.start(fight);
 

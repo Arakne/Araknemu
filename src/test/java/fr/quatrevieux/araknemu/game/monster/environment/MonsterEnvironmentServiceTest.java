@@ -36,6 +36,7 @@ import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -125,7 +126,7 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
         assertCount(1, service.byMap(10340));
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void respawn() throws InterruptedException, SQLException {
         LivingMonsterGroupPosition monsterGroupPosition = new LivingMonsterGroupPosition(
             container.get(MonsterGroupFactory.class),

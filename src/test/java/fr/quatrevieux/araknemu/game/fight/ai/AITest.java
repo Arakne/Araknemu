@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -76,7 +77,7 @@ class AITest extends FightBaseCase {
         assertSame(otherEnemy, ai.enemy().get());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void startEmptyShouldStop() throws InterruptedException {
         fight.turnList().start();
         FightTurn turn = fight.turnList().current().get();
@@ -89,7 +90,7 @@ class AITest extends FightBaseCase {
         assertFalse(turn.active());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void startUnit() throws InterruptedException {
         ActionGenerator generator1 = Mockito.mock(ActionGenerator.class);
         ActionGenerator generator2 = Mockito.mock(ActionGenerator.class);
@@ -115,7 +116,7 @@ class AITest extends FightBaseCase {
         assertTrue(turn.active());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void startWithoutAvailableActionShouldStopTurn() throws InterruptedException {
         ActionGenerator generator1 = Mockito.mock(ActionGenerator.class);
         ActionGenerator generator2 = Mockito.mock(ActionGenerator.class);
@@ -141,7 +142,7 @@ class AITest extends FightBaseCase {
         assertFalse(turn.active());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void startWithInactiveTurnShouldNotExecuteActions() throws InterruptedException {
         ActionGenerator generator1 = Mockito.mock(ActionGenerator.class);
         ActionGenerator generator2 = Mockito.mock(ActionGenerator.class);

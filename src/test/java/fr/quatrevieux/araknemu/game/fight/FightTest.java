@@ -35,6 +35,7 @@ import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -132,7 +133,7 @@ class FightTest extends GameBaseCase {
         requestStack.assertLast("test");
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void schedule() throws InterruptedException {
         AtomicBoolean ab = new AtomicBoolean(false);
 
@@ -144,7 +145,7 @@ class FightTest extends GameBaseCase {
         assertTrue(ab.get());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void execute() throws InterruptedException {
         AtomicBoolean ab = new AtomicBoolean(false);
 
@@ -164,7 +165,7 @@ class FightTest extends GameBaseCase {
         assertTrue(ab.get());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void executeWithExceptionShouldBeLogged() throws InterruptedException {
         RuntimeException raisedException = new RuntimeException("my error");
 
@@ -175,7 +176,7 @@ class FightTest extends GameBaseCase {
         Mockito.verify(logger).error("Error on fight executor : my error", raisedException);
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void scheduleWithExceptionShouldBeLogged() throws InterruptedException {
         RuntimeException raisedException = new RuntimeException("my error");
 
@@ -194,7 +195,7 @@ class FightTest extends GameBaseCase {
         assertEquals(0, fight.map().size());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void startStop() throws InterruptedException {
         AtomicReference<FightStarted> ref = new AtomicReference<>();
         AtomicReference<FightStopped> ref2 = new AtomicReference<>();

@@ -91,7 +91,10 @@ final public class FightTurnList {
      * Start the turn system
      */
     public void start() {
-        active.set(true);
+        if (active.getAndSet(true)) {
+            throw new IllegalStateException("TurnList already started");
+        }
+
         current = -1;
 
         next();

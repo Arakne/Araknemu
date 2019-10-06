@@ -36,6 +36,7 @@ import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -178,7 +179,7 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
         assertInstanceOf(MonsterGroupTeam.class, fight.team(1));
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void startFightShouldRespawnGroup() throws SQLException, InterruptedException {
         monsterGroupPosition = new LivingMonsterGroupPosition(
             container.get(MonsterGroupFactory.class),

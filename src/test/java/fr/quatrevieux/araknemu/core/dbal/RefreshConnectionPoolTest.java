@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.core.dbal;
 
 import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,7 +70,7 @@ class RefreshConnectionPoolTest {
         assertEquals(1, result);
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void refreshNoClosedConnections() throws InterruptedException {
         Thread.sleep(10);
 
@@ -78,7 +79,7 @@ class RefreshConnectionPoolTest {
         Mockito.verify(logger, Mockito.never()).warn(Mockito.anyString());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void refreshWithClosedConnections() throws Exception {
         Connection connection = pool.acquire();
         pool.release(connection);
@@ -91,7 +92,7 @@ class RefreshConnectionPoolTest {
         Mockito.verify(logger).warn("Closed connection detected");
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void refreshWithEmptyPool() throws Exception {
         Connection connection1 = pool.acquire();
         pool.release(connection1);

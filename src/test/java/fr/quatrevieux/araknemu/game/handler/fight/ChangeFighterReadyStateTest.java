@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.in.fight.FighterReady;
 import fr.quatrevieux.araknemu.network.game.out.fight.BeginFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.FighterReadyState;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -83,7 +84,7 @@ class ChangeFighterReadyStateTest extends GameBaseCase {
         assertFalse(session.fighter().ready());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void setReadyAndStartFight() throws InterruptedException {
         other.fighter().setReady(true);
 

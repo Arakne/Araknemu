@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -73,7 +74,7 @@ class AiModuleTest extends FightBaseCase {
         Mockito.verify(action).run();
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void turnStartedWithAi() throws Exception {
         Fight fight = createPvmFight();
         fight.register(new AiModule(fight, container.get(AiFactory.class)));

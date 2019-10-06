@@ -61,6 +61,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -85,7 +86,7 @@ public class FunctionalTest extends GameBaseCase {
         service = container.get(FightService.class);
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void challengeFight() throws Exception {
         dataSet.pushWeaponTemplates();
         FightHandler<ChallengeBuilder> handler = service.handler(ChallengeBuilder.class);

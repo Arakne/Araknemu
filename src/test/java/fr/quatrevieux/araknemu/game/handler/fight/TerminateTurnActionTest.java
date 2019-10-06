@@ -29,15 +29,14 @@ import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
 import fr.quatrevieux.araknemu.game.world.map.path.Path;
 import fr.quatrevieux.araknemu.game.world.map.path.PathStep;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
-import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TerminateTurnActionTest extends FightBaseCase {
     private Fight fight;
@@ -58,7 +57,7 @@ class TerminateTurnActionTest extends FightBaseCase {
         fighter.move(fight.map().get(185));
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void terminateMove() {
         FightTurn turn = new FightTurn(fighter, fight, Duration.ofSeconds(30));
         turn.start();
