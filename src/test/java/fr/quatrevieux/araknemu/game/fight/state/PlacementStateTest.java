@@ -46,6 +46,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.CancelFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.RemoveSprite;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -126,7 +127,7 @@ class PlacementStateTest extends FightBaseCase {
         assertEquals(fight, fight.fighters().get(1).fight());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void startWithPlacementTimeLimitShouldStartsFightOnTimeOut() throws InterruptedException {
         FightType type = Mockito.mock(FightType.class);
 

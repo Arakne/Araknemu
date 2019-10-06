@@ -34,6 +34,7 @@ import fr.quatrevieux.araknemu.game.listener.fight.fighter.RefreshBuffs;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.RefreshStates;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -100,7 +101,7 @@ class FightTurnTest extends FightBaseCase {
         assertEquals(3, turn.points().movementPoints());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void autoStopOnTimeout() throws InterruptedException {
         turn.start();
         assertTrue(turn.active());

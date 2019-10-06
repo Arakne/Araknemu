@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.in.fight.FighterChangePlace;
 import fr.quatrevieux.araknemu.network.game.out.fight.ChangeFighterPlaceError;
 import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -81,7 +82,7 @@ class ChangeFighterStartPlaceTest extends FightBaseCase {
         assertThrows(CloseImmediately.class, () -> handlePacket(new FighterChangePlace(123)));
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void functionalSuccess() throws Exception {
         fight = createFight();
         fighter = player.fighter();
