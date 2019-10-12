@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.exploration.npc.store;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
+import fr.quatrevieux.araknemu.game.exploration.npc.ExchangeProvider;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 
 import java.util.Arrays;
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
 /**
  * Handle Npc stores
  */
-final public class NpcStoreService {
+final public class NpcStoreService implements ExchangeProvider {
     final private ItemService itemService;
     final private GameConfiguration.EconomyConfiguration configuration;
     final private ItemTemplateRepository itemTemplateRepository;
@@ -50,11 +51,7 @@ final public class NpcStoreService {
         this.configuration = configuration;
     }
 
-    /**
-     * Load the store for the given npc template
-     *
-     * @return The store, if available
-     */
+    @Override
     public Optional<NpcStore> load(NpcTemplate template) {
         if (stores.containsKey(template.id())) {
             return Optional.of(stores.get(template.id()));

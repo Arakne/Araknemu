@@ -37,10 +37,7 @@ import fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceR
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
-import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcRepository;
-import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcTemplateRepository;
-import fr.quatrevieux.araknemu.data.world.repository.environment.npc.QuestionRepository;
-import fr.quatrevieux.araknemu.data.world.repository.environment.npc.ResponseActionRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.npc.*;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
@@ -65,6 +62,7 @@ import fr.quatrevieux.araknemu.game.connector.ConnectorService;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
+import fr.quatrevieux.araknemu.game.exploration.exchange.DefaultExchangeFactory;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeFactory;
 import fr.quatrevieux.araknemu.game.exploration.exchange.npc.NpcExchangeFactories;
 import fr.quatrevieux.araknemu.game.exploration.exchange.player.PlayerExchangeFactories;
@@ -94,6 +92,7 @@ import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.BankCostRes
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.GetterResolver;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersResolver;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.VariableResolver;
+import fr.quatrevieux.araknemu.game.exploration.npc.exchange.NpcExchangeService;
 import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStoreService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
@@ -176,6 +175,7 @@ final public class GameModule implements ContainerModule {
                     container.get(SpellService.class),
 
                     container.get(DialogService.class),
+                    container.get(NpcExchangeService.class),
                     container.get(NpcService.class),
 
                     container.get(MonsterRewardService.class),
@@ -202,7 +202,8 @@ final public class GameModule implements ContainerModule {
                     container.get(FightService.class),
                     container.get(ExplorationService.class),
                     container.get(NpcService.class),
-                    container.get(MonsterEnvironmentService.class)
+                    container.get(MonsterEnvironmentService.class),
+                    container.get(NpcExchangeService.class)
                 )
             )
         );
@@ -538,9 +539,12 @@ final public class GameModule implements ContainerModule {
             NpcService.class,
             container -> new NpcService(
                 container.get(DialogService.class),
-                container.get(NpcStoreService.class),
                 container.get(NpcTemplateRepository.class),
-                container.get(NpcRepository.class)
+                container.get(NpcRepository.class),
+                Arrays.asList(
+                    container.get(NpcStoreService.class),
+                    container.get(NpcExchangeService.class)
+                )
             )
         );
 
@@ -568,6 +572,15 @@ final public class GameModule implements ContainerModule {
                 container.get(ItemService.class),
                 container.get(ItemTemplateRepository.class),
                 container.get(GameConfiguration.class).economy()
+            )
+        );
+
+        configurator.persist(
+            NpcExchangeService.class,
+            container -> new NpcExchangeService(
+                container.get(ItemService.class),
+                container.get(NpcExchangeRepository.class),
+                container.get(ItemTemplateRepository.class)
             )
         );
 
@@ -731,7 +744,7 @@ final public class GameModule implements ContainerModule {
             }
         );
 
-        configurator.persist(ExchangeFactory.class, container -> new ExchangeFactory(
+        configurator.persist(ExchangeFactory.class, container -> new DefaultExchangeFactory(
             new PlayerExchangeFactories(),
             new NpcExchangeFactories()
         ));

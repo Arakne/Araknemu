@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.exploration.exchange.npc;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.exchange.Exchange;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.npc.StoreDialog;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStore;
@@ -32,7 +33,7 @@ import fr.quatrevieux.araknemu.network.game.out.exchange.store.NpcStoreList;
  *
  * @todo refactor with player store (use interface)
  */
-final public class NpcStoreExchange implements Sender {
+final public class NpcStoreExchange implements Exchange, Sender {
     final private ExplorationPlayer player;
     final private GameNpc seller;
     final private NpcStore store;
@@ -48,25 +49,21 @@ final public class NpcStoreExchange implements Sender {
         player.send(packet);
     }
 
+    @Override
+    public void initialize() {
+        player.send(new NpcStoreList(store.available()));
+    }
+
+    @Override
+    public StoreDialog dialog() {
+        return new StoreDialog(this);
+    }
+
     /**
      * The the seller npc
      */
     public GameNpc seller() {
         return seller;
-    }
-
-    /**
-     * Start the exchange by sending the available items
-     */
-    public void start() {
-        player.send(new NpcStoreList(store.available()));
-    }
-
-    /**
-     * Creates the dialog box interaction
-     */
-    public StoreDialog dialog() {
-        return new StoreDialog(this);
     }
 
     /**

@@ -21,11 +21,15 @@ package fr.quatrevieux.araknemu.game.exploration.npc.store;
 
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
+import fr.quatrevieux.araknemu.game.exploration.exchange.npc.NpcStoreExchange;
+import fr.quatrevieux.araknemu.game.exploration.npc.ExchangeProvider;
+import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -35,7 +39,7 @@ import java.util.stream.Collectors;
  *
  * Note: the store is related to a npc template and not a npc, so the same store can be shared between two npcs
  */
-final public class NpcStore {
+final public class NpcStore implements ExchangeProvider.Factory {
     final private ItemService itemService;
     final private GameConfiguration.EconomyConfiguration configuration;
     final private Map<Integer, ItemTemplate> itemTemplates;
@@ -44,6 +48,16 @@ final public class NpcStore {
         this.itemService = itemService;
         this.configuration = configuration;
         this.itemTemplates = itemTemplates.stream().collect(Collectors.toMap(ItemTemplate::id, Function.identity()));
+    }
+
+    @Override
+    public NpcStoreExchange create(ExplorationPlayer initiator, GameNpc npc) {
+        return new NpcStoreExchange(initiator, npc, this);
+    }
+
+    @Override
+    public ExchangeType type() {
+        return ExchangeType.NPC_STORE;
     }
 
     /**
@@ -75,15 +89,7 @@ final public class NpcStore {
      * @return Map of generated item, associated with quantity
      */
     public Map<Item, Integer> get(int id, int quantity) {
-        Map<Item, Integer> items = new HashMap<>();
-
-        for (; quantity > 0; --quantity) {
-            Item generated = itemService.create(itemTemplates.get(id));
-
-            items.put(generated, items.getOrDefault(generated, 0) + 1);
-        }
-
-        return items;
+        return itemService.createBulk(itemTemplates.get(id), quantity);
     }
 
     /**

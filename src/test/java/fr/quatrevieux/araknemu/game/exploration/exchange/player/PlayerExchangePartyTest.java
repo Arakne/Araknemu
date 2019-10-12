@@ -76,6 +76,11 @@ class PlayerExchangePartyTest extends GameBaseCase {
     }
 
     @Test
+    void dialog() {
+        assertInstanceOf(ExchangeDialog.class, local.dialog());
+    }
+
+    @Test
     void start() {
         local.start();
 

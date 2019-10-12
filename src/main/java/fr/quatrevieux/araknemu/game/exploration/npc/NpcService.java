@@ -28,28 +28,30 @@ import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcTemplate
 import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.DialogService;
-import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStoreService;
 import org.slf4j.Logger;
 
+import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
 /**
  * Manage living NPCs
  */
 final public class NpcService implements EventsSubscriber, PreloadableService {
     final private DialogService dialogService;
-    final private NpcStoreService exchangeService;
     final private NpcTemplateRepository templateRepository;
     final private NpcRepository npcRepository;
+    final private Collection<ExchangeProvider> exchangeProviders;
 
     final private ConcurrentMap<Integer, GameNpc> npcByEntityId = new ConcurrentHashMap<>();
 
-    public NpcService(DialogService dialogService, NpcStoreService exchangeService, NpcTemplateRepository templateRepository, NpcRepository npcRepository) {
+    public NpcService(DialogService dialogService, NpcTemplateRepository templateRepository, NpcRepository npcRepository, Collection<ExchangeProvider> exchangeProviders) {
         this.dialogService = dialogService;
-        this.exchangeService = exchangeService;
         this.templateRepository = templateRepository;
         this.npcRepository = npcRepository;
+        this.exchangeProviders = exchangeProviders;
     }
 
     @Override
@@ -111,7 +113,11 @@ final public class NpcService implements EventsSubscriber, PreloadableService {
             entity,
             template,
             dialogService.forNpc(entity),
-            exchangeService.load(template).orElse(null)
+            exchangeProviders.stream()
+                .map(provider -> provider.load(template))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList())
         );
 
         npcByEntityId.put(entity.id(), npc);

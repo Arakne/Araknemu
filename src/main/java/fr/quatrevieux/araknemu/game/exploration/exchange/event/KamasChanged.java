@@ -19,14 +19,18 @@
 
 package fr.quatrevieux.araknemu.game.exploration.exchange.event;
 
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeStorage;
+
 /**
  * The quantity of kamas in the exchange has changed
  */
-final public class KamasChanged {
+final public class KamasChanged implements ExchangeEvent {
     final private long quantity;
+    final private ExchangeStorage storage;
 
-    public KamasChanged(long quantity) {
+    public KamasChanged(long quantity, ExchangeStorage storage) {
         this.quantity = quantity;
+        this.storage = storage;
     }
 
     /**
@@ -34,5 +38,10 @@ final public class KamasChanged {
      */
     public long quantity() {
         return quantity;
+    }
+
+    @Override
+    public ExchangeStorage storage() {
+        return storage;
     }
 }

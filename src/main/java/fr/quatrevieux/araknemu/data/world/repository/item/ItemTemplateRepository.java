@@ -26,6 +26,8 @@ import java.util.Collection;
 
 /**
  * Repository for {@link ItemTemplate}
+ *
+ * @todo getAll
  */
 public interface ItemTemplateRepository extends Repository<ItemTemplate> {
     /**

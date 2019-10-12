@@ -83,7 +83,7 @@ class NpcDialogTest extends GameBaseCase {
             dataSet.refresh(new Npc(472, 0, null, null, null)),
             dataSet.refresh(new NpcTemplate(878, 0, 0, 0, null, null, null, 0, 0, null)),
             Collections.emptyList(),
-            null
+            Collections.emptyList()
         );
         player.interactions().start(new NpcDialog(player, npc));
 

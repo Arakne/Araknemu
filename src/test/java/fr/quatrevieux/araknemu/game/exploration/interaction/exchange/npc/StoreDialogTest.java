@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.exploration.exchange.npc.NpcStoreExchange;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeInteraction;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
+import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStore;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeCreated;
@@ -40,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class StoreDialogTest extends GameBaseCase {
     private GameNpc npc;
+    private NpcStore store;
     private ExplorationPlayer player;
     private StoreDialog dialog;
 
@@ -52,7 +54,8 @@ class StoreDialogTest extends GameBaseCase {
 
         player = explorationPlayer();
         npc = container.get(NpcService.class).get(10001);
-        dialog = new StoreDialog(new NpcStoreExchange(player, npc, npc.store()));
+        store = (NpcStore) npc.exchangeFactory(ExchangeType.NPC_STORE);
+        dialog = new StoreDialog(new NpcStoreExchange(player, npc, store));
 
         requestStack.clear();
     }
@@ -66,7 +69,7 @@ class StoreDialogTest extends GameBaseCase {
 
         requestStack.assertAll(
             new ExchangeCreated(ExchangeType.NPC_STORE, npc),
-            new NpcStoreList(npc.store().available())
+            new NpcStoreList(store.available())
         );
     }
 

@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.world.util.Sender;
 /**
  * Party of an exchange
  */
-public interface ExchangeParty extends Sender {
+public interface ExchangeParty extends Exchange, Sender {
     /**
      * The exchange type
      */
@@ -37,9 +37,11 @@ public interface ExchangeParty extends Sender {
     public Creature actor();
 
     /**
-     * Start the exchange (will start an interaction)
+     * Get the target creature of the exchange
+     *
+     * @return The creature, or null if there is no other party on the exchange
      */
-    public void start();
+    public Creature target();
 
     /**
      * Leave / cancel the exchange (will remove the interaction)

@@ -67,7 +67,7 @@ final public class OpenBank implements Action {
         Bank bank = service.load(player.account());
 
         if (payBankTax(player, bank)) {
-            bank.exchange(player).start();
+            player.interactions().start(bank.exchange(player).dialog());
         }
     }
 

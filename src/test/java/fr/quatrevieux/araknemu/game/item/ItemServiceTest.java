@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -130,6 +131,26 @@ class ItemServiceTest extends GameBaseCase {
 
         assertEquals(Characteristic.INTELLIGENCE, wearable.characteristics().get(0).characteristic());
         assertEquals(2, wearable.characteristics().get(0).boost());
+    }
+
+    @Test
+    void createBulkWithFixedStats() {
+        ItemTemplate template = container.get(ItemTemplateRepository.class).get(39);
+
+        Map<Item, Integer> items = service.createBulk(template, 3);
+
+        assertEquals(1, items.size());
+        assertTrue(items.containsKey(service.create(39)));
+        assertEquals(3, (int) items.get(service.create(39)));
+    }
+
+    @Test
+    void createBulkWithRandomStats() {
+        ItemTemplate template = container.get(ItemTemplateRepository.class).get(2422);
+        Map<Item, Integer> items = service.createBulk(template, 3);
+
+        assertEquals(3, items.size());
+        assertTrue(items.entrySet().stream().allMatch(entry-> entry.getKey().template().equals(template) && entry.getValue() == 1));
     }
 
     @Test

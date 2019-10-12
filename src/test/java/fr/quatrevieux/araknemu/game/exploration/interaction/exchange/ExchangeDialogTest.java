@@ -78,7 +78,7 @@ class ExchangeDialogTest extends GameBaseCase {
     @Test
     void stop() {
         player.interactions().start(dialog);
-        distant.start();
+        other.interactions().start(distant.dialog());
 
         dialog.stop();
 
@@ -89,7 +89,7 @@ class ExchangeDialogTest extends GameBaseCase {
     @Test
     void leave() {
         player.interactions().start(dialog);
-        distant.start();
+        other.interactions().start(distant.dialog());
 
         dialog.leave();
 

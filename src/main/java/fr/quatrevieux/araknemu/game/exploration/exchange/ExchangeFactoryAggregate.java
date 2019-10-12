@@ -31,7 +31,7 @@ import java.util.Map;
  *
  * @param <C> The supported creature type
  */
-public class ExchangeFactoryAggregate<C extends ExplorationCreature> {
+public class ExchangeFactoryAggregate<C extends ExplorationCreature> implements ExchangeFactory<C> {
     final private Map<ExchangeType, ExchangeTypeFactory<C>> factories = new EnumMap<>(ExchangeType.class);
 
     @SafeVarargs
@@ -48,13 +48,7 @@ public class ExchangeFactoryAggregate<C extends ExplorationCreature> {
         factories.put(factory.type(), factory);
     }
 
-    /**
-     * Creates the exchange interaction
-     *
-     * @param type The requested exchange type
-     * @param initiator The exchange initiator (current player)
-     * @param target The exchange target
-     */
+    @Override
     final public ExchangeInteraction create(ExchangeType type, ExplorationPlayer initiator, C target) {
         if (!factories.containsKey(type)) {
             throw new IllegalArgumentException("Unsupported type " + type);

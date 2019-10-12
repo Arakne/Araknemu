@@ -54,10 +54,7 @@ import fr.quatrevieux.araknemu.data.world.entity.character.PlayerExperience;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
-import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
-import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
-import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Question;
-import fr.quatrevieux.araknemu.data.world.entity.environment.npc.ResponseAction;
+import fr.quatrevieux.araknemu.data.world.entity.environment.npc.*;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemSet;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
@@ -67,10 +64,7 @@ import fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceR
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
-import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcRepository;
-import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcTemplateRepository;
-import fr.quatrevieux.araknemu.data.world.repository.environment.npc.QuestionRepository;
-import fr.quatrevieux.araknemu.data.world.repository.environment.npc.ResponseActionRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.npc.*;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.sql.SqlWorldRepositoriesModule;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
@@ -246,6 +240,7 @@ public class GameBaseCase extends DatabaseTestCase {
             .declare(MonsterRewardItem.class, MonsterRewardItemRepository.class)
             .declare(AccountBank.class, AccountBankRepository.class)
             .declare(BankItem.class, BankItemRepository.class)
+            .declare(NpcExchange.class, NpcExchangeRepository.class)
         ;
 
         container.get(GameService.class).subscribe();

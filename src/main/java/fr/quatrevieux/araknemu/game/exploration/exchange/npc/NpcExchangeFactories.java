@@ -19,17 +19,18 @@
 
 package fr.quatrevieux.araknemu.game.exploration.exchange.npc;
 
-import fr.quatrevieux.araknemu.game.exploration.exchange.*;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeFactory;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
+import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeInteraction;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 
 /**
  * Factories for npc exchanges
  */
-final public class NpcExchangeFactories extends ExchangeFactoryAggregate<GameNpc> {
-    @SafeVarargs
-    public NpcExchangeFactories(ExchangeTypeFactory<GameNpc>... factories) {
-        super(factories);
-
-        register(new SimpleExchangeTypeFactory<>(ExchangeType.NPC_STORE, (initiator, target) -> new NpcStoreExchange(initiator, target, target.store()).dialog()));
+final public class NpcExchangeFactories implements ExchangeFactory<GameNpc> {
+    @Override
+    public ExchangeInteraction create(ExchangeType type, ExplorationPlayer initiator, GameNpc target) {
+        return target.exchange(type, initiator).dialog();
     }
 }

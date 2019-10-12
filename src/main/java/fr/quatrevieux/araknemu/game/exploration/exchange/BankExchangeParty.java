@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.exploration.exchange;
 import fr.quatrevieux.araknemu.game.account.bank.Bank;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeDialog;
+import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeInteraction;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.listener.player.exchange.SendStoragePackets;
@@ -53,9 +54,19 @@ final public class BankExchangeParty implements ExchangeParty {
     }
 
     @Override
-    public void start() {
+    public Creature target() {
+        // Bank do not have target
+        return null;
+    }
+
+    @Override
+    public ExchangeInteraction dialog() {
+        return new ExchangeDialog(this);
+    }
+
+    @Override
+    public void initialize() {
         bank.dispatcher().register(new SendStoragePackets(this));
-        player.interactions().start(new ExchangeDialog(this));
         send(new StorageList(bank));
     }
 

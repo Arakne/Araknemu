@@ -25,15 +25,15 @@ package fr.quatrevieux.araknemu.game.exploration.exchange;
  * See : https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L332
  */
 public enum ExchangeType {
-    NPC_STORE,
-    PLAYER_EXCHANGE,
-    NPC_EXCHANGE,
-    FACTORY_TABLE,
-    PLAYER_STORE_BUY,
-    BANK,
-    PLAYER_STORE_SELL,
+    NPC_STORE, // dialog, prepare
+    PLAYER_EXCHANGE, // start
+    NPC_EXCHANGE, // dialog
+    FACTORY_TABLE, // start?
+    PLAYER_STORE_BUY, // dialog, prepare
+    BANK, // start?, dialog?, prepare
+    PLAYER_STORE_SELL, // dialog, prepare
     UNKNOWN_7,
-    COLLECTOR,
+    COLLECTOR, // dialog, prepare
     UNKNOWN_9,
     HDV_SELL,
     HDV_BUY,
