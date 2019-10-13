@@ -25,9 +25,11 @@ import fr.quatrevieux.araknemu.game.account.TokenService;
 import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.exception.CloseWithPacket;
 import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.network.exception.InactivityTimeout;
 import fr.quatrevieux.araknemu.network.game.out.account.LoginTokenError;
 import fr.quatrevieux.araknemu.network.in.Dispatcher;
 import fr.quatrevieux.araknemu.network.in.PacketParser;
+import fr.quatrevieux.araknemu.network.out.ServerMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -79,6 +81,14 @@ class GameSessionHandlerTest extends GameBaseCase {
         handler.exception(session, new CloseWithPacket(new LoginTokenError()));
 
         requestStack.assertLast(new LoginTokenError());
+        assertFalse(session.isAlive());
+    }
+
+    @Test
+    void exceptionInactivityTimeout() {
+        handler.exception(session, new InactivityTimeout());
+
+        requestStack.assertLast(ServerMessage.inactivity());
         assertFalse(session.isAlive());
     }
 

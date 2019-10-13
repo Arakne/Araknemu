@@ -31,6 +31,7 @@ import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.MessageToMessageEncoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.util.AttributeKey;
 import io.netty.util.CharsetUtil;
 
@@ -63,17 +64,19 @@ final public class NettyServer implements Server {
 
     final private SessionHandler handler;
     final private int port;
+    final private int readTimeout;
 
     private Channel serverChannel;
     private EventLoopGroup loopGroup;
 
-    public NettyServer(SessionHandler handler, int port) {
+    public NettyServer(SessionHandler handler, int port, int readTimeout) {
         this.handler = handler;
         this.port = port;
+        this.readTimeout = readTimeout;
     }
 
     @Override
-    public void start() throws Exception {
+    public void start() {
         ServerBootstrap bootstrap = new ServerBootstrap();
 
         SessionHandlerAdapter handlerAdapter = new SessionHandlerAdapter(handler);
@@ -85,13 +88,14 @@ final public class NettyServer implements Server {
             .group(loopGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors()))
             .channel(NioServerSocketChannel.class)
             .childHandler(new ChannelInitializer() {
-                protected void initChannel(Channel channel) throws Exception {
+                protected void initChannel(Channel channel) {
                     channel
                         .pipeline()
                         .addLast(new DelimiterBasedFrameDecoder(4096, Unpooled.wrappedBuffer(new byte[]{10, 0})))
                         .addLast(encoder)
                         .addLast(decoder)
                         .addLast(messageEncoder)
+                        .addLast(new ReadTimeoutHandler(readTimeout))
                         .addLast(handlerAdapter)
                     ;
                 }

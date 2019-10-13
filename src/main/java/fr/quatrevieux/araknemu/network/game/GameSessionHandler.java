@@ -22,11 +22,13 @@ package fr.quatrevieux.araknemu.network.game;
 import fr.quatrevieux.araknemu.network.adapter.Channel;
 import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
 import fr.quatrevieux.araknemu.network.exception.CloseSession;
+import fr.quatrevieux.araknemu.network.exception.InactivityTimeout;
 import fr.quatrevieux.araknemu.network.exception.WritePacket;
 import fr.quatrevieux.araknemu.network.in.Dispatcher;
 import fr.quatrevieux.araknemu.network.in.PacketParser;
 import fr.quatrevieux.araknemu.network.in.SessionClosed;
 import fr.quatrevieux.araknemu.network.in.SessionCreated;
+import fr.quatrevieux.araknemu.network.out.ServerMessage;
 
 /**
  * IoHandler for Game server
@@ -52,6 +54,12 @@ final public class GameSessionHandler implements SessionHandler<GameSession> {
 
     @Override
     public void exception(GameSession session, Throwable cause) {
+        if (cause instanceof InactivityTimeout) {
+            session.write(ServerMessage.inactivity());
+            session.close();
+            return;
+        }
+
         if (cause instanceof WritePacket) {
             session.write(
                 ((WritePacket) cause).packet()

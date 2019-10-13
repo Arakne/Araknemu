@@ -17,38 +17,16 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.network.adapter.netty;
-
-import fr.quatrevieux.araknemu.network.adapter.Channel;
-import io.netty.channel.ChannelHandlerContext;
+package fr.quatrevieux.araknemu.network.exception;
 
 /**
- * Adapt Netty channel to Araknemu Channel
+ * The session has reach its inactivity time
  */
-final public class ChannelAdapter implements Channel {
-    final private ChannelHandlerContext channel;
-
-    public ChannelAdapter(ChannelHandlerContext channel) {
-        this.channel = channel;
+public class InactivityTimeout extends Exception {
+    public InactivityTimeout() {
     }
 
-    @Override
-    public Object id() {
-        return channel.channel().id();
-    }
-
-    @Override
-    public void write(Object message) {
-        channel.writeAndFlush(message.toString());
-    }
-
-    @Override
-    public void close() {
-        channel.close();
-    }
-
-    @Override
-    public boolean isAlive() {
-        return channel.channel().isActive();
+    public InactivityTimeout(Throwable cause) {
+        super(cause);
     }
 }

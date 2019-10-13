@@ -52,4 +52,12 @@ final public class RealmConfiguration implements ConfigurationModule {
     public String clientVersion() {
         return pool.string("client.version", "1.29.1");
     }
+
+    /**
+     * The maximum inactivity time, in seconds
+     * By default, 900s = 15min
+     */
+    public int inactivityTime() {
+        return pool.integer("inactivityTime", 900);
+    }
 }

@@ -51,4 +51,9 @@ class RealmConfigurationTest {
     void clientVersion() {
         assertEquals("1.29.1", configuration.clientVersion());
     }
+
+    @Test
+    void inactivityTime() {
+        assertEquals(900, configuration.inactivityTime());
+    }
 }

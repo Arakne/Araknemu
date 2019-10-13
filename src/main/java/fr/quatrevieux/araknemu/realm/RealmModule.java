@@ -78,7 +78,8 @@ final public class RealmModule implements ContainerModule {
             Server.class,
             container -> new NettyServer(
                 container.get(SessionHandler.class),
-                container.get(RealmConfiguration.class).port()
+                container.get(RealmConfiguration.class).port(),
+                container.get(RealmConfiguration.class).inactivityTime()
             )
         );
 

@@ -21,9 +21,11 @@ package fr.quatrevieux.araknemu.network.adapter.netty;
 
 import fr.quatrevieux.araknemu.network.adapter.Session;
 import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
+import fr.quatrevieux.araknemu.network.exception.InactivityTimeout;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.timeout.ReadTimeoutException;
 import io.netty.util.AttributeKey;
 
 /**
@@ -70,11 +72,14 @@ final public class SessionHandlerAdapter<S extends Session> extends ChannelInbou
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        handler.exception(
-            ctx.channel().attr(sessionAttribute).get(),
-            cause
-        );
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        final S session = ctx.channel().attr(sessionAttribute).get();
+
+        if (cause instanceof ReadTimeoutException) {
+            cause = new InactivityTimeout(cause);
+        }
+
+        handler.exception(session, cause);
     }
 
     AttributeKey<S> sessionAttribute() {

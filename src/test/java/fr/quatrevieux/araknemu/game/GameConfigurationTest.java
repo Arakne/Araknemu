@@ -40,6 +40,7 @@ class GameConfigurationTest extends GameBaseCase {
         assertEquals(2, configuration.id());
         assertEquals(456, configuration.port());
         assertEquals("10.0.0.5", configuration.ip());
+        assertEquals(900, configuration.inactivityTime());
     }
 
     @Test

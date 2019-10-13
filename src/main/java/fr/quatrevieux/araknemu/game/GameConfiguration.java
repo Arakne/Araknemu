@@ -204,6 +204,14 @@ final public class GameConfiguration implements ConfigurationModule {
     }
 
     /**
+     * The maximum inactivity time, in seconds
+     * By default, 900s = 15min
+     */
+    public int inactivityTime() {
+        return pool.integer("inactivityTime", 900);
+    }
+
+    /**
      * Get player configuration
      */
     public PlayerConfiguration player() {

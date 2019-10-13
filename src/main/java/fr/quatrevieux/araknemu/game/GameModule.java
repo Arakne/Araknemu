@@ -217,7 +217,8 @@ final public class GameModule implements ContainerModule {
             Server.class,
             container -> new NettyServer(
                 container.get(SessionHandler.class),
-                container.get(GameConfiguration.class).port()
+                container.get(GameConfiguration.class).port(),
+                container.get(GameConfiguration.class).inactivityTime()
             )
         );
 
