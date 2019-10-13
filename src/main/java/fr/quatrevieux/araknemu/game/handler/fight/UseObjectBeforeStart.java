@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectUseRequest;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Use an object before start the fight

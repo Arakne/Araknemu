@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.network.game.in.exchange;
 
-import fr.quatrevieux.araknemu.network.in.Packet;
-import fr.quatrevieux.araknemu.network.in.ParsePacketException;
-import fr.quatrevieux.araknemu.network.in.SinglePacketParser;
+import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
+import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 
 /**
  * Accept the request and start the exchange

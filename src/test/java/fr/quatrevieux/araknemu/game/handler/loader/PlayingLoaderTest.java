@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.network.game.in.object.ObjectDeleteRequest;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectMoveRequest;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellMove;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellUpgrade;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

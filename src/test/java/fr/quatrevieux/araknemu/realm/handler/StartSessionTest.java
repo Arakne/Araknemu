@@ -19,11 +19,9 @@
 
 package fr.quatrevieux.araknemu.realm.handler;
 
-import fr.quatrevieux.araknemu.network.in.SessionCreated;
+import fr.quatrevieux.araknemu.core.network.SessionCreated;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class StartSessionTest extends RealmBaseCase {
     @Test

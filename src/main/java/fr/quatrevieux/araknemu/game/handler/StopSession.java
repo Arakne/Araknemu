@@ -21,8 +21,8 @@ package fr.quatrevieux.araknemu.game.handler;
 
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 import fr.quatrevieux.araknemu.network.game.GameSession;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
-import fr.quatrevieux.araknemu.network.in.SessionClosed;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.SessionClosed;
 
 import java.util.Objects;
 import java.util.stream.Stream;

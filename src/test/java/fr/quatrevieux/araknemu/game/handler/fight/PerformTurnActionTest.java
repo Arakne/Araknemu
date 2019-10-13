@@ -23,10 +23,9 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
-import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.NoneAction;
-import fr.quatrevieux.araknemu.network.game.out.fight.action.StartFightAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -21,20 +21,16 @@ package fr.quatrevieux.araknemu.game.handler;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
-import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
-import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.handler.account.ListCharacters;
-import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.game.player.PlayerService;
-import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.game.in.account.AskCharacterList;
-import fr.quatrevieux.araknemu.network.in.Packet;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

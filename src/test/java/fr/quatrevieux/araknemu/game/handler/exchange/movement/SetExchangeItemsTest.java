@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.exchange.player.PlayerExchangeParty;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
-import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.game.in.exchange.movement.ItemsMovement;
 import fr.quatrevieux.araknemu.network.game.out.exchange.movement.local.LocalExchangeObject;
 import org.junit.jupiter.api.BeforeEach;

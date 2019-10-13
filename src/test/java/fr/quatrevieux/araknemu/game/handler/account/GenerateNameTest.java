@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.handler.account;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.generator.NameGenerationException;
 import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
-import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.in.account.AskRandomName;
 import fr.quatrevieux.araknemu.network.game.out.account.RandomNameGenerated;
 import fr.quatrevieux.araknemu.network.game.out.account.RandomNameGenerationError;

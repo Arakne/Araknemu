@@ -23,13 +23,13 @@ import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.account.TokenService;
-import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
-import fr.quatrevieux.araknemu.network.exception.CloseWithPacket;
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
+import fr.quatrevieux.araknemu.core.network.exception.CloseWithPacket;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.account.LoginToken;
 import fr.quatrevieux.araknemu.network.game.out.account.LoginTokenError;
 import fr.quatrevieux.araknemu.network.game.out.account.LoginTokenSuccess;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 import java.util.NoSuchElementException;
 

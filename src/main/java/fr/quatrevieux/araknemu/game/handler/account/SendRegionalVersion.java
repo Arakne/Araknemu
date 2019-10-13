@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.handler.account;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.account.AskRegionalVersion;
 import fr.quatrevieux.araknemu.network.game.out.account.RegionalVersion;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Send the regional version of the server

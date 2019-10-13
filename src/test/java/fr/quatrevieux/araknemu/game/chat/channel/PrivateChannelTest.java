@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.game.chat.ChatException;
 import fr.quatrevieux.araknemu.game.chat.event.ConcealedMessage;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
-import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
+import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import org.junit.jupiter.api.BeforeEach;

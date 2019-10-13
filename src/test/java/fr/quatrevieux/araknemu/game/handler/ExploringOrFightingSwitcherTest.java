@@ -22,11 +22,11 @@ package fr.quatrevieux.araknemu.game.handler;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.handler.fight.PerformTurnAction;
 import fr.quatrevieux.araknemu.game.handler.game.ValidateGameAction;
-import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.game.in.account.AskCharacterList;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
-import fr.quatrevieux.araknemu.network.in.Packet;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

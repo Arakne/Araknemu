@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.game.handler.account.Login;
 import fr.quatrevieux.araknemu.game.handler.account.SendRegionalVersion;
 import fr.quatrevieux.araknemu.game.handler.basic.SendDateAndTime;
 import fr.quatrevieux.araknemu.network.game.in.QuickPing;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

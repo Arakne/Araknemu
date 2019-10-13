@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.handler.dialog;
 import fr.quatrevieux.araknemu.game.exploration.interaction.dialog.NpcDialog;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.dialog.LeaveDialogRequest;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Stop the current NPC dialog

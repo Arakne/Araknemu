@@ -27,15 +27,12 @@ import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
-import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
-import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
+import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.EnumSet;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class InfoTest extends CommandTestCase {
     @Test

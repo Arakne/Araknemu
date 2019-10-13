@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.common.account;
 
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
-import fr.quatrevieux.araknemu.network.adapter.Session;
+import fr.quatrevieux.araknemu.core.network.Session;
 
 /**
  * Abstract class for Living Account

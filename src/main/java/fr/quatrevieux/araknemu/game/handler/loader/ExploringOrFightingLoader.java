@@ -32,7 +32,7 @@ import fr.quatrevieux.araknemu.game.handler.game.EndGameAction;
 import fr.quatrevieux.araknemu.game.handler.game.ValidateGameAction;
 import fr.quatrevieux.araknemu.game.handler.object.UseObject;
 import fr.quatrevieux.araknemu.network.game.GameSession;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Loader for exploring or fighter switch packet handlers

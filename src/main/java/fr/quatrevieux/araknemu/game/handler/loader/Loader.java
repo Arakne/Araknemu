@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.network.game.GameSession;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Loader for packets handlers

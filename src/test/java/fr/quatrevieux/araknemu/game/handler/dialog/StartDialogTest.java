@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.dialog.NpcDialog;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
-import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.game.in.dialog.CreateDialogRequest;
 import fr.quatrevieux.araknemu.network.game.out.dialog.DialogCreated;
 import fr.quatrevieux.araknemu.network.game.out.dialog.DialogQuestion;

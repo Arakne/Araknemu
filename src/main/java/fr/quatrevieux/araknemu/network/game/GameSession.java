@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.network.adapter.Channel;
-import fr.quatrevieux.araknemu.network.adapter.Session;
+import fr.quatrevieux.araknemu.core.network.Channel;
+import fr.quatrevieux.araknemu.core.network.Session;
 
 /**
  * Session wrapper for game server

@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.realm.handler;
 
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
-import fr.quatrevieux.araknemu.network.in.SessionClosed;
+import fr.quatrevieux.araknemu.core.network.SessionClosed;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;

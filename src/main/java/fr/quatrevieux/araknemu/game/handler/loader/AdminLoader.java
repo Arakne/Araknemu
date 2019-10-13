@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.admin.AdminService;
 import fr.quatrevieux.araknemu.game.handler.EnsureAdmin;
 import fr.quatrevieux.araknemu.game.handler.basic.admin.ExecuteCommand;
 import fr.quatrevieux.araknemu.network.game.GameSession;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Loader for admin packets

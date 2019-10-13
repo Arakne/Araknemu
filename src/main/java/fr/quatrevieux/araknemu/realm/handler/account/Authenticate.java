@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.realm.handler.account;
 
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.network.realm.in.Credentials;
 import fr.quatrevieux.araknemu.network.realm.out.*;

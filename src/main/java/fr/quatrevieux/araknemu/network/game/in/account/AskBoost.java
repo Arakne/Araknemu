@@ -20,9 +20,9 @@
 package fr.quatrevieux.araknemu.network.game.in.account;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
-import fr.quatrevieux.araknemu.network.in.Packet;
-import fr.quatrevieux.araknemu.network.in.ParsePacketException;
-import fr.quatrevieux.araknemu.network.in.SinglePacketParser;
+import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
+import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 
 /**
  * Boost one characteristic

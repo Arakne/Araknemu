@@ -35,8 +35,8 @@ import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.SqlLivi
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
-import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
-import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
+import fr.quatrevieux.araknemu.core.network.SessionHandler;
+import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 import fr.quatrevieux.araknemu.realm.host.GameConnector;

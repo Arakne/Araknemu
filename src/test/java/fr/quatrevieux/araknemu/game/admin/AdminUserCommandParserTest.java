@@ -31,7 +31,7 @@ import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
-import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
+import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

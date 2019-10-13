@@ -19,12 +19,12 @@
 
 package fr.quatrevieux.araknemu.network.realm;
 
-import fr.quatrevieux.araknemu.network.adapter.Channel;
-import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
-import fr.quatrevieux.araknemu.network.in.Dispatcher;
-import fr.quatrevieux.araknemu.network.in.PacketParser;
-import fr.quatrevieux.araknemu.network.in.SessionClosed;
-import fr.quatrevieux.araknemu.network.in.SessionCreated;
+import fr.quatrevieux.araknemu.core.network.Channel;
+import fr.quatrevieux.araknemu.core.network.SessionHandler;
+import fr.quatrevieux.araknemu.core.network.parser.Dispatcher;
+import fr.quatrevieux.araknemu.core.network.parser.PacketParser;
+import fr.quatrevieux.araknemu.core.network.SessionClosed;
+import fr.quatrevieux.araknemu.core.network.SessionCreated;
 import fr.quatrevieux.araknemu.network.realm.in.RealmPacketParser;
 
 /**

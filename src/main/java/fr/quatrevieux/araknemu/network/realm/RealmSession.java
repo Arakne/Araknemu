@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.network.realm;
 
-import fr.quatrevieux.araknemu.network.adapter.Channel;
-import fr.quatrevieux.araknemu.network.adapter.Session;
-import fr.quatrevieux.araknemu.network.in.PacketParser;
+import fr.quatrevieux.araknemu.core.network.Channel;
+import fr.quatrevieux.araknemu.core.network.Session;
+import fr.quatrevieux.araknemu.core.network.parser.PacketParser;
 import fr.quatrevieux.araknemu.realm.ConnectionKey;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 

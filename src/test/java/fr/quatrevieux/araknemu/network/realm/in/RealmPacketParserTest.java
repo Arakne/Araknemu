@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.network.realm.in;
 
+import fr.quatrevieux.araknemu.core.network.parser.*;
 import fr.quatrevieux.araknemu.network.in.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

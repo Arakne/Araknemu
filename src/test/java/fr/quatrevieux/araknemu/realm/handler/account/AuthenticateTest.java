@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.realm.handler.account;
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
-import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
+import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.realm.in.Credentials;
 import fr.quatrevieux.araknemu.network.realm.out.*;
 import fr.quatrevieux.araknemu.realm.ConnectionKeyTest;

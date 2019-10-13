@@ -20,12 +20,12 @@
 package fr.quatrevieux.araknemu.game.handler;
 
 import fr.quatrevieux.araknemu.game.GameService;
-import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
-import fr.quatrevieux.araknemu.network.exception.CloseSession;
-import fr.quatrevieux.araknemu.network.exception.WritePacket;
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
+import fr.quatrevieux.araknemu.core.network.exception.CloseSession;
+import fr.quatrevieux.araknemu.core.network.exception.WritePacket;
 import fr.quatrevieux.araknemu.network.game.GameSession;
-import fr.quatrevieux.araknemu.network.in.Packet;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import org.slf4j.LoggerFactory;
 
 /**

@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
-import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import org.junit.jupiter.api.BeforeEach;

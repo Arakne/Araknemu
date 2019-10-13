@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.network.realm.in;
 
-import fr.quatrevieux.araknemu.network.in.Packet;
-import fr.quatrevieux.araknemu.network.in.PacketParser;
-import fr.quatrevieux.araknemu.network.in.ParsePacketException;
+import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.PacketParser;
+import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 
 /**
  * Packet parser for realm

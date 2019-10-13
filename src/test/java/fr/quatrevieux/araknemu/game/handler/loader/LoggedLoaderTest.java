@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.network.game.in.account.AddCharacterRequest;
 import fr.quatrevieux.araknemu.network.game.in.account.AskCharacterList;
 import fr.quatrevieux.araknemu.network.game.in.account.ChoosePlayingCharacter;
 import fr.quatrevieux.araknemu.network.game.in.account.DeleteCharacterRequest;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

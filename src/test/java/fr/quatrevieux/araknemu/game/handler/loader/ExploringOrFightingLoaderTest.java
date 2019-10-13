@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectUseRequest;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

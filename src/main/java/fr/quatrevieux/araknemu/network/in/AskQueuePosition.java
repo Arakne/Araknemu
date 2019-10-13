@@ -19,6 +19,10 @@
 
 package fr.quatrevieux.araknemu.network.in;
 
+import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
+import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+
 /**
  * Ask the position on the login queue
  *

@@ -29,8 +29,8 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player.Init
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player.TargetExchangeRequestDialog;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
-import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
-import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.in.exchange.ExchangeRequest;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeCreated;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeRequested;

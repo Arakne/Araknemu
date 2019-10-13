@@ -19,8 +19,8 @@
 
 package fr.quatrevieux.araknemu.realm.handler;
 
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
-import fr.quatrevieux.araknemu.network.in.SessionClosed;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.SessionClosed;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
 

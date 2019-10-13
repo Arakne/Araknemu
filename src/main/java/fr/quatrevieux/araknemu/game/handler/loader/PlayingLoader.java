@@ -34,7 +34,7 @@ import fr.quatrevieux.araknemu.game.handler.object.RemoveObject;
 import fr.quatrevieux.araknemu.game.handler.spell.MoveSpell;
 import fr.quatrevieux.araknemu.game.handler.spell.UpgradeSpell;
 import fr.quatrevieux.araknemu.network.game.GameSession;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Loader for playing packets

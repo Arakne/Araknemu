@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.realm;
 
 import fr.quatrevieux.araknemu.core.BootException;
 import fr.quatrevieux.araknemu.core.Service;
-import fr.quatrevieux.araknemu.network.adapter.Server;
+import fr.quatrevieux.araknemu.core.network.Server;
 import org.slf4j.Logger;
 
 /**

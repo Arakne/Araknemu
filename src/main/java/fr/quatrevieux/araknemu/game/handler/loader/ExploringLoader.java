@@ -41,7 +41,7 @@ import fr.quatrevieux.araknemu.game.handler.fight.ShowFightDetails;
 import fr.quatrevieux.araknemu.game.handler.game.CancelGameAction;
 import fr.quatrevieux.araknemu.game.handler.game.LoadExtraInfo;
 import fr.quatrevieux.araknemu.network.game.GameSession;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Loader for exploration packets

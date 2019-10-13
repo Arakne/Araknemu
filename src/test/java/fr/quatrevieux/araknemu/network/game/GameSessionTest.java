@@ -28,7 +28,7 @@ import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsC
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
+import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;

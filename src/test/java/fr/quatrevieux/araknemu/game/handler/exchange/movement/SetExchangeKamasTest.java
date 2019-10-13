@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.handler.exchange.movement;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.exchange.player.PlayerExchangeParty;
-import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.game.in.exchange.movement.KamasMovement;
 import fr.quatrevieux.araknemu.network.game.out.exchange.movement.local.LocalExchangeKamas;
 import org.junit.jupiter.api.BeforeEach;

@@ -44,7 +44,7 @@ import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
-import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
+import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

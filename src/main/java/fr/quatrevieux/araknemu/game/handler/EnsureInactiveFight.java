@@ -19,11 +19,11 @@
 
 package fr.quatrevieux.araknemu.game.handler;
 
-import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
-import fr.quatrevieux.araknemu.network.in.Packet;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Ensure that the session contains is not in fight, or the fight is not active

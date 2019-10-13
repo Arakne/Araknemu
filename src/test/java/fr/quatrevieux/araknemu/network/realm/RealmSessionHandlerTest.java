@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.network.realm;
 
-import fr.quatrevieux.araknemu.network.adapter.Channel;
-import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
-import fr.quatrevieux.araknemu.network.in.*;
+import fr.quatrevieux.araknemu.core.network.Channel;
+import fr.quatrevieux.araknemu.core.network.parser.*;
+import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.in.AskQueuePosition;
 import fr.quatrevieux.araknemu.network.realm.in.Credentials;
 import fr.quatrevieux.araknemu.network.realm.in.DofusVersion;

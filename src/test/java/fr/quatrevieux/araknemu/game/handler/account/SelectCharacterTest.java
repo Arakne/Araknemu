@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
-import fr.quatrevieux.araknemu.network.exception.CloseWithPacket;
+import fr.quatrevieux.araknemu.core.network.exception.CloseWithPacket;
 import fr.quatrevieux.araknemu.network.game.in.account.ChoosePlayingCharacter;
 import fr.quatrevieux.araknemu.network.game.out.chat.ChannelSubscribed;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;

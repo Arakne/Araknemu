@@ -19,8 +19,8 @@
 
 package fr.quatrevieux.araknemu.network.realm;
 
-import fr.quatrevieux.araknemu.network.adapter.Channel;
-import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
+import fr.quatrevieux.araknemu.core.network.Channel;
+import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
