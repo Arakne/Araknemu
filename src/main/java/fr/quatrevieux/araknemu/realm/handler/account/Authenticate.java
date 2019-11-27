@@ -57,28 +57,28 @@ final public class Authenticate implements PacketHandler<RealmSession, Credentia
         public void success(AuthenticationAccount account) {
             account.attach(session);
 
-            session.write(new Pseudo(account.pseudo()));
-            session.write(new Community(account.community()));
-            session.write(new GMLevel(account.isMaster()));
-            session.write(new Question(account.question()));
-            session.write(new HostList(hosts.all()));
+            session.send(new Pseudo(account.pseudo()));
+            session.send(new Community(account.community()));
+            session.send(new GMLevel(account.isMaster()));
+            session.send(new Question(account.question()));
+            session.send(new HostList(hosts.all()));
         }
 
         @Override
         public void invalidCredentials() {
-            session.write(new LoginError(LoginError.LOGIN_ERROR));
+            session.send(new LoginError(LoginError.LOGIN_ERROR));
             session.close();
         }
 
         @Override
         public void alreadyConnected() {
-            session.write(new LoginError(LoginError.ALREADY_LOGGED));
+            session.send(new LoginError(LoginError.ALREADY_LOGGED));
             session.close();
         }
 
         @Override
         public void isPlaying() {
-            session.write(new LoginError(LoginError.ALREADY_LOGGED_GAME_SERVER));
+            session.send(new LoginError(LoginError.ALREADY_LOGGED_GAME_SERVER));
             session.close();
         }
     }

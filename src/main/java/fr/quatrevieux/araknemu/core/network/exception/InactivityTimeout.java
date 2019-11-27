@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.core.network.exception;
 /**
  * The session has reach its inactivity time
  */
-public class InactivityTimeout extends Exception {
+public class InactivityTimeout extends RuntimeException {
     public InactivityTimeout() {
     }
 

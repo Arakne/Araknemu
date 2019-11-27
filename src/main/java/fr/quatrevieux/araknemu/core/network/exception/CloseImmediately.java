@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.core.network.exception;
 /**
  * Error which must result of closing session without any messages
  */
-public class CloseImmediately extends Exception implements CloseSession {
+public class CloseImmediately extends RuntimeException implements CloseSession {
     public CloseImmediately() {
     }
 

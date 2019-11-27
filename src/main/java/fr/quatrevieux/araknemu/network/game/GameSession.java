@@ -20,46 +20,25 @@
 package fr.quatrevieux.araknemu.network.game;
 
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
+import fr.quatrevieux.araknemu.core.network.session.AbstractDelegatedSession;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.core.network.Channel;
-import fr.quatrevieux.araknemu.core.network.Session;
+import fr.quatrevieux.araknemu.core.network.session.Session;
 
 /**
  * Session wrapper for game server
  */
-final public class GameSession implements Session, Dispatcher {
-    final private Channel channel;
-
+final public class GameSession extends AbstractDelegatedSession implements Session, Dispatcher {
     private GameAccount account;
     private GamePlayer player;
     private ExplorationPlayer exploration;
     private PlayerFighter fighter;
 
-    public GameSession(Channel channel) {
-        this.channel = channel;
-    }
-
-    @Override
-    public Channel channel() {
-        return channel;
-    }
-
-    @Override
-    public void write(Object packet) {
-        channel.write(packet);
-    }
-
-    @Override
-    public void close() {
-        channel.close();
-    }
-
-    @Override
-    public boolean isAlive() {
-        return channel.isAlive();
+    public GameSession(Session session) {
+        super(session);
     }
 
     /**

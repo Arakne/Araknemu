@@ -36,8 +36,8 @@ final public class SendDateAndTime implements PacketHandler<GameSession, AskDate
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR, -1370);
 
-        session.write(new ServerDate(calendar));
-        session.write(new ServerTime(calendar));
+        session.send(new ServerDate(calendar));
+        session.send(new ServerTime(calendar));
     }
 
     @Override

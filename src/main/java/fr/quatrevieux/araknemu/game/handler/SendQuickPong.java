@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 final public class SendQuickPong implements PacketHandler<GameSession, QuickPing> {
     @Override
     public void handle(GameSession session, QuickPing packet) {
-        session.write(new QuickPong());
+        session.send(new QuickPong());
     }
 
     @Override

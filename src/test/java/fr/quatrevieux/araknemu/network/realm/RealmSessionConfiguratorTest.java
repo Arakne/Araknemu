@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.network.realm;
 
-import fr.quatrevieux.araknemu.core.network.Channel;
+import fr.quatrevieux.araknemu.core.network.SessionCreated;
 import fr.quatrevieux.araknemu.core.network.parser.*;
-import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
+import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.network.in.AskQueuePosition;
 import fr.quatrevieux.araknemu.network.realm.in.Credentials;
 import fr.quatrevieux.araknemu.network.realm.in.DofusVersion;
@@ -31,16 +31,16 @@ import fr.quatrevieux.araknemu.realm.handler.StartSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
-class RealmSessionHandlerTest extends RealmBaseCase {
-    private RealmSessionHandler handler;
+class RealmSessionConfiguratorTest extends RealmBaseCase {
+    private RealmSessionConfigurator configurator;
 
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
-        handler = new RealmSessionHandler(
+        configurator = new RealmSessionConfigurator(
             new DefaultDispatcher<>(new PacketHandler[]{
                 new StartSession(),
                 new CheckDofusVersion(configuration),
@@ -65,19 +65,24 @@ class RealmSessionHandlerTest extends RealmBaseCase {
 
     @Test
     void opened() throws Exception {
-        handler.opened(session);
+        ConfigurableSession session = new ConfigurableSession(channel);
+        RealmSession realmSession = new RealmSession(session);
 
-        requestStack.assertLast("HC"+session.key().key());
+        configurator.configure(session, realmSession);
+
+        realmSession.receive(new SessionCreated());
+
+        requestStack.assertLast("HC"+realmSession.key().key());
     }
 
     @Test
-    void create() {
-        Channel channel = new DummyChannel();
-        RealmSession session = handler.create(channel);
+    void exceptionShouldCloseSession() {
+        ConfigurableSession session = new ConfigurableSession(channel);
+        RealmSession realmSession = new RealmSession(session);
 
-        assertSame(channel, session.channel());
-        assertNull(session.account());
-        assertFalse(session.isLogged());
-        assertNotNull(session.parser());
+        configurator.configure(session, realmSession);
+
+        realmSession.exception(new RuntimeException());
+        assertFalse(realmSession.isAlive());
     }
 }

@@ -87,8 +87,8 @@ public class AuthenticationProtocolTest extends RealmBaseCase {
     void authenticateTwiceError() throws Exception {
         RealmSession s1 = sessionHandler.create(new DummyChannel());
 
-        sessionHandler.received(s1, "1.29.1");
-        sessionHandler.received(s1,"test\n#1"+ConnectionKeyTest.cryptPassword("password", s1.key().key()));
+        s1.receive("1.29.1");
+        s1.receive("test\n#1"+ConnectionKeyTest.cryptPassword("password", s1.key().key()));
 
         assertTrue(s1.isLogged());
         assertTrue(s1.account().isLogged());
@@ -108,8 +108,8 @@ public class AuthenticationProtocolTest extends RealmBaseCase {
     void authenticateAndLogout() throws Exception {
         RealmSession s1 = sessionHandler.create(new DummyChannel());
 
-        sessionHandler.received(s1, "1.29.1");
-        sessionHandler.received(s1,"test\n#1"+ConnectionKeyTest.cryptPassword("password", s1.key().key()));
+        s1.receive("1.29.1");
+        s1.receive("test\n#1"+ConnectionKeyTest.cryptPassword("password", s1.key().key()));
         s1.close();
 
         assertFalse(s1.account().isLogged());

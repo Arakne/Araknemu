@@ -19,66 +19,52 @@
 
 package fr.quatrevieux.araknemu.network.game;
 
-import fr.quatrevieux.araknemu.data.living.entity.account.Account;
-import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.account.TokenService;
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.core.network.exception.CloseWithPacket;
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.core.network.exception.InactivityTimeout;
+import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
+import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.network.game.out.account.LoginTokenError;
-import fr.quatrevieux.araknemu.core.network.parser.Dispatcher;
-import fr.quatrevieux.araknemu.core.network.parser.PacketParser;
 import fr.quatrevieux.araknemu.network.out.ServerMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
-class GameSessionHandlerTest extends GameBaseCase {
-    private GameSessionHandler handler;
+class GameExceptionConfiguratorTest extends GameBaseCase {
+    private GameExceptionConfigurator configurator;
+    private GameSession gameSession;
 
     @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
-        handler = new GameSessionHandler(
-            container.get(Dispatcher.class),
-            container.get(PacketParser.class)
-        );
+        configurator = new GameExceptionConfigurator();
+        ConfigurableSession session = new ConfigurableSession(channel);
+        gameSession = new GameSession(session);
+
+        configurator.configure(session, gameSession);
     }
 
     @Test
-    void opened() throws Exception {
-        handler.opened(session);
-
-        requestStack.assertLast("HG");
-    }
-
-    @Test
-    void closed() throws Exception {
-        handler.closed(session);
-        assertFalse(session.isLogged());
-    }
-
-    @Test
-    void exceptionCaughtCloseSession() throws Exception {
-        handler.exception(session, new CloseImmediately());
+    void exceptionCaughtCloseSession() {
+        gameSession.exception(new CloseImmediately());
 
         assertFalse(session.isLogged());
     }
 
     @Test
-    void exceptionCaughtWritePacket() throws Exception {
-        handler.exception(session, new ErrorPacket(new LoginTokenError()));
+    void exceptionCaughtWritePacket() {
+        gameSession.exception(new ErrorPacket(new LoginTokenError()));
 
         requestStack.assertLast(new LoginTokenError());
     }
 
     @Test
-    void exceptionCaughtWriteAndClose() throws Exception {
-        handler.exception(session, new CloseWithPacket(new LoginTokenError()));
+    void exceptionCaughtWriteAndClose() {
+        gameSession.exception(new CloseWithPacket(new LoginTokenError()));
 
         requestStack.assertLast(new LoginTokenError());
         assertFalse(session.isAlive());
@@ -86,22 +72,9 @@ class GameSessionHandlerTest extends GameBaseCase {
 
     @Test
     void exceptionInactivityTimeout() {
-        handler.exception(session, new InactivityTimeout());
+        gameSession.exception(new InactivityTimeout());
 
         requestStack.assertLast(ServerMessage.inactivity());
         assertFalse(session.isAlive());
-    }
-
-    @Test
-    void messageReceivedSuccess() throws Exception {
-        Account account = new Account(1);
-        dataSet.push(account);
-
-        String token = container.get(TokenService.class).generate(account);
-
-        handler.received(session, "AT" + token);
-
-        assertTrue(session.isLogged());
-        assertEquals(1, session.account().id());
     }
 }

@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.core.network.exception;
 /**
  * Simple error which result of an error response
  */
-public class ErrorPacket extends Exception implements WritePacket {
+public class ErrorPacket extends RuntimeException implements WritePacket {
     private Object packet;
 
     public ErrorPacket(Object packet) {

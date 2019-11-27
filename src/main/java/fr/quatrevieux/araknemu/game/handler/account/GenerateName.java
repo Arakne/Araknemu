@@ -41,7 +41,7 @@ final public class GenerateName implements PacketHandler<GameSession, AskRandomN
     @Override
     public void handle(GameSession session, AskRandomName packet) throws Exception {
         try {
-            session.write(
+            session.send(
                 new RandomNameGenerated(
                     generator.generate()
                 )

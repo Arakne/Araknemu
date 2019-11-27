@@ -29,6 +29,10 @@ import fr.quatrevieux.araknemu.core.dbal.DatabaseConfiguration;
 import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.core.di.*;
+import fr.quatrevieux.araknemu.core.network.parser.Dispatcher;
+import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
+import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
@@ -85,10 +89,7 @@ import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
-import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
-import fr.quatrevieux.araknemu.core.network.parser.Dispatcher;
-import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.util.RandomUtil;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.AfterEach;
@@ -207,7 +208,7 @@ public class GameBaseCase extends DatabaseTestCase {
         configuration = container.get(GameConfiguration.class);
 
         channel = new DummyChannel();
-        session = new GameSession(channel);
+        session = (GameSession) container.get(SessionFactory.class).create(channel);
         requestStack = new SendingRequestStack(channel);
 
         dataSet = new GameDataSet(
@@ -362,7 +363,7 @@ public class GameBaseCase extends DatabaseTestCase {
         container.get(PlayerExperienceService.class).preload(NOPLogger.NOP_LOGGER);
 
         Player player = dataSet.push(new Player(-1, 5, 2, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1), level, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, -1, 0, new Position(10540, 210), 0));
-        GameSession session = new GameSession(new DummyChannel());
+        GameSession session = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
 
         session.attach(new GameAccount(
             new Account(5),
@@ -404,11 +405,12 @@ public class GameBaseCase extends DatabaseTestCase {
     }
 
     public GamePlayer makeSimpleGamePlayer(int id) throws ContainerException, SQLException {
-        return makeSimpleGamePlayer(id, new GameSession(new DummyChannel()));
+        GameSession session = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
+        return makeSimpleGamePlayer(id, session);
     }
 
     public GameSession makeSimpleExplorationSession(int id) throws ContainerException, SQLException {
-        GameSession session = new GameSession(new DummyChannel());
+        GameSession session = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
         GamePlayer gp = makeSimpleGamePlayer(id, session);
 
         ExplorationPlayer ep = new ExplorationPlayer(gp);

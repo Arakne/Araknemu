@@ -20,8 +20,7 @@
 package fr.quatrevieux.araknemu.core.network.netty;
 
 import fr.quatrevieux.araknemu.core.network.Server;
-import fr.quatrevieux.araknemu.core.network.Session;
-import fr.quatrevieux.araknemu.core.network.SessionHandler;
+import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
@@ -32,7 +31,6 @@ import io.netty.handler.codec.MessageToMessageEncoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.timeout.ReadTimeoutHandler;
-import io.netty.util.AttributeKey;
 import io.netty.util.CharsetUtil;
 
 import java.util.List;
@@ -43,34 +41,21 @@ import java.util.List;
 final public class NettyServer implements Server {
     @ChannelHandler.Sharable
     final static public class MessageEndEncoder extends MessageToMessageEncoder {
-        final private AttributeKey<Session> attributeKey;
-        final private SessionHandler handler;
-
-        public MessageEndEncoder(AttributeKey<Session> attributeKey, SessionHandler handler) {
-            this.attributeKey = attributeKey;
-            this.handler = handler;
-        }
-
         @Override
-        protected void encode(ChannelHandlerContext ctx, Object msg, List out) throws Exception {
+        protected void encode(ChannelHandlerContext ctx, Object msg, List out) {
             out.add(msg + "\000");
-
-            handler.sent(
-                ctx.channel().attr(attributeKey).get(),
-                msg
-            );
         }
     }
 
-    final private SessionHandler handler;
+    final private SessionFactory factory;
     final private int port;
     final private int readTimeout;
 
     private Channel serverChannel;
     private EventLoopGroup loopGroup;
 
-    public NettyServer(SessionHandler handler, int port, int readTimeout) {
-        this.handler = handler;
+    public NettyServer(SessionFactory factory, int port, int readTimeout) {
+        this.factory = factory;
         this.port = port;
         this.readTimeout = readTimeout;
     }
@@ -79,10 +64,10 @@ final public class NettyServer implements Server {
     public void start() {
         ServerBootstrap bootstrap = new ServerBootstrap();
 
-        SessionHandlerAdapter handlerAdapter = new SessionHandlerAdapter(handler);
+        SessionHandlerAdapter handlerAdapter = new SessionHandlerAdapter(factory);
         StringDecoder decoder = new StringDecoder(CharsetUtil.UTF_8);
         StringEncoder encoder = new StringEncoder(CharsetUtil.UTF_8);
-        MessageToMessageEncoder messageEncoder = new MessageEndEncoder(handlerAdapter.sessionAttribute(), handler);
+        MessageToMessageEncoder messageEncoder = new MessageEndEncoder();
 
         bootstrap
             .group(loopGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors()))

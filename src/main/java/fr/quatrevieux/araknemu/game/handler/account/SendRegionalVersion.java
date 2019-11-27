@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 final public class SendRegionalVersion implements PacketHandler<GameSession, AskRegionalVersion> {
     @Override
     public void handle(GameSession session, AskRegionalVersion packet) throws Exception {
-        session.write(new RegionalVersion(0)); // @todo configure
+        session.send(new RegionalVersion(0)); // @todo configure
     }
 
     @Override

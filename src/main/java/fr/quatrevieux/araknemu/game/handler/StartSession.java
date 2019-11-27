@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.core.network.SessionCreated;
 final public class StartSession implements PacketHandler<GameSession, SessionCreated> {
     @Override
     public void handle(GameSession session, SessionCreated packet) {
-        session.write(
+        session.send(
             new HelloGame()
         );
     }

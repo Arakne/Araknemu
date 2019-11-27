@@ -60,7 +60,7 @@ final public class Login implements PacketHandler<GameSession, LoginToken> {
         }
 
         account.attach(session);
-        session.write(new LoginTokenSuccess()); // @todo cipher key
+        session.send(new LoginTokenSuccess()); // @todo cipher key
     }
 
     @Override

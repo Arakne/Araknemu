@@ -21,13 +21,14 @@ package fr.quatrevieux.araknemu.game.admin.account;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
+import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
-import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import org.junit.jupiter.api.Test;
 
@@ -64,7 +65,7 @@ class InfoTest extends CommandTestCase {
             container.get(AccountRepository.class)
         );
 
-        account.attach(new GameSession(new DummyChannel()));
+        account.attach((GameSession) container.get(SessionFactory.class).create(new DummyChannel()));
 
         execute("info");
 

@@ -37,7 +37,7 @@ final public class UseObjectBeforeStart implements PacketHandler<GameSession, Ob
         UsableItem item = UsableItem.class.cast(entry.item());
 
         if (!item.checkFighter(session.fighter())) {
-            session.write(new Noop());
+            session.send(new Noop());
             return;
         }
 

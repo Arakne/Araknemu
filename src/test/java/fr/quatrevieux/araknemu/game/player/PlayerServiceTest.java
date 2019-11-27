@@ -21,6 +21,11 @@ package fr.quatrevieux.araknemu.game.player;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.event.Dispatcher;
+import fr.quatrevieux.araknemu.core.event.Listener;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
+import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
@@ -34,17 +39,13 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
-import fr.quatrevieux.araknemu.core.event.Dispatcher;
-import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
-import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.listener.player.*;
+import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
-import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -164,23 +165,23 @@ class PlayerServiceTest extends GameBaseCase {
 
     @Test
     void filter() throws ContainerException {
-        GameSession session1 = new GameSession(new DummyChannel());
+        GameSession session1 = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
         session1.attach(new GameAccount(new Account(1), container.get(AccountService.class), 2));
         service.load(session1, dataSet.pushPlayer("Bob", 1, 2).id());
 
-        GameSession session2 = new GameSession(new DummyChannel());
+        GameSession session2 = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
         session2.attach(new GameAccount(new Account(2), container.get(AccountService.class), 2));
         service.load(session2, dataSet.pushPlayer("Robert", 2, 2).id());
 
-        GameSession session3 = new GameSession(new DummyChannel());
+        GameSession session3 = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
         session3.attach(new GameAccount(new Account(3), container.get(AccountService.class), 2));
         service.load(session3, dataSet.pushPlayer("Jean", 3, 2).id());
 
-        GameSession session4 = new GameSession(new DummyChannel());
+        GameSession session4 = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
         session4.attach(new GameAccount(new Account(4), container.get(AccountService.class), 2));
         service.load(session4, dataSet.pushPlayer("Kevin", 4, 2).id());
 
-        GameSession session5 = new GameSession(new DummyChannel());
+        GameSession session5 = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
         session5.attach(new GameAccount(new Account(5), container.get(AccountService.class), 2));
         service.load(session5, dataSet.pushPlayer("Louis", 5, 2).id());
 
@@ -193,7 +194,7 @@ class PlayerServiceTest extends GameBaseCase {
     void isOnline() throws ContainerException {
         assertFalse(service.isOnline("no_found"));
 
-        GameSession session1 = new GameSession(new DummyChannel());
+        GameSession session1 = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
         session1.attach(new GameAccount(new Account(1), container.get(AccountService.class), 2));
         GamePlayer player = service.load(session1, dataSet.pushPlayer("Bob", 1, 2).id());
         session1.setPlayer(player);
@@ -212,7 +213,7 @@ class PlayerServiceTest extends GameBaseCase {
 
     @Test
     void getSuccess() throws ContainerException {
-        GameSession session1 = new GameSession(new DummyChannel());
+        GameSession session1 = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
         session1.attach(new GameAccount(new Account(1), container.get(AccountService.class), 2));
         GamePlayer player = service.load(session1, dataSet.pushPlayer("Bob", 1, 2).id());
 

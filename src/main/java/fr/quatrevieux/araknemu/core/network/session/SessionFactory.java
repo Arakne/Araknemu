@@ -17,31 +17,18 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.core.network;
+package fr.quatrevieux.araknemu.core.network.session;
+
+import fr.quatrevieux.araknemu.core.network.Channel;
 
 /**
- * Base interface for sessions
+ * Factory for create new sessions
+ *
+ * @param <S> The session type
  */
-public interface Session {
+public interface SessionFactory<S extends Session> {
     /**
-     * Get the low level IO channel
+     * Create the session from the channel
      */
-    public Channel channel();
-
-    /**
-     * Write packet to channel
-     *
-     * @param packet Packet to write
-     */
-    public void write(Object packet);
-
-    /**
-     * Close the session
-     */
-    public void close();
-
-    /**
-     * Check if the session is valid
-     */
-    public boolean isAlive();
+    public S create(Channel channel);
 }

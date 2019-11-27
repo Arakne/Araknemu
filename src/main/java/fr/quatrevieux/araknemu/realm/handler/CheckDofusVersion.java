@@ -41,7 +41,7 @@ final public class CheckDofusVersion implements PacketHandler<RealmSession, Dofu
             return;
         }
 
-        session.write(new BadVersion(configuration.clientVersion()));
+        session.send(new BadVersion(configuration.clientVersion()));
         session.close();
     }
 

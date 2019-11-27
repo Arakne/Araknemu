@@ -52,7 +52,7 @@ final public class CreateGame implements PacketHandler<GameSession, CreateGameRe
 
         player.start(exploration);
 
-        session.write(new GameCreated(CreateGameRequest.Type.EXPLORATION));
+        session.send(new GameCreated(CreateGameRequest.Type.EXPLORATION));
         session.dispatch(new StartExploration(exploration));
     }
 

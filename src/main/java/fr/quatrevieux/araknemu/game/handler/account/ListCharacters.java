@@ -37,7 +37,7 @@ final public class ListCharacters implements PacketHandler<GameSession, AskChara
 
     @Override
     public void handle(GameSession session, AskCharacterList packet) throws Exception {
-        session.write(
+        session.send(
             new CharactersList(
                 session.account().remainingTime(),
                 service.list(session.account())

@@ -96,7 +96,7 @@ final public class GamePlayer implements PlayerSessionScope {
 
     @Override
     public void send(Object packet) {
-        session.write(packet);
+        session.send(packet);
     }
 
     @Override

@@ -48,9 +48,9 @@ final public class SelectCharacter implements PacketHandler<GameSession, ChooseP
             throw new CloseWithPacket(new CharacterSelectionError());
         }
 
-        session.write(new CharacterSelected(session.player()));
+        session.send(new CharacterSelected(session.player()));
         session.player().dispatch(new GameJoined());
-        session.write(Error.welcome());
+        session.send(Error.welcome());
     }
 
     @Override

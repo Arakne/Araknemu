@@ -42,7 +42,7 @@ final public class ConnectGame implements PacketHandler<RealmSession, ChooseServ
     @Override
     public void handle(RealmSession session, ChooseServer packet) {
         if (!service.isAvailable(packet.id())) {
-            session.write(
+            session.send(
                 new SelectServerError(SelectServerError.Error.CANT_SELECT)
             );
 
@@ -54,7 +54,7 @@ final public class ConnectGame implements PacketHandler<RealmSession, ChooseServ
         host.connector().token(
             session.account(),
             token -> {
-                session.write(new SelectServerPlain(host.ip(), host.port(), token));
+                session.send(new SelectServerPlain(host.ip(), host.port(), token));
                 session.close();
             }
         );

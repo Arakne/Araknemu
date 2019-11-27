@@ -56,8 +56,8 @@ final public class CreateCharacter implements PacketHandler<GameSession, AddChar
             );
         }
 
-        session.write(new CharacterCreated());
-        session.write(
+        session.send(new CharacterCreated());
+        session.send(
             new CharactersList(
                 session.account().remainingTime(),
                 service.list(session.account())

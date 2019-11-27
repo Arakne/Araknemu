@@ -17,48 +17,47 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.common.account;
+package fr.quatrevieux.araknemu.core.network.session;
 
-import fr.quatrevieux.araknemu.core.network.session.Session;
+import fr.quatrevieux.araknemu.core.network.Channel;
 
 /**
- * Living account, connected to a session
+ * Base interface for sessions
  */
-public interface LivingAccount<S extends Session> {
+public interface Session {
     /**
-     * Check if the account is a master (admin) account
+     * Get the low level IO channel
      */
-    public boolean isMaster();
+    public Channel channel();
 
     /**
-     * Get the account id
-     */
-    public int id();
-
-    /**
-     * Get the account pseudo
-     */
-    public String pseudo();
-
-    /**
-     * Get the community ID
+     * Write packet to channel
      *
-     * @todo constant, enum ?
+     * @param packet Packet to send
      */
-    public int community();
+    public void send(Object packet);
 
     /**
-     * Attach the account to the session
+     * Handle a received packet
+     *
+     * @param packet Packet to handle
      */
-    public void attach(S session);
+    public void receive(Object packet);
 
     /**
-     * Detach the account from the session
+     * Handle an exception raised on the current session
+     *
+     * @param cause Exception to handle
      */
-    public void detach();
+    public void exception(Throwable cause);
 
     /**
-     * Check if the account is logged
+     * Close the session
      */
-    public boolean isLogged();
+    public void close();
+
+    /**
+     * Check if the session is valid
+     */
+    public boolean isAlive();
 }

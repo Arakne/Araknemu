@@ -20,6 +20,8 @@
 package fr.quatrevieux.araknemu.game.admin;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
+import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
@@ -31,7 +33,6 @@ import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
-import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -127,7 +128,7 @@ class AdminUserCommandParserTest extends GameBaseCase {
     void parseWithAnonymousContext() throws ContainerException, AdminException {
         Player player = dataSet.pushPlayer("John", 5, 2);
 
-        GameSession session = new GameSession(new DummyChannel());
+        GameSession session = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
 
         session.attach(new GameAccount(
             new Account(5),

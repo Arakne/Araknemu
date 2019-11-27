@@ -41,7 +41,7 @@ final public class MoveObject implements PacketHandler<GameSession, ObjectMoveRe
                 )
             ;
         } catch (BadLevelException e) {
-            session.write(new AddItemError(AddItemError.Error.TOO_LOW_LEVEL));
+            session.send(new AddItemError(AddItemError.Error.TOO_LOW_LEVEL));
         }
     }
 

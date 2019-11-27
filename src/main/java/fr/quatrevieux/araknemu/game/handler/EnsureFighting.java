@@ -55,7 +55,7 @@ final public class EnsureFighting<P extends Packet> implements PacketHandler<Gam
                     Throwable cause = e;
 
                     if (e instanceof WritePacket) {
-                        session.write(WritePacket.class.cast(e).packet());
+                        session.send(WritePacket.class.cast(e).packet());
                         cause = e.getCause();
                     }
 

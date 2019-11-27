@@ -61,8 +61,8 @@ final public class DeleteCharacter implements PacketHandler<GameSession, DeleteC
             throw new ErrorPacket(new CharacterDeleted(false), e);
         }
 
-        session.write(new CharacterDeleted(true));
-        session.write(
+        session.send(new CharacterDeleted(true));
+        session.send(
             new CharactersList(
                 session.account().remainingTime(),
                 service.list(session.account())

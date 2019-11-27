@@ -37,7 +37,7 @@ final public class ShowFightDetails implements PacketHandler<GameSession, AskFig
 
     @Override
     public void handle(GameSession session, AskFightDetails packet) {
-        session.write(new FightDetails(service.getFromMap(session.exploration().map().id(), packet.fightId())));
+        session.send(new FightDetails(service.getFromMap(session.exploration().map().id(), packet.fightId())));
     }
 
     @Override

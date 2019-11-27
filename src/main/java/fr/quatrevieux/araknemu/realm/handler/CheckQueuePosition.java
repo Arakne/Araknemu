@@ -33,7 +33,7 @@ import fr.quatrevieux.araknemu.network.realm.RealmSession;
 final public class CheckQueuePosition implements PacketHandler<RealmSession, AskQueuePosition> {
     @Override
     public void handle(RealmSession session, AskQueuePosition packet) {
-        session.write(new QueuePosition(1));
+        session.send(new QueuePosition(1));
     }
 
     @Override

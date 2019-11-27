@@ -90,7 +90,7 @@ final public class UseObject implements PacketHandler<GameSession, ObjectUseRequ
             if (result) {
                 entry.remove(1);
             } else {
-                session.write(new Noop());
+                session.send(new Noop());
             }
         }
     }

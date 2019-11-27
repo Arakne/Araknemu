@@ -19,9 +19,11 @@
 
 package fr.quatrevieux.araknemu.core.network.netty;
 
-import fr.quatrevieux.araknemu.core.network.Session;
-import fr.quatrevieux.araknemu.core.network.SessionHandler;
+import fr.quatrevieux.araknemu.core.network.SessionClosed;
+import fr.quatrevieux.araknemu.core.network.SessionCreated;
 import fr.quatrevieux.araknemu.core.network.exception.InactivityTimeout;
+import fr.quatrevieux.araknemu.core.network.session.Session;
+import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -35,17 +37,15 @@ import io.netty.util.AttributeKey;
 final public class SessionHandlerAdapter<S extends Session> extends ChannelInboundHandlerAdapter {
     final private AttributeKey<S> sessionAttribute = AttributeKey.valueOf("session");
 
-    final private SessionHandler<S> handler;
+    final private SessionFactory<S> factory;
 
-    public SessionHandlerAdapter(SessionHandler<S> handler) {
-        this.handler = handler;
+    public SessionHandlerAdapter(SessionFactory<S> factory) {
+        this.factory = factory;
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        S session = handler.create(
-            new ChannelAdapter(ctx)
-        );
+        S session = factory.create(new ChannelAdapter(ctx));
 
         ctx
             .channel()
@@ -53,36 +53,25 @@ final public class SessionHandlerAdapter<S extends Session> extends ChannelInbou
             .set(session)
         ;
 
-        handler.opened(session);
+        session.receive(new SessionCreated());
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        handler.closed(
-            ctx.channel().attr(sessionAttribute).get()
-        );
+        ctx.channel().attr(sessionAttribute).get().receive(new SessionClosed());
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        handler.received(
-            ctx.channel().attr(sessionAttribute).get(),
-            msg.toString()
-        );
+        ctx.channel().attr(sessionAttribute).get().receive(msg);
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        final S session = ctx.channel().attr(sessionAttribute).get();
-
         if (cause instanceof ReadTimeoutException) {
             cause = new InactivityTimeout(cause);
         }
 
-        handler.exception(session, cause);
-    }
-
-    AttributeKey<S> sessionAttribute() {
-        return sessionAttribute;
+        ctx.channel().attr(sessionAttribute).get().exception(cause);
     }
 }

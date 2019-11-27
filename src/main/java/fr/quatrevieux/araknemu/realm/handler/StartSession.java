@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.network.realm.out.HelloConnection;
 final public class StartSession implements PacketHandler<RealmSession, SessionCreated> {
     @Override
     public void handle(RealmSession session, SessionCreated packet) {
-        session.write(
+        session.send(
             new HelloConnection(
                 session.key()
             )

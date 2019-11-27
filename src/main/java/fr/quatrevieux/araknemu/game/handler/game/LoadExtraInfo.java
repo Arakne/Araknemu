@@ -54,7 +54,7 @@ final public class LoadExtraInfo implements PacketHandler<GameSession, AskExtraI
             throw new CloseImmediately("A map should be loaded before get extra info");
         }
 
-        session.write(new AddSprites(map.sprites()));
+        session.send(new AddSprites(map.sprites()));
 
         Collection<Fight> fights = fightService.fightsByMap(map.id());
 
@@ -63,7 +63,7 @@ final public class LoadExtraInfo implements PacketHandler<GameSession, AskExtraI
                 continue;
             }
 
-            session.write(new ShowFight(fight));
+            session.send(new ShowFight(fight));
 
             for (FightTeam team : fight.teams()) {
                 map.send(new AddTeamFighters(team));
@@ -72,7 +72,7 @@ final public class LoadExtraInfo implements PacketHandler<GameSession, AskExtraI
 
         map.send(new FightsCount(fights.size()));
 
-        session.write(new MapReady());
+        session.send(new MapReady());
     }
 
     @Override

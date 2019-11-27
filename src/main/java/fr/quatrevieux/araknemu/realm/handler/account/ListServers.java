@@ -37,7 +37,7 @@ final public class ListServers implements PacketHandler<RealmSession, AskServerL
 
     @Override
     public void handle(RealmSession session, AskServerList packet) {
-        session.write(
+        session.send(
             new ServerList(
                 ServerList.ONE_YEAR, // @todo abo
                 service.charactersByHost(session.account())

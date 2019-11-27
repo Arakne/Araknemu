@@ -24,6 +24,14 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.core.network.Server;
+import fr.quatrevieux.araknemu.core.network.netty.NettyServer;
+import fr.quatrevieux.araknemu.core.network.parser.AggregatePacketParser;
+import fr.quatrevieux.araknemu.core.network.parser.DefaultDispatcher;
+import fr.quatrevieux.araknemu.core.network.parser.Dispatcher;
+import fr.quatrevieux.araknemu.core.network.parser.PacketParser;
+import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
+import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.SqlLivingRepositoriesModule;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.sql.SqlWorldRepositoriesModule;
 import fr.quatrevieux.araknemu.game.account.AccountService;
@@ -75,14 +83,6 @@ import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
-import fr.quatrevieux.araknemu.core.network.Server;
-import fr.quatrevieux.araknemu.core.network.SessionHandler;
-import fr.quatrevieux.araknemu.core.network.netty.NettyServer;
-import fr.quatrevieux.araknemu.core.network.util.LoggingSessionHandler;
-import fr.quatrevieux.araknemu.core.network.parser.AggregatePacketParser;
-import fr.quatrevieux.araknemu.core.network.parser.DefaultDispatcher;
-import fr.quatrevieux.araknemu.core.network.parser.Dispatcher;
-import fr.quatrevieux.araknemu.core.network.parser.PacketParser;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -100,7 +100,7 @@ class GameModuleTest extends GameBaseCase {
         container.register(new GameModule(app));
 
         assertInstanceOf(GameService.class, container.get(GameService.class));
-        assertInstanceOf(LoggingSessionHandler.class, container.get(SessionHandler.class));
+        assertInstanceOf(SessionConfigurator.class, container.get(SessionFactory.class));
         assertInstanceOf(NettyServer.class, container.get(Server.class));
         assertInstanceOf(DefaultDispatcher.class, container.get(Dispatcher.class));
         assertInstanceOf(AggregatePacketParser.class, container.get(PacketParser.class));

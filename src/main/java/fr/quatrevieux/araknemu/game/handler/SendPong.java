@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 final public class SendPong implements PacketHandler<GameSession, Ping> {
     @Override
     public void handle(GameSession session, Ping packet) throws Exception {
-        session.write(new Pong());
+        session.send(new Pong());
     }
 
     @Override

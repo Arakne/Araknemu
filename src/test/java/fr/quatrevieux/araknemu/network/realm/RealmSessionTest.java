@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.network.realm;
 
 import fr.quatrevieux.araknemu.core.network.Channel;
+import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import org.junit.jupiter.api.Test;
 
@@ -31,12 +32,12 @@ class RealmSessionTest {
     void channel() {
         Channel channel = new DummyChannel();
 
-        assertSame(channel, new RealmSession(channel, null).channel());
+        assertSame(channel, new RealmSession(new ConfigurableSession(channel)).channel());
     }
 
     @Test
     void key() {
-        RealmSession session = new RealmSession(new DummyChannel(), null);
+        RealmSession session = new RealmSession(new ConfigurableSession(new DummyChannel()));
 
         assertEquals(32, session.key().key().length());
         assertSame(session.key(), session.key());
@@ -50,7 +51,7 @@ class RealmSessionTest {
     void write() {
         DummyChannel channel = new DummyChannel();
 
-        new RealmSession(channel, null).write("my message");
+        new RealmSession(new ConfigurableSession(channel)).send("my message");
 
         assertEquals("my message", channel.getMessages().lastElement());
     }
