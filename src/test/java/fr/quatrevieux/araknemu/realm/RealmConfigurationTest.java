@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -54,6 +55,6 @@ class RealmConfigurationTest {
 
     @Test
     void inactivityTime() {
-        assertEquals(900, configuration.inactivityTime());
+        assertEquals(Duration.ofMinutes(15), configuration.inactivityTime());
     }
 }

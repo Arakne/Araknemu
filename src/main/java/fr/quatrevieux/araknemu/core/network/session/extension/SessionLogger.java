@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.core.network.session.extension;
 
 import fr.quatrevieux.araknemu.core.network.SessionClosed;
 import fr.quatrevieux.araknemu.core.network.SessionCreated;
+import fr.quatrevieux.araknemu.core.network.exception.HandlingException;
 import fr.quatrevieux.araknemu.core.network.parser.HandlerNotFoundException;
 import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.core.network.session.Session;
@@ -65,6 +66,10 @@ final public class SessionLogger implements ConfigurableSession.ExceptionHandler
 
     @Override
     public boolean handleException(Throwable cause) {
+        if (cause instanceof HandlingException) {
+            return true;
+        }
+
         if (cause instanceof HandlerNotFoundException) {
             logger.warn(cause.getMessage());
 

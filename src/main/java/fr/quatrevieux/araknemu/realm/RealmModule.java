@@ -102,6 +102,7 @@ final public class RealmModule implements ContainerModule {
                 new PacketHandler[] {
                     new StartSession(),
                     new StopSession(container.get(AuthenticationService.class)),
+                    new CloseInactiveSession(),
                     new CheckDofusVersion(container.get(RealmConfiguration.class)),
                     new Authenticate(
                         container.get(AuthenticationService.class),

@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.network.SessionIdle;
 import fr.quatrevieux.araknemu.game.handler.CheckQueuePosition;
 import fr.quatrevieux.araknemu.game.handler.SendPong;
 import fr.quatrevieux.araknemu.game.handler.StartSession;
@@ -57,5 +58,6 @@ class CommonLoaderTest extends LoaderTestCase {
         assertContainsType(SendPong.class, handlers);
         assertContainsType(GenerateName.class, handlers);
         assertHandlePacket(QuickPing.class, handlers);
+        assertHandlePacket(SessionIdle.class, handlers);
     }
 }

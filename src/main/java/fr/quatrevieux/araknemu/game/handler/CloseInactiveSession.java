@@ -17,20 +17,27 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.core.network.exception;
+package fr.quatrevieux.araknemu.game.handler;
+
+import fr.quatrevieux.araknemu.core.network.SessionIdle;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.network.game.GameSession;
+import fr.quatrevieux.araknemu.network.out.ServerMessage;
 
 /**
- * Write error packet and close the session
+ * Close the inactive session
+ *
+ * @todo refactor with realm
  */
-public class CloseWithPacket extends HandlingException implements CloseSession, WritePacket {
-    private Object packet;
-
-    public CloseWithPacket(Object packet) {
-        this.packet = packet;
+final public class CloseInactiveSession implements PacketHandler<GameSession, SessionIdle> {
+    @Override
+    public void handle(GameSession session, SessionIdle packet) {
+        session.send(ServerMessage.inactivity());
+        session.close();
     }
 
     @Override
-    public Object packet() {
-        return packet;
+    public Class<SessionIdle> packet() {
+        return SessionIdle.class;
     }
 }

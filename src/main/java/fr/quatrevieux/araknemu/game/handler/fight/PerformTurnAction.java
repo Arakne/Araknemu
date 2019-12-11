@@ -32,7 +32,7 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
  */
 final public class PerformTurnAction implements PacketHandler<GameSession, GameActionRequest> {
     @Override
-    public void handle(GameSession session, GameActionRequest packet) throws Exception {
+    public void handle(GameSession session, GameActionRequest packet) {
         try {
             FightTurn turn = session.fighter().turn();
 

@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.core.network.netty;
 
 import fr.quatrevieux.araknemu.core.network.Server;
+import fr.quatrevieux.araknemu.core.network.SessionIdle;
 import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
@@ -30,10 +31,13 @@ import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.MessageToMessageEncoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
-import io.netty.handler.timeout.ReadTimeoutHandler;
+import io.netty.handler.timeout.IdleStateEvent;
+import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.CharsetUtil;
 
+import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Server adapter for Netty
@@ -49,12 +53,12 @@ final public class NettyServer implements Server {
 
     final private SessionFactory factory;
     final private int port;
-    final private int readTimeout;
+    final private Duration readTimeout;
 
     private Channel serverChannel;
     private EventLoopGroup loopGroup;
 
-    public NettyServer(SessionFactory factory, int port, int readTimeout) {
+    public NettyServer(SessionFactory factory, int port, Duration readTimeout) {
         this.factory = factory;
         this.port = port;
         this.readTimeout = readTimeout;
@@ -80,7 +84,12 @@ final public class NettyServer implements Server {
                         .addLast(encoder)
                         .addLast(decoder)
                         .addLast(messageEncoder)
-                        .addLast(new ReadTimeoutHandler(readTimeout))
+                        .addLast(new IdleStateHandler(readTimeout.toMillis(), 0, 0, TimeUnit.MILLISECONDS) {
+                            @Override
+                            protected void channelIdle(ChannelHandlerContext ctx, IdleStateEvent evt) throws Exception {
+                                ctx.fireChannelRead(new SessionIdle(readTimeout));
+                            }
+                        })
                         .addLast(handlerAdapter)
                     ;
                 }

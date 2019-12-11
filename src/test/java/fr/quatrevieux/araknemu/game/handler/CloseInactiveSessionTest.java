@@ -17,20 +17,23 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.core.network.exception;
+package fr.quatrevieux.araknemu.game.handler;
 
-/**
- * Write error packet and close the session
- */
-public class CloseWithPacket extends HandlingException implements CloseSession, WritePacket {
-    private Object packet;
+import fr.quatrevieux.araknemu.core.network.SessionIdle;
+import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.network.out.ServerMessage;
+import org.junit.jupiter.api.Test;
 
-    public CloseWithPacket(Object packet) {
-        this.packet = packet;
-    }
+import java.time.Duration;
 
-    @Override
-    public Object packet() {
-        return packet;
+import static org.junit.jupiter.api.Assertions.*;
+
+class CloseInactiveSessionTest extends GameBaseCase {
+    @Test
+    void handle() throws Exception {
+        handlePacket(new SessionIdle(Duration.ofMinutes(15)));
+
+        requestStack.assertLast(ServerMessage.inactivity());
+        assertFalse(session.isAlive());
     }
 }

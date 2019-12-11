@@ -17,16 +17,23 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.core.network.exception;
+package fr.quatrevieux.araknemu.realm.handler;
 
-/**
- * The session has reach its inactivity time
- */
-public class InactivityTimeout extends RuntimeException {
-    public InactivityTimeout() {
-    }
+import fr.quatrevieux.araknemu.core.network.SessionIdle;
+import fr.quatrevieux.araknemu.network.out.ServerMessage;
+import fr.quatrevieux.araknemu.realm.RealmBaseCase;
+import org.junit.jupiter.api.Test;
 
-    public InactivityTimeout(Throwable cause) {
-        super(cause);
+import java.time.Duration;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class CloseInactiveSessionTest extends RealmBaseCase {
+    @Test
+    void handle() {
+        session.receive(new SessionIdle(Duration.ofMinutes(15)));
+
+        assertFalse(session.isAlive());
+        requestStack.assertLast(ServerMessage.inactivity());
     }
 }

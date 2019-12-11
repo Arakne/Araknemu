@@ -20,17 +20,26 @@
 package fr.quatrevieux.araknemu.core.network.exception;
 
 /**
- * Write error packet and close the session
+ * Base exception which occurs during a normal handling of a packet
+ * The sub-class exceptions are usually related to an action
  */
-public class CloseWithPacket extends HandlingException implements CloseSession, WritePacket {
-    private Object packet;
-
-    public CloseWithPacket(Object packet) {
-        this.packet = packet;
+public class HandlingException extends RuntimeException {
+    public HandlingException() {
     }
 
-    @Override
-    public Object packet() {
-        return packet;
+    public HandlingException(String message) {
+        super(message);
+    }
+
+    public HandlingException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public HandlingException(Throwable cause) {
+        super(cause);
+    }
+
+    public HandlingException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

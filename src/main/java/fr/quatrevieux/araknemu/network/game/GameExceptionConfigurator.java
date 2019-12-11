@@ -20,11 +20,9 @@
 package fr.quatrevieux.araknemu.network.game;
 
 import fr.quatrevieux.araknemu.core.network.exception.CloseSession;
-import fr.quatrevieux.araknemu.core.network.exception.InactivityTimeout;
 import fr.quatrevieux.araknemu.core.network.exception.WritePacket;
 import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
-import fr.quatrevieux.araknemu.network.out.ServerMessage;
 
 /**
  * Configure base exception for a game session
@@ -32,13 +30,6 @@ import fr.quatrevieux.araknemu.network.out.ServerMessage;
 final public class GameExceptionConfigurator implements SessionConfigurator.Configurator<GameSession> {
     @Override
     public void configure(ConfigurableSession inner, GameSession session) {
-        inner.addExceptionHandler(InactivityTimeout.class, cause -> {
-            session.send(ServerMessage.inactivity());
-            session.close();
-
-            return false;
-        });
-
         inner.addExceptionHandler(WritePacket.class, cause -> {
             session.send(cause.packet());
 

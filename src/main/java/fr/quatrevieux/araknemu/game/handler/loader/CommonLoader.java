@@ -42,6 +42,7 @@ final public class CommonLoader implements Loader {
         return new PacketHandler[] {
             new StartSession(),
             new StopSession(),
+            new CloseInactiveSession(),
             new CheckQueuePosition(),
             new Login(
                 container.get(TokenService.class),

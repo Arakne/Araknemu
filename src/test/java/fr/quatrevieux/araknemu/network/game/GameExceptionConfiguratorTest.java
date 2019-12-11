@@ -22,11 +22,9 @@ package fr.quatrevieux.araknemu.network.game;
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.core.network.exception.CloseWithPacket;
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
-import fr.quatrevieux.araknemu.core.network.exception.InactivityTimeout;
 import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.network.game.out.account.LoginTokenError;
-import fr.quatrevieux.araknemu.network.out.ServerMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -67,14 +65,6 @@ class GameExceptionConfiguratorTest extends GameBaseCase {
         gameSession.exception(new CloseWithPacket(new LoginTokenError()));
 
         requestStack.assertLast(new LoginTokenError());
-        assertFalse(session.isAlive());
-    }
-
-    @Test
-    void exceptionInactivityTimeout() {
-        gameSession.exception(new InactivityTimeout());
-
-        requestStack.assertLast(ServerMessage.inactivity());
         assertFalse(session.isAlive());
     }
 }

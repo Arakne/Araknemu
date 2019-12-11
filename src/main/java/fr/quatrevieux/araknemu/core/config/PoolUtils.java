@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.core.config;
 
+import java.time.Duration;
+
 /**
  * Define utility methods for Pool
  */
@@ -90,5 +92,56 @@ final public class PoolUtils implements Pool {
 
     public double decimal(String key) {
         return decimal(key, 0d);
+    }
+
+    /**
+     * Get a duration duration config item
+     * Use the standard duration format (ISO-8601) with some differences :
+     * - The string is case insensitive
+     * - The prefix "PT" is not required
+     *
+     * Ex: "15s"    => 15 seconds
+     *     "2m5s"   => 2 minutes and 5 seconds
+     *     "p1dt5h" => 1 day and 5 hours
+     *
+     * @param key The config item key
+     * @param defaultValue The value to use when the config item is not defined
+     *
+     * @return The parsed duration
+     *
+     * @see Duration#parse(CharSequence)
+     */
+    public Duration duration(String key, Duration defaultValue) {
+        if (!pool.has(key)) {
+            return defaultValue;
+        }
+
+        String value = pool.get(key).toUpperCase();
+
+        if (value.charAt(0) != 'P') {
+            value = "PT" + value;
+        }
+
+        return Duration.parse(value);
+    }
+
+    /**
+     * Get a duration duration config item
+     * Use the standard duration format (ISO-8601) with some differences :
+     * - The string is case insensitive
+     * - The prefix "PT" is not required
+     *
+     * Ex: "15s"    => 15 seconds
+     *     "2m5s"   => 2 minutes and 5 seconds
+     *     "p1dt5h" => 1 day and 5 hours
+     *
+     * @param key The config item key
+     *
+     * @return The parsed duration
+     *
+     * @see Duration#parse(CharSequence)
+     */
+    public Duration duration(String key) {
+        return duration(key, Duration.ZERO);
     }
 }

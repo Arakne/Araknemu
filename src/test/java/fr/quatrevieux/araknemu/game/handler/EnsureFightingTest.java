@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.handler;
 
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.handler.fight.ChangeFighterStartPlace;
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
@@ -54,6 +55,23 @@ class EnsureFightingTest extends FightBaseCase {
         Thread.sleep(5);
 
         Mockito.verify(inner).handle(session, packet);
+    }
+
+    @RepeatedIfExceptionsTest
+    void handleWithException() throws Exception {
+        PacketHandler inner = Mockito.mock(PacketHandler.class);
+
+        EnsureFighting handler = new EnsureFighting<>(inner);
+        createFight();
+
+        Packet packet = new AskCharacterList(false);
+
+        Mockito.doThrow(new ErrorPacket("my packet")).when(inner).handle(session, packet);
+
+        handler.handle(session, packet);
+        Thread.sleep(10);
+
+        requestStack.assertLast("my packet");
     }
 
     @Test

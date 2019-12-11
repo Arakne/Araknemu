@@ -23,6 +23,8 @@ import fr.quatrevieux.araknemu.core.config.ConfigurationModule;
 import fr.quatrevieux.araknemu.core.config.Pool;
 import fr.quatrevieux.araknemu.core.config.PoolUtils;
 
+import java.time.Duration;
+
 /**
  * Configuration for realm
  */
@@ -54,10 +56,10 @@ final public class RealmConfiguration implements ConfigurationModule {
     }
 
     /**
-     * The maximum inactivity time, in seconds
-     * By default, 900s = 15min
+     * The maximum inactivity time, as duration
+     * By default, 15min ("PT15M" or "15m")
      */
-    public int inactivityTime() {
-        return pool.integer("inactivityTime", 900);
+    public Duration inactivityTime() {
+        return pool.duration("inactivityTime", Duration.ofMinutes(15));
     }
 }

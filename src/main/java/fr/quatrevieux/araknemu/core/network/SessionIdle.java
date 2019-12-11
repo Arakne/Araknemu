@@ -17,20 +17,28 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.core.network.exception;
+package fr.quatrevieux.araknemu.core.network;
+
+import fr.quatrevieux.araknemu.core.network.parser.Packet;
+
+import java.time.Duration;
 
 /**
- * Write error packet and close the session
+ * Pseudo packet used when the session raise its inactivity time
+ *
+ * Note: Only read idle is considered
  */
-public class CloseWithPacket extends HandlingException implements CloseSession, WritePacket {
-    private Object packet;
+final public class SessionIdle implements Packet {
+    final private Duration duration;
 
-    public CloseWithPacket(Object packet) {
-        this.packet = packet;
+    public SessionIdle(Duration duration) {
+        this.duration = duration;
     }
 
-    @Override
-    public Object packet() {
-        return packet;
+    /**
+     * The IDLE duration
+     */
+    public Duration duration() {
+        return duration;
     }
 }
