@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.core.network.session;
 
 import fr.quatrevieux.araknemu.core.network.Channel;
+import fr.quatrevieux.araknemu.core.network.InternalPacket;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +111,9 @@ final public class ConfigurableSession implements Session {
 
     @Override
     public void receive(Object packet) {
-        if (!isAlive()) {
+        // Do not handle received packet if the session is closed
+        // But handle internal packets (like SessionClosed)
+        if (!(packet instanceof InternalPacket) && !isAlive()) {
             return;
         }
 
@@ -121,7 +124,7 @@ final public class ConfigurableSession implements Session {
             public void accept(Object o) {
                 try {
                     receiveMiddlewares.get(index++).handlePacket(o, this);
-                } catch (Throwable e) {
+                } catch (Exception e) {
                     exception(e);
                 }
             }

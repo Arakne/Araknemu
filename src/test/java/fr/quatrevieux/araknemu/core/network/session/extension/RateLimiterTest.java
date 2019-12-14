@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.core.network.session.extension;
 
+import fr.quatrevieux.araknemu.core.network.SessionClosed;
 import fr.quatrevieux.araknemu.core.network.exception.RateLimitException;
 import fr.quatrevieux.araknemu.core.network.session.AbstractDelegatedSession;
 import fr.quatrevieux.araknemu.core.network.session.Session;
@@ -100,6 +101,26 @@ class RateLimiterTest {
         }
 
         assertEquals(8, receivedPackets.get());
+        assertEquals(0, rateLimitExceptions.get());
+    }
+
+    @Test
+    void withInternalPacketShouldIgnore() {
+        AtomicInteger receivedPackets = new AtomicInteger();
+        AtomicInteger rateLimitExceptions = new AtomicInteger();
+        SessionConfigurator<TestSession> configurator = new SessionConfigurator<>(TestSession::new);
+
+        configurator.add(new RateLimiter.Configurator<>(3));
+        configurator.add((inner, session) -> inner.addReceiveMiddleware((packet, next) -> receivedPackets.incrementAndGet()));
+        configurator.add((inner, session) -> inner.addExceptionHandler(RateLimitException.class, e -> { rateLimitExceptions.incrementAndGet(); return false; }));
+
+        TestSession session = configurator.create(new DummyChannel());
+
+        for (int i = 0; i < 5; ++i) {
+            session.receive(new SessionClosed());
+        }
+
+        assertEquals(5, receivedPackets.get());
         assertEquals(0, rateLimitExceptions.get());
     }
 }

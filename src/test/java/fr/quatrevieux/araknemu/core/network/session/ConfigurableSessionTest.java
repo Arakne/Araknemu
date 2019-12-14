@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.core.network.session;
 
 import fr.quatrevieux.araknemu._test.TestCase;
+import fr.quatrevieux.araknemu.core.network.SessionClosed;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -110,7 +111,7 @@ class ConfigurableSessionTest extends TestCase {
     }
 
     @Test
-    void receiveWithSessionClosed() throws Exception {
+    void receiveWithClosedSessionShouldIgnoreThePacket() throws Exception {
         ConfigurableSession.ReceivePacketMiddleware middleware = Mockito.mock(ConfigurableSession.ReceivePacketMiddleware.class);
         session.addReceiveMiddleware(middleware);
 
@@ -118,6 +119,19 @@ class ConfigurableSessionTest extends TestCase {
         session.receive("packet");
 
         Mockito.verify(middleware, Mockito.never()).handlePacket(Mockito.anyString(), Mockito.any(Consumer.class));
+    }
+
+    @Test
+    void receiveInternalPacketOnClosedSessionShouldHandleThePacket() throws Exception {
+        ConfigurableSession.ReceivePacketMiddleware middleware = Mockito.mock(ConfigurableSession.ReceivePacketMiddleware.class);
+        session.addReceiveMiddleware(middleware);
+
+        SessionClosed packet = new SessionClosed();
+
+        session.close();
+        session.receive(packet);
+
+        Mockito.verify(middleware).handlePacket(Mockito.eq(packet), Mockito.any(Consumer.class));
     }
 
     @Test

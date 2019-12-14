@@ -19,8 +19,6 @@
 
 package fr.quatrevieux.araknemu.core.network;
 
-import fr.quatrevieux.araknemu.core.network.parser.Packet;
-
 import java.time.Duration;
 
 /**
@@ -28,7 +26,7 @@ import java.time.Duration;
  *
  * Note: Only read idle is considered
  */
-final public class SessionIdle implements Packet {
+final public class SessionIdle implements InternalPacket {
     final private Duration duration;
 
     public SessionIdle(Duration duration) {

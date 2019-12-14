@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.core.network.session.extension;
 
+import fr.quatrevieux.araknemu.core.network.InternalPacket;
 import fr.quatrevieux.araknemu.core.network.exception.RateLimitException;
 import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.core.network.session.Session;
@@ -56,6 +57,12 @@ final public class RateLimiter implements ConfigurableSession.ReceivePacketMiddl
 
     @Override
     public void handlePacket(Object packet, Consumer<Object> next) {
+        // Internal packets must not be blocked
+        if (packet instanceof InternalPacket) {
+            next.accept(packet);
+            return;
+        }
+
         final long currentTime = System.currentTimeMillis() / 1000L;
 
         if (lastTime != currentTime) {

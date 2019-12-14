@@ -21,12 +21,11 @@ package fr.quatrevieux.araknemu.network.game;
 
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.core.network.session.AbstractDelegatedSession;
+import fr.quatrevieux.araknemu.core.network.session.Session;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.core.network.Channel;
-import fr.quatrevieux.araknemu.core.network.session.Session;
 
 /**
  * Session wrapper for game server

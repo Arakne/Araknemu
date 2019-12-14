@@ -19,10 +19,8 @@
 
 package fr.quatrevieux.araknemu.core.network;
 
-import fr.quatrevieux.araknemu.core.network.parser.Packet;
-
 /**
  * Packet object for represents session create (new socket connection)
  */
-final public class SessionCreated implements Packet {
+final public class SessionCreated implements InternalPacket {
 }

@@ -19,10 +19,8 @@
 
 package fr.quatrevieux.araknemu.core.network;
 
-import fr.quatrevieux.araknemu.core.network.parser.Packet;
-
 /**
  * Pseudo packet for session closed event
  */
-final public class SessionClosed implements Packet {
+final public class SessionClosed implements InternalPacket {
 }
