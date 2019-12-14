@@ -19,11 +19,13 @@
 
 package fr.quatrevieux.araknemu.network.realm;
 
+import fr.quatrevieux.araknemu.core.network.exception.RateLimitException;
 import fr.quatrevieux.araknemu.core.network.parser.Dispatcher;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.PacketParser;
 import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
+import org.slf4j.Logger;
 
 /**
  * Configure session for realm
@@ -32,15 +34,24 @@ final public class RealmSessionConfigurator implements SessionConfigurator.Confi
     final private Dispatcher<RealmSession> dispatcher;
     final private PacketParser[] loginPackets;
     final private PacketParser baseParser;
+    final private Logger logger;
 
-    public RealmSessionConfigurator(Dispatcher<RealmSession> dispatcher, PacketParser[] loginPackets, PacketParser baseParser) {
+    public RealmSessionConfigurator(Dispatcher<RealmSession> dispatcher, PacketParser[] loginPackets, PacketParser baseParser, Logger logger) {
         this.dispatcher = dispatcher;
         this.loginPackets = loginPackets;
         this.baseParser = baseParser;
+        this.logger = logger;
     }
 
     @Override
     public void configure(ConfigurableSession inner, RealmSession session) {
+        inner.addExceptionHandler(RateLimitException.class, cause -> {
+            logger.error("[{}] RateLimit : close session", session.channel().id());
+            session.close();
+
+            return true;
+        });
+
         inner.addExceptionHandler(Exception.class, cause -> {
             // If an error occurs before authenticate procedure
             // The session MUST be destroyed for security reasons

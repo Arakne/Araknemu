@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.core.network.netty.NettyServer;
 import fr.quatrevieux.araknemu.core.network.parser.*;
 import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
 import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
+import fr.quatrevieux.araknemu.core.network.session.extension.RateLimiter;
 import fr.quatrevieux.araknemu.core.network.session.extension.SessionLogger;
 import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
@@ -229,8 +230,9 @@ final public class GameModule implements ContainerModule {
         configurator.factory(
             SessionFactory.class,
             container -> new SessionConfigurator<>(GameSession::new)
+                .add(new RateLimiter.Configurator<>(container.get(GameConfiguration.class).packetRateLimit()))
                 .add(new SessionLogger.Configurator<>(container.get(Logger.class)))
-                .add(new GameExceptionConfigurator())
+                .add(new GameExceptionConfigurator(container.get(Logger.class)))
                 .add(new GamePacketConfigurator(
                     container.get(Dispatcher.class),
                     container.get(PacketParser.class)

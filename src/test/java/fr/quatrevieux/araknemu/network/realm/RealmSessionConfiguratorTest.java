@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.network.realm;
 
 import fr.quatrevieux.araknemu.core.network.SessionCreated;
+import fr.quatrevieux.araknemu.core.network.exception.RateLimitException;
 import fr.quatrevieux.araknemu.core.network.parser.*;
 import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.network.in.AskQueuePosition;
@@ -30,11 +31,14 @@ import fr.quatrevieux.araknemu.realm.handler.CheckDofusVersion;
 import fr.quatrevieux.araknemu.realm.handler.StartSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.slf4j.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class RealmSessionConfiguratorTest extends RealmBaseCase {
     private RealmSessionConfigurator configurator;
+    private Logger logger;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -59,7 +63,8 @@ class RealmSessionConfiguratorTest extends RealmBaseCase {
             new PacketParser[] {DofusVersion.parser(), Credentials.parser()},
             new AggregatePacketParser(
                 new SinglePacketParser[] {new AskQueuePosition.Parser()}
-            )
+            ),
+            logger = Mockito.mock(Logger.class)
         );
     }
 
@@ -84,5 +89,18 @@ class RealmSessionConfiguratorTest extends RealmBaseCase {
 
         realmSession.exception(new RuntimeException());
         assertFalse(realmSession.isAlive());
+    }
+
+    @Test
+    void exceptionCaughtRateLimit() {
+        ConfigurableSession session = new ConfigurableSession(channel);
+        RealmSession realmSession = new RealmSession(session);
+
+        configurator.configure(session, realmSession);
+
+        realmSession.exception(new RateLimitException());
+
+        assertFalse(session.isAlive());
+        Mockito.verify(logger).error("[{}] RateLimit : close session", session.channel().id());
     }
 }

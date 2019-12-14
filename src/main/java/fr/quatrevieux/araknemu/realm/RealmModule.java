@@ -22,14 +22,15 @@ package fr.quatrevieux.araknemu.realm;
 import fr.quatrevieux.araknemu.Araknemu;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
+import fr.quatrevieux.araknemu.core.network.Server;
+import fr.quatrevieux.araknemu.core.network.netty.NettyServer;
 import fr.quatrevieux.araknemu.core.network.parser.*;
 import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
 import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
+import fr.quatrevieux.araknemu.core.network.session.extension.RateLimiter;
 import fr.quatrevieux.araknemu.core.network.session.extension.SessionLogger;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
-import fr.quatrevieux.araknemu.core.network.Server;
-import fr.quatrevieux.araknemu.core.network.netty.NettyServer;
 import fr.quatrevieux.araknemu.network.in.CommonParserLoader;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.network.realm.RealmSessionConfigurator;
@@ -88,11 +89,13 @@ final public class RealmModule implements ContainerModule {
         configurator.factory(
             SessionFactory.class,
             container -> new SessionConfigurator<>(RealmSession::new)
+                .add(new RateLimiter.Configurator<>(container.get(RealmConfiguration.class).packetRateLimit()))
                 .add(new SessionLogger.Configurator<>(container.get(Logger.class)))
                 .add(new RealmSessionConfigurator(
                     container.get(Dispatcher.class),
                     new PacketParser[] {DofusVersion.parser(), Credentials.parser()},
-                    container.get(PacketParser.class)
+                    container.get(PacketParser.class),
+                    container.get(Logger.class)
                 ))
         );
 

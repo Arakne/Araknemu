@@ -65,6 +65,14 @@ class ConfigurableSessionTest extends TestCase {
     }
 
     @Test
+    void sendWithSessionClosed() {
+        session.close();
+        session.send("test");
+
+        assertTrue(channel.getMessages().empty());
+    }
+
+    @Test
     void receiveFinalMiddleware() throws Exception {
         ConfigurableSession.ReceivePacketMiddleware middleware = Mockito.mock(ConfigurableSession.ReceivePacketMiddleware.class);
         session.addReceiveMiddleware(middleware);
@@ -99,6 +107,17 @@ class ConfigurableSessionTest extends TestCase {
         session.receive("");
 
         Mockito.verify(predicate).test(e);
+    }
+
+    @Test
+    void receiveWithSessionClosed() throws Exception {
+        ConfigurableSession.ReceivePacketMiddleware middleware = Mockito.mock(ConfigurableSession.ReceivePacketMiddleware.class);
+        session.addReceiveMiddleware(middleware);
+
+        session.close();
+        session.receive("packet");
+
+        Mockito.verify(middleware, Mockito.never()).handlePacket(Mockito.anyString(), Mockito.any(Consumer.class));
     }
 
     @Test

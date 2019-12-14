@@ -95,6 +95,10 @@ final public class ConfigurableSession implements Session {
 
     @Override
     public void send(Object packet) {
+        if (!isAlive()) {
+            return;
+        }
+
         for (SendPacketTransformer transformer : sendTransformers) {
             if ((packet = transformer.transformPacket(packet)) == null) {
                 return;
@@ -106,6 +110,10 @@ final public class ConfigurableSession implements Session {
 
     @Override
     public void receive(Object packet) {
+        if (!isAlive()) {
+            return;
+        }
+
         final Consumer<Object> next = new Consumer<Object>() {
             private int index = 0;
 

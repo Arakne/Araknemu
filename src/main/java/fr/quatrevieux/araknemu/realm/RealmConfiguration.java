@@ -62,4 +62,12 @@ final public class RealmConfiguration implements ConfigurationModule {
     public Duration inactivityTime() {
         return pool.duration("inactivityTime", Duration.ofMinutes(15));
     }
+
+    /**
+     * Maximum number of received packets per seconds per clients
+     * When the limit is reached, the client session is closed
+     */
+    public int packetRateLimit() {
+        return pool.integer("packetRateLimit", 100);
+    }
 }

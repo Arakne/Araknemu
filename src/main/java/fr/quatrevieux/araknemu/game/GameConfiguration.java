@@ -214,6 +214,14 @@ final public class GameConfiguration implements ConfigurationModule {
     }
 
     /**
+     * Maximum number of received packets per seconds per clients
+     * When the limit is reached, the client session is closed
+     */
+    public int packetRateLimit() {
+        return pool.integer("packetRateLimit", 100);
+    }
+
+    /**
      * Get player configuration
      */
     public PlayerConfiguration player() {

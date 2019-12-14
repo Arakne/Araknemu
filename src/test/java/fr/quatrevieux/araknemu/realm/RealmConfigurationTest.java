@@ -57,4 +57,9 @@ class RealmConfigurationTest {
     void inactivityTime() {
         assertEquals(Duration.ofMinutes(15), configuration.inactivityTime());
     }
+
+    @Test
+    void packetRateLimit() {
+        assertEquals(100, configuration.packetRateLimit());
+    }
 }

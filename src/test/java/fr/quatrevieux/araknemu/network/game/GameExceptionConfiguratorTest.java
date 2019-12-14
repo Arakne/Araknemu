@@ -22,24 +22,28 @@ package fr.quatrevieux.araknemu.network.game;
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.core.network.exception.CloseWithPacket;
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.core.network.exception.RateLimitException;
 import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.network.game.out.account.LoginTokenError;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.slf4j.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class GameExceptionConfiguratorTest extends GameBaseCase {
     private GameExceptionConfigurator configurator;
     private GameSession gameSession;
+    private Logger logger;
 
     @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
-        configurator = new GameExceptionConfigurator();
+        configurator = new GameExceptionConfigurator(logger = Mockito.mock(Logger.class));
         ConfigurableSession session = new ConfigurableSession(channel);
         gameSession = new GameSession(session);
 
@@ -66,5 +70,13 @@ class GameExceptionConfiguratorTest extends GameBaseCase {
 
         requestStack.assertLast(new LoginTokenError());
         assertFalse(session.isAlive());
+    }
+
+    @Test
+    void exceptionCaughtRateLimit() {
+        gameSession.exception(new RateLimitException());
+
+        assertFalse(session.isAlive());
+        Mockito.verify(logger).error("[{}] RateLimit : close session", session.channel().id());
     }
 }
