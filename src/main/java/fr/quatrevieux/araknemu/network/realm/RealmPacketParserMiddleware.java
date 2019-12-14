@@ -21,27 +21,67 @@ package fr.quatrevieux.araknemu.network.realm;
 
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.PacketParser;
+import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
-import fr.quatrevieux.araknemu.network.realm.in.RealmPacketParser;
 
 import java.util.function.Consumer;
 
 /**
  * Middleware for parse the realm packets
+ *
+ * Handle the two first packets :
+ *
+ * Client                       Server
+ * [new connection] ------>     [initialise session]
+ *                  <------     HC{key}
+ * //=== [Start login, procedural packet exchange] ===//
+ * DofusVersion     ------>     [check version]
+ * Credentials      ------>     [parse credentials]
+ *                  <------     BadVersion [if do not corresponds]
+ *                  <------     LoginError [on bad credentials]
+ *                  <------     Pseudo
+ *                  <------     Community
+ *                  <------     HostList
+ *                  <------     GMLevel
+ *                  <------     Question
+ * //=== [Login success, standard packet exchange protocol] ===//
+ * AskServerList    ------>     [load characters by server]
+ *                  <------     ServerList
+ * SelectServer     ------>     [check for server and declare connection]
+ * [close]          <------     SelectServerXX
  */
 final public class RealmPacketParserMiddleware implements ConfigurableSession.ReceivePacketMiddleware {
-    final private RealmPacketParser parser;
+    final private PacketParser[] loginPackets;
+    final private PacketParser parser;
 
-    public RealmPacketParserMiddleware(PacketParser[] loginPackets, PacketParser baseParser) {
-        parser = new RealmPacketParser(loginPackets, baseParser);
+    private int packetCount = 0;
+
+    /**
+     * @param loginPackets The "indexed" packets (i.e. recognized by there received position)
+     * @param parser The other packets (i.e. recognized by there header)
+     */
+    public RealmPacketParserMiddleware(PacketParser[] loginPackets, PacketParser parser) {
+        this.loginPackets = loginPackets;
+        this.parser = parser;
     }
 
     @Override
     public void handlePacket(Object packet, Consumer<Object> next) {
-        if (!(packet instanceof Packet)) {
-            packet = parser.parse(packet.toString());
+        if (packet instanceof String) {
+            packet = parse(packet.toString());
         }
 
         next.accept(packet);
+    }
+
+    /**
+     * Parse the received packet
+     */
+    private Packet parse(String input) throws ParsePacketException {
+        if (packetCount >= loginPackets.length) {
+            return parser.parse(input);
+        }
+
+        return loginPackets[packetCount++].parse(input);
     }
 }
