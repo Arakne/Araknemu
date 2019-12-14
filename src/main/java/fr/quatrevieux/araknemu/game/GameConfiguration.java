@@ -23,6 +23,8 @@ import fr.quatrevieux.araknemu.core.config.ConfigurationModule;
 import fr.quatrevieux.araknemu.core.config.Pool;
 import fr.quatrevieux.araknemu.core.config.PoolUtils;
 
+import java.time.Duration;
+
 /**
  * Configuration class for game server
  */
@@ -201,6 +203,22 @@ final public class GameConfiguration implements ConfigurationModule {
      */
     public String ip() {
         return pool.string("server.ip", "127.0.0.1");
+    }
+
+    /**
+     * The maximum inactivity time, as duration
+     * By default, 15min ("PT15M" or "15m")
+     */
+    public Duration inactivityTime() {
+        return pool.duration("inactivityTime", Duration.ofMinutes(15));
+    }
+
+    /**
+     * Maximum number of received packets per seconds per clients
+     * When the limit is reached, the client session is closed
+     */
+    public int packetRateLimit() {
+        return pool.integer("packetRateLimit", 100);
     }
 
     /**

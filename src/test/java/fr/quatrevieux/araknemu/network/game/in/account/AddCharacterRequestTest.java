@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.network.game.in.account;
 
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
-import fr.quatrevieux.araknemu.network.in.ParsePacketException;
+import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

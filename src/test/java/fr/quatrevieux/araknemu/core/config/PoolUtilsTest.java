@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.core.config;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,20 +30,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PoolUtilsTest {
     private PoolUtils pool;
+    private Map<String, String> map = new HashMap<>();
 
     @BeforeEach
     void setUp() {
+        map.put("test_bool", "yes");
+        map.put("test_int", "774");
+        map.put("test_string", "foo");
+        map.put("test_double", "1.5");
+
         pool = new PoolUtils(
             new Pool() {
-                final private Map<String, String> map = new HashMap<>();
-
-                {
-                    map.put("test_bool", "yes");
-                    map.put("test_int", "774");
-                    map.put("test_string", "foo");
-                    map.put("test_double", "1.5");
-                }
-
                 @Override
                 public boolean has(String key) {
                     return map.containsKey(key);
@@ -101,5 +99,19 @@ class PoolUtilsTest {
 
         assertEquals(1.5, pool.decimal("test_double", 2));
         assertEquals(2, pool.decimal("not_found", 2));
+    }
+
+    @Test
+    void duration() {
+        map.put("simple", "15s");
+        map.put("min_and_sec", "2m5s");
+        map.put("with_prefix", "pt1h");
+        map.put("date", "p1dt5h");
+
+        assertEquals(Duration.ofSeconds(404), pool.duration("not_found", Duration.ofSeconds(404)));
+        assertEquals(Duration.ofSeconds(15), pool.duration("simple"));
+        assertEquals(Duration.ofSeconds(125), pool.duration("min_and_sec"));
+        assertEquals(Duration.ofHours(1), pool.duration("with_prefix"));
+        assertEquals(Duration.ofHours(29), pool.duration("date"));
     }
 }

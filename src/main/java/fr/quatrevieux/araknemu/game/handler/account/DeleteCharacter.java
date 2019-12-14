@@ -22,12 +22,12 @@ package fr.quatrevieux.araknemu.game.handler.account;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.account.AccountCharacter;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
-import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.account.DeleteCharacterRequest;
 import fr.quatrevieux.araknemu.network.game.out.account.CharacterDeleted;
 import fr.quatrevieux.araknemu.network.game.out.account.CharactersList;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Delete the character
@@ -61,8 +61,8 @@ final public class DeleteCharacter implements PacketHandler<GameSession, DeleteC
             throw new ErrorPacket(new CharacterDeleted(false), e);
         }
 
-        session.write(new CharacterDeleted(true));
-        session.write(
+        session.send(new CharacterDeleted(true));
+        session.send(
             new CharactersList(
                 session.account().remainingTime(),
                 service.list(session.account())

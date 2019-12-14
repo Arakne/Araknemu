@@ -20,17 +20,12 @@
 package fr.quatrevieux.araknemu.game.chat.channel;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
-import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.account.AccountService;
-import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.chat.ChatException;
 import fr.quatrevieux.araknemu.game.chat.event.ConcealedMessage;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
-import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
-import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +34,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PrivateChannelTest extends GameBaseCase {
     private PrivateChannel channel;
@@ -57,19 +53,7 @@ class PrivateChannelTest extends GameBaseCase {
             container.get(PlayerService.class)
         );
 
-        GameSession otherSession = new GameSession(new DummyChannel());
-        otherSession.attach(
-            new GameAccount(
-                new Account(3),
-                container.get(AccountService.class),
-                2
-            )
-        );
-
-        int playerId = dataSet.pushPlayer("Robert", 3, 2).id();
-
-        other = container.get(PlayerService.class).load(otherSession, playerId);
-        otherSession.setPlayer(other);
+        other = makeOtherPlayer();
     }
 
     @Test
@@ -96,7 +80,7 @@ class PrivateChannelTest extends GameBaseCase {
             gamePlayer(),
             new Message(
                 ChannelType.PRIVATE,
-                "Robert",
+                other.name(),
                 "Hello",
                 ""
             )

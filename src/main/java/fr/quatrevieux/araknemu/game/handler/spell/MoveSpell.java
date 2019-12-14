@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.handler.spell;
 
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellMove;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Move the spell from spell book

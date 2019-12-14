@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.realm.handler.account;
 
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.network.realm.in.ChooseServer;
 import fr.quatrevieux.araknemu.network.realm.out.SelectServerError;
@@ -42,7 +42,7 @@ final public class ConnectGame implements PacketHandler<RealmSession, ChooseServ
     @Override
     public void handle(RealmSession session, ChooseServer packet) {
         if (!service.isAvailable(packet.id())) {
-            session.write(
+            session.send(
                 new SelectServerError(SelectServerError.Error.CANT_SELECT)
             );
 
@@ -54,7 +54,7 @@ final public class ConnectGame implements PacketHandler<RealmSession, ChooseServ
         host.connector().token(
             session.account(),
             token -> {
-                session.write(new SelectServerPlain(host.ip(), host.port(), token));
+                session.send(new SelectServerPlain(host.ip(), host.port(), token));
                 session.close();
             }
         );

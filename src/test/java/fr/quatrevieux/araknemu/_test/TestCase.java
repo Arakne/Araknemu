@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu._test;
 
-import fr.quatrevieux.araknemu.network.exception.WritePacket;
+import fr.quatrevieux.araknemu.core.network.exception.WritePacket;
 import org.junit.jupiter.api.function.Executable;
 
 import java.lang.reflect.Field;

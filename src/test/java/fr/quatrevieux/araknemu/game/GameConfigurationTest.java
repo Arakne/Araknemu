@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameConfigurationTest extends GameBaseCase {
@@ -40,6 +42,8 @@ class GameConfigurationTest extends GameBaseCase {
         assertEquals(2, configuration.id());
         assertEquals(456, configuration.port());
         assertEquals("10.0.0.5", configuration.ip());
+        assertEquals(Duration.ofMinutes(15), configuration.inactivityTime());
+        assertEquals(100, configuration.packetRateLimit());
     }
 
     @Test

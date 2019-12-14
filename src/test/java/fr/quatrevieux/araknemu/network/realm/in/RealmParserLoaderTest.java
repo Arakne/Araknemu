@@ -19,9 +19,8 @@
 
 package fr.quatrevieux.araknemu.network.realm.in;
 
-import fr.quatrevieux.araknemu.network.in.AskQueuePosition;
-import fr.quatrevieux.araknemu.network.in.ParserLoader;
-import fr.quatrevieux.araknemu.network.in.SinglePacketParser;
+import fr.quatrevieux.araknemu.core.network.parser.ParserLoader;
+import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;

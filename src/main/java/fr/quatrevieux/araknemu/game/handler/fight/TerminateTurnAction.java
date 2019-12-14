@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.handler.fight;
 
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Fight game action acknowledge

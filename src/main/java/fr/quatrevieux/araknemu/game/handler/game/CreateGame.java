@@ -23,12 +23,12 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.event.StartExploration;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
 import fr.quatrevieux.araknemu.network.game.out.game.GameCreated;
 import fr.quatrevieux.araknemu.network.game.out.game.GameCreationError;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Create the game session
@@ -52,7 +52,7 @@ final public class CreateGame implements PacketHandler<GameSession, CreateGameRe
 
         player.start(exploration);
 
-        session.write(new GameCreated(CreateGameRequest.Type.EXPLORATION));
+        session.send(new GameCreated(CreateGameRequest.Type.EXPLORATION));
         session.dispatch(new StartExploration(exploration));
     }
 

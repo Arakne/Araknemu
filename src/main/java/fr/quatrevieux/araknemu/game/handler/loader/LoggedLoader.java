@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.game.handler.account.ListCharacters;
 import fr.quatrevieux.araknemu.game.handler.account.SelectCharacter;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.game.GameSession;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Loader for logged packets

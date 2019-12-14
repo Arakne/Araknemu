@@ -22,9 +22,9 @@ package fr.quatrevieux.araknemu.network.game.in.account;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.value.Colors;
-import fr.quatrevieux.araknemu.network.in.Packet;
-import fr.quatrevieux.araknemu.network.in.ParsePacketException;
-import fr.quatrevieux.araknemu.network.in.SinglePacketParser;
+import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
+import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 import org.apache.commons.lang3.StringUtils;
 
 /**

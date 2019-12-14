@@ -20,26 +20,28 @@
 package fr.quatrevieux.araknemu.network.game;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
+import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
-import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsChanged;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
+import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsChanged;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class GameSessionTest extends GameBaseCase {
     @Test
     void account() throws ContainerException {
-        GameSession session = new GameSession(new DummyChannel());
+        GameSession session = new GameSession(new ConfigurableSession(new DummyChannel()));
 
         GameAccount account = new GameAccount(
             new Account(1),
@@ -53,7 +55,7 @@ class GameSessionTest extends GameBaseCase {
 
     @Test
     void player() throws ContainerException, SQLException {
-        GameSession session = new GameSession(new DummyChannel());
+        GameSession session = new GameSession(new ConfigurableSession(new DummyChannel()));
 
         GamePlayer player = makeSimpleGamePlayer(10);
 
@@ -64,7 +66,7 @@ class GameSessionTest extends GameBaseCase {
 
     @Test
     void exploration() throws ContainerException, SQLException {
-        GameSession session = new GameSession(new DummyChannel());
+        GameSession session = new GameSession(new ConfigurableSession(new DummyChannel()));
 
         ExplorationPlayer player = new ExplorationPlayer(gamePlayer());
 
@@ -75,7 +77,7 @@ class GameSessionTest extends GameBaseCase {
 
     @Test
     void fighter() throws SQLException, ContainerException {
-        GameSession session = new GameSession(new DummyChannel());
+        GameSession session = new GameSession(new ConfigurableSession(new DummyChannel()));
 
         assertNull(session.fighter());
 
@@ -87,7 +89,7 @@ class GameSessionTest extends GameBaseCase {
 
     @Test
     void dispatchWithPlayer() throws ContainerException, SQLException {
-        GameSession session = new GameSession(new DummyChannel());
+        GameSession session = new GameSession(new ConfigurableSession(new DummyChannel()));
         GamePlayer player = makeSimpleGamePlayer(10);
         session.setPlayer(player);
 
@@ -102,7 +104,7 @@ class GameSessionTest extends GameBaseCase {
 
     @Test
     void dispatchWithExploration() throws ContainerException, SQLException {
-        GameSession session = new GameSession(new DummyChannel());
+        GameSession session = new GameSession(new ConfigurableSession(new DummyChannel()));
         GamePlayer player = makeSimpleGamePlayer(10);
         session.setPlayer(player);
 

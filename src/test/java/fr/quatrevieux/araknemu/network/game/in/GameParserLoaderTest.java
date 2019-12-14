@@ -47,8 +47,8 @@ import fr.quatrevieux.araknemu.network.game.in.object.ObjectMoveRequest;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectUseRequest;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellMove;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellUpgrade;
-import fr.quatrevieux.araknemu.network.in.ParserLoader;
-import fr.quatrevieux.araknemu.network.in.SinglePacketParser;
+import fr.quatrevieux.araknemu.core.network.parser.ParserLoader;
+import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;

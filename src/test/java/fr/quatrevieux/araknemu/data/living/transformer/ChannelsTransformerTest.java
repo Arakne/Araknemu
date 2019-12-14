@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.data.living.transformer;
 
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
-import fr.quatrevieux.araknemu.network.adapter.Channel;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;

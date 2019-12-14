@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.network.game.in.info;
 
-import fr.quatrevieux.araknemu.network.in.Packet;
-import fr.quatrevieux.araknemu.network.in.ParsePacketException;
-import fr.quatrevieux.araknemu.network.in.SinglePacketParser;
+import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
+import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 import org.apache.commons.lang3.StringUtils;
 
 /**

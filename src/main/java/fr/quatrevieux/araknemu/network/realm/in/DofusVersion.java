@@ -19,8 +19,8 @@
 
 package fr.quatrevieux.araknemu.network.realm.in;
 
-import fr.quatrevieux.araknemu.network.in.Packet;
-import fr.quatrevieux.araknemu.network.in.PacketParser;
+import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.PacketParser;
 
 /**
  * The dofus client version

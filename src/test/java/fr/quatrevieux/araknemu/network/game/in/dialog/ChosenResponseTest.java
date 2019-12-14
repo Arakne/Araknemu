@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.network.game.in.dialog;
 
-import fr.quatrevieux.araknemu.network.in.ParsePacketException;
+import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

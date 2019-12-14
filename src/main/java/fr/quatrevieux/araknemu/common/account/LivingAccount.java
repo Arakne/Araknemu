@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.common.account;
 
-import fr.quatrevieux.araknemu.network.adapter.Session;
+import fr.quatrevieux.araknemu.core.network.session.Session;
 
 /**
  * Living account, connected to a session

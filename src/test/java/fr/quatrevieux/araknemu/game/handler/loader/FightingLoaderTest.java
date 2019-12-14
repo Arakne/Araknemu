@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.network.game.in.fight.FighterChangePlace;
 import fr.quatrevieux.araknemu.network.game.in.fight.FighterReady;
 import fr.quatrevieux.araknemu.network.game.in.fight.LeaveFightRequest;
 import fr.quatrevieux.araknemu.network.game.in.fight.TurnEnd;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

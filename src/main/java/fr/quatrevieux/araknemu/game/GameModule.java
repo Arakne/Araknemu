@@ -24,6 +24,13 @@ import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.core.network.Server;
+import fr.quatrevieux.araknemu.core.network.netty.NettyServer;
+import fr.quatrevieux.araknemu.core.network.parser.*;
+import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
+import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
+import fr.quatrevieux.araknemu.core.network.session.extension.RateLimiter;
+import fr.quatrevieux.araknemu.core.network.session.extension.SessionLogger;
 import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
@@ -131,13 +138,11 @@ import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
-import fr.quatrevieux.araknemu.network.adapter.Server;
-import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
-import fr.quatrevieux.araknemu.network.adapter.netty.NettyServer;
-import fr.quatrevieux.araknemu.network.adapter.util.LoggingSessionHandler;
-import fr.quatrevieux.araknemu.network.game.GameSessionHandler;
+import fr.quatrevieux.araknemu.network.game.GameExceptionConfigurator;
+import fr.quatrevieux.araknemu.network.game.GamePacketConfigurator;
+import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.GameParserLoader;
-import fr.quatrevieux.araknemu.network.in.*;
+import fr.quatrevieux.araknemu.network.in.CommonParserLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -216,20 +221,22 @@ final public class GameModule implements ContainerModule {
         configurator.factory(
             Server.class,
             container -> new NettyServer(
-                container.get(SessionHandler.class),
-                container.get(GameConfiguration.class).port()
+                container.get(SessionFactory.class),
+                container.get(GameConfiguration.class).port(),
+                container.get(GameConfiguration.class).inactivityTime()
             )
         );
 
         configurator.factory(
-            SessionHandler.class,
-            container -> new LoggingSessionHandler(
-                new GameSessionHandler(
+            SessionFactory.class,
+            container -> new SessionConfigurator<>(GameSession::new)
+                .add(new RateLimiter.Configurator<>(container.get(GameConfiguration.class).packetRateLimit()))
+                .add(new SessionLogger.Configurator<>(container.get(Logger.class)))
+                .add(new GameExceptionConfigurator(container.get(Logger.class)))
+                .add(new GamePacketConfigurator(
                     container.get(Dispatcher.class),
                     container.get(PacketParser.class)
-                ),
-                container.get(Logger.class)
-            )
+                ))
         );
 
         configurator.factory(

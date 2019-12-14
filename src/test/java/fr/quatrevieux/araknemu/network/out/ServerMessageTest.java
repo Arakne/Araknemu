@@ -43,4 +43,9 @@ class ServerMessageTest {
     void notEnoughKamasForBank() {
         assertEquals("M110|123", ServerMessage.notEnoughKamasForBank(123).toString());
     }
+
+    @Test
+    void inactivity() {
+        assertEquals("M01|", ServerMessage.inactivity().toString());
+    }
 }

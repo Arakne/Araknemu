@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.basic.AskDate;
 import fr.quatrevieux.araknemu.network.game.out.basic.ServerDate;
 import fr.quatrevieux.araknemu.network.game.out.basic.ServerTime;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 import java.util.Calendar;
 
@@ -36,8 +36,8 @@ final public class SendDateAndTime implements PacketHandler<GameSession, AskDate
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR, -1370);
 
-        session.write(new ServerDate(calendar));
-        session.write(new ServerTime(calendar));
+        session.send(new ServerDate(calendar));
+        session.send(new ServerTime(calendar));
     }
 
     @Override

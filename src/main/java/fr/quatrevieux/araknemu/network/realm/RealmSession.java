@@ -19,46 +19,23 @@
 
 package fr.quatrevieux.araknemu.network.realm;
 
-import fr.quatrevieux.araknemu.network.adapter.Channel;
-import fr.quatrevieux.araknemu.network.adapter.Session;
-import fr.quatrevieux.araknemu.network.in.PacketParser;
+import fr.quatrevieux.araknemu.core.network.session.AbstractDelegatedSession;
+import fr.quatrevieux.araknemu.core.network.session.Session;
 import fr.quatrevieux.araknemu.realm.ConnectionKey;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 
 /**
  * Wrap IoSession for Realm
  */
-final public class RealmSession implements Session {
-    final private Channel channel;
-    final private PacketParser parser;
+final public class RealmSession extends AbstractDelegatedSession implements Session {
     final private ConnectionKey key;
 
     private AuthenticationAccount account;
 
-    public RealmSession(Channel channel, PacketParser parser) {
-        this.channel = channel;
-        this.parser  = parser;
+    public RealmSession(Session session) {
+        super(session);
+
         key = new ConnectionKey();
-    }
-
-    @Override
-    public Channel channel() {
-        return channel;
-    }
-
-    @Override
-    public void write(Object packet) {
-        channel.write(packet);
-    }
-
-    @Override
-    public void close() {
-        channel.close();
-    }
-
-    @Override
-    public boolean isAlive() {
-        return channel.isAlive();
     }
 
     /**
@@ -66,13 +43,6 @@ final public class RealmSession implements Session {
      */
     public ConnectionKey key() {
         return key;
-    }
-
-    /**
-     * Get the packet parser
-     */
-    public PacketParser parser() {
-        return parser;
     }
 
     /**

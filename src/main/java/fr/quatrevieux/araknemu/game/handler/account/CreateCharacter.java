@@ -22,13 +22,13 @@ package fr.quatrevieux.araknemu.game.handler.account;
 import fr.quatrevieux.araknemu.game.account.AccountCharacter;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.exception.CharacterCreationException;
-import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.account.AddCharacterRequest;
 import fr.quatrevieux.araknemu.network.game.out.account.CharacterCreated;
 import fr.quatrevieux.araknemu.network.game.out.account.CharacterCreationError;
 import fr.quatrevieux.araknemu.network.game.out.account.CharactersList;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Handle character creation {@link AddCharacterRequest}
@@ -56,8 +56,8 @@ final public class CreateCharacter implements PacketHandler<GameSession, AddChar
             );
         }
 
-        session.write(new CharacterCreated());
-        session.write(
+        session.send(new CharacterCreated());
+        session.send(
             new CharactersList(
                 session.account().remainingTime(),
                 service.list(session.account())

@@ -30,13 +30,13 @@ import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
-import fr.quatrevieux.araknemu.data.living.entity.player.Player;
-import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.SqlLivingRepositoriesModule;
+import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
+import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
+import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.SqlLivingRepositoriesModule;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
-import fr.quatrevieux.araknemu.network.adapter.SessionHandler;
-import fr.quatrevieux.araknemu.network.adapter.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 import fr.quatrevieux.araknemu.realm.host.GameConnector;
@@ -106,7 +106,7 @@ public class RealmBaseCase extends DatabaseTestCase {
     protected RealmSession session;
     protected DummyChannel channel;
     protected SendingRequestStack requestStack;
-    protected SessionHandler<RealmSession> sessionHandler;
+    protected SessionFactory<RealmSession> sessionHandler;
     protected Araknemu app;
     protected TestingDataSet dataSet;
     protected GameHost gameHost;
@@ -136,7 +136,7 @@ public class RealmBaseCase extends DatabaseTestCase {
         service = container.get(RealmService.class);
         configuration = service.configuration();
 
-        sessionHandler = container.get(SessionHandler.class);
+        sessionHandler = container.get(SessionFactory.class);
         channel = new DummyChannel();
         session = sessionHandler.create(channel);
         requestStack = new SendingRequestStack(channel);
@@ -170,6 +170,6 @@ public class RealmBaseCase extends DatabaseTestCase {
     }
 
     public void sendPacket(Object packet) throws Exception {
-        sessionHandler.received(session, packet.toString());
+        session.receive(packet);
     }
 }

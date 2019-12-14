@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.listener.map.SendAccessories;
 import fr.quatrevieux.araknemu.game.listener.player.InitializeGame;
 import fr.quatrevieux.araknemu.game.listener.player.SendMapData;
 import fr.quatrevieux.araknemu.game.listener.player.exploration.LeaveExplorationForFight;
-import fr.quatrevieux.araknemu.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
 import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import fr.quatrevieux.araknemu.network.game.out.game.GameCreated;

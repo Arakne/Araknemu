@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.handler.fight;
 
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.fight.TurnEnd;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * End the turn of the current fighter

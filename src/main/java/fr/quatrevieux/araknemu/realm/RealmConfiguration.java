@@ -23,6 +23,8 @@ import fr.quatrevieux.araknemu.core.config.ConfigurationModule;
 import fr.quatrevieux.araknemu.core.config.Pool;
 import fr.quatrevieux.araknemu.core.config.PoolUtils;
 
+import java.time.Duration;
+
 /**
  * Configuration for realm
  */
@@ -51,5 +53,21 @@ final public class RealmConfiguration implements ConfigurationModule {
      */
     public String clientVersion() {
         return pool.string("client.version", "1.29.1");
+    }
+
+    /**
+     * The maximum inactivity time, as duration
+     * By default, 15min ("PT15M" or "15m")
+     */
+    public Duration inactivityTime() {
+        return pool.duration("inactivityTime", Duration.ofMinutes(15));
+    }
+
+    /**
+     * Maximum number of received packets per seconds per clients
+     * When the limit is reached, the client session is closed
+     */
+    public int packetRateLimit() {
+        return pool.integer("packetRateLimit", 100);
     }
 }

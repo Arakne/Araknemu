@@ -76,4 +76,11 @@ final public class ServerMessage {
     static public ServerMessage notEnoughKamasForBank(long cost) {
         return new ServerMessage(true, 10, new Object[] { cost }, null);
     }
+
+    /**
+     * The session is closed because of the inactivity
+     */
+    static public ServerMessage inactivity() {
+        return new ServerMessage(false, 1, new Object[] {}, null);
+    }
 }

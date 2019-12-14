@@ -19,13 +19,14 @@
 
 package fr.quatrevieux.araknemu.game.handler;
 
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.handler.fight.ChangeFighterStartPlace;
-import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.game.in.account.AskCharacterList;
 import fr.quatrevieux.araknemu.network.game.in.fight.FighterChangePlace;
-import fr.quatrevieux.araknemu.network.in.Packet;
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -54,6 +55,23 @@ class EnsureFightingTest extends FightBaseCase {
         Thread.sleep(5);
 
         Mockito.verify(inner).handle(session, packet);
+    }
+
+    @RepeatedIfExceptionsTest
+    void handleWithException() throws Exception {
+        PacketHandler inner = Mockito.mock(PacketHandler.class);
+
+        EnsureFighting handler = new EnsureFighting<>(inner);
+        createFight();
+
+        Packet packet = new AskCharacterList(false);
+
+        Mockito.doThrow(new ErrorPacket("my packet")).when(inner).handle(session, packet);
+
+        handler.handle(session, packet);
+        Thread.sleep(10);
+
+        requestStack.assertLast("my packet");
     }
 
     @Test

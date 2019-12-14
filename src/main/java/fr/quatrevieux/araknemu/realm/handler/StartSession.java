@@ -19,8 +19,8 @@
 
 package fr.quatrevieux.araknemu.realm.handler;
 
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
-import fr.quatrevieux.araknemu.network.in.SessionCreated;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.SessionCreated;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.network.realm.out.HelloConnection;
 
@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.network.realm.out.HelloConnection;
 final public class StartSession implements PacketHandler<RealmSession, SessionCreated> {
     @Override
     public void handle(RealmSession session, SessionCreated packet) {
-        session.write(
+        session.send(
             new HelloConnection(
                 session.key()
             )

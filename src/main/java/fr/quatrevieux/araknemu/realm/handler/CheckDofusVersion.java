@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.realm.handler;
 
-import fr.quatrevieux.araknemu.network.in.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.network.realm.in.DofusVersion;
 import fr.quatrevieux.araknemu.network.realm.out.BadVersion;
@@ -41,7 +41,7 @@ final public class CheckDofusVersion implements PacketHandler<RealmSession, Dofu
             return;
         }
 
-        session.write(new BadVersion(configuration.clientVersion()));
+        session.send(new BadVersion(configuration.clientVersion()));
         session.close();
     }
 

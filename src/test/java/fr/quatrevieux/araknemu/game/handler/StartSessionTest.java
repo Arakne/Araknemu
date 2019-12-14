@@ -20,11 +20,9 @@
 package fr.quatrevieux.araknemu.game.handler;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.network.in.SessionCreated;
+import fr.quatrevieux.araknemu.core.network.SessionCreated;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class StartSessionTest extends GameBaseCase {
     private StartSession handler;

@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -50,5 +51,15 @@ class RealmConfigurationTest {
     @Test
     void clientVersion() {
         assertEquals("1.29.1", configuration.clientVersion());
+    }
+
+    @Test
+    void inactivityTime() {
+        assertEquals(Duration.ofMinutes(15), configuration.inactivityTime());
+    }
+
+    @Test
+    void packetRateLimit() {
+        assertEquals(100, configuration.packetRateLimit());
     }
 }

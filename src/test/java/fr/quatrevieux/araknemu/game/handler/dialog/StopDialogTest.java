@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.dialog.NpcDialog;
 import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
-import fr.quatrevieux.araknemu.network.exception.CloseImmediately;
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.network.game.in.dialog.LeaveDialogRequest;
 import fr.quatrevieux.araknemu.network.game.out.dialog.DialogLeaved;
 import org.junit.jupiter.api.BeforeEach;
