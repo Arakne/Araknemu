@@ -17,14 +17,14 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
+package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.constant.Alignment;
-import fr.quatrevieux.araknemu.data.living.entity.environment.SubArea;
-import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
+import fr.quatrevieux.araknemu.data.world.entity.environment.area.SubArea;
+import fr.quatrevieux.araknemu.data.world.repository.environment.area.SubAreaRepository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

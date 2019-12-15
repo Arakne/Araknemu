@@ -28,7 +28,7 @@ import fr.quatrevieux.araknemu.data.constant.Alignment;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
-import fr.quatrevieux.araknemu.data.living.entity.environment.SubArea;
+import fr.quatrevieux.araknemu.data.world.entity.environment.area.SubArea;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;

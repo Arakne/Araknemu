@@ -35,7 +35,7 @@ import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.BankItemRepository;
-import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.area.SubAreaRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;

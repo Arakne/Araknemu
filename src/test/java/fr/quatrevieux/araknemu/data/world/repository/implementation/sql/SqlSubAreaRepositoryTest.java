@@ -17,13 +17,14 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
+package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Alignment;
-import fr.quatrevieux.araknemu.data.living.entity.environment.SubArea;
+import fr.quatrevieux.araknemu.data.world.entity.environment.area.SubArea;
+import fr.quatrevieux.araknemu.data.world.repository.implementation.sql.SqlSubAreaRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

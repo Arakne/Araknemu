@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
+import fr.quatrevieux.araknemu.data.world.repository.environment.area.SubAreaRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcExchangeRepository;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.local.*;
 import fr.quatrevieux.araknemu.data.world.repository.monster.*;
@@ -30,7 +31,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SqlWorldRepositoriesModuleTest extends GameBaseCase {
     @Test
@@ -59,6 +60,7 @@ class SqlWorldRepositoriesModuleTest extends GameBaseCase {
         assertInstanceOf(SqlMonsterRewardRepository.class, container.get(MonsterRewardRepository.class));
         assertInstanceOf(SqlMonsterRewardItemRepository.class, container.get(MonsterRewardItemRepository.class));
         assertInstanceOf(SqlNpcExchangeRepository.class, container.get(NpcExchangeRepository.class));
+        assertInstanceOf(SqlSubAreaRepository.class, container.get(SubAreaRepository.class));
     }
 
     public void assertInstanceOf(Class type, Object obj) {

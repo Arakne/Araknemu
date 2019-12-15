@@ -28,7 +28,6 @@ import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.BankItemRepository;
-import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
@@ -68,11 +67,6 @@ final public class SqlLivingRepositoriesModule implements ContainerModule {
                 container.get(MutableCharacteristicsTransformer.class),
                 container.get(ChannelsTransformer.class)
             )
-        );
-
-        configurator.persist(
-            SubAreaRepository.class,
-            container -> new SqlSubAreaRepository(executor)
         );
 
         configurator.persist(

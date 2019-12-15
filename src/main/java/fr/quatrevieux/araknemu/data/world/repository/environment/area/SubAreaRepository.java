@@ -17,10 +17,10 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.data.living.repository.environment;
+package fr.quatrevieux.araknemu.data.world.repository.environment.area;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.Repository;
-import fr.quatrevieux.araknemu.data.living.entity.environment.SubArea;
+import fr.quatrevieux.araknemu.data.world.entity.environment.area.SubArea;
 
 import java.util.Collection;
 

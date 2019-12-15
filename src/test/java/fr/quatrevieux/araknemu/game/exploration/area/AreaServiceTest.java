@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.exploration.area;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.area.SubAreaRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.listener.player.InitializeAreas;

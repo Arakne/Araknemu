@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.network.game.out.area;
 
 import fr.quatrevieux.araknemu.data.constant.Alignment;
-import fr.quatrevieux.araknemu.data.living.entity.environment.SubArea;
+import fr.quatrevieux.araknemu.data.world.entity.environment.area.SubArea;
 
 import java.util.Collection;
 

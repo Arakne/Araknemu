@@ -21,8 +21,8 @@ package fr.quatrevieux.araknemu.game.exploration.area;
 
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.data.living.entity.environment.SubArea;
-import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
+import fr.quatrevieux.araknemu.data.world.entity.environment.area.SubArea;
+import fr.quatrevieux.araknemu.data.world.repository.environment.area.SubAreaRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.game.listener.player.InitializeAreas;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
