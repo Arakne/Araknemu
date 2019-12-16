@@ -31,12 +31,14 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
+import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.core.network.SessionClosed;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -140,5 +142,17 @@ class StopSessionTest extends FightBaseCase {
         assertNull(session.fighter());
         assertFalse(fight.active());
         assertTrue(fighter.dead());
+    }
+
+    @Test
+    void dispatchDisconnectedOnlyOnce() throws SQLException, ContainerException {
+        explorationPlayer();
+
+        AtomicInteger count = new AtomicInteger();
+        gamePlayer().dispatcher().add(Disconnected.class, e -> count.incrementAndGet());
+
+        handler.handle(session, new SessionClosed());
+
+        assertEquals(1, count.get());
     }
 }

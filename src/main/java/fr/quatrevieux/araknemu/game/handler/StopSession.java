@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.handler;
 
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
+import fr.quatrevieux.araknemu.game.player.PlayerSessionScope;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.core.network.SessionClosed;
@@ -33,13 +34,10 @@ import java.util.stream.Stream;
 final public class StopSession implements PacketHandler<GameSession, SessionClosed> {
     @Override
     public void handle(GameSession session, SessionClosed packet) {
-        Stream.of(session.exploration(), session.fighter(), session.player())
-            .filter(Objects::nonNull)
-            .forEach(scope -> {
-                scope.dispatch(new Disconnected());
-                scope.unregister(session);
-            })
-        ;
+        // Issue #85 : all session scopes forward "Disconnected" event to GamePlayer
+        // So, the event should be dispatched only to the first scope to prevent to be dispatched twice
+        scopes(session).findFirst().ifPresent(scope -> scope.dispatch(new Disconnected()));
+        scopes(session).forEach(scope -> scope.unregister(session));
 
         if (session.isLogged()) {
             session.account().detach();
@@ -49,5 +47,9 @@ final public class StopSession implements PacketHandler<GameSession, SessionClos
     @Override
     public Class<SessionClosed> packet() {
         return SessionClosed.class;
+    }
+
+    private Stream<PlayerSessionScope> scopes(GameSession session) {
+        return Stream.of(session.exploration(), session.fighter(), session.player()).filter(Objects::nonNull);
     }
 }
