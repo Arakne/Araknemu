@@ -19,9 +19,13 @@
 
 package fr.quatrevieux.araknemu.game.exploration.area;
 
+import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
+import fr.quatrevieux.araknemu.data.world.entity.environment.area.Area;
 import fr.quatrevieux.araknemu.data.world.entity.environment.area.SubArea;
+import fr.quatrevieux.araknemu.data.world.repository.environment.area.AreaRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.area.SubAreaRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.game.listener.player.InitializeAreas;
@@ -31,35 +35,52 @@ import org.slf4j.Logger;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Service for handle areas
  */
 final public class AreaService implements PreloadableService, EventsSubscriber {
-    final private SubAreaRepository repository;
+    final private AreaRepository areaRepository;
+    final private SubAreaRepository subAreaRepository;
 
-    final private Map<Integer, SubArea> subAreas = new HashMap<>();
+    final private Map<Integer, ExplorationSubArea> subAreas = new HashMap<>();
 
-    public AreaService(SubAreaRepository repository) {
-        this.repository = repository;
+    public AreaService(AreaRepository areaRepository, SubAreaRepository subAreaRepository) {
+        this.areaRepository = areaRepository;
+        this.subAreaRepository = subAreaRepository;
     }
 
     /**
      * Get all available areas
      */
-    public Collection<SubArea> list() {
+    public Collection<ExplorationSubArea> list() {
         return subAreas.values();
+    }
+
+    /**
+     * Get a sub area by its id
+     */
+    public ExplorationSubArea get(int id) {
+        return subAreas.get(id);
     }
 
     @Override
     public void preload(Logger logger) {
         logger.info("Loading areas...");
 
-        for (SubArea subArea : repository.all()) {
-            subAreas.put(subArea.id(), subArea);
+        Map<Integer, Area> areas = areaRepository.all().stream().collect(Collectors.toMap(Area::id, Function.identity()));
+
+        for (SubArea subArea : subAreaRepository.all()) {
+            if (!areas.containsKey(subArea.area())) {
+                throw new EntityNotFoundException("Cannot find area " + subArea.area());
+            }
+
+            subAreas.put(subArea.id(), new ExplorationSubArea(subArea, areas.get(subArea.area())));
         }
 
-        logger.info("Areas loaded");
+        logger.info("{} subareas loaded", subAreas.size());
     }
 
     @Override

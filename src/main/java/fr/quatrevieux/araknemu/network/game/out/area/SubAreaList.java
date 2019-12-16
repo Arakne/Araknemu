@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.network.game.out.area;
 
 import fr.quatrevieux.araknemu.data.constant.Alignment;
 import fr.quatrevieux.araknemu.data.world.entity.environment.area.SubArea;
+import fr.quatrevieux.araknemu.game.exploration.area.ExplorationSubArea;
 
 import java.util.Collection;
 
@@ -30,9 +31,9 @@ import java.util.Collection;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Subareas.as#L19
  */
 final public class SubAreaList {
-    final private Collection<SubArea> subAreas;
+    final private Collection<ExplorationSubArea> subAreas;
 
-    public SubAreaList(Collection<SubArea> subAreas) {
+    public SubAreaList(Collection<ExplorationSubArea> subAreas) {
         this.subAreas = subAreas;
     }
 
@@ -40,7 +41,7 @@ final public class SubAreaList {
     public String toString() {
         StringBuilder sb = new StringBuilder("al");
 
-        for (SubArea subArea : subAreas) {
+        for (ExplorationSubArea subArea : subAreas) {
             if(subArea.alignment() == Alignment.NONE) {
                 continue;
             }

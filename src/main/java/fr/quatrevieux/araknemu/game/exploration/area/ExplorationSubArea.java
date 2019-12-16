@@ -17,28 +17,45 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.network.game.out.area;
+package fr.quatrevieux.araknemu.game.exploration.area;
 
 import fr.quatrevieux.araknemu.data.constant.Alignment;
 import fr.quatrevieux.araknemu.data.world.entity.environment.area.Area;
 import fr.quatrevieux.araknemu.data.world.entity.environment.area.SubArea;
-import fr.quatrevieux.araknemu.game.exploration.area.ExplorationSubArea;
-import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
+/**
+ * SubArea for exploration map
+ */
+final public class ExplorationSubArea {
+    final private SubArea subArea;
+    final private Area area;
 
-import static org.junit.jupiter.api.Assertions.*;
+    public ExplorationSubArea(SubArea subArea, Area area) {
+        this.subArea = subArea;
+        this.area = area;
+    }
 
-class SubAreaListTest {
-    @Test
-    void generate() {
-        assertEquals(
-            "al|1;1|3;0",
-            new SubAreaList(Arrays.asList(
-                new ExplorationSubArea(new SubArea(1, 2, "", true, Alignment.BONTARIAN), new Area(0, "", 0)),
-                new ExplorationSubArea(new SubArea(2, 2, "", true, Alignment.NONE), new Area(0, "", 0)),
-                new ExplorationSubArea(new SubArea(3, 2, "", true, Alignment.NEUTRAL), new Area(0, "", 0))
-            )).toString()
-        );
+    /**
+     * Get the id of the subarea
+     *
+     * @see SubArea#id()
+     */
+    public int id() {
+        return subArea.id();
+    }
+
+    /**
+     * Get the parent area
+     */
+    public Area area() {
+        return area;
+    }
+
+    /**
+     * Get the subarea alignment
+     * The alignment can be overridden by a prism
+     */
+    public Alignment alignment() {
+        return subArea.alignment();
     }
 }

@@ -19,46 +19,32 @@
 
 package fr.quatrevieux.araknemu.data.world.entity.environment.area;
 
-import fr.quatrevieux.araknemu.data.constant.Alignment;
-
 /**
- * Map subareas. Contains alignment
+ * Area data
+ * The area contains multiple subarea, and is under a superarea
  */
-final public class SubArea {
+final public class Area {
     final private int id;
-    final private int area;
     final private String name;
-    final private boolean conquestable;
-    final private Alignment alignment;
+    final private int superarea;
 
-    public SubArea(int id, int area, String name, boolean conquestable, Alignment alignment) {
+    public Area(int id, String name, int superarea) {
         this.id = id;
-        this.area = area;
         this.name = name;
-        this.conquestable = conquestable;
-        this.alignment = alignment;
+        this.superarea = superarea;
     }
 
     /**
-     * Get the subarea id
-     * The id can be found as index of MA.sa object of maps_xx_xxx.swf
-     * This is the primary key of the subarea
+     * The area id
+     * This value can be found as index of MA.a into maps_xx_xxx.swf
+     * This is the primary key of areas
      */
     public int id() {
         return id;
     }
 
     /**
-     * Get the parent area
-     *
-     * @see Area#id()
-     */
-    public int area() {
-        return area;
-    }
-
-    /**
-     * Get the area name
+     * The area name
      * Used as human readable label
      */
     public String name() {
@@ -66,17 +52,9 @@ final public class SubArea {
     }
 
     /**
-     * Does the subarea is conquestable ?
+     * The super area id
      */
-    public boolean conquestable() {
-        return conquestable;
-    }
-
-    /**
-     * The default alignment of the subarea
-     * This value is overridden by the prism alignment, if present
-     */
-    public Alignment alignment() {
-        return alignment;
+    public int superarea() {
+        return superarea;
     }
 }

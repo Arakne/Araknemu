@@ -20,16 +20,16 @@
 package fr.quatrevieux.araknemu.data.world.repository.environment.area;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.Repository;
-import fr.quatrevieux.araknemu.data.world.entity.environment.area.SubArea;
+import fr.quatrevieux.araknemu.data.world.entity.environment.area.Area;
 
 import java.util.Collection;
 
 /**
- * Repository for sub areas
+ * Repository for areas
  */
-public interface SubAreaRepository extends Repository<SubArea> {
+public interface AreaRepository extends Repository<Area> {
     /**
      * Get all subareas
      */
-    public Collection<SubArea> all();
+    public Collection<Area> all();
 }

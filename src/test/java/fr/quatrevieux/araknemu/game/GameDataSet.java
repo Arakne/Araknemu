@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.data.constant.Alignment;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
+import fr.quatrevieux.araknemu.data.world.entity.environment.area.Area;
 import fr.quatrevieux.araknemu.data.world.entity.environment.area.SubArea;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.value.Colors;
@@ -191,6 +192,31 @@ public class GameDataSet extends TestingDataSet {
         pushSubArea(new SubArea(2, 0, "La montagne des Craqueleurs", true, Alignment.NEUTRAL));
         pushSubArea(new SubArea(3, 0, "Le champ des Ingalsses", true, Alignment.BONTARIAN));
         pushSubArea(new SubArea(4, 0, "La forêt d'Amakna", true, Alignment.BRAKMARIAN));
+
+        return this;
+    }
+
+    public Area pushArea(Area area) throws ContainerException, SQLException {
+        use(Area.class);
+
+        connection.prepare(
+            "INSERT INTO AREA (AREA_ID, AREA_NAME, SUPERAREA_ID) VALUES (?, ?, ?)",
+            stmt -> {
+                stmt.setInt(1, area.id());
+                stmt.setString(2, area.name());
+                stmt.setInt(3, area.superarea());
+
+                return stmt.executeUpdate();
+            }
+        );
+
+        return area;
+    }
+
+    public GameDataSet pushAreas() throws SQLException, ContainerException {
+        pushArea(new Area(0, "Amakna", 0));
+        pushArea(new Area(12, "Lande de Sidimote", 0));
+        pushArea(new Area(45, "Incarnam", 3));
 
         return this;
     }
