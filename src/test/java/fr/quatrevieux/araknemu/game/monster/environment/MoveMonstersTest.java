@@ -53,6 +53,8 @@ class MoveMonstersTest extends GameBaseCase {
             .pushMonsterSpells()
             .pushMonsterGroups()
             .pushMaps()
+            .pushAreas()
+            .pushSubAreas()
         ;
 
         task = new MoveMonsters(

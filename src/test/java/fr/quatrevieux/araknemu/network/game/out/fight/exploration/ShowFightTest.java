@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ShowFightTest extends FightBaseCase {
     @Test
     void generate() throws Exception {
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
 
         Fight fight = createFight(false);
 

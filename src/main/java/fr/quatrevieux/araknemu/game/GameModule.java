@@ -338,6 +338,7 @@ final public class GameModule implements ContainerModule {
             container -> new ExplorationMapService(
                 container.get(MapTemplateRepository.class),
                 container.get(FightService.class),
+                container.get(AreaService.class),
                 container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class),
                 // Use proxy to fix circular reference between ExplorationMapService and MapTriggerService
                 (map, cells) -> container.get(CellLoader.class).load(map, cells)

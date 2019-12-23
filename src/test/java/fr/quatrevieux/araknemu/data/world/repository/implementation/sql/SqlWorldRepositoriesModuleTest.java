@@ -62,7 +62,7 @@ class SqlWorldRepositoriesModuleTest extends GameBaseCase {
         assertInstanceOf(SqlMonsterRewardItemRepository.class, container.get(MonsterRewardItemRepository.class));
         assertInstanceOf(SqlNpcExchangeRepository.class, container.get(NpcExchangeRepository.class));
         assertInstanceOf(SqlSubAreaRepository.class, container.get(SubAreaRepository.class));
-        assertInstanceOf(SqlAreaRepository.class, container.get(AreaRepository.class));
+        assertInstanceOf(AreaRepositoryCache.class, container.get(AreaRepository.class));
     }
 
     public void assertInstanceOf(Class type, Object obj) {

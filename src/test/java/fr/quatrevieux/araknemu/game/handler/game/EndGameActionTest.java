@@ -44,7 +44,7 @@ class EndGameActionTest extends GameBaseCase {
 
     @Test
     void handleSuccess() throws Exception {
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
 
         ExplorationPlayer player = explorationPlayer();
 

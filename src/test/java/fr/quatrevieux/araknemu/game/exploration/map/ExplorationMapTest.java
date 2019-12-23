@@ -54,14 +54,14 @@ class ExplorationMapTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
     }
 
     @Test
     void data() throws ContainerException {
-        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null));
+        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null, null, 0));
 
-        ExplorationMap map = new ExplorationMap(template, new CellLoaderAggregate(new CellLoader[0]));
+        ExplorationMap map = new ExplorationMap(template, new CellLoaderAggregate(new CellLoader[0]), null);
 
         assertEquals(10300, map.id());
         assertEquals(template.date(), map.date());
@@ -70,9 +70,9 @@ class ExplorationMapTest extends GameBaseCase {
 
     @Test
     void addPlayerWillAddSprite() throws ContainerException, SQLException {
-        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null));
+        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null, null, 0));
 
-        ExplorationMap map = new ExplorationMap(template, new CellLoaderAggregate(new CellLoader[0]));
+        ExplorationMap map = new ExplorationMap(template, new CellLoaderAggregate(new CellLoader[0]), null);
 
         assertEquals(0, map.sprites().size());
 
@@ -100,9 +100,9 @@ class ExplorationMapTest extends GameBaseCase {
 
         ExplorationPlayer player = explorationPlayer();
 
-        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null));
+        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null, null, 0));
 
-        ExplorationMap map = new ExplorationMap(template, new CellLoaderAggregate(new CellLoader[0]));
+        ExplorationMap map = new ExplorationMap(template, new CellLoaderAggregate(new CellLoader[0]), null);
         map.dispatcher().add(listener);
 
         map.add(player);
@@ -119,7 +119,7 @@ class ExplorationMapTest extends GameBaseCase {
 
     @Test
     void addNpc() throws ContainerException, SQLException {
-        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null));
+        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null, null, 0));
         dataSet.pushNpcs();
 
         AtomicReference<NewSpriteOnMap> ref = new AtomicReference<>();
@@ -136,7 +136,7 @@ class ExplorationMapTest extends GameBaseCase {
             }
         };
 
-        ExplorationMap map = new ExplorationMap(template, new CellLoaderAggregate(new CellLoader[0]));
+        ExplorationMap map = new ExplorationMap(template, new CellLoaderAggregate(new CellLoader[0]), null);
         map.dispatcher().add(listener);
 
         assertEquals(0, map.sprites().size());
@@ -173,9 +173,9 @@ class ExplorationMapTest extends GameBaseCase {
 
     @Test
     void sendWillSendToPlayers() throws ContainerException, SQLException {
-        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null));
+        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null, null, 0));
 
-        ExplorationMap map = new ExplorationMap(template, new CellLoaderAggregate(new CellLoader[0]));
+        ExplorationMap map = new ExplorationMap(template, new CellLoaderAggregate(new CellLoader[0]), null);
 
         ExplorationPlayer player = explorationPlayer();
         player.join(map);
@@ -242,13 +242,13 @@ class ExplorationMapTest extends GameBaseCase {
 
     @Test
     void getPreloadedCellsWillKeepInstance() throws ContainerException, SQLException {
-        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null));
+        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null, null, 0));
         dataSet.pushTrigger(new MapTrigger(10300, 123, 0, "10300,465", "-1"));
         dataSet.pushTrigger(new MapTrigger(10300, 125, 0, "10340,365", "-1"));
 
         ExplorationMap map = new ExplorationMap(template, new CellLoaderAggregate(new CellLoader[] {
             new TriggerLoader(container.get(MapTriggerService.class))
-        }));
+        }), null);
 
         assertInstanceOf(TriggerCell.class, map.get(123));
         assertInstanceOf(TriggerCell.class, map.get(125));
@@ -259,9 +259,9 @@ class ExplorationMapTest extends GameBaseCase {
 
     @Test
     void getBasicCellWillBeReinstantiated() throws ContainerException, SQLException {
-        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null));
+        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null, null, 0));
 
-        ExplorationMap map = new ExplorationMap(template, new CellLoaderAggregate(new CellLoader[0]));
+        ExplorationMap map = new ExplorationMap(template, new CellLoaderAggregate(new CellLoader[0]), null);
 
         assertInstanceOf(BasicCell.class, map.get(456));
         assertNotSame(map.get(456), map.get(456));

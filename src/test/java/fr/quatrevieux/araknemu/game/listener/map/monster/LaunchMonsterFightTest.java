@@ -47,6 +47,8 @@ class LaunchMonsterFightTest extends GameBaseCase {
             .pushMonsterSpells()
             .pushMonsterGroups()
             .pushMaps()
+            .pushAreas()
+            .pushSubAreas()
         ;
 
         dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, 123), 1));

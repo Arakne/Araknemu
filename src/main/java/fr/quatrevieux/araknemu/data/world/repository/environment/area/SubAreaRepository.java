@@ -29,6 +29,15 @@ import java.util.Collection;
  */
 public interface SubAreaRepository extends Repository<SubArea> {
     /**
+     * Get a sub-area y its id
+     *
+     * @param id The subarea id
+     *
+     * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException Whe the subarea is not found
+     */
+    public SubArea get(int id);
+
+    /**
      * Get all subareas
      */
     public Collection<SubArea> all();

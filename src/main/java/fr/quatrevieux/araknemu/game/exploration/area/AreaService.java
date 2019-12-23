@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.game.exploration.area;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
-import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.world.entity.environment.area.Area;
@@ -63,7 +62,17 @@ final public class AreaService implements PreloadableService, EventsSubscriber {
      * Get a sub area by its id
      */
     public ExplorationSubArea get(int id) {
-        return subAreas.get(id);
+        if (subAreas.containsKey(id)) {
+            return subAreas.get(id);
+        }
+
+        final SubArea subArea = subAreaRepository.get(id);
+        final Area area = areaRepository.get(subArea.area());
+
+        ExplorationSubArea explorationSubArea = new ExplorationSubArea(subArea, area);
+        subAreas.put(explorationSubArea.id(), explorationSubArea);
+
+        return explorationSubArea;
     }
 
     @Override

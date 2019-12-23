@@ -35,6 +35,8 @@ class DialogCreatedTest extends GameBaseCase {
         dataSet
             .pushNpcs()
             .pushMaps()
+            .pushAreas()
+            .pushSubAreas()
         ;
 
         Creature npc = container.get(ExplorationMapService.class).load(10340).creature(-47204);

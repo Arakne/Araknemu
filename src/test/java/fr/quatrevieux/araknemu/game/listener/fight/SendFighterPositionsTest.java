@@ -38,7 +38,7 @@ class SendFighterPositionsTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
 
         fight = container.get(FightService.class).handler(ChallengeBuilder.class)
             .start(builder -> {

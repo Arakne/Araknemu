@@ -57,7 +57,7 @@ class AreaServiceTest extends GameBaseCase {
 
     @Test
     void list() {
-        assertCount(4, service.list());
+        assertCount(7, service.list());
         assertSame(
             service.list(),
             service.list()

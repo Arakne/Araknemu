@@ -49,6 +49,8 @@ class StartDialogTest extends GameBaseCase {
         dataSet
             .pushNpcs()
             .pushMaps()
+            .pushAreas()
+            .pushSubAreas()
         ;
 
         map = container.get(ExplorationMapService.class).load(10340);

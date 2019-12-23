@@ -85,7 +85,7 @@ class GameNpcTest extends GameBaseCase {
 
     @Test
     void join() throws SQLException {
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
 
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
         npc.join(map);

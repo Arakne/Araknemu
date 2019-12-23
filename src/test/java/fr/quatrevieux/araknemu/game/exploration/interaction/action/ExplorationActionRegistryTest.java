@@ -51,7 +51,7 @@ class ExplorationActionRegistryTest extends FightBaseCase {
             new FightActionsFactories(container.get(FightService.class), container.get(FighterFactory.class))
         );
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
     }
 
     @Test

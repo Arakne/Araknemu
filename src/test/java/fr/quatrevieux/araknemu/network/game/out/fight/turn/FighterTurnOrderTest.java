@@ -40,7 +40,7 @@ class FighterTurnOrderTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
 
         p1 = gamePlayer(true);
         p2 = makeOtherPlayer();

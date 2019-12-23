@@ -61,6 +61,17 @@ class SqlAreaRepositoryTest extends GameBaseCase {
     }
 
     @Test
+    void getById() throws SQLException, ContainerException {
+        dataSet.pushArea(new Area(0, "Amakna", 0));
+
+        Area area = repository.get(0);
+
+        assertEquals(0, area.id());
+        assertEquals(0, area.superarea());
+        assertEquals("Amakna", area.name());
+    }
+
+    @Test
     void has() throws SQLException, ContainerException {
         Area area = new Area(0, "Amakna", 0);
 
@@ -77,7 +88,7 @@ class SqlAreaRepositoryTest extends GameBaseCase {
 
         Collection<Area> areas = repository.all();
 
-        assertCount(3, areas);
+        assertCount(4, areas);
         assertContainsOnly(Area.class, areas.toArray());
     }
 }

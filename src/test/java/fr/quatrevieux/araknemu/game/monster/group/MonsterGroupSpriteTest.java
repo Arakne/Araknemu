@@ -51,6 +51,8 @@ class MonsterGroupSpriteTest extends GameBaseCase {
 
         dataSet
             .pushMaps()
+            .pushAreas()
+            .pushSubAreas()
             .pushMonsterSpells()
             .pushMonsterTemplates()
         ;

@@ -36,7 +36,7 @@ class SendFighterReadyStateTest extends FightBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
 
         fighter = makePlayerFighter(gamePlayer(true));
         Fight fight = createFight();

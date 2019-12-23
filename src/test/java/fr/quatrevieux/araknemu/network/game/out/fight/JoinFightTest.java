@@ -33,7 +33,7 @@ class JoinFightTest extends FightBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
     }
 
     @Test

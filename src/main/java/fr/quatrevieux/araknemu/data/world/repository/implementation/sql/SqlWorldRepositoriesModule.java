@@ -191,7 +191,7 @@ final public class SqlWorldRepositoriesModule implements ContainerModule {
 
         configurator.persist(
             AreaRepository.class,
-            container -> new SqlAreaRepository(executor)
+            container -> new AreaRepositoryCache(new SqlAreaRepository(executor))
         );
 
         configurator.persist(

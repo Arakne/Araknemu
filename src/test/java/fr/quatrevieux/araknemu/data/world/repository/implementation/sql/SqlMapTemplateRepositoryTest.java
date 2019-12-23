@@ -48,7 +48,7 @@ class SqlMapTemplateRepositoryTest extends GameBaseCase {
             new FightPlacesTransformer()
         );
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
     }
 
     @Test
@@ -63,6 +63,10 @@ class SqlMapTemplateRepositoryTest extends GameBaseCase {
 
         assertEquals(4, map.cells().get(308).movement());
         assertTrue(map.cells().get(308).lineOfSight());
+
+        assertEquals(-4, map.geoposition().x());
+        assertEquals(3, map.geoposition().y());
+        assertEquals(440, map.subAreaId());
     }
 
     @Test
@@ -83,7 +87,7 @@ class SqlMapTemplateRepositoryTest extends GameBaseCase {
 
     @Test
     void getByEntity() {
-        MapTemplate map = repository.get(new MapTemplate(10300, null, null, null, null, null));
+        MapTemplate map = repository.get(new MapTemplate(10300, null, null, null, null, null, null, 0));
 
         assertEquals(10300, map.id());
         assertEquals(479, map.cells().size());
@@ -91,8 +95,8 @@ class SqlMapTemplateRepositoryTest extends GameBaseCase {
 
     @Test
     void has() {
-        assertFalse(repository.has(new MapTemplate(-1, null, null, null, null, null)));
-        assertTrue(repository.has(new MapTemplate(10300, null, null, null, null, null)));
+        assertFalse(repository.has(new MapTemplate(-1, null, null, null, null, null, null, 0)));
+        assertTrue(repository.has(new MapTemplate(10300, null, null, null, null, null, null, 0)));
     }
 
     @Test

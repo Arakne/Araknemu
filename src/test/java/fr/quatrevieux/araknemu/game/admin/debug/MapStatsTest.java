@@ -36,7 +36,7 @@ class MapStatsTest extends CommandTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
 
         command = new MapStats(
             container.get(MapTemplateRepository.class)

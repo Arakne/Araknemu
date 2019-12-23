@@ -30,7 +30,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 /**
- * SQL implementation for subarea repository
+ * SQL implementation for area repository
  */
 final class SqlAreaRepository implements AreaRepository {
     private static class Loader implements RepositoryUtils.Loader<Area> {
@@ -83,9 +83,14 @@ final class SqlAreaRepository implements AreaRepository {
 
     @Override
     public Area get(Area entity) throws RepositoryException {
+        return get(entity.id());
+    }
+
+    @Override
+    public Area get(int id) throws RepositoryException {
         return utils.findOne(
             "SELECT * FROM AREA WHERE AREA_ID = ?",
-            rs -> rs.setInt(1, entity.id())
+            rs -> rs.setInt(1, id)
         );
     }
 

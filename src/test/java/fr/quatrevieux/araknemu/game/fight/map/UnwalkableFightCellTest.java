@@ -41,7 +41,7 @@ class UnwalkableFightCellTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
 
         mapTemplate = container.get(MapTemplateRepository.class).get(10340);
         map = new FightMap(mapTemplate);

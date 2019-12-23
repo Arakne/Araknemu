@@ -340,7 +340,11 @@ public class GameBaseCase extends DatabaseTestCase {
         GamePlayer player = gamePlayer(true);
         player.setPosition(new Position(10300, 279));
 
-        dataSet.pushMaps();
+        dataSet
+            .pushAreas()
+            .pushSubAreas()
+            .pushMaps()
+        ;
 
         ExplorationPlayer explorationPlayer = container.get(ExplorationService.class).create(player);
 

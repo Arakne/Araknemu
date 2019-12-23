@@ -65,6 +65,19 @@ class SqlSubAreaRepositoryTest extends GameBaseCase {
     }
 
     @Test
+    void getById() throws SQLException, ContainerException {
+        dataSet.pushSubArea(new SubArea(4, 0, "La forêt d'Amakna", true, Alignment.NONE));
+
+        SubArea area = repository.get(4);
+
+        assertEquals(4, area.id());
+        assertEquals(0, area.area());
+        assertEquals("La forêt d'Amakna", area.name());
+        assertEquals(true, area.conquestable());
+        assertEquals(Alignment.NONE, area.alignment());
+    }
+
+    @Test
     void has() throws SQLException, ContainerException {
         SubArea area = new SubArea(4, 0, "La forêt d'Amakna", true, Alignment.NONE);
 

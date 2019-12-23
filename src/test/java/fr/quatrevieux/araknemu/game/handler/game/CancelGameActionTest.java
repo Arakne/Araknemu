@@ -45,7 +45,7 @@ class CancelGameActionTest extends GameBaseCase {
 
     @Test
     void handleCancelMove() throws Exception {
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
 
         ExplorationPlayer player = explorationPlayer();
 

@@ -17,28 +17,30 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.data.world.repository.environment.area;
-
-import fr.quatrevieux.araknemu.core.dbal.repository.Repository;
-import fr.quatrevieux.araknemu.data.world.entity.environment.area.Area;
-
-import java.util.Collection;
+package fr.quatrevieux.araknemu.data.value;
 
 /**
- * Repository for areas
+ * Position using 2D coordinates
  */
-public interface AreaRepository extends Repository<Area> {
-    /**
-     * Get an area by its id
-     *
-     * @param id The area id
-     *
-     * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException When the area cannot be found
-     */
-    public Area get(int id);
+final public class Geoposition {
+    final private int x;
+    final private int y;
 
-    /**
-     * Get all subareas
-     */
-    public Collection<Area> all();
+    public Geoposition(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public int x() {
+        return x;
+    }
+
+    public int y() {
+        return y;
+    }
+
+    @Override
+    public String toString() {
+        return "[" + x + "," + y + "]";
+    }
 }

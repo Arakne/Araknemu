@@ -88,9 +88,14 @@ final class SqlSubAreaRepository implements SubAreaRepository {
 
     @Override
     public SubArea get(SubArea entity) throws RepositoryException {
+        return get(entity.id());
+    }
+
+    @Override
+    public SubArea get(int id) throws RepositoryException {
         return utils.findOne(
             "SELECT * FROM SUBAREA WHERE SUBAREA_ID = ?",
-            rs -> rs.setInt(1, entity.id())
+            rs -> rs.setInt(1, id)
         );
     }
 

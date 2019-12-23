@@ -55,7 +55,7 @@ class MapTriggerServiceTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
         service = new MapTriggerService(
             container.get(MapTriggerRepository.class),
             container.get(CellActionFactory.class)
@@ -83,7 +83,7 @@ class MapTriggerServiceTest extends GameBaseCase {
 
         ExplorationMap map = new ExplorationMap(
             container.get(MapTemplateRepository.class).get(10300),
-            new CellLoaderAggregate(new CellLoader[0])
+            new CellLoaderAggregate(new CellLoader[0]), null
         );
 
         dispatcher.dispatch(new MapLoaded(map));

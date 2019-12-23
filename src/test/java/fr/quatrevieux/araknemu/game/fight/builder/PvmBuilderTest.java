@@ -59,6 +59,8 @@ class PvmBuilderTest extends GameBaseCase {
 
         dataSet
             .pushMaps()
+            .pushAreas()
+            .pushSubAreas()
             .pushMonsterSpells()
             .pushMonsterTemplates()
         ;

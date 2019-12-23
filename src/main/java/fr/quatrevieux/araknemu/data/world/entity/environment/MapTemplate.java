@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.world.entity.environment;
 
 import fr.quatrevieux.araknemu.data.value.Dimensions;
+import fr.quatrevieux.araknemu.data.value.Geoposition;
 
 import java.util.List;
 
@@ -66,14 +67,18 @@ final public class MapTemplate {
     final private String key;
     final private List<Cell> cells;
     final private List<Integer>[] fightPlaces;
+    final private Geoposition geoposition;
+    final private int subAreaId;
 
-    public MapTemplate(int id, String date, Dimensions dimensions, String key, List<Cell> cells, List<Integer>[] fightPlaces) {
+    public MapTemplate(int id, String date, Dimensions dimensions, String key, List<Cell> cells, List<Integer>[] fightPlaces, Geoposition geoposition, int subAreaId) {
         this.id = id;
         this.date = date;
         this.dimensions = dimensions;
         this.key = key;
         this.cells = cells;
         this.fightPlaces = fightPlaces;
+        this.geoposition = geoposition;
+        this.subAreaId = subAreaId;
     }
 
     public int id() {
@@ -98,5 +103,21 @@ final public class MapTemplate {
 
     public List<Integer>[] fightPlaces() {
         return fightPlaces;
+    }
+
+    /**
+     * Get the map coordinates as 2D point
+     */
+    public Geoposition geoposition() {
+        return geoposition;
+    }
+
+    /**
+     * Get the map subarea
+     *
+     * @see fr.quatrevieux.araknemu.data.world.entity.environment.area.SubArea#id()
+     */
+    public int subAreaId() {
+        return subAreaId;
     }
 }

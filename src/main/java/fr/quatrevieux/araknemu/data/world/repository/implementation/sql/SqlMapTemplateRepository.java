@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.Dimensions;
+import fr.quatrevieux.araknemu.data.value.Geoposition;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 
@@ -59,7 +60,12 @@ final class SqlMapTemplateRepository implements MapTemplateRepository {
                 ),
                 rs.getString("key"),
                 cells,
-                fightPlacesTransformer.unserialize(rs.getString("places"))
+                fightPlacesTransformer.unserialize(rs.getString("places")),
+                new Geoposition(
+                    rs.getInt("MAP_X"),
+                    rs.getInt("MAP_Y")
+                ),
+                rs.getInt("SUBAREA_ID")
             );
         }
 
@@ -85,6 +91,7 @@ final class SqlMapTemplateRepository implements MapTemplateRepository {
     @Override
     public void initialize() throws RepositoryException {
         try {
+            // @todo normalize names
             executor.query(
                 "CREATE TABLE maps(" +
                     "id INTEGER PRIMARY KEY," +
@@ -93,9 +100,14 @@ final class SqlMapTemplateRepository implements MapTemplateRepository {
                     "height INTEGER," +
                     "key TEXT," +
                     "mapData TEXT," +
-                    "places TEXT" +
+                    "places TEXT," +
+                    "MAP_X INTEGER," +
+                    "MAP_Y INTEGER," +
+                    "SUBAREA_ID INTEGER" +
                 ")"
             );
+
+            executor.query("CREATE INDEX IDX_MAP_POS ON maps (MAP_X, MAP_Y)");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }

@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepo
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
 import fr.quatrevieux.araknemu.game.exploration.event.ExplorationPlayerCreated;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.TriggerCell;
@@ -64,11 +65,16 @@ class ExplorationMapServiceTest extends FightBaseCase {
         service = new ExplorationMapService(
             container.get(MapTemplateRepository.class),
             container.get(FightService.class),
+            container.get(AreaService.class),
             dispatcher = new DefaultListenerAggregate(),
             container.get(CellLoader.class)
         );
 
-        dataSet.pushMaps();
+        dataSet
+            .pushMaps()
+            .pushAreas()
+            .pushSubAreas()
+        ;
     }
 
     @Test
@@ -82,6 +88,7 @@ class ExplorationMapServiceTest extends FightBaseCase {
 
         assertEquals(10540, map.id());
         assertEquals(0, map.sprites().size());
+        assertEquals(454, map.subArea().id());
         assertSame(map, ref.get().map());
 
         ref.set(null);

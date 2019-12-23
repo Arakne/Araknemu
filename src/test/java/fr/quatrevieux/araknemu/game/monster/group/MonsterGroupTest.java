@@ -66,6 +66,8 @@ class MonsterGroupTest extends GameBaseCase {
             .pushMonsterSpells()
             .pushMonsterTemplates()
             .pushMaps()
+            .pushAreas()
+            .pushSubAreas()
         ;
 
         MonsterService service = container.get(MonsterService.class);
