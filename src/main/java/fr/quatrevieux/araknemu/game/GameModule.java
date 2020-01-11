@@ -83,6 +83,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validato
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.ValidateRestrictedDirections;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.ValidateWalkable;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoaderAggregate;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.MapTriggerService;
@@ -342,6 +343,15 @@ final public class GameModule implements ContainerModule {
                 container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class),
                 // Use proxy to fix circular reference between ExplorationMapService and MapTriggerService
                 (map, cells) -> container.get(CellLoader.class).load(map, cells)
+            )
+        );
+
+        configurator.persist(
+            GeolocationService.class,
+            container -> new GeolocationService(
+                container.get(ExplorationMapService.class),
+                container.get(AreaService.class),
+                container.get(MapTemplateRepository.class)
             )
         );
 

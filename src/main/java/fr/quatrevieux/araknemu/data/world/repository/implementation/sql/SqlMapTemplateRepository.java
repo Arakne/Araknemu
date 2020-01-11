@@ -136,6 +136,14 @@ final class SqlMapTemplateRepository implements MapTemplateRepository {
     }
 
     @Override
+    public Collection<MapTemplate> byGeoposition(Geoposition geoposition) {
+        return utils.findAll("SELECT * FROM maps WHERE MAP_X = ? AND MAP_Y = ?", stmt -> {
+            stmt.setInt(1, geoposition.x());
+            stmt.setInt(2, geoposition.y());
+        });
+    }
+
+    @Override
     public boolean has(MapTemplate entity) throws RepositoryException {
         return utils.aggregate(
             "SELECT COUNT(*) FROM maps WHERE id = ?",

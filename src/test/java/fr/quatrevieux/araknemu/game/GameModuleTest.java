@@ -51,6 +51,7 @@ import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeFactory;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ExplorationActionRegistry;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoaderAggregate;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.MapTriggerService;
@@ -146,6 +147,7 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(BankService.class, container.get(BankService.class));
         assertInstanceOf(NpcStoreService.class, container.get(NpcStoreService.class));
         assertInstanceOf(NpcExchangeService.class, container.get(NpcExchangeService.class));
+        assertInstanceOf(GeolocationService.class, container.get(GeolocationService.class));
 
         assertSame(
             container.get(ListenerAggregate.class),

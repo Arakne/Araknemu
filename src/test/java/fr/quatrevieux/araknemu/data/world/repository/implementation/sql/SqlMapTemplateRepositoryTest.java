@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.data.value.Dimensions;
+import fr.quatrevieux.araknemu.data.value.Geoposition;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.transformer.FightPlacesTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.MapCellTransformer;
@@ -29,7 +30,10 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -91,6 +95,30 @@ class SqlMapTemplateRepositoryTest extends GameBaseCase {
 
         assertEquals(10300, map.id());
         assertEquals(479, map.cells().size());
+    }
+
+    @Test
+    void byGeoposition() {
+        List<MapTemplate> maps = new ArrayList<>(repository.byGeoposition(new Geoposition(3, 6)));
+
+        assertCount(1, maps);
+        assertEquals(10340, maps.get(0).id());
+    }
+
+    @Test
+    void byGeopositionMultipleMaps() throws SQLException {
+        dataSet.pushMap(5, "", 0, 0, "", "", "", new Geoposition(3, 6), 0);
+
+        List<MapTemplate> maps = new ArrayList<>(repository.byGeoposition(new Geoposition(3, 6)));
+
+        assertCount(2, maps);
+        assertEquals(5, maps.get(0).id());
+        assertEquals(10340, maps.get(1).id());
+    }
+
+    @Test
+    void byGeopositionNoMaps() {
+        assertCount(0, repository.byGeoposition(new Geoposition(40, 4)));
     }
 
     @Test

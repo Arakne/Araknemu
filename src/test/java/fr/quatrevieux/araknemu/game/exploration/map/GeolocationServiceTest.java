@@ -1,0 +1,102 @@
+/*
+ * This file is part of Araknemu.
+ *
+ * Araknemu is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Araknemu is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Copyright (c) 2017-2019 Vincent Quatrevieux
+ */
+
+package fr.quatrevieux.araknemu.game.exploration.map;
+
+import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.data.value.Geoposition;
+import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
+import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.sql.SQLException;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class GeolocationServiceTest extends GameBaseCase {
+    private GeolocationService service;
+
+    @BeforeEach
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+
+        service = new GeolocationService(
+            container.get(ExplorationMapService.class),
+            container.get(AreaService.class),
+            container.get(MapTemplateRepository.class)
+        );
+
+        dataSet
+            .pushAreas()
+            .pushSubAreas()
+            .pushMaps()
+        ;
+    }
+
+    @Test
+    void findSuccess() {
+        GeolocationService.GeopositionContext context = new GeolocationService.GeopositionContext();
+        context.superArea = 3;
+
+        ExplorationMap map = service.find(new Geoposition(3, 6), context);
+
+        assertEquals(10340, map.id());
+        assertSame(map, service.find(new Geoposition(3, 6), context));
+    }
+
+    @Test
+    void findWithSubArea() throws SQLException {
+        pushMapsOnSameGeoposition();
+
+        GeolocationService.GeopositionContext context = new GeolocationService.GeopositionContext();
+        context.subArea = 4;
+        assertEquals(99003, service.find(new Geoposition(42, 24), context).id());
+
+        context.subArea = 1;
+        assertEquals(99002, service.find(new Geoposition(42, 24), context).id());
+    }
+
+    @Test
+    void findWithSuperArea() throws SQLException {
+        pushMapsOnSameGeoposition();
+
+        GeolocationService.GeopositionContext context = new GeolocationService.GeopositionContext();
+        context.superArea = 0;
+        assertEquals(99002, service.find(new Geoposition(42, 24), context).id());
+
+        context.superArea = 3;
+        assertEquals(99001, service.find(new Geoposition(42, 24), context).id());
+    }
+
+    @Test
+    void findNotFound() {
+        assertThrows(EntityNotFoundException.class, () -> service.find(new Geoposition(40, 4), new GeolocationService.GeopositionContext()));
+    }
+
+    private void pushMapsOnSameGeoposition() throws SQLException {
+        dataSet
+            .pushMap(99001, "", 0, 0, "", "", "", new Geoposition(42, 24), 440)
+            .pushMap(99002, "", 0, 0, "", "", "", new Geoposition(42, 24), 1)
+            .pushMap(99003, "", 0, 0, "", "", "", new Geoposition(42, 24), 4)
+        ;
+    }
+}
