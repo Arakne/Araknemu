@@ -39,7 +39,7 @@ class SendSpriteRemovedTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
         listener = new SendSpriteRemoved(
             container.get(ExplorationMapService.class).load(10300)
         );

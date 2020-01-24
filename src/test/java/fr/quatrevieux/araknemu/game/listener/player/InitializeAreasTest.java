@@ -36,7 +36,10 @@ class InitializeAreasTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushSubAreas();
+        dataSet
+            .pushSubAreas()
+            .pushAreas()
+        ;
 
         service = container.get(AreaService.class);
         service.preload(NOPLogger.NOP_LOGGER);

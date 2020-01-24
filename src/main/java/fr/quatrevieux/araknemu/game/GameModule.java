@@ -35,7 +35,6 @@ import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.BankItemRepository;
-import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
@@ -44,6 +43,8 @@ import fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceR
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.area.AreaRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.area.SubAreaRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.*;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
@@ -82,6 +83,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validato
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.ValidateRestrictedDirections;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.ValidateWalkable;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoaderAggregate;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.MapTriggerService;
@@ -337,9 +339,19 @@ final public class GameModule implements ContainerModule {
             container -> new ExplorationMapService(
                 container.get(MapTemplateRepository.class),
                 container.get(FightService.class),
+                container.get(AreaService.class),
                 container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class),
                 // Use proxy to fix circular reference between ExplorationMapService and MapTriggerService
                 (map, cells) -> container.get(CellLoader.class).load(map, cells)
+            )
+        );
+
+        configurator.persist(
+            GeolocationService.class,
+            container -> new GeolocationService(
+                container.get(ExplorationMapService.class),
+                container.get(AreaService.class),
+                container.get(MapTemplateRepository.class)
             )
         );
 
@@ -421,6 +433,7 @@ final public class GameModule implements ContainerModule {
         configurator.persist(
             AreaService.class,
             container -> new AreaService(
+                container.get(AreaRepository.class),
                 container.get(SubAreaRepository.class)
             )
         );

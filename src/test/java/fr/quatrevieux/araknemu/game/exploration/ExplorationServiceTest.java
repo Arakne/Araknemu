@@ -50,7 +50,7 @@ class ExplorationServiceTest extends GameBaseCase {
             container.get(Dispatcher.class)
         );
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
     }
 
     @Test

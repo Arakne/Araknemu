@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;
+import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
 import fr.quatrevieux.araknemu.game.exploration.event.ExplorationPlayerCreated;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
@@ -45,14 +46,16 @@ import java.util.concurrent.ConcurrentMap;
 final public class ExplorationMapService implements PreloadableService, EventsSubscriber {
     final private MapTemplateRepository repository;
     final private FightService fightService;
+    final private AreaService areaService;
     final private Dispatcher dispatcher;
     final private CellLoader loader;
 
     final private ConcurrentMap<Integer, ExplorationMap> maps = new ConcurrentHashMap<>();
 
-    public ExplorationMapService(MapTemplateRepository repository, FightService fightService, Dispatcher dispatcher, CellLoader loader) {
+    public ExplorationMapService(MapTemplateRepository repository, FightService fightService, AreaService areaService, Dispatcher dispatcher, CellLoader loader) {
         this.repository = repository;
         this.fightService = fightService;
+        this.areaService = areaService;
         this.dispatcher = dispatcher;
         this.loader = loader;
     }
@@ -117,8 +120,19 @@ final public class ExplorationMapService implements PreloadableService, EventsSu
         };
     }
 
+    /**
+     * Load the exploration map
+     */
+    public ExplorationMap load(MapTemplate template) {
+        if (maps.containsKey(template.id())) {
+            return maps.get(template.id());
+        }
+
+        return createMap(template);
+    }
+
     private ExplorationMap createMap(MapTemplate template) {
-        ExplorationMap map = new ExplorationMap(template, loader);
+        ExplorationMap map = new ExplorationMap(template, loader, areaService.get(template.subAreaId()));
         maps.put(map.id(), map);
 
         map.dispatcher().add(new SendNewSprite(map));

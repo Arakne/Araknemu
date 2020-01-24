@@ -31,6 +31,8 @@ import fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceR
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.area.AreaRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.area.SubAreaRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.*;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.local.*;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
@@ -180,6 +182,16 @@ final public class SqlWorldRepositoriesModule implements ContainerModule {
         configurator.persist(
             MonsterRewardItemRepository.class,
             container -> new SqlMonsterRewardItemRepository(executor)
+        );
+
+        configurator.persist(
+            SubAreaRepository.class,
+            container -> new SqlSubAreaRepository(executor)
+        );
+
+        configurator.persist(
+            AreaRepository.class,
+            container -> new AreaRepositoryCache(new SqlAreaRepository(executor))
         );
 
         configurator.persist(

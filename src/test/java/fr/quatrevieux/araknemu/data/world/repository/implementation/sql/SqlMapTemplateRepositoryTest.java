@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.data.value.Dimensions;
+import fr.quatrevieux.araknemu.data.value.Geolocation;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.transformer.FightPlacesTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.MapCellTransformer;
@@ -29,6 +30,8 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,7 +51,7 @@ class SqlMapTemplateRepositoryTest extends GameBaseCase {
             new FightPlacesTransformer()
         );
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
     }
 
     @Test
@@ -63,6 +66,11 @@ class SqlMapTemplateRepositoryTest extends GameBaseCase {
 
         assertEquals(4, map.cells().get(308).movement());
         assertTrue(map.cells().get(308).lineOfSight());
+
+        assertEquals(-4, map.geolocation().x());
+        assertEquals(3, map.geolocation().y());
+        assertEquals(440, map.subAreaId());
+        assertFalse(map.indoor());
     }
 
     @Test
@@ -77,22 +85,53 @@ class SqlMapTemplateRepositoryTest extends GameBaseCase {
     }
 
     @Test
+    void getIndoor() throws SQLException {
+        dataSet.pushMap(90002, "", 0, 0, "", "", "", new Geolocation(0, 0), 1, true);
+
+        assertTrue(repository.get(90002).indoor());
+    }
+
+    @Test
     void getNotFound() {
         assertThrows(EntityNotFoundException.class, () -> repository.get(-1));
     }
 
     @Test
     void getByEntity() {
-        MapTemplate map = repository.get(new MapTemplate(10300, null, null, null, null, null));
+        MapTemplate map = repository.get(new MapTemplate(10300, null, null, null, null, null, null, 0, false));
 
         assertEquals(10300, map.id());
         assertEquals(479, map.cells().size());
     }
 
     @Test
+    void byGeolocation() {
+        List<MapTemplate> maps = new ArrayList<>(repository.byGeolocation(new Geolocation(3, 6)));
+
+        assertCount(1, maps);
+        assertEquals(10340, maps.get(0).id());
+    }
+
+    @Test
+    void byGeolocationMultipleMaps() throws SQLException {
+        dataSet.pushMap(5, "", 0, 0, "", "", "", new Geolocation(3, 6), 0, false);
+
+        List<MapTemplate> maps = new ArrayList<>(repository.byGeolocation(new Geolocation(3, 6)));
+
+        assertCount(2, maps);
+        assertEquals(5, maps.get(0).id());
+        assertEquals(10340, maps.get(1).id());
+    }
+
+    @Test
+    void byGeolocationNoMaps() {
+        assertCount(0, repository.byGeolocation(new Geolocation(40, 4)));
+    }
+
+    @Test
     void has() {
-        assertFalse(repository.has(new MapTemplate(-1, null, null, null, null, null)));
-        assertTrue(repository.has(new MapTemplate(10300, null, null, null, null, null)));
+        assertFalse(repository.has(new MapTemplate(-1, null, null, null, null, null, null, 0, false)));
+        assertTrue(repository.has(new MapTemplate(10300, null, null, null, null, null, null, 0, false)));
     }
 
     @Test

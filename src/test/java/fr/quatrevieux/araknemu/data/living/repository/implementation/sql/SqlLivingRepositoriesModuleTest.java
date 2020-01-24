@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SqlLivingRepositoriesModuleTest extends RealmBaseCase {
     @Test
@@ -41,7 +41,6 @@ class SqlLivingRepositoriesModuleTest extends RealmBaseCase {
 
         assertInstanceOf(SqlAccountRepository.class, container.get(fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository.class));
         assertInstanceOf(SqlPlayerRepository.class, container.get(fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository.class));
-        assertInstanceOf(SqlSubAreaRepository.class, container.get(fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository.class));
         assertInstanceOf(SqlPlayerItemRepository.class, container.get(fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository.class));
         assertInstanceOf(SqlPlayerSpellRepository.class, container.get(fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository.class));
         assertInstanceOf(SqlAccountBankRepository.class, container.get(fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository.class));

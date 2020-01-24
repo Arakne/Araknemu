@@ -39,7 +39,7 @@ class WalkableFightCellTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
 
         cell = new WalkableFightCell(
             map = new FightMap(container.get(MapTemplateRepository.class).get(10340)),

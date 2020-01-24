@@ -42,7 +42,7 @@ class SendFightStartedTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
 
         listener = new SendFightStarted(
             fight = container.get(FightService.class).handler(ChallengeBuilder.class).start(

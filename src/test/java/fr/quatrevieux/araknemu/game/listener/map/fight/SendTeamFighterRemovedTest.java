@@ -44,7 +44,7 @@ class SendTeamFighterRemovedTest extends FightBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
 
         map = container.get(ExplorationMapService.class).load(10340);
         explorationPlayer().join(map);

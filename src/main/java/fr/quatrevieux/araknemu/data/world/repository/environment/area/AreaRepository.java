@@ -17,20 +17,28 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.data.living.repository.environment;
+package fr.quatrevieux.araknemu.data.world.repository.environment.area;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.Repository;
-import fr.quatrevieux.araknemu.data.living.entity.environment.SubArea;
+import fr.quatrevieux.araknemu.data.world.entity.environment.area.Area;
 
 import java.util.Collection;
 
 /**
- * Repository for sub areas
- * This repository is not mutable because data can only be updated, but not created
+ * Repository for areas
  */
-public interface SubAreaRepository extends Repository<SubArea> {
+public interface AreaRepository extends Repository<Area> {
+    /**
+     * Get an area by its id
+     *
+     * @param id The area id
+     *
+     * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException When the area cannot be found
+     */
+    public Area get(int id);
+
     /**
      * Get all subareas
      */
-    public Collection<SubArea> all();
+    public Collection<Area> all();
 }

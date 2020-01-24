@@ -40,6 +40,8 @@ class SendPacketTest extends GameBaseCase {
     void onNpc() throws SQLException, ContainerException {
         dataSet
             .pushMaps()
+            .pushAreas()
+            .pushSubAreas()
             .pushNpcs()
         ;
 

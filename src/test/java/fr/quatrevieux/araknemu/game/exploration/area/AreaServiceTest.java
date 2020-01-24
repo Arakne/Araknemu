@@ -21,9 +21,10 @@ package fr.quatrevieux.araknemu.game.exploration.area;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
-import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.data.world.repository.environment.area.AreaRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.area.SubAreaRepository;
+import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.listener.player.InitializeAreas;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,20 +44,35 @@ class AreaServiceTest extends GameBaseCase {
         super.setUp();
 
         service = new AreaService(
+            container.get(AreaRepository.class),
             container.get(SubAreaRepository.class)
         );
 
-        dataSet.pushSubAreas();
+        dataSet
+            .pushSubAreas()
+            .pushAreas()
+        ;
         service.preload(NOPLogger.NOP_LOGGER);
     }
 
     @Test
     void list() {
-        assertCount(4, service.list());
+        assertCount(7, service.list());
         assertSame(
             service.list(),
             service.list()
         );
+    }
+
+    @Test
+    void get() {
+        ExplorationSubArea area = service.get(3);
+
+        assertEquals(3, area.id());
+        assertEquals(0, area.area().id());
+        assertEquals("Amakna", area.area().name());
+
+        assertSame(area, service.get(3));
     }
 
     @Test

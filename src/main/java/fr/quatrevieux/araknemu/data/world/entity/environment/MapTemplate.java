@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.world.entity.environment;
 
 import fr.quatrevieux.araknemu.data.value.Dimensions;
+import fr.quatrevieux.araknemu.data.value.Geolocation;
 
 import java.util.List;
 
@@ -66,14 +67,20 @@ final public class MapTemplate {
     final private String key;
     final private List<Cell> cells;
     final private List<Integer>[] fightPlaces;
+    final private Geolocation geolocation;
+    final private int subAreaId;
+    final private boolean indoor;
 
-    public MapTemplate(int id, String date, Dimensions dimensions, String key, List<Cell> cells, List<Integer>[] fightPlaces) {
+    public MapTemplate(int id, String date, Dimensions dimensions, String key, List<Cell> cells, List<Integer>[] fightPlaces, Geolocation geolocation, int subAreaId, boolean indoor) {
         this.id = id;
         this.date = date;
         this.dimensions = dimensions;
         this.key = key;
         this.cells = cells;
         this.fightPlaces = fightPlaces;
+        this.geolocation = geolocation;
+        this.subAreaId = subAreaId;
+        this.indoor = indoor;
     }
 
     public int id() {
@@ -98,5 +105,31 @@ final public class MapTemplate {
 
     public List<Integer>[] fightPlaces() {
         return fightPlaces;
+    }
+
+    /**
+     * Get the map coordinates as 2D point
+     *
+     * This location can be found into map_xx_xxx.swf, as value of MA.m[mapid]
+     */
+    public Geolocation geolocation() {
+        return geolocation;
+    }
+
+    /**
+     * Get the map subarea
+     *
+     * @see fr.quatrevieux.araknemu.data.world.entity.environment.area.SubArea#id()
+     */
+    public int subAreaId() {
+        return subAreaId;
+    }
+
+    /**
+     * Does the map is an indoor map ?
+     * Indoor map are house or underground maps
+     */
+    public boolean indoor() {
+        return indoor;
     }
 }

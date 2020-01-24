@@ -17,45 +17,42 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
+package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
-import fr.quatrevieux.araknemu.data.constant.Alignment;
-import fr.quatrevieux.araknemu.data.living.entity.environment.SubArea;
-import fr.quatrevieux.araknemu.data.living.repository.environment.SubAreaRepository;
+import fr.quatrevieux.araknemu.data.world.entity.environment.area.Area;
+import fr.quatrevieux.araknemu.data.world.repository.environment.area.AreaRepository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
 /**
- * SQL implementation for subarea repository
+ * SQL implementation for area repository
  */
-final class SqlSubAreaRepository implements SubAreaRepository {
-    private static class Loader implements RepositoryUtils.Loader<SubArea> {
+final class SqlAreaRepository implements AreaRepository {
+    private static class Loader implements RepositoryUtils.Loader<Area> {
         @Override
-        public SubArea create(ResultSet rs) throws SQLException {
-            return new SubArea(
-                rs.getInt("SUBAREA_ID"),
+        public Area create(ResultSet rs) throws SQLException {
+            return new Area(
                 rs.getInt("AREA_ID"),
-                rs.getString("SUBAREA_NAME"),
-                rs.getBoolean("CONQUESTABLE"),
-                Alignment.byId(rs.getInt("ALIGNMENT"))
+                rs.getString("AREA_NAME"),
+                rs.getInt("SUPERAREA_ID")
             );
         }
 
         @Override
-        public SubArea fillKeys(SubArea entity, ResultSet keys) throws SQLException {
+        public Area fillKeys(Area entity, ResultSet keys) {
             throw new UnsupportedOperationException();
         }
     }
 
     final private QueryExecutor executor;
-    final private RepositoryUtils<SubArea> utils;
+    final private RepositoryUtils<Area> utils;
 
-    public SqlSubAreaRepository(QueryExecutor executor) {
+    public SqlAreaRepository(QueryExecutor executor) {
         this.executor = executor;
         this.utils = new RepositoryUtils<>(this.executor, new Loader());
     }
@@ -64,12 +61,10 @@ final class SqlSubAreaRepository implements SubAreaRepository {
     public void initialize() throws RepositoryException {
         try {
             executor.query(
-                "CREATE TABLE SUBAREA (" +
-                    "SUBAREA_ID INTEGER PRIMARY KEY," +
-                    "AREA_ID INTEGER," +
-                    "SUBAREA_NAME VARCHAR(200)," +
-                    "CONQUESTABLE INTEGER(1)," +
-                    "ALIGNMENT INTEGER(1)" +
+                "CREATE TABLE AREA (" +
+                    "AREA_ID INTEGER PRIMARY KEY," +
+                    "AREA_NAME VARCHAR(200)," +
+                    "SUPERAREA_ID INTEGER" +
                 ")"
             );
         } catch (SQLException e) {
@@ -80,30 +75,35 @@ final class SqlSubAreaRepository implements SubAreaRepository {
     @Override
     public void destroy() throws RepositoryException {
         try {
-            executor.query("DROP TABLE SUBAREA");
+            executor.query("DROP TABLE AREA");
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }
     }
 
     @Override
-    public SubArea get(SubArea entity) throws RepositoryException {
+    public Area get(Area entity) throws RepositoryException {
+        return get(entity.id());
+    }
+
+    @Override
+    public Area get(int id) throws RepositoryException {
         return utils.findOne(
-            "SELECT * FROM SUBAREA WHERE SUBAREA_ID = ?",
-            rs -> rs.setInt(1, entity.id())
+            "SELECT * FROM AREA WHERE AREA_ID = ?",
+            rs -> rs.setInt(1, id)
         );
     }
 
     @Override
-    public boolean has(SubArea entity) {
+    public boolean has(Area entity) {
         return utils.aggregate(
-            "SELECT COUNT(*) FROM SUBAREA WHERE SUBAREA_ID = ?",
+            "SELECT COUNT(*) FROM AREA WHERE AREA_ID = ?",
             rs -> rs.setInt(1, entity.id())
         ) > 0;
     }
 
     @Override
-    public Collection<SubArea> all() {
-        return utils.findAll("SELECT * FROM SUBAREA");
+    public Collection<Area> all() {
+        return utils.findAll("SELECT * FROM AREA");
     }
 }

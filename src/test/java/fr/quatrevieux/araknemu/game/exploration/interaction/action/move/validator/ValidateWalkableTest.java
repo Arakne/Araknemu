@@ -47,7 +47,7 @@ class ValidateWalkableTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
         map = explorationPlayer().map();
 
         validator = new ValidateWalkable();

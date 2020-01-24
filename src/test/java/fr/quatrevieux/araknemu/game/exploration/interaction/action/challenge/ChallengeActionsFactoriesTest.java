@@ -41,7 +41,7 @@ class ChallengeActionsFactoriesTest extends FightBaseCase {
 
         factory = new ExplorationActionRegistry(new ChallengeActionsFactories(container.get(FightService.class)));
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
     }
 
     @Test

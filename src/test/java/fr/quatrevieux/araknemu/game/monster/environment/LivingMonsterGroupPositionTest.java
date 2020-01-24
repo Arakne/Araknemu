@@ -57,6 +57,8 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
 
         dataSet
             .pushMaps()
+            .pushAreas()
+            .pushSubAreas()
             .pushMonsterTemplates()
             .pushMonsterGroups()
             .pushMonsterSpells()

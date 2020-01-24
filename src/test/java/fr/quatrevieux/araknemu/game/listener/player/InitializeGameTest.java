@@ -49,7 +49,7 @@ class InitializeGameTest extends GameBaseCase {
             container.get(ExplorationMapService.class)
         );
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
     }
 
     @Test

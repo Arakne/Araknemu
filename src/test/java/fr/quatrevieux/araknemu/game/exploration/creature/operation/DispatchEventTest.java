@@ -49,6 +49,8 @@ class DispatchEventTest extends GameBaseCase {
         dataSet
             .pushMaps()
             .pushNpcs()
+            .pushAreas()
+            .pushSubAreas()
         ;
 
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);

@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.value.Dimensions;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
+import fr.quatrevieux.araknemu.game.exploration.area.ExplorationSubArea;
 import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.BasicCell;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
@@ -48,14 +49,16 @@ import java.util.stream.Collectors;
  */
 final public class ExplorationMap implements GameMap<ExplorationMapCell>, Dispatcher {
     final private MapTemplate template;
+    final private ExplorationSubArea subArea;
 
     final private Map<Integer, ExplorationMapCell> cells;
     final private ConcurrentMap<Integer, ExplorationCreature> creatures = new ConcurrentHashMap<>();
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
-    public ExplorationMap(MapTemplate template, CellLoader loader) {
+    public ExplorationMap(MapTemplate template, CellLoader loader, ExplorationSubArea subArea) {
         this.template = template;
+        this.subArea = subArea;
 
         this.cells = loader.load(this, template.cells())
             .stream()
@@ -205,6 +208,20 @@ final public class ExplorationMap implements GameMap<ExplorationMapCell>, Dispat
      */
     public boolean canLaunchFight() {
         return template.fightPlaces().length >= 2;
+    }
+
+    /**
+     * Get the sub-area of the map
+     */
+    public ExplorationSubArea subArea() {
+        return subArea;
+    }
+
+    /**
+     * Check if the map is an indoor map (i.e. house or underground)
+     */
+    public boolean indoor() {
+        return template.indoor();
     }
 
     public ListenerAggregate dispatcher() {

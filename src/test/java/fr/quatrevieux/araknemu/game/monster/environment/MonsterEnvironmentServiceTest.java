@@ -61,6 +61,8 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
 
         dataSet
             .pushMaps()
+            .pushAreas()
+            .pushSubAreas()
             .pushMonsterGroups()
             .pushMonsterSpells()
             .pushMonsterTemplates()

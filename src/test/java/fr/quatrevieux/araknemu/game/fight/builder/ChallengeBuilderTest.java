@@ -45,7 +45,7 @@ class ChallengeBuilderTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
 
         builder = new ChallengeBuilder(container.get(FightService.class), container.get(FighterFactory.class), new RandomUtil(), NOPLogger.NOP_LOGGER);
     }

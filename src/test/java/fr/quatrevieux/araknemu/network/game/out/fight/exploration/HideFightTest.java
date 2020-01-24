@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class HideFightTest extends FightBaseCase {
     @Test
     void generate() throws ContainerException, SQLException {
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
 
         Fight fight = createSimpleFight(container.get(ExplorationMapService.class).load(10340));
 

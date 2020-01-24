@@ -20,7 +20,9 @@
 package fr.quatrevieux.araknemu.network.game.out.area;
 
 import fr.quatrevieux.araknemu.data.constant.Alignment;
-import fr.quatrevieux.araknemu.data.living.entity.environment.SubArea;
+import fr.quatrevieux.araknemu.data.world.entity.environment.area.Area;
+import fr.quatrevieux.araknemu.data.world.entity.environment.area.SubArea;
+import fr.quatrevieux.araknemu.game.exploration.area.ExplorationSubArea;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -33,9 +35,9 @@ class SubAreaListTest {
         assertEquals(
             "al|1;1|3;0",
             new SubAreaList(Arrays.asList(
-                new SubArea(1, 2, "", true, Alignment.BONTARIAN),
-                new SubArea(2, 2, "", true, Alignment.NONE),
-                new SubArea(3, 2, "", true, Alignment.NEUTRAL)
+                new ExplorationSubArea(new SubArea(1, 2, "", true, Alignment.BONTARIAN), new Area(0, "", 0)),
+                new ExplorationSubArea(new SubArea(2, 2, "", true, Alignment.NONE), new Area(0, "", 0)),
+                new ExplorationSubArea(new SubArea(3, 2, "", true, Alignment.NEUTRAL), new Area(0, "", 0))
             )).toString()
         );
     }

@@ -17,13 +17,14 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
+package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Alignment;
-import fr.quatrevieux.araknemu.data.living.entity.environment.SubArea;
+import fr.quatrevieux.araknemu.data.world.entity.environment.area.SubArea;
+import fr.quatrevieux.araknemu.data.world.repository.implementation.sql.SqlSubAreaRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,6 +56,19 @@ class SqlSubAreaRepositoryTest extends GameBaseCase {
         dataSet.pushSubArea(new SubArea(4, 0, "La forêt d'Amakna", true, Alignment.NONE));
 
         SubArea area = repository.get(new SubArea(4, 0, null, false, null));
+
+        assertEquals(4, area.id());
+        assertEquals(0, area.area());
+        assertEquals("La forêt d'Amakna", area.name());
+        assertEquals(true, area.conquestable());
+        assertEquals(Alignment.NONE, area.alignment());
+    }
+
+    @Test
+    void getById() throws SQLException, ContainerException {
+        dataSet.pushSubArea(new SubArea(4, 0, "La forêt d'Amakna", true, Alignment.NONE));
+
+        SubArea area = repository.get(4);
 
         assertEquals(4, area.id());
         assertEquals(0, area.area());

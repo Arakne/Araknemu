@@ -53,6 +53,8 @@ class MonsterGroupFactoryTest extends GameBaseCase {
 
         dataSet
             .pushMaps()
+            .pushAreas()
+            .pushSubAreas()
             .pushMonsterTemplates()
             .pushMonsterSpells()
             .pushMonsterGroups()

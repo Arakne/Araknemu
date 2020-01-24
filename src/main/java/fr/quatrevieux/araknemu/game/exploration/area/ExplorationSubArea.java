@@ -17,46 +17,45 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.data.living.entity.environment;
+package fr.quatrevieux.araknemu.game.exploration.area;
 
 import fr.quatrevieux.araknemu.data.constant.Alignment;
+import fr.quatrevieux.araknemu.data.world.entity.environment.area.Area;
+import fr.quatrevieux.araknemu.data.world.entity.environment.area.SubArea;
 
 /**
- * Map subareas. Contains alignment
+ * SubArea for exploration map
  */
-final public class SubArea {
-    final private int id;
-    final private int area;
-    final private String name;
-    final private boolean conquestable;
+final public class ExplorationSubArea {
+    final private SubArea subArea;
+    final private Area area;
 
-    private Alignment alignment;
-
-    public SubArea(int id, int area, String name, boolean conquestable, Alignment alignment) {
-        this.id = id;
+    public ExplorationSubArea(SubArea subArea, Area area) {
+        this.subArea = subArea;
         this.area = area;
-        this.name = name;
-        this.conquestable = conquestable;
-        this.alignment = alignment;
     }
 
+    /**
+     * Get the id of the subarea
+     *
+     * @see SubArea#id()
+     */
     public int id() {
-        return id;
+        return subArea.id();
     }
 
-    public int area() {
+    /**
+     * Get the parent area
+     */
+    public Area area() {
         return area;
     }
 
-    public String name() {
-        return name;
-    }
-
-    public boolean conquestable() {
-        return conquestable;
-    }
-
+    /**
+     * Get the subarea alignment
+     * The alignment can be overridden by a prism
+     */
     public Alignment alignment() {
-        return alignment;
+        return subArea.alignment();
     }
 }

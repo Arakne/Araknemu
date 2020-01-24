@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class FightDetailsTest extends FightBaseCase {
     @Test
     void generate() throws Exception {
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
 
         Fight fight = createFight(false);
 
@@ -41,7 +41,7 @@ class FightDetailsTest extends FightBaseCase {
 
     @Test
     void generateWithMultipleFighterInTeam() throws Exception {
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
 
         Fight fight = createFight();
 

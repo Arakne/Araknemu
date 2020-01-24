@@ -50,7 +50,7 @@ class PerformCellActionsTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
         dataSet.pushTrigger(new MapTrigger(10300, 120, Teleport.ACTION_ID, "10540,156", ""));
         listener = new PerformCellActions();
         map = container.get(ExplorationMapService.class).load(10300);

@@ -51,7 +51,7 @@ class LoadExtraInfoTest extends FightBaseCase {
         super.setUp();
 
         handler = new LoadExtraInfo(container.get(FightService.class));
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
         login();
         explorationPlayer();
     }

@@ -41,7 +41,7 @@ class TriggerCellTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushMaps();
+        dataSet.pushMaps().pushSubAreas().pushAreas();
         cell = new TriggerCell(
             123,
             new Teleport(
