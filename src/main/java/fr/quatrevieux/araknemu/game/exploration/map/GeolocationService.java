@@ -20,21 +20,129 @@
 package fr.quatrevieux.araknemu.game.exploration.map;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
-import fr.quatrevieux.araknemu.data.value.Geoposition;
+import fr.quatrevieux.araknemu.data.value.Geolocation;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
-import fr.quatrevieux.araknemu.game.exploration.area.ExplorationSubArea;
 
-import java.util.Collection;
+import java.util.Comparator;
 
 /**
  * Handle map geolocation
  */
 final public class GeolocationService {
-    final static public class GeopositionContext {
-        public int superArea = 0;
-        public Integer subArea;
+    final static public class GeolocationContext {
+        /** The first map is more pertinent */
+        final static private int FIRST = -1;
+        /** The second map is more pertinent */
+        final static private int SECOND = 1;
+        /** Both maps have the same pertinence */
+        final static private int NONE = 0;
+
+        private int superArea = 0;
+        private Integer subArea;
+        private boolean indoor = false;
+
+        /**
+         * Define the target super area
+         */
+        public GeolocationContext superArea(int superArea) {
+            this.superArea = superArea;
+
+            return this;
+        }
+
+        /**
+         * Define the preferred sub area
+         */
+        public GeolocationContext subArea(int subArea) {
+            this.subArea = subArea;
+
+            return this;
+        }
+
+        /**
+         * Define if the target map should be indoor
+         */
+        public GeolocationContext indoor(boolean indoor) {
+            this.indoor = indoor;
+
+            return this;
+        }
+
+        /**
+         * Build the map comparator
+         */
+        private Comparator<MapTemplate> buildComparator() {
+            Comparator<MapTemplate> comparator = this::compareSubArea;
+
+            return comparator
+                .thenComparing(this::compareIndoor)
+                .thenComparing(this::compareSize)
+            ;
+        }
+
+        /**
+         * Compare the maps subareas
+         * If only one of the two maps match with the context's subarea, it will be returned
+         */
+        private int compareSubArea(MapTemplate first, MapTemplate second) {
+            if (subArea == null) {
+                return NONE;
+            }
+
+            if (first.subAreaId() == subArea) {
+                if (second.subAreaId() != subArea) {
+                    return FIRST;
+                }
+            } else if (second.subAreaId() == subArea) {
+                return SECOND;
+            }
+
+            return NONE;
+        }
+
+        /**
+         * Compare the maps sizes
+         * The bigger map will be returned
+         */
+        private int compareSize(MapTemplate first, MapTemplate second) {
+            if (first.cells().size() > second.cells().size()) {
+                return FIRST;
+            }
+
+            if (first.cells().size() < second.cells().size()) {
+                return SECOND;
+            }
+
+            return NONE;
+        }
+
+        /**
+         * Compare the maps indoor flag
+         */
+        private int compareIndoor(MapTemplate first, MapTemplate second) {
+            if (first.indoor() == indoor) {
+                if (second.indoor() != indoor) {
+                    return FIRST;
+                }
+            } else if (second.indoor() == indoor) {
+                return SECOND;
+            }
+
+            return NONE;
+        }
+
+        /**
+         * Create a context from a map
+         */
+        static public GeolocationContext fromMap(ExplorationMap map) {
+            return new GeolocationContext()
+                .superArea(map.subArea().area().superarea())
+                .subArea(map.subArea().id())
+                .indoor(map.indoor())
+            ;
+        }
     }
 
     final private ExplorationMapService mapService;
@@ -48,38 +156,25 @@ final public class GeolocationService {
     }
 
     /**
-     * Find a map at a given geoposition
+     * Find a map at a given geolocation
      *
      * Use a context for a more accurate result :
-     * - Search maps on the same sub area
      * - Filter by the super area
+     * - Search maps on the same sub area
+     * - Search maps with same "indoor" flag
+     * - Then, return the bigger map
      *
-     * @param geoposition The map geoposition
+     * @param geolocation The map geolocation
      * @param context The search context
      *
-     * @throws EntityNotFoundException When the map cannot be found at the given geoposition
+     * @throws EntityNotFoundException When the map cannot be found at the given geolocation
      */
-    public ExplorationMap find(Geoposition geoposition, GeopositionContext context) {
-        Collection<MapTemplate> templates = repository.byGeoposition(geoposition);
-
-        if (context.subArea != null) {
-            for (MapTemplate template : templates) {
-                if (template.subAreaId() == context.subArea) {
-                    // @todo optimize
-                    return mapService.load(template.id());
-                }
-            }
-        }
-
-        for (MapTemplate template : templates) {
-            ExplorationSubArea explorationSubArea = areaService.get(template.subAreaId());
-
-            if (explorationSubArea.area().superarea() == context.superArea) {
-                // @todo optimize
-                return mapService.load(template.id());
-            }
-        }
-
-        throw new EntityNotFoundException("map at position " + geoposition + "is not found");
+    public ExplorationMap find(Geolocation geolocation, GeolocationContext context) {
+        return repository.byGeolocation(geolocation).stream()
+            .filter(map -> areaService.get(map.subAreaId()).area().superarea() == context.superArea)
+            .min(context.buildComparator())
+            .map(mapService::load)
+            .orElseThrow(() -> new EntityNotFoundException("map at position " + geolocation + "is not found"))
+        ;
     }
 }

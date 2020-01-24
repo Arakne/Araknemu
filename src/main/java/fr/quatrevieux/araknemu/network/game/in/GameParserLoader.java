@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.network.game.in;
 import fr.quatrevieux.araknemu.network.game.in.account.*;
 import fr.quatrevieux.araknemu.network.game.in.basic.AskDate;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminCommand;
+import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminMove;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import fr.quatrevieux.araknemu.network.game.in.chat.SubscribeChannels;
 import fr.quatrevieux.araknemu.network.game.in.dialog.ChosenResponse;
@@ -105,7 +106,8 @@ final public class GameParserLoader implements ParserLoader {
             new ItemsMovement.Parser(),
             new ExchangeReady.Parser(),
             new BuyRequest.Parser(),
-            new SellRequest.Parser()
+            new SellRequest.Parser(),
+            new AdminMove.Parser()
         );
     }
 }

@@ -120,6 +120,17 @@ final public class ExplorationMapService implements PreloadableService, EventsSu
         };
     }
 
+    /**
+     * Load the exploration map
+     */
+    public ExplorationMap load(MapTemplate template) {
+        if (maps.containsKey(template.id())) {
+            return maps.get(template.id());
+        }
+
+        return createMap(template);
+    }
+
     private ExplorationMap createMap(MapTemplate template) {
         ExplorationMap map = new ExplorationMap(template, loader, areaService.get(template.subAreaId()));
         maps.put(map.id(), map);

@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.data.world.repository.environment;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.Repository;
-import fr.quatrevieux.araknemu.data.value.Geoposition;
+import fr.quatrevieux.araknemu.data.value.Geolocation;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 
 import java.util.Collection;
@@ -35,10 +35,10 @@ public interface MapTemplateRepository extends Repository<MapTemplate> {
     public MapTemplate get(int id);
 
     /**
-     * Find maps matching with given geoposition
+     * Find maps matching with given geolocation
      * Multiple maps can be returned in case indoor or underground maps
      */
-    public Collection<MapTemplate> byGeoposition(Geoposition geoposition);
+    public Collection<MapTemplate> byGeolocation(Geolocation geolocation);
 
     /**
      * Get all map templates

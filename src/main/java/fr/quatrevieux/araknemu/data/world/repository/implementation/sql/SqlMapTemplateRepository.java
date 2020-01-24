@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.Dimensions;
-import fr.quatrevieux.araknemu.data.value.Geoposition;
+import fr.quatrevieux.araknemu.data.value.Geolocation;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 
@@ -61,11 +61,12 @@ final class SqlMapTemplateRepository implements MapTemplateRepository {
                 rs.getString("key"),
                 cells,
                 fightPlacesTransformer.unserialize(rs.getString("places")),
-                new Geoposition(
+                new Geolocation(
                     rs.getInt("MAP_X"),
                     rs.getInt("MAP_Y")
                 ),
-                rs.getInt("SUBAREA_ID")
+                rs.getInt("SUBAREA_ID"),
+                rs.getBoolean("INDOOR")
             );
         }
 
@@ -103,7 +104,8 @@ final class SqlMapTemplateRepository implements MapTemplateRepository {
                     "places TEXT," +
                     "MAP_X INTEGER," +
                     "MAP_Y INTEGER," +
-                    "SUBAREA_ID INTEGER" +
+                    "SUBAREA_ID INTEGER," +
+                    "INDOOR BOOLEAN" +
                 ")"
             );
 
@@ -136,10 +138,10 @@ final class SqlMapTemplateRepository implements MapTemplateRepository {
     }
 
     @Override
-    public Collection<MapTemplate> byGeoposition(Geoposition geoposition) {
+    public Collection<MapTemplate> byGeolocation(Geolocation geolocation) {
         return utils.findAll("SELECT * FROM maps WHERE MAP_X = ? AND MAP_Y = ?", stmt -> {
-            stmt.setInt(1, geoposition.x());
-            stmt.setInt(2, geoposition.y());
+            stmt.setInt(1, geolocation.x());
+            stmt.setInt(2, geolocation.y());
         });
     }
 

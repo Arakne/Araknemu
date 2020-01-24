@@ -217,6 +217,13 @@ final public class ExplorationMap implements GameMap<ExplorationMapCell>, Dispat
         return subArea;
     }
 
+    /**
+     * Check if the map is an indoor map (i.e. house or underground)
+     */
+    public boolean indoor() {
+        return template.indoor();
+    }
+
     public ListenerAggregate dispatcher() {
         return dispatcher;
     }

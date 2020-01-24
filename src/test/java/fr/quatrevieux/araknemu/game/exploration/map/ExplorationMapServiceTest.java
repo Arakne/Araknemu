@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.exploration.map;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
+import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
@@ -102,6 +103,20 @@ class ExplorationMapServiceTest extends FightBaseCase {
         assertTrue(map.dispatcher().has(SendPlayerChangeCell.class));
         assertTrue(map.dispatcher().has(SendPlayerChangeOrientation.class));
         assertTrue(map.dispatcher().has(SendCreatureMove.class));
+    }
+
+    @Test
+    void loadByMapTemplate() throws SQLException, ContainerException {
+        MapTemplate template = container.get(MapTemplateRepository.class).get(10540);
+
+        dataSet.pushTrigger(new MapTrigger(10540, 120, Teleport.ACTION_ID, "123,45", ""));
+
+        ExplorationMap map = service.load(template);
+
+        assertEquals(10540, map.id());
+        assertEquals(0, map.sprites().size());
+        assertEquals(454, map.subArea().id());
+        assertSame(map, service.load(template));
     }
 
     @Test

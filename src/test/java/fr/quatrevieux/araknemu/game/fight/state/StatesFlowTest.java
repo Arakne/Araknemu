@@ -48,7 +48,7 @@ class StatesFlowTest extends GameBaseCase {
             1,
             new ChallengeType(),
             new FightMap(
-                new MapTemplate(0, "", new Dimensions(0, 0), "", new ArrayList<>(), new List[0], null, 0)
+                new MapTemplate(0, "", new Dimensions(0, 0), "", new ArrayList<>(), new List[0], null, 0, false)
             ),
             new ArrayList<>(),
             new StatesFlow(),

@@ -59,7 +59,7 @@ class ExplorationMapTest extends GameBaseCase {
 
     @Test
     void data() throws ContainerException {
-        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null, null, 0));
+        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null, null, 0, false));
 
         ExplorationMap map = new ExplorationMap(template, new CellLoaderAggregate(new CellLoader[0]), null);
 
@@ -70,7 +70,7 @@ class ExplorationMapTest extends GameBaseCase {
 
     @Test
     void addPlayerWillAddSprite() throws ContainerException, SQLException {
-        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null, null, 0));
+        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null, null, 0, false));
 
         ExplorationMap map = new ExplorationMap(template, new CellLoaderAggregate(new CellLoader[0]), null);
 
@@ -100,7 +100,7 @@ class ExplorationMapTest extends GameBaseCase {
 
         ExplorationPlayer player = explorationPlayer();
 
-        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null, null, 0));
+        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null, null, 0, false));
 
         ExplorationMap map = new ExplorationMap(template, new CellLoaderAggregate(new CellLoader[0]), null);
         map.dispatcher().add(listener);
@@ -119,7 +119,7 @@ class ExplorationMapTest extends GameBaseCase {
 
     @Test
     void addNpc() throws ContainerException, SQLException {
-        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null, null, 0));
+        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null, null, 0, false));
         dataSet.pushNpcs();
 
         AtomicReference<NewSpriteOnMap> ref = new AtomicReference<>();
@@ -173,7 +173,7 @@ class ExplorationMapTest extends GameBaseCase {
 
     @Test
     void sendWillSendToPlayers() throws ContainerException, SQLException {
-        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null, null, 0));
+        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null, null, 0, false));
 
         ExplorationMap map = new ExplorationMap(template, new CellLoaderAggregate(new CellLoader[0]), null);
 
@@ -242,7 +242,7 @@ class ExplorationMapTest extends GameBaseCase {
 
     @Test
     void getPreloadedCellsWillKeepInstance() throws ContainerException, SQLException {
-        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null, null, 0));
+        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null, null, 0, false));
         dataSet.pushTrigger(new MapTrigger(10300, 123, 0, "10300,465", "-1"));
         dataSet.pushTrigger(new MapTrigger(10300, 125, 0, "10340,365", "-1"));
 
@@ -259,7 +259,7 @@ class ExplorationMapTest extends GameBaseCase {
 
     @Test
     void getBasicCellWillBeReinstantiated() throws ContainerException, SQLException {
-        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null, null, 0));
+        MapTemplate template = dataSet.refresh(new MapTemplate(10300, null, null, null, null, null, null, 0, false));
 
         ExplorationMap map = new ExplorationMap(template, new CellLoaderAggregate(new CellLoader[0]), null);
 

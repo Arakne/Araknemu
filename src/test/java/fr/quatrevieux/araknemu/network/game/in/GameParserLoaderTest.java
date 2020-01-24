@@ -19,9 +19,12 @@
 
 package fr.quatrevieux.araknemu.network.game.in;
 
+import fr.quatrevieux.araknemu.core.network.parser.ParserLoader;
+import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 import fr.quatrevieux.araknemu.network.game.in.account.*;
 import fr.quatrevieux.araknemu.network.game.in.basic.AskDate;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminCommand;
+import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminMove;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import fr.quatrevieux.araknemu.network.game.in.chat.SubscribeChannels;
 import fr.quatrevieux.araknemu.network.game.in.dialog.ChosenResponse;
@@ -39,21 +42,19 @@ import fr.quatrevieux.araknemu.network.game.in.exchange.store.SellRequest;
 import fr.quatrevieux.araknemu.network.game.in.fight.*;
 import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
-import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionCancel;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
+import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionCancel;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectDeleteRequest;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectMoveRequest;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectUseRequest;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellMove;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellUpgrade;
-import fr.quatrevieux.araknemu.core.network.parser.ParserLoader;
-import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class GameParserLoaderTest {
     @Test
@@ -102,6 +103,7 @@ class GameParserLoaderTest {
         assertContainsInstance(ExchangeReady.Parser.class, parsers);
         assertContainsInstance(BuyRequest.Parser.class, parsers);
         assertContainsInstance(SellRequest.Parser.class, parsers);
+        assertContainsInstance(AdminMove.Parser.class, parsers);
     }
 
     public void assertContainsInstance(Class type, Collection collection) {

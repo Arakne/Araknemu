@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.exploration.map;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
-import fr.quatrevieux.araknemu.data.value.Geoposition;
+import fr.quatrevieux.araknemu.data.value.Geolocation;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
@@ -54,49 +54,65 @@ class GeolocationServiceTest extends GameBaseCase {
 
     @Test
     void findSuccess() {
-        GeolocationService.GeopositionContext context = new GeolocationService.GeopositionContext();
-        context.superArea = 3;
+        GeolocationService.GeolocationContext context = new GeolocationService.GeolocationContext();
+        context.superArea(3);
 
-        ExplorationMap map = service.find(new Geoposition(3, 6), context);
+        ExplorationMap map = service.find(new Geolocation(3, 6), context);
 
         assertEquals(10340, map.id());
-        assertSame(map, service.find(new Geoposition(3, 6), context));
+        assertSame(map, service.find(new Geolocation(3, 6), context));
     }
 
     @Test
     void findWithSubArea() throws SQLException {
         pushMapsOnSameGeoposition();
 
-        GeolocationService.GeopositionContext context = new GeolocationService.GeopositionContext();
-        context.subArea = 4;
-        assertEquals(99003, service.find(new Geoposition(42, 24), context).id());
+        GeolocationService.GeolocationContext context = new GeolocationService.GeolocationContext();
+        assertEquals(99003, service.find(new Geolocation(42, 24), context.subArea(4)).id());
 
-        context.subArea = 1;
-        assertEquals(99002, service.find(new Geoposition(42, 24), context).id());
+        assertEquals(99002, service.find(new Geolocation(42, 24), context.subArea(1)).id());
     }
 
     @Test
     void findWithSuperArea() throws SQLException {
         pushMapsOnSameGeoposition();
 
-        GeolocationService.GeopositionContext context = new GeolocationService.GeopositionContext();
-        context.superArea = 0;
-        assertEquals(99002, service.find(new Geoposition(42, 24), context).id());
+        GeolocationService.GeolocationContext context = new GeolocationService.GeolocationContext();
+        assertEquals(99002, service.find(new Geolocation(42, 24), context.superArea(0)).id());
 
-        context.superArea = 3;
-        assertEquals(99001, service.find(new Geoposition(42, 24), context).id());
+        assertEquals(99001, service.find(new Geolocation(42, 24), context.superArea(3)).id());
     }
 
     @Test
     void findNotFound() {
-        assertThrows(EntityNotFoundException.class, () -> service.find(new Geoposition(40, 4), new GeolocationService.GeopositionContext()));
+        assertThrows(EntityNotFoundException.class, () -> service.find(new Geolocation(40, 4), new GeolocationService.GeolocationContext()));
+    }
+
+    @Test
+    void findShouldReturnTheBiggerMap() throws SQLException {
+        dataSet
+            .pushMap(99001, "", 0, 0, "", "Hhaaeaaaaa", "", new Geolocation(42, 24), 1, false)
+            .pushMap(99002, "", 0, 0, "", "HhaaeaaaaaHhaaeaaaaa", "", new Geolocation(42, 24), 1, false)
+        ;
+
+        assertEquals(99002, service.find(new Geolocation(42, 24), new GeolocationService.GeolocationContext()).id());
+    }
+
+    @Test
+    void findWithIndoor() throws SQLException {
+        dataSet
+            .pushMap(99001, "", 0, 0, "", "Hhaaeaaaaa", "", new Geolocation(42, 24), 1, true)
+            .pushMap(99002, "", 0, 0, "", "HhaaeaaaaaHhaaeaaaaa", "", new Geolocation(42, 24), 1, false)
+        ;
+
+        assertEquals(99001, service.find(new Geolocation(42, 24), new GeolocationService.GeolocationContext().indoor(true)).id());
     }
 
     private void pushMapsOnSameGeoposition() throws SQLException {
         dataSet
-            .pushMap(99001, "", 0, 0, "", "", "", new Geoposition(42, 24), 440)
-            .pushMap(99002, "", 0, 0, "", "", "", new Geoposition(42, 24), 1)
-            .pushMap(99003, "", 0, 0, "", "", "", new Geoposition(42, 24), 4)
+            .pushMap(99001, "", 0, 0, "", "", "", new Geolocation(42, 24), 440, false)
+            .pushMap(99002, "", 0, 0, "", "", "", new Geolocation(42, 24), 1, false)
+            .pushMap(99003, "", 0, 0, "", "", "", new Geolocation(42, 24), 4, false)
         ;
     }
 }

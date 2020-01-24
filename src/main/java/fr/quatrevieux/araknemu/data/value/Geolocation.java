@@ -22,11 +22,11 @@ package fr.quatrevieux.araknemu.data.value;
 /**
  * Position using 2D coordinates
  */
-final public class Geoposition {
+final public class Geolocation {
     final private int x;
     final private int y;
 
-    public Geoposition(int x, int y) {
+    public Geolocation(int x, int y) {
         this.x = x;
         this.y = y;
     }
