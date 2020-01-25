@@ -80,8 +80,14 @@ final public class AI implements Runnable {
 
     @Override
     public void run() {
+        if (turn == null) {
+            throw new IllegalStateException("AI#start() must be called before run()");
+        }
+
+        final FightTurn currentTurn = turn;
+
         for (ActionGenerator generator : actions) {
-            if (!turn.active()) {
+            if (!currentTurn.active()) {
                 turn = null;
                 return;
             }
@@ -89,14 +95,14 @@ final public class AI implements Runnable {
             Optional<Action> action = generator.generate(this);
 
             if (action.isPresent()) {
-                turn.perform(action.get());
-                turn.later(() -> fight().schedule(this, Duration.ofMillis(800)));
+                currentTurn.perform(action.get());
+                currentTurn.later(() -> fight().schedule(this, Duration.ofMillis(800)));
                 return;
             }
         }
 
-        turn.stop();
         turn = null;
+        currentTurn.stop();
     }
 
     /**

@@ -163,4 +163,11 @@ class AITest extends FightBaseCase {
         Mockito.verify(generator1, Mockito.never()).generate(ai);
         Mockito.verify(generator2, Mockito.never()).generate(ai);
     }
+
+    @Test
+    void runWithoutStart() {
+        AI ai = new AI(fighter, new ActionGenerator[] {});
+
+        assertThrows(IllegalStateException.class, ai::run);
+    }
 }
