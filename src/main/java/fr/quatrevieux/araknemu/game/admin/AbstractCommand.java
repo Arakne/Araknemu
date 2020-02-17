@@ -14,17 +14,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
-import org.apache.commons.lang3.StringUtils;
+import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
+import fr.quatrevieux.araknemu.game.admin.formatter.HelpFormatter;
 
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * Base command class
@@ -41,10 +44,19 @@ abstract public class AbstractCommand implements Command {
         }
 
         /**
-         * Set a command help message
+         * Configure the help page
+         *
+         * <code>
+         *     builder.help(
+         *         formatter -> formatter
+         *             .synopsis("my_command [option]")
+         *             .options("--opt", "opt description")
+         *             .example("my_command --opt", "example description")
+         *     );
+         * </code>
          */
-        public Builder help(String... help) {
-            AbstractCommand.this.help = StringUtils.join(help, "\n");
+        public Builder help(Consumer<HelpFormatter> configurator) {
+            configurator.accept(help);
 
             return this;
         }
@@ -59,9 +71,9 @@ abstract public class AbstractCommand implements Command {
         }
     }
 
+    final private HelpFormatter help = new HelpFormatter(this);
+    final private EnumSet<Permission> permissions = EnumSet.of(Permission.ACCESS);
     private String description = "No description";
-    private String help = "No help";
-    private EnumSet<Permission> permissions = EnumSet.of(Permission.ACCESS);
 
     public AbstractCommand() {
         build(new Builder());
@@ -79,15 +91,23 @@ abstract public class AbstractCommand implements Command {
 
     @Override
     final public String help() {
-        return
-            name() + " - " + description + '\n' +
-            "========================================\n\n" +
-            help
-        ;
+        return help.toString();
     }
 
     @Override
     final public Set<Permission> permissions() {
         return permissions;
+    }
+
+    @Override
+    public void execute(AdminPerformer performer, CommandParser.Arguments arguments) throws AdminException {
+        execute(performer, arguments.arguments());
+    }
+
+    /**
+     * Adapt the new Command interface to the legacy one
+     */
+    public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
+        throw new AdminException("Not implemented");
     }
 }

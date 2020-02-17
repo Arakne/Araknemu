@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin.debug;
@@ -41,10 +41,10 @@ final public class DebugContext implements Context {
 
     final private Context context;
 
-    public DebugContext(Container container) throws ContainerException {
+    public DebugContext(Container container, Context globalContext) throws ContainerException {
         this.container = container;
 
-        context = configure();
+        context = configure(globalContext);
     }
 
     @Override
@@ -62,8 +62,8 @@ final public class DebugContext implements Context {
         return context.child(name);
     }
 
-    private Context configure() throws ContainerException {
-        return new SimpleContext(new NullContext())
+    private Context configure(Context globalContext) throws ContainerException {
+        return new SimpleContext(globalContext)
             .add(new GenItem(container.get(ItemService.class)))
             .add(new FightPos(container.get(MapTemplateRepository.class)))
             .add(new Movement(container.get(MapTemplateRepository.class)))

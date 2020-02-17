@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin.global;
@@ -35,14 +35,15 @@ final public class Echo extends AbstractCommand {
         builder
             .description("Write to console the arguments")
             .help(
-                "echo [-i|s|e] [args ...]\n\n" +
-                "Options :\n" +
-                "-i : Print as information (default)\n" +
-                "-s : Print as success\n" +
-                "-e : Print as error\n\n" +
-                "Example :\n" +
-                "echo Hello World ! ==> Print 'Hello World !' in white (info)\n" +
-                "echo -e WAKE !!!   ==> Print 'WAKE !!!' in red (error)"
+                formatter -> formatter
+                    .synopsis("echo [-i|s|e] [args ...]")
+
+                    .options("-i", "Print as information (default)")
+                    .options("-s", "Print as success")
+                    .options("-e", "Print as error")
+
+                    .example("echo Hello World !", "Print 'Hello World !' in white (info)")
+                    .example("echo -e WAKE !!!", "Print 'WAKE !!!' in red (error)")
             )
         ;
     }

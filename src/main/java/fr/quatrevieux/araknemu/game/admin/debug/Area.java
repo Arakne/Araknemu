@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin.debug;
@@ -53,16 +53,18 @@ final public class Area extends AbstractCommand {
             .requires(Permission.DEBUG)
             .description("Display spell effect area")
             .help(
-                "area [area string]",
-                "\tarea string :",
-                "\tContains two chars, the first one is the area type, the second if the size in pseudo base 64",
-                "\tTypes :",
-                Arrays.stream(EffectArea.Type.values())
-                    .map(type -> "\t\t" + type.name() + " : " + type.c())
-                    .collect(Collectors.joining("\n")),
-                "\tExample :",
-                "\tCb : Circle of size 1",
-                "\tTc : Perpendicular line of size 2"
+                formatter -> formatter
+                    .synopsis("area [area string]")
+                    .options(
+                        "area string",
+                        "Contains two chars, the first one is the area type, the second if the size in pseudo base 64\n" +
+                        "Types :\n" +
+                            Arrays.stream(EffectArea.Type.values())
+                                .map(type -> "\t" + type.name() + " : " + type.c())
+                                .collect(Collectors.joining("\n"))
+                    )
+                    .example("area Cb", "Circle of size 1")
+                    .example("area Tc", "Perpendicular line of size 2")
             )
         ;
     }

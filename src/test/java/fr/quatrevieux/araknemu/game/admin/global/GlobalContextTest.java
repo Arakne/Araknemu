@@ -40,7 +40,9 @@ class GlobalContextTest extends CommandTestCase {
     @Test
     void commands() throws CommandNotFoundException {
         assertInstanceOf(Echo.class, context.command("echo"));
+        assertInstanceOf(Help.class, context.command("help"));
 
         assertContainsType(Echo.class, context.commands());
+        assertContainsType(Help.class, context.commands());
     }
 }

@@ -48,7 +48,10 @@ class AbstractCommandTest extends GameBaseCase {
         assertEquals(
             "cmd - No description\n" +
             "========================================\n\n" +
-            "No help",
+            "<b>SYNOPSIS</b>\n" +
+            "\tcmd\n\n" +
+            "<b>PERMISSIONS</b>\n" +
+            "\t[ACCESS]",
             command.help()
         );
         assertEquals(EnumSet.of(Permission.ACCESS), command.permissions());
@@ -61,7 +64,7 @@ class AbstractCommandTest extends GameBaseCase {
             protected void build(Builder builder) {
                 builder
                     .description("My very useful command")
-                    .help("Do what you wants")
+                    .help(formatter -> formatter.line("Do what you wants"))
                     .requires(Permission.SUPER_ADMIN)
                 ;
             }
@@ -78,8 +81,12 @@ class AbstractCommandTest extends GameBaseCase {
         assertEquals("My very useful command", command.description());
         assertEquals(
             "cmd - My very useful command\n" +
-                "========================================\n\n" +
-                "Do what you wants",
+            "========================================\n\n" +
+            "<b>SYNOPSIS</b>\n" +
+            "\tcmd\n" +
+            "Do what you wants" +
+            "\n\n<b>PERMISSIONS</b>\n" +
+            "\t[ACCESS, SUPER_ADMIN]",
             command.help()
         );
         assertEquals(EnumSet.of(Permission.ACCESS, Permission.SUPER_ADMIN), command.permissions());

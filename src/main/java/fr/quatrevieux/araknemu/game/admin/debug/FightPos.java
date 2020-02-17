@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin.debug;
@@ -46,7 +46,12 @@ final public class FightPos extends AbstractCommand {
     protected void build(Builder builder) {
         builder
             .description("Show all fight positions")
-            .help("fightpos [show|hide]")
+            .help(
+                formatter -> formatter
+                    .synopsis("fightpos [show|hide]")
+                    .example("fightpos show", "Show the fight positions")
+                    .example("fightpos hide", "Hide all fight positions")
+            )
             .requires(Permission.DEBUG)
         ;
     }

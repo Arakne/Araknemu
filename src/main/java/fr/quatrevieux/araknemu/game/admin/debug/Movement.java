@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin.debug;
@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.AdminUser;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
+import fr.quatrevieux.araknemu.game.admin.formatter.Link;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
 
 import java.util.ArrayList;
@@ -45,7 +46,11 @@ final public class Movement extends AbstractCommand {
     protected void build(Builder builder) {
         builder
             .description("Highlight cell by their movement value")
-            .help("movement [1-8]")
+            .help(
+                formatter -> formatter
+                    .synopsis("movement [1-8]")
+                    .seeAlso("${debug} fightpos hide", "For hide the cells", Link.Type.EXECUTE)
+            )
             .requires(Permission.DEBUG)
         ;
     }

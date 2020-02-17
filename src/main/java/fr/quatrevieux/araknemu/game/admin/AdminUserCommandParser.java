@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin;
@@ -26,7 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Predicate;
 
 /**
  * Admin user parser for command line
@@ -54,25 +54,109 @@ import java.util.concurrent.atomic.AtomicReference;
 final public class AdminUserCommandParser implements CommandParser {
     final private AdminUser user;
 
+    static private class State {
+        final private String line;
+        private int cursor = 0;
+
+        public State(String line) {
+            this.line = line;
+        }
+
+        /**
+         * Get the character at the cursor position
+         */
+        public char current() {
+            return line.charAt(cursor);
+        }
+
+        /**
+         * Move to the next character
+         */
+        public State next() {
+            ++cursor;
+
+            return this;
+        }
+
+        /**
+         * Check if there is more characters on the line
+         */
+        public boolean hasNext() {
+            return cursor < line.length();
+        }
+
+        /**
+         * Move to the next word (i.e. when a non letter or digit character is encountered) and return the current word
+         *
+         * @return The extracted word
+         */
+        public String nextWord() {
+            return moveWhile(Character::isLetterOrDigit);
+        }
+
+        /**
+         * Move the cursor while the predicate is valid for the current character
+         *
+         * @param predicate The character tester
+         *
+         * @return The "move" part, starting at the current cursor position (included), and ending with the last valid position (excluded)
+         */
+        public String moveWhile(Predicate<Character> predicate) {
+            int position = cursor;
+
+            while (hasNext() && predicate.test(current())) {
+                next();
+            }
+
+            return line.substring(position, cursor);
+        }
+
+        /**
+         * Skip white space characters
+         */
+        public State skipBlank() {
+            while (hasNext() && Character.isSpaceChar(current())) {
+                next();
+            }
+
+            return this;
+        }
+
+        /**
+         * Get the line part after the cursor (included)
+         */
+        public String after() {
+            return line.substring(cursor);
+        }
+
+        /**
+         * Get the line part before the cursor (excluded)
+         */
+        public String before() {
+            return line.substring(0, cursor);
+        }
+    }
+
     public AdminUserCommandParser(AdminUser user) {
         this.user = user;
     }
 
     @Override
     public Arguments parse(String line) throws AdminException {
-        line = line.trim();
+        State state = new State(line.trim());
 
-        if (line.isEmpty()) {
+        if (state.line.isEmpty()) {
             throw new CommandException("Empty command");
         }
 
-        AtomicReference<String> commandLine = new AtomicReference<>(line);
-
-        Context context = parseContext(commandLine);
-        String command = parseCommand(commandLine);
-        List<String> arguments = parseArguments(commandLine);
+        Context context = parseContext(state);
+        String contextPath = state.before().trim();
+        String command = parseCommand(state);
+        List<String> arguments = parseArguments(state);
 
         return new Arguments(
+            state.line,
+            contextPath,
             command,
             arguments,
             context
@@ -84,9 +168,9 @@ final public class AdminUserCommandParser implements CommandParser {
      *
      * The first argument is the command name, and arguments are separated with white space
      */
-    private List<String> parseArguments(AtomicReference<String> commandLine) {
+    private List<String> parseArguments(State state) {
         return Arrays.asList(
-            StringUtils.split(commandLine.get(), " ")
+            StringUtils.split(state.after(), " ")
         );
     }
 
@@ -95,8 +179,8 @@ final public class AdminUserCommandParser implements CommandParser {
      *
      * The command name is the first argument of the command line
      */
-    private String parseCommand(AtomicReference<String> commandLine) {
-        return StringUtils.substringBefore(commandLine.get(), " ");
+    private String parseCommand(State state) {
+        return StringUtils.substringBefore(state.after(), " ");
     }
 
     /**
@@ -107,26 +191,25 @@ final public class AdminUserCommandParser implements CommandParser {
      *
      * After resolve the root context, resolve the child contexts separated by >
      */
-    private Context parseContext(AtomicReference<String> commandLine) throws AdminException {
-        String line = commandLine.get();
+    private Context parseContext(State state) throws AdminException {
         Context context;
 
-        switch (line.charAt(0)) {
+        switch (state.current()) {
             case '!':
-                commandLine.set(line.substring(1));
+                state.next();
                 context = user.context().self();
                 break;
 
             case '$':
-                commandLine.set(line.substring(1));
-                context = resolveDynamicContext(commandLine);
+                state.next();
+                context = resolveDynamicContext(state);
                 break;
 
             default:
                 context = user.context().current();
         }
 
-        return resolveChildContext(commandLine, context);
+        return resolveChildContext(state, context);
     }
 
     /**
@@ -135,25 +218,16 @@ final public class AdminUserCommandParser implements CommandParser {
      *
      * Child contexts are separated by >
      */
-    private Context resolveChildContext(AtomicReference<String> commandLine, Context context) throws ContextNotFoundException {
-        String line = StringUtils.stripStart(commandLine.get(), null);
+    private Context resolveChildContext(State state, Context context) throws ContextNotFoundException {
+        state.skipBlank();
 
-        if (line.charAt(0) != '>') {
+        if (state.current() != '>') {
             return context;
         }
 
-        line = StringUtils.stripStart(line.substring(1).trim(), null);
+        String name = state.next().skipBlank().nextWord();
 
-        int end = 0;
-
-        while (end < line.length() && Character.isLetterOrDigit(line.charAt(end))) {
-            ++end;
-        }
-
-        String name = line.substring(0, end);
-        commandLine.set(line.substring(end + 1));
-
-        return resolveChildContext(commandLine, context.child(name));
+        return resolveChildContext(state, context.child(name));
     }
 
     /**
@@ -162,25 +236,12 @@ final public class AdminUserCommandParser implements CommandParser {
      * If the line starts with {, try to resolve an anonymous context
      * Else, get an already registered context
      */
-    private Context resolveDynamicContext(AtomicReference<String> commandLine) throws AdminException {
-        String line = commandLine.get();
-
-        if (line.charAt(0) == '{') {
-            commandLine.set(line.substring(1));
-
-            return resolveAnonymousContext(commandLine);
+    private Context resolveDynamicContext(State state) throws AdminException {
+        if (state.current() == '{') {
+            return resolveAnonymousContext(state.next());
         }
 
-        int end = 0;
-
-        while (end < line.length() && Character.isLetterOrDigit(line.charAt(end))) {
-            ++end;
-        }
-
-        String name = line.substring(0, end);
-        commandLine.set(line.substring(end + 1));
-
-        return user.context().get(name);
+        return user.context().get(state.nextWord());
     }
 
     /**
@@ -188,23 +249,17 @@ final public class AdminUserCommandParser implements CommandParser {
      *
      * The anonymous context is in form : ${type:argument}
      */
-    private Context resolveAnonymousContext(AtomicReference<String> commandLine) throws AdminException {
-        String line = commandLine.get();
+    private Context resolveAnonymousContext(State state) throws AdminException {
+        String[] arguments = StringUtils.split(state.moveWhile(c -> c != '}'), ":", 2);
 
-        int end = 0;
-
-        while (end < line.length() && line.charAt(end) != '}') {
-            ++end;
-        }
-
-        if (end == line.length()) {
+        if (!state.hasNext()) {
             throw new CommandException("Syntax error : missing closing accolade");
         }
 
-        String[] arguments = StringUtils.split(line.substring(0, end), ":", 2);
-        commandLine.set(
-            StringUtils.stripStart(line.substring(end + 1), " ")
-        );
+        state
+            .next()
+            .skipBlank()
+        ;
 
         return user.context().resolve(
             arguments[0],

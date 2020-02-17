@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin;
@@ -50,7 +50,7 @@ public interface Command {
      * @param performer The command performer
      * @param arguments The command arguments
      */
-    public void execute(AdminPerformer performer, List<String> arguments) throws AdminException;
+    public void execute(AdminPerformer performer, CommandParser.Arguments arguments) throws AdminException;
 
     /**
      * Get list of required permissions

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin.debug;
@@ -47,7 +47,7 @@ final public class GenItem extends AbstractCommand {
     protected void build(Builder builder) {
         builder
             .description("Try to generate a new item")
-            .help("genitem [item_id]")
+            .help(formatter -> formatter.synopsis("genitem [item_id]"))
             .requires(Permission.DEBUG)
         ;
     }

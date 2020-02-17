@@ -55,7 +55,7 @@ class SimpleContextTest extends GameBaseCase {
         }
 
         @Override
-        public void execute(AdminPerformer output, List<String> arguments) {
+        public void execute(AdminPerformer output, CommandParser.Arguments arguments) {
 
         }
 
@@ -111,6 +111,23 @@ class SimpleContextTest extends GameBaseCase {
         context.add(c3 = new DummyCommand("c3"));
 
         assertCollectionEquals(context.commands(), p1, p2, c1, c2, c3);
+    }
+
+    @Test
+    void commandsShouldFilterOverriddenParentCommands() {
+        SimpleContext parent = new SimpleContext(new NullContext());
+
+        Command p1, p2, c1, c2;
+
+        parent.add(p1 = new DummyCommand("foo"));
+        parent.add(p2 = new DummyCommand("bar"));
+
+        SimpleContext context = new SimpleContext(parent);
+
+        context.add(c1 = new DummyCommand("foo"));
+        context.add(c2 = new DummyCommand("baz"));
+
+        assertCollectionEquals(context.commands(), p2, c1, c2);
     }
 
     @Test

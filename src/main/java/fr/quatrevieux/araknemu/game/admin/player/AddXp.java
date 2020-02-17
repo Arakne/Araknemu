@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin.player;
@@ -40,7 +40,12 @@ final public class AddXp extends AbstractCommand {
     protected void build(Builder builder) {
         builder
             .description("Add experience to player")
-            .help("addxp [quantity]")
+            .help(
+                formatter -> formatter
+                    .synopsis("addxp [quantity]")
+                    .options("quantity", "The experience quantity to add. Must be an unsigned number.")
+                    .example("${player:John} addxp 1000000", "Add 1 million xp to John")
+            )
             .requires(Permission.MANAGE_PLAYER)
         ;
     }

@@ -69,6 +69,8 @@ class AdminUserCommandParserTest extends GameBaseCase {
         CommandParser.Arguments arguments = parser.parse("simple");
 
         assertEquals("simple", arguments.command());
+        assertEquals("simple", arguments.line());
+        assertEquals("", arguments.contextPath());
         assertEquals(Arrays.asList("simple"), arguments.arguments());
         assertSame(user.context().current(), arguments.context());
     }
@@ -78,6 +80,8 @@ class AdminUserCommandParserTest extends GameBaseCase {
         CommandParser.Arguments arguments = parser.parse("  cmd arg1   arg2  val1  ");
 
         assertEquals("cmd", arguments.command());
+        assertEquals("cmd arg1   arg2  val1", arguments.line());
+        assertEquals("", arguments.contextPath());
         assertEquals(Arrays.asList("cmd", "arg1", "arg2", "val1"), arguments.arguments());
         assertSame(user.context().current(), arguments.context());
     }
@@ -89,6 +93,8 @@ class AdminUserCommandParserTest extends GameBaseCase {
         CommandParser.Arguments arguments = parser.parse("!cmd arg");
 
         assertEquals("cmd", arguments.command());
+        assertEquals("!cmd arg", arguments.line());
+        assertEquals("!", arguments.contextPath());
         assertEquals(Arrays.asList("cmd", "arg"), arguments.arguments());
         assertSame(user.context().self(), arguments.context());
     }
@@ -101,6 +107,8 @@ class AdminUserCommandParserTest extends GameBaseCase {
         CommandParser.Arguments arguments = parser.parse("$myContext cmd arg");
 
         assertEquals("cmd", arguments.command());
+        assertEquals("$myContext cmd arg", arguments.line());
+        assertEquals("$myContext", arguments.contextPath());
         assertEquals(Arrays.asList("cmd", "arg"), arguments.arguments());
         assertSame(context, arguments.context());
     }
@@ -115,6 +123,8 @@ class AdminUserCommandParserTest extends GameBaseCase {
         CommandParser.Arguments arguments = parser.parse("> account cmd arg");
 
         assertEquals("cmd", arguments.command());
+        assertEquals("> account cmd arg", arguments.line());
+        assertEquals("> account", arguments.contextPath());
         assertEquals(Arrays.asList("cmd", "arg"), arguments.arguments());
         assertSame(user.context().self().child("account"), arguments.context());
     }
@@ -143,6 +153,8 @@ class AdminUserCommandParserTest extends GameBaseCase {
 
         CommandParser.Arguments arguments = parser.parse("${player:John} cmd arg");
         assertEquals("cmd", arguments.command());
+        assertEquals("${player:John} cmd arg", arguments.line());
+        assertEquals("${player:John}", arguments.contextPath());
         assertEquals(Arrays.asList("cmd", "arg"), arguments.arguments());
         assertInstanceOf(PlayerContext.class, arguments.context());
     }

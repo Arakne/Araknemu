@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin.player;
@@ -42,12 +42,11 @@ final public class SetLife extends AbstractCommand {
         builder
             .description("Change the player current life")
             .help(
-                "USAGE :",
-                "\tsetlife [number|max]",
-                "EXAMPLE :",
-                "\tsetlife 300                : Set the player life to 300",
-                "\tsetlife max                : Set full life to the player",
-                "\t${player:John} setlife 250 : Set John's life to 250"
+                formatter -> formatter
+                    .synopsis("setlife [number|max]")
+                    .example("setlife 300", "Set the player life to 300")
+                    .example("setlife max", "Set full life to the player")
+                    .example("${player:John} setlife 250", "Set John's life to 250")
             )
             .requires(Permission.MANAGE_PLAYER)
         ;

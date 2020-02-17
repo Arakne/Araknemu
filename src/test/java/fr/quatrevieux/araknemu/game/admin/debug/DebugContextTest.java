@@ -14,13 +14,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin.debug;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.admin.NullContext;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
+import fr.quatrevieux.araknemu.game.admin.global.GlobalContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +36,7 @@ class DebugContextTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        context = new DebugContext(container);
+        context = new DebugContext(container, new NullContext());
     }
 
     @Test
