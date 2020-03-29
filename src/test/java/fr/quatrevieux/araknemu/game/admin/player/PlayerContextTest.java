@@ -25,7 +25,11 @@ import fr.quatrevieux.araknemu.game.admin.NullContext;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContext;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
+import fr.quatrevieux.araknemu.game.admin.player.teleport.Goto;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.player.PlayerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +50,10 @@ class PlayerContextTest extends GameBaseCase {
                 gamePlayer().account(),
                 container.get(AccountRepository.class)
             ),
-            container.get(ItemService.class)
+            container.get(ItemService.class),
+            container.get(GeolocationService.class),
+            container.get(ExplorationMapService.class),
+            container.get(PlayerService.class)
         );
     }
 
@@ -58,6 +65,7 @@ class PlayerContextTest extends GameBaseCase {
         assertInstanceOf(AddStats.class, context.command("addstats"));
         assertInstanceOf(AddXp.class, context.command("addxp"));
         assertInstanceOf(Restriction.class, context.command("restriction"));
+        assertInstanceOf(Goto.class, context.command("goto"));
 
         assertContainsType(Info.class, context.commands());
         assertContainsType(GetItem.class, context.commands());
@@ -65,6 +73,7 @@ class PlayerContextTest extends GameBaseCase {
         assertContainsType(AddStats.class, context.commands());
         assertContainsType(AddXp.class, context.commands());
         assertContainsType(Restriction.class, context.commands());
+        assertContainsType(Goto.class, context.commands());
     }
 
     @Test

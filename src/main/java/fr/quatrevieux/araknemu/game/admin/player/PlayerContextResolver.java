@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.game.admin.player;
 import fr.quatrevieux.araknemu.game.admin.Context;
 import fr.quatrevieux.araknemu.game.admin.ContextResolver;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
@@ -35,11 +37,15 @@ final public class PlayerContextResolver implements ContextResolver {
     final private PlayerService service;
     final private ContextResolver accountContextResolver;
     final private ItemService itemService;
+    final private GeolocationService geolocationService;
+    final private ExplorationMapService mapService;
 
-    public PlayerContextResolver(PlayerService service, ContextResolver accountContextResolver, ItemService itemService) {
+    public PlayerContextResolver(PlayerService service, ContextResolver accountContextResolver, ItemService itemService, GeolocationService geolocationService, ExplorationMapService mapService) {
         this.service = service;
         this.accountContextResolver = accountContextResolver;
         this.itemService = itemService;
+        this.geolocationService = geolocationService;
+        this.mapService = mapService;
     }
 
     @Override
@@ -62,7 +68,10 @@ final public class PlayerContextResolver implements ContextResolver {
         return new PlayerContext(
             player,
             accountContextResolver.resolve(globalContext, player.account()),
-            itemService
+            itemService,
+            geolocationService,
+            mapService,
+            service
         );
     }
 

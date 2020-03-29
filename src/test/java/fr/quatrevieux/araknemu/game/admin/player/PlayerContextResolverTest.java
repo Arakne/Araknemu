@@ -27,6 +27,8 @@ import fr.quatrevieux.araknemu.game.admin.NullContext;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContext;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +51,9 @@ class PlayerContextResolverTest extends GameBaseCase {
         resolver = new PlayerContextResolver(
             container.get(PlayerService.class),
             container.get(AccountContextResolver.class),
-            container.get(ItemService.class)
+            container.get(ItemService.class),
+            container.get(GeolocationService.class),
+            container.get(ExplorationMapService.class)
         );
     }
 

@@ -74,10 +74,7 @@ abstract public class AbstractCommand implements Command {
     final private HelpFormatter help = new HelpFormatter(this);
     final private EnumSet<Permission> permissions = EnumSet.of(Permission.ACCESS);
     private String description = "No description";
-
-    public AbstractCommand() {
-        build(new Builder());
-    }
+    private boolean initialized = false;
 
     /**
      * Build the command
@@ -86,16 +83,22 @@ abstract public class AbstractCommand implements Command {
 
     @Override
     final public String description() {
+        initialize();
+
         return description;
     }
 
     @Override
     final public String help() {
+        initialize();
+
         return help.toString();
     }
 
     @Override
     final public Set<Permission> permissions() {
+        initialize();
+
         return permissions;
     }
 
@@ -109,5 +112,12 @@ abstract public class AbstractCommand implements Command {
      */
     public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
         throw new AdminException("Not implemented");
+    }
+
+    private void initialize() {
+        if (!initialized) {
+            build(new Builder());
+            initialized = true;
+        }
     }
 }

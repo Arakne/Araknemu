@@ -25,8 +25,12 @@ import fr.quatrevieux.araknemu.game.admin.SimpleContext;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
+import fr.quatrevieux.araknemu.game.admin.player.teleport.*;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.PlayerService;
 
 import java.util.Collection;
 
@@ -36,16 +40,14 @@ import java.util.Collection;
 final public class PlayerContext implements Context {
     final private GamePlayer player;
     final private Context accountContext;
-    final private ItemService itemService;
 
     final private Context context;
 
-    public PlayerContext(GamePlayer player, Context accountContext, ItemService itemService) throws ContextException {
+    public PlayerContext(GamePlayer player, Context accountContext, ItemService itemService, GeolocationService geolocationService, ExplorationMapService mapService, PlayerService playerService) throws ContextException {
         this.player = player;
         this.accountContext = accountContext;
-        this.itemService = itemService;
 
-        context = configure();
+        context = configure(itemService, geolocationService, mapService, playerService);
     }
 
     @Override
@@ -63,7 +65,7 @@ final public class PlayerContext implements Context {
         return context.child(name);
     }
 
-    private Context configure() throws ContextException {
+    private Context configure(ItemService itemService, GeolocationService geolocationService, ExplorationMapService mapService, PlayerService playerService) {
         return new SimpleContext(accountContext)
             .add(new Info(player))
             .add(new GetItem(player, itemService))
@@ -71,6 +73,12 @@ final public class PlayerContext implements Context {
             .add(new AddStats(player))
             .add(new AddXp(player))
             .add(new Restriction(player))
+            .add(new Goto(player, mapService, new LocationResolver[] {
+                new MapResolver(mapService),
+                new PositionResolver(player, geolocationService),
+                new PlayerResolver(playerService, mapService),
+                new CellResolver(),
+            }))
             .add("account", accountContext)
         ;
     }

@@ -674,7 +674,9 @@ final public class GameModule implements ContainerModule {
             container -> new PlayerContextResolver(
                 container.get(PlayerService.class),
                 container.get(AccountContextResolver.class),
-                container.get(ItemService.class)
+                container.get(ItemService.class),
+                container.get(GeolocationService.class),
+                container.get(ExplorationMapService.class)
             )
         );
 
