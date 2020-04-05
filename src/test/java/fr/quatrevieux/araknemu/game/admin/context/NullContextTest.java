@@ -14,40 +14,32 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.admin;
+package fr.quatrevieux.araknemu.game.admin.context;
 
+import fr.quatrevieux.araknemu._test.TestCase;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
+import org.junit.jupiter.api.Test;
 
-import java.util.Collection;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * Context for console
- */
-public interface Context {
-    /**
-     * Get a command by its name
-     *
-     * @param name The command name
-     *
-     * @return The command
-     *
-     * @throws CommandNotFoundException When the asked command cannot be found
-     */
-    public Command command(String name) throws CommandNotFoundException;
+class NullContextTest extends TestCase {
+    @Test
+    void command() {
+        assertThrows(CommandNotFoundException.class, () -> new NullContext().command("cmd"));
+    }
 
-    /**
-     * Get all available commands
-     */
-    public Collection<Command> commands();
+    @Test
+    void commands() {
+        assertTrue(new NullContext().commands().isEmpty());
+    }
 
-    /**
-     * Get a child context
-     *
-     * @param name The context name
-     */
-    public Context child(String name) throws ContextNotFoundException;
+    @Test
+    void child() {
+        assertThrows(ContextNotFoundException.class, () -> new NullContext().child("child"));
+    }
 }

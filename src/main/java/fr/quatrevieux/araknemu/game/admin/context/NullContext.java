@@ -14,31 +14,34 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.admin;
+package fr.quatrevieux.araknemu.game.admin.context;
 
-import fr.quatrevieux.araknemu._test.TestCase;
+import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
-import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Collection;
+import java.util.Collections;
 
-class NullContextTest extends TestCase {
-    @Test
-    void command() {
-        assertThrows(CommandNotFoundException.class, () -> new NullContext().command("cmd"));
+/**
+ * Null object for context
+ */
+final public class NullContext implements Context {
+    @Override
+    public Command command(String name) throws CommandNotFoundException {
+        throw new CommandNotFoundException(name);
     }
 
-    @Test
-    void commands() {
-        assertTrue(new NullContext().commands().isEmpty());
+    @Override
+    public Collection<Command> commands() {
+        return Collections.emptyList();
     }
 
-    @Test
-    void child() {
-        assertThrows(ContextNotFoundException.class, () -> new NullContext().child("child"));
+    @Override
+    public Context child(String name) throws ContextNotFoundException {
+        throw new ContextNotFoundException(name);
     }
 }

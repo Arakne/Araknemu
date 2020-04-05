@@ -22,7 +22,10 @@ package fr.quatrevieux.araknemu.game.admin;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
+import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
+import fr.quatrevieux.araknemu.game.admin.global.GlobalContext;
+import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,6 +45,7 @@ class AdminServiceTest extends GameBaseCase {
         super.setUp();
 
         service = new AdminService(
+            container.get(GlobalContext.class),
             Arrays.asList(
                 container.get(PlayerContextResolver.class),
                 container.get(AccountContextResolver.class)
@@ -71,5 +75,18 @@ class AdminServiceTest extends GameBaseCase {
         gamePlayer().dispatch(new Disconnected());
 
         assertNotSame(user, service.user(gamePlayer()));
+    }
+
+    @Test
+    void contextNotFound() {
+        assertThrows(ContextException.class, () -> service.context("not_found", null));
+    }
+
+    @Test
+    void contextSuccess() throws SQLException, ContextException {
+        Context context = service.context("player", gamePlayer(true).name());
+
+        assertInstanceOf(PlayerContext.class, context);
+        assertEquals(gamePlayer(), ((PlayerContext) (context)).player());
     }
 }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu;
@@ -34,6 +34,7 @@ import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.SqlLivi
 import fr.quatrevieux.araknemu.data.world.repository.implementation.sql.SqlWorldRepositoriesModule;
 import fr.quatrevieux.araknemu.game.GameModule;
 import fr.quatrevieux.araknemu.game.GameService;
+import fr.quatrevieux.araknemu.game.admin.AdminModule;
 import fr.quatrevieux.araknemu.game.connector.LocalModule;
 import fr.quatrevieux.araknemu.realm.RealmModule;
 import fr.quatrevieux.araknemu.realm.RealmService;
@@ -177,6 +178,7 @@ public class Araknemu {
             app.database().get("game")
         ));
         container.register(new GameModule(app));
+        container.register(new AdminModule());
         container.register(new LocalModule(realmContainer));
 
         return container;

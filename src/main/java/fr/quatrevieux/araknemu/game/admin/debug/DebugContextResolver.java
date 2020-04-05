@@ -19,33 +19,35 @@
 
 package fr.quatrevieux.araknemu.game.admin.debug;
 
-import fr.quatrevieux.araknemu.core.di.Container;
-import fr.quatrevieux.araknemu.core.di.ContainerException;
-import fr.quatrevieux.araknemu.game.admin.Context;
-import fr.quatrevieux.araknemu.game.admin.ContextResolver;
-import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
+import fr.quatrevieux.araknemu.game.admin.context.Context;
+import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Resolver for debug context
  */
 final public class DebugContextResolver implements ContextResolver {
-    final private Container container;
-
-    public DebugContextResolver(Container container) {
-        this.container = container;
-    }
+    final private List<ContextConfigurator<DebugContext>> configurators = new ArrayList<>();
 
     @Override
-    public Context resolve(Context globalContext, Object argument) throws ContextException {
-        try {
-            return new DebugContext(container, globalContext);
-        } catch (ContainerException e) {
-            throw new ContextException(e);
-        }
+    public Context resolve(Context globalContext, Object argument) {
+        return new DebugContext(globalContext, configurators);
     }
 
     @Override
     public String type() {
         return "debug";
+    }
+
+    /**
+     * Register a configurator for the debug context
+     */
+    public DebugContextResolver register(ContextConfigurator<DebugContext> configurator) {
+        configurators.add(configurator);
+
+        return this;
     }
 }

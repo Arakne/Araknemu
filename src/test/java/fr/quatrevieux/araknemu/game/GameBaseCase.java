@@ -78,6 +78,7 @@ import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
 import fr.quatrevieux.araknemu.data.world.repository.monster.*;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.game.admin.AdminModule;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
@@ -200,6 +201,7 @@ public class GameBaseCase extends DatabaseTestCase {
         container = new ItemPoolContainer();
         container.register(new ConnectorModule());
         container.register(new GameModule(app));
+        container.register(new AdminModule());
         container.register(new SqlLivingRepositoriesModule(
             app.database().get("game")
         ));

@@ -23,12 +23,13 @@ import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
-import fr.quatrevieux.araknemu.game.admin.NullContext;
+import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.NullContext;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Collections;
 
 class AccountContextTest extends GameBaseCase {
     private AccountContext context;
@@ -41,7 +42,12 @@ class AccountContextTest extends GameBaseCase {
         context = new AccountContext(
             new NullContext(),
             container.get(AccountService.class).load(dataSet.push(new Account(-1, "aaa", "aaa", "aaa"))),
-            container.get(AccountRepository.class)
+            Collections.singletonList(new ContextConfigurator<AccountContext>() {
+                @Override
+                public void configure(AccountContext context) {
+                    add(new Info(context.account(), container.get(AccountRepository.class)));
+                }
+            })
         );
     }
 

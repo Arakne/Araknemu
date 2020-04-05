@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game;
@@ -59,10 +59,6 @@ import fr.quatrevieux.araknemu.game.account.generator.NameCheckerGenerator;
 import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
 import fr.quatrevieux.araknemu.game.account.generator.SimpleNameGenerator;
 import fr.quatrevieux.araknemu.game.activity.ActivityService;
-import fr.quatrevieux.araknemu.game.admin.AdminService;
-import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
-import fr.quatrevieux.araknemu.game.admin.debug.DebugContextResolver;
-import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.chat.channel.*;
@@ -249,7 +245,7 @@ final public class GameModule implements ContainerModule {
                     new LoggedLoader(),
                     new PlayingLoader(),
                     new ExploringLoader(),
-                    new AdminLoader(),
+                    new AdminLoader(), // @todo should be defined into the AdminModule
                     new FightingLoader(),
                     new ExploringOrFightingLoader()
                 ).load(container)
@@ -470,17 +466,6 @@ final public class GameModule implements ContainerModule {
         );
 
         configurator.persist(
-            AdminService.class,
-            container -> new AdminService(
-                Arrays.asList(
-                    container.get(PlayerContextResolver.class),
-                    container.get(AccountContextResolver.class),
-                    container.get(DebugContextResolver.class)
-                )
-            )
-        );
-
-        configurator.persist(
             ItemService.class,
             container -> new ItemService(
                 container.get(ItemTemplateRepository.class),
@@ -667,30 +652,6 @@ final public class GameModule implements ContainerModule {
             container -> new DefaultFighterFactory(
                 container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class)
             )
-        );
-
-        configurator.factory(
-            PlayerContextResolver.class,
-            container -> new PlayerContextResolver(
-                container.get(PlayerService.class),
-                container.get(AccountContextResolver.class),
-                container.get(ItemService.class),
-                container.get(GeolocationService.class),
-                container.get(ExplorationMapService.class)
-            )
-        );
-
-        configurator.persist(
-            AccountContextResolver.class,
-            container -> new AccountContextResolver(
-                container.get(AccountService.class),
-                container.get(AccountRepository.class)
-            )
-        );
-
-        configurator.persist(
-            DebugContextResolver.class,
-            DebugContextResolver::new
         );
 
         configurator.persist(

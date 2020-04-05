@@ -26,7 +26,6 @@ import fr.quatrevieux.araknemu.data.world.transformer.ItemEffectsTransformer;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
-import fr.quatrevieux.araknemu.game.admin.formatter.HelpFormatter;
 import fr.quatrevieux.araknemu.game.admin.formatter.Link;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.ItemService;

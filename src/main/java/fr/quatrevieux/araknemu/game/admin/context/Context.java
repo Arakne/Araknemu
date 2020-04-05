@@ -14,33 +14,41 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.admin;
+package fr.quatrevieux.araknemu.game.admin.context;
 
+import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
 
 import java.util.Collection;
-import java.util.Collections;
 
 /**
- * Null object for context
+ * Context for console
  */
-final public class NullContext implements Context {
-    @Override
-    public Command command(String name) throws CommandNotFoundException {
-        throw new CommandNotFoundException(name);
-    }
+public interface Context {
+    /**
+     * Get a command by its name
+     *
+     * @param name The command name
+     *
+     * @return The command
+     *
+     * @throws CommandNotFoundException When the asked command cannot be found
+     */
+    public Command command(String name) throws CommandNotFoundException;
 
-    @Override
-    public Collection<Command> commands() {
-        return Collections.emptyList();
-    }
+    /**
+     * Get all available commands
+     */
+    public Collection<Command> commands();
 
-    @Override
-    public Context child(String name) throws ContextNotFoundException {
-        throw new ContextNotFoundException(name);
-    }
+    /**
+     * Get a child context
+     *
+     * @param name The context name
+     */
+    public Context child(String name) throws ContextNotFoundException;
 }

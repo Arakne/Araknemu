@@ -20,23 +20,21 @@
 package fr.quatrevieux.araknemu.game.admin;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.admin.context.Context;
+import fr.quatrevieux.araknemu.game.admin.debug.DebugContext;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AdminUserContextTest extends GameBaseCase {
     private AdminUserContext context;
 
     private Context self;
-    private Context global;
-    private Map<String, ContextResolver> resolvers;
 
     @Override
     @BeforeEach
@@ -44,9 +42,8 @@ class AdminUserContextTest extends GameBaseCase {
         super.setUp();
 
         context = new AdminUserContext(
-            global = Mockito.mock(Context.class),
-            self = Mockito.mock(Context.class),
-            resolvers = new HashMap<>()
+            container.get(AdminService.class),
+            self = Mockito.mock(Context.class)
         );
     }
 
@@ -54,7 +51,6 @@ class AdminUserContextTest extends GameBaseCase {
     void getters() {
         assertSame(self, context.current());
         assertSame(self, context.self());
-        assertSame(global, context.global());
     }
 
     @Test
@@ -87,13 +83,6 @@ class AdminUserContextTest extends GameBaseCase {
 
     @Test
     void resolveSuccess() throws ContextException {
-        ContextResolver resolver = Mockito.mock(ContextResolver.class);
-
-        resolvers.put("myResolver", resolver);
-
-        Context resolved = Mockito.mock(Context.class);
-        Mockito.when(resolver.resolve(global, "my_argument")).thenReturn(resolved);
-
-        assertSame(resolved, context.resolve("myResolver", "my_argument"));
+        assertInstanceOf(DebugContext.class, context.resolve("debug", null));
     }
 }

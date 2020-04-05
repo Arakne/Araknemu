@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.admin;
 
+import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 
 import java.util.List;

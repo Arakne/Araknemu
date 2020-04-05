@@ -19,21 +19,15 @@
 
 package fr.quatrevieux.araknemu.game.admin.player;
 
-import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.admin.NullContext;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContext;
+import fr.quatrevieux.araknemu.game.admin.context.NullContext;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
-import fr.quatrevieux.araknemu.game.admin.player.teleport.Goto;
-import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
-import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
-import fr.quatrevieux.araknemu.game.item.ItemService;
-import fr.quatrevieux.araknemu.game.player.PlayerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Collections;
 
 class PlayerContextTest extends GameBaseCase {
     private PlayerContext context;
@@ -48,32 +42,25 @@ class PlayerContextTest extends GameBaseCase {
             new AccountContext(
                 new NullContext(),
                 gamePlayer().account(),
-                container.get(AccountRepository.class)
+                Collections.emptyList()
             ),
-            container.get(ItemService.class),
-            container.get(GeolocationService.class),
-            container.get(ExplorationMapService.class),
-            container.get(PlayerService.class)
+            Collections.emptyList()
         );
     }
 
     @Test
     void commands() throws CommandNotFoundException {
         assertInstanceOf(Info.class, context.command("info"));
-        assertInstanceOf(GetItem.class, context.command("getitem"));
         assertInstanceOf(SetLife.class, context.command("setlife"));
         assertInstanceOf(AddStats.class, context.command("addstats"));
         assertInstanceOf(AddXp.class, context.command("addxp"));
         assertInstanceOf(Restriction.class, context.command("restriction"));
-        assertInstanceOf(Goto.class, context.command("goto"));
 
         assertContainsType(Info.class, context.commands());
-        assertContainsType(GetItem.class, context.commands());
         assertContainsType(SetLife.class, context.commands());
         assertContainsType(AddStats.class, context.commands());
         assertContainsType(AddXp.class, context.commands());
         assertContainsType(Restriction.class, context.commands());
-        assertContainsType(Goto.class, context.commands());
     }
 
     @Test

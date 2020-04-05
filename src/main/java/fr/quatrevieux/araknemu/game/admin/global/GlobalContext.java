@@ -19,43 +19,42 @@
 
 package fr.quatrevieux.araknemu.game.admin.global;
 
-import fr.quatrevieux.araknemu.game.admin.*;
-import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
-import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
+import fr.quatrevieux.araknemu.game.admin.context.AbstractContext;
+import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.NullContext;
+import fr.quatrevieux.araknemu.game.admin.context.SimpleContext;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Global context.
  * This context should be available in all other contexts
  */
-final public class GlobalContext implements Context {
-    final private AdminUser user;
+final public class GlobalContext extends AbstractContext<GlobalContext> {
+    final private List<ContextConfigurator<GlobalContext>> configurators;
 
-    final private Context context;
+    public GlobalContext(List<ContextConfigurator<GlobalContext>> configurators) {
+        super(configurators);
 
-    public GlobalContext(AdminUser user) {
-        this.user = user;
+        this.configurators = configurators;
+    }
 
-        context = configure();
+    public GlobalContext() {
+        this(new ArrayList<>());
+    }
+
+    /**
+     * Register a new configurator for the context
+     */
+    public GlobalContext register(ContextConfigurator<GlobalContext> configurator) {
+        configurators.add(configurator);
+
+        return this;
     }
 
     @Override
-    public Command command(String name) throws CommandNotFoundException {
-        return context.command(name);
-    }
-
-    @Override
-    public Collection<Command> commands() {
-        return context.commands();
-    }
-
-    @Override
-    public Context child(String name) throws ContextNotFoundException {
-        return context.child(name);
-    }
-
-    private Context configure() {
+    protected SimpleContext createContext() {
         return new SimpleContext(new NullContext())
             .add(new Echo())
             .add(new Help())

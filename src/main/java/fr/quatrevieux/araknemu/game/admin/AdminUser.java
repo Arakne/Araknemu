@@ -25,13 +25,11 @@ import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandPermissionsException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.admin.exception.ExceptionHandler;
-import fr.quatrevieux.araknemu.game.admin.global.GlobalContext;
 import fr.quatrevieux.araknemu.game.listener.admin.RemoveAdminSession;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.out.basic.admin.CommandResult;
 import org.slf4j.helpers.MessageFormatter;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -46,17 +44,11 @@ final public class AdminUser implements AdminPerformer {
     final private AdminUserCommandParser parser;
     final private ExceptionHandler errorHandler;
 
-    public AdminUser(AdminService service, GamePlayer player, Map<String, ContextResolver> resolvers) throws ContextException {
+    public AdminUser(AdminService service, GamePlayer player) throws ContextException {
         this.service = service;
         this.player = player;
 
-        Context globalContext = new GlobalContext(this);
-        this.context = new AdminUserContext(
-            globalContext,
-            resolvers.get("player").resolve(globalContext, player),
-            resolvers
-        );
-
+        this.context = new AdminUserContext(service, service.context("player", player));
         this.parser = new AdminUserCommandParser(this);
         this.errorHandler = new ExceptionHandler(this);
 

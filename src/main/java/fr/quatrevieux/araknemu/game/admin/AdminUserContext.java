@@ -14,11 +14,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin;
 
+import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
 
@@ -30,25 +31,15 @@ import java.util.Map;
  */
 final public class AdminUserContext {
     final private Map<String, Context> contexts = new HashMap<>();
-
-    final private Context global;
+    final private AdminService service;
     final private Context self;
-    final private Map<String, ContextResolver> resolvers;
 
     private Context current;
 
-    public AdminUserContext(Context global, Context self, Map<String, ContextResolver> resolvers) {
-        this.global = global;
+    public AdminUserContext(AdminService service, Context self) {
+        this.service = service;
         this.self = self;
         this.current = self;
-        this.resolvers = resolvers;
-    }
-
-    /**
-     * Get the global context
-     */
-    public Context global() {
-        return global;
     }
 
     /**
@@ -100,10 +91,6 @@ final public class AdminUserContext {
      * @param argument The context resolve argument
      */
     public Context resolve(String type, Object argument) throws ContextException {
-        if (!resolvers.containsKey(type)) {
-            throw new ContextException("Context type '" + type + "' not found");
-        }
-
-        return resolvers.get(type).resolve(global, argument);
+        return service.context(type, argument);
     }
 }

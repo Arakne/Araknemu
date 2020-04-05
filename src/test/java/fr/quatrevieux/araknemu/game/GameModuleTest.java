@@ -41,7 +41,7 @@ import fr.quatrevieux.araknemu.game.account.bank.BankService;
 import fr.quatrevieux.araknemu.game.account.generator.NameCheckerGenerator;
 import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
 import fr.quatrevieux.araknemu.game.activity.ActivityService;
-import fr.quatrevieux.araknemu.game.admin.AdminService;
+import fr.quatrevieux.araknemu.game.admin.AdminModule;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.connector.ConnectorService;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
@@ -99,6 +99,7 @@ class GameModuleTest extends GameBaseCase {
         container.register(new SqlLivingRepositoriesModule(app.database().get("game")));
         container.register(new SqlWorldRepositoriesModule(app.database().get("game")));
         container.register(new GameModule(app));
+        container.register(new AdminModule()); // @todo should be removed
 
         assertInstanceOf(GameService.class, container.get(GameService.class));
         assertInstanceOf(SessionConfigurator.class, container.get(SessionFactory.class));
@@ -117,7 +118,6 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(ChatService.class, container.get(ChatService.class));
         assertInstanceOf(NameCheckerGenerator.class, container.get(NameGenerator.class));
         assertInstanceOf(AreaService.class, container.get(AreaService.class));
-        assertInstanceOf(AdminService.class, container.get(AdminService.class));
         assertInstanceOf(ItemService.class, container.get(ItemService.class));
         assertInstanceOf(EffectMappers.class, container.get(EffectMappers.class));
         assertInstanceOf(DefaultItemFactory.class, container.get(ItemFactory.class));

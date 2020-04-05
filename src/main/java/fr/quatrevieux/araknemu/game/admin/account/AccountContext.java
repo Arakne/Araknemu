@@ -14,57 +14,42 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin.account;
 
-import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
-import fr.quatrevieux.araknemu.game.admin.Command;
-import fr.quatrevieux.araknemu.game.admin.Context;
-import fr.quatrevieux.araknemu.game.admin.SimpleContext;
-import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
-import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
+import fr.quatrevieux.araknemu.game.admin.context.AbstractContext;
+import fr.quatrevieux.araknemu.game.admin.context.Context;
+import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.SimpleContext;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Context for account
  */
-final public class AccountContext implements Context {
+final public class AccountContext extends AbstractContext<AccountContext> {
     final private Context globalContext;
     final private GameAccount account;
-    final private AccountRepository repository;
 
-    final private Context context;
+    public AccountContext(Context globalContext, GameAccount account, List<ContextConfigurator<AccountContext>> configurators) {
+        super(configurators);
 
-    public AccountContext(Context globalContext, GameAccount account, AccountRepository repository) {
         this.globalContext = globalContext;
         this.account = account;
-        this.repository = repository;
-
-        context = configure();
     }
 
     @Override
-    public Command command(String name) throws CommandNotFoundException {
-        return context.command(name);
+    protected SimpleContext createContext() {
+        return new SimpleContext(globalContext);
     }
 
-    @Override
-    public Collection<Command> commands() {
-        return context.commands();
-    }
-
-    @Override
-    public Context child(String name) throws ContextNotFoundException {
-        return context.child(name);
-    }
-
-    private Context configure() {
-        return new SimpleContext(globalContext)
-            .add(new Info(account, repository))
-        ;
+    /**
+     * Get the related account
+     */
+    public GameAccount account() {
+        return account;
     }
 }

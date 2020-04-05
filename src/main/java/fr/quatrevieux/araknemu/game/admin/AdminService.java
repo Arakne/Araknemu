@@ -14,11 +14,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin;
 
+import fr.quatrevieux.araknemu.game.admin.context.Context;
+import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 
@@ -32,11 +34,13 @@ import java.util.stream.Collectors;
  * Server for admin
  */
 final public class AdminService {
+    final private Context globalContext;
     final private Map<String, ContextResolver> resolvers;
 
     final private Map<Integer, AdminUser> usersById = new HashMap<>();
 
-    public AdminService(Collection<ContextResolver> resolvers) {
+    public AdminService(Context globalContext, Collection<ContextResolver> resolvers) {
+        this.globalContext = globalContext;
         this.resolvers = resolvers
             .stream()
             .collect(
@@ -57,11 +61,31 @@ final public class AdminService {
         if (!usersById.containsKey(player.id())) {
             usersById.put(
                 player.id(),
-                new AdminUser(this, player, resolvers)
+                new AdminUser(this, player)
             );
         }
 
         return usersById.get(player.id());
+    }
+
+    /**
+     * Resolve a context
+     *
+     * For resolve a player :
+     * resolve("player", "PlayerName");
+     *
+     * @param type The context type name
+     * @param argument The context argument
+     *
+     * @return The resolved context
+     * @throws ContextException When the context type cannot be found
+     */
+    public Context context(String type, Object argument) throws ContextException {
+        if (!resolvers.containsKey(type)) {
+            throw new ContextException("Context type '" + type + "' not found");
+        }
+
+        return resolvers.get(type).resolve(globalContext, argument);
     }
 
     /**

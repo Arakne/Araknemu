@@ -22,20 +22,16 @@ package fr.quatrevieux.araknemu.game.admin;
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandPermissionsException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
-import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
 import fr.quatrevieux.araknemu.network.game.out.basic.admin.CommandResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -47,15 +43,9 @@ class AdminUserTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        Map<String, ContextResolver> resolvers = new HashMap<>();
-
-        resolvers.put("account", container.get(AccountContextResolver.class));
-        resolvers.put("player", container.get(PlayerContextResolver.class));
-
         user = new AdminUser(
             container.get(AdminService.class),
-            gamePlayer(),
-            resolvers
+            gamePlayer()
         );
 
         gamePlayer().account().grant(Permission.ACCESS);

@@ -27,6 +27,9 @@ import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.game.admin.context.Context;
+import fr.quatrevieux.araknemu.game.admin.context.NullContext;
+import fr.quatrevieux.araknemu.game.admin.debug.DebugContext;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
@@ -43,7 +46,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @todo recursive context child
- * @todo context resolver without argument
  */
 class AdminUserCommandParserTest extends GameBaseCase {
     private AdminUserCommandParser parser;
@@ -157,6 +159,22 @@ class AdminUserCommandParserTest extends GameBaseCase {
         assertEquals("${player:John}", arguments.contextPath());
         assertEquals(Arrays.asList("cmd", "arg"), arguments.arguments());
         assertInstanceOf(PlayerContext.class, arguments.context());
+    }
+
+    @Test
+    void parseWithAnonymousContextWithoutArgument() throws ContainerException, AdminException {
+        session.attach(new GameAccount(
+            new Account(5),
+            container.get(AccountService.class),
+            2
+        ));
+
+        CommandParser.Arguments arguments = parser.parse("${debug} cmd arg");
+        assertEquals("cmd", arguments.command());
+        assertEquals("${debug} cmd arg", arguments.line());
+        assertEquals("${debug}", arguments.contextPath());
+        assertEquals(Arrays.asList("cmd", "arg"), arguments.arguments());
+        assertInstanceOf(DebugContext.class, arguments.context());
     }
 
     @Test
