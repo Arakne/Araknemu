@@ -33,6 +33,9 @@ import fr.quatrevieux.araknemu.game.admin.player.GetItem;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
 import fr.quatrevieux.araknemu.game.admin.player.teleport.*;
+import fr.quatrevieux.araknemu.game.admin.server.Online;
+import fr.quatrevieux.araknemu.game.admin.server.ServerContext;
+import fr.quatrevieux.araknemu.game.admin.server.ServerContextResolver;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.game.item.ItemService;
@@ -61,7 +64,8 @@ final public class AdminModule implements ContainerModule {
                 Arrays.asList(
                     container.get(PlayerContextResolver.class),
                     container.get(AccountContextResolver.class),
-                    container.get(DebugContextResolver.class)
+                    container.get(DebugContextResolver.class),
+                    container.get(ServerContextResolver.class)
                 )
             )
         );
@@ -112,6 +116,20 @@ final public class AdminModule implements ContainerModule {
                         add(new Movement(container.get(MapTemplateRepository.class)));
                         add(new MapStats(container.get(MapTemplateRepository.class)));
                         add(new Area(container.get(SpellEffectService.class)));
+                    }
+                })
+        );
+
+        configurator.persist(
+            ServerContextResolver.class,
+            container -> new ServerContextResolver()
+                .register(new ContextConfigurator<ServerContext>() {
+                    @Override
+                    public void configure(ServerContext context) {
+                        add(new Online(
+                            container.get(PlayerService.class),
+                            container.get(ExplorationMapService.class)
+                        ));
                     }
                 })
         );

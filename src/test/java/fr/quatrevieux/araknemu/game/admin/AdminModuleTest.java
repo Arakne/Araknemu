@@ -38,6 +38,9 @@ import fr.quatrevieux.araknemu.game.admin.player.GetItem;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
 import fr.quatrevieux.araknemu.game.admin.player.teleport.Goto;
+import fr.quatrevieux.araknemu.game.admin.server.Online;
+import fr.quatrevieux.araknemu.game.admin.server.ServerContext;
+import fr.quatrevieux.araknemu.game.admin.server.ServerContextResolver;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import org.junit.jupiter.api.Test;
 
@@ -58,6 +61,7 @@ class AdminModuleTest extends GameBaseCase {
         assertInstanceOf(AccountContextResolver.class, container.get(AccountContextResolver.class));
         assertInstanceOf(DebugContextResolver.class, container.get(DebugContextResolver.class));
         assertInstanceOf(GlobalContext.class, container.get(GlobalContext.class));
+        assertInstanceOf(ServerContextResolver.class, container.get(ServerContextResolver.class));
     }
 
     @Test
@@ -97,7 +101,7 @@ class AdminModuleTest extends GameBaseCase {
     }
 
     @Test
-    void debugResolver() throws SQLException, ContextException, CommandNotFoundException {
+    void debugResolver() throws SQLException, CommandNotFoundException {
         Container container = new ItemPoolContainer();
 
         container.register(new SqlLivingRepositoriesModule(app.database().get("game")));
@@ -115,5 +119,22 @@ class AdminModuleTest extends GameBaseCase {
         assertInstanceOf(Movement.class, context.command("movement"));
         assertInstanceOf(MapStats.class, context.command("mapstats"));
         assertInstanceOf(Area.class, context.command("area"));
+    }
+
+    @Test
+    void serverResolver() throws SQLException, CommandNotFoundException {
+        Container container = new ItemPoolContainer();
+
+        container.register(new SqlLivingRepositoriesModule(app.database().get("game")));
+        container.register(new SqlWorldRepositoriesModule(app.database().get("game")));
+        container.register(new GameModule(app));
+        container.register(new AdminModule());
+
+        container.get(PlayerService.class).load(session, gamePlayer().id());
+
+        Context context = container.get(ServerContextResolver.class).resolve(container.get(GlobalContext.class), null);
+
+        assertInstanceOf(ServerContext.class, context);
+        assertInstanceOf(Online.class, context.command("online"));
     }
 }
