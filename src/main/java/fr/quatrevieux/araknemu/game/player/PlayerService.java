@@ -14,13 +14,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.player;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
+import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
+import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
@@ -43,7 +45,7 @@ import java.util.stream.Stream;
 /**
  * Service for handle {@link GamePlayer}
  */
-final public class PlayerService {
+final public class PlayerService implements EventsSubscriber {
     final private PlayerRepository repository;
     final private GameConfiguration configuration;
     final private Dispatcher dispatcher;
@@ -162,6 +164,13 @@ final public class PlayerService {
      */
     public void save(GamePlayer player) {
         repository.save(player.entity());
+    }
+
+    @Override
+    public Listener[] listeners() {
+        return new Listener[] {
+            new SendShutdownScheduled(this),
+        };
     }
 
     private void login(GamePlayer player) {

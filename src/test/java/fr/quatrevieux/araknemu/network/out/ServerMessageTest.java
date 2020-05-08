@@ -48,4 +48,9 @@ class ServerMessageTest {
     void inactivity() {
         assertEquals("M01|", ServerMessage.inactivity().toString());
     }
+
+    @Test
+    void shutdown() {
+        assertEquals("M04|", ServerMessage.shutdown().toString());
+    }
 }

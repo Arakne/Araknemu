@@ -17,28 +17,24 @@
  * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.core.network;
+package fr.quatrevieux.araknemu.game.event;
 
-import fr.quatrevieux.araknemu.core.network.session.Session;
-
-import java.util.Collection;
+import fr.quatrevieux.araknemu.game.GameService;
 
 /**
- * Base interface for handle server
+ * The game server is stopped
  */
-public interface Server<S extends Session> {
-    /**
-     * Start the server
-     */
-    public void start() throws Exception;
+final public class GameStopped {
+    final private GameService service;
+
+    public GameStopped(GameService service) {
+        this.service = service;
+    }
 
     /**
-     * Stop the server
+     * The stopped game service
      */
-    public void stop() throws Exception;
-
-    /**
-     * Get all opened sessions of the server
-     */
-    public Collection<S> sessions();
+    public GameService service() {
+        return service;
+    }
 }

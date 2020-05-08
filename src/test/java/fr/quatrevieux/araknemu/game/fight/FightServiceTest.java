@@ -23,6 +23,8 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
+import fr.quatrevieux.araknemu.game.GameService;
+import fr.quatrevieux.araknemu.game.event.GameStopped;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.event.ExplorationPlayerCreated;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
@@ -101,6 +103,21 @@ class FightServiceTest extends FightBaseCase {
         dispatcher.dispatch(new ExplorationPlayerCreated(player));
 
         assertTrue(player.dispatcher().has(LeaveExplorationForFight.class));
+    }
+
+    @Test
+    void gameStoppedListenerShouldCancelFight() throws Exception {
+        ListenerAggregate dispatcher = new DefaultListenerAggregate();
+        dispatcher.register(service);
+
+        Fight fight = createFight(true);
+        service.created(fight);
+
+        dispatcher.dispatch(new GameStopped(container.get(GameService.class)));
+
+        assertTrue(service.fightsByMap(fight.map().id()).isEmpty());
+        assertCount(0, fight.teams());
+        assertCount(0, fight.fighters());
     }
 
     @Test

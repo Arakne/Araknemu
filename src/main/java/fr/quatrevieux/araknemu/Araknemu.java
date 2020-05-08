@@ -57,7 +57,7 @@ public class Araknemu {
      */
     final static public String VERSION = Araknemu.class.getPackage().getImplementationVersion();
     final static public String NAME = "Araknemu";
-    final static public String YEAR = "2017-2019";
+    final static public String YEAR = "2017-2020";
     final static public String AUTHOR = "Vincent Quatrevieux";
 
     final private Logger logger = LoggerFactory.getLogger(getClass());
@@ -65,6 +65,7 @@ public class Araknemu {
     final private Configuration configuration;
     final private DatabaseHandler database;
     final private List<Service> services = new ArrayList<>();
+    private boolean started = false;
 
     public Araknemu(Configuration configuration, DatabaseHandler database) {
         this.configuration = configuration;
@@ -89,6 +90,7 @@ public class Araknemu {
         logger.info("Running garbage collector");
         System.gc();
 
+        started = true;
         logger.info("Araknemu started");
     }
 
@@ -96,13 +98,20 @@ public class Araknemu {
      * Stop all services
      */
     public void shutdown() {
+        if (!started) {
+            return;
+        }
+
         logger.info("Shutdown requested...");
+        started = false;
 
         for (Service service : services) {
             service.shutdown();
         }
 
+        services.clear();
         database.stop();
+        System.gc();
 
         logger.info("Araknemu successfully stopped");
     }
@@ -126,6 +135,13 @@ public class Araknemu {
      */
     public DatabaseHandler database() {
         return database;
+    }
+
+    /**
+     * Check if the server is started
+     */
+    public boolean started() {
+        return started;
     }
 
     /**

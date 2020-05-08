@@ -95,4 +95,9 @@ class ErrorTest {
     void cantMoveOverweight() {
         assertEquals("Im112;", Error.cantMoveOverweight().toString());
     }
+
+    @Test
+    void shutdownScheduled() {
+        assertEquals("Im115;10min", Error.shutdownScheduled("10min").toString());
+    }
 }

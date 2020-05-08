@@ -17,28 +17,25 @@
  * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.core.network;
+package fr.quatrevieux.araknemu.game.event;
 
-import fr.quatrevieux.araknemu.core.network.session.Session;
-
-import java.util.Collection;
+import java.time.Duration;
 
 /**
- * Base interface for handle server
+ * A shutdown has been scheduled
+ * This event will be dispatched multiple times, according to the reminder configuration
  */
-public interface Server<S extends Session> {
-    /**
-     * Start the server
-     */
-    public void start() throws Exception;
+final public class ShutdownScheduled {
+    private Duration delay;
+
+    public ShutdownScheduled(Duration delay) {
+        this.delay = delay;
+    }
 
     /**
-     * Stop the server
+     * The shutdown delay
      */
-    public void stop() throws Exception;
-
-    /**
-     * Get all opened sessions of the server
-     */
-    public Collection<S> sessions();
+    public Duration delay() {
+        return delay;
+    }
 }

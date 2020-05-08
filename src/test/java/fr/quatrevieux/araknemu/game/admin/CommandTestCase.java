@@ -38,7 +38,7 @@ abstract public class CommandTestCase extends GameBaseCase {
     protected PerformerWrapper performer;
 
     static public class PerformerWrapper implements AdminPerformer {
-        class Entry {
+        public class Entry {
             final public LogType type;
             final public String message;
 

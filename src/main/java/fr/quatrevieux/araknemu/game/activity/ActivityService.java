@@ -14,12 +14,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.activity;
 
+import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
+import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
+import fr.quatrevieux.araknemu.game.event.GameStopped;
 import org.slf4j.Logger;
 
 import java.util.concurrent.Executors;
@@ -29,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Handle game activity
  */
-final public class ActivityService {
+final public class ActivityService implements EventsSubscriber {
     final private Logger logger;
     final private ScheduledExecutorService executor;
 
@@ -86,5 +89,22 @@ final public class ActivityService {
             task.delay().toMillis(),
             TimeUnit.MILLISECONDS
         );
+    }
+
+    @Override
+    public Listener[] listeners() {
+        return new Listener[] {
+            new Listener<GameStopped>() {
+                @Override
+                public void on(GameStopped event) {
+                    executor.shutdownNow();
+                }
+
+                @Override
+                public Class<GameStopped> event() {
+                    return GameStopped.class;
+                }
+            }
+        };
     }
 }

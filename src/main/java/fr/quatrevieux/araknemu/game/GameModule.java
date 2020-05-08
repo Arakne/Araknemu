@@ -163,7 +163,7 @@ final public class GameModule implements ContainerModule {
             container -> LoggerFactory.getLogger(GameService.class)
         );
 
-        configurator.factory(
+        configurator.persist(
             GameService.class,
             container -> new GameService(
                 container.get(GameConfiguration.class),
@@ -206,7 +206,10 @@ final public class GameModule implements ContainerModule {
                     container.get(ExplorationService.class),
                     container.get(NpcService.class),
                     container.get(MonsterEnvironmentService.class),
-                    container.get(NpcExchangeService.class)
+                    container.get(NpcExchangeService.class),
+                    container.get(ActivityService.class),
+                    container.get(PlayerService.class),
+                    container.get(ShutdownService.class)
                 )
             )
         );
@@ -730,6 +733,12 @@ final public class GameModule implements ContainerModule {
         configurator.persist(ExchangeFactory.class, container -> new DefaultExchangeFactory(
             new PlayerExchangeFactories(),
             new NpcExchangeFactories()
+        ));
+
+        configurator.persist(ShutdownService.class, container -> new ShutdownService(
+            app,
+            container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class),
+            container.get(GameConfiguration.class)
         ));
     }
 }

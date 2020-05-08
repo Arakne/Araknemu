@@ -148,6 +148,7 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(NpcStoreService.class, container.get(NpcStoreService.class));
         assertInstanceOf(NpcExchangeService.class, container.get(NpcExchangeService.class));
         assertInstanceOf(GeolocationService.class, container.get(GeolocationService.class));
+        assertInstanceOf(ShutdownService.class, container.get(ShutdownService.class));
 
         assertSame(
             container.get(ListenerAggregate.class),

@@ -41,6 +41,7 @@ import fr.quatrevieux.araknemu.game.admin.player.teleport.Goto;
 import fr.quatrevieux.araknemu.game.admin.server.Online;
 import fr.quatrevieux.araknemu.game.admin.server.ServerContext;
 import fr.quatrevieux.araknemu.game.admin.server.ServerContextResolver;
+import fr.quatrevieux.araknemu.game.admin.server.Shutdown;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import org.junit.jupiter.api.Test;
 
@@ -136,5 +137,6 @@ class AdminModuleTest extends GameBaseCase {
 
         assertInstanceOf(ServerContext.class, context);
         assertInstanceOf(Online.class, context.command("online"));
+        assertInstanceOf(Shutdown.class, context.command("shutdown"));
     }
 }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game;
@@ -22,8 +22,11 @@ package fr.quatrevieux.araknemu.game;
 import fr.quatrevieux.araknemu.core.config.ConfigurationModule;
 import fr.quatrevieux.araknemu.core.config.Pool;
 import fr.quatrevieux.araknemu.core.config.PoolUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 /**
  * Configuration class for game server
@@ -219,6 +222,20 @@ final public class GameConfiguration implements ConfigurationModule {
      */
     public int packetRateLimit() {
         return pool.integer("packetRateLimit", 100);
+    }
+
+    /**
+     * Get the shutdown reminder delays, in minutes
+     * The values are integer separated by a comma ","
+     * Default value : "1,10,30,60,120"
+     */
+    public long[] shutdownReminderMinutes() {
+        return Arrays.stream(StringUtils.split(pool.string("shutdownReminderMinutes", "1,10,30,60,120"), ","))
+            .map(String::trim)
+            .mapToLong(Long::parseLong)
+            .sorted()
+            .toArray()
+        ;
     }
 
     /**

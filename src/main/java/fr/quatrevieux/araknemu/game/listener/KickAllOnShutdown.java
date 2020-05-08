@@ -17,28 +17,26 @@
  * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.core.network;
+package fr.quatrevieux.araknemu.game.listener;
 
-import fr.quatrevieux.araknemu.core.network.session.Session;
-
-import java.util.Collection;
+import fr.quatrevieux.araknemu.core.event.Listener;
+import fr.quatrevieux.araknemu.game.event.GameStopped;
+import fr.quatrevieux.araknemu.network.out.ServerMessage;
 
 /**
- * Base interface for handle server
+ * Kick all sessions on server stop
  */
-public interface Server<S extends Session> {
-    /**
-     * Start the server
-     */
-    public void start() throws Exception;
+final public class KickAllOnShutdown implements Listener<GameStopped> {
+    @Override
+    public void on(GameStopped event) {
+        event.service().sessions().forEach(session -> {
+            session.send(ServerMessage.shutdown());
+            session.close();
+        });
+    }
 
-    /**
-     * Stop the server
-     */
-    public void stop() throws Exception;
-
-    /**
-     * Get all opened sessions of the server
-     */
-    public Collection<S> sessions();
+    @Override
+    public Class<GameStopped> event() {
+        return GameStopped.class;
+    }
 }
