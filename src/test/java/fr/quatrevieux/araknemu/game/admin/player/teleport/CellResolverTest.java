@@ -14,31 +14,37 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.admin;
+package fr.quatrevieux.araknemu.game.admin.player.teleport;
 
-import fr.quatrevieux.araknemu._test.TestCase;
-import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
-import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
+import fr.quatrevieux.araknemu.game.GameBaseCase;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class NullContextTest extends TestCase {
-    @Test
-    void command() {
-        assertThrows(CommandNotFoundException.class, () -> new NullContext().command("cmd"));
+class CellResolverTest extends GameBaseCase {
+    private CellResolver resolver;
+
+    @Override
+    @BeforeEach
+    public void setUp() throws Exception {
+        super.setUp();
+
+        resolver = new CellResolver();
     }
 
     @Test
-    void commands() {
-        assertTrue(new NullContext().commands().isEmpty());
-    }
+    void resolve() throws SQLException {
+        Target target = new Target(explorationPlayer().map(), 123);
 
-    @Test
-    void child() {
-        assertThrows(ContextNotFoundException.class, () -> new NullContext().child("child"));
+        resolver.resolve("321", target);
+
+        assertEquals(321, target.cell());
+        assertEquals(explorationPlayer().map(), target.map());
     }
 }

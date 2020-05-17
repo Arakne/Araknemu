@@ -14,18 +14,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin.player;
 
-import fr.quatrevieux.araknemu.game.admin.Context;
-import fr.quatrevieux.araknemu.game.admin.ContextResolver;
+import fr.quatrevieux.araknemu.game.admin.context.Context;
+import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
-import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -34,12 +36,12 @@ import java.util.NoSuchElementException;
 final public class PlayerContextResolver implements ContextResolver {
     final private PlayerService service;
     final private ContextResolver accountContextResolver;
-    final private ItemService itemService;
 
-    public PlayerContextResolver(PlayerService service, ContextResolver accountContextResolver, ItemService itemService) {
+    final private List<ContextConfigurator<PlayerContext>> configurators = new ArrayList<>();
+
+    public PlayerContextResolver(PlayerService service, ContextResolver accountContextResolver) {
         this.service = service;
         this.accountContextResolver = accountContextResolver;
-        this.itemService = itemService;
     }
 
     @Override
@@ -58,11 +60,20 @@ final public class PlayerContextResolver implements ContextResolver {
         return "player";
     }
 
+    /**
+     * Register a new configurator for the player context
+     */
+    public PlayerContextResolver register(ContextConfigurator<PlayerContext> configurator) {
+        configurators.add(configurator);
+
+        return this;
+    }
+
     private PlayerContext resolve(Context globalContext, GamePlayer player) throws ContextException {
         return new PlayerContext(
             player,
             accountContextResolver.resolve(globalContext, player.account()),
-            itemService
+            configurators
         );
     }
 

@@ -14,17 +14,22 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin.debug;
 
+import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.NullContext;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
+import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Collections;
 
 class DebugContextTest extends GameBaseCase {
     private DebugContext context;
@@ -34,7 +39,21 @@ class DebugContextTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        context = new DebugContext(container);
+        context = new DebugContext(
+            new NullContext(),
+            Collections.singletonList(
+                new ContextConfigurator<DebugContext>() {
+                    @Override
+                    public void configure(DebugContext context) {
+                        add(new GenItem(container.get(ItemService.class)));
+                        add(new FightPos(container.get(MapTemplateRepository.class)));
+                        add(new Movement(container.get(MapTemplateRepository.class)));
+                        add(new MapStats(container.get(MapTemplateRepository.class)));
+                        add(new Area(container.get(SpellEffectService.class)));
+                    }
+                }
+            )
+        );
     }
 
     @Test

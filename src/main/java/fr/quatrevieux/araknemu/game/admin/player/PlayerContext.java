@@ -14,64 +14,49 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin.player;
 
-import fr.quatrevieux.araknemu.game.admin.Command;
-import fr.quatrevieux.araknemu.game.admin.Context;
-import fr.quatrevieux.araknemu.game.admin.SimpleContext;
-import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
-import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
-import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
-import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.admin.context.AbstractContext;
+import fr.quatrevieux.araknemu.game.admin.context.Context;
+import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.SimpleContext;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Context for a player
  */
-final public class PlayerContext implements Context {
+final public class PlayerContext extends AbstractContext<PlayerContext> {
     final private GamePlayer player;
     final private Context accountContext;
-    final private ItemService itemService;
 
-    final private Context context;
+    public PlayerContext(GamePlayer player, Context accountContext, List<ContextConfigurator<PlayerContext>> configurators) {
+        super(configurators);
 
-    public PlayerContext(GamePlayer player, Context accountContext, ItemService itemService) throws ContextException {
         this.player = player;
         this.accountContext = accountContext;
-        this.itemService = itemService;
-
-        context = configure();
     }
 
     @Override
-    public Command command(String name) throws CommandNotFoundException {
-        return context.command(name);
-    }
-
-    @Override
-    public Collection<Command> commands() {
-        return context.commands();
-    }
-
-    @Override
-    public Context child(String name) throws ContextNotFoundException {
-        return context.child(name);
-    }
-
-    private Context configure() throws ContextException {
+    protected SimpleContext createContext() {
         return new SimpleContext(accountContext)
+            .add("account", accountContext)
             .add(new Info(player))
-            .add(new GetItem(player, itemService))
             .add(new SetLife(player))
             .add(new AddStats(player))
             .add(new AddXp(player))
             .add(new Restriction(player))
-            .add("account", accountContext)
         ;
+    }
+
+    /**
+     * The player related to the context
+     */
+    public GamePlayer player() {
+        return player;
     }
 }

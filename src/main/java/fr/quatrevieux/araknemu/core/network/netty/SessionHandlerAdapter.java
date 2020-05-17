@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.core.network.netty;
@@ -25,8 +25,13 @@ import fr.quatrevieux.araknemu.core.network.session.Session;
 import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelId;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.AttributeKey;
+
+import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Adapt Netty ChannelInboundHandler to SessionHandler
@@ -36,6 +41,7 @@ final public class SessionHandlerAdapter<S extends Session> extends ChannelInbou
     final private AttributeKey<S> sessionAttribute = AttributeKey.valueOf("session");
 
     final private SessionFactory<S> factory;
+    final private ConcurrentMap<ChannelId, S> sessions = new ConcurrentHashMap<>();
 
     public SessionHandlerAdapter(SessionFactory<S> factory) {
         this.factory = factory;
@@ -51,12 +57,14 @@ final public class SessionHandlerAdapter<S extends Session> extends ChannelInbou
             .set(session)
         ;
 
+        sessions.put(ctx.channel().id(), session);
         session.receive(new SessionCreated());
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         ctx.channel().attr(sessionAttribute).get().receive(new SessionClosed());
+        sessions.remove(ctx.channel().id());
     }
 
     @Override
@@ -67,5 +75,12 @@ final public class SessionHandlerAdapter<S extends Session> extends ChannelInbou
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         ctx.channel().attr(sessionAttribute).get().exception(cause);
+    }
+
+    /**
+     * Get all active sessions
+     */
+    public Collection<S> sessions() {
+        return sessions.values();
     }
 }

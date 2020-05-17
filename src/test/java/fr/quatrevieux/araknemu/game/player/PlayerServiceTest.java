@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.player;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
@@ -39,6 +40,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.game.event.ShutdownScheduled;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 import fr.quatrevieux.araknemu.game.listener.player.*;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
@@ -47,10 +49,12 @@ import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -230,5 +234,17 @@ class PlayerServiceTest extends GameBaseCase {
         service.save(player);
 
         assertEquals(new Position(963, 258), dataSet.refresh(entity).position());
+    }
+
+    @Test
+    void shutdownScheduled() {
+        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null)).id();
+        service.load(session, id);
+
+        ListenerAggregate dispatcher = new DefaultListenerAggregate();
+        dispatcher.register(service);
+
+        dispatcher.dispatch(new ShutdownScheduled(Duration.ofMinutes(10)));
+        requestStack.assertLast(Error.shutdownScheduled("10min"));
     }
 }

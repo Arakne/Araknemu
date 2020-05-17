@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight;
@@ -279,7 +279,16 @@ final public class Fight implements Dispatcher, Sender {
      * Must be called before start the fight
      */
     public void cancel() {
-        if (active()) {
+        cancel(false);
+    }
+
+    /**
+     * Cancel the fight
+     *
+     * @param force Force cancel the fight even if the fight is started
+     */
+    public void cancel(boolean force) {
+        if (!force && active()) {
             throw new IllegalStateException("Cannot cancel an active fight");
         }
 
@@ -321,7 +330,7 @@ final public class Fight implements Dispatcher, Sender {
      * Destroy fight after terminated
      */
     public void destroy() {
-        executor.shutdown();
+        executor.shutdownNow();
 
         teams.clear();
         map.destroy();

@@ -14,22 +14,24 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.admin;
+package fr.quatrevieux.araknemu.game.admin.context;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
+import fr.quatrevieux.araknemu.game.admin.Command;
+import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class SimpleContextTest extends GameBaseCase {
     class DummyCommand implements Command {
@@ -55,7 +57,7 @@ class SimpleContextTest extends GameBaseCase {
         }
 
         @Override
-        public void execute(AdminPerformer output, List<String> arguments) {
+        public void execute(AdminPerformer output, CommandParser.Arguments arguments) {
 
         }
 
@@ -111,6 +113,23 @@ class SimpleContextTest extends GameBaseCase {
         context.add(c3 = new DummyCommand("c3"));
 
         assertCollectionEquals(context.commands(), p1, p2, c1, c2, c3);
+    }
+
+    @Test
+    void commandsShouldFilterOverriddenParentCommands() {
+        SimpleContext parent = new SimpleContext(new NullContext());
+
+        Command p1, p2, c1, c2;
+
+        parent.add(p1 = new DummyCommand("foo"));
+        parent.add(p2 = new DummyCommand("bar"));
+
+        SimpleContext context = new SimpleContext(parent);
+
+        context.add(c1 = new DummyCommand("foo"));
+        context.add(c2 = new DummyCommand("baz"));
+
+        assertCollectionEquals(context.commands(), p2, c1, c2);
     }
 
     @Test

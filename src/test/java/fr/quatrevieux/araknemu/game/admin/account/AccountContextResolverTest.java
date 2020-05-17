@@ -19,21 +19,22 @@
 
 package fr.quatrevieux.araknemu.game.admin.account;
 
-import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
-import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
-import fr.quatrevieux.araknemu.game.admin.Context;
-import fr.quatrevieux.araknemu.game.admin.NullContext;
+import fr.quatrevieux.araknemu.game.admin.Command;
+import fr.quatrevieux.araknemu.game.admin.context.Context;
+import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.NullContext;
+import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
-import java.util.EnumSet;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AccountContextResolverTest extends GameBaseCase {
     private AccountContextResolver resolver;
@@ -45,10 +46,7 @@ class AccountContextResolverTest extends GameBaseCase {
 
         dataSet.use(Account.class);
 
-        resolver = new AccountContextResolver(
-            container.get(AccountService.class),
-            container.get(AccountRepository.class)
-        );
+        resolver = new AccountContextResolver();
     }
 
     @Test
@@ -67,5 +65,27 @@ class AccountContextResolverTest extends GameBaseCase {
     @Test
     void invalidArgument() {
         assertThrows(ContextException.class, () -> resolver.resolve(new NullContext(), new Object()));
+    }
+
+    @Test
+    void register() throws ContextException, CommandNotFoundException {
+        Command command = Mockito.mock(Command.class);
+        Mockito.when(command.name()).thenReturn("mocked");
+
+        resolver.register(new ContextConfigurator<AccountContext>() {
+            @Override
+            public void configure(AccountContext context) {
+                add(command);
+            }
+        });
+
+        Account account = dataSet.push(new Account(-1, "aaa", "", "aaa"));
+
+        Context context = resolver.resolve(
+            new NullContext(),
+            container.get(AccountService.class).load(account)
+        );
+
+        assertSame(command, context.command("mocked"));
     }
 }

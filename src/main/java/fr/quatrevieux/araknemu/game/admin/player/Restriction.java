@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin.player;
@@ -47,19 +47,21 @@ final public class Restriction extends AbstractCommand {
         builder
             .description("Change the player restrictions")
             .help(
-                "USAGE :",
-                "\trestriction [+/-][restriction]...",
-                "OPERATIONS :",
-                "\t+restriction : Active the restriction on the player",
-                "\t-restriction : Remove the restriction on the player",
-                "AVAILABLE RESTRICTIONS :",
-                "\t" + Arrays.stream(Restrictions.Restriction.values()).map(Enum::name).collect(Collectors.joining(", ")),
-                "\tNote: The name is case insensitive",
-                "WARNING : This is a debug feature, and can cause bugs if misused",
-                "EXAMPLE :",
-                "\trestriction +DENY_CHALLENGE                      : The player will not be allowed perform challenges",
-                "\trestriction +DENY_CHAT -ALLOW_MOVE_ALL_DIRECTION : Perform multiple changes",
-                "\t${player:John} restriction +DENY_CHALLENGE       : Change John's restrictions"
+                formatter -> formatter
+                    .synopsis("restriction [+/-][restriction]...")
+
+                    .options("+restriction", "Active the restriction on the player")
+                    .options("-restriction", "Remove the restriction on the player")
+
+                    .line("AVAILABLE RESTRICTIONS :",
+                        "\t" + Arrays.stream(Restrictions.Restriction.values()).map(Enum::name).collect(Collectors.joining(", ")),
+                        "\tNote: The name is case insensitive"
+                    )
+                    .line("WARNING : This is a debug feature, and can cause bugs if misused")
+
+                    .example("restriction +DENY_CHALLENGE", "The player will not be allowed perform challenges")
+                    .example("restriction +DENY_CHAT -ALLOW_MOVE_ALL_DIRECTION", "Perform multiple changes")
+                    .example("${player:John} restriction +DENY_CHALLENGE", "Change John's restrictions")
             )
             .requires(Permission.MANAGE_PLAYER)
             .requires(Permission.DEBUG)

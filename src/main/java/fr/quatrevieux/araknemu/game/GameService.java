@@ -26,6 +26,8 @@ import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.event.GameStarted;
 import fr.quatrevieux.araknemu.core.network.Server;
+import fr.quatrevieux.araknemu.game.event.GameStopped;
+import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.realm.host.GameHost;
 import org.slf4j.Logger;
 
@@ -37,13 +39,13 @@ import java.util.Collection;
 final public class GameService implements Service {
     final private GameConfiguration configuration;
     final private RealmConnector connector;
-    final private Server server;
+    final private Server<GameSession> server;
     final private Logger logger;
     final private Collection<PreloadableService> preloadables;
     final private ListenerAggregate dispatcher;
     final private Collection<EventsSubscriber> subscribers;
 
-    public GameService(GameConfiguration configuration, RealmConnector connector, Server server, Logger logger, ListenerAggregate dispatcher, Collection<PreloadableService> preloadables, Collection<EventsSubscriber> subscribers) {
+    public GameService(GameConfiguration configuration, RealmConnector connector, Server<GameSession> server, Logger logger, ListenerAggregate dispatcher, Collection<PreloadableService> preloadables, Collection<EventsSubscriber> subscribers) {
         this.configuration = configuration;
         this.connector = connector;
         this.server = server;
@@ -101,6 +103,8 @@ final public class GameService implements Service {
             false
         );
 
+        dispatcher.dispatch(new GameStopped(this));
+
         try {
             server.stop();
         } catch (Exception e) {
@@ -108,6 +112,13 @@ final public class GameService implements Service {
         }
 
         logger.info("Game server {} stopped", configuration.id());
+    }
+
+    /**
+     * Get all active game sessions
+     */
+    public Collection<GameSession> sessions() {
+        return server.sessions();
     }
 
     /**

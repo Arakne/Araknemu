@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game;
@@ -59,10 +59,6 @@ import fr.quatrevieux.araknemu.game.account.generator.NameCheckerGenerator;
 import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
 import fr.quatrevieux.araknemu.game.account.generator.SimpleNameGenerator;
 import fr.quatrevieux.araknemu.game.activity.ActivityService;
-import fr.quatrevieux.araknemu.game.admin.AdminService;
-import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
-import fr.quatrevieux.araknemu.game.admin.debug.DebugContextResolver;
-import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.chat.channel.*;
@@ -167,7 +163,7 @@ final public class GameModule implements ContainerModule {
             container -> LoggerFactory.getLogger(GameService.class)
         );
 
-        configurator.factory(
+        configurator.persist(
             GameService.class,
             container -> new GameService(
                 container.get(GameConfiguration.class),
@@ -210,7 +206,10 @@ final public class GameModule implements ContainerModule {
                     container.get(ExplorationService.class),
                     container.get(NpcService.class),
                     container.get(MonsterEnvironmentService.class),
-                    container.get(NpcExchangeService.class)
+                    container.get(NpcExchangeService.class),
+                    container.get(ActivityService.class),
+                    container.get(PlayerService.class),
+                    container.get(ShutdownService.class)
                 )
             )
         );
@@ -249,7 +248,7 @@ final public class GameModule implements ContainerModule {
                     new LoggedLoader(),
                     new PlayingLoader(),
                     new ExploringLoader(),
-                    new AdminLoader(),
+                    new AdminLoader(), // @todo should be defined into the AdminModule
                     new FightingLoader(),
                     new ExploringOrFightingLoader()
                 ).load(container)
@@ -470,17 +469,6 @@ final public class GameModule implements ContainerModule {
         );
 
         configurator.persist(
-            AdminService.class,
-            container -> new AdminService(
-                Arrays.asList(
-                    container.get(PlayerContextResolver.class),
-                    container.get(AccountContextResolver.class),
-                    container.get(DebugContextResolver.class)
-                )
-            )
-        );
-
-        configurator.persist(
             ItemService.class,
             container -> new ItemService(
                 container.get(ItemTemplateRepository.class),
@@ -669,28 +657,6 @@ final public class GameModule implements ContainerModule {
             )
         );
 
-        configurator.factory(
-            PlayerContextResolver.class,
-            container -> new PlayerContextResolver(
-                container.get(PlayerService.class),
-                container.get(AccountContextResolver.class),
-                container.get(ItemService.class)
-            )
-        );
-
-        configurator.persist(
-            AccountContextResolver.class,
-            container -> new AccountContextResolver(
-                container.get(AccountService.class),
-                container.get(AccountRepository.class)
-            )
-        );
-
-        configurator.persist(
-            DebugContextResolver.class,
-            DebugContextResolver::new
-        );
-
         configurator.persist(
             EffectMappers.class,
             container -> new EffectMappers(
@@ -767,6 +733,12 @@ final public class GameModule implements ContainerModule {
         configurator.persist(ExchangeFactory.class, container -> new DefaultExchangeFactory(
             new PlayerExchangeFactories(),
             new NpcExchangeFactories()
+        ));
+
+        configurator.persist(ShutdownService.class, container -> new ShutdownService(
+            app,
+            container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class),
+            container.get(GameConfiguration.class)
         ));
     }
 }

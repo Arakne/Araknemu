@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.admin.debug;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
@@ -65,7 +66,7 @@ class GenItemTest extends CommandTestCase {
 
     @Test
     void executeRealUser() throws ContainerException, SQLException, AdminException {
-        command.execute(user(), Arrays.asList("genitem", "39"));
+        command.execute(user(), new CommandParser.Arguments("genitem 39", "", command.name(), Arrays.asList("genitem", "39"), user().context().current()));
 
         requestStack.assertLast(
             new MessageSent(

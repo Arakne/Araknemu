@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu;
@@ -34,6 +34,7 @@ import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.SqlLivi
 import fr.quatrevieux.araknemu.data.world.repository.implementation.sql.SqlWorldRepositoriesModule;
 import fr.quatrevieux.araknemu.game.GameModule;
 import fr.quatrevieux.araknemu.game.GameService;
+import fr.quatrevieux.araknemu.game.admin.AdminModule;
 import fr.quatrevieux.araknemu.game.connector.LocalModule;
 import fr.quatrevieux.araknemu.realm.RealmModule;
 import fr.quatrevieux.araknemu.realm.RealmService;
@@ -56,7 +57,7 @@ public class Araknemu {
      */
     final static public String VERSION = Araknemu.class.getPackage().getImplementationVersion();
     final static public String NAME = "Araknemu";
-    final static public String YEAR = "2017-2019";
+    final static public String YEAR = "2017-2020";
     final static public String AUTHOR = "Vincent Quatrevieux";
 
     final private Logger logger = LoggerFactory.getLogger(getClass());
@@ -64,6 +65,7 @@ public class Araknemu {
     final private Configuration configuration;
     final private DatabaseHandler database;
     final private List<Service> services = new ArrayList<>();
+    private boolean started = false;
 
     public Araknemu(Configuration configuration, DatabaseHandler database) {
         this.configuration = configuration;
@@ -88,6 +90,7 @@ public class Araknemu {
         logger.info("Running garbage collector");
         System.gc();
 
+        started = true;
         logger.info("Araknemu started");
     }
 
@@ -95,13 +98,20 @@ public class Araknemu {
      * Stop all services
      */
     public void shutdown() {
+        if (!started) {
+            return;
+        }
+
         logger.info("Shutdown requested...");
+        started = false;
 
         for (Service service : services) {
             service.shutdown();
         }
 
+        services.clear();
         database.stop();
+        System.gc();
 
         logger.info("Araknemu successfully stopped");
     }
@@ -125,6 +135,13 @@ public class Araknemu {
      */
     public DatabaseHandler database() {
         return database;
+    }
+
+    /**
+     * Check if the server is started
+     */
+    public boolean started() {
+        return started;
     }
 
     /**
@@ -177,6 +194,7 @@ public class Araknemu {
             app.database().get("game")
         ));
         container.register(new GameModule(app));
+        container.register(new AdminModule());
         container.register(new LocalModule(realmContainer));
 
         return container;

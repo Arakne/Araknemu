@@ -14,33 +14,27 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.admin;
-
-import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
-import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
-
-import java.util.Collection;
-import java.util.Collections;
+package fr.quatrevieux.araknemu.game.admin.player.teleport;
 
 /**
- * Null object for context
+ * Resolve the target cell
  */
-final public class NullContext implements Context {
+final public class CellResolver implements LocationResolver {
     @Override
-    public Command command(String name) throws CommandNotFoundException {
-        throw new CommandNotFoundException(name);
+    public String name() {
+        return "cell";
     }
 
     @Override
-    public Collection<Command> commands() {
-        return Collections.emptyList();
+    public void resolve(String argument, Target target) {
+        target.setCell(Integer.parseUnsignedInt(argument));
     }
 
     @Override
-    public Context child(String name) throws ContextNotFoundException {
-        throw new ContextNotFoundException(name);
+    public String help() {
+        return "Define the target cell.\nUsage: goto [map target] cell [cellid]";
     }
 }

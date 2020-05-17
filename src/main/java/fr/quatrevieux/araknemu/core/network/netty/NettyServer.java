@@ -14,13 +14,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.core.network.netty;
 
 import fr.quatrevieux.araknemu.core.network.Server;
 import fr.quatrevieux.araknemu.core.network.SessionIdle;
+import fr.quatrevieux.araknemu.core.network.session.Session;
 import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
@@ -36,29 +37,31 @@ import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.CharsetUtil;
 
 import java.time.Duration;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Server adapter for Netty
  */
-final public class NettyServer implements Server {
+final public class NettyServer<S extends Session> implements Server<S> {
     @ChannelHandler.Sharable
-    final static public class MessageEndEncoder extends MessageToMessageEncoder {
+    final static public class MessageEndEncoder extends MessageToMessageEncoder<Object> {
         @Override
-        protected void encode(ChannelHandlerContext ctx, Object msg, List out) {
+        protected void encode(ChannelHandlerContext ctx, Object msg, List<Object> out) {
             out.add(msg + "\000");
         }
     }
 
-    final private SessionFactory factory;
+    final private SessionFactory<S> factory;
     final private int port;
     final private Duration readTimeout;
 
     private Channel serverChannel;
     private EventLoopGroup loopGroup;
+    private SessionHandlerAdapter<S> handlerAdapter;
 
-    public NettyServer(SessionFactory factory, int port, Duration readTimeout) {
+    public NettyServer(SessionFactory<S> factory, int port, Duration readTimeout) {
         this.factory = factory;
         this.port = port;
         this.readTimeout = readTimeout;
@@ -68,15 +71,15 @@ final public class NettyServer implements Server {
     public void start() {
         ServerBootstrap bootstrap = new ServerBootstrap();
 
-        SessionHandlerAdapter handlerAdapter = new SessionHandlerAdapter(factory);
+        handlerAdapter = new SessionHandlerAdapter<>(factory);
         StringDecoder decoder = new StringDecoder(CharsetUtil.UTF_8);
         StringEncoder encoder = new StringEncoder(CharsetUtil.UTF_8);
-        MessageToMessageEncoder messageEncoder = new MessageEndEncoder();
+        MessageToMessageEncoder<Object> messageEncoder = new MessageEndEncoder();
 
         bootstrap
             .group(loopGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors()))
             .channel(NioServerSocketChannel.class)
-            .childHandler(new ChannelInitializer() {
+            .childHandler(new ChannelInitializer<Channel>() {
                 protected void initChannel(Channel channel) {
                     channel
                         .pipeline()
@@ -105,7 +108,12 @@ final public class NettyServer implements Server {
 
     @Override
     public void stop() throws Exception {
-        serverChannel.closeFuture();
         loopGroup.shutdownGracefully().sync();
+        serverChannel.closeFuture().sync();
+    }
+
+    @Override
+    public Collection<S> sessions() {
+        return handlerAdapter.sessions();
     }
 }

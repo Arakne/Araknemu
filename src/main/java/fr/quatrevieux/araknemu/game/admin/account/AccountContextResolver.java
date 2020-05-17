@@ -14,29 +14,25 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin.account;
 
-import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
-import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
-import fr.quatrevieux.araknemu.game.admin.Context;
-import fr.quatrevieux.araknemu.game.admin.ContextResolver;
+import fr.quatrevieux.araknemu.game.admin.context.Context;
+import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Context resolver for account
  */
 final public class AccountContextResolver implements ContextResolver {
-    final private AccountService service;
-    final private AccountRepository repository;
-
-    public AccountContextResolver(AccountService service, AccountRepository repository) {
-        this.service = service;
-        this.repository = repository;
-    }
+    final private List<ContextConfigurator<AccountContext>> configurators = new ArrayList<>();
 
     @Override
     public AccountContext resolve(Context globalContext, Object argument) throws ContextException {
@@ -52,7 +48,16 @@ final public class AccountContextResolver implements ContextResolver {
         return "account";
     }
 
+    /**
+     * Register a configurator for the account resolver
+     */
+    public AccountContextResolver register(ContextConfigurator<AccountContext> configurator) {
+        configurators.add(configurator);
+
+        return this;
+    }
+
     private AccountContext resolveByAccount(Context globalContext, GameAccount account) {
-        return new AccountContext(globalContext, account, repository);
+        return new AccountContext(globalContext, account, configurators);
     }
 }

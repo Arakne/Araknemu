@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.data.value;
 
+import java.util.Objects;
+
 /**
  * Position using 2D coordinates
  */
@@ -42,5 +44,25 @@ final public class Geolocation {
     @Override
     public String toString() {
         return "[" + x + "," + y + "]";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Geolocation that = (Geolocation) o;
+
+        return x == that.x && y == that.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.network.game.out.info;
@@ -140,5 +140,14 @@ final public class Error extends InformationMessage {
      */
     static public Error cantMoveOverweight() {
         return new Error(12);
+    }
+
+    /**
+     * A shutdown is scheduled
+     *
+     * @param delay The delay string. The value is not translated.
+     */
+    static public Error shutdownScheduled(String delay) {
+        return new Error(15, delay);
     }
 }

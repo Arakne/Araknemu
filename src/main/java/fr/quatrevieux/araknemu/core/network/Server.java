@@ -14,15 +14,19 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.core.network;
 
+import fr.quatrevieux.araknemu.core.network.session.Session;
+
+import java.util.Collection;
+
 /**
  * Base interface for handle server
  */
-public interface Server {
+public interface Server<S extends Session> {
     /**
      * Start the server
      */
@@ -32,4 +36,9 @@ public interface Server {
      * Stop the server
      */
     public void stop() throws Exception;
+
+    /**
+     * Get all opened sessions of the server
+     */
+    public Collection<S> sessions();
 }

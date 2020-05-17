@@ -27,6 +27,9 @@ import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.game.admin.context.Context;
+import fr.quatrevieux.araknemu.game.admin.context.NullContext;
+import fr.quatrevieux.araknemu.game.admin.debug.DebugContext;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
@@ -43,7 +46,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @todo recursive context child
- * @todo context resolver without argument
  */
 class AdminUserCommandParserTest extends GameBaseCase {
     private AdminUserCommandParser parser;
@@ -69,6 +71,8 @@ class AdminUserCommandParserTest extends GameBaseCase {
         CommandParser.Arguments arguments = parser.parse("simple");
 
         assertEquals("simple", arguments.command());
+        assertEquals("simple", arguments.line());
+        assertEquals("", arguments.contextPath());
         assertEquals(Arrays.asList("simple"), arguments.arguments());
         assertSame(user.context().current(), arguments.context());
     }
@@ -78,6 +82,8 @@ class AdminUserCommandParserTest extends GameBaseCase {
         CommandParser.Arguments arguments = parser.parse("  cmd arg1   arg2  val1  ");
 
         assertEquals("cmd", arguments.command());
+        assertEquals("cmd arg1   arg2  val1", arguments.line());
+        assertEquals("", arguments.contextPath());
         assertEquals(Arrays.asList("cmd", "arg1", "arg2", "val1"), arguments.arguments());
         assertSame(user.context().current(), arguments.context());
     }
@@ -89,6 +95,8 @@ class AdminUserCommandParserTest extends GameBaseCase {
         CommandParser.Arguments arguments = parser.parse("!cmd arg");
 
         assertEquals("cmd", arguments.command());
+        assertEquals("!cmd arg", arguments.line());
+        assertEquals("!", arguments.contextPath());
         assertEquals(Arrays.asList("cmd", "arg"), arguments.arguments());
         assertSame(user.context().self(), arguments.context());
     }
@@ -101,6 +109,8 @@ class AdminUserCommandParserTest extends GameBaseCase {
         CommandParser.Arguments arguments = parser.parse("$myContext cmd arg");
 
         assertEquals("cmd", arguments.command());
+        assertEquals("$myContext cmd arg", arguments.line());
+        assertEquals("$myContext", arguments.contextPath());
         assertEquals(Arrays.asList("cmd", "arg"), arguments.arguments());
         assertSame(context, arguments.context());
     }
@@ -115,6 +125,8 @@ class AdminUserCommandParserTest extends GameBaseCase {
         CommandParser.Arguments arguments = parser.parse("> account cmd arg");
 
         assertEquals("cmd", arguments.command());
+        assertEquals("> account cmd arg", arguments.line());
+        assertEquals("> account", arguments.contextPath());
         assertEquals(Arrays.asList("cmd", "arg"), arguments.arguments());
         assertSame(user.context().self().child("account"), arguments.context());
     }
@@ -143,8 +155,26 @@ class AdminUserCommandParserTest extends GameBaseCase {
 
         CommandParser.Arguments arguments = parser.parse("${player:John} cmd arg");
         assertEquals("cmd", arguments.command());
+        assertEquals("${player:John} cmd arg", arguments.line());
+        assertEquals("${player:John}", arguments.contextPath());
         assertEquals(Arrays.asList("cmd", "arg"), arguments.arguments());
         assertInstanceOf(PlayerContext.class, arguments.context());
+    }
+
+    @Test
+    void parseWithAnonymousContextWithoutArgument() throws ContainerException, AdminException {
+        session.attach(new GameAccount(
+            new Account(5),
+            container.get(AccountService.class),
+            2
+        ));
+
+        CommandParser.Arguments arguments = parser.parse("${debug} cmd arg");
+        assertEquals("cmd", arguments.command());
+        assertEquals("${debug} cmd arg", arguments.line());
+        assertEquals("${debug}", arguments.contextPath());
+        assertEquals(Arrays.asList("cmd", "arg"), arguments.arguments());
+        assertInstanceOf(DebugContext.class, arguments.context());
     }
 
     @Test

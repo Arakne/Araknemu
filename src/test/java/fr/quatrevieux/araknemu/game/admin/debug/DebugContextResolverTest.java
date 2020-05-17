@@ -20,12 +20,17 @@
 package fr.quatrevieux.araknemu.game.admin.debug;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.admin.NullContext;
+import fr.quatrevieux.araknemu.game.admin.Command;
+import fr.quatrevieux.araknemu.game.admin.context.Context;
+import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.NullContext;
+import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class DebugContextResolverTest extends GameBaseCase {
     private DebugContextResolver resolver;
@@ -35,11 +40,28 @@ class DebugContextResolverTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        resolver = new DebugContextResolver(container);
+        resolver = new DebugContextResolver();
     }
 
     @Test
     void resolve() throws ContextException {
         assertInstanceOf(DebugContext.class, resolver.resolve(new NullContext(), null));
+    }
+
+    @Test
+    void register() throws ContextException, CommandNotFoundException {
+        Command command = Mockito.mock(Command.class);
+        Mockito.when(command.name()).thenReturn("mocked");
+
+        resolver.register(new ContextConfigurator<DebugContext>() {
+            @Override
+            public void configure(DebugContext context) {
+                add(command);
+            }
+        });
+
+        Context context = resolver.resolve(new NullContext(), null);
+
+        assertSame(command, context.command("mocked"));
     }
 }

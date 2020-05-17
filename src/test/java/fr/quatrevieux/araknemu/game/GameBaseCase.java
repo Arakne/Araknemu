@@ -29,10 +29,12 @@ import fr.quatrevieux.araknemu.core.dbal.DatabaseConfiguration;
 import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.core.di.*;
+import fr.quatrevieux.araknemu.core.network.Server;
 import fr.quatrevieux.araknemu.core.network.parser.Dispatcher;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
+import fr.quatrevieux.araknemu.core.network.util.DummyServer;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Sex;
@@ -78,6 +80,7 @@ import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
 import fr.quatrevieux.araknemu.data.world.repository.monster.*;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.game.admin.AdminModule;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
@@ -174,6 +177,7 @@ public class GameBaseCase extends DatabaseTestCase {
 
     protected Container container;
     protected GameConfiguration configuration;
+    protected DummyServer<GameSession> server;
     protected DummyChannel channel;
     protected GameSession session;
     protected SendingRequestStack requestStack;
@@ -200,17 +204,20 @@ public class GameBaseCase extends DatabaseTestCase {
         container = new ItemPoolContainer();
         container.register(new ConnectorModule());
         container.register(new GameModule(app));
+        container.register(new AdminModule());
         container.register(new SqlLivingRepositoriesModule(
             app.database().get("game")
         ));
         container.register(new SqlWorldRepositoriesModule(
             app.database().get("game")
         ));
+        server = new DummyServer<>(container.get(SessionFactory.class));
+        container.register(configurator -> configurator.set(Server.class, server));
 
         configuration = container.get(GameConfiguration.class);
 
-        channel = new DummyChannel();
-        session = (GameSession) container.get(SessionFactory.class).create(channel);
+        session = server.createSession();
+        channel = (DummyChannel) session.channel();
         requestStack = new SendingRequestStack(channel);
 
         dataSet = new GameDataSet(
@@ -370,7 +377,7 @@ public class GameBaseCase extends DatabaseTestCase {
         container.get(PlayerExperienceService.class).preload(NOPLogger.NOP_LOGGER);
 
         Player player = dataSet.push(new Player(-1, 5, 2, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1), level, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, -1, 0, new Position(10540, 210), 0));
-        GameSession session = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
+        GameSession session = server.createSession();
 
         session.attach(new GameAccount(
             new Account(5),
@@ -412,12 +419,12 @@ public class GameBaseCase extends DatabaseTestCase {
     }
 
     public GamePlayer makeSimpleGamePlayer(int id) throws ContainerException, SQLException {
-        GameSession session = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
+        GameSession session = server.createSession();
         return makeSimpleGamePlayer(id, session);
     }
 
     public GameSession makeSimpleExplorationSession(int id) throws ContainerException, SQLException {
-        GameSession session = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
+        GameSession session = server.createSession();
         GamePlayer gp = makeSimpleGamePlayer(id, session);
 
         ExplorationPlayer ep = new ExplorationPlayer(gp);

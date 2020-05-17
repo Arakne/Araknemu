@@ -263,6 +263,20 @@ class FightTest extends GameBaseCase {
     }
 
     @Test
+    void cancelActiveForce() {
+        AtomicReference<FightCancelled> ref = new AtomicReference<>();
+        fight.dispatcher().add(FightCancelled.class, ref::set);
+
+        fight.start();
+
+        fight.cancel(true);
+
+        assertSame(fight, ref.get().fight());
+        assertCount(0, fight.teams());
+        assertCount(0, fight.fighters());
+    }
+
+    @Test
     void register() {
         FightModule module = Mockito.mock(FightModule.class);
 

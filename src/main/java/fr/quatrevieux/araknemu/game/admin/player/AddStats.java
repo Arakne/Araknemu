@@ -44,17 +44,19 @@ final public class AddStats extends AbstractCommand {
         builder
             .description("Add stats to a player")
             .help(
-                "USAGE :",
-                "\taddstats [characteristic] [value]",
-                "ARGUMENTS :",
-                "\tcharacteristic :",
-                "\t\tThe characteristic to add. This parameter is case insensitive.",
-                "\t\tIt's value must be one of those : " + Arrays.toString(Characteristic.values()),
-                "\tvalue :",
-                "\t\tThe value to add, must be an integer",
-                "\t\tNegative values are allowed, but be careful with negative vitality !!!",
-                "EXAMPLE :",
-                "\taddstats vitality 150 : Add 150 vitality to current player"
+                formatter -> formatter
+                    .synopsis("addstats [characteristic] [value]")
+
+                    .options(
+                        "characteristic",
+                        "The characteristic to add.\n" +
+                        "This parameter is case insensitive.\n" +
+                        "It's value must be one of those : " + Arrays.toString(Characteristic.values())
+                    )
+                    .options("value", "The value to add, must be an integer. Negative values are allowed, but be careful with negative vitality !!!")
+
+                    .example("addstats vitality 150", "Add 150 vitality to current player")
+                    .example("${player:John} addstats strength 50", "Add 50 strength to current John")
             )
             .requires(Permission.MANAGE_PLAYER)
         ;

@@ -14,27 +14,27 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.admin;
+package fr.quatrevieux.araknemu.game.event;
 
-import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
+import fr.quatrevieux.araknemu.game.GameService;
 
 /**
- * Resolver for console context
+ * The game server is stopped
  */
-public interface ContextResolver {
-    /**
-     * Resolve the context
-     *
-     * @param globalContext The global context
-     * @param argument The resolver argument
-     */
-    public Context resolve(Context globalContext, Object argument) throws ContextException;
+final public class GameStopped {
+    final private GameService service;
+
+    public GameStopped(GameService service) {
+        this.service = service;
+    }
 
     /**
-     * Get the resolver type
+     * The stopped game service
      */
-    public String type();
+    public GameService service() {
+        return service;
+    }
 }

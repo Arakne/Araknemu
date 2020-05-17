@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.exploration.map;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.Listener;
+import fr.quatrevieux.araknemu.data.value.Geolocation;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
@@ -66,6 +67,7 @@ class ExplorationMapTest extends GameBaseCase {
         assertEquals(10300, map.id());
         assertEquals(template.date(), map.date());
         assertEquals(template.key(), map.key());
+        assertEquals(new Geolocation(-4, 3), map.geolocation());
     }
 
     @Test

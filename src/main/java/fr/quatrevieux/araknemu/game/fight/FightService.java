@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight;
@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
+import fr.quatrevieux.araknemu.game.event.GameStopped;
 import fr.quatrevieux.araknemu.game.exploration.event.ExplorationPlayerCreated;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.builder.FightBuilder;
@@ -34,7 +35,11 @@ import fr.quatrevieux.araknemu.game.listener.player.exploration.LeaveExploration
 import fr.quatrevieux.araknemu.game.listener.player.fight.AttachFighter;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -48,7 +53,7 @@ final public class FightService implements EventsSubscriber {
     final private Map<Class, FightBuilderFactory> builderFactories;
     final private Collection<FightModule.Factory> moduleFactories;
 
-    final private Map<Integer, Map<Integer, Fight>> fightsByMapId = new HashMap<>();
+    final private Map<Integer, Map<Integer, Fight>> fightsByMapId = new ConcurrentHashMap<>();
     final private AtomicInteger lastFightId = new AtomicInteger();
 
     public FightService(MapTemplateRepository mapRepository, Dispatcher dispatcher, Collection<? extends FightBuilderFactory> factories, Collection<FightModule.Factory> moduleFactories) {
@@ -87,6 +92,22 @@ final public class FightService implements EventsSubscriber {
                 @Override
                 public Class<ExplorationPlayerCreated> event() {
                     return ExplorationPlayerCreated.class;
+                }
+            },
+            new Listener<GameStopped>() {
+                @Override
+                public void on(GameStopped event) {
+                    fightsByMapId.values().stream()
+                        .flatMap(fights -> fights.values().stream())
+                        .forEach(fight -> fight.cancel(true))
+                    ;
+
+                    fightsByMapId.clear();
+                }
+
+                @Override
+                public Class<GameStopped> event() {
+                    return GameStopped.class;
                 }
             }
         };
@@ -161,7 +182,7 @@ final public class FightService implements EventsSubscriber {
         if (fightsByMapId.containsKey(fight.map().id())) {
             fightsByMapId.get(fight.map().id()).put(fight.id(), fight);
         } else {
-            Map<Integer, Fight> fights = new HashMap<>();
+            Map<Integer, Fight> fights = new ConcurrentHashMap<>();
 
             fights.put(fight.id(), fight);
 

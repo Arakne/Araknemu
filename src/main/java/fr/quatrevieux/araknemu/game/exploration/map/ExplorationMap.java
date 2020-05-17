@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.value.Dimensions;
+import fr.quatrevieux.araknemu.data.value.Geolocation;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.game.exploration.area.ExplorationSubArea;
 import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
@@ -222,6 +223,13 @@ final public class ExplorationMap implements GameMap<ExplorationMapCell>, Dispat
      */
     public boolean indoor() {
         return template.indoor();
+    }
+
+    /**
+     * Get the map geolocation
+     */
+    public Geolocation geolocation() {
+        return template.geolocation();
     }
 
     public ListenerAggregate dispatcher() {

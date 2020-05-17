@@ -38,7 +38,7 @@ abstract public class CommandTestCase extends GameBaseCase {
     protected PerformerWrapper performer;
 
     static public class PerformerWrapper implements AdminPerformer {
-        class Entry {
+        public class Entry {
             final public LogType type;
             final public String message;
 
@@ -86,14 +86,23 @@ abstract public class CommandTestCase extends GameBaseCase {
     }
 
     public void execute(AdminPerformer performer, String... arguments) throws AdminException {
-        command.execute(
-            this.performer = new PerformerWrapper(performer),
-            Arrays.asList(arguments)
-        );
+        try {
+            command.execute(
+                this.performer = new PerformerWrapper(performer),
+                new CommandParser.Arguments("", "", command.name(), Arrays.asList(arguments), user().context().current())
+            );
+        } catch (SQLException e) {
+            throw new AdminException(e);
+        }
     }
 
     public void execute(String... arguments) throws ContainerException, SQLException, AdminException {
         execute(user(), arguments);
+    }
+
+    public void executeLine(String line) throws AdminException, SQLException {
+        performer = new PerformerWrapper(user());
+        command.execute(performer, new AdminUserCommandParser(user()).parse(line));
     }
 
     public void assertOutput(String... lines) {
@@ -135,7 +144,7 @@ abstract public class CommandTestCase extends GameBaseCase {
             .findFirst()
         ;
 
-        assertTrue(log.isPresent(), "Line not found");
+        assertTrue(log.isPresent(), () -> "Line not found in logs : " + line + "\nActual : \n" + performer.logs.stream().map(entry -> entry.message).collect(Collectors.joining("\n")));
         assertEquals(type, log.get().type, "Invalid log type");
     }
 }

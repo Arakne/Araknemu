@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.core.network.util;
@@ -30,6 +30,7 @@ final public class DummyChannel implements Channel {
     private long id = 1;
     private boolean isAlive = true;
     private Stack<Object> messages = new Stack<>();
+    private DummyServer<?> server;
 
     @Override
     public Object id() {
@@ -44,6 +45,10 @@ final public class DummyChannel implements Channel {
     @Override
     public void close() {
         isAlive = false;
+
+        if (server != null) {
+            server.removeChannel(this);
+        }
     }
 
     @Override
@@ -57,5 +62,9 @@ final public class DummyChannel implements Channel {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    void setServer(DummyServer<?> server) {
+        this.server = server;
     }
 }

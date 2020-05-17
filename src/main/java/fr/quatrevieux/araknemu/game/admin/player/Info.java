@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin.player;
@@ -40,8 +40,15 @@ final public class Info extends AbstractCommand {
     protected void build(Builder builder) {
         builder
             .description("Display information on the selected player")
+            .help(
+                formatter -> formatter
+                    .synopsis("[context] info")
+                    .line("<i>Note: this command takes no arguments, the account is only resolved by the context</i>")
+
+                    .example("${player:Alan} info", "Display information about the player Alan")
+                    .example("info", "Display self player information")
+            )
             .requires(Permission.MANAGE_PLAYER)
-            .help("info")
         ;
     }
 

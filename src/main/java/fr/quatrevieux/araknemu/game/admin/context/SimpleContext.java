@@ -14,11 +14,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.admin;
+package fr.quatrevieux.araknemu.game.admin.context;
 
+import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
 
@@ -53,7 +54,12 @@ final public class SimpleContext implements Context {
     public Collection<Command> commands() {
         Collection<Command> allCommands = new ArrayList<>(commands.values());
 
-        allCommands.addAll(parent.commands());
+        // Filter commands overridden by current context
+        for (Command command : parent.commands()) {
+            if (!commands.containsKey(command.name())) {
+                allCommands.add(command);
+            }
+        }
 
         return allCommands;
     }

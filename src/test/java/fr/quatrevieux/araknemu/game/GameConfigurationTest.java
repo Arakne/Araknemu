@@ -44,6 +44,7 @@ class GameConfigurationTest extends GameBaseCase {
         assertEquals("10.0.0.5", configuration.ip());
         assertEquals(Duration.ofMinutes(15), configuration.inactivityTime());
         assertEquals(100, configuration.packetRateLimit());
+        assertArrayEquals(new long[] {1, 10, 30, 60, 120}, configuration.shutdownReminderMinutes());
     }
 
     @Test
