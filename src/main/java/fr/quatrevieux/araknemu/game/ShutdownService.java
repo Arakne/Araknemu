@@ -72,7 +72,7 @@ final public class ShutdownService implements EventsSubscriber {
         checkNotScheduled();
 
         scheduledShutdown = executor.schedule(app::shutdown, delay.toMillis(), TimeUnit.MILLISECONDS);
-        remindShutdown();
+        remindShutdown(delay);
     }
 
     /**
@@ -139,27 +139,32 @@ final public class ShutdownService implements EventsSubscriber {
      * Remind the shutdown at the configured minutes
      */
     private void remindShutdown() {
-        delay().ifPresent(delay -> {
-            dispatcher.dispatch(new ShutdownScheduled(delay));
+        delay().ifPresent(this::remindShutdown);
+    }
 
-            final long minutes = delay.toMinutes();
-            final long[] remindDelays = configuration.shutdownReminderMinutes();
+    /**
+     * Remind the shutdown at the configured minutes
+     */
+    private void remindShutdown(Duration delay) {
+        dispatcher.dispatch(new ShutdownScheduled(delay));
 
-            for (int i = 0; i < remindDelays.length; ++i) {
-                // Delay is too low for a remind
-                if (minutes <= remindDelays[i]) {
-                    break;
-                }
+        final long minutes = delay.toMinutes();
+        final long[] remindDelays = configuration.shutdownReminderMinutes();
 
-                // Delay is on an higher interval
-                if (i + 1 < remindDelays.length && minutes > remindDelays[i + 1]) {
-                    continue;
-                }
-
-                // Schedule the reminder at the given delay
-                executor.schedule(this::remindShutdown, minutes - remindDelays[i], TimeUnit.MINUTES);
+        for (int i = 0; i < remindDelays.length; ++i) {
+            // Delay is too low for a remind
+            if (minutes <= remindDelays[i]) {
                 break;
             }
-        });
+
+            // Delay is on an higher interval
+            if (i + 1 < remindDelays.length && minutes > remindDelays[i + 1]) {
+                continue;
+            }
+
+            // Schedule the reminder at the given delay
+            executor.schedule((Runnable) this::remindShutdown, minutes - remindDelays[i], TimeUnit.MINUTES);
+            break;
+        }
     }
 }

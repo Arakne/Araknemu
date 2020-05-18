@@ -15,7 +15,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Installing
 
-***Note:** Those instruction permit to setup a development environment, not a production one*
+**Note:** Those instruction enable the setup of a development environment, not a production one
 
 - Clone the repository and go to the project directory
     ```
@@ -40,8 +40,8 @@ java -jar target/araknemu-0.6-alpha-jar-with-dependencies.jar
 
 ### Project state
 
-The project is in pre-alpha development state, so the architecture is not stable, and will change until the v1.0 is released.
-It can be used only for testing or development purpose.
+The project is in pre-alpha development state, and thus, the architecture is not stable, and will change until v1.0 is released. 
+It can only be used for testing or development purposes.
 
 ### Features
 
@@ -68,7 +68,7 @@ To see all currently implemented features you can go to [closed feature issues](
     - Usable items (i.e. potions)
     - Item sets
 - Bank
-- Fight
+- Combat
     - Duel
     - PvM
     - AI
@@ -78,13 +78,13 @@ To see all currently implemented features you can go to [closed feature issues](
 
 #### Where is the database ?
 
-This project only provide the server source code. You should create your own database for launch the server.
-A command will be created for generates the database structure.
+This project only provides the server source code. You should create your own database in order to launch the server. 
+A command will be created to generate the database structure.
 
 #### Why this project ? There is a lot of other dofus emulators...
 
-All dofus servers I've seen have very bad quality standard, not following semantic versioning, 
-always on rolling release (i.e. no maintained version), and no unit and functional tests.
+All dofus servers I've seen have very bad quality standards, don't follow semantic versioning, 
+are always on rolling release (i.e. no maintained version), and no unit and functional tests. 
 So, the goal of this project is to provide a reliable open source base for Dofus servers.
 
 ## Contributing
