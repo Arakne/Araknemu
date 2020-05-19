@@ -14,21 +14,21 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.handler.account;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.network.exception.CloseWithPacket;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.player.event.GameJoined;
-import fr.quatrevieux.araknemu.core.network.exception.CloseWithPacket;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.account.ChoosePlayingCharacter;
 import fr.quatrevieux.araknemu.network.game.out.account.CharacterSelected;
 import fr.quatrevieux.araknemu.network.game.out.account.CharacterSelectionError;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Handle character select for entering game
@@ -41,11 +41,17 @@ final public class SelectCharacter implements PacketHandler<GameSession, ChooseP
     }
 
     @Override
-    public void handle(GameSession session, ChoosePlayingCharacter packet) throws Exception {
-        try {
-            service.load(session, packet.id()).register(session);
-        } catch (EntityNotFoundException e) {
-            throw new CloseWithPacket(new CharacterSelectionError());
+    public void handle(GameSession session, ChoosePlayingCharacter packet) {
+        synchronized (session) {
+            if (session.player() != null) {
+                throw new CloseWithPacket(new CharacterSelectionError());
+            }
+
+            try {
+                service.load(session, packet.id()).register(session);
+            } catch (EntityNotFoundException e) {
+                throw new CloseWithPacket(new CharacterSelectionError());
+            }
         }
 
         session.send(new CharacterSelected(session.player()));

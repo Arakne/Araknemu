@@ -35,8 +35,7 @@ import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.*;
 
 class GameSessionTest extends GameBaseCase {
     @Test
@@ -62,6 +61,11 @@ class GameSessionTest extends GameBaseCase {
         session.setPlayer(player);
 
         assertSame(player, session.player());
+
+        assertThrows(IllegalStateException.class, () -> session.setPlayer(player));
+
+        session.setPlayer(null);
+        assertNull(session.player());
     }
 
     @Test
