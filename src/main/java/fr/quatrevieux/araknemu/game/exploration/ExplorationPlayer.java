@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.exploration;
@@ -150,8 +150,8 @@ final public class ExplorationPlayer implements ExplorationCreature, Explorer, P
      * Join an exploration map
      */
     public void join(ExplorationMap map) {
-        this.map = map;
         this.cell = map.get(position().cell());
+        this.map = map;
         map.add(this);
 
         dispatch(new MapJoined(map));
@@ -164,6 +164,7 @@ final public class ExplorationPlayer implements ExplorationCreature, Explorer, P
      * @param cell The new cell
      */
     public void changeMap(ExplorationMap map, int cell) {
+        this.map = null;
         player.setPosition(
             new Position(map.id(), cell)
         );
@@ -193,6 +194,7 @@ final public class ExplorationPlayer implements ExplorationCreature, Explorer, P
         if (map != null) {
             map.remove(this);
             dispatch(new MapLeaved(map));
+            map = null;
         }
     }
 

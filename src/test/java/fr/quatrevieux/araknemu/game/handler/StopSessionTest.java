@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
@@ -90,6 +91,7 @@ class StopSessionTest extends FightBaseCase {
     @Test
     void withExplorationPlayer() throws SQLException, ContainerException {
         ExplorationPlayer player = explorationPlayer();
+        ExplorationMap map = player.map();
 
         handler.handle(session, new SessionClosed());
 
@@ -99,7 +101,7 @@ class StopSessionTest extends FightBaseCase {
         assertNull(session.account());
         assertNull(session.player());
         assertNull(session.exploration());
-        assertFalse(player.map().creatures().contains(player));
+        assertFalse(map.creatures().contains(player));
     }
 
     @Test

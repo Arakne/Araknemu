@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.request.Invitation;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
@@ -94,6 +95,8 @@ class ChallengerDialogTest extends GameBaseCase {
 
     @Test
     void accept() {
+        ExplorationMap map = initiator.map();
+
         dialog.accept();
 
         assertFalse(initiator.interactions().interacting());
@@ -104,8 +107,8 @@ class ChallengerDialogTest extends GameBaseCase {
         assertTrue(challenger.player().isFighting());
         assertFalse(challenger.player().isExploring());
 
-        assertFalse(initiator.map().creatures().contains(initiator));
-        assertFalse(initiator.map().creatures().contains(challenger));
+        assertFalse(map.creatures().contains(initiator));
+        assertFalse(map.creatures().contains(challenger));
 
         assertInstanceOf(ChallengeType.class, initiator.player().fighter().fight().type());
         assertInstanceOf(PlacementState.class, initiator.player().fighter().fight().state());
