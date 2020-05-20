@@ -39,6 +39,7 @@ import org.junit.jupiter.api.Test;
 import java.util.EnumSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SelectCharacterTest extends GameBaseCase {
     private SelectCharacter handler;
@@ -89,5 +90,13 @@ class SelectCharacterTest extends GameBaseCase {
         handler.handle(session, new ChoosePlayingCharacter(id));
 
         requestStack.assertOne(new ChannelSubscribed(EnumSet.of(ChannelType.INFO, ChannelType.PRIVATE)));
+    }
+
+    @Test
+    void cannotReselectCharacter() throws Exception {
+        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null)).id();
+
+        handlePacket(new ChoosePlayingCharacter(id));
+        assertThrows(CloseWithPacket.class, () -> handlePacket(new ChoosePlayingCharacter(id)));
     }
 }

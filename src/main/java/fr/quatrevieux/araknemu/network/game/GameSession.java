@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.network.game;
@@ -73,8 +73,14 @@ final public class GameSession extends AbstractDelegatedSession implements Sessi
 
     /**
      * Set the logged player
+     *
+     * @throws IllegalStateException When a player is already set
      */
     public void setPlayer(GamePlayer player) {
+        if (this.player != null && player != null) {
+            throw new IllegalStateException("A player is already loaded");
+        }
+
         this.player = player;
     }
 

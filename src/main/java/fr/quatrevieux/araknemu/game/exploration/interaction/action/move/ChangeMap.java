@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.exploration.interaction.action.move;
@@ -59,7 +59,9 @@ final public class ChangeMap implements BlockingAction {
 
     @Override
     public void cancel(String argument) {
-        throw new UnsupportedOperationException("Cannot cancel map change");
+        if (argument != null) {
+            throw new UnsupportedOperationException("Cannot cancel map change");
+        }
     }
 
     @Override

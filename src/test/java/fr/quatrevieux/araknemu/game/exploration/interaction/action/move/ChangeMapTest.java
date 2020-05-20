@@ -106,7 +106,6 @@ class ChangeMapTest extends GameBaseCase {
 
     @Test
     void startWillNotChangePosition() throws Exception {
-        ExplorationMap lastMap = player.map();
         Position lastPosition = player.position();
         ActionQueue queue = new ActionQueue();
 
@@ -114,7 +113,7 @@ class ChangeMapTest extends GameBaseCase {
 
         changeMap.start(queue);
 
-        assertSame(lastMap, player.map());
+        assertNull(player.map());
         assertEquals(lastPosition, player.position());
         assertTrue(queue.isBusy());
     }
@@ -130,5 +129,13 @@ class ChangeMapTest extends GameBaseCase {
         requestStack.assertLast(
             new MapData(map)
         );
+    }
+
+    @Test
+    void cancel() {
+        ChangeMap changeMap = new ChangeMap(player, map, 123, 5);
+
+        assertThrows(UnsupportedOperationException.class, () -> changeMap.cancel(""));
+        changeMap.cancel(null);
     }
 }

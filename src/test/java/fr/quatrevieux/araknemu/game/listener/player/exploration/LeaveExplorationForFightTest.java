@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.listener.player.exploration;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
@@ -47,6 +48,8 @@ class LeaveExplorationForFightTest extends FightBaseCase {
 
     @Test
     void onFightJoined() throws Exception {
+        ExplorationMap map = player.map();
+
         listener.on(
             new FightJoined(
                 createFight(false),
@@ -56,6 +59,6 @@ class LeaveExplorationForFightTest extends FightBaseCase {
 
         assertFalse(player.player().isExploring());
         assertNull(session.exploration());
-        assertFalse(player.map().creatures().contains(player));
+        assertFalse(map.creatures().contains(player));
     }
 }

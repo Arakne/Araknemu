@@ -134,6 +134,7 @@ class ExplorationPlayerTest extends GameBaseCase {
 
         assertFalse(map.creatures().contains(player));
         assertSame(map, ref.get());
+        assertNull(player.map());
     }
 
     @Test
@@ -232,7 +233,7 @@ class ExplorationPlayerTest extends GameBaseCase {
         player.unregister(session);
 
         assertNull(session.exploration());
-        assertFalse(player.map().creatures().contains(player));
+        assertFalse(map.creatures().contains(player));
     }
 
     @Test
