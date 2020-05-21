@@ -75,6 +75,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.ExplorationAc
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.challenge.ChallengeActionsFactories;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.fight.FightActionsFactories;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.MoveFactory;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.StopOnTrigger;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.ValidateOverweight;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.ValidateRestrictedDirections;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.ValidateWalkable;
@@ -381,7 +382,8 @@ final public class GameModule implements ContainerModule {
                 new MoveFactory(
                     new ValidateWalkable(),
                     new ValidateOverweight(),
-                    new ValidateRestrictedDirections()
+                    new ValidateRestrictedDirections(),
+                    new StopOnTrigger()
                 ),
                 new ChallengeActionsFactories(container.get(FightService.class)),
                 new FightActionsFactories(
