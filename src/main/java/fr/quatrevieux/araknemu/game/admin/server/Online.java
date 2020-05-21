@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * List online players on the current server
@@ -36,6 +37,43 @@ import java.util.List;
 final public class Online extends AbstractCommand {
     final private PlayerService service;
     final private ExplorationMapService mapService;
+
+    /**
+     * Store the command options
+     */
+    static class Options {
+        private int limit = 20;
+        private int skip = 0;
+        private String search = null;
+
+        public Options(List<String> arguments) {
+            for (int i = 1; i < arguments.size(); ++i) {
+                switch (arguments.get(i)) {
+                    case "--limit":
+                        limit = Integer.parseInt(arguments.get(++i));
+                        break;
+
+                    case "--skip":
+                        skip = Integer.parseInt(arguments.get(++i));
+                        break;
+
+                    default:
+                        search = arguments.get(i).toLowerCase();
+                }
+            }
+        }
+
+        /**
+         * Apply the options on the stream
+         */
+        public Stream<GamePlayer> apply(Stream<GamePlayer> stream) {
+            if (search != null) {
+                stream = stream.filter(player -> player.name().toLowerCase().contains(search));
+            }
+
+            return stream.skip(skip).limit(limit);
+        }
+    }
 
     public Online(PlayerService service, ExplorationMapService mapService) {
         this.service = service;
@@ -47,10 +85,13 @@ final public class Online extends AbstractCommand {
         builder
             .description("List online players")
             .help(formatter -> formatter
-                .synopsis("online [search]")
+                .synopsis("online [options] [search]")
                 .options("search", "Optional. Filter the online player name. Return only players containing the search term into the name.")
+                .options("--limit", "Limit the number of returned lines. By default the limit is set to 20.")
+                .options("--skip", "Skip the first lines.")
                 .example("${server} online", "List all online players")
                 .example("${server} online john", "List all online players, containing john in the name")
+                .example("${server} online --skip 3 --limit 5 j", "With pagination")
             )
             .requires(Permission.MANAGE_PLAYER)
         ;
@@ -65,11 +106,16 @@ final public class Online extends AbstractCommand {
     public void execute(AdminPerformer performer, List<String> arguments) {
         performer.success("There is {} online players", service.online().size());
 
-        service
-            .filter(player -> arguments.size() <= 1 || player.name().toLowerCase().contains(arguments.get(1).toLowerCase()))
+        Options options = new Options(arguments);
+
+        long count = options
+            .apply(service.online().stream())
             .map(this::format)
-            .forEach(performer::info)
+            .peek(performer::info)
+            .count()
         ;
+
+        pagination(performer, options, count);
     }
 
     /**
@@ -109,5 +155,22 @@ final public class Online extends AbstractCommand {
         }
 
         return "joining game";
+    }
+
+    /**
+     * Display the "next" link
+     */
+    private void pagination(AdminPerformer performer, Options options, long currentCount) {
+        if (currentCount == 0) {
+            performer.error("No results found");
+            return;
+        }
+
+        if (currentCount == options.limit) {
+            performer.info(
+                "------------------------------------------------\n" +
+                "\t<b>" + new Link().execute("${server} online --limit " + options.limit + " --skip " + (options.skip + options.limit)).text("next") + "</b>"
+            );
+        }
     }
 }
