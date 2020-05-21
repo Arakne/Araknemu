@@ -124,7 +124,44 @@ class OnlineTest extends CommandTestCase {
 
         execute("online", "not_found");
 
-        assertOutput("There is 2 online players");
+        assertOutput(
+            "There is 2 online players",
+            "No results found"
+        );
+    }
+
+    @Test
+    void limit() throws Exception {
+        explorationPlayer();
+        makeOtherPlayer();
+
+        execute("online", "--limit", "1");
+
+        assertOutput(
+            "There is 2 online players",
+            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Bob'>Bob</a></u> Feca [-4,3] in exploration - <u><a href='asfunction:onHref,ExecCmd,${player:Bob} info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Bob,true'>goto</a></u>",
+            "------------------------------------------------\n" +
+            "\t<b><u><a href='asfunction:onHref,ExecCmd,${server} online --limit 1 --skip 1,true'>next</a></u></b>"
+        );
+    }
+
+    @Test
+    void skip() throws Exception {
+        explorationPlayer();
+        makeOtherPlayer();
+
+        execute("online", "--skip", "1");
+
+        assertOutput(
+            "There is 2 online players",
+            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Other'>Other</a></u> Cra [-51,10] joining game - <u><a href='asfunction:onHref,ExecCmd,${player:Other} info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Other,true'>goto</a></u>"
+        );
+        execute("online", "--skip", "10");
+
+        assertOutput(
+            "There is 2 online players",
+            "No results found"
+        );
     }
 
     @Test
@@ -132,7 +169,7 @@ class OnlineTest extends CommandTestCase {
         String help = command.help();
 
         assertTrue(help.contains("List online players"));
-        assertTrue(help.contains("online [search]"));
+        assertTrue(help.contains("online [options] [search]"));
         assertTrue(help.contains("${server} online john"));
     }
 }
