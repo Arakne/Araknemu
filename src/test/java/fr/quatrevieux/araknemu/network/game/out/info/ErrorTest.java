@@ -87,6 +87,11 @@ class ErrorTest {
     }
 
     @Test
+    void cantCastSightBlocked() {
+        assertEquals("Im1174;", Error.cantCastSightBlocked().toString());
+    }
+
+    @Test
     void cantDoDuringFight() {
         assertEquals("Im191;", Error.cantDoDuringFight().toString());
     }

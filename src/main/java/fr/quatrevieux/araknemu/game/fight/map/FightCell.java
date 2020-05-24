@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.map;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.world.map.BattlefieldCell;
 import fr.quatrevieux.araknemu.game.world.map.MapCell;
 
 import java.util.Optional;
@@ -27,7 +28,7 @@ import java.util.Optional;
 /**
  * Cell for a fight map
  */
-public interface FightCell extends MapCell {
+public interface FightCell extends BattlefieldCell {
     @Override
     public FightMap map();
 
@@ -35,11 +36,6 @@ public interface FightCell extends MapCell {
      * Check if the cell is walkable, ignoring current fighter
      */
     public boolean walkableIgnoreFighter();
-
-    /**
-     * Check if the cell block line of sight
-     */
-    public boolean sightBlocking();
 
     /**
      * Get the fighter on the cell

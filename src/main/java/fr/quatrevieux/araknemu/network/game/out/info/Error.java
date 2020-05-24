@@ -105,6 +105,13 @@ final public class Error extends InformationMessage {
     }
 
     /**
+     * Cannot cast the spell : The sight is blocked
+     */
+    static public Error cantCastSightBlocked() {
+        return new Error(174);
+    }
+
+    /**
      * Cannot cast the spell : The cast is in invalid state
      */
     static public Error cantCastBadState() {
