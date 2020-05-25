@@ -120,6 +120,7 @@ class AdminModuleTest extends GameBaseCase {
         assertInstanceOf(Movement.class, context.command("movement"));
         assertInstanceOf(MapStats.class, context.command("mapstats"));
         assertInstanceOf(Area.class, context.command("area"));
+        assertInstanceOf(LineOfSight.class, context.command("lineofsight"));
     }
 
     @Test

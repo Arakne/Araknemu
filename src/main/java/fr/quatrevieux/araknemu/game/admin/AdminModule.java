@@ -118,6 +118,7 @@ final public class AdminModule implements ContainerModule {
                         add(new Movement(container.get(MapTemplateRepository.class)));
                         add(new MapStats(container.get(MapTemplateRepository.class)));
                         add(new Area(container.get(SpellEffectService.class)));
+                        add(new LineOfSight(container.get(MapTemplateRepository.class)));
                     }
                 })
         );
