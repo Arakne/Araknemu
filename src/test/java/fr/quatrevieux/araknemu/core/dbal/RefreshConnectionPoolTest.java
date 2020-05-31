@@ -22,12 +22,12 @@ package fr.quatrevieux.araknemu.core.dbal;
 import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
 import io.github.artsok.RepeatedIfExceptionsTest;
+import org.apache.logging.log4j.Logger;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,7 +50,7 @@ class RefreshConnectionPoolTest {
         );
 
         logger = Mockito.mock(Logger.class);
-        pool = new RefreshConnectionPool(new SimpleConnectionPool(driver, 2), 0, logger);
+        pool = new RefreshConnectionPool(new SimpleConnectionPool(driver, 2, logger), 0, logger);
         pool.initialize();
     }
 

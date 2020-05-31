@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.realm;
@@ -43,8 +43,8 @@ import fr.quatrevieux.araknemu.realm.handler.account.Authenticate;
 import fr.quatrevieux.araknemu.realm.handler.account.ConnectGame;
 import fr.quatrevieux.araknemu.realm.handler.account.ListServers;
 import fr.quatrevieux.araknemu.realm.host.HostService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * DI module for RealmService
@@ -60,7 +60,7 @@ final public class RealmModule implements ContainerModule {
     public void configure(ContainerConfigurator configurator) {
         configurator.factory(
             Logger.class,
-            container -> LoggerFactory.getLogger(RealmService.class)
+            container -> LogManager.getLogger(RealmService.class)
         );
 
         configurator.factory(

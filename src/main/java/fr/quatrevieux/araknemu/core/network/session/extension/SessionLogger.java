@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.core.network.session.extension;
@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.core.network.parser.HandlerNotFoundException;
 import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.core.network.session.Session;
 import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 import java.util.function.Consumer;
 
@@ -88,11 +88,11 @@ final public class SessionLogger implements ConfigurableSession.ExceptionHandler
     @Override
     public void handlePacket(Object packet, Consumer<Object> next) {
         if (packet instanceof SessionCreated) {
-            logger.info("[{}] Session created", session.channel().id());
+            logger.debug("[{}] Session created", session.channel().id());
         } else if (packet instanceof SessionClosed) {
-            logger.info("[{}] Session closed", session.channel().id());
+            logger.debug("[{}] Session closed", session.channel().id());
         } else {
-            logger.info("[{}] Recv << {}", session.channel().id(), packet);
+            logger.debug("[{}] Recv << {}", session.channel().id(), packet);
         }
 
         next.accept(packet);
@@ -100,7 +100,7 @@ final public class SessionLogger implements ConfigurableSession.ExceptionHandler
 
     @Override
     public Object transformPacket(Object packet) {
-        logger.info("[{}] Send >> {}", session.channel().id(), packet);
+        logger.debug("[{}] Send >> {}", session.channel().id(), packet);
 
         return packet;
     }

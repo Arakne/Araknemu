@@ -21,13 +21,11 @@ package fr.quatrevieux.araknemu.game.handler.chat;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
-import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.network.game.in.chat.SubscribeChannels;
 import fr.quatrevieux.araknemu.network.game.out.chat.ChannelSubscribed;
 import fr.quatrevieux.araknemu.network.game.out.chat.ChannelUnsubscribed;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.helpers.NOPLogger;
 
 import java.util.Arrays;
 

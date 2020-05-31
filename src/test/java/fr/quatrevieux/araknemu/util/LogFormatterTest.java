@@ -17,38 +17,20 @@
  * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.activity;
+package fr.quatrevieux.araknemu.util;
 
+import org.junit.jupiter.api.Test;
 
-import org.apache.logging.log4j.Logger;
+import static org.junit.jupiter.api.Assertions.*;
 
-import java.time.Duration;
-
-/**
- * Activity task
- *
- * @see ActivityService#execute(Task)
- */
-public interface Task {
-    /**
-     * Execute the action
-     */
-    public void execute(Logger logger);
-
-    /**
-     * The waiting delay before execute the task
-     */
-    public Duration delay();
-
-    /**
-     * Try to retry execute the task
-     *
-     * @return true if can retry, or false if cannot (or reach max tries limit)
-     */
-    public boolean retry(ActivityService service);
-
-    /**
-     * Get the task name
-     */
-    public String toString();
+class LogFormatterTest {
+    @Test
+    void format() {
+        assertEquals("Hello World !", LogFormatter.format("Hello World !"));
+        assertEquals("Hello John !", LogFormatter.format("Hello {} !", "John"));
+        assertEquals("Foo Bar", LogFormatter.format("{} {}", "Foo", "Bar"));
+        assertEquals("", LogFormatter.format(""));
+        assertEquals("abcd", LogFormatter.format("{}{}{}{}", 'a', 'b', 'c', 'd'));
+        assertThrows(IndexOutOfBoundsException.class, () -> LogFormatter.format("Hello {} !"));
+    }
 }

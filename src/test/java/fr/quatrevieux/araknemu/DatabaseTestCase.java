@@ -27,14 +27,14 @@ import fr.quatrevieux.araknemu.core.dbal.ConnectionPool;
 import fr.quatrevieux.araknemu.core.dbal.DatabaseConfiguration;
 import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
+import org.apache.logging.log4j.LogManager;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.BeforeEach;
-import org.slf4j.helpers.NOPLogger;
 
 import java.io.File;
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DatabaseTestCase extends TestCase {
     protected ConnectionPool connection;
@@ -48,7 +48,7 @@ public class DatabaseTestCase extends TestCase {
                     new Ini(new File("src/test/test_config.ini"))
                 )
             ).module(DatabaseConfiguration.class),
-            NOPLogger.NOP_LOGGER
+            LogManager.getLogger()
         ).get("realm");
 
         poolUtils = new ConnectionPoolExecutor(connection);

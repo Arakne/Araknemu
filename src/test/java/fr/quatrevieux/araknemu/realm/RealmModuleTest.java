@@ -39,6 +39,7 @@ import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.SqlLivingRepositoriesModule;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
 import fr.quatrevieux.araknemu.realm.host.HostService;
+import org.apache.logging.log4j.LogManager;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.Test;
 
@@ -58,7 +59,8 @@ class RealmModuleTest {
         Araknemu app = new Araknemu(
             configuration,
             new DefaultDatabaseHandler(
-                configuration.module(DatabaseConfiguration.class)
+                configuration.module(DatabaseConfiguration.class),
+                LogManager.getLogger()
             )
         );
 

@@ -21,12 +21,12 @@ package fr.quatrevieux.araknemu.core.dbal;
 
 import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
+import org.apache.logging.log4j.Logger;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,7 +47,7 @@ class AutoReconnectConnectionPoolTest {
         );
 
         logger = Mockito.mock(Logger.class);
-        pool = new AutoReconnectConnectionPool(new SimpleConnectionPool(driver, 1), logger);
+        pool = new AutoReconnectConnectionPool(new SimpleConnectionPool(driver, 1, logger), logger);
         pool.initialize();
     }
 

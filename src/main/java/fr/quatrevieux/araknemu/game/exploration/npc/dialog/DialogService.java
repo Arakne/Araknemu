@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.exploration.npc.dialog;
@@ -31,7 +31,7 @@ import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.dialog.LeaveDi
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.dialog.NextQuestion;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersResolver;
 import org.apache.commons.lang3.ArrayUtils;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

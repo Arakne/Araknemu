@@ -41,9 +41,9 @@ import fr.quatrevieux.araknemu.game.listener.player.exploration.LeaveExploration
 import fr.quatrevieux.araknemu.game.listener.player.fight.AttachFighter;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.util.RandomUtil;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -66,7 +66,7 @@ class FightServiceTest extends FightBaseCase {
             container.get(MapTemplateRepository.class),
             dispatcher = new DefaultListenerAggregate(),
             Arrays.asList(
-                new ChallengeBuilderFactory(container.get(FighterFactory.class), NOPLogger.NOP_LOGGER)
+                new ChallengeBuilderFactory(container.get(FighterFactory.class), container.get(Logger.class))
             ),
             Arrays.asList(
                 RaulebaqueModule::new
@@ -186,7 +186,7 @@ class FightServiceTest extends FightBaseCase {
 
     @Test
     void modules() throws ContainerException {
-        BaseBuilder builder = new BaseBuilder(service, new RandomUtil(), new ChallengeType(), NOPLogger.NOP_LOGGER);
+        BaseBuilder builder = new BaseBuilder(service, new RandomUtil(), new ChallengeType(), container.get(Logger.class));
         builder.map(container.get(ExplorationMapService.class).load(10340));
         Fight fight = builder.build(1);
 

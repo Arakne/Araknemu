@@ -38,9 +38,9 @@ import fr.quatrevieux.araknemu.game.admin.AdminModule;
 import fr.quatrevieux.araknemu.game.connector.LocalModule;
 import fr.quatrevieux.araknemu.realm.RealmModule;
 import fr.quatrevieux.araknemu.realm.RealmService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.ini4j.Ini;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,7 +60,7 @@ public class Araknemu {
     final static public String YEAR = "2017-2020";
     final static public String AUTHOR = "Vincent Quatrevieux";
 
-    final private Logger logger = LoggerFactory.getLogger(getClass());
+    final private Logger logger = LogManager.getLogger(getClass());
 
     final private Configuration configuration;
     final private DatabaseHandler database;
@@ -158,7 +158,7 @@ public class Araknemu {
             configuration,
             new DefaultDatabaseHandler(
                 configuration.module(DatabaseConfiguration.class),
-                LoggerFactory.getLogger(DatabaseHandler.class)
+                LogManager.getLogger(DatabaseHandler.class)
             )
         );
 

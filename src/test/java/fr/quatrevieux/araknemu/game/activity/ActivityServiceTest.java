@@ -21,15 +21,12 @@ package fr.quatrevieux.araknemu.game.activity;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import io.github.artsok.RepeatedIfExceptionsTest;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
 
 import java.time.Duration;
 import java.util.function.Consumer;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ActivityServiceTest extends GameBaseCase {
     private Logger logger;

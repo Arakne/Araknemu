@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.core.dbal;
 
 import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
+import org.apache.logging.log4j.LogManager;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +49,7 @@ class SimpleConnectionPoolTest {
 
     @Test
     void acquireWillCreateConnections() throws SQLException {
-        SimpleConnectionPool pool = new SimpleConnectionPool(driver, 2);
+        SimpleConnectionPool pool = new SimpleConnectionPool(driver, 2, LogManager.getLogger());
 
         Connection connection1 = pool.acquire();
         Connection connection2 = pool.acquire();
@@ -61,7 +62,7 @@ class SimpleConnectionPoolTest {
 
     @Test
     void acquireAndRelease() throws SQLException {
-        SimpleConnectionPool pool = new SimpleConnectionPool(driver, 1);
+        SimpleConnectionPool pool = new SimpleConnectionPool(driver, 1, LogManager.getLogger());
 
         try (Connection connection = pool.acquire()) {
             pool.release(connection);
@@ -71,7 +72,7 @@ class SimpleConnectionPoolTest {
 
     @Test
     void releasePoolFull() throws SQLException {
-        SimpleConnectionPool pool = new SimpleConnectionPool(driver, 1);
+        SimpleConnectionPool pool = new SimpleConnectionPool(driver, 1, LogManager.getLogger());
 
         Connection connection1 = pool.acquire();
         Connection connection2 = pool.acquire();
@@ -85,7 +86,7 @@ class SimpleConnectionPoolTest {
 
     @Test
     void releaseClosedConnection() throws SQLException {
-        SimpleConnectionPool pool = new SimpleConnectionPool(driver, 1);
+        SimpleConnectionPool pool = new SimpleConnectionPool(driver, 1, LogManager.getLogger());
 
         Connection connection = pool.acquire();
         connection.close();
@@ -97,7 +98,7 @@ class SimpleConnectionPoolTest {
 
     @Test
     void execute() throws SQLException {
-        SimpleConnectionPool pool = new SimpleConnectionPool(driver, 1);
+        SimpleConnectionPool pool = new SimpleConnectionPool(driver, 1, LogManager.getLogger());
 
         assertTrue(pool.execute((ConnectionPool.Task<Boolean>) connection -> {
             try (Statement stmt = connection.createStatement()) {
@@ -129,7 +130,7 @@ class SimpleConnectionPoolTest {
 
     @Test
     void stop() throws SQLException {
-        SimpleConnectionPool pool = new SimpleConnectionPool(driver, 2);
+        SimpleConnectionPool pool = new SimpleConnectionPool(driver, 2, LogManager.getLogger());
 
         assertEquals(0, pool.size());
 

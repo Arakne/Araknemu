@@ -43,9 +43,9 @@ import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
 import io.github.artsok.RepeatedIfExceptionsTest;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -79,7 +79,7 @@ class ActiveStateTest extends GameBaseCase {
                 new PlacementState(false),
                 state = new ActiveState()
             ),
-            NOPLogger.NOP_LOGGER
+            container.get(Logger.class)
         );
 
         fight.nextState();

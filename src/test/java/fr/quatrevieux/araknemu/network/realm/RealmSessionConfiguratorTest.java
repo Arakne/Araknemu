@@ -29,10 +29,10 @@ import fr.quatrevieux.araknemu.network.realm.in.DofusVersion;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
 import fr.quatrevieux.araknemu.realm.handler.CheckDofusVersion;
 import fr.quatrevieux.araknemu.realm.handler.StartSession;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 

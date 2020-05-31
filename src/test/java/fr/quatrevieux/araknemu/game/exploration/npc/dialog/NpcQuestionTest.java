@@ -27,10 +27,10 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersResolver;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.VariableResolver;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -51,7 +51,7 @@ class NpcQuestionTest extends GameBaseCase {
 
     @Test
     void id() {
-        assertEquals(3596, new NpcQuestion(repository.get(3596), Collections.emptyList(), new ParametersResolver(new VariableResolver[0], NOPLogger.NOP_LOGGER)).id());
+        assertEquals(3596, new NpcQuestion(repository.get(3596), Collections.emptyList(), new ParametersResolver(new VariableResolver[0], container.get(Logger.class))).id());
     }
 
     @Test
@@ -64,7 +64,7 @@ class NpcQuestionTest extends GameBaseCase {
 
     @Test
     void check() throws SQLException, ContainerException {
-        assertTrue(new NpcQuestion(repository.get(3596), Collections.emptyList(), new ParametersResolver(new VariableResolver[0], NOPLogger.NOP_LOGGER)).check(explorationPlayer()));
+        assertTrue(new NpcQuestion(repository.get(3596), Collections.emptyList(), new ParametersResolver(new VariableResolver[0], container.get(Logger.class))).check(explorationPlayer()));
     }
 
     @Test
@@ -84,7 +84,7 @@ class NpcQuestionTest extends GameBaseCase {
         responses.add(new Response(1, Arrays.asList(a1)));
         responses.add(new Response(2, Arrays.asList(a2, a3)));
 
-        NpcQuestion question = new NpcQuestion(repository.get(3596), responses, new ParametersResolver(new VariableResolver[0], NOPLogger.NOP_LOGGER));
+        NpcQuestion question = new NpcQuestion(repository.get(3596), responses, new ParametersResolver(new VariableResolver[0], container.get(Logger.class)));
 
         Collection<Response> actual = question.responses(player);
 

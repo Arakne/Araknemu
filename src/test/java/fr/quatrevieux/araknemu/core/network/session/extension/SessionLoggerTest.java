@@ -27,10 +27,10 @@ import fr.quatrevieux.araknemu.core.network.session.Session;
 import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.in.Ping;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
 
 class SessionLoggerTest {
     private Session session;
@@ -56,28 +56,28 @@ class SessionLoggerTest {
     void receivePacket() {
         session.receive("my packet");
 
-        Mockito.verify(logger).info("[{}] Recv << {}", 1L, "my packet");
+        Mockito.verify(logger).debug("[{}] Recv << {}", 1L, "my packet");
     }
 
     @Test
     void sessionClosed() {
         session.receive(new SessionClosed());
 
-        Mockito.verify(logger).info("[{}] Session closed", 1L);
+        Mockito.verify(logger).debug("[{}] Session closed", 1L);
     }
 
     @Test
     void sessionCreated() {
         session.receive(new SessionCreated());
 
-        Mockito.verify(logger).info("[{}] Session created", 1L);
+        Mockito.verify(logger).debug("[{}] Session created", 1L);
     }
 
     @Test
     void sendPacket() {
         session.send("my packet");
 
-        Mockito.verify(logger).info("[{}] Send >> {}", 1L, "my packet");
+        Mockito.verify(logger).debug("[{}] Send >> {}", 1L, "my packet");
     }
 
     @Test

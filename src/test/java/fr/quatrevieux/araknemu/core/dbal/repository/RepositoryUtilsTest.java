@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.core.config.IniDriver;
 import fr.quatrevieux.araknemu.core.dbal.DatabaseConfiguration;
 import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
+import org.apache.logging.log4j.LogManager;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -77,7 +78,8 @@ class RepositoryUtilsTest {
                     new IniDriver(
                         new Ini(new File("src/test/test_config.ini"))
                     )
-                ).module(DatabaseConfiguration.class)
+                ).module(DatabaseConfiguration.class),
+                LogManager.getLogger()
             ).get("realm")
         );
 

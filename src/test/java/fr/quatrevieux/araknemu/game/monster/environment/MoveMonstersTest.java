@@ -29,9 +29,9 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 import java.time.Duration;
@@ -73,7 +73,7 @@ class MoveMonstersTest extends GameBaseCase {
 
     @Test
     void executeWithoutMonsters() {
-        task.execute(NOPLogger.NOP_LOGGER);
+        task.execute(container.get(Logger.class));
     }
 
     @Test
@@ -87,7 +87,7 @@ class MoveMonstersTest extends GameBaseCase {
         MonsterGroup group = container.get(MonsterEnvironmentService.class).byMap(10340).stream().findFirst().get().available().get(0);
         ExplorationMapCell lastCell = group.cell();
 
-        task.execute(NOPLogger.NOP_LOGGER);
+        task.execute(container.get(Logger.class));
 
         assertNotEquals(lastCell, group.cell());
         requestStack.assertLast(new GameActionResponse("", ActionType.MOVE, group.id(), "ab-fbVha3"));
@@ -103,7 +103,7 @@ class MoveMonstersTest extends GameBaseCase {
 
         MonsterGroup group = container.get(MonsterEnvironmentService.class).byMap(10340).stream().findFirst().get().available().get(0);
 
-        task.execute(NOPLogger.NOP_LOGGER);
+        task.execute(container.get(Logger.class));
 
         assertEquals(map.get(123), group.cell());
         requestStack.assertEmpty();
@@ -120,7 +120,7 @@ class MoveMonstersTest extends GameBaseCase {
         LivingMonsterGroupPosition position = container.get(MonsterEnvironmentService.class).byMap(10340).stream().findFirst().get();
         Collection<ExplorationMapCell> baseCells = position.available().stream().map(MonsterGroup::cell).collect(Collectors.toList());
 
-        task.execute(NOPLogger.NOP_LOGGER);
+        task.execute(container.get(Logger.class));
 
         // Diff on current cells
         baseCells.removeAll(position.available().stream().map(MonsterGroup::cell).collect(Collectors.toList()));
@@ -141,7 +141,7 @@ class MoveMonstersTest extends GameBaseCase {
         for (int i = 0; i < 100; ++i) {
             ExplorationMapCell lastCell = group.cell();
 
-            task.execute(NOPLogger.NOP_LOGGER);
+            task.execute(container.get(Logger.class));
 
             if (!group.cell().equals(lastCell)) {
                 ++moveCount;

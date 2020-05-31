@@ -28,7 +28,7 @@ import fr.quatrevieux.araknemu.game.admin.exception.ExceptionHandler;
 import fr.quatrevieux.araknemu.game.listener.admin.RemoveAdminSession;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.out.basic.admin.CommandResult;
-import org.slf4j.helpers.MessageFormatter;
+import fr.quatrevieux.araknemu.util.LogFormatter;
 
 import java.util.Optional;
 import java.util.Set;
@@ -80,7 +80,7 @@ final public class AdminUser implements AdminPerformer {
     @Override
     public void log(LogType type, String message, Object... arguments) {
         player.send(
-            new CommandResult(type, MessageFormatter.arrayFormat(message, arguments).getMessage())
+            new CommandResult(type, LogFormatter.format(message, arguments))
         );
     }
 

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ This file is part of Araknemu.
+  ~
+  ~ Araknemu is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Lesser General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Araknemu is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Lesser General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser General Public License
+  ~ along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
+  ~
+  ~ Copyright (c) 2017-2020 Vincent Quatrevieux
+  -->
+
+<Configuration status="WARN">
+    <Properties>
+        <Property name="FILE_LOG_PATTERN">%d %p %c{1.} [%t] %m%n</Property>
+    </Properties>
+
+    <Appenders>
+        <RollingFile name="errors" fileName="logs/errors.log"
+                     filePattern="logs/$${date:yyyy-MM}/errors-%d{MM-dd-yyyy}-%i.log.gz"
+                     append="true"
+        >
+            <PatternLayout pattern="${FILE_LOG_PATTERN}" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="250 MB"/>
+            </Policies>
+        </RollingFile>
+
+        <RollingFile name="game" fileName="logs/game.log"
+                     filePattern="logs/$${date:yyyy-MM}/game-%d{MM-dd-yyyy}-%i.log.gz"
+                     append="true"
+        >
+            <PatternLayout pattern="${FILE_LOG_PATTERN}" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="250 MB"/>
+            </Policies>
+
+            <Filters>
+                <ThresholdFilter level="TRACE"/>
+                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+        </RollingFile>
+
+        <RollingFile name="realm" fileName="logs/realm.log"
+                     filePattern="logs/$${date:yyyy-MM}/realm-%d{MM-dd-yyyy}-%i.log.gz"
+                     append="true"
+        >
+            <PatternLayout pattern="${FILE_LOG_PATTERN}" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="250 MB"/>
+            </Policies>
+
+            <Filters>
+                <ThresholdFilter level="TRACE"/>
+                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+        </RollingFile>
+
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %p %m%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="fr.quatrevieux.araknemu.game.GameService">
+            <AppenderRef ref="game" level="TRACE" />
+        </Logger>
+        <Logger name="fr.quatrevieux.araknemu.realm.RealmService">
+            <AppenderRef ref="realm" level="TRACE" />
+        </Logger>
+        <Root level="INFO">
+            <AppenderRef ref="STDOUT" level="TRACE"/>
+            <AppenderRef ref="errors" level="WARN" />
+        </Root>
+    </Loggers>
+</Configuration>

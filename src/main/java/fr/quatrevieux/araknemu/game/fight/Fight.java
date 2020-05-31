@@ -38,7 +38,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.FightTurnList;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 import org.apache.commons.lang3.time.StopWatch;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 import java.time.Duration;
 import java.util.ArrayList;

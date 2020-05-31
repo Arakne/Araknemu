@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
-import org.slf4j.helpers.MessageFormatter;
+import fr.quatrevieux.araknemu.util.LogFormatter;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -75,7 +75,7 @@ abstract public class CommandTestCase extends GameBaseCase {
             logs.add(
                 new Entry(
                     type,
-                    MessageFormatter.arrayFormat(message, arguments).getMessage()
+                    LogFormatter.format(message, arguments)
                 )
             );
         }

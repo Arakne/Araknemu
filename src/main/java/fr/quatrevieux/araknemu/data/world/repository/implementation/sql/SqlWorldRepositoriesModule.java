@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
@@ -40,7 +40,7 @@ import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
 import fr.quatrevieux.araknemu.data.world.repository.monster.*;
 import fr.quatrevieux.araknemu.data.world.transformer.*;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * DI module for world repositories
@@ -51,7 +51,7 @@ final public class SqlWorldRepositoriesModule implements ContainerModule {
     public SqlWorldRepositoriesModule(ConnectionPool connection) {
         this.executor = new LoggedQueryExecutor(
             new ConnectionPoolExecutor(connection),
-            LoggerFactory.getLogger(SqlWorldRepositoriesModule.class)
+            LogManager.getLogger(SqlWorldRepositoriesModule.class)
         );
     }
 

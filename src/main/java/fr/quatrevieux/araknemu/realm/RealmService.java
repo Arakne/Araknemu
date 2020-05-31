@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.realm;
@@ -22,17 +22,18 @@ package fr.quatrevieux.araknemu.realm;
 import fr.quatrevieux.araknemu.core.BootException;
 import fr.quatrevieux.araknemu.core.Service;
 import fr.quatrevieux.araknemu.core.network.Server;
-import org.slf4j.Logger;
+import fr.quatrevieux.araknemu.network.realm.RealmSession;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Service for handling server authentication
  */
 final public class RealmService implements Service {
     final private RealmConfiguration configuration;
-    final private Server server;
+    final private Server<RealmSession> server;
     final private Logger logger;
 
-    public RealmService(RealmConfiguration configuration, Server server, Logger logger) {
+    public RealmService(RealmConfiguration configuration, Server<RealmSession> server, Logger logger) {
         this.configuration = configuration;
         this.server = server;
         this.logger = logger;
@@ -40,11 +41,15 @@ final public class RealmService implements Service {
 
     @Override
     public void boot() throws BootException {
+        logger.info("Starting realm server on port {}", configuration.port());
+
         try {
             server.start();
         } catch (Exception e) {
             throw new BootException("Cannot start realm server", e);
         }
+
+        logger.info("Realm server started");
     }
 
     @Override

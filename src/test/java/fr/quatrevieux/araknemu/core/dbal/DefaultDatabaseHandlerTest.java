@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.core.dbal;
 import fr.quatrevieux.araknemu._test.TestCase;
 import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
+import org.apache.logging.log4j.LogManager;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,7 +45,8 @@ class DefaultDatabaseHandlerTest extends TestCase {
                 new IniDriver(
                     new Ini(new File("src/test/test_config.ini"))
                 )
-            ).module(DatabaseConfiguration.class)
+            ).module(DatabaseConfiguration.class),
+            LogManager.getLogger()
         );
     }
 
