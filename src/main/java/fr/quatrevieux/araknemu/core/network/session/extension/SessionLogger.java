@@ -27,6 +27,8 @@ import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.core.network.session.Session;
 import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 
 import java.util.function.Consumer;
 
@@ -51,6 +53,11 @@ final public class SessionLogger implements ConfigurableSession.ExceptionHandler
         }
     }
 
+    final static private Marker RECEIVED_MARKER = MarkerManager.getMarker("RECEIVED");
+    final static private Marker SENT_MARKER = MarkerManager.getMarker("SENT");
+    final static private Marker SESSION_MARKER = MarkerManager.getMarker("SESSION");
+    final static private Marker NETWORK_ERROR_MARKER = MarkerManager.getMarker("NETWORK_ERROR");
+
     final private Session session;
     final private Logger logger;
 
@@ -71,15 +78,15 @@ final public class SessionLogger implements ConfigurableSession.ExceptionHandler
         }
 
         if (cause instanceof HandlerNotFoundException) {
-            logger.warn(cause.getMessage());
+            logger.warn(NETWORK_ERROR_MARKER, cause.getMessage());
 
             return false;
         }
 
-        logger.error("[{}] Uncaught exception", session.channel().id(), cause);
+        logger.error(NETWORK_ERROR_MARKER, "[{}] Uncaught exception", session, cause);
 
         if (cause.getCause() != null) {
-            logger.error("[{}] Cause : {}", session.channel().id(), cause.getCause());
+            logger.error(NETWORK_ERROR_MARKER, "[{}] Cause : {}", session, cause.getCause());
         }
 
         return true;
@@ -88,11 +95,11 @@ final public class SessionLogger implements ConfigurableSession.ExceptionHandler
     @Override
     public void handlePacket(Object packet, Consumer<Object> next) {
         if (packet instanceof SessionCreated) {
-            logger.debug("[{}] Session created", session.channel().id());
+            logger.debug(SESSION_MARKER, "[{}] Session created", session);
         } else if (packet instanceof SessionClosed) {
-            logger.debug("[{}] Session closed", session.channel().id());
+            logger.debug(SESSION_MARKER, "[{}] Session closed", session);
         } else {
-            logger.debug("[{}] Recv << {}", session.channel().id(), packet);
+            logger.debug(RECEIVED_MARKER, "[{}] Recv << {}", session, packet);
         }
 
         next.accept(packet);
@@ -100,7 +107,7 @@ final public class SessionLogger implements ConfigurableSession.ExceptionHandler
 
     @Override
     public Object transformPacket(Object packet) {
-        logger.debug("[{}] Send >> {}", session.channel().id(), packet);
+        logger.debug(SENT_MARKER, "[{}] Send >> {}", session, packet);
 
         return packet;
     }

@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.network.realm;
 import fr.quatrevieux.araknemu.core.network.Channel;
 import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
+import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,5 +56,16 @@ class RealmSessionTest {
         new RealmSession(new ConfigurableSession(channel)).send("my message");
 
         assertEquals("my message", channel.getMessages().lastElement());
+    }
+
+    @Test
+    void string() {
+        RealmSession session = new RealmSession(new ConfigurableSession(new DummyChannel()));
+
+        assertEquals("ip=127.0.0.1", session.toString());
+
+        session.attach(new AuthenticationAccount(new Account(1), null));
+
+        assertEquals("ip=127.0.0.1; account=1", session.toString());
     }
 }

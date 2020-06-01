@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.core.network.util;
 
 import fr.quatrevieux.araknemu.core.network.Channel;
 
+import java.net.InetSocketAddress;
 import java.util.Stack;
 
 /**
@@ -66,5 +67,10 @@ final public class DummyChannel implements Channel {
 
     void setServer(DummyServer<?> server) {
         this.server = server;
+    }
+
+    @Override
+    public InetSocketAddress address() {
+        return new InetSocketAddress("127.0.0.1", 0);
     }
 }

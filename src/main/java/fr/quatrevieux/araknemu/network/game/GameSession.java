@@ -139,4 +139,27 @@ final public class GameSession extends AbstractDelegatedSession implements Sessi
             fighter.dispatcher().dispatch(event);
         }
     }
+
+    @Override
+    public String toString() {
+        String str = "ip=" + channel().address().getAddress().getHostAddress();
+
+        if (account != null) {
+            str += "; account=" + account.id();
+        }
+
+        if (player != null) {
+            str += "; player=" + player.id() + "; position=" + player.position();
+        }
+
+        if (exploration != null) {
+            str += "; state=exploring";
+        }
+
+        if (fighter != null) {
+            str += "; state=fighting";
+        }
+
+        return str;
+    }
 }
