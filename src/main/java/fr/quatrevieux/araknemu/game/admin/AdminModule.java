@@ -43,6 +43,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Arrays;
 
@@ -68,7 +69,8 @@ final public class AdminModule implements ContainerModule {
                     container.get(AccountContextResolver.class),
                     container.get(DebugContextResolver.class),
                     container.get(ServerContextResolver.class)
-                )
+                ),
+                LogManager.getLogger(AdminService.class)
             )
         );
 

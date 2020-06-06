@@ -27,8 +27,12 @@ import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandPermissionsException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
 import fr.quatrevieux.araknemu.network.game.out.basic.admin.CommandResult;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.sql.SQLException;
 import java.util.EnumSet;
@@ -37,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AdminUserTest extends GameBaseCase {
     private AdminUser user;
+    private Logger logger;
 
     @Override
     @BeforeEach
@@ -45,7 +50,8 @@ class AdminUserTest extends GameBaseCase {
 
         user = new AdminUser(
             container.get(AdminService.class),
-            gamePlayer()
+            gamePlayer(),
+            logger = Mockito.mock(Logger.class)
         );
 
         gamePlayer().account().grant(Permission.ACCESS);
@@ -67,6 +73,8 @@ class AdminUserTest extends GameBaseCase {
         requestStack.assertLast(
             new CommandResult(LogType.SUCCESS, "My message")
         );
+
+        Mockito.verify(logger).log(Level.INFO, AdminPerformer.OUTPUT_MARKER, "[{}; type={}] {}", user, LogType.SUCCESS, "My message");
     }
 
     @Test
@@ -76,6 +84,8 @@ class AdminUserTest extends GameBaseCase {
         requestStack.assertLast(
             new CommandResult(LogType.SUCCESS, "Hello John !")
         );
+
+        Mockito.verify(logger).log(Level.INFO, AdminPerformer.OUTPUT_MARKER, "[{}; type={}] {}", user, LogType.SUCCESS, "Hello John !");
     }
 
     @Test
@@ -94,6 +104,8 @@ class AdminUserTest extends GameBaseCase {
         requestStack.assertLast(
             new CommandResult(LogType.DEFAULT, "Hello John !")
         );
+
+        Mockito.verify(logger).log(Level.INFO, AdminPerformer.OUTPUT_MARKER, "[{}; type={}] {}", user, LogType.DEFAULT, "Hello John !");
     }
 
     @Test
@@ -103,6 +115,8 @@ class AdminUserTest extends GameBaseCase {
         requestStack.assertLast(
             new CommandResult(LogType.SUCCESS, "Hello John !")
         );
+
+        Mockito.verify(logger).log(Level.INFO, AdminPerformer.OUTPUT_MARKER, "[{}; type={}] {}", user, LogType.SUCCESS, "Hello John !");
     }
 
     @Test
@@ -112,21 +126,26 @@ class AdminUserTest extends GameBaseCase {
         requestStack.assertLast(
             new CommandResult(LogType.ERROR, "Hello John !")
         );
+
+        Mockito.verify(logger).log(Level.INFO, AdminPerformer.OUTPUT_MARKER, "[{}; type={}] {}", user, LogType.ERROR, "Hello John !");
     }
 
     @Test
     void executeNoPermissions() {
         assertThrows(CommandPermissionsException.class, () -> user.execute("info"));
+        Mockito.verify(logger).log(Level.INFO, AdminPerformer.EXECUTE_MARKER, "[{}] {}", user, "info");
     }
 
     @Test
     void executeCommandNotFound() {
         assertThrows(CommandNotFoundException.class, () -> user.execute("not_found_command"));
+        Mockito.verify(logger).log(Level.INFO, AdminPerformer.EXECUTE_MARKER, "[{}] {}", user, "not_found_command");
     }
 
     @Test
     void executeContextNotFound() {
         assertThrows(ContextNotFoundException.class, () -> user.execute("$not_found info"));
+        Mockito.verify(logger).log(Level.INFO, AdminPerformer.EXECUTE_MARKER, "[{}] {}", user, "$not_found info");
     }
 
     @Test
@@ -136,6 +155,7 @@ class AdminUserTest extends GameBaseCase {
         requestStack.assertLast(
             new CommandResult(LogType.DEFAULT, "Hello World !")
         );
+        Mockito.verify(logger).log(Level.INFO, AdminPerformer.EXECUTE_MARKER, "[{}] {}", user, "echo Hello World !");
     }
 
     @Test
@@ -157,5 +177,10 @@ class AdminUserTest extends GameBaseCase {
         user.send("test");
 
         requestStack.assertLast("test");
+    }
+
+    @Test
+    void string() {
+        assertEquals("account=1; player=1", user.toString());
     }
 }

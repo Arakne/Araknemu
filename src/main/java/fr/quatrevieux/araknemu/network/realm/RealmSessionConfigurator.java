@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketParser;
 import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.MarkerManager;
 
 /**
  * Configure session for realm
@@ -46,7 +47,7 @@ final public class RealmSessionConfigurator implements SessionConfigurator.Confi
     @Override
     public void configure(ConfigurableSession inner, RealmSession session) {
         inner.addExceptionHandler(RateLimitException.class, cause -> {
-            logger.error("[{}] RateLimit : close session", session.channel().id());
+            logger.error(MarkerManager.getMarker("RATE_LIMIT"), "[{}] RateLimit : close session", session);
             session.close();
 
             return true;

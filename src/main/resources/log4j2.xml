@@ -67,6 +67,22 @@
             </Filters>
         </RollingFile>
 
+        <RollingFile name="admin" fileName="logs/admin.log"
+                     filePattern="logs/$${date:yyyy-MM}/admin-%d{MM-dd-yyyy}-%i.log.gz"
+                     append="true"
+        >
+            <PatternLayout pattern="${FILE_LOG_PATTERN}" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="250 MB"/>
+            </Policies>
+
+            <Filters>
+                <ThresholdFilter level="TRACE"/>
+                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+        </RollingFile>
+
         <Console name="STDOUT" target="SYSTEM_OUT">
             <PatternLayout pattern="%d %p %m%n"/>
         </Console>
@@ -77,6 +93,9 @@
         </Logger>
         <Logger name="fr.quatrevieux.araknemu.realm.RealmService">
             <AppenderRef ref="realm" level="TRACE" />
+        </Logger>
+        <Logger name="fr.quatrevieux.araknemu.game.admin.AdminService">
+            <AppenderRef ref="admin" level="INFO" />
         </Logger>
         <Root level="INFO">
             <AppenderRef ref="STDOUT" level="TRACE"/>

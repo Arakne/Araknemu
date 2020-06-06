@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.game.admin;
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 
 import java.util.Optional;
 import java.util.Set;
@@ -30,6 +32,9 @@ import java.util.Set;
  * Perform admin operations
  */
 public interface AdminPerformer extends AdminLogger {
+    final static public Marker EXECUTE_MARKER = MarkerManager.getMarker("EXECUTE");
+    final static public Marker OUTPUT_MARKER = MarkerManager.getMarker("OUTPUT");
+
     /**
      * Parse and execute a command
      *

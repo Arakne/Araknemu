@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.realm.RealmBaseCase;
 import fr.quatrevieux.araknemu.realm.handler.CheckDofusVersion;
 import fr.quatrevieux.araknemu.realm.handler.StartSession;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.MarkerManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -101,6 +102,6 @@ class RealmSessionConfiguratorTest extends RealmBaseCase {
         realmSession.exception(new RateLimitException());
 
         assertFalse(session.isAlive());
-        Mockito.verify(logger).error("[{}] RateLimit : close session", session.channel().id());
+        Mockito.verify(logger).error(MarkerManager.getMarker("RATE_LIMIT"), "[{}] RateLimit : close session", realmSession);
     }
 }

@@ -29,6 +29,8 @@ import fr.quatrevieux.araknemu.game.listener.admin.RemoveAdminSession;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.out.basic.admin.CommandResult;
 import fr.quatrevieux.araknemu.util.LogFormatter;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 import java.util.Set;
@@ -39,14 +41,16 @@ import java.util.Set;
 final public class AdminUser implements AdminPerformer {
     final private AdminService service;
     final private GamePlayer player;
+    final private Logger logger;
 
     final private AdminUserContext context;
     final private AdminUserCommandParser parser;
     final private ExceptionHandler errorHandler;
 
-    public AdminUser(AdminService service, GamePlayer player) throws ContextException {
+    public AdminUser(AdminService service, GamePlayer player, Logger logger) throws ContextException {
         this.service = service;
         this.player = player;
+        this.logger = logger;
 
         this.context = new AdminUserContext(service, service.context("player", player));
         this.parser = new AdminUserCommandParser(this);
@@ -69,6 +73,8 @@ final public class AdminUser implements AdminPerformer {
 
     @Override
     public void execute(String command) throws AdminException {
+        logger.log(Level.INFO, EXECUTE_MARKER, "[{}] {}", this, command);
+
         execute(parser.parse(command));
     }
 
@@ -79,9 +85,10 @@ final public class AdminUser implements AdminPerformer {
 
     @Override
     public void log(LogType type, String message, Object... arguments) {
-        player.send(
-            new CommandResult(type, LogFormatter.format(message, arguments))
-        );
+        final String out = LogFormatter.format(message, arguments);
+
+        logger.log(Level.INFO, OUTPUT_MARKER, "[{}; type={}] {}", this, type, out);
+        player.send(new CommandResult(type, out));
     }
 
     /**
@@ -119,6 +126,11 @@ final public class AdminUser implements AdminPerformer {
      */
     public GamePlayer player() {
         return player;
+    }
+
+    @Override
+    public String toString() {
+        return "account=" + player.account().id() + "; player=" + player.id();
     }
 
     private void execute(CommandParser.Arguments arguments) throws AdminException {

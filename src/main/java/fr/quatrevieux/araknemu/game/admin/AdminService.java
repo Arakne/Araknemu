@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,11 +37,13 @@ import java.util.stream.Collectors;
 final public class AdminService {
     final private Context globalContext;
     final private Map<String, ContextResolver> resolvers;
+    final private Logger logger;
 
     final private Map<Integer, AdminUser> usersById = new HashMap<>();
 
-    public AdminService(Context globalContext, Collection<ContextResolver> resolvers) {
+    public AdminService(Context globalContext, Collection<ContextResolver> resolvers, Logger logger) {
         this.globalContext = globalContext;
+        this.logger = logger;
         this.resolvers = resolvers
             .stream()
             .collect(
@@ -61,7 +64,7 @@ final public class AdminService {
         if (!usersById.containsKey(player.id())) {
             usersById.put(
                 player.id(),
-                new AdminUser(this, player)
+                new AdminUser(this, player, logger)
             );
         }
 
