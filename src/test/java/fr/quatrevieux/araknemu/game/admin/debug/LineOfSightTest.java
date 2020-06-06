@@ -23,16 +23,12 @@ import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepo
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.admin.AdminService;
 import fr.quatrevieux.araknemu.game.admin.AdminUser;
-import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
-import fr.quatrevieux.araknemu.util.Base64;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 class LineOfSightTest extends GameBaseCase {
     private LineOfSight command;
