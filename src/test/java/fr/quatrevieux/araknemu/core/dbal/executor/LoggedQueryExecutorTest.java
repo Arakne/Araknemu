@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.core.dbal.executor;
 
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
 
 import java.sql.SQLException;
 

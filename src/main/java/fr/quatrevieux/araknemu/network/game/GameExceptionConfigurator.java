@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.network.game;
@@ -24,7 +24,8 @@ import fr.quatrevieux.araknemu.core.network.exception.RateLimitException;
 import fr.quatrevieux.araknemu.core.network.exception.WritePacket;
 import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.MarkerManager;
 
 /**
  * Configure base exception for a game session
@@ -51,7 +52,7 @@ final public class GameExceptionConfigurator implements SessionConfigurator.Conf
         });
 
         inner.addExceptionHandler(RateLimitException.class, cause -> {
-            logger.error("[{}] RateLimit : close session", session.channel().id());
+            logger.error(MarkerManager.getMarker("RATE_LIMIT"), "[{}] RateLimit : close session", session);
             session.close();
 
             return true;

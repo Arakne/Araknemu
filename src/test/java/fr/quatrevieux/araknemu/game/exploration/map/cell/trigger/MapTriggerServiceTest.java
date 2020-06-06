@@ -35,11 +35,10 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.CellActi
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.teleport.Teleport;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
 import fr.quatrevieux.araknemu.game.listener.map.PerformCellActions;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -111,7 +110,7 @@ class MapTriggerServiceTest extends GameBaseCase {
         dataSet.pushTrigger(new MapTrigger(10300, 456, 0, "13002,125", "-1"));
         dataSet.pushTrigger(new MapTrigger(10301, 145, 0, "13000,235", "-1"));
 
-        service.preload(NOPLogger.NOP_LOGGER);
+        service.preload(container.get(Logger.class));
         Collection<CellAction> actions = service.forMap(container.get(ExplorationMapService.class).load(10300));
 
         assertCount(2, actions);

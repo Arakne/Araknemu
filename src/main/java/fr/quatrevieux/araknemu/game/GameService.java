@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game;
@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.core.network.Server;
 import fr.quatrevieux.araknemu.game.event.GameStopped;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.realm.host.GameHost;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 

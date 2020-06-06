@@ -37,11 +37,10 @@ import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import io.github.artsok.RepeatedIfExceptionsTest;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 import java.time.Duration;
@@ -161,7 +160,7 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
         dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10300, 123), 2));
         dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10300, 125), 2));
 
-        service.preload(NOPLogger.NOP_LOGGER);
+        service.preload(container.get(Logger.class));
         assertEquals(3, service.groups().count());
     }
 }

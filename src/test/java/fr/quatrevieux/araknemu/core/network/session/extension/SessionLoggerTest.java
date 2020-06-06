@@ -27,10 +27,11 @@ import fr.quatrevieux.araknemu.core.network.session.Session;
 import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.network.game.in.Ping;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.MarkerManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
 
 class SessionLoggerTest {
     private Session session;
@@ -56,28 +57,28 @@ class SessionLoggerTest {
     void receivePacket() {
         session.receive("my packet");
 
-        Mockito.verify(logger).info("[{}] Recv << {}", 1L, "my packet");
+        Mockito.verify(logger).debug(MarkerManager.getMarker("RECEIVED"), "[{}] Recv << {}", session, "my packet");
     }
 
     @Test
     void sessionClosed() {
         session.receive(new SessionClosed());
 
-        Mockito.verify(logger).info("[{}] Session closed", 1L);
+        Mockito.verify(logger).debug(MarkerManager.getMarker("SESSION"), "[{}] Session closed", session);
     }
 
     @Test
     void sessionCreated() {
         session.receive(new SessionCreated());
 
-        Mockito.verify(logger).info("[{}] Session created", 1L);
+        Mockito.verify(logger).debug(MarkerManager.getMarker("SESSION"), "[{}] Session created", session);
     }
 
     @Test
     void sendPacket() {
         session.send("my packet");
 
-        Mockito.verify(logger).info("[{}] Send >> {}", 1L, "my packet");
+        Mockito.verify(logger).debug(MarkerManager.getMarker("SENT"), "[{}] Send >> {}", session, "my packet");
     }
 
     @Test
@@ -85,7 +86,7 @@ class SessionLoggerTest {
         Exception e = new Exception("my error");
         session.exception(e);
 
-        Mockito.verify(logger).error("[{}] Uncaught exception", 1L, e);
+        Mockito.verify(logger).error(MarkerManager.getMarker("NETWORK_ERROR"), "[{}] Uncaught exception", session, e);
     }
 
     @Test
@@ -94,14 +95,14 @@ class SessionLoggerTest {
         Exception e = new Exception("my error", previous);
         session.exception(e);
 
-        Mockito.verify(logger).error("[{}] Uncaught exception", 1L, e);
-        Mockito.verify(logger).error("[{}] Cause : {}", 1L, previous);
+        Mockito.verify(logger).error(MarkerManager.getMarker("NETWORK_ERROR"), "[{}] Uncaught exception", session, e);
+        Mockito.verify(logger).error(MarkerManager.getMarker("NETWORK_ERROR"), "[{}] Cause : {}", session, previous);
     }
 
     @Test
     void exceptionHandlerNotFound() {
         session.exception(new HandlerNotFoundException(new Ping()));
 
-        Mockito.verify(logger).warn("Cannot found handler for packet Ping");
+        Mockito.verify(logger).warn(MarkerManager.getMarker("NETWORK_ERROR"), "Cannot found handler for packet Ping");
     }
 }

@@ -47,10 +47,10 @@ import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.RemoveSprite;
 import io.github.artsok.RepeatedIfExceptionsTest;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -84,7 +84,7 @@ class PlacementStateTest extends FightBaseCase {
                 state = new PlacementState(false),
                 new ActiveState()
             ),
-            NOPLogger.NOP_LOGGER
+            container.get(Logger.class)
         );
     }
 
@@ -146,7 +146,7 @@ class PlacementStateTest extends FightBaseCase {
                 state = new PlacementState(false),
                 new ActiveState()
             ),
-            NOPLogger.NOP_LOGGER
+            container.get(Logger.class)
         );
 
         state.start(fight);

@@ -19,13 +19,10 @@
 
 package fr.quatrevieux.araknemu.game.handler.spell;
 
-import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellMove;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.helpers.NOPLogger;
 
 import static org.junit.jupiter.api.Assertions.*;
 

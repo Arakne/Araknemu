@@ -142,8 +142,8 @@ import fr.quatrevieux.araknemu.network.game.GamePacketConfigurator;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.GameParserLoader;
 import fr.quatrevieux.araknemu.network.in.CommonParserLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 
@@ -161,7 +161,7 @@ final public class GameModule implements ContainerModule {
     public void configure(ContainerConfigurator configurator) {
         configurator.factory(
             Logger.class,
-            container -> LoggerFactory.getLogger(GameService.class)
+            container -> LogManager.getLogger(GameService.class)
         );
 
         configurator.persist(

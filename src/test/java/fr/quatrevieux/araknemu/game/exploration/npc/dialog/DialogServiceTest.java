@@ -29,12 +29,10 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.ActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersResolver;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.VariableResolver;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -60,7 +58,7 @@ class DialogServiceTest extends GameBaseCase {
             container.get(QuestionRepository.class),
             container.get(ResponseActionRepository.class),
             new ActionFactory[0],
-            new ParametersResolver(new VariableResolver[0], NOPLogger.NOP_LOGGER),
+            new ParametersResolver(new VariableResolver[0], container.get(Logger.class)),
             logger = Mockito.mock(Logger.class)
         );
     }

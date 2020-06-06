@@ -26,10 +26,11 @@ import fr.quatrevieux.araknemu.core.network.exception.RateLimitException;
 import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.network.game.out.account.LoginTokenError;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.MarkerManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -77,6 +78,6 @@ class GameExceptionConfiguratorTest extends GameBaseCase {
         gameSession.exception(new RateLimitException());
 
         assertFalse(session.isAlive());
-        Mockito.verify(logger).error("[{}] RateLimit : close session", session.channel().id());
+        Mockito.verify(logger).error(MarkerManager.getMarker("RATE_LIMIT"), "[{}] RateLimit : close session", gameSession);
     }
 }

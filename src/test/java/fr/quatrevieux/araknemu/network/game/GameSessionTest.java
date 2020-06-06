@@ -127,4 +127,30 @@ class GameSessionTest extends GameBaseCase {
         assertSame(event, ref.get());
         assertSame(event, ref2.get());
     }
+
+    @Test
+    void string() throws SQLException {
+        GameSession session = new GameSession(new ConfigurableSession(new DummyChannel()));
+
+        assertEquals("ip=127.0.0.1", session.toString());
+
+        GamePlayer player = makeSimpleGamePlayer(10);
+
+        session.attach(player.account());
+        assertEquals("ip=127.0.0.1; account=10", session.toString());
+
+        session.setPlayer(player);
+
+        assertEquals("ip=127.0.0.1; account=10; player=10; position=(10540, 210)", session.toString());
+
+        ExplorationPlayer exploration = explorationPlayer();
+        session.setExploration(exploration);
+
+        assertEquals("ip=127.0.0.1; account=10; player=10; position=(10540, 210); state=exploring", session.toString());
+
+        session.setExploration(null);
+        session.setFighter(new PlayerFighter(player));
+
+        assertEquals("ip=127.0.0.1; account=10; player=10; position=(10540, 210); state=fighting", session.toString());
+    }
 }

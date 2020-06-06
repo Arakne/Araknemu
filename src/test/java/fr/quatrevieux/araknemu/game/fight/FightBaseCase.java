@@ -59,9 +59,9 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
-import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 import java.time.Duration;
@@ -104,7 +104,7 @@ public class FightBaseCase extends GameBaseCase {
                 new ActiveState(),
                 new FinishState()
             ),
-            NOPLogger.NOP_LOGGER
+            container.get(Logger.class)
         );
 
         fight.register(new StatesModule(fight));
@@ -134,7 +134,7 @@ public class FightBaseCase extends GameBaseCase {
                 new ActiveState(),
                 new FinishState()
             ),
-            NOPLogger.NOP_LOGGER
+            container.get(Logger.class)
         );
 
         fight.register(new StatesModule(fight));

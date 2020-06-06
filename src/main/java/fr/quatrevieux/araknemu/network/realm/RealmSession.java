@@ -72,4 +72,15 @@ final public class RealmSession extends AbstractDelegatedSession implements Sess
     public boolean isLogged() {
         return account != null;
     }
+
+    @Override
+    public String toString() {
+        String str = "ip=" + channel().address().getAddress().getHostAddress();
+
+        if (account != null) {
+            str += "; account=" + account.id();
+        }
+
+        return str;
+    }
 }

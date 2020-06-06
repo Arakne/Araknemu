@@ -29,9 +29,9 @@ import fr.quatrevieux.araknemu.game.player.experience.event.PlayerXpChanged;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.out.account.NewPlayerLevel;
 import fr.quatrevieux.araknemu.network.game.out.account.Stats;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicReference;
@@ -49,7 +49,7 @@ class GamePlayerExperienceTest extends GameBaseCase {
         super.setUp();
 
         dataSet.pushExperience();
-        container.get(PlayerExperienceService.class).preload(NOPLogger.NOP_LOGGER);
+        container.get(PlayerExperienceService.class).preload(container.get(Logger.class));
 
         player = new Player(1);
         player.setLevel(7);

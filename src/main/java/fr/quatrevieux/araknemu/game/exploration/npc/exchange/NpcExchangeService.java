@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.exploration.npc.exchange;
@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.game.event.GameStarted;
 import fr.quatrevieux.araknemu.game.exploration.npc.ExchangeProvider;
 import fr.quatrevieux.araknemu.game.item.ItemService;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.List;

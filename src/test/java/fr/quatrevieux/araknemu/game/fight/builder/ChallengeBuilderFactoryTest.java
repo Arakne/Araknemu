@@ -23,9 +23,9 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.helpers.NOPLogger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,7 +37,7 @@ class ChallengeBuilderFactoryTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        factory = new ChallengeBuilderFactory(container.get(FighterFactory.class), NOPLogger.NOP_LOGGER);
+        factory = new ChallengeBuilderFactory(container.get(FighterFactory.class), container.get(Logger.class));
     }
 
     @Test

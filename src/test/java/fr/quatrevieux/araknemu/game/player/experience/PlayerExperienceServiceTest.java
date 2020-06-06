@@ -31,11 +31,10 @@ import fr.quatrevieux.araknemu.game.listener.player.RebuildLifePointsOnLevelUp;
 import fr.quatrevieux.araknemu.game.listener.player.SendLevelUp;
 import fr.quatrevieux.araknemu.game.listener.player.SendPlayerXp;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 
@@ -56,7 +55,7 @@ class PlayerExperienceServiceTest extends GameBaseCase {
 
         dataSet.pushExperience();
 
-        service.preload(NOPLogger.NOP_LOGGER);
+        service.preload(container.get(Logger.class));
     }
 
     @Test

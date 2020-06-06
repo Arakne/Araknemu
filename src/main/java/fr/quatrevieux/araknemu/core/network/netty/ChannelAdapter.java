@@ -14,13 +14,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.core.network.netty;
 
 import fr.quatrevieux.araknemu.core.network.Channel;
 import io.netty.channel.ChannelHandlerContext;
+
+import java.net.InetSocketAddress;
 
 /**
  * Adapt Netty channel to Araknemu Channel
@@ -50,5 +52,10 @@ final public class ChannelAdapter implements Channel {
     @Override
     public boolean isAlive() {
         return channel.channel().isActive();
+    }
+
+    @Override
+    public InetSocketAddress address() {
+        return (InetSocketAddress) channel.channel().remoteAddress();
     }
 }

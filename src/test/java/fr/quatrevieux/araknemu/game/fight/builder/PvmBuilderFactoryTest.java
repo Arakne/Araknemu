@@ -24,9 +24,9 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.helpers.NOPLogger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,7 +38,7 @@ class PvmBuilderFactoryTest  extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        factory = new PvmBuilderFactory(container.get(FighterFactory.class), container.get(PvmType.class), NOPLogger.NOP_LOGGER);
+        factory = new PvmBuilderFactory(container.get(FighterFactory.class), container.get(PvmType.class), container.get(Logger.class));
     }
 
     @Test

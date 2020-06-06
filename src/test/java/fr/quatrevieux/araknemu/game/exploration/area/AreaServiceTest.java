@@ -27,9 +27,9 @@ import fr.quatrevieux.araknemu.data.world.repository.environment.area.SubAreaRep
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.listener.player.InitializeAreas;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 
@@ -52,7 +52,7 @@ class AreaServiceTest extends GameBaseCase {
             .pushSubAreas()
             .pushAreas()
         ;
-        service.preload(NOPLogger.NOP_LOGGER);
+        service.preload(container.get(Logger.class));
     }
 
     @Test

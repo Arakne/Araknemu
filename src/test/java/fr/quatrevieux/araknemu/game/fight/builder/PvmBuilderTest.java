@@ -38,9 +38,9 @@ import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
 import fr.quatrevieux.araknemu.util.RandomUtil;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.helpers.NOPLogger;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -70,7 +70,7 @@ class PvmBuilderTest extends GameBaseCase {
             container.get(FighterFactory.class),
             new RandomUtil(),
             container.get(PvmType.class),
-            NOPLogger.NOP_LOGGER
+            container.get(Logger.class)
         );
 
         MonsterService service = container.get(MonsterService.class);
@@ -125,7 +125,7 @@ class PvmBuilderTest extends GameBaseCase {
                 container.get(FighterFactory.class),
                 random,
                 container.get(PvmType.class),
-                NOPLogger.NOP_LOGGER
+                container.get(Logger.class)
             );
 
             Fight fight = builder
@@ -150,7 +150,7 @@ class PvmBuilderTest extends GameBaseCase {
             container.get(FighterFactory.class),
             null,
             container.get(PvmType.class),
-            NOPLogger.NOP_LOGGER
+            container.get(Logger.class)
         );
 
         for (int i = 0; i < 100; ++i) {

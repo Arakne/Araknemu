@@ -14,13 +14,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.core.dbal;
 
-import org.slf4j.Logger;
-import org.slf4j.helpers.NOPLogger;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -49,10 +48,6 @@ final public class DefaultDatabaseHandler implements DatabaseHandler {
 
         factory("sqlite", SQLiteDriver::new);
         factory("mysql",  MySQLDriver::new);
-    }
-
-    public DefaultDatabaseHandler(DatabaseConfiguration configuration) {
-        this(configuration, NOPLogger.NOP_LOGGER);
     }
 
     @Override

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.network.realm;
@@ -25,7 +25,8 @@ import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.PacketParser;
 import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.MarkerManager;
 
 /**
  * Configure session for realm
@@ -46,7 +47,7 @@ final public class RealmSessionConfigurator implements SessionConfigurator.Confi
     @Override
     public void configure(ConfigurableSession inner, RealmSession session) {
         inner.addExceptionHandler(RateLimitException.class, cause -> {
-            logger.error("[{}] RateLimit : close session", session.channel().id());
+            logger.error(MarkerManager.getMarker("RATE_LIMIT"), "[{}] RateLimit : close session", session);
             session.close();
 
             return true;

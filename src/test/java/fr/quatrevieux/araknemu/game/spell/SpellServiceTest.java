@@ -22,10 +22,10 @@ package fr.quatrevieux.araknemu.game.spell;
 import fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 

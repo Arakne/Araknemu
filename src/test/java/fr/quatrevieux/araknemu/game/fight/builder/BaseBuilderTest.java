@@ -25,15 +25,13 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
-import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
 import fr.quatrevieux.araknemu.util.RandomUtil;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.helpers.NOPLogger;
 
 import java.util.ArrayList;
 
@@ -51,7 +49,7 @@ class BaseBuilderTest extends GameBaseCase {
         dataSet.pushMaps().pushSubAreas().pushAreas();
 
         type = Mockito.mock(FightType.class);
-        builder = new BaseBuilder(container.get(FightService.class), new RandomUtil(), type, NOPLogger.NOP_LOGGER);
+        builder = new BaseBuilder(container.get(FightService.class), new RandomUtil(), type, container.get(Logger.class));
     }
 
     @Test
@@ -112,7 +110,7 @@ class BaseBuilderTest extends GameBaseCase {
 
     @Test
     void buildWithoutRandomizeTeam() throws Exception {
-        builder = new BaseBuilder(container.get(FightService.class), null, type, NOPLogger.NOP_LOGGER);
+        builder = new BaseBuilder(container.get(FightService.class), null, type, container.get(Logger.class));
 
         PlayerFighter fighter = new PlayerFighter(gamePlayer());
         PlayerFighter other = new PlayerFighter(makeOtherPlayer());

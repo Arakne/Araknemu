@@ -30,10 +30,10 @@ import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
 import fr.quatrevieux.araknemu.game.item.factory.ItemFactory;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.item.type.Wearable;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
 
 import java.util.Map;
 import java.util.stream.Collectors;

@@ -21,10 +21,10 @@ package fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 

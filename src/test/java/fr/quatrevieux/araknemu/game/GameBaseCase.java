@@ -96,12 +96,15 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharac
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.util.RandomUtil;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
-import org.slf4j.helpers.NOPLogger;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -197,7 +200,8 @@ public class GameBaseCase extends DatabaseTestCase {
         app = new Araknemu(
             conf,
             new DefaultDatabaseHandler(
-                conf.module(DatabaseConfiguration.class)
+                conf.module(DatabaseConfiguration.class),
+                LogManager.getLogger()
             )
         );
 
@@ -301,7 +305,7 @@ public class GameBaseCase extends DatabaseTestCase {
             .pushExperience()
         ;
 
-        container.get(PlayerExperienceService.class).preload(NOPLogger.NOP_LOGGER);
+        container.get(PlayerExperienceService.class).preload(container.get(Logger.class));
 
         MutableCharacteristics characteristics = new DefaultCharacteristics();
 
@@ -374,7 +378,7 @@ public class GameBaseCase extends DatabaseTestCase {
             .use(PlayerSpell.class)
         ;
 
-        container.get(PlayerExperienceService.class).preload(NOPLogger.NOP_LOGGER);
+        container.get(PlayerExperienceService.class).preload(container.get(Logger.class));
 
         Player player = dataSet.push(new Player(-1, 5, 2, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1), level, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, -1, 0, new Position(10540, 210), 0));
         GameSession session = server.createSession();
@@ -442,7 +446,7 @@ public class GameBaseCase extends DatabaseTestCase {
             .use(PlayerSpell.class)
         ;
 
-        container.get(PlayerExperienceService.class).preload(NOPLogger.NOP_LOGGER);
+        container.get(PlayerExperienceService.class).preload(container.get(Logger.class));
 
         Player player = dataSet.createPlayer(id);
 

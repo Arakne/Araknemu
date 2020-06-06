@@ -23,10 +23,10 @@ import fr.quatrevieux.araknemu.data.value.Interval;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterRewardItemRepository;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterRewardRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 

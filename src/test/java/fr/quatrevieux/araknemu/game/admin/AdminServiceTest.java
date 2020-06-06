@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.admin.global.GlobalContext;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
+import org.apache.logging.log4j.LogManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -49,7 +50,8 @@ class AdminServiceTest extends GameBaseCase {
             Arrays.asList(
                 container.get(PlayerContextResolver.class),
                 container.get(AccountContextResolver.class)
-            )
+            ),
+            LogManager.getLogger()
         );
     }
 

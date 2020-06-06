@@ -14,13 +14,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.core.dbal;
 
-import org.slf4j.Logger;
-import org.slf4j.helpers.NOPLogger;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -41,10 +40,6 @@ final public class SimpleConnectionPool implements ConnectionPool {
         this.driver = driver;
         this.logger = logger;
         this.connections = new ArrayBlockingQueue<>(size);
-    }
-
-    public SimpleConnectionPool(Driver driver, int size) {
-        this(driver, size, NOPLogger.NOP_LOGGER);
     }
 
     @Override

@@ -37,11 +37,10 @@ import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStore;
 import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStoreService;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import fr.quatrevieux.araknemu.game.world.map.Direction;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.helpers.NOPLogger;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -102,7 +101,7 @@ class NpcServiceTest extends GameBaseCase {
 
         // Push NPC after load map to ensure that old NpcService will not load NPCs
         dataSet.pushNpcs();
-        service.preload(NOPLogger.NOP_LOGGER);
+        service.preload(container.get(Logger.class));
 
         dispatcher.dispatch(new MapLoaded(map));
 

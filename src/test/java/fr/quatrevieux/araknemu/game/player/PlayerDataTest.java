@@ -42,9 +42,9 @@ import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.helpers.NOPLogger;
 
 import java.util.EnumSet;
 
@@ -70,7 +70,7 @@ class PlayerDataTest  extends GameBaseCase {
             .use(PlayerSpell.class)
         ;
 
-        container.get(PlayerExperienceService.class).preload(NOPLogger.NOP_LOGGER);
+        container.get(PlayerExperienceService.class).preload(container.get(Logger.class));
 
         MutableCharacteristics characteristics = new DefaultCharacteristics();
 

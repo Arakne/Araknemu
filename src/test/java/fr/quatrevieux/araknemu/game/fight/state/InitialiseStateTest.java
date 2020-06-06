@@ -26,9 +26,9 @@ import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.helpers.NOPLogger;
 
 import java.util.Arrays;
 
@@ -58,7 +58,7 @@ class InitialiseStateTest extends GameBaseCase {
                 new NullState(),
                 nextState = new NullState()
             ),
-            NOPLogger.NOP_LOGGER
+            container.get(Logger.class)
         );
     }
 

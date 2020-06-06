@@ -42,6 +42,7 @@ import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 import fr.quatrevieux.araknemu.realm.host.GameConnector;
 import fr.quatrevieux.araknemu.realm.host.GameHost;
 import fr.quatrevieux.araknemu.realm.host.HostService;
+import org.apache.logging.log4j.LogManager;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -123,7 +124,8 @@ public class RealmBaseCase extends DatabaseTestCase {
         app = new Araknemu(
             conf,
             new DefaultDatabaseHandler(
-                conf.module(DatabaseConfiguration.class)
+                conf.module(DatabaseConfiguration.class),
+                LogManager.getLogger()
             )
         );
 

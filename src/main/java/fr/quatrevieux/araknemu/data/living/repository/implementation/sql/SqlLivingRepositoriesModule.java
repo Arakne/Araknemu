@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
@@ -35,7 +35,7 @@ import fr.quatrevieux.araknemu.data.living.transformer.ChannelsTransformer;
 import fr.quatrevieux.araknemu.data.living.transformer.PermissionsTransformer;
 import fr.quatrevieux.araknemu.data.transformer.MutableCharacteristicsTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.ItemEffectsTransformer;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * DI module for living repositories
@@ -46,7 +46,7 @@ final public class SqlLivingRepositoriesModule implements ContainerModule {
     public SqlLivingRepositoriesModule(ConnectionPool connection) {
         this.executor = new LoggedQueryExecutor(
             new ConnectionPoolExecutor(connection),
-            LoggerFactory.getLogger(SqlLivingRepositoriesModule.class)
+            LogManager.getLogger(SqlLivingRepositoriesModule.class)
         );
     }
 
