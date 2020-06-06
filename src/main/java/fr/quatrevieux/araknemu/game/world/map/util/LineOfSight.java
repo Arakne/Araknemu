@@ -93,7 +93,7 @@ final public class LineOfSight<C extends BattlefieldCell> {
         // For every X between source and target
         for (int currentX = source.x(); currentX <= target.x(); ++currentX) {
             // yMax is the value of Y at the current X
-            int yMax = (int) Math.round(currentX * ySlope + yAtZero);
+            int yMax = (int) Math.round((currentX + 0.5) * ySlope + yAtZero);
 
             for (;;) {
                 // target is reached : do not check it's LoS
@@ -137,7 +137,7 @@ final public class LineOfSight<C extends BattlefieldCell> {
         final int cellId = x * width + y * (width - 1);
 
         // Cell outside the battlefield
-        if (cellId >= battlefield.size()) {
+        if (cellId >= battlefield.size() || cellId < 0) {
             return false;
         }
 
