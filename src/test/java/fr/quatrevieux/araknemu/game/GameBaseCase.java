@@ -19,6 +19,10 @@
 
 package fr.quatrevieux.araknemu.game;
 
+import fr.arakne.utils.value.Colors;
+import fr.arakne.utils.value.constant.Gender;
+import fr.arakne.utils.value.constant.Race;
+import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.Araknemu;
 import fr.quatrevieux.araknemu.DatabaseTestCase;
 import fr.quatrevieux.araknemu.common.account.Permission;
@@ -36,8 +40,6 @@ import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.core.network.util.DummyServer;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
-import fr.quatrevieux.araknemu.data.constant.Race;
-import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.account.AccountBank;
 import fr.quatrevieux.araknemu.data.living.entity.account.BankItem;
@@ -51,7 +53,6 @@ import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.SqlLivi
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
-import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerExperience;
@@ -95,11 +96,8 @@ import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import fr.quatrevieux.araknemu.network.game.GameSession;
-import fr.quatrevieux.araknemu.util.RandomUtil;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.config.Configurator;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -312,7 +310,7 @@ public class GameBaseCase extends DatabaseTestCase {
         characteristics.set(Characteristic.STRENGTH, 50);
         characteristics.set(Characteristic.INTELLIGENCE, 150);
 
-        Player player = dataSet.push(new Player(-1, session.account().id(), session.account().serverId(), "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 50, characteristics, new Position(10540, 200), EnumSet.allOf(ChannelType.class), 0, 0, -1, 5481459, new Position(10540, 200), 15225));
+        Player player = dataSet.push(new Player(-1, session.account().id(), session.account().serverId(), "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 50, characteristics, new Position(10540, 200), EnumSet.allOf(ChannelType.class), 0, 0, -1, 5481459, new Position(10540, 200), 15225));
 
         if (!load) {
             session.setPlayer(
@@ -380,7 +378,7 @@ public class GameBaseCase extends DatabaseTestCase {
 
         container.get(PlayerExperienceService.class).preload(container.get(Logger.class));
 
-        Player player = dataSet.push(new Player(-1, 5, 2, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1), level, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, -1, 0, new Position(10540, 210), 0));
+        Player player = dataSet.push(new Player(-1, 5, 2, "Other", Race.CRA, Gender.MALE, new Colors(-1, -1, -1), level, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, -1, 0, new Position(10540, 210), 0));
         GameSession session = server.createSession();
 
         session.attach(new GameAccount(

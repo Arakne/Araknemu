@@ -14,16 +14,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.exploration.map.cell;
 
-import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
+import fr.arakne.utils.maps.serializer.CellData;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Load exploration map cells
@@ -35,5 +34,5 @@ public interface CellLoader {
      * @param map The exploration map
      * @param cells Cells to load
      */
-    public Collection<ExplorationMapCell> load(ExplorationMap map, List<MapTemplate.Cell> cells);
+    public Collection<ExplorationMapCell> load(ExplorationMap map, CellData[] cells);
 }

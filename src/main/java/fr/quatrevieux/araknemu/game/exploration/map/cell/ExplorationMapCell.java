@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.exploration.map.cell;
 
+import fr.arakne.utils.maps.MapCell;
 import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
-import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
-import fr.quatrevieux.araknemu.game.world.map.MapCell;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 
 /**
  * Cell of exploration map

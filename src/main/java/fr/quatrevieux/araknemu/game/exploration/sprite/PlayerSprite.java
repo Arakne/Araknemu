@@ -14,15 +14,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.exploration.sprite;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
-import fr.quatrevieux.araknemu.game.world.map.Direction;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Sprite for exploration player
@@ -76,9 +75,9 @@ final public class PlayerSprite implements Sprite {
             name() + ";" +
             exploration.player().spriteInfo().race().ordinal() + ";" + // @todo title
             exploration.player().spriteInfo().gfxId() + "^" + exploration.player().spriteInfo().size() + ";" +
-            exploration.player().spriteInfo().sex().ordinal() + ";" +
+            exploration.player().spriteInfo().gender().ordinal() + ";" +
             ";" + // @todo alignment
-            StringUtils.join(exploration.player().spriteInfo().colors().toHexArray(), ';') + ";" +
+            exploration.player().spriteInfo().colors().toHexString(";") + ";" +
             exploration.player().spriteInfo().accessories() + ";" +
             ";" + // @todo aura
             ";;" + // @todo emote; emote timer

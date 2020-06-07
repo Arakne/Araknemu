@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight;
 
+import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
@@ -40,7 +41,6 @@ import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.listener.player.exploration.LeaveExplorationForFight;
 import fr.quatrevieux.araknemu.game.listener.player.fight.AttachFighter;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
-import fr.quatrevieux.araknemu.util.RandomUtil;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

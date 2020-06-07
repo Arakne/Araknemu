@@ -19,15 +19,15 @@
 
 package fr.quatrevieux.araknemu.game.player;
 
+import fr.arakne.utils.value.Colors;
+import fr.arakne.utils.value.constant.Gender;
+import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
-import fr.quatrevieux.araknemu.data.constant.Race;
-import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
-import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
@@ -71,7 +71,7 @@ class GamePlayerTest extends GameBaseCase {
         characteristics.set(Characteristic.INTELLIGENCE, 150);
         characteristics.set(Characteristic.VITALITY, 50);
 
-        entity = dataSet.push(new Player(5, 2, 1, "Other", Race.CRA, Sex.MALE, new Colors(-1, -1, -1), 50, characteristics, new Position(10300, 308), EnumSet.allOf(ChannelType.class), 0, 0, -1, 0, new Position(10300, 308), 0));
+        entity = dataSet.push(new Player(5, 2, 1, "Other", Race.CRA, Gender.MALE, new Colors(-1, -1, -1), 50, characteristics, new Position(10300, 308), EnumSet.allOf(ChannelType.class), 0, 0, -1, 0, new Position(10300, 308), 0));
 
         player = new GamePlayer(
             new GameAccount(

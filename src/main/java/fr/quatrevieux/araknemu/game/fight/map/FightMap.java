@@ -14,14 +14,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.map;
 
-import fr.quatrevieux.araknemu.data.value.Dimensions;
+import fr.arakne.utils.maps.DofusMap;
+import fr.arakne.utils.maps.serializer.CellData;
+import fr.arakne.utils.value.Dimensions;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
-import fr.quatrevieux.araknemu.game.world.map.GameMap;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,7 +31,7 @@ import java.util.List;
 /**
  * Map for the fight
  */
-final public class FightMap implements GameMap<FightCell>, Iterable<FightCell> {
+final public class FightMap implements DofusMap<FightCell>, Iterable<FightCell> {
     final private MapTemplate template;
     final private List<FightCell> cells;
 
@@ -89,16 +90,16 @@ final public class FightMap implements GameMap<FightCell>, Iterable<FightCell> {
         cells.clear();
     }
 
-    private List<FightCell> makeCells(List<MapTemplate.Cell> template) {
-        List<FightCell> cells = new ArrayList<>(template.size());
+    private List<FightCell> makeCells(CellData[] template) {
+        List<FightCell> cells = new ArrayList<>(template.length);
 
-        for (int i = 0; i < template.size(); ++i) {
-            MapTemplate.Cell cell = template.get(i);
+        for (int i = 0; i < template.length; ++i) {
+            CellData cell = template[i];
 
-            if (!cell.active() || cell.movement() < 2) {
-                cells.add(new UnwalkableFightCell(this, template.get(i), i));
+            if (!cell.active() || !cell.movement().walkable()) {
+                cells.add(new UnwalkableFightCell(this, template[i], i));
             } else {
-                cells.add(new WalkableFightCell(this, template.get(i), i));
+                cells.add(new WalkableFightCell(this, template[i], i));
             }
         }
 

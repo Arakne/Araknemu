@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.data.world.entity.environment.npc;
 
-import fr.quatrevieux.araknemu.data.constant.Sex;
-import fr.quatrevieux.araknemu.data.value.Colors;
+import fr.arakne.utils.value.Colors;
+import fr.arakne.utils.value.constant.Gender;
 
 import java.util.Optional;
 
@@ -32,19 +32,19 @@ final public class NpcTemplate {
     final private int gfxId;
     final private int scaleX;
     final private int scaleY;
-    final private Sex sex;
+    final private Gender gender;
     final private Colors colors;
     final private String accessories;
     final private int extraClip;
     final private int customArtwork;
     final private int[] storeItems;
 
-    public NpcTemplate(int id, int gfxId, int scaleX, int scaleY, Sex sex, Colors colors, String accessories, int extraClip, int customArtwork, int[] storeItems) {
+    public NpcTemplate(int id, int gfxId, int scaleX, int scaleY, Gender gender, Colors colors, String accessories, int extraClip, int customArtwork, int[] storeItems) {
         this.id = id;
         this.gfxId = gfxId;
         this.scaleX = scaleX;
         this.scaleY = scaleY;
-        this.sex = sex;
+        this.gender = gender;
         this.colors = colors;
         this.accessories = accessories;
         this.extraClip = extraClip;
@@ -85,8 +85,8 @@ final public class NpcTemplate {
     /**
      * Get the sprite sex
      */
-    public Sex sex() {
-        return sex;
+    public Gender gender() {
+        return gender;
     }
 
     /**

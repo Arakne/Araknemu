@@ -49,16 +49,16 @@ class UnwalkableFightCellTest extends GameBaseCase {
 
     @Test
     void sightBlocking() {
-        UnwalkableFightCell cell = new UnwalkableFightCell(map, mapTemplate.cells().get(0), 0);
+        UnwalkableFightCell cell = new UnwalkableFightCell(map, mapTemplate.cells()[0], 0);
         assertFalse(cell.sightBlocking());
 
-        cell = new UnwalkableFightCell(map, mapTemplate.cells().get(11), 11);
+        cell = new UnwalkableFightCell(map, mapTemplate.cells()[11], 11);
         assertTrue(cell.sightBlocking());
     }
 
     @Test
     void getters() {
-        UnwalkableFightCell cell = new UnwalkableFightCell(map, mapTemplate.cells().get(0), 0);
+        UnwalkableFightCell cell = new UnwalkableFightCell(map, mapTemplate.cells()[0], 0);
 
         assertEquals(0, cell.id());
         assertFalse(cell.walkable());
@@ -69,22 +69,22 @@ class UnwalkableFightCellTest extends GameBaseCase {
 
     @Test
     void set() {
-        UnwalkableFightCell cell = new UnwalkableFightCell(map, mapTemplate.cells().get(0), 0);
+        UnwalkableFightCell cell = new UnwalkableFightCell(map, mapTemplate.cells()[0], 0);
 
         assertThrows(FightMapException.class, () -> cell.set(Mockito.mock(Fighter.class)));
     }
 
     @Test
     void removeFighter() {
-        UnwalkableFightCell cell = new UnwalkableFightCell(map, mapTemplate.cells().get(0), 0);
+        UnwalkableFightCell cell = new UnwalkableFightCell(map, mapTemplate.cells()[0], 0);
 
         assertThrows(FightMapException.class, () -> cell.removeFighter());
     }
 
     @Test
     void equals() {
-        UnwalkableFightCell cell0 = new UnwalkableFightCell(map, mapTemplate.cells().get(0), 0);
-        UnwalkableFightCell cell1 = new UnwalkableFightCell(map, mapTemplate.cells().get(1), 1);
+        UnwalkableFightCell cell0 = new UnwalkableFightCell(map, mapTemplate.cells()[0], 0);
+        UnwalkableFightCell cell1 = new UnwalkableFightCell(map, mapTemplate.cells()[1], 1);
 
         assertEquals(cell0, cell0);
         assertNotEquals(cell0, cell1);

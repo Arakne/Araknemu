@@ -14,21 +14,21 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
+import fr.arakne.utils.value.Colors;
+import fr.arakne.utils.value.constant.Gender;
+import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
-import fr.quatrevieux.araknemu.data.constant.Race;
-import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
-import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.value.ServerCharacters;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
@@ -50,7 +50,7 @@ final class SqlPlayerRepository implements PlayerRepository {
                 rs.getInt("SERVER_ID"),
                 rs.getString("PLAYER_NAME"),
                 Race.byId(rs.getInt("RACE")),
-                Sex.values()[rs.getInt("SEX")],
+                Gender.values()[rs.getInt("SEX")],
                 new Colors(
                     rs.getInt("COLOR1"),
                     rs.getInt("COLOR2"),
@@ -154,7 +154,7 @@ final class SqlPlayerRepository implements PlayerRepository {
                 stmt.setInt(2,     entity.serverId());
                 stmt.setString(3,  entity.name());
                 stmt.setInt(4,     entity.race().ordinal());
-                stmt.setInt(5,     entity.sex().ordinal());
+                stmt.setInt(5,     entity.gender().ordinal());
                 stmt.setInt(6,     entity.colors().color1());
                 stmt.setInt(7,     entity.colors().color2());
                 stmt.setInt(8,     entity.colors().color3());

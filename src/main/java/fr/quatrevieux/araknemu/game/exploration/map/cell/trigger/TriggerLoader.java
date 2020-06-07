@@ -14,18 +14,17 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.exploration.map.cell.trigger;
 
-import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
+import fr.arakne.utils.maps.serializer.CellData;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -39,7 +38,7 @@ final public class TriggerLoader implements CellLoader {
     }
 
     @Override
-    public Collection<ExplorationMapCell> load(ExplorationMap map, List<MapTemplate.Cell> cells) {
+    public Collection<ExplorationMapCell> load(ExplorationMap map, CellData[] cells) {
         return service.forMap(map).stream()
             .map(action -> new TriggerCell(action.cell(), action, map))
             .collect(Collectors.toList())

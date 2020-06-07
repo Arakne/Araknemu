@@ -19,16 +19,16 @@
 
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
+import fr.arakne.utils.value.Colors;
+import fr.arakne.utils.value.constant.Gender;
+import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.DatabaseTestCase;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
-import fr.quatrevieux.araknemu.data.constant.Race;
-import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.transformer.ChannelsTransformer;
 import fr.quatrevieux.araknemu.data.transformer.MutableCharacteristicsTransformer;
-import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.value.ServerCharacters;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
@@ -67,7 +67,7 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
 
     @Test
     void addWillSetId() {
-        Player player = new Player(-1, 5, 1, "name", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, null);
+        Player player = new Player(-1, 5, 1, "name", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null);
 
         Player inserted = repository.add(player);
 
@@ -78,14 +78,14 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
         assertEquals(1, inserted.serverId());
         assertEquals("name", inserted.name());
         assertEquals(Race.FECA, inserted.race());
-        assertEquals(Sex.MALE, inserted.sex());
+        assertEquals(Gender.MALE, inserted.gender());
         assertEquals(-1, inserted.colors().color1());
         assertEquals(1, inserted.level());
     }
 
     @Test
     void addAndGet() {
-        Player player = repository.add(new Player(-1, 5, 1, "name", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, null));
+        Player player = repository.add(new Player(-1, 5, 1, "name", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null));
 
         Player get = repository.get(player);
 
@@ -94,14 +94,14 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
         assertEquals(1, get.serverId());
         assertEquals("name", get.name());
         assertEquals(Race.FECA, get.race());
-        assertEquals(Sex.MALE, get.sex());
+        assertEquals(Gender.MALE, get.gender());
         assertEquals(-1, get.colors().color1());
         assertEquals(1, get.level());
     }
 
     @Test
     void has() {
-        Player player = new Player(-1, 5, 1, "name", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, null);
+        Player player = new Player(-1, 5, 1, "name", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null);
 
         assertFalse(repository.has(player));
 
@@ -112,12 +112,12 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
 
     @Test
     void getNotFound() {
-        assertThrows(EntityNotFoundException.class, () -> repository.get(new Player(-1, 5, 1, "name", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, null)));
+        assertThrows(EntityNotFoundException.class, () -> repository.get(new Player(-1, 5, 1, "name", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null)));
     }
 
     @Test
     void delete() {
-        Player player = new Player(-1, 5, 1, "name", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, null);
+        Player player = new Player(-1, 5, 1, "name", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null);
         player = repository.add(player);
 
         assertTrue(repository.has(player));
@@ -135,43 +135,43 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
     @Test
     void nameExists() {
         assertFalse(repository.nameExists(new Player(-1, 5, 1, "name", null, null, null, 1, null)));
-        repository.add(new Player(-1, 5, 1, "name", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, null));
+        repository.add(new Player(-1, 5, 1, "name", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null));
         assertTrue(repository.nameExists(new Player(-1, 5, 1, "name", null, null, null, 1, null)));
     }
 
     @Test
     void accountCharactersCount() {
-        repository.add(new Player(-1, 5, 1, "One", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, null));
-        repository.add(new Player(-1, 5, 1, "Two", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, null));
-        repository.add(new Player(-1, 5, 2, "Other", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, null));
+        repository.add(new Player(-1, 5, 1, "One", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null));
+        repository.add(new Player(-1, 5, 1, "Two", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null));
+        repository.add(new Player(-1, 5, 2, "Other", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null));
 
         assertEquals(2, repository.accountCharactersCount(new Player(-1, 5, 1, null, null, null, null, 0, null)));
     }
 
     @Test
     void getForGamePlayerNotFound() {
-        int id = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, null)).id();
+        int id = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null)).id();
 
         assertThrows(EntityNotFoundException.class, () -> repository.getForGame(Player.forGame(-1, 123, 2)));
     }
 
     @Test
     void getForGameBadAccount() {
-        int id = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, null)).id();
+        int id = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null)).id();
 
         assertThrows(EntityNotFoundException.class, () -> repository.getForGame(Player.forGame(id, 123, 1)));
     }
 
     @Test
     void getForGameBadServer() {
-        int id = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, null)).id();
+        int id = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null)).id();
 
         assertThrows(EntityNotFoundException.class, () -> repository.getForGame(Player.forGame(id, 5, 2)));
     }
 
     @Test
     void getForGameSuccess() {
-        int id = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, null)).id();
+        int id = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, null)).id();
 
         Player player = repository.getForGame(Player.forGame(id, 5, 1));
 
@@ -186,14 +186,14 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
         characteristics.set(Characteristic.ACTION_POINT, 12);
         characteristics.set(Characteristic.STRENGTH, 5);
 
-        Player player = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, characteristics));
+        Player player = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, characteristics));
 
         assertEquals(characteristics, repository.get(player).stats());
     }
 
     @Test
     void insertWithPoints() {
-        Player player = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(123, 456), EnumSet.noneOf(ChannelType.class), 10, 15, 75, 125, new Position(321, 251), 127));
+        Player player = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(123, 456), EnumSet.noneOf(ChannelType.class), 10, 15, 75, 125, new Position(321, 251), 127));
 
         player = repository.get(player);
 
@@ -205,7 +205,7 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
 
     @Test
     void insertWithSavedPositionAndKamas() {
-        Player player = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Sex.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(123, 456), EnumSet.noneOf(ChannelType.class), 10, 15, 75, 125, new Position(321, 251), 127));
+        Player player = repository.add(new Player(-1, 5, 1, "One", Race.FECA, Gender.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(123, 456), EnumSet.noneOf(ChannelType.class), 10, 15, 75, 125, new Position(321, 251), 127));
 
         player = repository.get(player);
 
@@ -215,10 +215,10 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
 
     @Test
     void allServersCharactersCount() {
-        repository.add(Player.forCreation(1, 1, "bob", Race.CRA, Sex.FEMALE, new Colors(-1, -1, -1)));
-        repository.add(Player.forCreation(1, 1, "cc", Race.CRA, Sex.FEMALE, new Colors(-1, -1, -1)));
-        repository.add(Player.forCreation(1, 1, "dd", Race.CRA, Sex.FEMALE, new Colors(-1, -1, -1)));
-        repository.add(Player.forCreation(1, 3, "other", Race.CRA, Sex.FEMALE, new Colors(-1, -1, -1)));
+        repository.add(Player.forCreation(1, 1, "bob", Race.CRA, Gender.FEMALE, new Colors(-1, -1, -1)));
+        repository.add(Player.forCreation(1, 1, "cc", Race.CRA, Gender.FEMALE, new Colors(-1, -1, -1)));
+        repository.add(Player.forCreation(1, 1, "dd", Race.CRA, Gender.FEMALE, new Colors(-1, -1, -1)));
+        repository.add(Player.forCreation(1, 3, "other", Race.CRA, Gender.FEMALE, new Colors(-1, -1, -1)));
 
         Collection<ServerCharacters> serverCharacters = repository.accountCharactersCount(1);
 
@@ -235,12 +235,12 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
 
     @Test
     void saveNotFound() {
-        assertThrows(EntityNotFoundException.class, () -> repository.save(Player.forCreation(5, 2, "bob", Race.CRA, Sex.FEMALE, new Colors(-1, -1, -1))));
+        assertThrows(EntityNotFoundException.class, () -> repository.save(Player.forCreation(5, 2, "bob", Race.CRA, Gender.FEMALE, new Colors(-1, -1, -1))));
     }
 
     @Test
     void saveSuccess() {
-        Player player = repository.add(Player.forCreation(1, 1, "bob", Race.CRA, Sex.FEMALE, new Colors(-1, -1, -1)));
+        Player player = repository.add(Player.forCreation(1, 1, "bob", Race.CRA, Gender.FEMALE, new Colors(-1, -1, -1)));
 
         player.setPosition(new Position(1234, 56));
         player.stats().set(Characteristic.ACTION_POINT, 12);

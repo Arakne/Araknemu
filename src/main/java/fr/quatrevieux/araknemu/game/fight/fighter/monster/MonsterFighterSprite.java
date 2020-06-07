@@ -14,16 +14,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.fighter.monster;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
-import fr.quatrevieux.araknemu.game.world.map.Direction;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Sprite for monster
@@ -77,7 +76,7 @@ final public class MonsterFighterSprite implements Sprite {
             type().id() + ";" +
             monster.gfxId() + "^100;" + // @todo size
             monster.gradeNumber() + ";" +
-            StringUtils.join(monster.colors().toHexArray(), ";") + ";" +
+            monster.colors().toHexString(";") + ";" +
             "0,0,0,0;" + // @todo accessories
             fighter.life().current() + ";" +
             fighter.characteristics().get(Characteristic.ACTION_POINT) + ";" +

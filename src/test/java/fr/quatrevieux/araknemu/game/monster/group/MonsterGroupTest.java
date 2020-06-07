@@ -19,7 +19,10 @@
 
 package fr.quatrevieux.araknemu.game.monster.group;
 
-import fr.quatrevieux.araknemu.data.value.Interval;
+import fr.arakne.utils.maps.path.Decoder;
+import fr.arakne.utils.maps.path.Path;
+import fr.arakne.utils.maps.path.PathStep;
+import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
@@ -37,10 +40,7 @@ import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
 import fr.quatrevieux.araknemu.game.monster.environment.MonsterEnvironmentService;
 import fr.quatrevieux.araknemu.game.monster.environment.RandomCellSelector;
-import fr.quatrevieux.araknemu.game.world.map.Direction;
-import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
-import fr.quatrevieux.araknemu.game.world.map.path.Path;
-import fr.quatrevieux.araknemu.game.world.map.path.PathStep;
+import fr.arakne.utils.maps.constant.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

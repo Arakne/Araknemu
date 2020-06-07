@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.account.generator;
 
+import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
-import fr.quatrevieux.araknemu.util.RandomUtil;
 
 /**
  * Simple generator for character names switching between consonants and vowels

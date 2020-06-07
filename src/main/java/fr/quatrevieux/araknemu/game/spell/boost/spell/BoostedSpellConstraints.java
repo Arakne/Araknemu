@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.spell.boost.spell;
 
-import fr.quatrevieux.araknemu.data.value.Interval;
+import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.boost.SpellModifiers;
 
@@ -37,16 +37,7 @@ final public class BoostedSpellConstraints implements SpellConstraints {
 
     @Override
     public Interval range() {
-        int boost = modifiers.range();
-
-        if (boost == 0) {
-            return constraints.range();
-        }
-
-        return new Interval(
-            constraints.range().min(),
-            constraints.range().max() + boost
-        );
+        return constraints.range().modify(modifiers.range());
     }
 
     @Override

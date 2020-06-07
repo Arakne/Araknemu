@@ -19,8 +19,8 @@
 
 package fr.quatrevieux.araknemu.game.player;
 
+import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
-import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;

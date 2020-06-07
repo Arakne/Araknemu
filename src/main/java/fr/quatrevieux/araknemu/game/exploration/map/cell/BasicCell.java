@@ -14,42 +14,22 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.exploration.map.cell;
 
-import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
+import fr.arakne.utils.maps.AbstractCellDataAdapter;
+import fr.arakne.utils.maps.serializer.CellData;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
 
 /**
  * Simple cell type
  */
-final public class BasicCell implements ExplorationMapCell {
-    final private int id;
-    final private MapTemplate.Cell template;
-    final private ExplorationMap map;
-
-    public BasicCell(int id, MapTemplate.Cell template, ExplorationMap map) {
-        this.id = id;
-        this.template = template;
-        this.map = map;
-    }
-
-    @Override
-    public ExplorationMap map() {
-        return map;
-    }
-
-    @Override
-    public int id() {
-        return id;
-    }
-
-    @Override
-    public boolean walkable() {
-        return template.active() && template.movement() > 1;
+final public class BasicCell extends AbstractCellDataAdapter<ExplorationMap> implements ExplorationMapCell {
+    public BasicCell(int id, CellData template, ExplorationMap map) {
+        super(map, template, id);
     }
 
     @Override
@@ -59,22 +39,12 @@ final public class BasicCell implements ExplorationMapCell {
             return false;
         }
 
-        for (Creature creature : map.creatures()) {
+        for (Creature creature : map().creatures()) {
             if (equals(creature.cell())) {
                 return false;
             }
         }
 
         return true;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof BasicCell && equals((BasicCell) obj);
-    }
-
-    @Override
-    public int hashCode() {
-        return id;
     }
 }

@@ -14,23 +14,23 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
+import fr.arakne.utils.maps.serializer.CellData;
+import fr.arakne.utils.value.Dimensions;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
-import fr.quatrevieux.araknemu.data.value.Dimensions;
 import fr.quatrevieux.araknemu.data.value.Geolocation;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -41,16 +41,6 @@ final class SqlMapTemplateRepository implements MapTemplateRepository {
     private class Loader implements RepositoryUtils.Loader<MapTemplate> {
         @Override
         public MapTemplate create(ResultSet rs) throws SQLException {
-            String cellsData = rs.getString("mapData");
-
-            List<MapTemplate.Cell> cells = new ArrayList<>(cellsData.length() / 10);
-
-            for (int i = 0; i < cellsData.length(); i += 10) {
-                cells.add(
-                    cellTransformer.unserialize(cellsData.substring(i, i + 10))
-                );
-            }
-
             return new MapTemplate(
                 rs.getInt("id"),
                 rs.getString("date"),
@@ -59,7 +49,7 @@ final class SqlMapTemplateRepository implements MapTemplateRepository {
                     rs.getInt("height")
                 ),
                 rs.getString("key"),
-                cells,
+                cellsTransformer.unserialize(rs.getString("mapData")),
                 fightPlacesTransformer.unserialize(rs.getString("places")),
                 new Geolocation(
                     rs.getInt("MAP_X"),
@@ -78,12 +68,12 @@ final class SqlMapTemplateRepository implements MapTemplateRepository {
 
     final private QueryExecutor executor;
     final private RepositoryUtils<MapTemplate> utils;
-    final private Transformer<MapTemplate.Cell> cellTransformer;
+    final private Transformer<CellData[]> cellsTransformer;
     final private Transformer<List<Integer>[]> fightPlacesTransformer;
 
-    public SqlMapTemplateRepository(QueryExecutor executor, Transformer<MapTemplate.Cell> cellTransformer, Transformer<List<Integer>[]> fightPlacesTransformer) {
+    public SqlMapTemplateRepository(QueryExecutor executor, Transformer<CellData[]> cellsTransformer, Transformer<List<Integer>[]> fightPlacesTransformer) {
         this.executor = executor;
-        this.cellTransformer = cellTransformer;
+        this.cellsTransformer = cellsTransformer;
         this.fightPlacesTransformer = fightPlacesTransformer;
 
         utils = new RepositoryUtils<>(this.executor, new Loader());

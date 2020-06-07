@@ -43,7 +43,7 @@ class WalkableFightCellTest extends GameBaseCase {
 
         cell = new WalkableFightCell(
             map = new FightMap(container.get(MapTemplateRepository.class).get(10340)),
-            container.get(MapTemplateRepository.class).get(10340).cells().get(123),
+            container.get(MapTemplateRepository.class).get(10340).cells()[123],
             123
         );
     }
@@ -98,7 +98,7 @@ class WalkableFightCellTest extends GameBaseCase {
     void equals() throws ContainerException {
         WalkableFightCell other = new WalkableFightCell(
             map = new FightMap(container.get(MapTemplateRepository.class).get(10340)),
-            container.get(MapTemplateRepository.class).get(10340).cells().get(456),
+            container.get(MapTemplateRepository.class).get(10340).cells()[456],
             456
         );
 

@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.admin.debug;
 
+import fr.arakne.utils.maps.CoordinateCell;
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
@@ -27,7 +28,6 @@ import fr.quatrevieux.araknemu.game.admin.AdminUser;
 import fr.quatrevieux.araknemu.game.admin.formatter.Link;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
-import fr.quatrevieux.araknemu.game.world.map.util.CoordinateCell;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
 
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ final public class LineOfSight extends AbstractCommand {
         List<Integer> blocked = new ArrayList<>();
 
         CoordinateCell<FightCell> current = new CoordinateCell<>(map.get(user.player().position().cell()));
-        fr.quatrevieux.araknemu.game.world.map.util.LineOfSight<FightCell> lineOfSight = new fr.quatrevieux.araknemu.game.world.map.util.LineOfSight<>(map);
+        fr.arakne.utils.maps.LineOfSight<FightCell> lineOfSight = new fr.arakne.utils.maps.LineOfSight<>(map);
 
         for (int i = 0; i < map.size(); ++i) {
             if (lineOfSight.between(current, new CoordinateCell<>(map.get(i)))) {

@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.data.world.transformer;
 
+import fr.arakne.utils.value.Colors;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.transformer.TransformerException;
-import fr.quatrevieux.araknemu.data.value.Colors;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -35,7 +35,7 @@ import org.apache.commons.lang3.StringUtils;
 final public class ColorsTransformer implements Transformer<Colors> {
     @Override
     public String serialize(Colors value) {
-        return StringUtils.join(value.toHexArray(), ",");
+        return value.toHexString(",");
     }
 
     @Override

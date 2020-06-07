@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.game.fight.builder;
 
+import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
-import fr.quatrevieux.araknemu.util.RandomUtil;
 import org.apache.logging.log4j.Logger;
 
 /**

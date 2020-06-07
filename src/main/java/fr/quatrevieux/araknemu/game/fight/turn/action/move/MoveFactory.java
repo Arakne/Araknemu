@@ -14,18 +14,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 
+import fr.arakne.utils.maps.path.Decoder;
+import fr.arakne.utils.maps.path.Path;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionFactory;
-import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
-import fr.quatrevieux.araknemu.game.world.map.path.Path;
 
 /**
  * Factory for move action

@@ -19,14 +19,14 @@
 
 package fr.quatrevieux.araknemu.game.monster.environment;
 
+import fr.arakne.utils.maps.path.Decoder;
+import fr.arakne.utils.maps.path.Path;
+import fr.arakne.utils.maps.path.PathException;
+import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.activity.ActivityService;
 import fr.quatrevieux.araknemu.game.activity.Task;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
-import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
-import fr.quatrevieux.araknemu.game.world.map.path.Path;
-import fr.quatrevieux.araknemu.game.world.map.path.PathException;
-import fr.quatrevieux.araknemu.util.RandomUtil;
 import org.apache.logging.log4j.Logger;
 
 import java.time.Duration;

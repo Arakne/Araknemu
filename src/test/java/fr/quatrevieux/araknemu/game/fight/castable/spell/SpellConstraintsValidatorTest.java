@@ -19,10 +19,9 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.spell;
 
-import fr.quatrevieux.araknemu.data.value.Interval;
+import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.spell.Spell;

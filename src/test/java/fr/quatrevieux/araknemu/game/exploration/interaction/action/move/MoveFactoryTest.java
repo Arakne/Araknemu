@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ExplorationActionRegistry;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.ValidateWalkable;
-import fr.quatrevieux.araknemu.game.world.map.Direction;
+import fr.arakne.utils.maps.constant.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

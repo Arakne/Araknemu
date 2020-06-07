@@ -14,14 +14,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.network.game.out.account;
 
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.out.object.ItemSerializer;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -46,9 +45,9 @@ final public class CharacterSelected {
             character.name() + "|" +
             character.properties().experience().level() + "|" +
             "|" + // @todo guild
-            character.spriteInfo().sex().ordinal() + "|" +
+            character.spriteInfo().gender().ordinal() + "|" +
             character.spriteInfo().gfxId() + "|" +
-            StringUtils.join(character.spriteInfo().colors().toHexArray(), '|') + "|" +
+            character.spriteInfo().colors().toHexString("|") + "|" +
             StreamSupport.stream(character.inventory().spliterator(), false)
                 .map(ItemSerializer::new)
                 .map(Object::toString)

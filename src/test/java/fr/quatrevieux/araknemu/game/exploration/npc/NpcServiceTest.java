@@ -36,7 +36,7 @@ import fr.quatrevieux.araknemu.game.exploration.npc.exchange.NpcExchangeService;
 import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStore;
 import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStoreService;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
-import fr.quatrevieux.araknemu.game.world.map.Direction;
+import fr.arakne.utils.maps.constant.Direction;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

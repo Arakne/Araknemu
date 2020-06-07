@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.validator;
 
-import fr.quatrevieux.araknemu.data.value.Interval;
+import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;

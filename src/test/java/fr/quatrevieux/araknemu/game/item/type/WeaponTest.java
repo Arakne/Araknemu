@@ -19,11 +19,11 @@
 
 package fr.quatrevieux.araknemu.game.item.type;
 
+import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu._test.TestCase;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
-import fr.quatrevieux.araknemu.data.value.Interval;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;

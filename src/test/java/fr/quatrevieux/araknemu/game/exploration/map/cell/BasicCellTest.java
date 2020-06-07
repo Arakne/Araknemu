@@ -47,14 +47,14 @@ class BasicCellTest extends GameBaseCase {
     void map() {
         ExplorationMap map = service.load(10340);
 
-        BasicCell cell = new BasicCell(185, repository.get(10340).cells().get(185), map);
+        BasicCell cell = new BasicCell(185, repository.get(10340).cells()[185], map);
 
         assertSame(map, cell.map());
     }
 
     @Test
     void walkableCell() {
-        BasicCell cell = new BasicCell(185, repository.get(10340).cells().get(185), service.load(10340));
+        BasicCell cell = new BasicCell(185, repository.get(10340).cells()[185], service.load(10340));
 
         assertEquals(185, cell.id());
         assertTrue(cell.walkable());
@@ -62,7 +62,7 @@ class BasicCellTest extends GameBaseCase {
 
     @Test
     void deactivatedCell() {
-        BasicCell cell = new BasicCell(0, repository.get(10340).cells().get(0), service.load(10340));
+        BasicCell cell = new BasicCell(0, repository.get(10340).cells()[0], service.load(10340));
 
         assertEquals(0, cell.id());
         assertFalse(cell.walkable());
@@ -70,7 +70,7 @@ class BasicCellTest extends GameBaseCase {
 
     @Test
     void unwalkableCell() {
-        BasicCell cell = new BasicCell(209, repository.get(10340).cells().get(209), service.load(10340));
+        BasicCell cell = new BasicCell(209, repository.get(10340).cells()[209], service.load(10340));
 
         assertEquals(209, cell.id());
         assertFalse(cell.walkable());
@@ -78,18 +78,18 @@ class BasicCellTest extends GameBaseCase {
 
     @Test
     void equals() {
-        BasicCell cell = new BasicCell(185, repository.get(10340).cells().get(185), service.load(10340));
+        BasicCell cell = new BasicCell(185, repository.get(10340).cells()[185], service.load(10340));
 
         assertEquals(cell, cell);
-        assertEquals(cell, new BasicCell(185, repository.get(10340).cells().get(185), service.load(10340)));
-        assertNotEquals(cell, new BasicCell(180, repository.get(10340).cells().get(180), service.load(10340)));
+        assertEquals(cell, new BasicCell(185, repository.get(10340).cells()[185], service.load(10340)));
+        assertNotEquals(cell, new BasicCell(180, repository.get(10340).cells()[180], service.load(10340)));
         assertNotEquals(cell, new Object());
     }
 
     @Test
     void free() {
-        assertTrue(new BasicCell(185, repository.get(10340).cells().get(185), service.load(10340)).free());
-        assertFalse(new BasicCell(209, repository.get(10340).cells().get(209), service.load(10340)).free());
+        assertTrue(new BasicCell(185, repository.get(10340).cells()[185], service.load(10340)).free());
+        assertFalse(new BasicCell(209, repository.get(10340).cells()[209], service.load(10340)).free());
     }
 
     @Test
@@ -99,9 +99,9 @@ class BasicCellTest extends GameBaseCase {
         player.join(map);
 
         player.changeCell(185);
-        assertFalse(new BasicCell(185, repository.get(10340).cells().get(185), service.load(10340)).free());
+        assertFalse(new BasicCell(185, repository.get(10340).cells()[185], service.load(10340)).free());
 
         player.changeCell(186);
-        assertTrue(new BasicCell(185, repository.get(10340).cells().get(185), service.load(10340)).free());
+        assertTrue(new BasicCell(185, repository.get(10340).cells()[185], service.load(10340)).free());
     }
 }

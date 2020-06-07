@@ -14,14 +14,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.monster.group;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
-import fr.quatrevieux.araknemu.game.world.map.Direction;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.stream.Collectors;
 
@@ -87,7 +86,7 @@ final public class MonsterGroupSprite implements Sprite {
                 .map(monster -> Integer.toString(monster.level()))
                 .collect(Collectors.joining(",")) + ";" +
             group.monsters().stream()
-                .map(monster -> StringUtils.join(monster.colors().toHexArray(), ",") + ";0,0,0,0;") // @todo accessories
+                .map(monster -> monster.colors().toHexString(",") + ";0,0,0,0;") // @todo accessories
                 .collect(Collectors.joining())
         ;
     }

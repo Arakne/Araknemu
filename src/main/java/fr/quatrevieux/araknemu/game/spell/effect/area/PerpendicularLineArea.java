@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.spell.effect.area;
 
+import fr.arakne.utils.maps.CoordinateCell;
+import fr.arakne.utils.maps.MapCell;
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
-import fr.quatrevieux.araknemu.game.world.map.Direction;
-import fr.quatrevieux.araknemu.game.world.map.MapCell;
-import fr.quatrevieux.araknemu.game.world.map.util.CoordinateCell;
 
 import java.util.HashSet;
 import java.util.Set;

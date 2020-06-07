@@ -72,7 +72,7 @@ final public class SqlWorldRepositoriesModule implements ContainerModule {
             MapTemplateRepository.class,
             container -> new SqlMapTemplateRepository(
                 executor,
-                container.get(MapCellTransformer.class),
+                container.get(MapCellsTransformer.class),
                 container.get(FightPlacesTransformer.class)
             )
         );
@@ -202,8 +202,8 @@ final public class SqlWorldRepositoriesModule implements ContainerModule {
         );
 
         configurator.persist(
-            MapCellTransformer.class,
-            container -> new MapCellTransformer()
+            MapCellsTransformer.class,
+            container -> new MapCellsTransformer()
         );
 
         configurator.persist(

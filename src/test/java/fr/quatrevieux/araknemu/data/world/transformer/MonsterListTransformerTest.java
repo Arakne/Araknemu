@@ -19,8 +19,8 @@
 
 package fr.quatrevieux.araknemu.data.world.transformer;
 
+import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu._test.TestCase;
-import fr.quatrevieux.araknemu.data.value.Interval;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import org.junit.jupiter.api.Test;
 

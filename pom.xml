@@ -64,6 +64,11 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.28.0</version>
         </dependency>
+        <dependency>
+            <groupId>fr.arakne</groupId>
+            <artifactId>arakne-map</artifactId>
+            <version>0.1-alpha</version>
+        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>

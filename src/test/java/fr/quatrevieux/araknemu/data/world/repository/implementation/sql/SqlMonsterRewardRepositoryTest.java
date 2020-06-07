@@ -19,8 +19,8 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
+import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
-import fr.quatrevieux.araknemu.data.value.Interval;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterRewardData;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.BeforeEach;

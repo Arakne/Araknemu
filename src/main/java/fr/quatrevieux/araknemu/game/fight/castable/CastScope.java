@@ -14,16 +14,16 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.castable;
 
+import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
-import fr.quatrevieux.araknemu.util.RandomUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -172,7 +172,7 @@ final public class CastScope {
             return withEffects(effects);
         }
 
-        int dice = RANDOM.integer(100);
+        int dice = RANDOM.nextInt(100);
 
         for (SpellEffect effect : probableEffects) {
             dice -= effect.probability();

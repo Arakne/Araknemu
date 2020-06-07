@@ -19,7 +19,8 @@
 
 package fr.quatrevieux.araknemu.game.fight.builder;
 
-import fr.quatrevieux.araknemu.data.value.Interval;
+import fr.arakne.utils.value.Interval;
+import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
@@ -36,8 +37,7 @@ import fr.quatrevieux.araknemu.game.monster.environment.MonsterEnvironmentServic
 import fr.quatrevieux.araknemu.game.monster.environment.RandomCellSelector;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
-import fr.quatrevieux.araknemu.game.world.map.Direction;
-import fr.quatrevieux.araknemu.util.RandomUtil;
+import fr.arakne.utils.maps.constant.Direction;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -14,17 +14,17 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 
+import fr.arakne.utils.maps.constant.Direction;
+import fr.arakne.utils.maps.path.Path;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
-import fr.quatrevieux.araknemu.game.world.map.Direction;
-import fr.quatrevieux.araknemu.game.world.map.path.Path;
 
 /**
  * Successful move result
@@ -50,7 +50,7 @@ final class MoveSuccess implements ActionResult {
 
     @Override
     public Object[] arguments() {
-        return new Object[] { path.encode() };
+        return new Object[] { path.encodeWithStartCell() };
     }
 
     @Override

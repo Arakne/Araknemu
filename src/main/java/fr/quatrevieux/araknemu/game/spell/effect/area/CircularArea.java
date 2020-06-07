@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.spell.effect.area;
 
+import fr.arakne.utils.maps.CoordinateCell;
+import fr.arakne.utils.maps.DofusMap;
+import fr.arakne.utils.maps.MapCell;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
-import fr.quatrevieux.araknemu.game.world.map.GameMap;
-import fr.quatrevieux.araknemu.game.world.map.MapCell;
-import fr.quatrevieux.araknemu.game.world.map.util.CoordinateCell;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -45,7 +45,7 @@ final public class CircularArea implements SpellEffectArea {
     public <C extends MapCell> Set<C> resolve(C target, C source) {
         Set<C> cells = new HashSet<>();
 
-        GameMap<C> map = target.map();
+        DofusMap<C> map = (DofusMap<C>) target.map();
         CoordinateCell<C> center = new CoordinateCell<>(target);
 
         for (int i = 0; i < map.size(); ++i) {

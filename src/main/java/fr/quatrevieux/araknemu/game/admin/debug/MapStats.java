@@ -14,11 +14,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin.debug;
 
+import fr.arakne.utils.maps.serializer.CellData;
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
@@ -70,16 +71,16 @@ final public class MapStats extends AbstractCommand {
                 ++withFightPos;
             }
 
-            cellCount += template.cells().size();
+            cellCount += template.cells().length;
 
-            for (MapTemplate.Cell cell : template.cells()) {
-                ++movements[cell.movement()];
+            for (CellData cell : template.cells()) {
+                ++movements[cell.movement().ordinal()];
 
                 if (!cell.active()) {
                     ++desactived;
                 }
 
-                if (cell.interactive()) {
+                if (cell.layer2().interactive()) {
                     ++interactive;
                 }
             }

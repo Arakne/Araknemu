@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.network.game.out.spell;
 
+import fr.arakne.utils.encoding.Base64;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookEntry;
-import fr.quatrevieux.araknemu.util.Base64;
 
 /**
  * Update the spell data after upgrade

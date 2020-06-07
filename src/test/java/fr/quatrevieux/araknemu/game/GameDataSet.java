@@ -19,6 +19,10 @@
 
 package fr.quatrevieux.araknemu.game;
 
+import fr.arakne.utils.maps.constant.Direction;
+import fr.arakne.utils.value.Colors;
+import fr.arakne.utils.value.constant.Gender;
+import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.TestingDataSet;
 import fr.quatrevieux.araknemu.core.dbal.repository.Repository;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
@@ -26,13 +30,10 @@ import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Alignment;
 import fr.quatrevieux.araknemu.data.constant.Effect;
-import fr.quatrevieux.araknemu.data.constant.Race;
-import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.value.Geolocation;
 import fr.quatrevieux.araknemu.data.world.entity.environment.area.Area;
 import fr.quatrevieux.araknemu.data.world.entity.environment.area.SubArea;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
-import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
@@ -50,7 +51,6 @@ import fr.quatrevieux.araknemu.data.world.transformer.ItemEffectsTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.ItemSetBonusTransformer;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
-import fr.quatrevieux.araknemu.game.world.map.Direction;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLException;
@@ -142,14 +142,14 @@ public class GameDataSet extends TestingDataSet {
      * Create a simple player data
      */
     public Player createPlayer(int id) {
-        return new Player(id, 10000 + id, 1, "PLAYER_" + id, Race.CRA, Sex.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, -1, 0, new Position(10540, 210), 0);
+        return new Player(id, 10000 + id, 1, "PLAYER_" + id, Race.CRA, Gender.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, -1, 0, new Position(10540, 210), 0);
     }
 
     /**
      * Create an push a new player
      */
     public Player pushPlayer(String name, int accountId, int serverId) throws ContainerException {
-        Player player = new Player(-1, accountId, serverId, name, Race.CRA, Sex.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, -1, 0, new Position(10540, 210), 0);
+        Player player = new Player(-1, accountId, serverId, name, Race.CRA, Gender.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, -1, 0, new Position(10540, 210), 0);
 
         return push(player);
     }
@@ -647,7 +647,7 @@ public class GameDataSet extends TestingDataSet {
                 stmt.setInt(i++, template.gfxId());
                 stmt.setInt(i++, template.scaleX());
                 stmt.setInt(i++, template.scaleY());
-                stmt.setInt(i++, template.sex().ordinal());
+                stmt.setInt(i++, template.gender().ordinal());
                 stmt.setInt(i++, template.colors().color1());
                 stmt.setInt(i++, template.colors().color2());
                 stmt.setInt(i++, template.colors().color3());
@@ -695,9 +695,9 @@ public class GameDataSet extends TestingDataSet {
             return this;
         }
 
-        pushNpcTemplate(new NpcTemplate(848, 30, 100, 100, Sex.MALE, new Colors(394758, 16121664, 13070517), "0,1be7,0,0,0", -1, 9096, null));
-        pushNpcTemplate(new NpcTemplate(849, 9037, 100, 100, Sex.MALE, new Colors(-1, -1, -1), "0,0,0,0,0", -1, 0, null));
-        pushNpcTemplate(new NpcTemplate(878, 40, 100, 100, Sex.MALE, new Colors(8158389, 13677665, 3683117), "0,20f9,2a5,1d5e,1b9e", 4, 9092, null));
+        pushNpcTemplate(new NpcTemplate(848, 30, 100, 100, Gender.MALE, new Colors(394758, 16121664, 13070517), "0,1be7,0,0,0", -1, 9096, null));
+        pushNpcTemplate(new NpcTemplate(849, 9037, 100, 100, Gender.MALE, new Colors(-1, -1, -1), "0,0,0,0,0", -1, 0, null));
+        pushNpcTemplate(new NpcTemplate(878, 40, 100, 100, Gender.MALE, new Colors(8158389, 13677665, 3683117), "0,20f9,2a5,1d5e,1b9e", 4, 9092, null));
 
 
         return this;
@@ -722,7 +722,7 @@ public class GameDataSet extends TestingDataSet {
         pushItemTemplates();
         pushItemSets();
 
-        pushNpcTemplate(new NpcTemplate(10001, 9037, 100, 100, Sex.MALE, new Colors(-1, -1, -1), "0,0,0,0,0", -1, 0, new int[] {39, 2425}));
+        pushNpcTemplate(new NpcTemplate(10001, 9037, 100, 100, Gender.MALE, new Colors(-1, -1, -1), "0,0,0,0,0", -1, 0, new int[] {39, 2425}));
         pushNpc(new Npc(10001, 10001, new Position(10340, 125), Direction.SOUTH_EAST, new int[] {}));
 
         return this;
