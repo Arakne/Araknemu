@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.exploration.map;
@@ -107,11 +107,11 @@ final public class GeolocationService {
          * The bigger map will be returned
          */
         private int compareSize(MapTemplate first, MapTemplate second) {
-            if (first.cells().size() > second.cells().size()) {
+            if (first.cells().length > second.cells().length) {
                 return FIRST;
             }
 
-            if (first.cells().size() < second.cells().size()) {
+            if (first.cells().length < second.cells().length) {
                 return SECOND;
             }
 

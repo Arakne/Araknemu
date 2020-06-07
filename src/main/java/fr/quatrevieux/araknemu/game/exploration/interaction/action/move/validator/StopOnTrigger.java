@@ -19,10 +19,10 @@
 
 package fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator;
 
+import fr.arakne.utils.maps.path.Path;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.Move;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.TriggerCell;
-import fr.quatrevieux.araknemu.game.world.map.path.Path;
 
 /**
  * Stop the path on the first trigger

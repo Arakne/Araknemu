@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.monster.reward;
 
-import fr.quatrevieux.araknemu.data.value.Interval;
+import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterRewardItemRepository;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterRewardRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;

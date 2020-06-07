@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.data.living.entity.player;
 
-import fr.quatrevieux.araknemu.data.constant.Race;
-import fr.quatrevieux.araknemu.data.constant.Sex;
+import fr.arakne.utils.value.Colors;
+import fr.arakne.utils.value.constant.Gender;
+import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.data.living.entity.WalletEntity;
-import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
@@ -40,7 +40,7 @@ final public class Player implements WalletEntity {
     final private int serverId;
     private String name;
     private Race race;
-    private Sex sex;
+    private Gender gender;
     private Colors colors;
     private int level;
     private MutableCharacteristics stats;
@@ -53,13 +53,13 @@ final public class Player implements WalletEntity {
     private Position savedPosition;
     private long kamas;
 
-    public Player(int id, int accountId, int serverId, String name, Race race, Sex sex, Colors colors, int level, MutableCharacteristics stats, Position position, Set<ChannelType> channels, int boostPoints, int spellPoints, int life, long experience, Position savedPosition, long kamas) {
+    public Player(int id, int accountId, int serverId, String name, Race race, Gender gender, Colors colors, int level, MutableCharacteristics stats, Position position, Set<ChannelType> channels, int boostPoints, int spellPoints, int life, long experience, Position savedPosition, long kamas) {
         this.id = id;
         this.accountId = accountId;
         this.serverId = serverId;
         this.name = name;
         this.race = race;
-        this.sex = sex;
+        this.gender = gender;
         this.colors = colors;
         this.level = level;
         this.stats = stats;
@@ -73,8 +73,8 @@ final public class Player implements WalletEntity {
         this.kamas = kamas;
     }
 
-    public Player(int id, int accountId, int serverId, String name, Race race, Sex sex, Colors colors, int level, MutableCharacteristics characteristics) {
-        this(id, accountId, serverId, name, race, sex, colors, level, characteristics, new Position(0, 0), EnumSet.noneOf(ChannelType.class), 0, 0, -1, 0, new Position(0, 0), 0);
+    public Player(int id, int accountId, int serverId, String name, Race race, Gender gender, Colors colors, int level, MutableCharacteristics characteristics) {
+        this(id, accountId, serverId, name, race, gender, colors, level, characteristics, new Position(0, 0), EnumSet.noneOf(ChannelType.class), 0, 0, -1, 0, new Position(0, 0), 0);
     }
 
     public Player(int id) {
@@ -101,8 +101,8 @@ final public class Player implements WalletEntity {
         return race;
     }
 
-    public Sex sex() {
-        return sex;
+    public Gender gender() {
+        return gender;
     }
 
     public Colors colors() {
@@ -199,7 +199,7 @@ final public class Player implements WalletEntity {
             serverId,
             name,
             race,
-            sex,
+            gender,
             colors,
             level,
             stats,
@@ -218,8 +218,8 @@ final public class Player implements WalletEntity {
      * Constructor for character creation
      * The player race will be set to -1
      */
-    static public Player forCreation(int accountId, int serverId, String name, Race race, Sex sex, Colors colors) {
-        return new Player(-1, accountId, serverId, name, race, sex, colors, 1, new DefaultCharacteristics());
+    static public Player forCreation(int accountId, int serverId, String name, Race race, Gender gender, Colors colors) {
+        return new Player(-1, accountId, serverId, name, race, gender, colors, 1, new DefaultCharacteristics());
     }
 
     /**

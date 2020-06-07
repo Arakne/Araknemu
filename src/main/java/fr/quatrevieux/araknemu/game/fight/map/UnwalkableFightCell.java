@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.map;
 
-import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
+import fr.arakne.utils.maps.serializer.CellData;
 import fr.quatrevieux.araknemu.game.fight.exception.FightMapException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 
@@ -30,10 +30,10 @@ import java.util.Optional;
  */
 final public class UnwalkableFightCell implements FightCell {
     final private FightMap map;
-    final private MapTemplate.Cell template;
+    final private CellData template;
     final private int id;
 
-    public UnwalkableFightCell(FightMap map, MapTemplate.Cell template, int id) {
+    public UnwalkableFightCell(FightMap map, CellData template, int id) {
         this.map = map;
         this.template = template;
         this.id = id;
@@ -85,7 +85,17 @@ final public class UnwalkableFightCell implements FightCell {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj instanceof UnwalkableFightCell && equals((FightCell) obj);
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        UnwalkableFightCell that = (UnwalkableFightCell) o;
+
+        return id == that.id && map == that.map;
     }
 }

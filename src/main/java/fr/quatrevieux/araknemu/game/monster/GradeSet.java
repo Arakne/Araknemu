@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.monster;
 
-import fr.quatrevieux.araknemu.data.value.Interval;
-import fr.quatrevieux.araknemu.util.RandomUtil;
+import fr.arakne.utils.value.Interval;
+import fr.arakne.utils.value.helper.RandomUtil;
 
 import java.util.List;
 import java.util.NoSuchElementException;

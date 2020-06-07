@@ -14,12 +14,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.data.world.entity.environment;
 
-import fr.quatrevieux.araknemu.data.value.Dimensions;
+import fr.arakne.utils.maps.serializer.CellData;
+import fr.arakne.utils.value.Dimensions;
 import fr.quatrevieux.araknemu.data.value.Geolocation;
 
 import java.util.List;
@@ -28,50 +29,17 @@ import java.util.List;
  * Entity for Dofus map
  */
 final public class MapTemplate {
-    public interface Cell {
-        /**
-         * Check if the cell do not block the line of sight
-         */
-        public boolean lineOfSight();
-
-        /**
-         * Get the permitted movement type
-         *
-         * The value is an int in range [0 - 5] :
-         *
-         * - 0 means not walkable
-         * - 1 means walkable, but not on a road
-         * - 2 to 5 means different levels of walkable cells. Bigger is the movement, lower is the weight on pathing
-         */
-        public int movement();
-
-        /**
-         * Check if the cell contains an interactive object
-         */
-        public boolean interactive();
-
-        /**
-         * Get the cell object id
-         */
-        public int objectId();
-
-        /**
-         * Check if the cell is active or not
-         */
-        public boolean active();
-    }
-
     final private int id;
     final private String date;
     final private Dimensions dimensions;
     final private String key;
-    final private List<Cell> cells;
+    final private CellData[] cells;
     final private List<Integer>[] fightPlaces;
     final private Geolocation geolocation;
     final private int subAreaId;
     final private boolean indoor;
 
-    public MapTemplate(int id, String date, Dimensions dimensions, String key, List<Cell> cells, List<Integer>[] fightPlaces, Geolocation geolocation, int subAreaId, boolean indoor) {
+    public MapTemplate(int id, String date, Dimensions dimensions, String key, CellData[] cells, List<Integer>[] fightPlaces, Geolocation geolocation, int subAreaId, boolean indoor) {
         this.id = id;
         this.date = date;
         this.dimensions = dimensions;
@@ -99,7 +67,7 @@ final public class MapTemplate {
         return key;
     }
 
-    public List<Cell> cells() {
+    public CellData[] cells() {
         return cells;
     }
 

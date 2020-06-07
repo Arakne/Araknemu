@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.player.race;
 
-import fr.quatrevieux.araknemu.data.constant.Race;
+import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;

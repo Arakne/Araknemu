@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.monster.group.generator;
 
+import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
-import fr.quatrevieux.araknemu.util.RandomUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +93,7 @@ final public class RandomMonsterListGenerator implements MonsterListGenerator {
      * Select a random monster from the group data, considering the rate
      */
     private Monster monster(MonsterGroupData data) {
-        int value = random.integer(data.totalRate());
+        int value = random.nextInt(data.totalRate());
 
         for (MonsterGroupData.Monster monsterData : data.monsters()) {
             value -= monsterData.rate();

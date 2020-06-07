@@ -19,8 +19,8 @@
 
 package fr.quatrevieux.araknemu.network.game.in.account;
 
-import fr.quatrevieux.araknemu.data.constant.Race;
-import fr.quatrevieux.araknemu.data.constant.Sex;
+import fr.arakne.utils.value.constant.Gender;
+import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import org.junit.jupiter.api.Test;
 
@@ -35,7 +35,7 @@ class AddCharacterRequestTest {
 
         assertEquals("bob", request.name());
         assertEquals(Race.XELOR, request.race());
-        assertEquals(Sex.FEMALE, request.sex());
+        assertEquals(Gender.FEMALE, request.gender());
         assertEquals(145, request.colors().color1());
         assertEquals(541, request.colors().color2());
         assertEquals(123, request.colors().color3());

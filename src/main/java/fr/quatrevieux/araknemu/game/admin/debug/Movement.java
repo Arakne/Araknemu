@@ -70,8 +70,8 @@ final public class Movement extends AbstractCommand {
 
         List<Integer> cells = new ArrayList<>();
 
-        for (int i = 0; i < map.cells().size(); ++i) {
-            if (map.cells().get(i).movement() == mov) {
+        for (int i = 0; i < map.cells().length; ++i) {
+            if (map.cells()[i].movement().ordinal() == mov) {
                 cells.add(i);
             }
         }

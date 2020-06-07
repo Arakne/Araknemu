@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.builder;
 
+import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
@@ -38,7 +39,6 @@ import fr.quatrevieux.araknemu.network.game.out.fight.exploration.AddTeamFighter
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightsCount;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.HideFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.ShowFight;
-import fr.quatrevieux.araknemu.util.RandomUtil;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

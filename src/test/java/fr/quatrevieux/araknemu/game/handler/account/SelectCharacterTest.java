@@ -19,12 +19,12 @@
 
 package fr.quatrevieux.araknemu.game.handler.account;
 
-import fr.quatrevieux.araknemu.data.constant.Race;
-import fr.quatrevieux.araknemu.data.constant.Sex;
+import fr.arakne.utils.value.Colors;
+import fr.arakne.utils.value.constant.Gender;
+import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
-import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
@@ -75,7 +75,7 @@ class SelectCharacterTest extends GameBaseCase {
 
     @Test
     void handleSuccess() throws Exception {
-        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null)).id();
+        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, null)).id();
 
         handler.handle(session, new ChoosePlayingCharacter(id));
 
@@ -85,7 +85,7 @@ class SelectCharacterTest extends GameBaseCase {
 
     @Test
     void handleWillSendChatChannels() throws Exception {
-        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null, new Position(10300, 123), EnumSet.of(ChannelType.INFO, ChannelType.PRIVATE), 0, 0, -1, 0, new Position(10540, 210), 0)).id();
+        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, null, new Position(10300, 123), EnumSet.of(ChannelType.INFO, ChannelType.PRIVATE), 0, 0, -1, 0, new Position(10540, 210), 0)).id();
 
         handler.handle(session, new ChoosePlayingCharacter(id));
 
@@ -94,7 +94,7 @@ class SelectCharacterTest extends GameBaseCase {
 
     @Test
     void cannotReselectCharacter() throws Exception {
-        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null)).id();
+        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, null)).id();
 
         handlePacket(new ChoosePlayingCharacter(id));
         assertThrows(CloseWithPacket.class, () -> handlePacket(new ChoosePlayingCharacter(id)));

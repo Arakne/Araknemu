@@ -14,16 +14,16 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
+import fr.arakne.utils.value.Colors;
+import fr.arakne.utils.value.constant.Gender;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
-import fr.quatrevieux.araknemu.data.constant.Sex;
-import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcTemplateRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -47,7 +47,7 @@ final class SqlNpcTemplateRepository implements NpcTemplateRepository {
                 rs.getInt("GFXID"),
                 rs.getInt("SCALE_X"),
                 rs.getInt("SCALE_Y"),
-                Sex.values()[rs.getInt("SEX")],
+                Gender.values()[rs.getInt("SEX")],
                 new Colors(
                     rs.getInt("COLOR1"),
                     rs.getInt("COLOR2"),

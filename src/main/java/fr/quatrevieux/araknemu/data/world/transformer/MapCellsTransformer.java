@@ -19,32 +19,33 @@
 
 package fr.quatrevieux.araknemu.data.world.transformer;
 
-import fr.arakne.utils.encoding.Base64;
+import fr.arakne.utils.maps.serializer.CellData;
+import fr.arakne.utils.maps.serializer.DefaultMapDataSerializer;
+import fr.arakne.utils.maps.serializer.MapDataSerializer;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
-import fr.quatrevieux.araknemu.data.value.EffectArea;
 
 /**
- * Transform spell / weapon effect area string
+ * Transformer for map cell
+ *
+ * https://github.com/Emudofus/Dofus/blob/1.29/ank/battlefield/utils/Compressor.as#L54
  */
-final public class EffectAreaTransformer implements Transformer<EffectArea> {
-    @Override
-    public String serialize(EffectArea value) {
-        if (value == null) {
-            return null;
-        }
+final public class MapCellsTransformer implements Transformer<CellData[]> {
+    final private MapDataSerializer serializer;
 
-        return new String(new char[] {value.type().c(), Base64.chr(value.size())});
+    public MapCellsTransformer() {
+        DefaultMapDataSerializer serializer = new DefaultMapDataSerializer();
+        serializer.enableCache();
+
+        this.serializer = serializer;
     }
 
     @Override
-    public EffectArea unserialize(String serialize) {
-        if (serialize == null) {
-            return null;
-        }
+    public String serialize(CellData[] value) {
+        throw new UnsupportedOperationException();
+    }
 
-        return new EffectArea(
-            EffectArea.Type.byChar(serialize.charAt(0)),
-            Base64.ord(serialize.charAt(1))
-        );
+    @Override
+    public CellData[] unserialize(String serialize) {
+        return serializer.deserialize(serialize);
     }
 }

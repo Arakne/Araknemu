@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.exploration.map.cell.trigger;
@@ -59,8 +59,18 @@ final public class TriggerCell implements ExplorationMapCell {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj instanceof TriggerCell && equals((TriggerCell) obj);
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        TriggerCell that = (TriggerCell) o;
+
+        return id == that.id && map == that.map;
     }
 
     @Override

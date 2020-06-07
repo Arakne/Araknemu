@@ -19,11 +19,11 @@
 
 package fr.quatrevieux.araknemu.game.handler.account;
 
-import fr.quatrevieux.araknemu.data.constant.Race;
-import fr.quatrevieux.araknemu.data.constant.Sex;
+import fr.arakne.utils.value.Colors;
+import fr.arakne.utils.value.constant.Gender;
+import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
-import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountCharacter;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
@@ -66,10 +66,10 @@ class ListCharactersTest extends GameBaseCase {
 
     @Test
     void withCharacters() throws Exception {
-        Player first = dataSet.push(Player.forCreation(1, 2, "first", Race.ECAFLIP, Sex.MALE, new Colors(-1, -1, -1)));
-        Player second = dataSet.push(Player.forCreation(1, 2, "second", Race.FECA, Sex.MALE, new Colors(-1, -1, -1)));
-        dataSet.push(Player.forCreation(2, 2, "not_my_account", Race.FECA, Sex.MALE, new Colors(-1, -1, -1)));
-        dataSet.push(Player.forCreation(1, 1, "not_my_server", Race.FECA, Sex.MALE, new Colors(-1, -1, -1)));
+        Player first = dataSet.push(Player.forCreation(1, 2, "first", Race.ECAFLIP, Gender.MALE, new Colors(-1, -1, -1)));
+        Player second = dataSet.push(Player.forCreation(1, 2, "second", Race.FECA, Gender.MALE, new Colors(-1, -1, -1)));
+        dataSet.push(Player.forCreation(2, 2, "not_my_account", Race.FECA, Gender.MALE, new Colors(-1, -1, -1)));
+        dataSet.push(Player.forCreation(1, 1, "not_my_server", Race.FECA, Gender.MALE, new Colors(-1, -1, -1)));
 
         handler.handle(session, new AskCharacterList(false));
 

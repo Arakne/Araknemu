@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.map.util;
 
+import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
-import fr.quatrevieux.araknemu.util.RandomUtil;
 
 import java.util.List;
 
@@ -83,7 +83,7 @@ final public class PlacementCellsGenerator {
      */
     private FightCell randomFightCell() {
         for (;;) {
-            FightCell cell = map.get(random.integer(map.size()));
+            FightCell cell = map.get(random.nextInt(map.size()));
 
             if (cell.walkable()) {
                 return cell;

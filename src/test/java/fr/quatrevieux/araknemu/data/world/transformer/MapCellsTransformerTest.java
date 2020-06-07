@@ -14,17 +14,29 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.world.map;
+package fr.quatrevieux.araknemu.data.world.transformer;
 
-/**
- * Base type for a battlefield cell
- */
-public interface BattlefieldCell extends MapCell {
-    /**
-     * Check if the cell block line of sight
-     */
-    public boolean sightBlocking();
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+
+class MapCellsTransformerTest {
+    private MapCellsTransformer transformer;
+
+    @BeforeEach
+    void setUp() {
+        transformer = new MapCellsTransformer();
+    }
+
+    @Test
+    void unserializeSameDataWillReturnSameObject() {
+        assertArrayEquals(
+            transformer.unserialize("Hhaaeaaaaa"),
+            transformer.unserialize("Hhaaeaaaaa")
+        );
+    }
 }

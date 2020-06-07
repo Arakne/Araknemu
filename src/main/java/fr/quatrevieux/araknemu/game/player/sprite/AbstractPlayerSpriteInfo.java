@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.player.sprite;
 
-import fr.quatrevieux.araknemu.data.constant.Race;
-import fr.quatrevieux.araknemu.data.constant.Sex;
+import fr.arakne.utils.value.Colors;
+import fr.arakne.utils.value.constant.Gender;
+import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
-import fr.quatrevieux.araknemu.data.value.Colors;
 
 /**
  * Sprite info for using Player entity
@@ -51,7 +51,7 @@ abstract public class AbstractPlayerSpriteInfo implements SpriteInfo {
 
     @Override
     public int gfxId() {
-        return 10 * entity.race().ordinal() + entity.sex().ordinal();
+        return 10 * entity.race().ordinal() + entity.gender().ordinal();
     }
 
     @Override
@@ -60,8 +60,8 @@ abstract public class AbstractPlayerSpriteInfo implements SpriteInfo {
     }
 
     @Override
-    public Sex sex() {
-        return entity.sex();
+    public Gender gender() {
+        return entity.gender();
     }
 
     @Override

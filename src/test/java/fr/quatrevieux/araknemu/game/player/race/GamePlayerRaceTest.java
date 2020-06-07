@@ -19,8 +19,8 @@
 
 package fr.quatrevieux.araknemu.game.player.race;
 
+import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
-import fr.quatrevieux.araknemu.data.constant.Race;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.spell.SpellLevels;

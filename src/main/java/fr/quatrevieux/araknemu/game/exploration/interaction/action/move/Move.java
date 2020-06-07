@@ -14,11 +14,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.exploration.interaction.action.move;
 
+import fr.arakne.utils.maps.path.Path;
+import fr.arakne.utils.maps.path.PathStep;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
@@ -26,8 +28,6 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingActio
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.PathValidationException;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.PathValidator;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
-import fr.quatrevieux.araknemu.game.world.map.path.Path;
-import fr.quatrevieux.araknemu.game.world.map.path.PathStep;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 
 /**
@@ -117,7 +117,7 @@ final public class Move implements BlockingAction {
 
     @Override
     public Object[] arguments() {
-        return new Object[] { path.encode() };
+        return new Object[] { path.encodeWithStartCell() };
     }
 
     public Path<ExplorationMapCell> path() {

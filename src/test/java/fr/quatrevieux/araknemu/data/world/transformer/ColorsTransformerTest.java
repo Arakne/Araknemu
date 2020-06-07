@@ -19,8 +19,8 @@
 
 package fr.quatrevieux.araknemu.data.world.transformer;
 
+import fr.arakne.utils.value.Colors;
 import fr.quatrevieux.araknemu.data.transformer.TransformerException;
-import fr.quatrevieux.araknemu.data.value.Colors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

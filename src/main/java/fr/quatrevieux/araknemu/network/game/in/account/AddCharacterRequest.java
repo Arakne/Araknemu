@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.network.game.in.account;
 
-import fr.quatrevieux.araknemu.data.constant.Race;
-import fr.quatrevieux.araknemu.data.constant.Sex;
-import fr.quatrevieux.araknemu.data.value.Colors;
+import fr.arakne.utils.value.Colors;
+import fr.arakne.utils.value.constant.Gender;
+import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
@@ -45,7 +45,7 @@ final public class AddCharacterRequest implements Packet {
             return new AddCharacterRequest(
                 data[0],
                 Race.byId(Integer.parseInt(data[1])),
-                Sex.parse(data[2]),
+                Gender.parse(data[2]),
                 new Colors(
                     Integer.parseInt(data[3]),
                     Integer.parseInt(data[4]),
@@ -62,13 +62,13 @@ final public class AddCharacterRequest implements Packet {
 
     final private String name;
     final private Race race;
-    final private Sex sex;
+    final private Gender gender;
     final private Colors colors;
 
-    public AddCharacterRequest(String name, Race race, Sex sex, Colors colors) {
+    public AddCharacterRequest(String name, Race race, Gender gender, Colors colors) {
         this.name = name;
         this.race = race;
-        this.sex = sex;
+        this.gender = gender;
         this.colors = colors;
     }
 
@@ -80,8 +80,8 @@ final public class AddCharacterRequest implements Packet {
         return race;
     }
 
-    public Sex sex() {
-        return sex;
+    public Gender gender() {
+        return gender;
     }
 
     public Colors colors() {

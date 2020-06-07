@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.monster.group;
 
-import fr.quatrevieux.araknemu.data.value.Interval;
+import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;

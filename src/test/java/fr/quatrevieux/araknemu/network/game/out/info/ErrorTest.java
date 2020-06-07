@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.network.game.out.info;
 
-import fr.quatrevieux.araknemu.data.value.Interval;
+import fr.arakne.utils.value.Interval;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -19,11 +19,11 @@
 
 package fr.quatrevieux.araknemu.game.player.sprite;
 
+import fr.arakne.utils.value.Colors;
+import fr.arakne.utils.value.constant.Gender;
+import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
-import fr.quatrevieux.araknemu.data.constant.Race;
-import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
-import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +46,7 @@ class GamePlayerSpriteInfoTest extends GameBaseCase {
         assertEquals("Bob", spriteInfo.name());
         assertArrayEquals(new Colors(123, 456, 789).toArray(), spriteInfo.colors().toArray());
         assertEquals("100x100", spriteInfo.size().toString());
-        assertEquals(Sex.MALE, spriteInfo.sex());
+        assertEquals(Gender.MALE, spriteInfo.gender());
         assertEquals(Race.FECA, spriteInfo.race());
         assertEquals(gamePlayer().inventory().accessories(), spriteInfo.accessories());
     }

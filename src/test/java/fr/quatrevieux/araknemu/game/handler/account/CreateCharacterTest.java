@@ -19,13 +19,13 @@
 
 package fr.quatrevieux.araknemu.game.handler.account;
 
-import fr.quatrevieux.araknemu.data.constant.Race;
-import fr.quatrevieux.araknemu.data.constant.Sex;
+import fr.arakne.utils.value.Colors;
+import fr.arakne.utils.value.constant.Gender;
+import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
-import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountCharacter;
@@ -71,7 +71,7 @@ class CreateCharacterTest extends GameBaseCase {
         handler.handle(session, new AddCharacterRequest(
             "Bob",
             Race.ECAFLIP,
-            Sex.MALE,
+            Gender.MALE,
             new Colors(123, 456, 789)
         ));
 
@@ -81,7 +81,7 @@ class CreateCharacterTest extends GameBaseCase {
         assertEquals(2, player.serverId());
         assertEquals("Bob", player.name());
         assertEquals(Race.ECAFLIP, player.race());
-        assertEquals(Sex.MALE, player.sex());
+        assertEquals(Gender.MALE, player.gender());
         assertArrayEquals(new int[]{123, 456, 789}, player.colors().toArray());
         assertEquals(new Position(10300, 320), player.position());
 
@@ -102,7 +102,7 @@ class CreateCharacterTest extends GameBaseCase {
             handler.handle(session, new AddCharacterRequest(
                 "-invalid-name",
                 Race.ECAFLIP,
-                Sex.MALE,
+                Gender.MALE,
                 new Colors(123, 456, 789)
             ));
 

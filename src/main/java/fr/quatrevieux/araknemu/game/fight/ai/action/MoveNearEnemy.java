@@ -14,18 +14,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
+import fr.arakne.utils.maps.constant.Direction;
+import fr.arakne.utils.maps.path.Decoder;
+import fr.arakne.utils.maps.path.Pathfinder;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.world.map.Direction;
-import fr.quatrevieux.araknemu.game.world.map.path.Decoder;
-import fr.quatrevieux.araknemu.game.world.map.path.Pathfinder;
 
 import java.util.Optional;
 
@@ -78,7 +78,7 @@ final public class MoveNearEnemy implements ActionGenerator {
         int cost = 1;
 
         // @todo check agility for tackle ?
-        for (Direction direction : Direction.RESTRICTED) {
+        for (Direction direction : Direction.restrictedDirections()) {
             if (decoder.nextCellByDirection(cell, direction)
                 .flatMap(FightCell::fighter)
                 .filter(other -> !other.team().equals(fighter.team()))

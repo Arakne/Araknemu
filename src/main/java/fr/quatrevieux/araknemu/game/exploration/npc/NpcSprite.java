@@ -14,14 +14,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.exploration.npc;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
-import fr.quatrevieux.araknemu.game.world.map.Direction;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Sprite for the NPC
@@ -70,8 +69,8 @@ final public class NpcSprite implements Sprite {
             name() + ";" +
             type().id() + ";" +
             npc.template().gfxId() + "^" + npc.template().scaleX() + "x" + npc.template().scaleY() + ";" +
-            npc.template().sex().ordinal() + ";" +
-            StringUtils.join(npc.template().colors().toHexArray(), ';') + ";" +
+            npc.template().gender().ordinal() + ";" +
+            npc.template().colors().toHexString(";") + ";" +
             npc.template().accessories() + ";" +
             (npc.template().extraClip() != -1 ? npc.template().extraClip() : "") + ";" +
             npc.template().customArtwork()

@@ -19,7 +19,8 @@
 
 package fr.quatrevieux.araknemu.game.fight.state;
 
-import fr.quatrevieux.araknemu.data.value.Dimensions;
+import fr.arakne.utils.maps.serializer.CellData;
+import fr.arakne.utils.value.Dimensions;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.Fight;
@@ -48,7 +49,7 @@ class StatesFlowTest extends GameBaseCase {
             1,
             new ChallengeType(),
             new FightMap(
-                new MapTemplate(0, "", new Dimensions(0, 0), "", new ArrayList<>(), new List[0], null, 0, false)
+                new MapTemplate(0, "", new Dimensions(0, 0), "", new CellData[0], new List[0], null, 0, false)
             ),
             new ArrayList<>(),
             new StatesFlow(),

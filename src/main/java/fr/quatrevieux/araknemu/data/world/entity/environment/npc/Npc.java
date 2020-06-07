@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.data.world.entity.environment.npc;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.data.value.Position;
-import fr.quatrevieux.araknemu.game.world.map.Direction;
 
 /**
  * Store the NPC data

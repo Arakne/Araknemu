@@ -14,15 +14,16 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.exploration.map;
 
+import fr.arakne.utils.maps.DofusMap;
+import fr.arakne.utils.value.Dimensions;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.data.value.Dimensions;
 import fr.quatrevieux.araknemu.data.value.Geolocation;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.game.exploration.area.ExplorationSubArea;
@@ -35,7 +36,6 @@ import fr.quatrevieux.araknemu.game.exploration.map.event.SpriteRemoveFromMap;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.game.exploration.creature.operation.SendPacket;
-import fr.quatrevieux.araknemu.game.world.map.GameMap;
 
 import java.util.Collection;
 import java.util.Map;
@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
 /**
  * Map object for exploration
  */
-final public class ExplorationMap implements GameMap<ExplorationMapCell>, Dispatcher {
+final public class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispatcher {
     final private MapTemplate template;
     final private ExplorationSubArea subArea;
 
@@ -107,7 +107,7 @@ final public class ExplorationMap implements GameMap<ExplorationMapCell>, Dispat
      * Get the number of cells of the map
      */
     public int size() {
-        return template.cells().size();
+        return template.cells().length;
     }
 
     @Override
@@ -116,7 +116,7 @@ final public class ExplorationMap implements GameMap<ExplorationMapCell>, Dispat
             return cells.get(id);
         }
 
-        return new BasicCell(id, template.cells().get(id), this);
+        return new BasicCell(id, template.cells()[id], this);
     }
 
     /**

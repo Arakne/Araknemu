@@ -19,6 +19,9 @@
 
 package fr.quatrevieux.araknemu.game.player;
 
+import fr.arakne.utils.value.Colors;
+import fr.arakne.utils.value.constant.Gender;
+import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
@@ -27,14 +30,11 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
-import fr.quatrevieux.araknemu.data.constant.Race;
-import fr.quatrevieux.araknemu.data.constant.Sex;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
-import fr.quatrevieux.araknemu.data.value.Colors;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
@@ -89,14 +89,14 @@ class PlayerServiceTest extends GameBaseCase {
 
     @Test
     void loadInvalidServer() throws ContainerException, SQLException {
-        int id = dataSet.push(new Player(-1, 1, 3, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null)).id();
+        int id = dataSet.push(new Player(-1, 1, 3, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, null)).id();
 
         assertThrows(EntityNotFoundException.class, () -> service.load(session, id));
     }
 
     @Test
     void loadSuccess() throws ContainerException {
-        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null)).id();
+        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, null)).id();
 
         GamePlayer player = service.load(session, id);
 
@@ -128,7 +128,7 @@ class PlayerServiceTest extends GameBaseCase {
 
         container.get(ListenerAggregate.class).add(listener);
 
-        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null)).id();
+        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, null)).id();
 
         GamePlayer player = service.load(session, id);
 
@@ -137,7 +137,7 @@ class PlayerServiceTest extends GameBaseCase {
 
     @Test
     void loadWillAddToOnlinePlayers() throws ContainerException, SQLException {
-        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null)).id();
+        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, null)).id();
 
         GamePlayer player = service.load(session, id);
 
@@ -148,7 +148,7 @@ class PlayerServiceTest extends GameBaseCase {
 
     @Test
     void loadOnlinePlayerWillThrowException() throws ContainerException {
-        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null)).id();
+        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, null)).id();
 
         service.load(session, id);
 
@@ -157,7 +157,7 @@ class PlayerServiceTest extends GameBaseCase {
 
     @Test
     void loadedPlayerOnDisconnectWillBeRemovedFromOnlineList() throws ContainerException {
-        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null)).id();
+        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, null)).id();
 
         GamePlayer player = service.load(session, id);
         session.setPlayer(player);
@@ -238,7 +238,7 @@ class PlayerServiceTest extends GameBaseCase {
 
     @Test
     void shutdownScheduled() {
-        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Sex.MALE, new Colors(123, 456, 789), 23, null)).id();
+        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, null)).id();
         service.load(session, id);
 
         ListenerAggregate dispatcher = new DefaultListenerAggregate();

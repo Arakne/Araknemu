@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.game.monster;
 
+import fr.arakne.utils.value.Colors;
+import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
-import fr.quatrevieux.araknemu.data.value.Colors;
-import fr.quatrevieux.araknemu.data.value.Interval;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.monster.reward.MonsterRewardService;

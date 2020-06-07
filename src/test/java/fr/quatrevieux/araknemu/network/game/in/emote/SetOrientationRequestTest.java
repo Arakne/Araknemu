@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.network.game.in.emote;
 
-import fr.quatrevieux.araknemu.game.world.map.Direction;
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
