@@ -224,4 +224,29 @@ class HostServiceTest extends RealmBaseCase {
         assertEquals(3, arr[1].serverId());
         assertEquals(1, arr[1].charactersCount());
     }
+
+    @Test
+    void searchFriendServers() throws ContainerException {
+        dataSet.push(new Account(1, "john", "", "john"));
+        dataSet.push(new Account(1, "other", "", "other"));
+        dataSet.push(Player.forCreation(1, 1, "bob", Race.CRA, Gender.FEMALE, new Colors(-1, -1, -1)));
+        dataSet.push(Player.forCreation(1, 1, "cc", Race.CRA, Gender.FEMALE, new Colors(-1, -1, -1)));
+        dataSet.push(Player.forCreation(1, 1, "dd", Race.CRA, Gender.FEMALE, new Colors(-1, -1, -1)));
+        dataSet.push(Player.forCreation(1, 3, "other", Race.CRA, Gender.FEMALE, new Colors(-1, -1, -1)));
+        dataSet.push(Player.forCreation(2, 3, "bad_account", Race.CRA, Gender.FEMALE, new Colors(-1, -1, -1)));
+
+        Collection<ServerCharacters> serverCharacters = service.searchFriendServers("john");
+
+        assertEquals(2, serverCharacters.size());
+
+        ServerCharacters[] arr = serverCharacters.toArray(new ServerCharacters[]{});
+
+        assertEquals(1, arr[0].serverId());
+        assertEquals(3, arr[0].charactersCount());
+
+        assertEquals(3, arr[1].serverId());
+        assertEquals(1, arr[1].charactersCount());
+
+        assertEquals(1, service.searchFriendServers("other").size());
+    }
 }

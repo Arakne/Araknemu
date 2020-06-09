@@ -33,6 +33,7 @@ import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.value.ServerCharacters;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -249,6 +250,30 @@ final class SqlPlayerRepository implements PlayerRepository {
                                     rs.getInt("COUNT(*)")
                                 )
                             );
+                        }
+
+                        return list;
+                    }
+                }
+            );
+        } catch (SQLException e) {
+            throw new RepositoryException("Cannot load characters count", e);
+        }
+    }
+
+    @Override
+    public Collection<ServerCharacters> serverCharactersCountByAccountPseudo(String accountPseudo) {
+        try {
+            return executor.prepare(
+                "SELECT SERVER_ID, COUNT(*) FROM PLAYER P JOIN ACCOUNT A ON P.ACCOUNT_ID = A.ACCOUNT_ID WHERE A.PSEUDO = ? GROUP BY SERVER_ID",
+                stmt -> {
+                    stmt.setString(1, accountPseudo);
+
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        Collection<ServerCharacters> list = new ArrayList<>();
+
+                        while (rs.next()) {
+                            list.add(new ServerCharacters(rs.getInt("SERVER_ID"), rs.getInt("COUNT(*)")));
                         }
 
                         return list;

@@ -14,27 +14,27 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.network.realm.in;
+package fr.quatrevieux.araknemu.network.realm.out;
 
-import fr.quatrevieux.araknemu.core.network.parser.ParserLoader;
-import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import fr.quatrevieux.araknemu.data.value.ServerCharacters;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.Collection;
 
-/**
- * Load realm input packet parsers
- */
-final public class RealmParserLoader implements ParserLoader {
-    @Override
-    public Collection<SinglePacketParser> load() {
-        return Arrays.asList(
-            new AskServerList.Parser(),
-            new ChooseServer.Parser(),
-            new FriendSearch.Parser()
+import static org.junit.jupiter.api.Assertions.*;
+
+class FriendServerListTest {
+    @Test
+    void packet() {
+        assertEquals(
+            "AF1,3;3,2",
+            new FriendServerList(Arrays.asList(
+                new ServerCharacters(1, 3),
+                new ServerCharacters(3, 2)
+            )).toString()
         );
     }
 }

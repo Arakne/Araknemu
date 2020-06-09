@@ -117,11 +117,20 @@ final public class HostService {
     }
 
     /**
-     * Get characters count for each hots
+     * Get characters count for each hosts
      */
     public Collection<ServerCharacters> charactersByHost(AuthenticationAccount account) {
         return playerRepository.accountCharactersCount(
             account.id()
         );
+    }
+
+    /**
+     * Search for the friend servers
+     *
+     * @param pseudo The friend account pseudo
+     */
+    public Collection<ServerCharacters> searchFriendServers(String pseudo) {
+        return playerRepository.serverCharactersCountByAccountPseudo(pseudo);
     }
 }
