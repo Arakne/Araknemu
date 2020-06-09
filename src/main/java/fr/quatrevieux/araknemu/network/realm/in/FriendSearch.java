@@ -14,27 +14,42 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.network.realm.in;
 
-import fr.quatrevieux.araknemu.core.network.parser.ParserLoader;
+import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 
-import java.util.Arrays;
-import java.util.Collection;
-
 /**
- * Load realm input packet parsers
+ * Packet for find a friend server
+ *
+ * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L80
  */
-final public class RealmParserLoader implements ParserLoader {
-    @Override
-    public Collection<SinglePacketParser> load() {
-        return Arrays.asList(
-            new AskServerList.Parser(),
-            new ChooseServer.Parser(),
-            new FriendSearch.Parser()
-        );
+final public class FriendSearch implements Packet {
+    final static public class Parser implements SinglePacketParser<FriendSearch> {
+        @Override
+        public FriendSearch parse(String input) {
+            return new FriendSearch(input);
+        }
+
+        @Override
+        public String code() {
+            return "AF";
+        }
+    }
+
+    final private String pseudo;
+
+    public FriendSearch(String pseudo) {
+        this.pseudo = pseudo;
+    }
+
+    /**
+     * Get the search pseudo
+     */
+    public String pseudo() {
+        return pseudo;
     }
 }

@@ -42,6 +42,7 @@ import fr.quatrevieux.araknemu.realm.handler.*;
 import fr.quatrevieux.araknemu.realm.handler.account.Authenticate;
 import fr.quatrevieux.araknemu.realm.handler.account.ConnectGame;
 import fr.quatrevieux.araknemu.realm.handler.account.ListServers;
+import fr.quatrevieux.araknemu.realm.handler.account.SearchFriend;
 import fr.quatrevieux.araknemu.realm.host.HostService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -118,7 +119,8 @@ final public class RealmModule implements ContainerModule {
                     new PongResponse(),
                     new ConnectGame(
                         container.get(HostService.class)
-                    )
+                    ),
+                    new SearchFriend(container.get(HostService.class)),
                 }
             )
         );

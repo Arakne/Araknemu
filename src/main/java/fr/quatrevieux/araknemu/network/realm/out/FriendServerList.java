@@ -14,27 +14,33 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.network.realm.in;
+package fr.quatrevieux.araknemu.network.realm.out;
 
-import fr.quatrevieux.araknemu.core.network.parser.ParserLoader;
-import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import fr.quatrevieux.araknemu.data.value.ServerCharacters;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
- * Load realm input packet parsers
+ * List of friend servers
+ *
+ * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L1235
  */
-final public class RealmParserLoader implements ParserLoader {
+final public class FriendServerList {
+    final private Collection<ServerCharacters> servers;
+
+    public FriendServerList(Collection<ServerCharacters> servers) {
+        this.servers = servers;
+    }
+
     @Override
-    public Collection<SinglePacketParser> load() {
-        return Arrays.asList(
-            new AskServerList.Parser(),
-            new ChooseServer.Parser(),
-            new FriendSearch.Parser()
-        );
+    public String toString() {
+        return "AF" + servers.stream()
+            .map(serverCharacters -> serverCharacters.serverId() + "," + serverCharacters.charactersCount())
+            .collect(Collectors.joining(";"))
+        ;
     }
 }

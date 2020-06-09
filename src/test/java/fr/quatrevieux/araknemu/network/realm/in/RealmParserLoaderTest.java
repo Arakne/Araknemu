@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class RealmParserLoaderTest {
     @Test
@@ -36,6 +36,7 @@ class RealmParserLoaderTest {
 
         assertContainsInstance(AskServerList.Parser.class, parsers);
         assertContainsInstance(ChooseServer.Parser.class, parsers);
+        assertContainsInstance(FriendSearch.Parser.class, parsers);
     }
 
     public void assertContainsInstance(Class type, Collection collection) {

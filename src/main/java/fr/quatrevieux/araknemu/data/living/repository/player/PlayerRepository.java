@@ -36,7 +36,7 @@ public interface PlayerRepository extends MutableRepository<Player> {
      * @param accountId The account race
      * @param serverId The server
      */
-    Collection<Player> findByAccount(int accountId, int serverId);
+    public Collection<Player> findByAccount(int accountId, int serverId);
 
     /**
      * Check if the name is already used into the current server
@@ -45,14 +45,14 @@ public interface PlayerRepository extends MutableRepository<Player> {
      *
      * @return true if exists
      */
-    boolean nameExists(Player player);
+    public boolean nameExists(Player player);
 
     /**
      * Get the account characters count
      *
      * @param player The player data
      */
-    int accountCharactersCount(Player player);
+    public int accountCharactersCount(Player player);
 
     /**
      * Get list of servers with characters count
@@ -61,17 +61,26 @@ public interface PlayerRepository extends MutableRepository<Player> {
      *
      * @return The list of servers. The returned server can be down, but cannot have a count of zero
      */
-    Collection<ServerCharacters> accountCharactersCount(int accountId);
+    public Collection<ServerCharacters> accountCharactersCount(int accountId);
+
+    /**
+     * Get list of servers with characters count filter by the account pseudo
+     *
+     * @param accountPseudo The account pseudo to find
+     *
+     * @return The list of servers. The returned server can be down, but cannot have a count of zero
+     */
+    public Collection<ServerCharacters> serverCharactersCountByAccountPseudo(String accountPseudo);
 
     /**
      * Get the player entity by race, and ensure that account and server is valid
      */
-    Player getForGame(Player player);
+    public Player getForGame(Player player);
 
     /**
      * Save the player entity
      *
      * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException When the entity cannot be updated
      */
-    void save(Player player) throws RepositoryException;
+    public void save(Player player) throws RepositoryException;
 }

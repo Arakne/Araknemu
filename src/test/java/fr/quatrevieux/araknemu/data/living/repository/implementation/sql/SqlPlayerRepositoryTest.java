@@ -26,8 +26,11 @@ import fr.quatrevieux.araknemu.DatabaseTestCase;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
+import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.transformer.ChannelsTransformer;
+import fr.quatrevieux.araknemu.data.living.transformer.PermissionsTransformer;
 import fr.quatrevieux.araknemu.data.transformer.MutableCharacteristicsTransformer;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.value.ServerCharacters;
@@ -263,5 +266,59 @@ class SqlPlayerRepositoryTest extends DatabaseTestCase {
         assertEquals(741, savedPlayer.experience());
         assertEquals(4589, savedPlayer.kamas());
         assertEquals(new Position(4568, 123), savedPlayer.savedPosition());
+    }
+
+    @Test
+    void serverCharactersCountByAccountPseudo() {
+        AccountRepository accountRepository = new SqlAccountRepository(new ConnectionPoolExecutor(connection), new PermissionsTransformer());
+        accountRepository.initialize();
+
+        accountRepository.add(new Account(-1, "john", "", "john"));
+        accountRepository.add(new Account(-1, "alan", "", "alan"));
+        accountRepository.add(new Account(-1, "jack", "", "jack"));
+
+        repository.add(Player.forCreation(1, 1, "aaa", Race.CRA, Gender.FEMALE, new Colors(-1, -1, -1)));
+        repository.add(Player.forCreation(1, 1, "bbb", Race.CRA, Gender.FEMALE, new Colors(-1, -1, -1)));
+        repository.add(Player.forCreation(1, 3, "ccc", Race.CRA, Gender.FEMALE, new Colors(-1, -1, -1)));
+        repository.add(Player.forCreation(2, 1, "ddd", Race.CRA, Gender.FEMALE, new Colors(-1, -1, -1)));
+        repository.add(Player.forCreation(3, 1, "eee", Race.CRA, Gender.FEMALE, new Colors(-1, -1, -1)));
+        repository.add(Player.forCreation(3, 3, "fff", Race.CRA, Gender.FEMALE, new Colors(-1, -1, -1)));
+
+        Collection<ServerCharacters> serverCharacters = repository.serverCharactersCountByAccountPseudo("john");
+
+        assertEquals(2, serverCharacters.size());
+
+        ServerCharacters[] arr = serverCharacters.toArray(new ServerCharacters[]{});
+
+        assertEquals(1, arr[0].serverId());
+        assertEquals(2, arr[0].charactersCount());
+
+        assertEquals(3, arr[1].serverId());
+        assertEquals(1, arr[1].charactersCount());
+
+        serverCharacters = repository.serverCharactersCountByAccountPseudo("jack");
+
+        assertEquals(2, serverCharacters.size());
+
+        arr = serverCharacters.toArray(new ServerCharacters[]{});
+
+        assertEquals(1, arr[0].serverId());
+        assertEquals(1, arr[0].charactersCount());
+
+        assertEquals(3, arr[1].serverId());
+        assertEquals(1, arr[1].charactersCount());
+
+        serverCharacters = repository.serverCharactersCountByAccountPseudo("alan");
+
+        assertEquals(1, serverCharacters.size());
+
+        arr = serverCharacters.toArray(new ServerCharacters[]{});
+
+        assertEquals(1, arr[0].serverId());
+        assertEquals(1, arr[0].charactersCount());
+
+        assertTrue(repository.serverCharactersCountByAccountPseudo("not_found").isEmpty());
+
+        accountRepository.destroy();
     }
 }
