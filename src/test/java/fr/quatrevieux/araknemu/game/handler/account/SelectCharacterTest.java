@@ -22,9 +22,11 @@ package fr.quatrevieux.araknemu.game.handler.account;
 import fr.arakne.utils.value.Colors;
 import fr.arakne.utils.value.constant.Gender;
 import fr.arakne.utils.value.constant.Race;
+import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
+import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
@@ -33,9 +35,11 @@ import fr.quatrevieux.araknemu.core.network.exception.CloseWithPacket;
 import fr.quatrevieux.araknemu.network.game.in.account.ChoosePlayingCharacter;
 import fr.quatrevieux.araknemu.network.game.out.chat.ChannelSubscribed;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import fr.quatrevieux.araknemu.network.game.out.info.Information;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.util.EnumSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -74,13 +78,17 @@ class SelectCharacterTest extends GameBaseCase {
     }
 
     @Test
-    void handleSuccess() throws Exception {
+    void handleSuccess() {
         int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, null)).id();
 
         handler.handle(session, new ChoosePlayingCharacter(id));
 
+        ConnectionLog log = container.get(ConnectionLogRepository.class).currentSession(session.account().id());
+        assertEquals(id, log.playerId());
+
         requestStack.assertOne("ASK|1|Bob|23||0|10|7b|1c8|315|");
-        requestStack.assertLast(Error.welcome());
+        requestStack.assertOne(Error.welcome());
+        requestStack.assertOne(Information.currentIpAddress("127.0.0.1"));
     }
 
     @Test
@@ -98,5 +106,17 @@ class SelectCharacterTest extends GameBaseCase {
 
         handlePacket(new ChoosePlayingCharacter(id));
         assertThrows(CloseWithPacket.class, () -> handlePacket(new ChoosePlayingCharacter(id)));
+    }
+
+    @Test
+    void handleWillSendLastSession() {
+        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, null)).id();
+        ConnectionLog log = dataSet.push(new ConnectionLog(session.account().id(), Instant.parse("2020-05-10T15:25:00.00Z"), "145.0.23.65"));
+        log.setEndDate(Instant.parse("2020-05-10T18:25:00.00Z"));
+        container.get(ConnectionLogRepository.class).save(log);
+
+        handler.handle(session, new ChoosePlayingCharacter(id));
+
+        requestStack.assertOne(Information.lastLogin(log.startDate(), log.ipAddress()));
     }
 }

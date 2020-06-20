@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.realm;
 
 import fr.quatrevieux.araknemu.Araknemu;
+import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.core.network.Server;
@@ -30,6 +31,7 @@ import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import fr.quatrevieux.araknemu.core.network.session.extension.RateLimiter;
 import fr.quatrevieux.araknemu.core.network.session.extension.SessionLogger;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
+import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.network.in.CommonParserLoader;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
@@ -110,7 +112,8 @@ final public class RealmModule implements ContainerModule {
                     new CheckDofusVersion(container.get(RealmConfiguration.class)),
                     new Authenticate(
                         container.get(AuthenticationService.class),
-                        container.get(HostService.class)
+                        container.get(HostService.class),
+                        container.get(SessionLogService.class)
                     ),
                     new CheckQueuePosition(),
                     new ListServers(
@@ -151,5 +154,9 @@ final public class RealmModule implements ContainerModule {
                 container.get(PlayerRepository.class)
             )
         );
+
+        configurator.persist(SessionLogService.class, container -> new SessionLogService(
+            container.get(ConnectionLogRepository.class)
+        ));
     }
 }

@@ -33,8 +33,10 @@ import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
 import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
+import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
 import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.SqlLivingRepositoriesModule;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
@@ -147,6 +149,7 @@ public class RealmBaseCase extends DatabaseTestCase {
         dataSet
             .declare(Account.class, AccountRepository.class)
             .declare(Player.class, PlayerRepository.class)
+            .declare(ConnectionLog.class, ConnectionLogRepository.class)
         ;
 
         container.get(HostService.class).declare(

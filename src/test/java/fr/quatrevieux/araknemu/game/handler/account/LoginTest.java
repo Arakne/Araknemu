@@ -21,16 +21,20 @@ package fr.quatrevieux.araknemu.game.handler.account;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.account.TokenService;
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.core.network.exception.CloseWithPacket;
+import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.network.game.in.account.LoginToken;
 import fr.quatrevieux.araknemu.network.game.out.account.LoginTokenSuccess;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,16 +48,18 @@ class LoginTest extends GameBaseCase {
 
         handler = new Login(
             container.get(TokenService.class),
-            container.get(AccountService.class)
+            container.get(AccountService.class),
+            container.get(SessionLogService.class)
         );
 
-        dataSet.use(Account.class);
+        dataSet.use(Account.class).use(ConnectionLog.class);
     }
 
     @Test
-    void handleSuccess() throws Exception {
+    void handleSuccess() {
         Account account = new Account(1, "test", "test", "test");
         dataSet.push(account);
+        ConnectionLog log = dataSet.push(new ConnectionLog(account.id(), Instant.now(), "127.0.0.1"));
 
         String token = container.get(TokenService.class).generate(account);
 
@@ -62,6 +68,8 @@ class LoginTest extends GameBaseCase {
         assertTrue(session.isLogged());
         requestStack.assertLast(new LoginTokenSuccess());
         assertEquals(1, session.account().id());
+        assertNotNull(session.log());
+        assertEquals(session.account().serverId(), dataSet.refresh(log).serverId());
     }
 
     @Test

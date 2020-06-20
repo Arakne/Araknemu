@@ -40,6 +40,7 @@ import fr.quatrevieux.araknemu.game.account.TokenService;
 import fr.quatrevieux.araknemu.game.account.bank.BankService;
 import fr.quatrevieux.araknemu.game.account.generator.NameCheckerGenerator;
 import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
+import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.game.activity.ActivityService;
 import fr.quatrevieux.araknemu.game.admin.AdminModule;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
@@ -149,6 +150,7 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(NpcExchangeService.class, container.get(NpcExchangeService.class));
         assertInstanceOf(GeolocationService.class, container.get(GeolocationService.class));
         assertInstanceOf(ShutdownService.class, container.get(ShutdownService.class));
+        assertInstanceOf(SessionLogService.class, container.get(SessionLogService.class));
 
         assertSame(
             container.get(ListenerAggregate.class),

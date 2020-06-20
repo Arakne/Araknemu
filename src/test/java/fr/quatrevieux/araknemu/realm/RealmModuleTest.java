@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.realm;
 
 import fr.quatrevieux.araknemu.Araknemu;
+import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.config.Configuration;
 import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
@@ -76,6 +77,7 @@ class RealmModuleTest {
         assertInstanceOf(AggregatePacketParser.class, container.get(PacketParser.class));
         assertInstanceOf(AuthenticationService.class, container.get(AuthenticationService.class));
         assertInstanceOf(HostService.class, container.get(HostService.class));
+        assertInstanceOf(SessionLogService.class, container.get(SessionLogService.class));
     }
 
     public void assertInstanceOf(Class clazz, Object obj) {

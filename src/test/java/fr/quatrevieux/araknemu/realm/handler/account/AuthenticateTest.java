@@ -20,9 +20,12 @@
 package fr.quatrevieux.araknemu.realm.handler.account;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
+import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
+import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
+import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
 import fr.quatrevieux.araknemu.network.realm.in.Credentials;
 import fr.quatrevieux.araknemu.network.realm.out.*;
 import fr.quatrevieux.araknemu.realm.ConnectionKeyTest;
@@ -33,6 +36,7 @@ import fr.quatrevieux.araknemu.realm.host.HostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.util.EnumSet;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,10 +51,14 @@ class AuthenticateTest extends RealmBaseCase {
 
         handler = new Authenticate(
             container.get(AuthenticationService.class),
-            container.get(HostService.class)
+            container.get(HostService.class),
+            container.get(SessionLogService.class)
         );
 
-        dataSet.push(new Account(-1, "login", "password", "pseudo", EnumSet.noneOf(Permission.class), "My question", "My response"), "login_account");
+        dataSet
+            .use(ConnectionLog.class)
+            .push(new Account(-1, "login", "password", "pseudo", EnumSet.noneOf(Permission.class), "My question", "My response"), "login_account")
+        ;
     }
 
     @Test
@@ -71,6 +79,12 @@ class AuthenticateTest extends RealmBaseCase {
             new Question("My+question"),
             "AH1;1;110;1"
         );
+
+        ConnectionLog log = container.get(ConnectionLogRepository.class).currentSession(session.account().id());
+
+        assertEquals(session.account().id(), log.accountId());
+        assertEquals("127.0.0.1", log.ipAddress());
+        assertBetween(0, 1, Instant.now().getEpochSecond() - log.startDate().getEpochSecond());
     }
 
     @Test

@@ -28,10 +28,12 @@ import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.BankItemRepository;
+import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
 import fr.quatrevieux.araknemu.data.living.transformer.ChannelsTransformer;
+import fr.quatrevieux.araknemu.data.living.transformer.InstantTransformer;
 import fr.quatrevieux.araknemu.data.living.transformer.PermissionsTransformer;
 import fr.quatrevieux.araknemu.data.transformer.MutableCharacteristicsTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.ItemEffectsTransformer;
@@ -96,6 +98,14 @@ final public class SqlLivingRepositoriesModule implements ContainerModule {
         );
 
         configurator.persist(
+            ConnectionLogRepository.class,
+            container -> new SqlConnectionLogRepository(
+                executor,
+                container.get(InstantTransformer.class)
+            )
+        );
+
+        configurator.persist(
             MutableCharacteristicsTransformer.class,
             container -> new MutableCharacteristicsTransformer()
         );
@@ -114,5 +124,7 @@ final public class SqlLivingRepositoriesModule implements ContainerModule {
             ItemEffectsTransformer.class,
             container -> new ItemEffectsTransformer()
         );
+
+        configurator.persist(InstantTransformer.class, container -> new InstantTransformer());
     }
 }

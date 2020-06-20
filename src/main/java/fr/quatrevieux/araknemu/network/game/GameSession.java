@@ -23,50 +23,42 @@ import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.core.network.session.AbstractDelegatedSession;
 import fr.quatrevieux.araknemu.core.network.session.Session;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.common.session.SessionLog;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.network.AccountSession;
 
 /**
  * Session wrapper for game server
  */
-final public class GameSession extends AbstractDelegatedSession implements Session, Dispatcher {
+final public class GameSession extends AbstractDelegatedSession implements AccountSession<GameAccount>, Dispatcher {
     private GameAccount account;
     private GamePlayer player;
     private ExplorationPlayer exploration;
     private PlayerFighter fighter;
+    private SessionLog log;
 
     public GameSession(Session session) {
         super(session);
     }
 
-    /**
-     * Attach an game account to the session
-     *
-     * @param account Account to attach
-     */
+    @Override
     public void attach(GameAccount account) {
         this.account = account;
     }
 
-    /**
-     * Get the attached account
-     */
+    @Override
     public GameAccount account() {
         return account;
     }
 
-    /**
-     * Check if an account is attached
-     */
+    @Override
     public boolean isLogged() {
         return account != null;
     }
 
-    /**
-     * Remove the attached account
-     * @return The attached account
-     */
+    @Override
     public GameAccount detach() {
         return account = null;
     }
@@ -123,6 +115,20 @@ final public class GameSession extends AbstractDelegatedSession implements Sessi
      */
     public void setFighter(PlayerFighter fighter) {
         this.fighter = fighter;
+    }
+
+    /**
+     * Get the session log
+     */
+    public SessionLog log() {
+        return log;
+    }
+
+    /**
+     * Define the current session log related to the current session
+     */
+    public void setLog(SessionLog log) {
+        this.log = log;
     }
 
     @Override
