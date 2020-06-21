@@ -32,18 +32,20 @@ final public class ConnectionLog {
     private Integer serverId;
     private Integer playerId;
     private Instant endDate;
+    private String clientUid;
 
-    public ConnectionLog(int accountId, Instant startDate, String ipAddress, Integer serverId, Integer playerId, Instant endDate) {
+    public ConnectionLog(int accountId, Instant startDate, String ipAddress, Integer serverId, Integer playerId, Instant endDate, String clientUid) {
         this.accountId = accountId;
         this.startDate = startDate;
         this.ipAddress = ipAddress;
         this.serverId = serverId;
         this.playerId = playerId;
         this.endDate = endDate;
+        this.clientUid = clientUid;
     }
 
     public ConnectionLog(int accountId, Instant startDate, String ipAddress) {
-        this(accountId, startDate, ipAddress, null, null, null);
+        this(accountId, startDate, ipAddress, null, null, null, null);
     }
 
     /**
@@ -108,5 +110,19 @@ final public class ConnectionLog {
 
     public void setEndDate(Instant endDate) {
         this.endDate = endDate;
+    }
+
+    /**
+     * The client unique id
+     * Can be null if not set
+     *
+     * @see fr.quatrevieux.araknemu.network.game.in.account.ClientUid
+     */
+    public String clientUid() {
+        return clientUid;
+    }
+
+    public void setClientUid(String clientUid) {
+        this.clientUid = clientUid;
     }
 }

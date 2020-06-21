@@ -116,6 +116,18 @@ class SqlConnectionLogRepositoryTest extends GameBaseCase {
     }
 
     @Test
+    void clientUid() {
+        ConnectionLog log = new ConnectionLog(1, Instant.parse("2020-06-05T14:25:31.00Z"), "145.25.211.5");
+        repository.add(log);
+
+        assertNull(repository.get(log).clientUid());
+
+        log.setClientUid("my_uid");
+        repository.save(log);
+        assertEquals("my_uid", repository.get(log).clientUid());
+    }
+
+    @Test
     void lastSession() {
         Account account = new Account(5);
 

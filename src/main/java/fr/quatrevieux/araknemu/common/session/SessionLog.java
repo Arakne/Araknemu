@@ -53,6 +53,14 @@ final public class SessionLog {
     }
 
     /**
+     * Define the current client uid
+     */
+    public void setClientUid(String uid) {
+        log.setClientUid(uid);
+        service.save(log);
+    }
+
+    /**
      * Mark the session as terminated
      */
     public void stop() {

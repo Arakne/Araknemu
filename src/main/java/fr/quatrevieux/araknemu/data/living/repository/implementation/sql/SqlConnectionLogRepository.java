@@ -47,6 +47,7 @@ final class SqlConnectionLogRepository implements ConnectionLogRepository {
             );
 
             log.setEndDate(instantTransformer.unserialize(rs.getString("END_DATE")));
+            log.setClientUid(rs.getString("CLIENT_UID"));
 
             int serverId = rs.getInt("SERVER_ID");
 
@@ -90,6 +91,7 @@ final class SqlConnectionLogRepository implements ConnectionLogRepository {
                     "END_DATE DATETIME," +
                     "SERVER_ID INTEGER," +
                     "PLAYER_ID INTEGER," +
+                    "CLIENT_UID VARCHAR(32)," +
                     "PRIMARY KEY (ACCOUNT_ID, START_DATE)" +
                 ")"
             );
@@ -168,7 +170,7 @@ final class SqlConnectionLogRepository implements ConnectionLogRepository {
     @Override
     public void save(ConnectionLog log) {
         utils.update(
-            "UPDATE CONNECTION_LOG SET `SERVER_ID` = ?, `PLAYER_ID` = ?, `END_DATE` = ? WHERE `ACCOUNT_ID` = ? AND `START_DATE` = ?",
+            "UPDATE CONNECTION_LOG SET `SERVER_ID` = ?, `PLAYER_ID` = ?, `END_DATE` = ?, `CLIENT_UID` = ? WHERE `ACCOUNT_ID` = ? AND `START_DATE` = ?",
             rs -> {
                 if (log.serverId() != null) {
                     rs.setInt(1, log.serverId());
@@ -183,8 +185,9 @@ final class SqlConnectionLogRepository implements ConnectionLogRepository {
                 }
 
                 rs.setString(3, instantTransformer.serialize(log.endDate()));
-                rs.setInt(4, log.accountId());
-                rs.setString(5, instantTransformer.serialize(log.startDate()));
+                rs.setString(4, log.clientUid());
+                rs.setInt(5, log.accountId());
+                rs.setString(6, instantTransformer.serialize(log.startDate()));
             }
         );
     }

@@ -79,4 +79,10 @@ class SessionLogTest extends GameBaseCase {
         assertEquals(log.endDate(), sessionLog.last().get().endDate());
         assertEquals(log.accountId(), sessionLog.last().get().accountId());
     }
+
+    @Test
+    void setClientUid() {
+        sessionLog.setClientUid("my_uid");
+        assertEquals("my_uid", dataSet.refresh(entity).clientUid());
+    }
 }
