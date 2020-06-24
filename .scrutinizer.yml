@@ -3,7 +3,7 @@ build:
         tests:
             environment:
                 java: 'java-8-oracle'
-                timezone: FR
+                timezone: Europe/Paris
 
             services:
                 mysql: 5.7
