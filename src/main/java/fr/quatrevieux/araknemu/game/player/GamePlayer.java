@@ -257,6 +257,13 @@ final public class GamePlayer implements PlayerSessionScope {
         return restrictions;
     }
 
+    /**
+     * Does the player is a newly created character ? (i.e. first connection)
+     */
+    public boolean isNew() {
+        return !session.log().hasAlreadyPlayed(entity);
+    }
+
     Player entity() {
         return entity;
     }

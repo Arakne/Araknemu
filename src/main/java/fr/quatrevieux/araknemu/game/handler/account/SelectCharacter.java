@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.network.game.in.account.ChoosePlayingCharacter;
 import fr.quatrevieux.araknemu.network.game.out.account.CharacterSelected;
 import fr.quatrevieux.araknemu.network.game.out.account.CharacterSelectionError;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import fr.quatrevieux.araknemu.network.game.out.info.Information;
 
 /**
  * Handle character select for entering game
@@ -56,7 +57,11 @@ final public class SelectCharacter implements PacketHandler<GameSession, ChooseP
 
         session.send(new CharacterSelected(session.player()));
         session.player().dispatch(new GameJoined());
+        session.log().setPlayerId(session.player().id());
+
         session.send(Error.welcome());
+        session.log().last().ifPresent(log -> session.send(Information.lastLogin(log.startDate(), log.ipAddress())));
+        session.send(Information.currentIpAddress(session.channel().address().getAddress().getHostAddress()));
     }
 
     @Override

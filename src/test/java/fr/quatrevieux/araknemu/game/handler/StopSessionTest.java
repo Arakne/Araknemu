@@ -21,11 +21,13 @@ package fr.quatrevieux.araknemu.game.handler;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.Fight;
@@ -39,6 +41,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -67,12 +70,17 @@ class StopSessionTest extends FightBaseCase {
         );
         account.attach(session);
 
+        ConnectionLog log = dataSet.push(new ConnectionLog(account.id(), Instant.now(), "127.0.0.1"));
+        session.setLog(container.get(SessionLogService.class).load(session));
+
         handler.handle(session, new SessionClosed());
 
         assertFalse(session.isLogged());
         assertFalse(account.isLogged());
         assertFalse(accountService.isLogged(account.id()));
         assertNull(session.account());
+
+        assertBetween(0, 1, Instant.now().getEpochSecond() - dataSet.refresh(log).endDate().getEpochSecond());
     }
 
     @Test

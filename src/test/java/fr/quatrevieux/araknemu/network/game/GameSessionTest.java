@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.network.game;
 
+import fr.quatrevieux.araknemu.common.session.SessionLog;
+import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
@@ -89,6 +91,19 @@ class GameSessionTest extends GameBaseCase {
         session.setFighter(fighter);
 
         assertSame(fighter, session.fighter());
+    }
+
+    @Test
+    void log() throws ContainerException {
+        login();
+        GameSession session = new GameSession(new ConfigurableSession(new DummyChannel()));
+
+        assertNull(session.log());
+
+        SessionLog log = container.get(SessionLogService.class).create(this.session);
+        session.setLog(log);
+
+        assertSame(log, session.log());
     }
 
     @Test

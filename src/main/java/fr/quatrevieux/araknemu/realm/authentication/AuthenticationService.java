@@ -14,12 +14,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.realm.authentication;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.realm.host.HostService;
 
 import java.util.Collections;
@@ -32,7 +33,7 @@ import java.util.concurrent.ConcurrentMap;
  * Service for handle authentication
  */
 final public class AuthenticationService {
-    final private fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository repository;
+    final private AccountRepository repository;
     final private HostService hosts;
 
     /**
@@ -47,7 +48,7 @@ final public class AuthenticationService {
      */
     final private ConcurrentMap<Integer, AuthenticationAccount> authenticated = new ConcurrentHashMap<>();
 
-    public AuthenticationService(fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository repository, HostService hosts) {
+    public AuthenticationService(AccountRepository repository, HostService hosts) {
         this.repository = repository;
         this.hosts = hosts;
     }

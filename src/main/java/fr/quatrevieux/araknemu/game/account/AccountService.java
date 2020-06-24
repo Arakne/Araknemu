@@ -14,12 +14,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.account;
 
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,7 +30,7 @@ import java.util.concurrent.ConcurrentMap;
  * Service for game accounts
  */
 final public class AccountService {
-    final private fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository repository;
+    final private AccountRepository repository;
     final private GameConfiguration configuration;
 
     /**
@@ -37,7 +38,7 @@ final public class AccountService {
      */
     final private ConcurrentMap<Integer, GameAccount> accounts = new ConcurrentHashMap<>();
 
-    public AccountService(fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository repository, GameConfiguration configuration) {
+    public AccountService(AccountRepository repository, GameConfiguration configuration) {
         this.repository = repository;
         this.configuration = configuration;
     }

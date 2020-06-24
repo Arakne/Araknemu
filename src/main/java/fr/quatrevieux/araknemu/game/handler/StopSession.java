@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.handler;
@@ -41,6 +41,7 @@ final public class StopSession implements PacketHandler<GameSession, SessionClos
 
         if (session.isLogged()) {
             session.account().detach();
+            session.log().stop();
         }
     }
 

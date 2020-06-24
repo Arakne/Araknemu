@@ -14,23 +14,24 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
 import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
+import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.game.handler.*;
 import fr.quatrevieux.araknemu.game.handler.account.GenerateName;
 import fr.quatrevieux.araknemu.game.handler.account.Login;
 import fr.quatrevieux.araknemu.game.handler.account.SendRegionalVersion;
 import fr.quatrevieux.araknemu.game.handler.basic.SendDateAndTime;
 import fr.quatrevieux.araknemu.network.game.GameSession;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Loader for common packets
@@ -46,7 +47,8 @@ final public class CommonLoader implements Loader {
             new CheckQueuePosition(),
             new Login(
                 container.get(TokenService.class),
-                container.get(AccountService.class)
+                container.get(AccountService.class),
+                container.get(SessionLogService.class)
             ),
             new SendRegionalVersion(),
             new PongResponse(),

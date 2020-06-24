@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.realm.handler.account;
 
+import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.network.realm.in.Credentials;
@@ -32,13 +33,11 @@ import fr.quatrevieux.araknemu.realm.host.HostService;
  * Authenticate the client
  */
 final public class Authenticate implements PacketHandler<RealmSession, Credentials> {
-    private static class Request implements AuthenticationRequest {
-        final private HostService hosts;
+    private class Request implements AuthenticationRequest {
         final private RealmSession session;
         final private Credentials credentials;
 
-        public Request(HostService hosts, RealmSession session, Credentials credentials) {
-            this.hosts = hosts;
+        public Request(RealmSession session, Credentials credentials) {
             this.session = session;
             this.credentials = credentials;
         }
@@ -56,6 +55,7 @@ final public class Authenticate implements PacketHandler<RealmSession, Credentia
         @Override
         public void success(AuthenticationAccount account) {
             account.attach(session);
+            logService.create(session);
 
             session.send(new Pseudo(account.pseudo()));
             session.send(new Community(account.community()));
@@ -85,17 +85,17 @@ final public class Authenticate implements PacketHandler<RealmSession, Credentia
 
     final private AuthenticationService service;
     final private HostService hosts;
+    final private SessionLogService logService;
 
-    public Authenticate(AuthenticationService service, HostService hosts) {
+    public Authenticate(AuthenticationService service, HostService hosts, SessionLogService logService) {
         this.service = service;
-        this.hosts   = hosts;
+        this.hosts = hosts;
+        this.logService = logService;
     }
 
     @Override
     public void handle(RealmSession session, Credentials packet) {
-        service.authenticate(
-            new Request(hosts, session, packet)
-        );
+        service.authenticate(new Request(session, packet));
     }
 
     @Override

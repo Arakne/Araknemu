@@ -35,6 +35,7 @@ import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.BankItemRepository;
+import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
@@ -58,6 +59,7 @@ import fr.quatrevieux.araknemu.game.account.generator.CamelizeName;
 import fr.quatrevieux.araknemu.game.account.generator.NameCheckerGenerator;
 import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
 import fr.quatrevieux.araknemu.game.account.generator.SimpleNameGenerator;
+import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.game.activity.ActivityService;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
@@ -741,6 +743,10 @@ final public class GameModule implements ContainerModule {
             app,
             container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class),
             container.get(GameConfiguration.class)
+        ));
+
+        configurator.persist(SessionLogService.class, container -> new SessionLogService(
+            container.get(ConnectionLogRepository.class)
         ));
     }
 }

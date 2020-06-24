@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.network.game.out.info;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class InformationTest {
@@ -82,6 +84,22 @@ class InformationTest {
         assertEquals(
             "Im020;42",
             Information.bankTaxPayed(42).toString()
+        );
+    }
+
+    @Test
+    void lastLogin() {
+        assertEquals(
+            "Im0152;2020~6~20~16~25~141.22.12.34",
+            Information.lastLogin(Instant.parse("2020-06-20T14:25:00.00Z"), "141.22.12.34").toString()
+        );
+    }
+
+    @Test
+    void currentIpAddress() {
+        assertEquals(
+            "Im0153;141.22.12.34",
+            Information.currentIpAddress("141.22.12.34").toString()
         );
     }
 }

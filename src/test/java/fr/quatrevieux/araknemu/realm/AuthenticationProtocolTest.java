@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.realm;
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
+import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.network.realm.out.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +38,10 @@ public class AuthenticationProtocolTest extends RealmBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.push(new Account(-1, "test", "password", "pseudo", EnumSet.noneOf(Permission.class), "security question", "secret answer"), "test_account");
+        dataSet
+            .use(ConnectionLog.class)
+            .push(new Account(-1, "test", "password", "pseudo", EnumSet.noneOf(Permission.class), "security question", "secret answer"), "test_account")
+        ;
     }
 
     @Test

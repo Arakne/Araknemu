@@ -14,20 +14,21 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.network.realm;
 
 import fr.quatrevieux.araknemu.core.network.session.AbstractDelegatedSession;
 import fr.quatrevieux.araknemu.core.network.session.Session;
+import fr.quatrevieux.araknemu.network.AccountSession;
 import fr.quatrevieux.araknemu.realm.ConnectionKey;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 
 /**
  * Wrap IoSession for Realm
  */
-final public class RealmSession extends AbstractDelegatedSession implements Session {
+final public class RealmSession extends AbstractDelegatedSession implements AccountSession<AuthenticationAccount> {
     final private ConnectionKey key;
 
     private AuthenticationAccount account;
@@ -45,30 +46,22 @@ final public class RealmSession extends AbstractDelegatedSession implements Sess
         return key;
     }
 
-    /**
-     * Attach account to the session
-     */
+    @Override
     public void attach(AuthenticationAccount account) {
         this.account = account;
     }
 
-    /**
-     * Detach account from session
-     */
-    public void detach() {
-        account = null;
+    @Override
+    public AuthenticationAccount detach() {
+        return account = null;
     }
 
-    /**
-     * Get attached account
-     */
+    @Override
     public AuthenticationAccount account() {
         return account;
     }
 
-    /**
-     * Check is the client is logged (has an attached account)
-     */
+    @Override
     public boolean isLogged() {
         return account != null;
     }

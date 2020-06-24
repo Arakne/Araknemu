@@ -25,10 +25,13 @@ import fr.quatrevieux.araknemu.core.network.parser.Dispatcher;
 import fr.quatrevieux.araknemu.core.network.parser.PacketParser;
 import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.TokenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -68,6 +71,7 @@ class GamePacketConfiguratorTest extends GameBaseCase {
     void messageReceivedSuccess() throws Exception {
         Account account = new Account(1);
         dataSet.push(account);
+        dataSet.push(new ConnectionLog(account.id(), Instant.now(), "127.0.0.1"));
 
         String token = container.get(TokenService.class).generate(account);
 

@@ -43,12 +43,14 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.account.AccountBank;
 import fr.quatrevieux.araknemu.data.living.entity.account.BankItem;
+import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.BankItemRepository;
+import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
 import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.SqlLivingRepositoriesModule;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
@@ -81,6 +83,7 @@ import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
 import fr.quatrevieux.araknemu.data.world.repository.monster.*;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.game.admin.AdminModule;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
@@ -107,6 +110,7 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.EnumSet;
 
@@ -254,6 +258,7 @@ public class GameBaseCase extends DatabaseTestCase {
             .declare(BankItem.class, BankItemRepository.class)
             .declare(NpcExchange.class, NpcExchangeRepository.class)
             .declare(Area.class, AreaRepository.class)
+            .declare(ConnectionLog.class, ConnectionLogRepository.class)
         ;
 
         container.get(GameService.class).subscribe();
@@ -277,6 +282,8 @@ public class GameBaseCase extends DatabaseTestCase {
         );
 
         account.attach(session);
+        dataSet.push(new ConnectionLog(account.id(), Instant.now(), "127.0.0.1"));
+        session.setLog(container.get(SessionLogService.class).load(session));
     }
 
     public GamePlayer gamePlayer() throws ContainerException, SQLException {
