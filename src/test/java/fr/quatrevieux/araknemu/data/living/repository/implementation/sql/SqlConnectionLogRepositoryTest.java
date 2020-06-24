@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.transformer.InstantTransformer;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.BeforeEach;
@@ -173,5 +174,29 @@ class SqlConnectionLogRepositoryTest extends GameBaseCase {
         repository.delete(log);
 
         assertThrows(EntityNotFoundException.class, () -> repository.get(log));
+    }
+
+    @Test
+    void hasAlreadyPlayed() {
+        Player player = new Player(5);
+
+        assertFalse(repository.hasAlreadyPlayed(player));
+
+        ConnectionLog log = repository.add(new ConnectionLog(5, Instant.parse("2020-06-05T16:10:21.00Z"), ""));
+        log.setPlayerId(5);
+        repository.save(log);
+
+        assertFalse(repository.hasAlreadyPlayed(player));
+        log.setEndDate(Instant.now());
+        repository.save(log);
+
+        assertTrue(repository.hasAlreadyPlayed(player));
+
+        ConnectionLog other = repository.add(new ConnectionLog(5, Instant.parse("2020-06-05T16:10:21.00Z"), ""));
+        other.setPlayerId(5);
+        other.setEndDate(Instant.now());
+        repository.save(other);
+
+        assertTrue(repository.hasAlreadyPlayed(player));
     }
 }

@@ -22,12 +22,15 @@ package fr.quatrevieux.araknemu.game.player;
 import fr.arakne.utils.value.Colors;
 import fr.arakne.utils.value.constant.Gender;
 import fr.arakne.utils.value.constant.Race;
+import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
+import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
@@ -45,6 +48,7 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharac
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.util.EnumSet;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -247,5 +251,21 @@ class GamePlayerTest extends GameBaseCase {
 
         player.setSavedPosition(new Position(10340, 255));
         assertEquals(new Position(10340, 255), player.savedPosition());
+    }
+
+    @Test
+    void isNew() {
+        dataSet.use(ConnectionLog.class);
+        session.attach(player.account());
+        session.setLog(container.get(SessionLogService.class).load(session));
+
+        assertTrue(player.isNew());
+
+        ConnectionLog log = dataSet.push(new ConnectionLog(entity.accountId(), Instant.now(), ""));
+        log.setEndDate(Instant.now());
+        log.setPlayerId(entity.id());
+        container.get(ConnectionLogRepository.class).save(log);
+
+        assertFalse(player.isNew());
     }
 }

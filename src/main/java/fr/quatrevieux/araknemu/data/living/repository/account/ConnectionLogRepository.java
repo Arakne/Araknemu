@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.data.living.repository.account;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.MutableRepository;
 import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 
 import java.util.Optional;
 
@@ -53,4 +54,13 @@ public interface ConnectionLogRepository extends MutableRepository<ConnectionLog
      * Save mutable fields of the log
      */
     public void save(ConnectionLog log);
+
+    /**
+     * Check if the terminated session exists for the given player
+     *
+     * @param player player to search
+     *
+     * @return true if a session exists
+     */
+    public boolean hasAlreadyPlayed(Player player);
 }

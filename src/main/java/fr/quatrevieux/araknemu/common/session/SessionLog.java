@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.common.session;
 
 import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -73,5 +74,12 @@ final public class SessionLog {
      */
     public Optional<ConnectionLog> last() {
         return service.lastSession(log.accountId());
+    }
+
+    /**
+     * Check if a session is present for the given player
+     */
+    public boolean hasAlreadyPlayed(Player player) {
+        return service.hasAlreadyPlayed(player);
     }
 }

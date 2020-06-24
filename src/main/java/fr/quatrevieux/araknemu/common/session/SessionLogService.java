@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.common.session;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
 import fr.quatrevieux.araknemu.network.AccountSession;
 
@@ -83,5 +84,12 @@ final public class SessionLogService {
      */
     Optional<ConnectionLog> lastSession(int accountId) {
         return repository.lastSession(accountId);
+    }
+
+    /**
+     * Check if a session is present for the given player
+     */
+    boolean hasAlreadyPlayed(Player player) {
+        return repository.hasAlreadyPlayed(player);
     }
 }

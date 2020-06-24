@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.common.session;
 
 import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.BeforeEach;
@@ -84,5 +85,16 @@ class SessionLogTest extends GameBaseCase {
     void setClientUid() {
         sessionLog.setClientUid("my_uid");
         assertEquals("my_uid", dataSet.refresh(entity).clientUid());
+    }
+
+    @Test
+    void hasAlreadyPlayed() {
+        Player player = new Player(5);
+
+        assertFalse(sessionLog.hasAlreadyPlayed(player));
+        sessionLog.setPlayerId(5);
+        sessionLog.stop();
+
+        assertTrue(sessionLog.hasAlreadyPlayed(player));
     }
 }

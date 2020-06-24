@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 
@@ -190,5 +191,13 @@ final class SqlConnectionLogRepository implements ConnectionLogRepository {
                 rs.setString(6, instantTransformer.serialize(log.startDate()));
             }
         );
+    }
+
+    @Override
+    public boolean hasAlreadyPlayed(Player player) {
+        return utils.aggregate(
+            "SELECT COUNT(*) FROM CONNECTION_LOG WHERE PLAYER_ID = ? AND END_DATE IS NOT NULL",
+            stmt -> stmt.setInt(1, player.id())
+        ) > 0;
     }
 }
