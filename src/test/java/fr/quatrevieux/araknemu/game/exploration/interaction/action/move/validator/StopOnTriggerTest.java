@@ -95,4 +95,27 @@ class StopOnTriggerTest extends GameBaseCase {
         assertEquals("aexbftdgl", new Decoder<>(map).encode(path));
         assertEquals(map.get(395), path.get(path.size() - 1).cell());
     }
+
+    @Test
+    void shouldIgnoreTheFirstCellOnPath() throws SQLException, ContainerException {
+        ExplorationPlayer player = explorationPlayer();
+
+        Move move = new Move(
+            player,
+            new Path<>(
+                new Decoder<>(player.map()),
+                Arrays.asList(
+                    new PathStep(map.get(21), Direction.WEST),
+                    new PathStep(map.get(22), Direction.WEST),
+                    new PathStep(map.get(23), Direction.WEST)
+                )
+            ),
+            new PathValidator[] {new ValidateWalkable()}
+        );
+
+        Path<ExplorationMapCell> path = validator.validate(move, move.path());
+
+        assertEquals(3, path.size());
+        assertEquals(23, path.last().cell().id());
+    }
 }
