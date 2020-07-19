@@ -19,13 +19,13 @@
 
 package fr.quatrevieux.araknemu.game.handler.loader;
 
+import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
 import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
-import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.game.handler.*;
 import fr.quatrevieux.araknemu.game.handler.account.GenerateName;
 import fr.quatrevieux.araknemu.game.handler.account.Login;

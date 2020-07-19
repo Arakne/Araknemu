@@ -25,6 +25,7 @@ package fr.quatrevieux.araknemu.core.event;
 public interface Dispatcher {
     /**
      * Dispatch the event to listeners
+     * This method should not raise any exceptions
      *
      * @param event Event to dispatch
      */

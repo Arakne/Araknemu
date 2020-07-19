@@ -19,7 +19,10 @@
 
 package fr.quatrevieux.araknemu.game.handler;
 
+import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.event.Listener;
+import fr.quatrevieux.araknemu.core.network.SessionClosed;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
@@ -27,7 +30,6 @@ import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
-import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.Fight;
@@ -36,7 +38,6 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.core.network.SessionClosed;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -164,5 +165,32 @@ class StopSessionTest extends FightBaseCase {
         handler.handle(session, new SessionClosed());
 
         assertEquals(1, count.get());
+    }
+
+    @Test
+    void withExceptionOnDisconnectShouldContinueProcessAndLogError() throws SQLException, ContainerException {
+        ExplorationPlayer player = explorationPlayer();
+        player.dispatcher().add(new Listener<Disconnected>() {
+            @Override
+            public void on(Disconnected event) {
+                throw new RuntimeException("my error");
+            }
+
+            @Override
+            public Class<Disconnected> event() {
+                return Disconnected.class;
+            }
+        });
+        ExplorationMap map = player.map();
+
+        handler.handle(session, new SessionClosed());
+
+        assertFalse(session.isLogged());
+        assertFalse(player.account().isLogged());
+        assertFalse(accountService.isLogged(player.account().id()));
+        assertNull(session.account());
+        assertNull(session.player());
+        assertNull(session.exploration());
+        assertFalse(map.creatures().contains(player));
     }
 }

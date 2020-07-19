@@ -42,8 +42,10 @@ import fr.quatrevieux.araknemu.game.admin.server.Online;
 import fr.quatrevieux.araknemu.game.admin.server.ServerContext;
 import fr.quatrevieux.araknemu.game.admin.server.ServerContextResolver;
 import fr.quatrevieux.araknemu.game.admin.server.Shutdown;
+import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.sql.SQLException;
 
@@ -131,6 +133,7 @@ class AdminModuleTest extends GameBaseCase {
         container.register(new SqlWorldRepositoriesModule(app.database().get("game")));
         container.register(new GameModule(app));
         container.register(new AdminModule());
+        container.register(configurator -> configurator.set(RealmConnector.class, Mockito.mock(RealmConnector.class)));
 
         container.get(PlayerService.class).load(session, gamePlayer().id());
 

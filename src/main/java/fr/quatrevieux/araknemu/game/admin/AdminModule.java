@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
+import fr.quatrevieux.araknemu.game.GameService;
 import fr.quatrevieux.araknemu.game.ShutdownService;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContext;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
@@ -133,7 +134,8 @@ final public class AdminModule implements ContainerModule {
                     public void configure(ServerContext context) {
                         add(new Online(
                             container.get(PlayerService.class),
-                            container.get(ExplorationMapService.class)
+                            container.get(ExplorationMapService.class),
+                            container.get(GameService.class)
                         ));
                         add(new Shutdown(container.get(ShutdownService.class)));
                     }

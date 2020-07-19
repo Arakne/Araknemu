@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.admin.server;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.data.value.Geolocation;
+import fr.quatrevieux.araknemu.game.GameService;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.formatter.Link;
@@ -37,6 +38,7 @@ import java.util.stream.Stream;
 final public class Online extends AbstractCommand {
     final private PlayerService service;
     final private ExplorationMapService mapService;
+    final private GameService gameService;
 
     /**
      * Store the command options
@@ -75,9 +77,10 @@ final public class Online extends AbstractCommand {
         }
     }
 
-    public Online(PlayerService service, ExplorationMapService mapService) {
+    public Online(PlayerService service, ExplorationMapService mapService, GameService gameService) {
         this.service = service;
         this.mapService = mapService;
+        this.gameService = gameService;
     }
 
     @Override
@@ -104,7 +107,7 @@ final public class Online extends AbstractCommand {
 
     @Override
     public void execute(AdminPerformer performer, List<String> arguments) {
-        performer.success("There is {} online players", service.online().size());
+        performer.success("There is {} online players with {} active sessions", service.online().size(), gameService.sessions().size());
 
         Options options = new Options(arguments);
 

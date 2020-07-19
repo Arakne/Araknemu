@@ -19,6 +19,9 @@
 
 package fr.quatrevieux.araknemu.core.event;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -30,8 +33,19 @@ import java.util.Set;
  * @fixme Use ConcurrentHashMap instead of HashMap ?
  */
 final public class DefaultListenerAggregate implements ListenerAggregate {
+    final private Logger logger;
     final private Map<Class<? extends Listener>, Listener> listeners = new HashMap<>();
     final private Map<Class, Set<Class<? extends Listener>>> events = new HashMap<>();
+
+    final static private Logger defaultLogger = LogManager.getLogger(DefaultListenerAggregate.class);
+
+    public DefaultListenerAggregate() {
+        this(defaultLogger);
+    }
+
+    public DefaultListenerAggregate(Logger logger) {
+        this.logger = logger;
+    }
 
     @Override
     public void dispatch(Object event) {
@@ -40,7 +54,11 @@ final public class DefaultListenerAggregate implements ListenerAggregate {
         }
 
         for (Class listenerClass : events.get(event.getClass())) {
-            get(listenerClass).on(event);
+            try {
+                get(listenerClass).on(event);
+            } catch (RuntimeException e) {
+                logger.error(e.getMessage(), e);
+            }
         }
     }
 
