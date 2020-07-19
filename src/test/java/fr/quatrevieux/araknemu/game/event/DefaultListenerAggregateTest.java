@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.event;
 
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.Listener;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -114,10 +115,14 @@ class DefaultListenerAggregateTest {
 
     @Test
     void dispatchWithExceptionShouldNotStopOtherListeners() {
+        Logger logger = Mockito.mock(Logger.class);
+        dispatcher = new DefaultListenerAggregate(logger);
+
+        RuntimeException error = new RuntimeException("my error");
         Listener<A> l1 = new Listener<A>() {
             @Override
             public void on(A event) {
-                throw new RuntimeException("my error");
+                throw error;
             }
 
             @Override
@@ -132,9 +137,10 @@ class DefaultListenerAggregateTest {
 
         A a = new A();
 
-        assertThrows(RuntimeException.class, () -> dispatcher.dispatch(a));
+        dispatcher.dispatch(a);
 
         assertSame(a, l2.a);
+        Mockito.verify(logger).error("my error", error);
     }
 
     @Test

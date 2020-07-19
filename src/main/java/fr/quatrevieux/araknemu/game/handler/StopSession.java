@@ -19,12 +19,11 @@
 
 package fr.quatrevieux.araknemu.game.handler;
 
+import fr.quatrevieux.araknemu.core.network.SessionClosed;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 import fr.quatrevieux.araknemu.game.player.PlayerSessionScope;
 import fr.quatrevieux.araknemu.network.game.GameSession;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
-import fr.quatrevieux.araknemu.core.network.SessionClosed;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -33,22 +32,11 @@ import java.util.stream.Stream;
  * Handle end of session
  */
 final public class StopSession implements PacketHandler<GameSession, SessionClosed> {
-    final private Logger logger;
-
-    public StopSession(Logger logger) {
-        this.logger = logger;
-    }
-
     @Override
     public void handle(GameSession session, SessionClosed packet) {
         // Issue #85 : all session scopes forward "Disconnected" event to GamePlayer
         // So, the event should be dispatched only to the first scope to prevent to be dispatched twice
-        try {
-            scopes(session).findFirst().ifPresent(scope -> scope.dispatch(new Disconnected()));
-        } catch (RuntimeException e) {
-            logger.error("Error during logout", e);
-        }
-
+        scopes(session).findFirst().ifPresent(scope -> scope.dispatch(new Disconnected()));
         scopes(session).forEach(scope -> scope.unregister(session));
 
         if (session.isLogged()) {

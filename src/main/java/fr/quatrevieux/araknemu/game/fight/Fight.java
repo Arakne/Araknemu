@@ -63,8 +63,8 @@ final public class Fight implements Dispatcher, Sender {
     final private Logger logger;
     final private List<FightModule> modules = new ArrayList<>();
     final private Map<Class, Object> attachments = new HashMap<>();
+    final private ListenerAggregate dispatcher;
 
-    final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
     final private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     final private FightTurnList turnList = new FightTurnList(this);
     final private EffectsHandler effects = new EffectsHandler();
@@ -78,6 +78,7 @@ final public class Fight implements Dispatcher, Sender {
         this.teams = teams;
         this.statesFlow = statesFlow;
         this.logger = logger;
+        this.dispatcher = new DefaultListenerAggregate(logger);
     }
 
     /**

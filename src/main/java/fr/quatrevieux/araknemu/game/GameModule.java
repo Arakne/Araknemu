@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game;
 
 import fr.quatrevieux.araknemu.Araknemu;
+import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
@@ -59,7 +60,6 @@ import fr.quatrevieux.araknemu.game.account.generator.CamelizeName;
 import fr.quatrevieux.araknemu.game.account.generator.NameCheckerGenerator;
 import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
 import fr.quatrevieux.araknemu.game.account.generator.SimpleNameGenerator;
-import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.game.activity.ActivityService;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
@@ -451,7 +451,7 @@ final public class GameModule implements ContainerModule {
 
         configurator.persist(
             ListenerAggregate.class,
-            container -> new DefaultListenerAggregate()
+            container -> new DefaultListenerAggregate(container.get(Logger.class))
         );
 
         configurator.factory(
