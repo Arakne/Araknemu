@@ -39,8 +39,18 @@ final public class DefaultListenerAggregate implements ListenerAggregate {
             return;
         }
 
+        RuntimeException exception = null;
+
         for (Class listenerClass : events.get(event.getClass())) {
-            get(listenerClass).on(event);
+            try {
+                get(listenerClass).on(event);
+            } catch (RuntimeException e) {
+                exception = e;
+            }
+        }
+
+        if (exception != null) {
+            throw exception;
         }
     }
 

@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -109,6 +110,31 @@ class DefaultListenerAggregateTest {
         assertSame(a, l1.a);
         assertSame(a, l2.a);
         assertNull(l3.b);
+    }
+
+    @Test
+    void dispatchWithExceptionShouldNotStopOtherListeners() {
+        Listener<A> l1 = new Listener<A>() {
+            @Override
+            public void on(A event) {
+                throw new RuntimeException("my error");
+            }
+
+            @Override
+            public Class<A> event() {
+                return A.class;
+            }
+        };
+        ListenerA l2 = new ListenerA();
+
+        dispatcher.add(l1);
+        dispatcher.add(l2);
+
+        A a = new A();
+
+        assertThrows(RuntimeException.class, () -> dispatcher.dispatch(a));
+
+        assertSame(a, l2.a);
     }
 
     @Test

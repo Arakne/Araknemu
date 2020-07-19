@@ -48,7 +48,7 @@ final public class SessionHandlerAdapter<S extends Session> extends ChannelInbou
     }
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    public void channelActive(ChannelHandlerContext ctx) {
         S session = factory.create(new ChannelAdapter(ctx));
 
         ctx
@@ -62,13 +62,16 @@ final public class SessionHandlerAdapter<S extends Session> extends ChannelInbou
     }
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        ctx.channel().attr(sessionAttribute).get().receive(new SessionClosed());
-        sessions.remove(ctx.channel().id());
+    public void channelInactive(ChannelHandlerContext ctx) {
+        try {
+            ctx.channel().attr(sessionAttribute).get().receive(new SessionClosed());
+        } finally {
+            sessions.remove(ctx.channel().id());
+        }
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ctx.channel().attr(sessionAttribute).get().receive(msg);
     }
 

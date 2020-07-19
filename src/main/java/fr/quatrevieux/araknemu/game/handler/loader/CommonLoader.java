@@ -32,6 +32,7 @@ import fr.quatrevieux.araknemu.game.handler.account.Login;
 import fr.quatrevieux.araknemu.game.handler.account.SendRegionalVersion;
 import fr.quatrevieux.araknemu.game.handler.basic.SendDateAndTime;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Loader for common packets
@@ -42,7 +43,7 @@ final public class CommonLoader implements Loader {
     public PacketHandler<GameSession, ?>[] load(Container container) throws ContainerException {
         return new PacketHandler[] {
             new StartSession(),
-            new StopSession(),
+            new StopSession(container.get(Logger.class)),
             new CloseInactiveSession(),
             new CheckQueuePosition(),
             new Login(

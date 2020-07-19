@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.handler.CheckQueuePosition;
 import fr.quatrevieux.araknemu.game.handler.StartSession;
 import fr.quatrevieux.araknemu.game.handler.StopSession;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -34,7 +35,7 @@ class AggregateLoaderTest extends GameBaseCase {
         Loader l1 = Mockito.mock(Loader.class);
         Loader l2 = Mockito.mock(Loader.class);
 
-        Mockito.when(l1.load(container)).thenReturn(new PacketHandler[] {new StartSession(), new StopSession()});
+        Mockito.when(l1.load(container)).thenReturn(new PacketHandler[] {new StartSession(), new StopSession(Mockito.mock(Logger.class))});
         Mockito.when(l2.load(container)).thenReturn(new PacketHandler[] {new CheckQueuePosition()});
 
         AggregateLoader loader = new AggregateLoader(l1, l2);
