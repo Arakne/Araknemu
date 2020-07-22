@@ -23,6 +23,9 @@ import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
+import fr.quatrevieux.araknemu.realm.authentication.password.Password;
+import fr.quatrevieux.araknemu.realm.authentication.password.PasswordManager;
+import fr.quatrevieux.araknemu.realm.authentication.password.PlainTextHash;
 import fr.quatrevieux.araknemu.realm.host.HostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +44,8 @@ class AuthenticationAccountTest extends RealmBaseCase {
 
         service = new AuthenticationService(
             container.get(AccountRepository.class),
-            container.get(HostService.class)
+            container.get(HostService.class),
+            container.get(PasswordManager.class)
         );
     }
 
@@ -49,6 +53,7 @@ class AuthenticationAccountTest extends RealmBaseCase {
     void accountValues() {
         AuthenticationAccount account = new AuthenticationAccount(
             new Account(1, "user", "pass", "pseudo", EnumSet.noneOf(Permission.class), "question", "response"),
+            new PlainTextHash().parse("password"),
             service
         );
 
@@ -60,20 +65,35 @@ class AuthenticationAccountTest extends RealmBaseCase {
     }
 
     @Test
-    void checkPassword() {
+    void password() {
         AuthenticationAccount account = new AuthenticationAccount(
             new Account(1, "user", "pass", "pseudo"),
+            new PlainTextHash().parse("pass"),
             service
         );
 
-        assertFalse(account.checkPassword("invalid"));
-        assertTrue(account.checkPassword("pass"));
+        assertEquals("pass", account.password().toString());
+        assertFalse(account.password().check("invalid"));
+        assertTrue(account.password().check("pass"));
+    }
+
+    @Test
+    void updatePassword() {
+        Account entity = dataSet.push(new Account(1, "user", "pass", "pseudo", EnumSet.noneOf(Permission.class), "question", "response"));
+        AuthenticationAccount account = new AuthenticationAccount(entity, new PlainTextHash().parse("pass"), service);
+
+        Password password = new PlainTextHash().parse("newPass");
+        account.updatePassword(password);
+
+        assertSame(password, account.password());
+        assertEquals("newPass", dataSet.refresh(entity).password());
     }
 
     @Test
     void isAlive() {
         AuthenticationAccount account = new AuthenticationAccount(
             new Account(1, "user", "pass", "pseudo"),
+            new PlainTextHash().parse("password"),
             service
         );
 
@@ -90,6 +110,7 @@ class AuthenticationAccountTest extends RealmBaseCase {
     void attach() {
         AuthenticationAccount account = new AuthenticationAccount(
             new Account(1, "user", "pass", "pseudo"),
+            new PlainTextHash().parse("password"),
             service
         );
 
@@ -103,6 +124,7 @@ class AuthenticationAccountTest extends RealmBaseCase {
     void detach() {
         AuthenticationAccount account = new AuthenticationAccount(
             new Account(1, "user", "pass", "pseudo"),
+            new PlainTextHash().parse("password"),
             service
         );
 

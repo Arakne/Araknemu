@@ -22,26 +22,38 @@ package fr.quatrevieux.araknemu.realm.authentication;
 import fr.quatrevieux.araknemu.common.account.AbstractLivingAccount;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
+import fr.quatrevieux.araknemu.realm.authentication.password.Password;
 
 /**
  * AuthenticationAccount entity for realm
  */
 final public class AuthenticationAccount extends AbstractLivingAccount<RealmSession> {
     final private AuthenticationService service;
+    private Password password;
 
-    public AuthenticationAccount(Account account, AuthenticationService service) {
+    public AuthenticationAccount(Account account, Password password, AuthenticationService service) {
         super(account);
 
+        this.password = password;
         this.service = service;
     }
 
     /**
-     * Check if the given password is valid
-     *
-     * @param password Input password
+     * Get the password of the account
      */
-    public boolean checkPassword(String password) {
-        return account.password().equals(password);
+    public Password password() {
+        return password;
+    }
+
+    /**
+     * Update the account password
+     *
+     * @param newPassword new password
+     */
+    public void updatePassword(Password newPassword) {
+        password = newPassword;
+        account.setPassword(newPassword.toString());
+        service.savePassword(account);
     }
 
     /**

@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.network.realm.out.SelectServerPlain;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
+import fr.quatrevieux.araknemu.realm.authentication.password.PlainTextHash;
 import fr.quatrevieux.araknemu.realm.host.HostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,6 +48,7 @@ class ConnectGameTest extends RealmBaseCase {
         session.attach(
             new AuthenticationAccount(
                 new Account(1),
+                new PlainTextHash().parse("password"),
                 container.get(AuthenticationService.class)
             )
         );

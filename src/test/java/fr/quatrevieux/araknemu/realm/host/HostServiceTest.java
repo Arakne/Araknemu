@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.data.value.ServerCharacters;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
+import fr.quatrevieux.araknemu.realm.authentication.password.PlainTextHash;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -86,6 +87,7 @@ class HostServiceTest extends RealmBaseCase {
         service.checkLogin(
             new AuthenticationAccount(
                 new Account(1),
+                new PlainTextHash().parse("password"),
                 container.get(AuthenticationService.class)
             ),
             response -> checkLogin = response
@@ -104,6 +106,7 @@ class HostServiceTest extends RealmBaseCase {
 
         AuthenticationAccount account = new AuthenticationAccount(
             new Account(1),
+            new PlainTextHash().parse("password"),
             container.get(AuthenticationService.class)
         );
 
@@ -126,6 +129,7 @@ class HostServiceTest extends RealmBaseCase {
 
         AuthenticationAccount account = new AuthenticationAccount(
             new Account(1),
+            new PlainTextHash().parse("password"),
             container.get(AuthenticationService.class)
         );
 
@@ -154,6 +158,7 @@ class HostServiceTest extends RealmBaseCase {
 
         AuthenticationAccount account = new AuthenticationAccount(
             new Account(1),
+            new PlainTextHash().parse("password"),
             container.get(AuthenticationService.class)
         );
 
@@ -185,6 +190,7 @@ class HostServiceTest extends RealmBaseCase {
 
         AuthenticationAccount account = new AuthenticationAccount(
             new Account(1),
+            new PlainTextHash().parse("password"),
             container.get(AuthenticationService.class)
         );
 
@@ -210,6 +216,7 @@ class HostServiceTest extends RealmBaseCase {
         Collection<ServerCharacters> serverCharacters = service.charactersByHost(
             new AuthenticationAccount(
                 new Account(1),
+                new PlainTextHash().parse("password"),
                 container.get(AuthenticationService.class)
             )
         );

@@ -23,8 +23,10 @@ import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
+import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.network.realm.out.*;
+import fr.quatrevieux.araknemu.realm.authentication.password.Argon2Hash;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,12 +35,14 @@ import java.util.EnumSet;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AuthenticationProtocolTest extends RealmBaseCase {
+    private Account account;
+
     @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet
+        account = dataSet
             .use(ConnectionLog.class)
             .push(new Account(-1, "test", "password", "pseudo", EnumSet.noneOf(Permission.class), "security question", "secret answer"), "test_account")
         ;
@@ -72,6 +76,29 @@ public class AuthenticationProtocolTest extends RealmBaseCase {
 
     @Test
     void authenticationSuccess() throws Exception {
+        sendPacket("1.29.1");
+        sendPacket("test\n#1"+ConnectionKeyTest.cryptPassword("password", session.key().key()));
+
+        assertTrue(session.isLogged());
+        assertEquals("pseudo", session.account().pseudo());
+
+        requestStack.assertAll(
+            new Pseudo("pseudo"),
+            new Community(0),
+            new GMLevel(false),
+            new Question("security question"),
+            "AH1;1;110;1"
+        );
+
+        assertTrue(dataSet.refresh(account).password().startsWith("$argon2id$v=19$m=65536,t=4,p=8$"));
+    }
+
+    @Test
+    void authenticationSuccessWithArgon2Password() throws Exception {
+        AccountRepository repository = container.get(AccountRepository.class);
+        account.setPassword("$argon2id$v=19$m=65536,t=4,p=8$wNluVjglTHANEbFv1QqVUg$z6yjCMpUkyWiQ4V8hDTQGPFvZb/pDfge78Pcmn3uUoU");
+        repository.savePassword(account);
+
         sendPacket("1.29.1");
         sendPacket("test\n#1"+ConnectionKeyTest.cryptPassword("password", session.key().key()));
 

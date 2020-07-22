@@ -20,7 +20,9 @@
 package fr.quatrevieux.araknemu.realm.authentication;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
+import fr.quatrevieux.araknemu.realm.authentication.password.PasswordManager;
 import fr.quatrevieux.araknemu.realm.host.HostService;
 
 import java.util.Collections;
@@ -35,6 +37,7 @@ import java.util.concurrent.ConcurrentMap;
 final public class AuthenticationService {
     final private AccountRepository repository;
     final private HostService hosts;
+    final private PasswordManager passwordManager;
 
     /**
      * Set of accounts which wait for authentication process
@@ -48,9 +51,10 @@ final public class AuthenticationService {
      */
     final private ConcurrentMap<Integer, AuthenticationAccount> authenticated = new ConcurrentHashMap<>();
 
-    public AuthenticationService(AccountRepository repository, HostService hosts) {
+    public AuthenticationService(AccountRepository repository, HostService hosts, PasswordManager passwordManager) {
         this.repository = repository;
         this.hosts = hosts;
+        this.passwordManager = passwordManager;
     }
 
     /**
@@ -63,19 +67,18 @@ final public class AuthenticationService {
         AuthenticationAccount account;
 
         try {
-            account = new AuthenticationAccount(
-                repository.findByUsername(request.username()),
-                this
-            );
+            account = getAccount(request.username());
         } catch (EntityNotFoundException e) {
             request.invalidCredentials();
             return;
         }
 
-        if (!account.checkPassword(request.password())) {
+        if (!account.password().check(request.password())) {
             request.invalidCredentials();
             return;
         }
+
+        passwordManager.rehash(account.password(), request.password(), account::updatePassword);
 
         if (
             isAuthenticated(account)
@@ -121,5 +124,15 @@ final public class AuthenticationService {
      */
     void login(AuthenticationAccount account) {
         authenticated.put(account.id(), account);
+    }
+
+    void savePassword(Account account) {
+        repository.savePassword(account);
+    }
+
+    private AuthenticationAccount getAccount(String username) {
+        final Account account = repository.findByUsername(username);
+
+        return new AuthenticationAccount(account, passwordManager.get(account.password()), this);
     }
 }

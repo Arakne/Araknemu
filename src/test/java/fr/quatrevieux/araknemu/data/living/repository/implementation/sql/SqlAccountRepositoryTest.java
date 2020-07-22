@@ -124,4 +124,14 @@ class SqlAccountRepositoryTest extends DatabaseTestCase {
         assertEquals("azerty", account.question());
         assertEquals("uiop", account.answer());
     }
+
+    @Test
+    void savePassword() {
+        Account account = repository.add(new Account(0, "other", "pass", "aaa", EnumSet.noneOf(Permission.class), "azerty", "uiop"));
+
+        account.setPassword("newPass");
+        repository.savePassword(account);
+
+        assertEquals("newPass", repository.get(account).password());
+    }
 }

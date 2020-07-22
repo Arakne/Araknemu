@@ -39,6 +39,9 @@ import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
 import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.SqlLivingRepositoriesModule;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
+import fr.quatrevieux.araknemu.realm.authentication.password.Argon2Hash;
+import fr.quatrevieux.araknemu.realm.authentication.password.PasswordManager;
+import fr.quatrevieux.araknemu.realm.authentication.password.PlainTextHash;
 import fr.quatrevieux.araknemu.realm.host.HostService;
 import org.apache.logging.log4j.LogManager;
 import org.ini4j.Ini;
@@ -78,6 +81,9 @@ class RealmModuleTest {
         assertInstanceOf(AuthenticationService.class, container.get(AuthenticationService.class));
         assertInstanceOf(HostService.class, container.get(HostService.class));
         assertInstanceOf(SessionLogService.class, container.get(SessionLogService.class));
+        assertInstanceOf(PasswordManager.class, container.get(PasswordManager.class));
+        assertInstanceOf(PlainTextHash.class, container.get(PlainTextHash.class));
+        assertInstanceOf(Argon2Hash.class, container.get(Argon2Hash.class));
     }
 
     public void assertInstanceOf(Class clazz, Object obj) {
