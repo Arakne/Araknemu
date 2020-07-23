@@ -32,6 +32,7 @@ import fr.quatrevieux.araknemu.realm.ConnectionKeyTest;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
+import fr.quatrevieux.araknemu.realm.authentication.password.PlainTextHash;
 import fr.quatrevieux.araknemu.realm.host.HostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -126,6 +127,7 @@ class AuthenticateTest extends RealmBaseCase {
     void handleAlreadyLoggedIn() throws ContainerException {
         AuthenticationAccount account = new AuthenticationAccount(
             (Account) dataSet.get("login_account"),
+            new PlainTextHash().parse("password"),
             container.get(AuthenticationService.class)
         );
         account.attach(sessionHandler.create(new DummyChannel()));

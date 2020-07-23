@@ -23,6 +23,8 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
+import fr.quatrevieux.araknemu.realm.authentication.password.PasswordManager;
+import fr.quatrevieux.araknemu.realm.authentication.password.PlainTextHash;
 import fr.quatrevieux.araknemu.realm.host.HostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +43,8 @@ class AuthenticationServiceTest extends RealmBaseCase {
 
         service = new AuthenticationService(
             container.get(AccountRepository.class),
-            container.get(HostService.class)
+            container.get(HostService.class),
+            container.get(PasswordManager.class)
         );
 
         dataSet.use(Account.class);
@@ -51,6 +54,7 @@ class AuthenticationServiceTest extends RealmBaseCase {
     void login() {
         AuthenticationAccount account = new AuthenticationAccount(
             new Account(1),
+            new PlainTextHash().parse("password"),
             service
         );
 
@@ -66,6 +70,7 @@ class AuthenticationServiceTest extends RealmBaseCase {
     void logout() {
         AuthenticationAccount account = new AuthenticationAccount(
             new Account(1),
+            new PlainTextHash().parse("password"),
             service
         );
 
@@ -82,16 +87,19 @@ class AuthenticationServiceTest extends RealmBaseCase {
     void isAuthenticated() {
         AuthenticationAccount account1 = new AuthenticationAccount(
             new Account(1),
+            new PlainTextHash().parse("password"),
             service
         );
 
         AuthenticationAccount account2 = new AuthenticationAccount(
             new Account(1),
+            new PlainTextHash().parse("password"),
             service
         );
 
         AuthenticationAccount account3 = new AuthenticationAccount(
             new Account(2),
+            new PlainTextHash().parse("password"),
             service
         );
 
@@ -189,6 +197,7 @@ class AuthenticationServiceTest extends RealmBaseCase {
 
         AuthenticationAccount authenticationAccount = new AuthenticationAccount(
             account,
+            new PlainTextHash().parse("password"),
             service
         );
 
@@ -237,6 +246,7 @@ class AuthenticationServiceTest extends RealmBaseCase {
 
         AuthenticationAccount authenticationAccount = new AuthenticationAccount(
             account,
+            new PlainTextHash().parse("password"),
             service
         );
 
@@ -282,6 +292,93 @@ class AuthenticationServiceTest extends RealmBaseCase {
         connector.checkLogin = false;
 
         dataSet.push(new Account(-1, "test", "pass", "pseudo"));
+
+        service.authenticate(new AuthenticationRequest() {
+            @Override
+            public String username() {
+                return "test";
+            }
+
+            @Override
+            public String password() {
+                return "pass";
+            }
+
+            @Override
+            public void success(AuthenticationAccount account) {
+                response = "success";
+                _account = account;
+            }
+
+            @Override
+            public void invalidCredentials() {
+                response = "invalidCredentials";
+            }
+
+            @Override
+            public void alreadyConnected() {
+                response = "alreadyConnected";
+            }
+
+            @Override
+            public void isPlaying() {
+                response = "isPlaying";
+            }
+        });
+
+        assertEquals("success", response);
+        assertEquals("pseudo", _account.pseudo());
+    }
+
+    @Test
+    void authenticateSuccessShouldRehashPassword() throws ContainerException {
+        connector.checkLogin = false;
+
+        Account entity = dataSet.push(new Account(-1, "test", "pass", "pseudo"));
+
+        service.authenticate(new AuthenticationRequest() {
+            @Override
+            public String username() {
+                return "test";
+            }
+
+            @Override
+            public String password() {
+                return "pass";
+            }
+
+            @Override
+            public void success(AuthenticationAccount account) {
+                response = "success";
+                _account = account;
+            }
+
+            @Override
+            public void invalidCredentials() {
+                response = "invalidCredentials";
+            }
+
+            @Override
+            public void alreadyConnected() {
+                response = "alreadyConnected";
+            }
+
+            @Override
+            public void isPlaying() {
+                response = "isPlaying";
+            }
+        });
+
+        assertEquals("success", response);
+        assertEquals("pseudo", _account.pseudo());
+        assertTrue(dataSet.refresh(entity).password().startsWith("$argon2id$v=19$m=65536,t=4,p=8$"));
+    }
+
+    @Test
+    void authenticateSuccessWithArgon2Pass() throws ContainerException {
+        connector.checkLogin = false;
+
+        dataSet.push(new Account(-1, "test", "$argon2id$v=19$m=65536,t=4,p=8$6A7YVUL1Cs6fG/NKBnWkGg$5YXeRp8S9UOm99EzL17RyvA3HKglQkyXkaForylU8NM", "pseudo"));
 
         service.authenticate(new AuthenticationRequest() {
             @Override

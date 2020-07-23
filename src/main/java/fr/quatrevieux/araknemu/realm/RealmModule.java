@@ -40,6 +40,9 @@ import fr.quatrevieux.araknemu.network.realm.in.Credentials;
 import fr.quatrevieux.araknemu.network.realm.in.DofusVersion;
 import fr.quatrevieux.araknemu.network.realm.in.RealmParserLoader;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
+import fr.quatrevieux.araknemu.realm.authentication.password.Argon2Hash;
+import fr.quatrevieux.araknemu.realm.authentication.password.PasswordManager;
+import fr.quatrevieux.araknemu.realm.authentication.password.PlainTextHash;
 import fr.quatrevieux.araknemu.realm.handler.*;
 import fr.quatrevieux.araknemu.realm.handler.account.Authenticate;
 import fr.quatrevieux.araknemu.realm.handler.account.ConnectGame;
@@ -48,6 +51,8 @@ import fr.quatrevieux.araknemu.realm.handler.account.SearchFriend;
 import fr.quatrevieux.araknemu.realm.host.HostService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Arrays;
 
 /**
  * DI module for RealmService
@@ -144,7 +149,8 @@ final public class RealmModule implements ContainerModule {
             AuthenticationService.class,
             container -> new AuthenticationService(
                 container.get(AccountRepository.class),
-                container.get(HostService.class)
+                container.get(HostService.class),
+                container.get(PasswordManager.class)
             )
         );
 
@@ -158,5 +164,30 @@ final public class RealmModule implements ContainerModule {
         configurator.persist(SessionLogService.class, container -> new SessionLogService(
             container.get(ConnectionLogRepository.class)
         ));
+
+        configurator.persist(
+            PasswordManager.class,
+            container -> new PasswordManager(
+                Arrays.asList(container.get(RealmConfiguration.class).passwordHashAlgorithms()),
+                container.get(Argon2Hash.class),
+                container.get(PlainTextHash.class)
+            )
+        );
+
+        configurator.factory(
+            Argon2Hash.class,
+            container -> {
+                RealmConfiguration.Argon2 config = container.get(RealmConfiguration.class).argon2();
+
+                return new Argon2Hash()
+                    .setIterations(config.iterations())
+                    .setMemory(config.memory())
+                    .setParallelism(config.parallelism())
+                    .setType(config.type())
+                ;
+            }
+        );
+
+        configurator.factory(PlainTextHash.class, container -> new PlainTextHash());
     }
 }

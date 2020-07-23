@@ -83,6 +83,13 @@ final public class Account {
         return answer;
     }
 
+    /**
+     * Change the password
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public Account withId(int id) {
         return new Account(
             id,

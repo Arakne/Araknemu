@@ -69,6 +69,11 @@
             <artifactId>arakne-map</artifactId>
             <version>0.1-alpha</version>
         </dependency>
+        <dependency>
+            <groupId>de.mkammerer</groupId>
+            <artifactId>argon2-jvm</artifactId>
+            <version>2.7</version>
+        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>

@@ -19,9 +19,12 @@
 
 package fr.quatrevieux.araknemu.realm;
 
+import de.mkammerer.argon2.Argon2Factory;
 import fr.quatrevieux.araknemu.core.config.ConfigurationModule;
 import fr.quatrevieux.araknemu.core.config.Pool;
 import fr.quatrevieux.araknemu.core.config.PoolUtils;
+import fr.quatrevieux.araknemu.realm.authentication.password.Argon2Hash;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.Duration;
 
@@ -29,6 +32,37 @@ import java.time.Duration;
  * Configuration for realm
  */
 final public class RealmConfiguration implements ConfigurationModule {
+    final public class Argon2 {
+        /**
+         * Get the number of iterations. Default: 4
+         */
+        public int iterations() {
+            return pool.integer("password.argon2.iterations", 4);
+        }
+
+        /**
+         * Get the memory, in kilobits. Default: 65536 (64Mo)
+         */
+        public int memory() {
+            return pool.integer("password.argon2.memory", 64*1024);
+        }
+
+        /**
+         * Get the parallelism parameter. Default: 8
+         */
+        public int parallelism() {
+            return pool.integer("password.argon2.parallelism", 8);
+        }
+
+        /**
+         * Get the argon2 algorithm type. Default: "argon2id"
+         * Available types : "argon2i", "argon2d", "argon2id"
+         */
+        public Argon2Factory.Argon2Types type() {
+            return Argon2Hash.typeByName(pool.string("password.argon2.type", "argon2id").toUpperCase());
+        }
+    }
+
     private PoolUtils pool;
 
     @Override
@@ -69,5 +103,28 @@ final public class RealmConfiguration implements ConfigurationModule {
      */
     public int packetRateLimit() {
         return pool.integer("packetRateLimit", 100);
+    }
+
+    /**
+     * Get list of enabled hash algorithms. The algorithms are separated by a coma.
+     * Available algorithms : argon2, plain
+     * The first value will be the default hash algorithm
+     * Default value: "argon2, plain"
+     */
+    public String[] passwordHashAlgorithms() {
+        String[] algorithms = StringUtils.split(pool.string("password.defaultHash", "argon2, plain"), ",");
+
+        for (int i = 0; i < algorithms.length; ++i) {
+            algorithms[i] = algorithms[i].toLowerCase().trim();
+        }
+
+        return algorithms;
+    }
+
+    /**
+     * The the argon2 configuration
+     */
+    public Argon2 argon2() {
+        return new Argon2();
     }
 }

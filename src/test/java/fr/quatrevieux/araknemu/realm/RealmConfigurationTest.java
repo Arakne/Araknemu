@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.realm;
 
+import de.mkammerer.argon2.Argon2Factory;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
 import org.ini4j.Ini;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,5 +62,18 @@ class RealmConfigurationTest {
     @Test
     void packetRateLimit() {
         assertEquals(100, configuration.packetRateLimit());
+    }
+
+    @Test
+    void passwordHashAlgorithms() {
+        assertArrayEquals(new String[] {"argon2", "plain"}, configuration.passwordHashAlgorithms());
+    }
+
+    @Test
+    void argon2() {
+        assertEquals(4, configuration.argon2().iterations());
+        assertEquals(8, configuration.argon2().parallelism());
+        assertEquals(64*1024, configuration.argon2().memory());
+        assertEquals(Argon2Factory.Argon2Types.ARGON2id, configuration.argon2().type());
     }
 }

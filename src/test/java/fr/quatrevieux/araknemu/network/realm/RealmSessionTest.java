@@ -64,7 +64,7 @@ class RealmSessionTest {
 
         assertEquals("ip=127.0.0.1", session.toString());
 
-        session.attach(new AuthenticationAccount(new Account(1), null));
+        session.attach(new AuthenticationAccount(new Account(1), null, null));
 
         assertEquals("ip=127.0.0.1; account=1", session.toString());
     }

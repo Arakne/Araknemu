@@ -140,4 +140,12 @@ final class SqlAccountRepository implements AccountRepository {
             rs -> rs.setString(1, username)
         );
     }
+
+    @Override
+    public void savePassword(Account entity) {
+        utils.update("UPDATE ACCOUNT SET PASSWORD = ? WHERE ACCOUNT_ID = ?", stmt -> {
+            stmt.setString(1, entity.password());
+            stmt.setInt(2, entity.id());
+        });
+    }
 }

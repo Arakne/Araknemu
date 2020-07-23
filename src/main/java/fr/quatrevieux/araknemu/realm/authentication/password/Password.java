@@ -14,28 +14,38 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.data.living.repository.account;
-
-import fr.quatrevieux.araknemu.core.dbal.repository.MutableRepository;
-import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
-import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+package fr.quatrevieux.araknemu.realm.authentication.password;
 
 /**
- * Repository for accounts
+ * Value object for hashed password
  */
-public interface AccountRepository extends MutableRepository<Account> {
+public interface Password {
     /**
-     * Find account by its username (for authenticate)
+     * Check the password hash
+     *
+     * @param input The input (plain password)
+     *
+     * @return true is the pass match
      */
-    public Account findByUsername(String username) throws RepositoryException;
+    public boolean check(String input);
 
     /**
-     * Update the password field of the account
+     * Does the pass need a rehash (i.e. configuration has changed, or expired)
      *
-     * @param account Account to update
+     * @return true is the password should be rehashed
      */
-    public void savePassword(Account account);
+    public boolean needRehash();
+
+    /**
+     * Get the string value of the password
+     */
+    public String toString();
+
+    /**
+     * Get the hash algorithm
+     */
+    public HashAlgorithm algorithm();
 }

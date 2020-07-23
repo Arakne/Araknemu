@@ -14,28 +14,38 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.data.living.repository.account;
-
-import fr.quatrevieux.araknemu.core.dbal.repository.MutableRepository;
-import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
-import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+package fr.quatrevieux.araknemu.realm.authentication.password;
 
 /**
- * Repository for accounts
+ * Algorithm for hash password
  */
-public interface AccountRepository extends MutableRepository<Account> {
+public interface HashAlgorithm {
     /**
-     * Find account by its username (for authenticate)
+     * Parse an hashed password to create {@link Password} instance
+     *
+     * @param hashedValue The hashed (database) value
      */
-    public Account findByUsername(String username) throws RepositoryException;
+    public Password parse(String hashedValue);
 
     /**
-     * Update the password field of the account
-     *
-     * @param account Account to update
+     * Check if the algorithm supports (has generate) the given hashed value
      */
-    public void savePassword(Account account);
+    public boolean supports(String hashedValue);
+
+    /**
+     * Hash a plain password
+     *
+     * @param inputValue Password to hash
+     *
+     * @return The hashed password instance
+     */
+    public Password hash(String inputValue);
+
+    /**
+     * Get the algorithm name
+     */
+    public String name();
 }
