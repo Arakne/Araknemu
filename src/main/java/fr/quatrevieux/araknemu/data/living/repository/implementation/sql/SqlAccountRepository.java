@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
+import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
@@ -31,6 +32,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 
 final class SqlAccountRepository implements AccountRepository {
     private static class Loader implements RepositoryUtils.Loader<Account> {
@@ -147,6 +149,18 @@ final class SqlAccountRepository implements AccountRepository {
             "SELECT * FROM ACCOUNT WHERE USERNAME = ?",
             rs -> rs.setString(1, username)
         );
+    }
+
+    @Override
+    public Optional<Account> findByPseudo(String pseudo) throws RepositoryException {
+        try {
+            return Optional.of(utils.findOne(
+                "SELECT * FROM ACCOUNT WHERE PSEUDO = ?",
+                stmt -> stmt.setString(1, pseudo)
+            ));
+        } catch (EntityNotFoundException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Repository for accounts
@@ -33,6 +34,12 @@ public interface AccountRepository extends MutableRepository<Account> {
      * Find account by its username (for authenticate)
      */
     public Account findByUsername(String username) throws RepositoryException;
+
+    /**
+     * Find an account by its pseudo
+     * If the account is not found, an empty optional is returned
+     */
+    public Optional<Account> findByPseudo(String pseudo);
 
     /**
      * Update the password field of the account

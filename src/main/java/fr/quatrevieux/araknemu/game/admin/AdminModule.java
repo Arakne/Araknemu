@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameService;
 import fr.quatrevieux.araknemu.game.ShutdownService;
+import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContext;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
 import fr.quatrevieux.araknemu.game.admin.account.Ban;
@@ -103,7 +104,7 @@ final public class AdminModule implements ContainerModule {
 
         configurator.persist(
             AccountContextResolver.class,
-            container -> new AccountContextResolver()
+            container -> new AccountContextResolver(container.get(AccountService.class))
                 .register(new ContextConfigurator<AccountContext>() {
                     @Override
                     public void configure(AccountContext context) {

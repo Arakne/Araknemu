@@ -108,6 +108,15 @@ class SqlAccountRepositoryTest extends DatabaseTestCase {
     }
 
     @Test
+    void findByPseudo() {
+        Account inserted = repository.add(new Account(0, "test", "password", "testouille"));
+        repository.add(new Account(0, "other", "pass", "aaa"));
+
+        assertEquals(inserted, repository.findByPseudo("testouille").get());
+        assertFalse(repository.findByPseudo("not_found").isPresent());
+    }
+
+    @Test
     void permissions() {
         Account account = repository.add(new Account(0, "other", "pass", "aaa", EnumSet.of(Permission.ACCESS), "", ""));
         account = repository.get(account);

@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.admin.account;
 
+import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
@@ -27,12 +28,18 @@ import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Context resolver for account
  */
 final public class AccountContextResolver implements ContextResolver {
+    final private AccountService service;
     final private List<ContextConfigurator<AccountContext>> configurators = new ArrayList<>();
+
+    public AccountContextResolver(AccountService service) {
+        this.service = service;
+    }
 
     @Override
     public AccountContext resolve(Context globalContext, Object argument) throws ContextException {
@@ -40,7 +47,9 @@ final public class AccountContextResolver implements ContextResolver {
             return resolveByAccount(globalContext, GameAccount.class.cast(argument));
         }
 
-        throw new ContextException("Invalid argument : " + argument);
+        return resolveByPseudo(globalContext, argument.toString())
+            .orElseThrow(() -> new ContextException("Invalid argument : " + argument))
+        ;
     }
 
     @Override
@@ -59,5 +68,9 @@ final public class AccountContextResolver implements ContextResolver {
 
     private AccountContext resolveByAccount(Context globalContext, GameAccount account) {
         return new AccountContext(globalContext, account, configurators);
+    }
+
+    private Optional<AccountContext> resolveByPseudo(Context globalContext, String pseudo) {
+        return service.findByPseudo(pseudo).map(account -> resolveByAccount(globalContext, account));
     }
 }

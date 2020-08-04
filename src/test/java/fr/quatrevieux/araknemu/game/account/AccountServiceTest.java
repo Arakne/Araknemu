@@ -107,6 +107,30 @@ class AccountServiceTest extends GameBaseCase {
     }
 
     @Test
+    void findByPseudoLoggedAccount() {
+        GameAccount account = new GameAccount(
+            dataSet.push(new Account(-1, "name", "pass", "pseudo", Collections.emptySet(), "", "")),
+            service,
+            1
+        );
+        account.attach(session);
+
+        assertSame(account, service.findByPseudo("pseudo").get());
+    }
+
+    @Test
+    void findByPseudoNotLoggedAccount() {
+        Account account = dataSet.push(new Account(-1, "name", "pass", "pseudo", Collections.emptySet(), "", ""));
+
+        assertEquals(account.id(), service.findByPseudo("pseudo").get().id());
+    }
+
+    @Test
+    void findByPseudoNotFound() {
+        assertFalse(service.findByPseudo("not_found").isPresent());
+    }
+
+    @Test
     void listenerShouldKickAccountOnBan() {
         dataSet.use(Banishment.class);
         Account account1 = dataSet.push(new Account(-1, "name", "pass", "pseudo", Collections.emptySet(), "", ""));

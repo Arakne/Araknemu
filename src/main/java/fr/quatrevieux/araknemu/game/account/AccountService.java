@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.network.out.ServerMessage;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -58,11 +59,7 @@ final public class AccountService implements EventsSubscriber {
      * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException When cannot found the account
      */
     public GameAccount load(Account account) {
-        return new GameAccount(
-            repository.get(account),
-            this,
-            configuration.id()
-        );
+        return instantiate(repository.get(account));
     }
 
     /**
@@ -101,10 +98,32 @@ final public class AccountService implements EventsSubscriber {
         ;
 
         for (Account account : repository.findByIds(toLoad)) {
-            loadedAccounts.put(account.id(), new GameAccount(account, this, configuration.id()));
+            loadedAccounts.put(account.id(), instantiate(account));
         }
 
         return loadedAccounts;
+    }
+
+    /**
+     * Find an account by its pseudo
+     * If the account is logged, the logged account is returned
+     *
+     * @param pseudo The pseudo to search
+     *
+     * @return The account. If the pseudo cannot be found, an empty optional is returned
+     */
+    public Optional<GameAccount> findByPseudo(String pseudo) {
+        // @todo need index ? actually only used by admin command
+        Optional<GameAccount> loggedAccount = accounts.values().stream()
+            .filter(gameAccount -> gameAccount.pseudo().equalsIgnoreCase(pseudo))
+            .findFirst()
+        ;
+
+        if (loggedAccount.isPresent()) {
+            return loggedAccount;
+        }
+
+        return repository.findByPseudo(pseudo).map(this::instantiate);
     }
 
     @Override
@@ -142,5 +161,12 @@ final public class AccountService implements EventsSubscriber {
      */
     void logout(GameAccount account) {
         accounts.remove(account.id());
+    }
+
+    /**
+     * Instantiate the GameAccount for the given account entity
+     */
+    private GameAccount instantiate(Account entity) {
+        return new GameAccount(entity, this, configuration.id());
     }
 }

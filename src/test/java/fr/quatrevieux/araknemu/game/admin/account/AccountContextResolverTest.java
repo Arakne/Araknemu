@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
+import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
@@ -33,8 +34,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class AccountContextResolverTest extends GameBaseCase {
     private AccountContextResolver resolver;
@@ -46,7 +46,7 @@ class AccountContextResolverTest extends GameBaseCase {
 
         dataSet.use(Account.class);
 
-        resolver = new AccountContextResolver();
+        resolver = new AccountContextResolver(container.get(AccountService.class));
     }
 
     @Test
@@ -61,10 +61,32 @@ class AccountContextResolverTest extends GameBaseCase {
         assertInstanceOf(AccountContext.class, context);
     }
 
+    @Test
+    void resolveByPseudoNotLogged() throws ContextException {
+        Account account = dataSet.push(new Account(-1, "login", "", "pseudo"));
+        Context context = resolver.resolve(new NullContext(), "pseudo");
+
+        assertInstanceOf(AccountContext.class, context);
+        assertEquals(account.id(), ((AccountContext) context).account().id());
+        assertFalse(((AccountContext) context).account().isLogged());
+    }
+
+    @Test
+    void resolveByPseudoLogged() throws ContextException {
+        GameAccount account = container.get(AccountService.class).load(dataSet.push(new Account(-1, "login", "", "pseudo")));
+        account.attach(server.createSession());
+
+        Context context = resolver.resolve(new NullContext(), "pseudo");
+
+        assertInstanceOf(AccountContext.class, context);
+        assertSame(account, ((AccountContext) context).account());
+        assertTrue(((AccountContext) context).account().isLogged());
+    }
 
     @Test
     void invalidArgument() {
         assertThrows(ContextException.class, () -> resolver.resolve(new NullContext(), new Object()));
+        assertThrows(ContextException.class, () -> resolver.resolve(new NullContext(), "nout_found"));
     }
 
     @Test
