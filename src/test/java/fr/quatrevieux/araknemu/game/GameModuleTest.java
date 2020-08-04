@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game;
 
+import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
@@ -151,6 +152,7 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(GeolocationService.class, container.get(GeolocationService.class));
         assertInstanceOf(ShutdownService.class, container.get(ShutdownService.class));
         assertInstanceOf(SessionLogService.class, container.get(SessionLogService.class));
+        assertInstanceOf(BanishmentService.class, container.get(BanishmentService.class));
 
         assertSame(
             container.get(ListenerAggregate.class),

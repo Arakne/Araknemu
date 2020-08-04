@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.GameModule;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContext;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
+import fr.quatrevieux.araknemu.game.admin.account.Ban;
 import fr.quatrevieux.araknemu.game.admin.account.Info;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.debug.*;
@@ -101,6 +102,7 @@ class AdminModuleTest extends GameBaseCase {
 
         assertInstanceOf(AccountContext.class, context);
         assertInstanceOf(Info.class, context.command("info"));
+        assertInstanceOf(Ban.class, context.command("ban"));
     }
 
     @Test

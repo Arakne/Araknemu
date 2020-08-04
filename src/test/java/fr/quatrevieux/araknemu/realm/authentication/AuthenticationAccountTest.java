@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.realm.authentication;
 
+import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
@@ -45,7 +46,8 @@ class AuthenticationAccountTest extends RealmBaseCase {
         service = new AuthenticationService(
             container.get(AccountRepository.class),
             container.get(HostService.class),
-            container.get(PasswordManager.class)
+            container.get(PasswordManager.class),
+            container.get(BanishmentService.class)
         );
     }
 

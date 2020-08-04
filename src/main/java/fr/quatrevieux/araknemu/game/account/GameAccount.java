@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.account;
@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.common.account.AbstractLivingAccount;
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+import fr.quatrevieux.araknemu.network.out.ServerMessage;
 import fr.quatrevieux.araknemu.network.realm.out.ServerList;
 
 import java.util.Collections;
@@ -108,5 +109,18 @@ final public class GameAccount extends AbstractLivingAccount<GameSession> {
      */
     public boolean checkAnswer(String input) {
         return account.answer().equalsIgnoreCase(input);
+    }
+
+    /**
+     * Kick the account with the given server message
+     * If the account is not logged, this method will de nothing
+     *
+     * @param message Message to show
+     */
+    public void kick(ServerMessage message) {
+        if (isLogged()) {
+            session.send(message);
+            session.close();
+        }
     }
 }

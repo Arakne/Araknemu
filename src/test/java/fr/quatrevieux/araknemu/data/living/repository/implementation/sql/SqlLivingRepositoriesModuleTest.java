@@ -47,6 +47,7 @@ class SqlLivingRepositoriesModuleTest extends RealmBaseCase {
         assertInstanceOf(SqlAccountBankRepository.class, container.get(fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository.class));
         assertInstanceOf(SqlBankItemRepository.class, container.get(fr.quatrevieux.araknemu.data.living.repository.account.BankItemRepository.class));
         assertInstanceOf(SqlConnectionLogRepository.class, container.get(fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository.class));
+        assertInstanceOf(SqlBanishmentRepository.class, container.get(fr.quatrevieux.araknemu.data.living.repository.account.BanishmentRepository.class));
 
         assertInstanceOf(PermissionsTransformer.class, container.get(PermissionsTransformer.class));
         assertInstanceOf(InstantTransformer.class, container.get(InstantTransformer.class));

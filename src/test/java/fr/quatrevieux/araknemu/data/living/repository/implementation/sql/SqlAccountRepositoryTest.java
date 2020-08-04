@@ -20,16 +20,18 @@
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.DatabaseTestCase;
-import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.transformer.PermissionsTransformer;
-import fr.quatrevieux.araknemu.common.account.Permission;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -133,5 +135,20 @@ class SqlAccountRepositoryTest extends DatabaseTestCase {
         repository.savePassword(account);
 
         assertEquals("newPass", repository.get(account).password());
+    }
+
+    @Test
+    void findByIds() {
+        Account account1 = repository.add(new Account(-1, "name", "pass", "pseudo", Collections.emptySet(), "", ""));
+        Account account2 = repository.add(new Account(-1, "name2", "pass", "pseudo2", Collections.emptySet(), "", ""));
+
+        Collection<Account> accounts = repository.findByIds(new int[] {account1.id(), account2.id(), -1});
+
+        assertEquals(2, accounts.size());
+        assertContains(account1, accounts);
+        assertContains(account2, accounts);
+
+        assertEquals(Collections.emptyList(), repository.findByIds(new int[] {}));
+        assertEquals(Collections.singleton(account2), repository.findByIds(new int[] {account2.id()}));
     }
 }

@@ -20,36 +20,38 @@
 package fr.quatrevieux.araknemu.data.living.repository.account;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.MutableRepository;
-import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
-import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.data.living.entity.account.Banishment;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
- * Repository for accounts
+ * Repository for {@link Banishment} entity
  */
-public interface AccountRepository extends MutableRepository<Account> {
+public interface BanishmentRepository extends MutableRepository<Banishment> {
     /**
-     * Find account by its username (for authenticate)
+     * Check if the given account is banned at the current time
+     *
+     * @param accountId Account id to check
+     *
+     * @return true if the account is banned (and should not be logged in)
      */
-    public Account findByUsername(String username) throws RepositoryException;
+    public boolean isBanned(int accountId);
 
     /**
-     * Update the password field of the account
+     * Get list of all banishment for the given account
+     * The active and past banishment are returned
+     * The entries are sorted by start date in reverse order (from recent to old)
      *
-     * @param account Account to update
+     * @param accountId The account to check
+     *
+     * @return List of banishment
      */
-    public void savePassword(Account account);
+    public List<Banishment> forAccount(int accountId);
 
     /**
-     * Find multiple accounts by ids
-     * If an account id is not found, it will be ignored
+     * Remove all active banishment for the given account
      *
-     * Note: The result order is undefined
-     *
-     * @param ids The account ids
-     *
-     * @return List of accounts
+     * @param accountId The account id
      */
-    public Collection<Account> findByIds(int[] ids);
+    public void removeActive(int accountId);
 }

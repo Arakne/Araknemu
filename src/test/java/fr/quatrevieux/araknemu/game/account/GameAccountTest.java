@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import org.junit.jupiter.api.BeforeEach;
+import fr.quatrevieux.araknemu.network.out.ServerMessage;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
@@ -79,5 +79,23 @@ class GameAccountTest extends GameBaseCase {
 
         assertTrue(account.isGranted(Permission.ACCESS));
         assertFalse(account.isGranted(Permission.SUPER_ADMIN));
+    }
+
+    @Test
+    void kick() {
+        GameAccount account = new GameAccount(
+            new Account(1, "name", "password", "pseudo", EnumSet.of(Permission.ACCESS), "", ""),
+            container.get(AccountService.class),
+            1
+        );
+
+        account.kick(ServerMessage.inactivity());
+        requestStack.assertEmpty();
+
+        account.attach(session);
+
+        account.kick(ServerMessage.inactivity());
+        requestStack.assertLast(ServerMessage.inactivity());
+        assertFalse(session.isAlive());
     }
 }

@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.admin;
 
+import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
@@ -27,6 +28,7 @@ import fr.quatrevieux.araknemu.game.GameService;
 import fr.quatrevieux.araknemu.game.ShutdownService;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContext;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
+import fr.quatrevieux.araknemu.game.admin.account.Ban;
 import fr.quatrevieux.araknemu.game.admin.account.Info;
 import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.debug.*;
@@ -106,6 +108,7 @@ final public class AdminModule implements ContainerModule {
                     @Override
                     public void configure(AccountContext context) {
                         add(new Info(context.account(), container.get(AccountRepository.class)));
+                        add(new Ban(context.account(), container.get(BanishmentService.class)));
                     }
                 })
         );

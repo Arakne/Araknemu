@@ -19,14 +19,25 @@
 
 package fr.quatrevieux.araknemu.game.account;
 
+import fr.quatrevieux.araknemu.common.account.banishment.BanEntry;
+import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
+import fr.quatrevieux.araknemu.common.account.banishment.event.AccountBanned;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.data.living.entity.account.Banishment;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
+import fr.quatrevieux.araknemu.network.out.ServerMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.time.Duration;
+import java.util.Collections;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -74,5 +85,62 @@ class AccountServiceTest extends GameBaseCase {
 
         account.attach(session);
         assertTrue(service.isLogged(1));
+    }
+
+    @Test
+    void getByIds() {
+        Account account1 = dataSet.push(new Account(-1, "name", "pass", "pseudo", Collections.emptySet(), "", ""));
+        Account account2 = dataSet.push(new Account(-1, "name2", "pass", "pseudo2", Collections.emptySet(), "", ""));
+
+        GameAccount account = new GameAccount(
+            account1,
+            service,
+            1
+        );
+        account.attach(session);
+
+        Map<Integer, GameAccount> accounts = service.getByIds(new int[] {account1.id(), account2.id(), -1});
+
+        assertEquals(2, accounts.size());
+        assertSame(account, accounts.get(account1.id()));
+        assertEquals("pseudo2", accounts.get(account2.id()).pseudo());
+    }
+
+    @Test
+    void listenerShouldKickAccountOnBan() {
+        dataSet.use(Banishment.class);
+        Account account1 = dataSet.push(new Account(-1, "name", "pass", "pseudo", Collections.emptySet(), "", ""));
+        GameAccount account = new GameAccount(account1, service, 1);
+        account.attach(session);
+
+        GameAccount banisher = new GameAccount(new Account(-1, "banisher", "pass", "banisher", Collections.emptySet(), "", ""), service, 1);
+
+        BanEntry<GameAccount> entry = ((BanishmentService<GameAccount>) container.get(BanishmentService.class)).ban(account, Duration.ofHours(1), "cause", banisher);
+
+        ListenerAggregate dispatcher = new DefaultListenerAggregate();
+        dispatcher.register(service);
+
+        dispatcher.dispatch(new AccountBanned<>(entry));
+
+        requestStack.assertLast(ServerMessage.kick(banisher.pseudo(), "cause"));
+        assertFalse(session.isAlive());
+    }
+
+    @Test
+    void listenerShouldKickAccountOnBanWithoutBanisher() {
+        dataSet.use(Banishment.class);
+        Account account1 = dataSet.push(new Account(-1, "name", "pass", "pseudo", Collections.emptySet(), "", ""));
+        GameAccount account = new GameAccount(account1, service, 1);
+        account.attach(session);
+
+        BanEntry<GameAccount> entry = ((BanishmentService<GameAccount>) container.get(BanishmentService.class)).ban(account, Duration.ofHours(1), "cause");
+
+        ListenerAggregate dispatcher = new DefaultListenerAggregate();
+        dispatcher.register(service);
+
+        dispatcher.dispatch(new AccountBanned<>(entry));
+
+        requestStack.assertLast(ServerMessage.kick("system", "cause"));
+        assertFalse(session.isAlive());
     }
 }

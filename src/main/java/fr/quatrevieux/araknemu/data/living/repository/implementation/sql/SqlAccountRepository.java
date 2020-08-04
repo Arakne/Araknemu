@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
@@ -25,9 +25,12 @@ import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.transformer.PermissionsTransformer;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Collections;
 
 final class SqlAccountRepository implements AccountRepository {
     private static class Loader implements RepositoryUtils.Loader<Account> {
@@ -119,9 +122,14 @@ final class SqlAccountRepository implements AccountRepository {
 
     @Override
     public Account get(Account entity) throws RepositoryException {
+        return get(entity.id());
+    }
+
+    // @fixme not on the interface
+    public Account get(int id) throws RepositoryException {
         return utils.findOne(
             "SELECT * FROM ACCOUNT WHERE ACCOUNT_ID = ?",
-            rs -> rs.setInt(1, entity.id())
+            stmt -> stmt.setInt(1, id)
         );
     }
 
@@ -147,5 +155,25 @@ final class SqlAccountRepository implements AccountRepository {
             stmt.setString(1, entity.password());
             stmt.setInt(2, entity.id());
         });
+    }
+
+    @Override
+    public Collection<Account> findByIds(int[] ids) {
+        if (ids.length == 0) {
+            return Collections.emptyList();
+        }
+
+        if (ids.length == 1) {
+            return Collections.singleton(get(ids[0]));
+        }
+
+        return utils.findAll(
+            "SELECT * FROM ACCOUNT WHERE ACCOUNT_ID IN (" + StringUtils.repeat("?, ", ids.length - 1) + "?)",
+            stmt -> {
+                for (int i = 0; i < ids.length; ++i) {
+                    stmt.setInt(i + 1, ids[i]);
+                }
+            }
+        );
     }
 }

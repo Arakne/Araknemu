@@ -17,44 +17,42 @@
  * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.realm.authentication;
+package fr.quatrevieux.araknemu.common.account.banishment.event;
+
+import fr.quatrevieux.araknemu.common.account.LivingAccount;
+import fr.quatrevieux.araknemu.common.account.banishment.BanEntry;
+
+import java.util.Optional;
 
 /**
- * Request authentication
+ * Event rasied when an account has been banned
  */
-public interface AuthenticationRequest {
-    /**
-     * The username
-     */
-    public String username();
+final public class AccountBanned<A extends LivingAccount> {
+    final private BanEntry<A> entry;
+
+    public AccountBanned(BanEntry<A> entry) {
+        this.entry = entry;
+    }
 
     /**
-     * The password
+     * The ban entry
      */
-    public String password();
+    public BanEntry<A> entry() {
+        return entry;
+    }
 
     /**
-     * Called on authenticate success
+     * The banned account
      */
-    public void success(AuthenticationAccount account);
+    public A account() {
+        return entry.account();
+    }
 
     /**
-     * Called on authenticate error
+     * The banisher account
+     * Can be an empty optional if the banishment is automatic
      */
-    public void invalidCredentials();
-
-    /**
-     * Called when account is already connected
-     */
-    public void alreadyConnected();
-
-    /**
-     * Called when the account is logged into a game server
-     */
-    public void isPlaying();
-
-    /**
-     * Called when account is banned
-     */
-    public void banned();
+    public Optional<A> banisher() {
+        return entry.banisher();
+    }
 }

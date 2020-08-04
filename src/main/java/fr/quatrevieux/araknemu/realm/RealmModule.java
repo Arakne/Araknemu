@@ -31,6 +31,7 @@ import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import fr.quatrevieux.araknemu.core.network.session.extension.RateLimiter;
 import fr.quatrevieux.araknemu.core.network.session.extension.SessionLogger;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
+import fr.quatrevieux.araknemu.data.living.repository.account.BanishmentRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.network.in.CommonParserLoader;
@@ -40,6 +41,7 @@ import fr.quatrevieux.araknemu.network.realm.in.Credentials;
 import fr.quatrevieux.araknemu.network.realm.in.DofusVersion;
 import fr.quatrevieux.araknemu.network.realm.in.RealmParserLoader;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
+import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
 import fr.quatrevieux.araknemu.realm.authentication.password.Argon2Hash;
 import fr.quatrevieux.araknemu.realm.authentication.password.PasswordManager;
 import fr.quatrevieux.araknemu.realm.authentication.password.PlainTextHash;
@@ -150,7 +152,8 @@ final public class RealmModule implements ContainerModule {
             container -> new AuthenticationService(
                 container.get(AccountRepository.class),
                 container.get(HostService.class),
-                container.get(PasswordManager.class)
+                container.get(PasswordManager.class),
+                container.get(BanishmentService.class)
             )
         );
 
@@ -172,6 +175,11 @@ final public class RealmModule implements ContainerModule {
                 container.get(Argon2Hash.class),
                 container.get(PlainTextHash.class)
             )
+        );
+
+        configurator.persist(
+            BanishmentService.class,
+            container -> new BanishmentService(container.get(BanishmentRepository.class), null)
         );
 
         configurator.factory(

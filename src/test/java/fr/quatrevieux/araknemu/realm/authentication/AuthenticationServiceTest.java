@@ -19,8 +19,10 @@
 
 package fr.quatrevieux.araknemu.realm.authentication;
 
+import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.data.living.entity.account.Banishment;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
 import fr.quatrevieux.araknemu.realm.authentication.password.PasswordManager;
@@ -28,6 +30,9 @@ import fr.quatrevieux.araknemu.realm.authentication.password.PlainTextHash;
 import fr.quatrevieux.araknemu.realm.host.HostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,10 +49,11 @@ class AuthenticationServiceTest extends RealmBaseCase {
         service = new AuthenticationService(
             container.get(AccountRepository.class),
             container.get(HostService.class),
-            container.get(PasswordManager.class)
+            container.get(PasswordManager.class),
+            container.get(BanishmentService.class)
         );
 
-        dataSet.use(Account.class);
+        dataSet.use(Account.class, Banishment.class);
     }
 
     @Test
@@ -147,6 +153,11 @@ class AuthenticationServiceTest extends RealmBaseCase {
             public void isPlaying() {
 
             }
+
+            @Override
+            public void banned() {
+
+            }
         });
 
         assertEquals("invalidCredentials", response);
@@ -184,6 +195,11 @@ class AuthenticationServiceTest extends RealmBaseCase {
 
             @Override
             public void isPlaying() {
+
+            }
+
+            @Override
+            public void banned() {
 
             }
         });
@@ -234,6 +250,11 @@ class AuthenticationServiceTest extends RealmBaseCase {
             public void isPlaying() {
 
             }
+
+            @Override
+            public void banned() {
+
+            }
         });
 
         assertEquals("alreadyConnected", response);
@@ -282,9 +303,68 @@ class AuthenticationServiceTest extends RealmBaseCase {
             public void isPlaying() {
                 response = "isPlaying";
             }
+
+            @Override
+            public void banned() {
+                response = "banned";
+            }
         });
 
         assertEquals("isPlaying", response);
+    }
+
+    @Test
+    void authenticateBanned() throws ContainerException {
+        connector.checkLogin = true;
+        Account account = dataSet.push(new Account(-1, "test", "pass", "pseudo"));
+        dataSet.push(new Banishment(account.id(), Instant.now().minus(1, ChronoUnit.HOURS), Instant.now().plus(1, ChronoUnit.HOURS), "test", 3));
+
+        AuthenticationAccount authenticationAccount = new AuthenticationAccount(
+            account,
+            new PlainTextHash().parse("password"),
+            service
+        );
+
+        service.login(authenticationAccount);
+
+        service.authenticate(new AuthenticationRequest() {
+            @Override
+            public String username() {
+                return "test";
+            }
+
+            @Override
+            public String password() {
+                return "pass";
+            }
+
+            @Override
+            public void success(AuthenticationAccount account) {
+
+            }
+
+            @Override
+            public void invalidCredentials() {
+                response = "invalidCredentials";
+            }
+
+            @Override
+            public void alreadyConnected() {
+                response = "alreadyConnected";
+            }
+
+            @Override
+            public void isPlaying() {
+                response = "isPlaying";
+            }
+
+            @Override
+            public void banned() {
+                response = "banned";
+            }
+        });
+
+        assertEquals("banned", response);
     }
 
     @Test
@@ -323,6 +403,11 @@ class AuthenticationServiceTest extends RealmBaseCase {
             @Override
             public void isPlaying() {
                 response = "isPlaying";
+            }
+
+            @Override
+            public void banned() {
+                response = "banned";
             }
         });
 
@@ -367,6 +452,11 @@ class AuthenticationServiceTest extends RealmBaseCase {
             public void isPlaying() {
                 response = "isPlaying";
             }
+
+            @Override
+            public void banned() {
+                response = "banned";
+            }
         });
 
         assertEquals("success", response);
@@ -410,6 +500,11 @@ class AuthenticationServiceTest extends RealmBaseCase {
             @Override
             public void isPlaying() {
                 response = "isPlaying";
+            }
+
+            @Override
+            public void banned() {
+                response = "banned";
             }
         });
 

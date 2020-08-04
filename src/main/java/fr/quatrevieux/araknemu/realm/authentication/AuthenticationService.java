@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.realm.authentication;
 
+import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
@@ -38,6 +39,7 @@ final public class AuthenticationService {
     final private AccountRepository repository;
     final private HostService hosts;
     final private PasswordManager passwordManager;
+    final private BanishmentService<AuthenticationAccount> banishmentService;
 
     /**
      * Set of accounts which wait for authentication process
@@ -51,10 +53,11 @@ final public class AuthenticationService {
      */
     final private ConcurrentMap<Integer, AuthenticationAccount> authenticated = new ConcurrentHashMap<>();
 
-    public AuthenticationService(AccountRepository repository, HostService hosts, PasswordManager passwordManager) {
+    public AuthenticationService(AccountRepository repository, HostService hosts, PasswordManager passwordManager, BanishmentService<AuthenticationAccount> banishmentService) {
         this.repository = repository;
         this.hosts = hosts;
         this.passwordManager = passwordManager;
+        this.banishmentService = banishmentService;
     }
 
     /**
@@ -70,6 +73,11 @@ final public class AuthenticationService {
             account = getAccount(request.username());
         } catch (EntityNotFoundException e) {
             request.invalidCredentials();
+            return;
+        }
+
+        if (banishmentService.isBanned(account)) {
+            request.banned();
             return;
         }
 
