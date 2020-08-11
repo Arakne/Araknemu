@@ -19,13 +19,12 @@
 
 package fr.quatrevieux.araknemu.game.account;
 
-import fr.quatrevieux.araknemu.common.account.banishment.event.AccountBanned;
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
-import fr.quatrevieux.araknemu.network.out.ServerMessage;
+import fr.quatrevieux.araknemu.game.listener.KickBannedAccount;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -129,23 +128,7 @@ final public class AccountService implements EventsSubscriber {
     @Override
     public Listener[] listeners() {
         return new Listener[] {
-            new Listener<AccountBanned<GameAccount>>() {
-                @Override
-                public void on(AccountBanned<GameAccount> event) {
-                    event.account().kick(
-                        ServerMessage.kick(
-                            event.banisher().map(GameAccount::pseudo).orElse("system"),
-                            event.entry().cause()
-                        )
-                    );
-                }
-
-                @Override
-                @SuppressWarnings("unchecked")
-                public Class<AccountBanned<GameAccount>> event() {
-                    return (Class<AccountBanned<GameAccount>>)(Class<?>) AccountBanned.class;
-                }
-            }
+            new KickBannedAccount(),
         };
     }
 

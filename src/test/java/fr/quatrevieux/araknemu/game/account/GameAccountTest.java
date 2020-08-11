@@ -52,9 +52,12 @@ class GameAccountTest extends GameBaseCase {
             1
         );
 
+        assertFalse(account.session().isPresent());
         account.attach(session);
+        assertSame(session, account.session().get());
         account.detach();
         assertFalse(account.isLogged());
+        assertFalse(account.session().isPresent());
     }
 
     @Test

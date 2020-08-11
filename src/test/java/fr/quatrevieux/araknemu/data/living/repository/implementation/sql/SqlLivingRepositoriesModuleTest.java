@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
 import fr.quatrevieux.araknemu.data.living.transformer.InstantTransformer;
+import fr.quatrevieux.araknemu.data.living.transformer.IpAddressTransformer;
 import fr.quatrevieux.araknemu.data.living.transformer.PermissionsTransformer;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
 import org.junit.jupiter.api.Test;
@@ -48,9 +49,11 @@ class SqlLivingRepositoriesModuleTest extends RealmBaseCase {
         assertInstanceOf(SqlBankItemRepository.class, container.get(fr.quatrevieux.araknemu.data.living.repository.account.BankItemRepository.class));
         assertInstanceOf(SqlConnectionLogRepository.class, container.get(fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository.class));
         assertInstanceOf(SqlBanishmentRepository.class, container.get(fr.quatrevieux.araknemu.data.living.repository.account.BanishmentRepository.class));
+        assertInstanceOf(SqlBanIpRepository.class, container.get(fr.quatrevieux.araknemu.data.living.repository.BanIpRepository.class));
 
         assertInstanceOf(PermissionsTransformer.class, container.get(PermissionsTransformer.class));
         assertInstanceOf(InstantTransformer.class, container.get(InstantTransformer.class));
+        assertInstanceOf(IpAddressTransformer.class, container.get(IpAddressTransformer.class));
     }
 
     public void assertInstanceOf(Class type, Object obj) {

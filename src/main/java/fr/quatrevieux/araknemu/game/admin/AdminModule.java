@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.admin;
 
+import fr.quatrevieux.araknemu.common.account.banishment.BanIpService;
 import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
@@ -38,10 +39,7 @@ import fr.quatrevieux.araknemu.game.admin.player.GetItem;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
 import fr.quatrevieux.araknemu.game.admin.player.teleport.*;
-import fr.quatrevieux.araknemu.game.admin.server.Online;
-import fr.quatrevieux.araknemu.game.admin.server.ServerContext;
-import fr.quatrevieux.araknemu.game.admin.server.ServerContextResolver;
-import fr.quatrevieux.araknemu.game.admin.server.Shutdown;
+import fr.quatrevieux.araknemu.game.admin.server.*;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.game.item.ItemService;
@@ -142,6 +140,7 @@ final public class AdminModule implements ContainerModule {
                             container.get(GameService.class)
                         ));
                         add(new Shutdown(container.get(ShutdownService.class)));
+                        add(new Banip(container.get(BanIpService.class)));
                     }
                 })
         );

@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.network.out.ServerMessage;
 import fr.quatrevieux.araknemu.network.realm.out.ServerList;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -65,6 +66,13 @@ final public class GameAccount extends AbstractLivingAccount<GameSession> {
         service.logout(this);
 
         super.detach();
+    }
+
+    /**
+     * Get the current session for the account
+     */
+    public Optional<GameSession> session() {
+        return Optional.ofNullable(session);
     }
 
     /**

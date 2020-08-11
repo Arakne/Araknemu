@@ -55,8 +55,8 @@ class OnlineTest extends CommandTestCase {
 
         assertOutput(
             "There is 2 online players with 2 active sessions",
-            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Bob'>Bob</a></u> Feca [-51,10] joining game - <u><a href='asfunction:onHref,ExecCmd,${player:Bob} info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Bob,true'>goto</a></u>",
-            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Other'>Other</a></u> Cra [-51,10] joining game - <u><a href='asfunction:onHref,ExecCmd,${player:Other} info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Other,true'>goto</a></u>"
+            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Bob'>Bob</a></u> Feca [-51,10] joining game [127.0.0.1] - <u><a href='asfunction:onHref,ExecCmd,${player:Bob} info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Bob,true'>goto</a></u>",
+            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Other'>Other</a></u> Cra [-51,10] joining game [no ip] - <u><a href='asfunction:onHref,ExecCmd,${player:Other} info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Other,true'>goto</a></u>"
         );
     }
 
@@ -68,7 +68,7 @@ class OnlineTest extends CommandTestCase {
 
         assertOutput(
             "There is 1 online players with 1 active sessions",
-            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Bob'>Bob</a></u> Feca [-4,3] in exploration - <u><a href='asfunction:onHref,ExecCmd,${player:Bob} info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Bob,true'>goto</a></u>"
+            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Bob'>Bob</a></u> Feca [-4,3] in exploration [127.0.0.1] - <u><a href='asfunction:onHref,ExecCmd,${player:Bob} info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Bob,true'>goto</a></u>"
         );
     }
 
@@ -87,7 +87,7 @@ class OnlineTest extends CommandTestCase {
 
         assertOutput(
             "There is 1 online players with 1 active sessions",
-            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Bob'>Bob</a></u> Feca [-51,10] in combat - <u><a href='asfunction:onHref,ExecCmd,${player:Bob} info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Bob,true'>goto</a></u>"
+            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Bob'>Bob</a></u> Feca [-51,10] in combat [127.0.0.1] - <u><a href='asfunction:onHref,ExecCmd,${player:Bob} info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Bob,true'>goto</a></u>"
         );
     }
 
@@ -100,7 +100,7 @@ class OnlineTest extends CommandTestCase {
 
         assertOutput(
             "There is 2 online players with 2 active sessions",
-            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Bob'>Bob</a></u> Feca [-51,10] joining game - <u><a href='asfunction:onHref,ExecCmd,${player:Bob} info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Bob,true'>goto</a></u>"
+            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Bob'>Bob</a></u> Feca [-51,10] joining game [127.0.0.1] - <u><a href='asfunction:onHref,ExecCmd,${player:Bob} info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Bob,true'>goto</a></u>"
         );
     }
 
@@ -113,8 +113,8 @@ class OnlineTest extends CommandTestCase {
 
         assertOutput(
             "There is 2 online players with 2 active sessions",
-            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Bob'>Bob</a></u> Feca [-51,10] joining game - <u><a href='asfunction:onHref,ExecCmd,${player:Bob} info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Bob,true'>goto</a></u>",
-            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Other'>Other</a></u> Cra [-51,10] joining game - <u><a href='asfunction:onHref,ExecCmd,${player:Other} info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Other,true'>goto</a></u>"
+            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Bob'>Bob</a></u> Feca [-51,10] joining game [127.0.0.1] - <u><a href='asfunction:onHref,ExecCmd,${player:Bob} info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Bob,true'>goto</a></u>",
+            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Other'>Other</a></u> Cra [-51,10] joining game [no ip] - <u><a href='asfunction:onHref,ExecCmd,${player:Other} info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Other,true'>goto</a></u>"
         );
     }
 
@@ -140,7 +140,7 @@ class OnlineTest extends CommandTestCase {
 
         assertOutput(
             "There is 2 online players with 2 active sessions",
-            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Bob'>Bob</a></u> Feca [-4,3] in exploration - <u><a href='asfunction:onHref,ExecCmd,${player:Bob} info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Bob,true'>goto</a></u>",
+            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Bob'>Bob</a></u> Feca [-4,3] in exploration [127.0.0.1] - <u><a href='asfunction:onHref,ExecCmd,${player:Bob} info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Bob,true'>goto</a></u>",
             "------------------------------------------------\n" +
             "\t<b><u><a href='asfunction:onHref,ExecCmd,${server} online --limit 1 --skip 1,true'>next</a></u></b>"
         );
@@ -155,7 +155,7 @@ class OnlineTest extends CommandTestCase {
 
         assertOutput(
             "There is 2 online players with 2 active sessions",
-            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Other'>Other</a></u> Cra [-51,10] joining game - <u><a href='asfunction:onHref,ExecCmd,${player:Other} info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Other,true'>goto</a></u>"
+            "<u><a href='asfunction:onHref,ShowPlayerPopupMenu,Other'>Other</a></u> Cra [-51,10] joining game [no ip] - <u><a href='asfunction:onHref,ExecCmd,${player:Other} info,true'>info</a></u> <u><a href='asfunction:onHref,ExecCmd,goto player Other,true'>goto</a></u>"
         );
         execute("online", "--skip", "10");
 

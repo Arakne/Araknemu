@@ -70,6 +70,11 @@ class RealmConfigurationTest {
     }
 
     @Test
+    void banIpRefresh() {
+        assertEquals(Duration.ofSeconds(30), configuration.banIpRefresh());
+    }
+
+    @Test
     void argon2() {
         assertEquals(4, configuration.argon2().iterations());
         assertEquals(8, configuration.argon2().parallelism());

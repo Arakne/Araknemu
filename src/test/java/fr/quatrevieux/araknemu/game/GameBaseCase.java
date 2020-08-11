@@ -41,10 +41,12 @@ import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.core.network.util.DummyServer;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.data.living.entity.BanIp;
 import fr.quatrevieux.araknemu.data.living.entity.account.*;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
+import fr.quatrevieux.araknemu.data.living.repository.BanIpRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.*;
 import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.SqlLivingRepositoriesModule;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
@@ -216,10 +218,6 @@ public class GameBaseCase extends DatabaseTestCase {
 
         configuration = container.get(GameConfiguration.class);
 
-        session = server.createSession();
-        channel = (DummyChannel) session.channel();
-        requestStack = new SendingRequestStack(channel);
-
         dataSet = new GameDataSet(
             container,
             new ConnectionPoolExecutor(app.database().get("game"))
@@ -254,7 +252,13 @@ public class GameBaseCase extends DatabaseTestCase {
             .declare(Area.class, AreaRepository.class)
             .declare(ConnectionLog.class, ConnectionLogRepository.class)
             .declare(Banishment.class, BanishmentRepository.class)
+            .declare(BanIp.class, BanIpRepository.class)
+            .use(BanIp.class)
         ;
+
+        session = server.createSession();
+        channel = (DummyChannel) session.channel();
+        requestStack = new SendingRequestStack(channel);
 
         container.get(GameService.class).subscribe();
     }

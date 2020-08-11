@@ -21,9 +21,15 @@ package fr.quatrevieux.araknemu.realm;
 
 import fr.quatrevieux.araknemu.core.BootException;
 import fr.quatrevieux.araknemu.core.Service;
+import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.core.network.Server;
+import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
+import fr.quatrevieux.araknemu.realm.event.AuthStopped;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Collection;
 
 /**
  * Service for handling server authentication
@@ -32,16 +38,30 @@ final public class RealmService implements Service {
     final private RealmConfiguration configuration;
     final private Server<RealmSession> server;
     final private Logger logger;
+    final private Collection<PreloadableService> preloadables;
+    final private ListenerAggregate dispatcher;
+    final private Collection<EventsSubscriber> subscribers;
 
-    public RealmService(RealmConfiguration configuration, Server<RealmSession> server, Logger logger) {
+    public RealmService(RealmConfiguration configuration, Server<RealmSession> server, Logger logger, ListenerAggregate dispatcher, Collection<PreloadableService> preloadables, Collection<EventsSubscriber> subscribers) {
         this.configuration = configuration;
         this.server = server;
         this.logger = logger;
+        this.dispatcher = dispatcher;
+        this.preloadables = preloadables;
+        this.subscribers = subscribers;
     }
 
     @Override
     public void boot() throws BootException {
         logger.info("Starting realm server on port {}", configuration.port());
+
+        for (EventsSubscriber subscriber : subscribers) {
+            dispatcher.register(subscriber);
+        }
+
+        for (PreloadableService service : preloadables) {
+            service.preload(logger);
+        }
 
         try {
             server.start();
@@ -62,10 +82,15 @@ final public class RealmService implements Service {
             logger.error("Error during stopping the realm service", e);
         }
 
+        dispatcher.dispatch(new AuthStopped());
         logger.info("Realm service stopped");
     }
 
     public RealmConfiguration configuration() {
         return configuration;
+    }
+
+    public Collection<RealmSession> sessions() {
+        return server.sessions();
     }
 }

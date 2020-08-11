@@ -158,6 +158,7 @@ class SqlAccountRepositoryTest extends DatabaseTestCase {
         assertContains(account2, accounts);
 
         assertEquals(Collections.emptyList(), repository.findByIds(new int[] {}));
+        assertEquals(Collections.emptyList(), repository.findByIds(new int[] {404}));
         assertEquals(Collections.singleton(account2), repository.findByIds(new int[] {account2.id()}));
     }
 }

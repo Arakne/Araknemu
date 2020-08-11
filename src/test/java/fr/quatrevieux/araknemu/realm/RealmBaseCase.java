@@ -32,10 +32,12 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
 import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
+import fr.quatrevieux.araknemu.data.living.entity.BanIp;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.account.Banishment;
 import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
+import fr.quatrevieux.araknemu.data.living.repository.BanIpRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.BanishmentRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
@@ -142,18 +144,20 @@ public class RealmBaseCase extends DatabaseTestCase {
         service = container.get(RealmService.class);
         configuration = service.configuration();
 
-        sessionHandler = container.get(SessionFactory.class);
-        channel = new DummyChannel();
-        session = sessionHandler.create(channel);
-        requestStack = new SendingRequestStack(channel);
-
         dataSet = new TestingDataSet(container);
         dataSet
             .declare(Account.class, AccountRepository.class)
             .declare(Player.class, PlayerRepository.class)
             .declare(ConnectionLog.class, ConnectionLogRepository.class)
             .declare(Banishment.class, BanishmentRepository.class)
+            .declare(BanIp.class, BanIpRepository.class)
+            .use(BanIp.class)
         ;
+
+        sessionHandler = container.get(SessionFactory.class);
+        channel = new DummyChannel();
+        session = sessionHandler.create(channel);
+        requestStack = new SendingRequestStack(channel);
 
         container.get(HostService.class).declare(
             gameHost = new GameHost(

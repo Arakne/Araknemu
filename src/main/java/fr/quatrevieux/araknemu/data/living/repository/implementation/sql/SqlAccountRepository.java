@@ -178,7 +178,11 @@ final class SqlAccountRepository implements AccountRepository {
         }
 
         if (ids.length == 1) {
-            return Collections.singleton(get(ids[0]));
+            try {
+                return Collections.singleton(get(ids[0]));
+            } catch (EntityNotFoundException e) {
+                return Collections.emptyList();
+            }
         }
 
         return utils.findAll(

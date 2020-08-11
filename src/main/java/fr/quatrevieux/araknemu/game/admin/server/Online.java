@@ -128,7 +128,7 @@ final public class Online extends AbstractCommand {
         return Link.Type.PLAYER.create(player.name()) +
             " " + player.race().name() +
             " " + geolocation(player) +
-            " " + state(player) + " - " +
+            " " + state(player) + " [" + ipAddress(player) + "] - " +
             Link.Type.EXECUTE.create("${player:" + player.name() + "} info").text("info") +
             " " + Link.Type.EXECUTE.create("goto player " + player.name()).text("goto")
         ;
@@ -158,6 +158,16 @@ final public class Online extends AbstractCommand {
         }
 
         return "joining game";
+    }
+
+    /**
+     * Render the player IP address
+     */
+    private String ipAddress(GamePlayer player) {
+        return player.account().session()
+            .map(session -> session.channel().address().getAddress().getHostAddress())
+            .orElse("no ip")
+        ;
     }
 
     /**

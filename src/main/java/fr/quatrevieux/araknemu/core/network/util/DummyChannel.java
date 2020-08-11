@@ -32,6 +32,15 @@ final public class DummyChannel implements Channel {
     private boolean isAlive = true;
     private Stack<Object> messages = new Stack<>();
     private DummyServer<?> server;
+    private String ipAddress;
+
+    public DummyChannel() {
+        this("127.0.0.1");
+    }
+
+    public DummyChannel(String ipAddress) {
+        this.ipAddress = ipAddress == null ? "127.0.0.1" : ipAddress;
+    }
 
     @Override
     public Object id() {
@@ -71,6 +80,6 @@ final public class DummyChannel implements Channel {
 
     @Override
     public InetSocketAddress address() {
-        return new InetSocketAddress("127.0.0.1", 0);
+        return new InetSocketAddress(ipAddress, 0);
     }
 }
