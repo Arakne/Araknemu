@@ -73,13 +73,13 @@ class AbstractBanIpSynchronizerTest extends GameBaseCase {
         assertTrue(service.isIpBanned(new IPAddressString("145.32.213.5")));
 
         dataSet.push(new BanIp(new IPAddressString("145.32.213.6"), Instant.now().plus(10, ChronoUnit.SECONDS), null, "cause", -1));
-        Thread.sleep(10);
+        Thread.sleep(100);
         assertTrue(service.isIpBanned(new IPAddressString("145.32.213.6")));
 
         synchronizer.stopPulling();
-        Thread.sleep(10);
+        Thread.sleep(100);
         dataSet.push(new BanIp(new IPAddressString("145.32.213.7"), Instant.now().plus(10, ChronoUnit.SECONDS), null, "cause", -1));
-        Thread.sleep(10);
+        Thread.sleep(100);
         assertFalse(service.isIpBanned(new IPAddressString("145.32.213.7")));
     }
 
@@ -105,7 +105,7 @@ class AbstractBanIpSynchronizerTest extends GameBaseCase {
         assertTrue(session.isAlive());
 
         dataSet.push(new BanIp(new IPAddressString("145.23.14.5"), Instant.now().plus(10, ChronoUnit.SECONDS), null, "cause", -1));
-        Thread.sleep(10);
+        Thread.sleep(100);
 
         assertEquals(new LoginError(LoginError.BANNED).toString(), ((DummyChannel) session.channel()).getMessages().peek().toString());
         assertFalse(session.isAlive());
