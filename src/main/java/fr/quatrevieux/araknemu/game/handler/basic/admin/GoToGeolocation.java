@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.handler.basic.admin;
 
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.ChangeMap;
@@ -26,6 +27,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminMove;
+import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 
 /**
  * Go to the requested geolocation
@@ -39,6 +41,10 @@ final public class GoToGeolocation implements PacketHandler<GameSession, AdminMo
 
     @Override
     public void handle(GameSession session, AdminMove packet) {
+        if (!session.account().isMaster()) {
+            throw new ErrorPacket(new Noop());
+        }
+
         final ExplorationPlayer player = session.exploration();
 
         ExplorationMap target = service.find(packet.geolocation(), GeolocationService.GeolocationContext.fromMap(player.map()));

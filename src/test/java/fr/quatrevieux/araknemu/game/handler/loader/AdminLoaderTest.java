@@ -23,7 +23,6 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.handler.EnsureAdmin;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminCommand;
-import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminMove;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -45,6 +44,5 @@ class AdminLoaderTest extends LoaderTestCase {
         assertContainsOnly(EnsureAdmin.class, handlers);
 
         assertHandlePacket(AdminCommand.class, handlers);
-        assertHandlePacket(AdminMove.class, handlers);
     }
 }

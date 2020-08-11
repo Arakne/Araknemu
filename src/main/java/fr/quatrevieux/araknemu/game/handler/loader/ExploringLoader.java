@@ -22,8 +22,10 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeFactory;
+import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.handler.EnsureExploring;
+import fr.quatrevieux.araknemu.game.handler.basic.admin.GoToGeolocation;
 import fr.quatrevieux.araknemu.game.handler.dialog.PerformResponseAction;
 import fr.quatrevieux.araknemu.game.handler.dialog.StartDialog;
 import fr.quatrevieux.araknemu.game.handler.dialog.StopDialog;
@@ -71,6 +73,7 @@ final public class ExploringLoader extends AbstractLoader {
             new AcceptExchange(),
             new BuyItem(),
             new SellItem(),
+            new GoToGeolocation(container.get(GeolocationService.class)),
         };
     }
 }

@@ -21,10 +21,12 @@ package fr.quatrevieux.araknemu.game.handler.basic.admin;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.data.value.Geolocation;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminMove;
+import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -64,7 +66,21 @@ class GoToGeolocationTest extends GameBaseCase {
     }
 
     @Test
-    void teleportNotAdmin() {
+    void teleportNotAdmin() throws Exception {
+        ExplorationPlayer player = explorationPlayer();
+
+        try {
+            handlePacket(new AdminMove(new Geolocation(3, 6)));
+            fail("Expects ErrorPacket");
+        } catch (ErrorPacket e) {
+            assertEquals(new Noop().toString(), e.packet().toString());
+        }
+
+        assertNotEquals(10340, player.map().id());
+    }
+
+    @Test
+    void teleportNotExploring() {
         assertThrows(CloseImmediately.class, () -> handlePacket(new AdminMove(new Geolocation(3, 6))));
     }
 }
