@@ -26,6 +26,7 @@ import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.Araknemu;
 import fr.quatrevieux.araknemu.DatabaseTestCase;
 import fr.quatrevieux.araknemu.common.account.Permission;
+import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.config.Configuration;
 import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
@@ -40,17 +41,13 @@ import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.core.network.util.DummyServer;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
-import fr.quatrevieux.araknemu.data.living.entity.account.Account;
-import fr.quatrevieux.araknemu.data.living.entity.account.AccountBank;
-import fr.quatrevieux.araknemu.data.living.entity.account.BankItem;
-import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
+import fr.quatrevieux.araknemu.data.living.entity.BanIp;
+import fr.quatrevieux.araknemu.data.living.entity.account.*;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
-import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
-import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
-import fr.quatrevieux.araknemu.data.living.repository.account.BankItemRepository;
-import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
+import fr.quatrevieux.araknemu.data.living.repository.BanIpRepository;
+import fr.quatrevieux.araknemu.data.living.repository.account.*;
 import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.SqlLivingRepositoriesModule;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
@@ -83,7 +80,6 @@ import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
 import fr.quatrevieux.araknemu.data.world.repository.monster.*;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
-import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.game.admin.AdminModule;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
@@ -222,10 +218,6 @@ public class GameBaseCase extends DatabaseTestCase {
 
         configuration = container.get(GameConfiguration.class);
 
-        session = server.createSession();
-        channel = (DummyChannel) session.channel();
-        requestStack = new SendingRequestStack(channel);
-
         dataSet = new GameDataSet(
             container,
             new ConnectionPoolExecutor(app.database().get("game"))
@@ -259,7 +251,14 @@ public class GameBaseCase extends DatabaseTestCase {
             .declare(NpcExchange.class, NpcExchangeRepository.class)
             .declare(Area.class, AreaRepository.class)
             .declare(ConnectionLog.class, ConnectionLogRepository.class)
+            .declare(Banishment.class, BanishmentRepository.class)
+            .declare(BanIp.class, BanIpRepository.class)
+            .use(BanIp.class)
         ;
+
+        session = server.createSession();
+        channel = (DummyChannel) session.channel();
+        requestStack = new SendingRequestStack(channel);
 
         container.get(GameService.class).subscribe();
     }

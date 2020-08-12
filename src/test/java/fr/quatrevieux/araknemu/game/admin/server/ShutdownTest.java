@@ -85,7 +85,7 @@ class ShutdownTest extends CommandTestCase {
         LocalDateTime time = LocalDateTime.now().plus(container.get(ShutdownService.class).delay().get());
 
         assertEquals(22, time.getHour());
-        assertEquals(45, time.getMinute());
+        assertBetween(44, 45, time.getMinute());
         performer.logs.get(0).message.startsWith("Shutdown scheduled at");
     }
 

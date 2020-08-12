@@ -20,14 +20,18 @@
 package fr.quatrevieux.araknemu.game.admin;
 
 import fr.quatrevieux.araknemu.Araknemu;
+import fr.quatrevieux.araknemu.common.account.banishment.BanIpService;
+import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameService;
 import fr.quatrevieux.araknemu.game.ShutdownService;
+import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContext;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
+import fr.quatrevieux.araknemu.game.admin.account.Ban;
 import fr.quatrevieux.araknemu.game.admin.account.Info;
 import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.debug.*;
@@ -36,10 +40,7 @@ import fr.quatrevieux.araknemu.game.admin.player.GetItem;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
 import fr.quatrevieux.araknemu.game.admin.player.teleport.*;
-import fr.quatrevieux.araknemu.game.admin.server.Online;
-import fr.quatrevieux.araknemu.game.admin.server.ServerContext;
-import fr.quatrevieux.araknemu.game.admin.server.ServerContextResolver;
-import fr.quatrevieux.araknemu.game.admin.server.Shutdown;
+import fr.quatrevieux.araknemu.game.admin.server.*;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.game.item.ItemService;
@@ -110,11 +111,12 @@ final public class AdminModule implements ContainerModule {
 
         configurator.persist(
             AccountContextResolver.class,
-            container -> new AccountContextResolver()
+            container -> new AccountContextResolver(container.get(AccountService.class))
                 .register(new ContextConfigurator<AccountContext>() {
                     @Override
                     public void configure(AccountContext context) {
                         add(new Info(context.account(), container.get(AccountRepository.class)));
+                        add(new Ban(context.account(), container.get(BanishmentService.class)));
                     }
                 })
         );
@@ -147,6 +149,7 @@ final public class AdminModule implements ContainerModule {
                             container.get(GameService.class)
                         ));
                         add(new Shutdown(container.get(ShutdownService.class)));
+                        add(new Banip(container.get(BanIpService.class)));
                         add(new fr.quatrevieux.araknemu.game.admin.server.Info(
                             container.get(Araknemu.class),
                             container.get(PlayerService.class),

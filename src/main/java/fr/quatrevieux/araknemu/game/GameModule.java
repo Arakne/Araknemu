@@ -20,6 +20,9 @@
 package fr.quatrevieux.araknemu.game;
 
 import fr.quatrevieux.araknemu.Araknemu;
+import fr.quatrevieux.araknemu.common.account.banishment.BanIpService;
+import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
+import fr.quatrevieux.araknemu.common.account.banishment.network.BanIpCheck;
 import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
@@ -33,10 +36,8 @@ import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import fr.quatrevieux.araknemu.core.network.session.extension.RateLimiter;
 import fr.quatrevieux.araknemu.core.network.session.extension.SessionLogger;
 import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
-import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
-import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
-import fr.quatrevieux.araknemu.data.living.repository.account.BankItemRepository;
-import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
+import fr.quatrevieux.araknemu.data.living.repository.BanIpRepository;
+import fr.quatrevieux.araknemu.data.living.repository.account.*;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
@@ -193,7 +194,9 @@ final public class GameModule implements ContainerModule {
                     container.get(ExplorationMapService.class),
 
                     container.get(PlayerRaceService.class),
-                    container.get(PlayerExperienceService.class)
+                    container.get(PlayerExperienceService.class),
+
+                    container.get(GameBanIpSynchronizer.class)
                 ),
 
                 // Subscribers
@@ -212,7 +215,9 @@ final public class GameModule implements ContainerModule {
                     container.get(NpcExchangeService.class),
                     container.get(ActivityService.class),
                     container.get(PlayerService.class),
-                    container.get(ShutdownService.class)
+                    container.get(AccountService.class),
+                    container.get(ShutdownService.class),
+                    container.get(GameBanIpSynchronizer.class)
                 )
             )
         );
@@ -234,6 +239,7 @@ final public class GameModule implements ContainerModule {
         configurator.factory(
             SessionFactory.class,
             container -> new SessionConfigurator<>(GameSession::new)
+                .add(new BanIpCheck<>(container.get(BanIpService.class)))
                 .add(new RateLimiter.Configurator<>(container.get(GameConfiguration.class).packetRateLimit()))
                 .add(new SessionLogger.Configurator<>(container.get(Logger.class)))
                 .add(new GameExceptionConfigurator(container.get(Logger.class)))
@@ -640,6 +646,34 @@ final public class GameModule implements ContainerModule {
                 container.get(AccountBankRepository.class),
                 container.get(BankItemRepository.class),
                 container.get(GameConfiguration.class).economy()
+            )
+        );
+
+        configurator.persist(
+            BanishmentService.class,
+            container -> new BanishmentService<>(
+                container.get(BanishmentRepository.class),
+                container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class),
+                ids -> container.get(AccountService.class).getByIds(ids)
+            )
+        );
+
+        configurator.persist(
+            BanIpService.class,
+            container -> new BanIpService<>(
+                container.get(BanIpRepository.class),
+                container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class),
+                ids -> container.get(AccountService.class).getByIds(ids)
+            )
+        );
+
+        configurator.persist(
+            GameBanIpSynchronizer.class,
+            container -> new GameBanIpSynchronizer(
+                container.get(BanIpService.class),
+                () -> container.get(GameService.class).sessions(),
+                container.get(Logger.class),
+                container.get(GameConfiguration.class).banIpRefresh()
             )
         );
 

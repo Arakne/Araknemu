@@ -90,4 +90,14 @@ final public class ServerMessage {
     static public ServerMessage shutdown() {
         return new ServerMessage(false, 4, new Object[] {}, null);
     }
+
+    /**
+     * The player has been kicked
+     *
+     * @param performer The kicker pseudo
+     * @param cause The kick message
+     */
+    static public ServerMessage kick(String performer, String cause) {
+        return new ServerMessage(false, 18, new Object[] {performer, cause}, null);
+    }
 }

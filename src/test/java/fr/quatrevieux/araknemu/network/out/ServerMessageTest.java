@@ -53,4 +53,9 @@ class ServerMessageTest {
     void shutdown() {
         assertEquals("M04|", ServerMessage.shutdown().toString());
     }
+
+    @Test
+    void kick() {
+        assertEquals("M018|John;cause", ServerMessage.kick("John", "cause").toString());
+    }
 }

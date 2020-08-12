@@ -239,6 +239,14 @@ final public class GameConfiguration implements ConfigurationModule {
     }
 
     /**
+     * Get the refresh interval for the ban ip table
+     * Default: 10 minutes (10m)
+     */
+    public Duration banIpRefresh() {
+        return pool.duration("banip.refresh", Duration.ofMinutes(10));
+    }
+
+    /**
      * Get player configuration
      */
     public PlayerConfiguration player() {

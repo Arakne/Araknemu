@@ -20,9 +20,14 @@
 package fr.quatrevieux.araknemu.realm;
 
 import fr.quatrevieux.araknemu.Araknemu;
+import fr.quatrevieux.araknemu.common.account.banishment.BanIpService;
+import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
+import fr.quatrevieux.araknemu.common.account.banishment.network.BanIpCheck;
 import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
+import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.core.network.Server;
 import fr.quatrevieux.araknemu.core.network.netty.NettyServer;
 import fr.quatrevieux.araknemu.core.network.parser.*;
@@ -30,7 +35,9 @@ import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
 import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import fr.quatrevieux.araknemu.core.network.session.extension.RateLimiter;
 import fr.quatrevieux.araknemu.core.network.session.extension.SessionLogger;
+import fr.quatrevieux.araknemu.data.living.repository.BanIpRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
+import fr.quatrevieux.araknemu.data.living.repository.account.BanishmentRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.network.in.CommonParserLoader;
@@ -71,14 +78,24 @@ final public class RealmModule implements ContainerModule {
             container -> LogManager.getLogger(RealmService.class)
         );
 
-        configurator.factory(
+        configurator.persist(
             RealmService.class,
             container -> new RealmService(
                 container.get(RealmConfiguration.class),
                 container.get(Server.class),
-                container.get(Logger.class)
+                container.get(Logger.class),
+                container.get(ListenerAggregate.class),
+                Arrays.asList(
+                    container.get(AuthBanIpSynchronizer.class)
+                ),
+                Arrays.asList(
+                    container.get(AuthBanIpSynchronizer.class)
+                )
             )
         );
+
+        configurator.persist(ListenerAggregate.class, container -> new DefaultListenerAggregate(container.get(Logger.class)));
+        configurator.factory(fr.quatrevieux.araknemu.core.event.Dispatcher.class, container -> container.get(ListenerAggregate.class));
 
         configurator.factory(
             RealmConfiguration.class,
@@ -97,6 +114,7 @@ final public class RealmModule implements ContainerModule {
         configurator.factory(
             SessionFactory.class,
             container -> new SessionConfigurator<>(RealmSession::new)
+                .add(new BanIpCheck<>(container.get(BanIpService.class)))
                 .add(new RateLimiter.Configurator<>(container.get(RealmConfiguration.class).packetRateLimit()))
                 .add(new SessionLogger.Configurator<>(container.get(Logger.class)))
                 .add(new RealmSessionConfigurator(
@@ -150,7 +168,8 @@ final public class RealmModule implements ContainerModule {
             container -> new AuthenticationService(
                 container.get(AccountRepository.class),
                 container.get(HostService.class),
-                container.get(PasswordManager.class)
+                container.get(PasswordManager.class),
+                container.get(BanishmentService.class)
             )
         );
 
@@ -171,6 +190,26 @@ final public class RealmModule implements ContainerModule {
                 Arrays.asList(container.get(RealmConfiguration.class).passwordHashAlgorithms()),
                 container.get(Argon2Hash.class),
                 container.get(PlainTextHash.class)
+            )
+        );
+
+        configurator.persist(
+            BanishmentService.class,
+            container -> new BanishmentService(container.get(BanishmentRepository.class), container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class))
+        );
+
+        configurator.persist(
+            BanIpService.class,
+            container -> new BanIpService(container.get(BanIpRepository.class), container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class))
+        );
+
+        configurator.persist(
+            AuthBanIpSynchronizer.class,
+            container -> new AuthBanIpSynchronizer(
+                container.get(BanIpService.class),
+                () -> container.get(RealmService.class).sessions(),
+                container.get(Logger.class),
+                container.get(RealmConfiguration.class).banIpRefresh()
             )
         );
 

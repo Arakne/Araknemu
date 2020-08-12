@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.realm;
 
 import fr.quatrevieux.araknemu.Araknemu;
+import fr.quatrevieux.araknemu.common.account.banishment.BanIpService;
 import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.config.Configuration;
 import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
@@ -29,6 +30,8 @@ import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
+import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.core.network.Server;
 import fr.quatrevieux.araknemu.core.network.netty.NettyServer;
 import fr.quatrevieux.araknemu.core.network.parser.AggregatePacketParser;
@@ -39,6 +42,7 @@ import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
 import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.SqlLivingRepositoriesModule;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
+import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
 import fr.quatrevieux.araknemu.realm.authentication.password.Argon2Hash;
 import fr.quatrevieux.araknemu.realm.authentication.password.PasswordManager;
 import fr.quatrevieux.araknemu.realm.authentication.password.PlainTextHash;
@@ -84,6 +88,11 @@ class RealmModuleTest {
         assertInstanceOf(PasswordManager.class, container.get(PasswordManager.class));
         assertInstanceOf(PlainTextHash.class, container.get(PlainTextHash.class));
         assertInstanceOf(Argon2Hash.class, container.get(Argon2Hash.class));
+        assertInstanceOf(BanishmentService.class, container.get(BanishmentService.class));
+        assertInstanceOf(BanIpService.class, container.get(BanIpService.class));
+        assertInstanceOf(AuthBanIpSynchronizer.class, container.get(AuthBanIpSynchronizer.class));
+        assertInstanceOf(DefaultListenerAggregate.class, container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class));
+        assertInstanceOf(DefaultListenerAggregate.class, container.get(ListenerAggregate.class));
     }
 
     public void assertInstanceOf(Class clazz, Object obj) {

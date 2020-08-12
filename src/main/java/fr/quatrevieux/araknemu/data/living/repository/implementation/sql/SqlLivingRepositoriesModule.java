@@ -25,15 +25,14 @@ import fr.quatrevieux.araknemu.core.dbal.executor.LoggedQueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
-import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
-import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
-import fr.quatrevieux.araknemu.data.living.repository.account.BankItemRepository;
-import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
+import fr.quatrevieux.araknemu.data.living.repository.BanIpRepository;
+import fr.quatrevieux.araknemu.data.living.repository.account.*;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
 import fr.quatrevieux.araknemu.data.living.transformer.ChannelsTransformer;
 import fr.quatrevieux.araknemu.data.living.transformer.InstantTransformer;
+import fr.quatrevieux.araknemu.data.living.transformer.IpAddressTransformer;
 import fr.quatrevieux.araknemu.data.living.transformer.PermissionsTransformer;
 import fr.quatrevieux.araknemu.data.transformer.MutableCharacteristicsTransformer;
 import fr.quatrevieux.araknemu.data.world.transformer.ItemEffectsTransformer;
@@ -106,6 +105,23 @@ final public class SqlLivingRepositoriesModule implements ContainerModule {
         );
 
         configurator.persist(
+            BanishmentRepository.class,
+            container -> new SqlBanishmentRepository(
+                executor,
+                container.get(InstantTransformer.class)
+            )
+        );
+
+        configurator.persist(
+         BanIpRepository.class,
+            container -> new SqlBanIpRepository(
+                executor,
+                container.get(IpAddressTransformer.class),
+                container.get(InstantTransformer.class)
+            )
+        );
+
+        configurator.persist(
             MutableCharacteristicsTransformer.class,
             container -> new MutableCharacteristicsTransformer()
         );
@@ -126,5 +142,6 @@ final public class SqlLivingRepositoriesModule implements ContainerModule {
         );
 
         configurator.persist(InstantTransformer.class, container -> new InstantTransformer());
+        configurator.persist(IpAddressTransformer.class, container -> new IpAddressTransformer());
     }
 }

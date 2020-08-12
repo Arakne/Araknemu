@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
+import fr.quatrevieux.araknemu.data.living.entity.account.Banishment;
 import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
 import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
 import fr.quatrevieux.araknemu.network.realm.in.Credentials;
@@ -38,6 +39,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.EnumSet;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,7 +59,7 @@ class AuthenticateTest extends RealmBaseCase {
         );
 
         dataSet
-            .use(ConnectionLog.class)
+            .use(ConnectionLog.class, Banishment.class)
             .push(new Account(-1, "login", "password", "pseudo", EnumSet.noneOf(Permission.class), "My question", "My response"), "login_account")
         ;
     }
@@ -156,5 +158,21 @@ class AuthenticateTest extends RealmBaseCase {
         assertFalse(session.isLogged());
 
         requestStack.assertLast(new LoginError(LoginError.ALREADY_LOGGED_GAME_SERVER));
+    }
+
+    @Test
+    void handleBanned() throws ContainerException {
+        connector.checkLogin = true;
+        dataSet.push(new Banishment(Account.class.cast(dataSet.get("login_account")).id(), Instant.now().minus(1, ChronoUnit.HOURS), Instant.now().plus(1, ChronoUnit.HOURS), "test", 3));
+
+        handler.handle(session, new Credentials(
+            "login",
+            ConnectionKeyTest.cryptPassword("password", session.key().key()),
+            Credentials.Method.VIGENERE_BASE_64
+        ));
+
+        assertFalse(session.isLogged());
+
+        requestStack.assertLast(new LoginError(LoginError.BANNED));
     }
 }

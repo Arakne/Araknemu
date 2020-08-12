@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.realm.handler.account;
@@ -79,6 +79,12 @@ final public class Authenticate implements PacketHandler<RealmSession, Credentia
         @Override
         public void isPlaying() {
             session.send(new LoginError(LoginError.ALREADY_LOGGED_GAME_SERVER));
+            session.close();
+        }
+
+        @Override
+        public void banned() {
+            session.send(new LoginError(LoginError.BANNED));
             session.close();
         }
     }

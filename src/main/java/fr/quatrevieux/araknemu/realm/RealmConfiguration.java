@@ -106,6 +106,14 @@ final public class RealmConfiguration implements ConfigurationModule {
     }
 
     /**
+     * Get the refresh interval for the ban ip table
+     * Default: 30 seconds (30s)
+     */
+    public Duration banIpRefresh() {
+        return pool.duration("banip.refresh", Duration.ofSeconds(30));
+    }
+
+    /**
      * Get list of enabled hash algorithms. The algorithms are separated by a coma.
      * Available algorithms : argon2, plain
      * The first value will be the default hash algorithm
