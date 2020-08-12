@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.admin;
 
+import fr.quatrevieux.araknemu.Araknemu;
 import fr.quatrevieux.araknemu.common.account.banishment.BanIpService;
 import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
@@ -55,6 +56,12 @@ import java.util.Arrays;
  * Note: Only commands which needs dependencies from the container should be defined here. "simple" commands may be defined directly on the context
  */
 final public class AdminModule implements ContainerModule {
+    final private Araknemu app;
+
+    public AdminModule(Araknemu app) {
+        this.app = app;
+    }
+
     @Override
     public void configure(ContainerConfigurator configurator) {
         configureService(configurator);
@@ -62,6 +69,8 @@ final public class AdminModule implements ContainerModule {
     }
 
     private void configureService(ContainerConfigurator configurator) {
+        configurator.factory(Araknemu.class, container -> app);
+
         configurator.persist(
             AdminService.class,
             container -> new AdminService(
@@ -141,6 +150,11 @@ final public class AdminModule implements ContainerModule {
                         ));
                         add(new Shutdown(container.get(ShutdownService.class)));
                         add(new Banip(container.get(BanIpService.class)));
+                        add(new fr.quatrevieux.araknemu.game.admin.server.Info(
+                            container.get(Araknemu.class),
+                            container.get(PlayerService.class),
+                            container.get(GameService.class)
+                        ));
                     }
                 })
         );

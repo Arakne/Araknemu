@@ -206,7 +206,7 @@ public class GameBaseCase extends DatabaseTestCase {
         container = new ItemPoolContainer();
         container.register(new ConnectorModule());
         container.register(new GameModule(app));
-        container.register(new AdminModule());
+        container.register(new AdminModule(app));
         container.register(new SqlLivingRepositoriesModule(
             app.database().get("game")
         ));

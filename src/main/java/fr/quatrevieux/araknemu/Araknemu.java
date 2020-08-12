@@ -45,6 +45,7 @@ import org.ini4j.Ini;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +67,7 @@ public class Araknemu {
     final private DatabaseHandler database;
     final private List<Service> services = new ArrayList<>();
     private boolean started = false;
+    private Instant startDate;
 
     public Araknemu(Configuration configuration, DatabaseHandler database) {
         this.configuration = configuration;
@@ -91,6 +93,7 @@ public class Araknemu {
         System.gc();
 
         started = true;
+        startDate = Instant.now();
         logger.info("Araknemu started");
     }
 
@@ -145,6 +148,13 @@ public class Araknemu {
     }
 
     /**
+     * Get the server start date
+     */
+    public Instant startDate() {
+        return startDate;
+    }
+
+    /**
      * Application entry point
      */
     public static void main(String[] args) throws IOException, SQLException, ContainerException, BootException {
@@ -194,7 +204,7 @@ public class Araknemu {
             app.database().get("game")
         ));
         container.register(new GameModule(app));
-        container.register(new AdminModule());
+        container.register(new AdminModule(app));
         container.register(new LocalModule(realmContainer));
 
         return container;
