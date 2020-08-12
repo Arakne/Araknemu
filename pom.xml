@@ -32,7 +32,7 @@
 
     <groupId>fr.quatrevieux.araknemu</groupId>
     <artifactId>araknemu</artifactId>
-    <version>0.6-alpha</version>
+    <version>0.7-alpha</version>
     <dependencies>
         <dependency>
             <groupId>io.netty</groupId>
