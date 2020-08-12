@@ -57,7 +57,7 @@ class AdminModuleTest extends GameBaseCase {
         container.register(new SqlLivingRepositoriesModule(app.database().get("game")));
         container.register(new SqlWorldRepositoriesModule(app.database().get("game")));
         container.register(new GameModule(app));
-        container.register(new AdminModule());
+        container.register(new AdminModule(app));
 
         assertInstanceOf(AdminService.class, container.get(AdminService.class));
         assertInstanceOf(PlayerContextResolver.class, container.get(PlayerContextResolver.class));
@@ -74,7 +74,7 @@ class AdminModuleTest extends GameBaseCase {
         container.register(new SqlLivingRepositoriesModule(app.database().get("game")));
         container.register(new SqlWorldRepositoriesModule(app.database().get("game")));
         container.register(new GameModule(app));
-        container.register(new AdminModule());
+        container.register(new AdminModule(app));
 
         container.get(PlayerService.class).load(session, gamePlayer().id());
 
@@ -93,7 +93,7 @@ class AdminModuleTest extends GameBaseCase {
         container.register(new SqlLivingRepositoriesModule(app.database().get("game")));
         container.register(new SqlWorldRepositoriesModule(app.database().get("game")));
         container.register(new GameModule(app));
-        container.register(new AdminModule());
+        container.register(new AdminModule(app));
 
         container.get(PlayerService.class).load(session, gamePlayer().id());
 
@@ -110,7 +110,7 @@ class AdminModuleTest extends GameBaseCase {
         container.register(new SqlLivingRepositoriesModule(app.database().get("game")));
         container.register(new SqlWorldRepositoriesModule(app.database().get("game")));
         container.register(new GameModule(app));
-        container.register(new AdminModule());
+        container.register(new AdminModule(app));
 
         container.get(PlayerService.class).load(session, gamePlayer().id());
 
@@ -132,7 +132,7 @@ class AdminModuleTest extends GameBaseCase {
         container.register(new SqlLivingRepositoriesModule(app.database().get("game")));
         container.register(new SqlWorldRepositoriesModule(app.database().get("game")));
         container.register(new GameModule(app));
-        container.register(new AdminModule());
+        container.register(new AdminModule(app));
         container.register(configurator -> configurator.set(RealmConnector.class, Mockito.mock(RealmConnector.class)));
 
         container.get(PlayerService.class).load(session, gamePlayer().id());
@@ -142,5 +142,6 @@ class AdminModuleTest extends GameBaseCase {
         assertInstanceOf(ServerContext.class, context);
         assertInstanceOf(Online.class, context.command("online"));
         assertInstanceOf(Shutdown.class, context.command("shutdown"));
+        assertInstanceOf(fr.quatrevieux.araknemu.game.admin.server.Info.class, context.command("info"));
     }
 }
