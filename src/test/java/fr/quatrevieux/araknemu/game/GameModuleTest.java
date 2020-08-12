@@ -100,7 +100,7 @@ class GameModuleTest extends GameBaseCase {
         container.register(new SqlLivingRepositoriesModule(app.database().get("game")));
         container.register(new SqlWorldRepositoriesModule(app.database().get("game")));
         container.register(new GameModule(app));
-        container.register(new AdminModule()); // @todo should be removed
+        container.register(new AdminModule(app)); // @todo should be removed
 
         assertInstanceOf(GameService.class, container.get(GameService.class));
         assertInstanceOf(SessionConfigurator.class, container.get(SessionFactory.class));
