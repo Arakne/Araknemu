@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.fight.map;
 
-import fr.arakne.utils.maps.DofusMap;
 import fr.arakne.utils.maps.serializer.CellData;
 import fr.arakne.utils.value.Dimensions;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
@@ -31,7 +30,7 @@ import java.util.List;
 /**
  * Map for the fight
  */
-final public class FightMap implements DofusMap<FightCell>, Iterable<FightCell> {
+final public class FightMap implements BattlefieldMap {
     final private MapTemplate template;
     final private List<FightCell> cells;
 

@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.spell;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 
@@ -33,7 +33,7 @@ final public class LaunchedSpells {
     private class Entry {
         private int cooldown;
         private int count = 1;
-        final private Map<Fighter, Integer> countPerTarget = new HashMap<>();
+        final private Map<PassiveFighter, Integer> countPerTarget = new HashMap<>();
 
         Entry(Spell spell, FightCell cell) {
             cooldown = spell.constraints().launchDelay();

@@ -109,6 +109,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.MonsterAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Aggressive;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Runaway;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.*;
@@ -548,7 +549,7 @@ final public class GameModule implements ContainerModule {
                     StatesModule::new,
                     RaulebaqueModule::new,
                     LaunchedSpellsModule::new,
-                    fight -> new AiModule(fight, container.get(AiFactory.class))
+                    fight -> new AiModule(container.get(AiFactory.class))
                 )
             )
         );
@@ -759,10 +760,11 @@ final public class GameModule implements ContainerModule {
             MonsterAiFactory.class,
             container -> {
                 MonsterAiFactory factory = new MonsterAiFactory();
+                final Simulator simulator = AiModule.createSimulator(); // @todo refactor
 
-                factory.register("AGGRESSIVE", new Aggressive());
-                factory.register("RUNAWAY", new Runaway());
-                factory.register("SUPPORT", new Runaway());
+                factory.register("AGGRESSIVE", new Aggressive(simulator));
+                factory.register("RUNAWAY", new Runaway(simulator));
+                factory.register("SUPPORT", new Runaway(simulator));
 
                 return factory;
             }

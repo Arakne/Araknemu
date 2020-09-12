@@ -14,29 +14,19 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.castable.validator;
+package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 
-import fr.quatrevieux.araknemu.game.fight.castable.Castable;
+import fr.arakne.utils.maps.path.Path;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import fr.quatrevieux.araknemu.game.fight.turn.Turn;
-import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionFactory;
 
-/**
- * Validate fighter states
- */
-final public class StatesValidator implements CastConstraintValidator {
-    @Override
-    public Error validate(Turn turn, Castable castable, FightCell target) {
-        if (
-            !turn.fighter().states().hasAll(castable.constraints().requiredStates())
-            || turn.fighter().states().hasOne(castable.constraints().forbiddenStates())
-        ) {
-            return Error.cantCastBadState();
-        }
-
-        return null;
-    }
+public interface MoveActionFactory extends FightActionFactory {
+    /**
+     * Create the move action
+     */
+    public Action create(Path<FightCell> path);
 }

@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
  * Simulator for simple alter characteristic effect
@@ -53,7 +54,7 @@ final public class AlterCharacteristicSimulator implements EffectSimulator {
             * Math.max(effect.effect().duration(), 1)
         ;
 
-        for (Fighter target : effect.targets()) {
+        for (PassiveFighter target : effect.targets()) {
             simulation.addBoost(value, target);
         }
     }

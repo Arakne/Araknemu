@@ -33,7 +33,7 @@ import java.util.stream.StreamSupport;
 /**
  * Handle buff list for a fighter
  */
-final public class BuffList implements Iterable<Buff> {
+final public class BuffList implements Iterable<Buff>, Buffs {
     final private Fighter fighter;
     final private Collection<Buff> buffs = new LinkedList<>();
 
@@ -53,9 +53,7 @@ final public class BuffList implements Iterable<Buff> {
         return StreamSupport.stream(spliterator(), false);
     }
 
-    /**
-     * Add and start a buff
-     */
+    @Override
     public void add(Buff buff) {
         buffs.add(buff);
         buff.hook().onBuffStarted(buff);
@@ -72,9 +70,7 @@ final public class BuffList implements Iterable<Buff> {
         }
     }
 
-    /**
-     * @see BuffHook#onStartTurn(Buff)
-     */
+    @Override
     public boolean onStartTurn() {
         boolean result = true;
 
@@ -85,36 +81,28 @@ final public class BuffList implements Iterable<Buff> {
         return result;
     }
 
-    /**
-     * @see BuffHook#onEndTurn(Buff)
-     */
+    @Override
     public void onEndTurn() {
         for (Buff buff : buffs) {
             buff.hook().onEndTurn(buff);
         }
     }
 
-    /**
-     * @see BuffHook#onCastTarget(Buff, CastScope);
-     */
+    @Override
     public void onCastTarget(CastScope cast) {
         for (Buff buff : buffs) {
             buff.hook().onCastTarget(buff, cast);
         }
     }
 
-    /**
-     * @see BuffHook#onDamage(Buff, Damage);
-     */
+    @Override
     public void onDamage(Damage value) {
         for (Buff buff : buffs) {
             buff.hook().onDamage(buff, value);
         }
     }
 
-    /**
-     * Refresh the buff list after turn end
-     */
+    @Override
     public void refresh() {
         Iterator<Buff> iterator = buffs.iterator();
 

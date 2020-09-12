@@ -19,7 +19,8 @@
 
 package fr.quatrevieux.araknemu.game.spell.effect.target;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
  * Implementation of effect target using spell flags
@@ -46,7 +47,7 @@ final public class SpellEffectTarget implements EffectTarget {
     }
 
     @Override
-    public boolean test(Fighter caster, Fighter fighter) {
+    public boolean test(ActiveFighter caster, PassiveFighter fighter) {
         if (check(NOT_TEAM) && caster.team().equals(fighter.team())) {
             return false;
         }

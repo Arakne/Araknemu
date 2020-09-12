@@ -17,37 +17,28 @@
  * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.map;
+package fr.quatrevieux.araknemu.game.fight.turn.action.factory;
 
-import fr.arakne.utils.maps.BattlefieldCell;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastActionFactory;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveActionFactory;
 
-import java.util.Optional;
-
-/**
- * Cell for a fight map
- */
-public interface FightCell extends BattlefieldCell {
-    @Override
-    public BattlefieldMap map();
+public interface ActionsFactory {
+    public Action create(ActionType action, String[] arguments);
 
     /**
-     * Check if the cell is walkable, ignoring current fighter
+     * Get the factory for spell cast action
      */
-    public boolean walkableIgnoreFighter();
+    public CastActionFactory cast();
 
     /**
-     * Get the fighter on the cell
+     * Get the factory for close combat action
      */
-    public Optional<PassiveFighter> fighter();
+    public FightActionFactory closeCombat();
 
     /**
-     * Set a fighter on this cell
+     * Get the factory for move action
      */
-    public void set(PassiveFighter fighter);
-
-    /**
-     * Remove the fighter on the cell
-     */
-    public void removeFighter();
+    public MoveActionFactory move();
 }

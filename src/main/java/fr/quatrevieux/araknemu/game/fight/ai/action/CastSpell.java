@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.ai.util.SpellCaster;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -72,7 +72,7 @@ final public class CastSpell implements ActionGenerator {
             return Optional.empty();
         }
 
-        Optional<Fighter> enemy = ai.enemy();
+        Optional<? extends PassiveFighter> enemy = ai.enemy();
 
         if (!enemy.isPresent()) {
             return Optional.empty();
@@ -85,7 +85,7 @@ final public class CastSpell implements ActionGenerator {
                 continue;
             }
 
-            for (FightCell targetCell : ai.fight().map()) {
+            for (FightCell targetCell : ai.map()) {
                 // Target or launch is not valid
                 if (!targetCell.walkableIgnoreFighter() || !caster.validate(spell, targetCell)) {
                     continue;

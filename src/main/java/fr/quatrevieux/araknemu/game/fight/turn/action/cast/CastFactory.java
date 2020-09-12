@@ -34,7 +34,7 @@ import fr.quatrevieux.araknemu.game.spell.Spell;
 /**
  * Factory for cast action
  */
-final public class CastFactory implements FightActionFactory {
+final public class CastFactory implements CastActionFactory {
     final private FightTurn turn;
     final private Fighter fighter;
     final private CastConstraintValidator<Spell> validator;
@@ -66,19 +66,12 @@ final public class CastFactory implements FightActionFactory {
         return ActionType.CAST;
     }
 
-    /**
-     * Create the cast action
-     *
-     * @param spell The spell to cast
-     * @param target The cell target
-     */
+    @Override
     public Cast create(Spell spell, FightCell target) {
         return new Cast(turn, fighter, spell, target, validator, criticalityStrategy);
     }
 
-    /**
-     * Get the spell cast validator
-     */
+    @Override
     public CastConstraintValidator<Spell> validator() {
         return validator;
     }

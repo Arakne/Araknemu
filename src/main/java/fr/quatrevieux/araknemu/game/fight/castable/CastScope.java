@@ -20,7 +20,8 @@
 package fr.quatrevieux.araknemu.game.fight.castable;
 
 import fr.arakne.utils.value.helper.RandomUtil;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
@@ -34,9 +35,9 @@ import java.util.stream.Collectors;
 final public class CastScope {
     public class EffectScope {
         final private SpellEffect effect;
-        final private Collection<Fighter> targets;
+        final private Collection<PassiveFighter> targets;
 
-        public EffectScope(SpellEffect effect, Collection<Fighter> targets) {
+        public EffectScope(SpellEffect effect, Collection<PassiveFighter> targets) {
             this.effect = effect;
             this.targets = targets;
         }
@@ -45,7 +46,7 @@ final public class CastScope {
             return effect;
         }
 
-        public Collection<Fighter> targets() {
+        public Collection<PassiveFighter> targets() {
             return targets.stream()
                 .map(targetMapping::get)
                 .filter(fighter -> !fighter.dead())
@@ -60,13 +61,13 @@ final public class CastScope {
     final static private RandomUtil RANDOM = RandomUtil.createShared();
 
     final private Castable action;
-    final private Fighter caster;
+    final private ActiveFighter caster;
     final private FightCell target;
 
     private List<EffectScope> effects;
-    private Map<Fighter, Fighter> targetMapping;
+    private Map<PassiveFighter, PassiveFighter> targetMapping;
 
-    public CastScope(Castable action, Fighter caster, FightCell target) {
+    public CastScope(Castable action, ActiveFighter caster, FightCell target) {
         this.action = action;
         this.caster = caster;
         this.target = target;
@@ -93,7 +94,7 @@ final public class CastScope {
     /**
      * Get the caster
      */
-    public Fighter caster() {
+    public ActiveFighter caster() {
         return caster;
     }
 
@@ -107,7 +108,7 @@ final public class CastScope {
     /**
      * Get the cast targets
      */
-    public Set<Fighter> targets() {
+    public Set<PassiveFighter> targets() {
         return new HashSet<>(targetMapping.values());
     }
 
@@ -117,7 +118,7 @@ final public class CastScope {
      * @param originalTarget The base target fighter
      * @param newTarget The new target fighter
      */
-    public void replaceTarget(Fighter originalTarget, Fighter newTarget) {
+    public void replaceTarget(PassiveFighter originalTarget, PassiveFighter newTarget) {
         targetMapping.put(originalTarget, newTarget);
     }
 
@@ -142,7 +143,7 @@ final public class CastScope {
         targetMapping = new HashMap<>();
 
         for (EffectScope effect : this.effects) {
-            for (Fighter fighter : effect.targets) {
+            for (PassiveFighter fighter : effect.targets) {
                 targetMapping.put(fighter, fighter);
             }
         }
@@ -189,7 +190,8 @@ final public class CastScope {
     /**
      * Resolve the targets of the effect
      */
-    private Collection<Fighter> resolveTargets(SpellEffect effect) {
+    private Collection<PassiveFighter> resolveTargets(SpellEffect effect) {
+        // @fixme
         if (effect.target().onlyCaster()) {
             return Collections.singleton(caster);
         }

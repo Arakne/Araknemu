@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 import fr.arakne.utils.maps.CoordinateCell;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.ai.AI;
+import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
@@ -47,7 +47,7 @@ class MoveFarEnemiesTest extends FightBaseCase {
     private Fighter otherEnemy;
 
     private MoveFarEnemies action;
-    private AI ai;
+    private FighterAI ai;
 
     private FightTurn turn;
 
@@ -57,7 +57,7 @@ class MoveFarEnemiesTest extends FightBaseCase {
         super.setUp();
 
         fight = createFight();
-        fight.register(new AiModule(fight, new ChainAiFactory()));
+        fight.register(new AiModule(new ChainAiFactory()));
         fight.register(new CommonEffectsModule(fight));
 
         fighter = player.fighter();
@@ -72,7 +72,7 @@ class MoveFarEnemiesTest extends FightBaseCase {
 
         action = new MoveFarEnemies();
 
-        ai = new AI(fighter, new ActionGenerator[] { new DummyGenerator() });
+        ai = new FighterAI(fighter, fight, new ActionGenerator[] { new DummyGenerator() });
         ai.start(turn = fight.turnList().current().get());
         action.initialize(ai);
     }

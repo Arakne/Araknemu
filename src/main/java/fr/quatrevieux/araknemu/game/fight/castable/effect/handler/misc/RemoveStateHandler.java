@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
  * Handle remove state from the fighter
@@ -29,7 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 final public class RemoveStateHandler implements EffectHandler {
     @Override
     public void handle(CastScope cast, CastScope.EffectScope effect) {
-        for (Fighter target : effect.targets()) {
+        for (PassiveFighter target : effect.targets()) {
             target.states().remove(effect.effect().special());
         }
     }

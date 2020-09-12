@@ -21,13 +21,11 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.ai.AI;
+import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.module.AiModule;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
-import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
@@ -45,7 +43,7 @@ class TeleportNearEnemyTest extends FightBaseCase {
     private Fight fight;
 
     private TeleportNearEnemy action;
-    private AI ai;
+    private FighterAI ai;
 
     private FightTurn turn;
 
@@ -55,7 +53,7 @@ class TeleportNearEnemyTest extends FightBaseCase {
         super.setUp();
 
         fight = createFight();
-        fight.register(new AiModule(fight, new ChainAiFactory()));
+        fight.register(new AiModule(new ChainAiFactory()));
         fight.register(new CommonEffectsModule(fight));
 
         fighter = player.fighter();
@@ -66,7 +64,7 @@ class TeleportNearEnemyTest extends FightBaseCase {
 
         action = new TeleportNearEnemy();
 
-        ai = new AI(fighter, new ActionGenerator[] { new DummyGenerator() });
+        ai = new FighterAI(fighter, fight, new ActionGenerator[] { new DummyGenerator() });
         ai.start(turn = fight.turnList().current().get());
     }
 

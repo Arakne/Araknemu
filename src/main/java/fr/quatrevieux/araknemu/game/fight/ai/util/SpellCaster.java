@@ -22,18 +22,18 @@ package fr.quatrevieux.araknemu.game.fight.ai.util;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
-import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
-import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastFactory;
+import fr.quatrevieux.araknemu.game.fight.turn.Turn;
+import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastActionFactory;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 
 /**
  * Utility class for cast spells
  */
 final public class SpellCaster {
-    final private FightTurn turn;
+    final private Turn turn;
     final private CastConstraintValidator<Spell> validator;
-    final private CastFactory factory;
+    final private CastActionFactory factory;
 
     public SpellCaster(AI ai) {
         turn = ai.turn();
@@ -51,7 +51,7 @@ final public class SpellCaster {
     /**
      * Create the action
      */
-    public Cast create(Spell spell, FightCell target) {
+    public Action create(Spell spell, FightCell target) {
         return factory.create(spell, target);
     }
 }

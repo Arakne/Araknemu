@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 /**
@@ -50,7 +51,7 @@ final public class DamageSimulator implements EffectSimulator {
             .value()
         ;
 
-        for (Fighter target : effect.targets()) {
+        for (PassiveFighter target : effect.targets()) {
             Damage damage = new Damage(value, element)
                 .percent(target.characteristics().get(element.percentResistance()))
                 .fixed(target.characteristics().get(element.fixedResistance()))

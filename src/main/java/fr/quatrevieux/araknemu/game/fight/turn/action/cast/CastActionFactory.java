@@ -14,29 +14,28 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.castable.validator;
+package fr.quatrevieux.araknemu.game.fight.turn.action.cast;
 
-import fr.quatrevieux.araknemu.game.fight.castable.Castable;
+import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import fr.quatrevieux.araknemu.game.fight.turn.Turn;
-import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionFactory;
+import fr.quatrevieux.araknemu.game.spell.Spell;
 
-/**
- * Validate fighter states
- */
-final public class StatesValidator implements CastConstraintValidator {
-    @Override
-    public Error validate(Turn turn, Castable castable, FightCell target) {
-        if (
-            !turn.fighter().states().hasAll(castable.constraints().requiredStates())
-            || turn.fighter().states().hasOne(castable.constraints().forbiddenStates())
-        ) {
-            return Error.cantCastBadState();
-        }
+public interface CastActionFactory extends FightActionFactory {
+    /**
+     * Create the cast action
+     *
+     * @param spell  The spell to cast
+     * @param target The cell target
+     */
+    Action create(Spell spell, FightCell target);
 
-        return null;
-    }
+    /**
+     * Get the spell cast validator
+     */
+    CastConstraintValidator<Spell> validator();
 }

@@ -23,7 +23,7 @@ import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.maps.path.Pathfinder;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 
@@ -35,12 +35,12 @@ import java.util.Optional;
 final public class MoveNearEnemy implements ActionGenerator {
     private Decoder<FightCell> decoder;
     private Pathfinder<FightCell> pathfinder;
-    private Fighter fighter;
+    private ActiveFighter fighter;
 
     @Override
     public void initialize(AI ai) {
         this.fighter = ai.fighter();
-        this.decoder = new Decoder<>(ai.fighter().fight().map());
+        this.decoder = new Decoder<>(ai.map());
         this.pathfinder = decoder
             .pathfinder()
             .targetDistance(1)

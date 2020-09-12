@@ -19,35 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.map;
 
-import fr.arakne.utils.maps.BattlefieldCell;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.arakne.utils.maps.DofusMap;
 
-import java.util.Optional;
-
-/**
- * Cell for a fight map
- */
-public interface FightCell extends BattlefieldCell {
-    @Override
-    public BattlefieldMap map();
-
-    /**
-     * Check if the cell is walkable, ignoring current fighter
-     */
-    public boolean walkableIgnoreFighter();
-
-    /**
-     * Get the fighter on the cell
-     */
-    public Optional<PassiveFighter> fighter();
-
-    /**
-     * Set a fighter on this cell
-     */
-    public void set(PassiveFighter fighter);
-
-    /**
-     * Remove the fighter on the cell
-     */
-    public void removeFighter();
+public interface BattlefieldMap extends DofusMap<FightCell>, Iterable<FightCell> {
 }

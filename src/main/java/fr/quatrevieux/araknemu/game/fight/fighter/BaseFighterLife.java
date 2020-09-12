@@ -58,7 +58,7 @@ final public class BaseFighterLife implements FighterLife {
     }
 
     @Override
-    public int alter(Fighter caster, int value) {
+    public int alter(ActiveFighter caster, int value) {
         if (dead) {
             return 0;
         }
@@ -82,7 +82,7 @@ final public class BaseFighterLife implements FighterLife {
     }
 
     @Override
-    public void kill(Fighter caster) {
+    public void kill(ActiveFighter caster) {
         current = 0;
         dead = true;
         fighter.fight().dispatch(new FighterDie(fighter, caster));

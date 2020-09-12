@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * Action factory for all turn actions
  */
-final public class TurnActionsFactory {
+final public class TurnActionsFactory implements ActionsFactory {
     final private CastFactory castFactory;
     final private CloseCombatFactory closeCombatFactory;
     final private MoveFactory moveFactory;
@@ -50,6 +50,7 @@ final public class TurnActionsFactory {
         register(closeCombatFactory);
     }
 
+    @Override
     public Action create(ActionType action, String[] arguments) {
         if (!factories.containsKey(action)) {
             throw new FightException("Fight action " + action + " not found");
@@ -58,23 +59,17 @@ final public class TurnActionsFactory {
         return factories.get(action).create(arguments);
     }
 
-    /**
-     * Get the factory for spell cast action
-     */
+    @Override
     public CastFactory cast() {
         return castFactory;
     }
 
-    /**
-     * Get the factory for close combat action
-     */
+    @Override
     public CloseCombatFactory closeCombat() {
         return closeCombatFactory;
     }
 
-    /**
-     * Get the factory for move action
-     */
+    @Override
     public MoveFactory move() {
         return moveFactory;
     }

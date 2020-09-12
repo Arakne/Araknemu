@@ -19,7 +19,9 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.simulation;
 
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 
@@ -28,7 +30,7 @@ import fr.quatrevieux.araknemu.game.spell.Spell;
  */
 final public class CastSimulation {
     final private Spell spell;
-    final private Fighter caster;
+    final private ActiveFighter caster;
     final private FightCell target;
 
     private int enemiesLife;
@@ -39,7 +41,7 @@ final public class CastSimulation {
     private int alliesBoost;
     private int selfBoost;
 
-    public CastSimulation(Spell spell, Fighter caster, FightCell target) {
+    public CastSimulation(Spell spell, ActiveFighter caster, FightCell target) {
         this.spell = spell;
         this.caster = caster;
         this.target = target;
@@ -72,7 +74,7 @@ final public class CastSimulation {
      * @param value The life diff. Negative value for damage, positive for heal
      * @param target The target fighter
      */
-    public void alterLife(int value, Fighter target) {
+    public void alterLife(int value, PassiveFighter target) {
         if (value < 0) {
             value = Math.max(value, -target.life().current());
         } else {
@@ -94,7 +96,7 @@ final public class CastSimulation {
      * @param value The damage value. Should be positive
      * @param target The target fighter
      */
-    public void addDamage(int value, Fighter target) {
+    public void addDamage(int value, PassiveFighter target) {
         alterLife(-value, target);
     }
 
@@ -128,7 +130,7 @@ final public class CastSimulation {
      * @param value The boost value. Can be negative for a malus
      * @param target The target fighter
      */
-    public void addBoost(int value, Fighter target) {
+    public void addBoost(int value, PassiveFighter target) {
         if (target.equals(caster)) {
             selfBoost += value;
         } else if (target.team().equals(caster.team())) {
@@ -141,7 +143,7 @@ final public class CastSimulation {
     /**
      * Get the simulated spell caster
      */
-    public Fighter caster() {
+    public ActiveFighter caster() {
         return caster;
     }
 

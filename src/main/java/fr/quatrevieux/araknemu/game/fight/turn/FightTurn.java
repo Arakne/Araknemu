@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Handle a fighter turn
  */
-final public class FightTurn {
+final public class FightTurn implements Turn {
     final private AtomicBoolean active = new AtomicBoolean(false);
 
     final private Fighter fighter;
@@ -58,9 +58,7 @@ final public class FightTurn {
         this.actionFactory = new TurnActionsFactory(this);
     }
 
-    /**
-     * Get the current fighter
-     */
+    @Override
     public Fighter fighter() {
         return fighter;
     }
@@ -79,9 +77,7 @@ final public class FightTurn {
         return duration;
     }
 
-    /**
-     * Check if the turn is active
-     */
+    @Override
     public boolean active() {
         return active.get();
     }
@@ -132,11 +128,7 @@ final public class FightTurn {
         });
     }
 
-    /**
-     * Perform a fight action
-     *
-     * @param action The action to perform
-     */
+    @Override
     public void perform(Action action) throws FightException {
         if (!active.get()) {
             throw new FightException("Turn is not active");
@@ -166,16 +158,12 @@ final public class FightTurn {
         actionHandler.terminate();
     }
 
-    /**
-     * Get the actions factory
-     */
+    @Override
     public TurnActionsFactory actions() {
         return actionFactory;
     }
 
-    /**
-     * Get the current fighter points
-     */
+    @Override
     public FighterTurnPoints points() {
         return points;
     }

@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.simulation;
 
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.EffectSimulator;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -54,7 +54,7 @@ final public class Simulator {
      *
      * @return The simulation result
      */
-    public CastSimulation simulate(Spell spell, Fighter caster, FightCell target) {
+    public CastSimulation simulate(Spell spell, ActiveFighter caster, FightCell target) {
         CastSimulation normalSimulation = simulate(spell, new CastScope(spell, caster, target).withEffects(spell.effects()));
 
         if (spell.criticalHit() < 2) {

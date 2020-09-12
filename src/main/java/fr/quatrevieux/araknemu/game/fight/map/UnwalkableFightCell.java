@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.map;
 import fr.arakne.utils.maps.serializer.CellData;
 import fr.quatrevieux.araknemu.game.fight.exception.FightMapException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 import java.util.Optional;
 
@@ -65,12 +66,12 @@ final public class UnwalkableFightCell implements FightCell {
     }
 
     @Override
-    public Optional<Fighter> fighter() {
+    public Optional<PassiveFighter> fighter() {
         return Optional.empty();
     }
 
     @Override
-    public void set(Fighter fighter) {
+    public void set(PassiveFighter fighter) {
         throw new FightMapException("Cannot add fighter on unwalkable cell");
     }
 

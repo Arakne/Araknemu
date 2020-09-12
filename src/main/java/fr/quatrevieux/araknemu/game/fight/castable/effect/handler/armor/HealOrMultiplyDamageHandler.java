@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
  * Suffered damage will be healed, or multiplied
@@ -40,7 +41,7 @@ final public class HealOrMultiplyDamageHandler implements EffectHandler, BuffHoo
 
     @Override
     public void buff(CastScope cast, CastScope.EffectScope effect) {
-        for (Fighter target : effect.targets()) {
+        for (PassiveFighter target : effect.targets()) {
             target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
         }
     }

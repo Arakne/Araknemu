@@ -23,7 +23,7 @@ import fr.arakne.utils.maps.CoordinateCell;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.util.SpellCaster;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -113,7 +113,7 @@ final public class TeleportNearEnemy implements ActionGenerator {
             return Optional.empty();
         }
 
-        Optional<Fighter> enemy = ai.enemy();
+        Optional<? extends PassiveFighter> enemy = ai.enemy();
 
         if (!enemy.isPresent()) {
             return Optional.empty();
@@ -131,7 +131,7 @@ final public class TeleportNearEnemy implements ActionGenerator {
                 continue;
             }
 
-            for (FightCell cell : ai.fight().map()) {
+            for (FightCell cell : ai.map()) {
                 // Target or launch is not valid
                 if (!cell.walkable() || !caster.validate(spell, cell)) {
                     continue;

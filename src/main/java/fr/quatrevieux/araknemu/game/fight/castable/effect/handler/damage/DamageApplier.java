@@ -24,7 +24,9 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
@@ -54,7 +56,7 @@ final public class DamageApplier {
      *
      * @return The real damage value
      */
-    public int apply(Fighter caster, SpellEffect effect, Fighter target) {
+    public int apply(ActiveFighter caster, SpellEffect effect, PassiveFighter target) {
         EffectValue value = new EffectValue(effect)
             .percent(caster.characteristics().get(element.boost()))
             .percent(caster.characteristics().get(Characteristic.PERCENT_DAMAGE))

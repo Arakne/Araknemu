@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.ai.factory;
 
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.ai.AI;
+import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +56,7 @@ class ChainAiFactoryTest extends FightBaseCase {
 
     @Test
     void createSuccess() {
-        final AI ai = new AI(fighter, new ActionGenerator[0]);
+        final FighterAI ai = new FighterAI(fighter, fighter.fight(), new ActionGenerator[0]);
 
         assertSame(ai, new ChainAiFactory(
             fighter -> Optional.empty(),

@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionFactory
 /**
  * Factory for move action
  */
-final public class MoveFactory implements FightActionFactory {
+final public class MoveFactory implements MoveActionFactory {
     final private FightTurn turn;
 
     public MoveFactory(FightTurn turn) {
@@ -47,9 +47,7 @@ final public class MoveFactory implements FightActionFactory {
         return ActionType.MOVE;
     }
 
-    /**
-     * Create the move action
-     */
+    @Override
     public Move create(Path<FightCell> path) {
         return new Move(turn, turn.fighter(), path);
     }

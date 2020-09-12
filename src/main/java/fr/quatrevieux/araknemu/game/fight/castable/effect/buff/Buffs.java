@@ -17,37 +17,39 @@
  * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.map;
+package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
-import fr.arakne.utils.maps.BattlefieldCell;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 
-import java.util.Optional;
-
-/**
- * Cell for a fight map
- */
-public interface FightCell extends BattlefieldCell {
-    @Override
-    public BattlefieldMap map();
+public interface Buffs {
+    /**
+     * Add and start a buff
+     */
+    void add(Buff buff);
 
     /**
-     * Check if the cell is walkable, ignoring current fighter
+     * @see BuffHook#onCastTarget(Buff, CastScope);
      */
-    public boolean walkableIgnoreFighter();
+    void onCastTarget(CastScope cast);
 
     /**
-     * Get the fighter on the cell
+     * @see BuffHook#onDamage(Buff, Damage);
      */
-    public Optional<PassiveFighter> fighter();
+    void onDamage(Damage value);
 
     /**
-     * Set a fighter on this cell
+     * @see BuffHook#onStartTurn(Buff)
      */
-    public void set(PassiveFighter fighter);
+    public boolean onStartTurn();
 
     /**
-     * Remove the fighter on the cell
+     * @see BuffHook#onEndTurn(Buff)
      */
-    public void removeFighter();
+    public void onEndTurn();
+
+    /**
+     * Refresh the buff list after turn end
+     */
+    public void refresh();
 }

@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.arakne.utils.maps.constant.Direction;
+import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 
 /**
@@ -30,7 +31,7 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
  */
 final public class LineLaunchValidator implements CastConstraintValidator {
     @Override
-    public Error validate(FightTurn turn, Castable castable, FightCell target) {
+    public Error validate(Turn turn, Castable castable, FightCell target) {
         if (!castable.constraints().lineLaunch()) {
             return null;
         }
@@ -39,7 +40,7 @@ final public class LineLaunchValidator implements CastConstraintValidator {
             return null;
         }
 
-        final int mapWidth = turn.fight().map().dimensions().width();
+        final int mapWidth = target.map().dimensions().width();
 
         for (Direction direction : Direction.values()) {
             if (!direction.restricted()) {

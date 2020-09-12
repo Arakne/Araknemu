@@ -17,37 +17,37 @@
  * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.map;
+package fr.quatrevieux.araknemu.game.fight.fighter;
 
-import fr.arakne.utils.maps.BattlefieldCell;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.spell.SpellList;
 
-import java.util.Optional;
-
-/**
- * Cell for a fight map
- */
-public interface FightCell extends BattlefieldCell {
-    @Override
-    public BattlefieldMap map();
+public interface ActiveFighter extends PassiveFighter {
+    /**
+     * Get the fighter spells
+     */
+    public SpellList spells();
 
     /**
-     * Check if the cell is walkable, ignoring current fighter
+     * Get an attachment by its key
+     *
+     * @param key The attachment key
+     *
+     * @return The attached value
+     *
+     * @see Fighter#attach(Object, Object) For set the attachment
      */
-    public boolean walkableIgnoreFighter();
+    public Object attachment(Object key);
 
     /**
-     * Get the fighter on the cell
+     * Get attachment by its class
+     *
+     * @param type The attachment class
+     *
+     * @return The attachment
+     *
+     * @see Fighter#attach(Object) Fir set the attachment
      */
-    public Optional<PassiveFighter> fighter();
-
-    /**
-     * Set a fighter on this cell
-     */
-    public void set(PassiveFighter fighter);
-
-    /**
-     * Remove the fighter on the cell
-     */
-    public void removeFighter();
+    default public <T> T attachment(Class<T> type) {
+        return type.cast(attachment((Object) type));
+    }
 }

@@ -20,8 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.module;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.ai.AI;
+import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AlterCharacteristicSimulator;
@@ -39,10 +38,8 @@ import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStarted;
 final public class AiModule implements FightModule {
     final private AiFactory factory;
 
-    public AiModule(Fight fight, AiFactory factory) {
+    public AiModule(AiFactory factory) {
         this.factory = factory;
-
-        fight.attach(createSimulator());
     }
 
     @Override
@@ -84,7 +81,7 @@ final public class AiModule implements FightModule {
      * Starts the AI on turn start
      */
     private void start(FightTurn turn) {
-        AI ai = turn.fighter().attachment(AI.class);
+        FighterAI ai = turn.fighter().attachment(FighterAI.class);
 
         if (ai != null) {
             ai.start(turn);
@@ -93,8 +90,10 @@ final public class AiModule implements FightModule {
 
     /**
      * Creates the simulator
+     *
+     * @todo refactor : not public, in game module
      */
-    private Simulator createSimulator() {
+    static public Simulator createSimulator() {
         Simulator simulator = new Simulator();
 
         simulator.register(91, new StealLifeSimulator(Element.WATER));

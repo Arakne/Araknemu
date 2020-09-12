@@ -19,7 +19,8 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.weapon;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget;
 
 /**
@@ -34,7 +35,7 @@ final public class WeaponEffectTarget implements EffectTarget {
     }
 
     @Override
-    public boolean test(Fighter caster, Fighter fighter) {
+    public boolean test(ActiveFighter caster, PassiveFighter fighter) {
         return !caster.equals(fighter);
     }
 }

@@ -17,37 +17,40 @@
  * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.map;
+package fr.quatrevieux.araknemu.game.fight.turn;
 
-import fr.arakne.utils.maps.BattlefieldCell;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
-
-import java.util.Optional;
-
-/**
- * Cell for a fight map
- */
-public interface FightCell extends BattlefieldCell {
-    @Override
-    public BattlefieldMap map();
+public interface TurnPoints {
+    /**
+     * Get the current fighter movement points
+     */
+    int movementPoints();
 
     /**
-     * Check if the cell is walkable, ignoring current fighter
+     * Add movement points to the current turn
      */
-    public boolean walkableIgnoreFighter();
+    void addMovementPoints(int value);
 
     /**
-     * Get the fighter on the cell
+     * Remove movement points to the current turn
+     *
+     * @return int The real removed MP amount
      */
-    public Optional<PassiveFighter> fighter();
+    int removeMovementPoints(int value);
 
     /**
-     * Set a fighter on this cell
+     * Get the current fighter action points
      */
-    public void set(PassiveFighter fighter);
+    int actionPoints();
 
     /**
-     * Remove the fighter on the cell
+     * Add action points to the current turn
      */
-    public void removeFighter();
+    void addActionPoints(int value);
+
+    /**
+     * Remove action points to the current turn
+     *
+     * @return int The real removed AP amount
+     */
+    int removeActionPoints(int value);
 }

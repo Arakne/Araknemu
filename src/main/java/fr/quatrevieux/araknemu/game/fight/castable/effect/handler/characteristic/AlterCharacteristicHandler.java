@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
@@ -52,7 +53,7 @@ abstract public class AlterCharacteristicHandler implements EffectHandler, BuffH
     public void buff(CastScope cast, CastScope.EffectScope effect) {
         SpellEffect buffEffect = computeBuffEffect(cast, effect.effect());
 
-        for (Fighter target : effect.targets()) {
+        for (PassiveFighter target : effect.targets()) {
             target.buffs().add(new Buff(buffEffect, cast.action(), cast.caster(), target, this));
         }
     }
