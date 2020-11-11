@@ -75,6 +75,9 @@ final public class Attack implements ActionGenerator, CastSpell.SimulationSelect
             + simulation.selfLife() * 2
         ;
 
+        int killRatio = simulation.killedEnemies() - 2 * simulation.killedAllies();
+        score += 100 * killRatio; // @todo better algo ?
+
         return score / simulation.spell().apCost();
     }
 }

@@ -68,7 +68,7 @@ final public class FightTurnList {
      * @param fighter Fighter to remove
      */
     public void remove(Fighter fighter) {
-        fighters.remove(fighter);
+        fighters.remove(fighter); // @fixme change current (get index + if before decrement current)
 
         fight.dispatch(new TurnListChanged(this));
     }
@@ -124,7 +124,7 @@ final public class FightTurnList {
         fight.dispatch(new NextTurnInitiated());
 
         while (active.get()) {
-            if (++current == fighters.size()) {
+            if (++current >= fighters.size()) {
                 current = 0;
             }
 

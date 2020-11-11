@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.network.game;
 
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.core.network.exception.CloseSession;
 import fr.quatrevieux.araknemu.core.network.exception.RateLimitException;
 import fr.quatrevieux.araknemu.core.network.exception.WritePacket;
@@ -41,6 +42,12 @@ final public class GameExceptionConfigurator implements SessionConfigurator.Conf
     public void configure(ConfigurableSession inner, GameSession session) {
         inner.addExceptionHandler(WritePacket.class, cause -> {
             session.send(cause.packet());
+
+            return true;
+        });
+
+        inner.addExceptionHandler(CloseImmediately.class, cause -> {
+            logger.error(MarkerManager.getMarker("CLOSE_IMMEDIATELY"), "[{}] Session closed : {}", session, cause.getMessage());
 
             return true;
         });

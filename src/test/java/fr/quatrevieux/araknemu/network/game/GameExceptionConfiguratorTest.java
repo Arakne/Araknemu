@@ -53,9 +53,10 @@ class GameExceptionConfiguratorTest extends GameBaseCase {
 
     @Test
     void exceptionCaughtCloseSession() {
-        gameSession.exception(new CloseImmediately());
+        gameSession.exception(new CloseImmediately("my error"));
 
         assertFalse(session.isLogged());
+        Mockito.verify(logger).error(MarkerManager.getMarker("CLOSE_IMMEDIATELY"), "[{}] Session closed : {}", gameSession, "my error");
     }
 
     @Test

@@ -83,6 +83,10 @@ final public class BaseFighterLife implements FighterLife {
 
     @Override
     public void kill(ActiveFighter caster) {
+        if (dead) {
+            return;
+        }
+
         current = 0;
         dead = true;
         fighter.fight().dispatch(new FighterDie(fighter, caster));

@@ -92,6 +92,21 @@ class AttackTest extends FightBaseCase {
     }
 
     @Test
+    void shouldKillEnemyWhenLowLife() {
+        otherEnemy.life().alter(otherEnemy, -45);
+        otherEnemy.move(fight.map().get(135));
+        Optional<Action> result = action.generate(ai);
+
+        assertTrue(result.isPresent());
+        assertInstanceOf(Cast.class, result.get());
+
+        Cast cast = (Cast) result.get();
+
+        assertEquals(3, cast.spell().id());
+        assertEquals(otherEnemy.cell(), cast.target());
+    }
+
+    @Test
     void notEnoughAP() {
         turn.points().useActionPoints(5);
 

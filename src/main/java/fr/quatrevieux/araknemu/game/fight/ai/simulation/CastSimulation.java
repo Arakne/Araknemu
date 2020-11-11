@@ -20,13 +20,14 @@
 package fr.quatrevieux.araknemu.game.fight.ai.simulation;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 
 /**
  * The simulation result of a cast
+ *
+ * @todo use double instead of int
  */
 final public class CastSimulation {
     final private Spell spell;
@@ -40,6 +41,9 @@ final public class CastSimulation {
     private int enemiesBoost;
     private int alliesBoost;
     private int selfBoost;
+
+    private int killedAllies;
+    private int killedEnemies;
 
     public CastSimulation(Spell spell, ActiveFighter caster, FightCell target) {
         this.spell = spell;
@@ -69,12 +73,32 @@ final public class CastSimulation {
     }
 
     /**
+     * Number of killed allies
+     */
+    public int killedAllies() {
+        return killedAllies;
+    }
+
+    /**
+     * Number of killed enemies
+     */
+    public int killedEnemies() {
+        return killedEnemies;
+    }
+
+    /**
      * Alter life value of the target
+     *
+     * @todo handle poison (should not kill)
+     * @todo interval instead of value
      *
      * @param value The life diff. Negative value for damage, positive for heal
      * @param target The target fighter
      */
     public void alterLife(int value, PassiveFighter target) {
+        // @todo compute chance
+        boolean killed = target.life().current() + value <= 0;
+
         if (value < 0) {
             value = Math.max(value, -target.life().current());
         } else {
@@ -85,8 +109,16 @@ final public class CastSimulation {
             selfLife += value;
         } else if (target.team().equals(caster.team())) {
             alliesLife += value;
+
+            if (killed) {
+                ++killedAllies;
+            }
         } else {
             enemiesLife += value;
+
+            if (killed) {
+                ++killedEnemies;
+            }
         }
     }
 
@@ -171,12 +203,29 @@ final public class CastSimulation {
      * @param percent The simulation chance int percent. This value as interval of [0, 100]
      */
     public void merge(CastSimulation simulation, int percent) {
-        enemiesLife += (simulation.enemiesLife * percent) / 100;
-        alliesLife += (simulation.alliesLife * percent) / 100;
-        selfLife += (simulation.selfLife * percent) / 100;
+        enemiesLife += applyPercent(simulation.enemiesLife, percent);
+        alliesLife += applyPercent(simulation.alliesLife, percent);
+        selfLife += applyPercent(simulation.selfLife, percent);
 
-        enemiesBoost += (simulation.enemiesBoost * percent) / 100;
-        alliesBoost += (simulation.alliesBoost * percent) / 100;
-        selfBoost += (simulation.selfBoost * percent) / 100;
+        enemiesBoost += applyPercent(simulation.enemiesBoost, percent);
+        alliesBoost += applyPercent(simulation.alliesBoost, percent);
+        selfBoost += applyPercent(simulation.selfBoost, percent);
+
+        killedAllies += applyPercent(simulation.killedAllies, percent);
+        killedEnemies += applyPercent(simulation.killedEnemies, percent);
+    }
+
+    private int applyPercent(int value, int percent) {
+        if (value == 0) {
+            return 0;
+        }
+
+        int withPercent = (value * percent) / 100;
+
+        if (withPercent == 0) {
+            return value > 0 ? 1 : -1;
+        }
+
+        return withPercent;
     }
 }
