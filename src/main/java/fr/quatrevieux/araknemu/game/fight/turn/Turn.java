@@ -24,6 +24,9 @@ import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 
+/**
+ * Fighter turn
+ */
 public interface Turn {
     /**
      * Get the current fighter

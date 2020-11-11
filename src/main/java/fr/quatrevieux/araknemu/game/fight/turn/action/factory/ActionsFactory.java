@@ -19,12 +19,26 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.factory;
 
+import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastActionFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveActionFactory;
 
+/**
+ * Factory for fight actions
+ */
 public interface ActionsFactory {
+    /**
+     * Create a fight action
+     *
+     * @param action The action type
+     * @param arguments The arguments of the GA packet
+     *
+     * @return The new action
+     *
+     * @throws FightException When cannot create the action
+     */
     public Action create(ActionType action, String[] arguments);
 
     /**

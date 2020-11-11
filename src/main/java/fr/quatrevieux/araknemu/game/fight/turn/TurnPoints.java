@@ -19,38 +19,41 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn;
 
+/**
+ * Handle AP and MP of a fighter turn
+ */
 public interface TurnPoints {
     /**
      * Get the current fighter movement points
      */
-    int movementPoints();
+    public int movementPoints();
 
     /**
      * Add movement points to the current turn
      */
-    void addMovementPoints(int value);
+    public void addMovementPoints(int value);
 
     /**
      * Remove movement points to the current turn
      *
      * @return int The real removed MP amount
      */
-    int removeMovementPoints(int value);
+    public int removeMovementPoints(int value);
 
     /**
      * Get the current fighter action points
      */
-    int actionPoints();
+    public int actionPoints();
 
     /**
      * Add action points to the current turn
      */
-    void addActionPoints(int value);
+    public void addActionPoints(int value);
 
     /**
      * Remove action points to the current turn
      *
      * @return int The real removed AP amount
      */
-    int removeActionPoints(int value);
+    public int removeActionPoints(int value);
 }

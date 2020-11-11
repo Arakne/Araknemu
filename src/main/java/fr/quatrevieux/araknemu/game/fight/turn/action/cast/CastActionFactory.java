@@ -25,6 +25,9 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionFactory;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 
+/**
+ * Factory for create a cast action
+ */
 public interface CastActionFactory extends FightActionFactory {
     /**
      * Create the cast action
@@ -32,10 +35,10 @@ public interface CastActionFactory extends FightActionFactory {
      * @param spell  The spell to cast
      * @param target The cell target
      */
-    Action create(Spell spell, FightCell target);
+    public Action create(Spell spell, FightCell target);
 
     /**
      * Get the spell cast validator
      */
-    CastConstraintValidator<Spell> validator();
+    public CastConstraintValidator<Spell> validator();
 }

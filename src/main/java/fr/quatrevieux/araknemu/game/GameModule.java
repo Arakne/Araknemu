@@ -110,8 +110,12 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.MonsterAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Aggressive;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Runaway;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AlterCharacteristicSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.DamageSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.StealLifeSimulator;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilderFactory;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.*;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.PvmRewardsGenerator;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider.PvmEndFightActionProvider;
@@ -756,11 +760,66 @@ final public class GameModule implements ContainerModule {
             )
         );
 
+        // @todo Move to "FightModule"
+        configurator.persist(Simulator.class, container -> {
+            final Simulator simulator = new Simulator();
+
+            simulator.register(91, new StealLifeSimulator(Element.WATER));
+            simulator.register(92, new StealLifeSimulator(Element.EARTH));
+            simulator.register(93, new StealLifeSimulator(Element.AIR));
+            simulator.register(94, new StealLifeSimulator(Element.FIRE));
+            simulator.register(95, new StealLifeSimulator(Element.NEUTRAL));
+
+            simulator.register(96,  new DamageSimulator(Element.WATER));
+            simulator.register(97,  new DamageSimulator(Element.EARTH));
+            simulator.register(98,  new DamageSimulator(Element.AIR));
+            simulator.register(99,  new DamageSimulator(Element.FIRE));
+            simulator.register(100, new DamageSimulator(Element.NEUTRAL));
+
+            // AP
+            simulator.register(111, new AlterCharacteristicSimulator(200));
+            simulator.register(120, new AlterCharacteristicSimulator(200));
+            simulator.register(168, new AlterCharacteristicSimulator(-200));
+
+            // MP
+            simulator.register(78,  new AlterCharacteristicSimulator(200));
+            simulator.register(128, new AlterCharacteristicSimulator(200));
+            simulator.register(169, new AlterCharacteristicSimulator(-200));
+
+            // Characteristics boost
+            simulator.register(112, new AlterCharacteristicSimulator(10)); // damage
+            simulator.register(115, new AlterCharacteristicSimulator(5)); // critical
+            simulator.register(117, new AlterCharacteristicSimulator(5)); // sight
+            simulator.register(118, new AlterCharacteristicSimulator()); // strength
+            simulator.register(119, new AlterCharacteristicSimulator()); // agility
+            simulator.register(122, new AlterCharacteristicSimulator(-5)); // Fail malus
+            simulator.register(123, new AlterCharacteristicSimulator()); // luck
+            simulator.register(124, new AlterCharacteristicSimulator()); // wisdom
+            simulator.register(126, new AlterCharacteristicSimulator()); // intelligence
+            simulator.register(138, new AlterCharacteristicSimulator(2)); // percent damage
+            simulator.register(178, new AlterCharacteristicSimulator(8)); // heal
+            simulator.register(182, new AlterCharacteristicSimulator(10)); // summoned creature
+
+            // Characteristics malus
+            simulator.register(116, new AlterCharacteristicSimulator(-5)); // sight malus
+            simulator.register(145, new AlterCharacteristicSimulator(-10)); // -damage
+            simulator.register(152, new AlterCharacteristicSimulator(-1)); // -luck
+            simulator.register(154, new AlterCharacteristicSimulator(-1)); // -agility
+            simulator.register(155, new AlterCharacteristicSimulator(-1)); // -intelligence
+            simulator.register(156, new AlterCharacteristicSimulator(-1)); // -wisdom
+            simulator.register(157, new AlterCharacteristicSimulator(-1)); // -strength
+            simulator.register(171, new AlterCharacteristicSimulator(-5)); // -critical
+            simulator.register(179, new AlterCharacteristicSimulator(-8)); // -heal
+            simulator.register(186, new AlterCharacteristicSimulator(-2)); // -percent damage
+
+            return simulator;
+        });
+
         configurator.persist(
             MonsterAiFactory.class,
             container -> {
                 MonsterAiFactory factory = new MonsterAiFactory();
-                final Simulator simulator = AiModule.createSimulator(); // @todo refactor
+                final Simulator simulator = container.get(Simulator.class);
 
                 factory.register("AGGRESSIVE", new Aggressive(simulator));
                 factory.register("RUNAWAY", new Runaway(simulator));

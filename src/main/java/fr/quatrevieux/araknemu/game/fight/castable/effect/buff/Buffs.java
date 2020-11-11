@@ -22,21 +22,24 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 
+/**
+ * Handle and store buff list for a fighter
+ */
 public interface Buffs {
     /**
      * Add and start a buff
      */
-    void add(Buff buff);
+    public void add(Buff buff);
 
     /**
      * @see BuffHook#onCastTarget(Buff, CastScope);
      */
-    void onCastTarget(CastScope cast);
+    public void onCastTarget(CastScope cast);
 
     /**
      * @see BuffHook#onDamage(Buff, Damage);
      */
-    void onDamage(Damage value);
+    public void onDamage(Damage value);
 
     /**
      * @see BuffHook#onStartTurn(Buff)

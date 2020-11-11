@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
+import fr.quatrevieux.araknemu.game.fight.team.Team;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
@@ -82,6 +83,9 @@ public interface Fighter extends Creature<FightCell>, Dispatcher, ActiveFighter 
      * Get the fight
      */
     public Fight fight();
+
+    @Override
+    public FightTeam team();
 
     /**
      * Join the fight

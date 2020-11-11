@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.factory;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Aggressive;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.module.AiModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,7 @@ class MonsterAiFactoryTest extends FightBaseCase {
 
         fight = createPvmFight();
         factory = new MonsterAiFactory();
-        factory.register("AGGRESSIVE", new Aggressive(AiModule.createSimulator()));
+        factory.register("AGGRESSIVE", new Aggressive(container.get(Simulator.class)));
     }
 
     @Test

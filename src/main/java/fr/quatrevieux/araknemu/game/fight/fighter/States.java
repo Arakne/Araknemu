@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.fighter;
 
 /**
- * Handler fighter states
+ * Handle fighter states
  *
  * @todo move to package
  */

@@ -24,6 +24,9 @@ import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionFactory;
 
+/**
+ * Factory for a move action
+ */
 public interface MoveActionFactory extends FightActionFactory {
     /**
      * Create the move action

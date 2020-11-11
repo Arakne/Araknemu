@@ -47,7 +47,7 @@ class SimulatorTest extends FightBaseCase {
         fight = createFight();
         fighter = player.fighter();
         fight.register(new AiModule(new ChainAiFactory()));
-        simulator = AiModule.createSimulator();
+        simulator = container.get(Simulator.class);
     }
 
     @Test

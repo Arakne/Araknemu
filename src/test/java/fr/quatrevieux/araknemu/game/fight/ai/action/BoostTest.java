@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.module.AiModule;
@@ -71,7 +72,7 @@ class BoostTest extends FightBaseCase {
 
         fight.turnList().start();
 
-        action = new Boost(AiModule.createSimulator());
+        action = new Boost(container.get(Simulator.class));
 
         ai = new FighterAI(fighter, fight, new ActionGenerator[] { new DummyGenerator() });
         ai.start(turn = fight.turnList().current().get());

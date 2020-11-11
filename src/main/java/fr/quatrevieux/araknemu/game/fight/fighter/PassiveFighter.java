@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.fighter;
 
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
+import fr.quatrevieux.araknemu.game.fight.team.Team;
 
 /**
  * Fighter type which can be a target of spells or other actions
@@ -65,7 +65,7 @@ public interface PassiveFighter {
     /**
      * Get the fighter team
      */
-    public FightTeam team();
+    public Team<? extends PassiveFighter> team();
 
     /**
      * Check if the player is dead

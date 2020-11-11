@@ -17,12 +17,23 @@
  * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.map;
+package fr.quatrevieux.araknemu.game.fight.team;
 
-import fr.arakne.utils.maps.DofusMap;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+
+import java.util.Collection;
 
 /**
- * Base type for dofus fight map
+ * Base team type for a fighter
  */
-public interface BattlefieldMap extends DofusMap<FightCell>, Iterable<FightCell> {
+public interface Team<F extends PassiveFighter> {
+    /**
+     * Get the team number (0 or 1)
+     */
+    public int number();
+
+    /**
+     * Get the fighter list
+     */
+    public Collection<F> fighters();
 }

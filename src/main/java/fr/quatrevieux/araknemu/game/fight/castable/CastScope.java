@@ -191,7 +191,6 @@ final public class CastScope {
      * Resolve the targets of the effect
      */
     private Collection<PassiveFighter> resolveTargets(SpellEffect effect) {
-        // @fixme
         if (effect.target().onlyCaster()) {
             return Collections.singleton(caster);
         }
