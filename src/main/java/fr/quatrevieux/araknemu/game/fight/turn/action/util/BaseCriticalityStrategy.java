@@ -22,7 +22,6 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.util;
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 
 /**
  * Base algorithm for compute criticality

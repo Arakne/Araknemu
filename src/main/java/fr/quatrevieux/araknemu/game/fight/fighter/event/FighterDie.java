@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.game.fight.fighter.event;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
