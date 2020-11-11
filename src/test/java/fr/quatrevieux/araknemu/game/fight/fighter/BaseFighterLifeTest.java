@@ -227,5 +227,10 @@ class BaseFighterLifeTest extends FightBaseCase {
         assertSame(caster, ref.get().caster());
         assertSame(fighter, ref.get().fighter());
         assertTrue(life.dead());
+
+        ref.set(null);
+        life.kill(caster);
+
+        assertNull(ref.get());
     }
 }

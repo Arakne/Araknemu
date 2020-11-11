@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.ai.AI;
+import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -49,7 +49,7 @@ class AttackTest extends FightBaseCase {
     private Fighter otherEnemy;
 
     private Attack action;
-    private AI ai;
+    private FighterAI ai;
 
     private FightTurn turn;
 
@@ -59,7 +59,7 @@ class AttackTest extends FightBaseCase {
         super.setUp();
 
         fight = createFight();
-        fight.register(new AiModule(fight, new ChainAiFactory()));
+        fight.register(new AiModule(new ChainAiFactory()));
         fight.register(new CommonEffectsModule(fight));
 
         fighter = player.fighter();
@@ -72,9 +72,9 @@ class AttackTest extends FightBaseCase {
 
         fight.turnList().start();
 
-        action = new Attack(fight.attachment(Simulator.class));
+        action = new Attack(container.get(Simulator.class));
 
-        ai = new AI(fighter, new ActionGenerator[] { new DummyGenerator() });
+        ai = new FighterAI(fighter, fight, new ActionGenerator[] { new DummyGenerator() });
         ai.start(turn = fight.turnList().current().get());
         action.initialize(ai);
     }
@@ -90,6 +90,21 @@ class AttackTest extends FightBaseCase {
 
         assertEquals(3, cast.spell().id());
         assertEquals(enemy.cell(), cast.target());
+    }
+
+    @Test
+    void shouldKillEnemyWhenLowLife() {
+        otherEnemy.life().alter(otherEnemy, -45);
+        otherEnemy.move(fight.map().get(135));
+        Optional<Action> result = action.generate(ai);
+
+        assertTrue(result.isPresent());
+        assertInstanceOf(Cast.class, result.get());
+
+        Cast cast = (Cast) result.get();
+
+        assertEquals(3, cast.spell().id());
+        assertEquals(otherEnemy.cell(), cast.target());
     }
 
     @Test

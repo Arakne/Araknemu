@@ -19,7 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action;
 
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 
 import java.time.Duration;
 
@@ -40,7 +40,7 @@ public interface Action {
     /**
      * Get the action performer
      */
-    public Fighter performer();
+    public ActiveFighter performer();
 
     /**
      * Get the action type

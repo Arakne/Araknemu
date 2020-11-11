@@ -36,7 +36,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AITest extends FightBaseCase {
+class FighterAITest extends FightBaseCase {
     private Fighter fighter;
     private Fight fight;
 
@@ -61,16 +61,15 @@ class AITest extends FightBaseCase {
 
     @Test
     void getters() {
-        AI ai = new AI(fighter, new ActionGenerator[0]);
+        FighterAI ai = new FighterAI(fighter, fight, new ActionGenerator[0]);
 
-        assertSame(fight, ai.fight());
         assertSame(fighter, ai.fighter());
         assertSame(enemy, ai.enemy().get());
     }
 
     @Test
     void enemyShouldFilterDeadFighters() {
-        AI ai = new AI(fighter, new ActionGenerator[0]);
+        FighterAI ai = new FighterAI(fighter, fight, new ActionGenerator[0]);
 
         enemy.life().kill(fighter);
 
@@ -82,7 +81,7 @@ class AITest extends FightBaseCase {
         fight.turnList().start();
         FightTurn turn = fight.turnList().current().get();
 
-        AI ai = new AI(fighter, new ActionGenerator[0]);
+        FighterAI ai = new FighterAI(fighter, fight, new ActionGenerator[0]);
         ai.start(turn);
 
         Thread.sleep(20);
@@ -98,7 +97,7 @@ class AITest extends FightBaseCase {
         fight.turnList().start();
         FightTurn turn = fight.turnList().current().get();
 
-        AI ai = new AI(fighter, new ActionGenerator[] {generator1, generator2});
+        FighterAI ai = new FighterAI(fighter, fight, new ActionGenerator[] {generator1, generator2});
 
         Mockito.when(generator1.generate(ai)).thenReturn(Optional.of(Mockito.mock(Action.class)));
 
@@ -124,7 +123,7 @@ class AITest extends FightBaseCase {
         fight.turnList().start();
         FightTurn turn = fight.turnList().current().get();
 
-        AI ai = new AI(fighter, new ActionGenerator[] {generator1, generator2});
+        FighterAI ai = new FighterAI(fighter, fight, new ActionGenerator[] {generator1, generator2});
 
         Mockito.when(generator1.generate(ai)).thenReturn(Optional.empty());
         Mockito.when(generator2.generate(ai)).thenReturn(Optional.empty());
@@ -150,7 +149,7 @@ class AITest extends FightBaseCase {
         fight.turnList().start();
         FightTurn turn = fight.turnList().current().get();
 
-        AI ai = new AI(fighter, new ActionGenerator[] {generator1, generator2});
+        FighterAI ai = new FighterAI(fighter, fight, new ActionGenerator[] {generator1, generator2});
 
         turn.stop();
         ai.start(turn);
@@ -166,7 +165,7 @@ class AITest extends FightBaseCase {
 
     @Test
     void runWithoutStart() {
-        AI ai = new AI(fighter, new ActionGenerator[] {});
+        FighterAI ai = new FighterAI(fighter, fight, new ActionGenerator[] {});
 
         assertThrows(IllegalStateException.class, ai::run);
     }

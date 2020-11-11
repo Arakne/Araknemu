@@ -20,7 +20,8 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 /**
@@ -32,13 +33,13 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 final public class Buff {
     final private SpellEffect effect;
     final private Castable action;
-    final private Fighter caster;
-    final private Fighter target;
+    final private ActiveFighter caster;
+    final private PassiveFighter target;
     final private BuffHook hook;
 
     private int remainingTurns;
 
-    public Buff(SpellEffect effect, Castable action, Fighter caster, Fighter target, BuffHook hook) {
+    public Buff(SpellEffect effect, Castable action, ActiveFighter caster, PassiveFighter target, BuffHook hook) {
         this.effect = effect;
         this.action = action;
         this.caster = caster;
@@ -65,14 +66,14 @@ final public class Buff {
     /**
      * Get the buff caster
      */
-    public Fighter caster() {
+    public ActiveFighter caster() {
         return caster;
     }
 
     /**
      * Get the buff target
      */
-    public Fighter target() {
+    public PassiveFighter target() {
         return target;
     }
 

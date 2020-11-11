@@ -21,8 +21,8 @@ package fr.quatrevieux.araknemu.game.fight.ai.factory;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 
 import java.util.HashMap;
 import java.util.Map;

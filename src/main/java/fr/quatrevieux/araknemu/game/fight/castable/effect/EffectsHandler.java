@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect;
 
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +40,7 @@ final public class EffectsHandler {
      * Apply a cast to the fight
      */
     public void apply(CastScope cast) {
-        for (Fighter target : cast.targets()) {
+        for (PassiveFighter target : cast.targets()) {
             target.buffs().onCastTarget(cast);
         }
 

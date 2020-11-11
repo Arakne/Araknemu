@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.network.game.out.fight.action;
 
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.apache.commons.lang3.StringUtils;
@@ -30,10 +30,10 @@ import org.apache.commons.lang3.StringUtils;
  */
 final public class ActionEffect {
     final private int id;
-    final private Fighter caster;
+    final private PassiveFighter caster;
     final private Object[] arguments;
 
-    public ActionEffect(int id, Fighter caster, Object... arguments) {
+    public ActionEffect(int id, PassiveFighter caster, Object... arguments) {
         this.id = id;
         this.caster = caster;
         this.arguments = arguments;
@@ -50,7 +50,7 @@ final public class ActionEffect {
      * @param fighter The fighter
      * @param quantity The MP quantity
      */
-    static public ActionEffect usedMovementPoints(Fighter fighter, int quantity) {
+    static public ActionEffect usedMovementPoints(PassiveFighter fighter, int quantity) {
         return new ActionEffect(129, fighter, fighter.id(), -quantity);
     }
 
@@ -60,7 +60,7 @@ final public class ActionEffect {
      * @param fighter The fighter
      * @param quantity The AP quantity
      */
-    static public ActionEffect usedActionPoints(Fighter fighter, int quantity) {
+    static public ActionEffect usedActionPoints(PassiveFighter fighter, int quantity) {
         return new ActionEffect(102, fighter, fighter.id(), -quantity);
     }
 
@@ -71,7 +71,7 @@ final public class ActionEffect {
      * @param target The target
      * @param quantity The life points difference. Negative for damage, Positive for heal
      */
-    static public ActionEffect alterLifePoints(Fighter caster, Fighter target, int quantity) {
+    static public ActionEffect alterLifePoints(PassiveFighter caster, PassiveFighter target, int quantity) {
         return new ActionEffect(100, caster, target.id(), quantity);
     }
 
@@ -81,7 +81,7 @@ final public class ActionEffect {
      * @param caster The spell caster
      * @param spell The launched spell
      */
-    static public ActionEffect criticalHitSpell(Fighter caster, Spell spell) {
+    static public ActionEffect criticalHitSpell(PassiveFighter caster, Spell spell) {
         return new ActionEffect(301, caster, spell.id());
     }
 
@@ -90,7 +90,7 @@ final public class ActionEffect {
      *
      * @param caster The weapon caster
      */
-    static public ActionEffect criticalHitCloseCombat(Fighter caster) {
+    static public ActionEffect criticalHitCloseCombat(PassiveFighter caster) {
         return new ActionEffect(304, caster);
     }
 
@@ -100,7 +100,7 @@ final public class ActionEffect {
      * @param caster The spell caster
      * @param fighter The dead fighter
      */
-    static public ActionEffect fighterDie(Fighter caster, Fighter fighter) {
+    static public ActionEffect fighterDie(PassiveFighter caster, PassiveFighter fighter) {
         return new ActionEffect(103, caster, fighter.id());
     }
 
@@ -111,7 +111,7 @@ final public class ActionEffect {
      * @param fighter The teleport fighter
      * @param target The target cell
      */
-    static public ActionEffect teleport(Fighter caster, Fighter fighter, FightCell target) {
+    static public ActionEffect teleport(PassiveFighter caster, PassiveFighter fighter, FightCell target) {
         return new ActionEffect(4, caster, fighter.id(), target.id());
     }
 
@@ -121,7 +121,7 @@ final public class ActionEffect {
      * @param caster The buff caster
      * @param fighter The target fighter
      */
-    static public ActionEffect skipNextTurn(Fighter caster, Fighter fighter) {
+    static public ActionEffect skipNextTurn(PassiveFighter caster, PassiveFighter fighter) {
         return new ActionEffect(140, caster, fighter.id());
     }
 
@@ -131,7 +131,7 @@ final public class ActionEffect {
      * @param fighter The fighter
      * @param success true is the spell is successfully returned
      */
-    static public ActionEffect returnSpell(Fighter fighter, boolean success) {
+    static public ActionEffect returnSpell(PassiveFighter fighter, boolean success) {
         return new ActionEffect(106, fighter, fighter.id(), success ? "1" : "0");
     }
 
@@ -150,7 +150,7 @@ final public class ActionEffect {
      * @param fighter The fighter
      * @param quantity The AP quantity
      */
-    static public ActionEffect addActionPoints(Fighter fighter, int quantity) {
+    static public ActionEffect addActionPoints(PassiveFighter fighter, int quantity) {
         return new ActionEffect(120, fighter, fighter.id(), quantity);
     }
 
@@ -160,7 +160,7 @@ final public class ActionEffect {
      * @param fighter The fighter
      * @param quantity The AP quantity
      */
-    static public ActionEffect removeActionPoints(Fighter fighter, int quantity) {
+    static public ActionEffect removeActionPoints(PassiveFighter fighter, int quantity) {
         return new ActionEffect(168, fighter, fighter.id(), -quantity);
     }
 
@@ -170,7 +170,7 @@ final public class ActionEffect {
      * @param fighter The fighter
      * @param quantity The MP quantity
      */
-    static public ActionEffect addMovementPoints(Fighter fighter, int quantity) {
+    static public ActionEffect addMovementPoints(PassiveFighter fighter, int quantity) {
         return new ActionEffect(128, fighter, fighter.id(), quantity);
     }
 
@@ -180,7 +180,7 @@ final public class ActionEffect {
      * @param fighter The fighter
      * @param quantity The MP quantity
      */
-    static public ActionEffect removeMovementPoints(Fighter fighter, int quantity) {
+    static public ActionEffect removeMovementPoints(PassiveFighter fighter, int quantity) {
         return new ActionEffect(169, fighter, fighter.id(), -quantity);
     }
 
@@ -190,7 +190,7 @@ final public class ActionEffect {
      * @param fighter The fighter
      * @param value The reduction value
      */
-    static public ActionEffect reducedDamage(Fighter fighter, int value) {
+    static public ActionEffect reducedDamage(PassiveFighter fighter, int value) {
         return new ActionEffect(105, fighter, fighter.id(), value);
     }
 
@@ -200,7 +200,7 @@ final public class ActionEffect {
      * @param fighter The fighter
      * @param state The state id to add
      */
-    static public ActionEffect addState(Fighter fighter, int state) {
+    static public ActionEffect addState(PassiveFighter fighter, int state) {
         return new ActionEffect(950, fighter, fighter.id(), state, 1);
     }
 
@@ -210,7 +210,7 @@ final public class ActionEffect {
      * @param fighter The fighter
      * @param state The state id to remove
      */
-    static public ActionEffect removeState(Fighter fighter, int state) {
+    static public ActionEffect removeState(PassiveFighter fighter, int state) {
         return new ActionEffect(950, fighter, fighter.id(), state, 0);
     }
 }

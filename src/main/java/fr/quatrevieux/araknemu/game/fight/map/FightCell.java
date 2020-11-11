@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.map;
 
 import fr.arakne.utils.maps.BattlefieldCell;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 import java.util.Optional;
 
@@ -29,7 +29,7 @@ import java.util.Optional;
  */
 public interface FightCell extends BattlefieldCell {
     @Override
-    public FightMap map();
+    public BattlefieldMap map();
 
     /**
      * Check if the cell is walkable, ignoring current fighter
@@ -39,12 +39,12 @@ public interface FightCell extends BattlefieldCell {
     /**
      * Get the fighter on the cell
      */
-    public Optional<Fighter> fighter();
+    public Optional<PassiveFighter> fighter();
 
     /**
      * Set a fighter on this cell
      */
-    public void set(Fighter fighter);
+    public void set(PassiveFighter fighter);
 
     /**
      * Remove the fighter on the cell

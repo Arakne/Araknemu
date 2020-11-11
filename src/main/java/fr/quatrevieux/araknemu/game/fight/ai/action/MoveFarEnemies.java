@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.arakne.utils.maps.CoordinateCell;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 
@@ -58,7 +58,7 @@ final public class MoveFarEnemies implements ActionGenerator {
             return Optional.empty();
         }
 
-        enemiesCells = ai.enemies().map(Fighter::cell).map(CoordinateCell::new).collect(Collectors.toList());
+        enemiesCells = ai.enemies().map(PassiveFighter::cell).map(CoordinateCell::new).collect(Collectors.toList());
         currentCellScore = score(new CoordinateCell<>(ai.fighter().cell()));
 
         return movement.generate(ai);

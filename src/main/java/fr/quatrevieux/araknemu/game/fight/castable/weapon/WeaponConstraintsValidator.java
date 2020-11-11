@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.weapon;
 
 import fr.quatrevieux.araknemu.game.fight.castable.validator.*;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
+import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 
 /**
@@ -46,7 +46,7 @@ final public class WeaponConstraintsValidator implements CastConstraintValidator
     }
 
     @Override
-    public Error validate(FightTurn turn, CastableWeapon weapon, FightCell target) {
+    public Error validate(Turn turn, CastableWeapon weapon, FightCell target) {
         return validator.validate(turn, weapon, target);
     }
 }

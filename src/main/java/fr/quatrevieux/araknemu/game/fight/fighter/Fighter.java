@@ -22,19 +22,17 @@ package fr.quatrevieux.araknemu.game.fight.fighter;
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
-import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
 
 /**
  * Base fighter
  */
-public interface Fighter extends Creature<FightCell>, Dispatcher {
+public interface Fighter extends Creature<FightCell>, Dispatcher, ActiveFighter {
     /**
      * Initialise the fighter when fight started
      */
@@ -46,41 +44,11 @@ public interface Fighter extends Creature<FightCell>, Dispatcher {
     public void setOrientation(Direction orientation);
 
     /**
-     * Go to the given cell
-     */
-    public void move(FightCell cell);
-
-    /**
-     * Get the fighter life
-     */
-    public FighterLife life();
-
-    /**
-     * Get the fighter total characteristics
-     */
-    public FighterCharacteristics characteristics();
-
-    /**
-     * Get the fighter spells
-     */
-    public SpellList spells();
-
-    /**
      * Get the weapon
      *
      * @throws fr.quatrevieux.araknemu.game.fight.exception.FightException When cannot get any weapon on the fighter
      */
     public CastableWeapon weapon();
-
-    /**
-     * Get the current buffs
-     */
-    public BuffList buffs();
-
-    /**
-     * Get the fighter states
-     */
-    public States states();
 
     /**
      * Attach an attribute to the fighter
@@ -104,43 +72,17 @@ public interface Fighter extends Creature<FightCell>, Dispatcher {
     }
 
     /**
-     * Get an attachment by its key
-     *
-     * @param key The attachment key
-     *
-     * @return The attached value
-     *
-     * @see Fighter#attach(Object, Object) For set the attachment
-     */
-    public Object attachment(Object key);
-
-    /**
-     * Get attachment by its class
-     *
-     * @param type The attachment class
-     *
-     * @return The attachment
-     *
-     * @see Fighter#attach(Object) Fir set the attachment
-     */
-    default public <T> T attachment(Class<T> type) {
-        return type.cast(attachment((Object) type));
-    }
-
-    /**
      * Get the fighter level
      */
     public int level();
 
     /**
-     * Get the fighter team
-     */
-    public FightTeam team();
-
-    /**
      * Get the fight
      */
     public Fight fight();
+
+    @Override
+    public FightTeam team();
 
     /**
      * Join the fight
@@ -154,13 +96,6 @@ public interface Fighter extends Creature<FightCell>, Dispatcher {
      * Check if the fighter is ready for fight
      */
     public boolean ready();
-
-    /**
-     * Check if the player is dead
-     */
-    default public boolean dead() {
-        return life().dead();
-    }
 
     /**
      * Start to play the turn

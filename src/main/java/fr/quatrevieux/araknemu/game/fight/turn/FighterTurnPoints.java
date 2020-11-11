@@ -28,7 +28,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.event.MovementPointsUsed;
 /**
  * Handle fighter turn points (AP / MP)
  */
-final public class FighterTurnPoints {
+final public class FighterTurnPoints implements TurnPoints {
     final private Fight fight;
     final private Fighter fighter;
 
@@ -46,9 +46,7 @@ final public class FighterTurnPoints {
         this.actionPoints = fighter.characteristics().get(Characteristic.ACTION_POINT);
     }
 
-    /**
-     * Get the current fighter movement points
-     */
+    @Override
     public int movementPoints() {
         return movementPoints - usedMovementPoints;
     }
@@ -64,18 +62,12 @@ final public class FighterTurnPoints {
         fight.dispatch(new MovementPointsUsed(fighter, points));
     }
 
-    /**
-     * Add movement points to the current turn
-     */
+    @Override
     public void addMovementPoints(int value) {
         movementPoints += value;
     }
 
-    /**
-     * Remove movement points to the current turn
-     *
-     * @return int The real removed MP amount
-     */
+    @Override
     public int removeMovementPoints(int value) {
         if (value > movementPoints()) {
             value = movementPoints();
@@ -86,9 +78,7 @@ final public class FighterTurnPoints {
         return value;
     }
 
-    /**
-     * Get the current fighter action points
-     */
+    @Override
     public int actionPoints() {
         return actionPoints - usedActionPoints;
     }
@@ -104,18 +94,12 @@ final public class FighterTurnPoints {
         fight.dispatch(new ActionPointsUsed(fighter, points));
     }
 
-    /**
-     * Add action points to the current turn
-     */
+    @Override
     public void addActionPoints(int value) {
         actionPoints += value;
     }
 
-    /**
-     * Remove action points to the current turn
-     *
-     * @return int The real removed AP amount
-     */
+    @Override
     public int removeActionPoints(int value) {
         if (value > actionPoints()) {
             value = actionPoints();

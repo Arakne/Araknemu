@@ -24,13 +24,12 @@ import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
  * Team for fight
  */
-public interface FightTeam extends Sender {
+public interface FightTeam extends Sender, Team<Fighter> {
     /**
      * Get the team leader (the fight initiator)
      */
@@ -62,19 +61,9 @@ public interface FightTeam extends Sender {
     public Alignment alignment();
 
     /**
-     * Get the team number (0 or 1)
-     */
-    public int number();
-
-    /**
      * Get start places
      */
     public List<Integer> startPlaces();
-
-    /**
-     * Get the fighter list
-     */
-    public Collection<Fighter> fighters();
 
     /**
      * Send packet to all players

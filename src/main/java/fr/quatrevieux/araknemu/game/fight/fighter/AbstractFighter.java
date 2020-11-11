@@ -39,7 +39,7 @@ import java.util.Map;
 abstract public class AbstractFighter implements Fighter {
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
     final private BuffList buffs = new BuffList(this);
-    final private States states = new States(this);
+    final private States states = new FighterStates(this);
     final private Map<Object, Object> attachments = new HashMap<>();
 
     // Mutable attributes

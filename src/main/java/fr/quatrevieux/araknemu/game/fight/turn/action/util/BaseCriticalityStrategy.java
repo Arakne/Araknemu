@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.util;
 
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 
 /**
  * Base algorithm for compute criticality
@@ -32,9 +32,9 @@ final public class BaseCriticalityStrategy implements CriticalityStrategy {
      */
     final static private RandomUtil RANDOM = RandomUtil.createShared();
 
-    final private Fighter fighter;
+    final private ActiveFighter fighter;
 
-    public BaseCriticalityStrategy(Fighter fighter) {
+    public BaseCriticalityStrategy(ActiveFighter fighter) {
         this.fighter = fighter;
     }
 

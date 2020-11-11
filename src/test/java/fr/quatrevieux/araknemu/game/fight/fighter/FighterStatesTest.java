@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class StatesTest extends FightBaseCase {
+class FighterStatesTest extends FightBaseCase {
     private Fight fight;
     private Fighter fighter;
     private States states;
@@ -43,7 +43,7 @@ class StatesTest extends FightBaseCase {
 
         fight = createFight();
         fighter = player.fighter();
-        states = new States(fighter);
+        states = new FighterStates(fighter);
         fight.state(PlacementState.class).startFight();
     }
 

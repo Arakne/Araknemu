@@ -69,6 +69,7 @@ import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.MonsterAiFactory;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
@@ -156,6 +157,7 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(BanishmentService.class, container.get(BanishmentService.class));
         assertInstanceOf(BanIpService.class, container.get(BanIpService.class));
         assertInstanceOf(GameBanIpSynchronizer.class, container.get(GameBanIpSynchronizer.class));
+        assertInstanceOf(Simulator.class, container.get(Simulator.class));
 
         assertSame(
             container.get(ListenerAggregate.class),

@@ -63,7 +63,7 @@ final public class Movement implements ActionGenerator {
 
     @Override
     public void initialize(AI ai) {
-        this.pathfinder = new Decoder<>(ai.fighter().fight().map()).pathfinder();
+        this.pathfinder = new Decoder<>(ai.map()).pathfinder();
     }
 
     @Override
@@ -106,7 +106,7 @@ final public class Movement implements ActionGenerator {
         final CoordinateCell<FightCell> currentCell = new CoordinateCell<>(ai.fighter().cell());
         final List<ScoredCell> selectedCells = new ArrayList<>();
 
-        for (FightCell cell : ai.fight().map()) {
+        for (FightCell cell : ai.map()) {
             if (!cell.walkable()) {
                 continue;
             }

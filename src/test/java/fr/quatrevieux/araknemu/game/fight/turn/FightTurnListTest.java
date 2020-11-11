@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.event.NextTurnInitiated;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnListChanged;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStarted;
@@ -30,6 +31,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -184,5 +186,25 @@ class FightTurnListTest extends FightBaseCase {
 
         assertSame(turnList, ref.get().turnList());
         assertFalse(turnList.fighters().contains(player.fighter()));
+    }
+
+    @Test
+    void removeAndNext() throws SQLException {
+        PlayerFighter third = makePlayerFighter(makeSimpleGamePlayer(5));
+        fight.team(0).join(third);
+
+        turnList.init(new AlternateTeamFighterOrder());
+        turnList.start();
+        assertEquals(player.fighter(), turnList.currentFighter());
+
+        turnList.next();
+        assertEquals(other.fighter(), turnList.currentFighter());
+
+        turnList.next();
+        assertEquals(third, turnList.currentFighter());
+
+        turnList.remove(third);
+        turnList.next();
+        assertEquals(player.fighter(), turnList.currentFighter());
     }
 }

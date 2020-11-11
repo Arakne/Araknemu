@@ -46,8 +46,8 @@ class SimulatorTest extends FightBaseCase {
 
         fight = createFight();
         fighter = player.fighter();
-        fight.register(new AiModule(fight, new ChainAiFactory()));
-        simulator = fight.attachment(Simulator.class);
+        fight.register(new AiModule(new ChainAiFactory()));
+        simulator = container.get(Simulator.class);
     }
 
     @Test
@@ -73,7 +73,7 @@ class SimulatorTest extends FightBaseCase {
         CastSimulation simulation = simulator.simulate(fighter.spells().get(3), fighter, other.fighter().cell());
 
         assertEquals(0, simulation.alliesLife());
-        assertEquals(-9, simulation.enemiesLife());
+        assertEquals(-10, simulation.enemiesLife());
         assertEquals(0, simulation.selfLife());
         assertEquals(0, simulation.alliesBoost());
         assertEquals(0, simulation.enemiesBoost());
