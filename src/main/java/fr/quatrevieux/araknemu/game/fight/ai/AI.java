@@ -27,6 +27,10 @@ import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+/**
+ * Base type for AI
+ * Use by action generators as data accessor
+ */
 public interface AI {
     /**
      * Start the AI
@@ -41,6 +45,9 @@ public interface AI {
      */
     public ActiveFighter fighter();
 
+    /**
+     * Get the current fight map
+     */
     public BattlefieldMap map();
 
     /**
@@ -48,6 +55,9 @@ public interface AI {
      */
     public Turn turn();
 
+    /**
+     * Get all fighter of the current fight
+     */
     public Stream<? extends PassiveFighter> fighters();
 
     /**

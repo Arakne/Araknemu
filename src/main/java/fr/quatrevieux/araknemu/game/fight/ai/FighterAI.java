@@ -35,11 +35,11 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
- * Base class for handle AI actions
+ * Base class to handle AI actions
  *
  * The AI can be seen as a pipeline of action generators :
- * - If a generator cannot generates an action, the next one is called
- * - If all generators failed, the turn is stopped
+ * - If a generator cannot generate an action, the next one is called
+ * - If all generators fail, the turn is stopped
  * - When an action is successfully generated, it will be executed,
  *   and the "pipeline" is reset after the action termination
  *
