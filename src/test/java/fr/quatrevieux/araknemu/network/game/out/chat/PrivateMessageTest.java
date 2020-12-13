@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PrivateMessageTest extends GameBaseCase {
     @Test
@@ -37,6 +37,32 @@ class PrivateMessageTest extends GameBaseCase {
                 gamePlayer(),
                 "Hello World !",
                 "my items"
+            ).toString()
+        );
+    }
+
+    @Test
+    void generateWithHtmlChars() throws SQLException, ContainerException {
+        assertEquals(
+            "cMKF|1|Bob|&lt;a href='test'&gt;my link&lt;a/&gt;|+&amp;",
+            new PrivateMessage(
+                PrivateMessage.TYPE_FROM,
+                gamePlayer(),
+                "<a href='test'>my link<a/>",
+                "||+&||"
+            ).toString()
+        );
+    }
+
+    @Test
+    void generateDoNotDoubleEscapeLtAndGt() throws SQLException, ContainerException {
+        assertEquals(
+            "cMKF|1|Bob|&lt;b&gt;test&lt;/b&gt;|",
+            new PrivateMessage(
+                PrivateMessage.TYPE_FROM,
+                gamePlayer(),
+                "&lt;b&gt;test&lt;/b&gt;",
+                ""
             ).toString()
         );
     }

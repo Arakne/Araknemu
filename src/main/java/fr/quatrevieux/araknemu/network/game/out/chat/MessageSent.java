@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.network.game.out.chat;
@@ -24,24 +24,22 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 
 /**
  * Send message to client
- *
- * @todo Escape message
  */
-final public class MessageSent {
-    final private GamePlayer sender;
+final public class MessageSent extends AbstractChatMessage {
     final private ChannelType channel;
-    final private String message;
-    final private String extra;
 
     public MessageSent(GamePlayer sender, ChannelType channel, String message, String extra) {
-        this.sender = sender;
+        this(sender, channel, message, extra, false);
+    }
+
+    public MessageSent(GamePlayer sender, ChannelType channel, String message, String extra, boolean unescape) {
+        super(sender, message, extra, unescape);
+
         this.channel = channel;
-        this.message = message;
-        this.extra = extra;
     }
 
     @Override
-    public String toString() {
-        return "cMK" + channel.identifier() + "|" + sender.id() + "|" + sender.name() + "|" + message + "|" + extra;
+    protected char channel() {
+        return channel.identifier();
     }
 }

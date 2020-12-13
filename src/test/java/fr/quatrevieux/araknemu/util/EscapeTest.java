@@ -14,29 +14,26 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.network.realm.out;
+package fr.quatrevieux.araknemu.util;
 
-import fr.quatrevieux.araknemu.util.Escape;
+import org.junit.jupiter.api.Test;
 
-/**
- * Send secret answer to client
- */
-final public class Question {
-    final private String answer;
+import static org.junit.jupiter.api.Assertions.*;
 
-    public Question(String answer) {
-        this.answer = answer;
+class EscapeTest {
+    @Test
+    void html() {
+        assertEquals("Hello World !", Escape.html("Hello World !"));
+        assertEquals("&lt;strong&gt;Hello World !&lt;/strong&gt;", Escape.html("<strong>Hello World !</strong>"));
+        assertEquals("&lt;strong&gt;Hello World !&lt;/strong&gt;", Escape.html("&lt;strong&gt;Hello World !&lt;/strong&gt;"));
+        assertEquals("&amp;&amp;", Escape.html("&&"));
     }
 
-    public String answer() {
-        return answer;
-    }
-
-    @Override
-    public String toString() {
-        return "AQ" + Escape.url(Escape.html(answer));
+    @Test
+    void url() {
+        assertEquals("Hello+World+%21", Escape.url("Hello World !"));
     }
 }

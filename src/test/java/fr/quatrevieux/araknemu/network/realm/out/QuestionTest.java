@@ -35,5 +35,6 @@ class QuestionTest {
     @Test
     void test_toString() {
         assertEquals("AQmy+answer", new Question("my answer").toString());
+        assertEquals("AQ%26lt%3Bb%26gt%3Bhello%26lt%3B%2Fb%26gt%3B+%26lt%3Bi%26gt%3Bworld%26lt%3B%2Fi%26gt%3B", new Question("<b>hello</b> <i>world</i>").toString());
     }
 }

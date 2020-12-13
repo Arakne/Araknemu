@@ -79,7 +79,7 @@ class AuthenticateTest extends RealmBaseCase {
             new Pseudo("pseudo"),
             new Community(0),
             new GMLevel(false),
-            new Question("My+question"),
+            new Question("My question"),
             "AH1;1;110;1"
         );
 
@@ -107,7 +107,7 @@ class AuthenticateTest extends RealmBaseCase {
             new Pseudo("pseudo2"),
             new Community(0),
             new GMLevel(true),
-            new Question("My+other+question"),
+            new Question("My other question"),
             "AH1;1;110;1"
         );
     }

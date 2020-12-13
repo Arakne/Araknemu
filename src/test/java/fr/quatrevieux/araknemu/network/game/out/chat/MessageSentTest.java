@@ -41,4 +41,44 @@ class MessageSentTest extends GameBaseCase {
             ).toString()
         );
     }
+
+    @Test
+    void generateWithHtmlChars() throws SQLException, ContainerException {
+        assertEquals(
+            "cMK*|1|Bob|&lt;a href='test'&gt;my link&lt;a/&gt;|+&amp;",
+            new MessageSent(
+                gamePlayer(),
+                ChannelType.MESSAGES,
+                "<a href='test'>my link<a/>",
+                "||+&||"
+            ).toString()
+        );
+    }
+
+    @Test
+    void generateWithHtmlCharsUnescaped() throws SQLException, ContainerException {
+        assertEquals(
+            "cMK*|1|Bob|<a href='test'>my link<a/>|||+&||",
+            new MessageSent(
+                gamePlayer(),
+                ChannelType.MESSAGES,
+                "<a href='test'>my link<a/>",
+                "||+&||",
+                true
+            ).toString()
+        );
+    }
+
+    @Test
+    void generateDoNotDoubleEscapeLtAndGt() throws SQLException, ContainerException {
+        assertEquals(
+            "cMK*|1|Bob|&lt;b&gt;test&lt;/b&gt;|",
+            new MessageSent(
+                gamePlayer(),
+                ChannelType.MESSAGES,
+                "&lt;b&gt;test&lt;/b&gt;",
+                ""
+            ).toString()
+        );
+    }
 }
