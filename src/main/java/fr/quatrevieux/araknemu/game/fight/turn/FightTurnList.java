@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.event.TurnListChanged;
 import fr.quatrevieux.araknemu.game.fight.turn.order.FighterOrderStrategy;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -36,9 +37,10 @@ final public class FightTurnList {
     final private Fight fight;
 
     private List<Fighter> fighters;
-    private int current;
+    private int index;
+    private Fighter current;
     private FightTurn turn;
-    private AtomicBoolean active = new AtomicBoolean(false);
+    final private AtomicBoolean active = new AtomicBoolean(false);
 
     public FightTurnList(Fight fight) {
         this.fight = fight;
@@ -53,6 +55,7 @@ final public class FightTurnList {
         }
 
         fighters = orderStrategy.compute(fight.teams());
+        current = fighters.get(0); // Always init the first fighter
     }
 
     /**
@@ -68,7 +71,24 @@ final public class FightTurnList {
      * @param fighter Fighter to remove
      */
     public void remove(Fighter fighter) {
-        fighters.remove(fighter); // @fixme change current (get index + if before decrement current)
+        final int index = fighters.indexOf(fighter);
+
+        if (index == -1) {
+            throw new NoSuchElementException("Fighter " + fighter.id() + " is not found on the turn list");
+        }
+
+        fighters.remove(index);
+
+        // The removed fighter is the current fighter or before on the list
+        // so removing it will shift the list to the left relatively to the cursor (current)
+        // which cause that the next fighter will be skipped
+        // See: https://github.com/Arakne/Araknemu/issues/127
+        if (index <= this.index) {
+            // If current is negative, move cursor to the end
+            if (--this.index < 0) {
+                this.index += fighters.size();
+            }
+        }
 
         fight.dispatch(new TurnListChanged(this));
     }
@@ -84,7 +104,7 @@ final public class FightTurnList {
      * Get the current turn fighter
      */
     public Fighter currentFighter() {
-        return fighters.get(current);
+        return current;
     }
 
     /**
@@ -95,7 +115,7 @@ final public class FightTurnList {
             throw new IllegalStateException("TurnList already started");
         }
 
-        current = -1;
+        index = -1;
 
         next();
     }
@@ -124,15 +144,16 @@ final public class FightTurnList {
         fight.dispatch(new NextTurnInitiated());
 
         while (active.get()) {
-            if (++current >= fighters.size()) {
-                current = 0;
+            if (++index >= fighters.size()) {
+                index = 0;
             }
 
-            if (fighters.get(current).dead()) {
+            if (fighters.get(index).dead()) {
                 continue;
             }
 
-            turn = new FightTurn(fighters.get(current), fight, fight.type().turnDuration());
+            current = fighters.get(index);
+            turn = new FightTurn(current, fight, fight.type().turnDuration());
 
             if (turn.start()) {
                 break;

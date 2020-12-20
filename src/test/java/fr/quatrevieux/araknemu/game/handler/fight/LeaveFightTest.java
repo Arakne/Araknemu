@@ -30,7 +30,6 @@ import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.fight.state.FinishState;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.in.fight.LeaveFightRequest;
@@ -126,11 +125,13 @@ class LeaveFightTest extends FightBaseCase {
 
         fight.state(PlacementState.class).joinTeam(makePlayerFighter(makeSimpleGamePlayer(10)), fight.team(0));
         fight.state(PlacementState.class).startFight();
+        fight.turnList().start();
         requestStack.clear();
 
         assertSame(player.fighter(), fight.turnList().currentFighter());
 
         handler.handle(session, new LeaveFightRequest());
+        Thread.sleep(1600); // Wait for die animation
 
         assertSame(other.fighter(), fight.turnList().currentFighter());
     }

@@ -121,6 +121,7 @@ final public class FightTurn implements Turn {
 
             if (fighter.dead()) {
                 // Wait for die animation
+                // @fixme remove on tests ?
                 fight.schedule(() -> fight.turnList().next(), Duration.ofMillis(1500));
             } else {
                 fight.turnList().next();
