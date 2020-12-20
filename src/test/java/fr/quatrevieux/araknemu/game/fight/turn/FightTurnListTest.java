@@ -32,7 +32,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,6 +60,8 @@ class FightTurnListTest extends FightBaseCase {
             Arrays.asList(player.fighter(), other.fighter()),
             turnList.fighters()
         );
+
+        assertSame(player.fighter(), turnList.currentFighter());
     }
 
     @Test
@@ -183,6 +187,7 @@ class FightTurnListTest extends FightBaseCase {
         fight.dispatcher().add(TurnListChanged.class, ref::set);
 
         turnList.remove(player.fighter());
+        assertSame(player.fighter(), turnList.currentFighter()); // Remove do not change the current fighter
 
         assertSame(turnList, ref.get().turnList());
         assertFalse(turnList.fighters().contains(player.fighter()));
@@ -204,7 +209,69 @@ class FightTurnListTest extends FightBaseCase {
         assertEquals(third, turnList.currentFighter());
 
         turnList.remove(third);
+        assertEquals(third, turnList.currentFighter());
         turnList.next();
         assertEquals(player.fighter(), turnList.currentFighter());
+    }
+
+    /**
+     * Bug: https://github.com/Arakne/Araknemu/issues/127
+     */
+    @Test
+    void removeCurrentFighterShouldNotSkipFighterTurn() throws SQLException {
+        PlayerFighter third = makePlayerFighter(makeSimpleGamePlayer(5));
+        fight.team(0).join(third);
+
+        turnList.init(new AlternateTeamFighterOrder());
+        turnList.start();
+        assertEquals(player.fighter(), turnList.currentFighter());
+
+        turnList.next();
+        assertEquals(other.fighter(), turnList.currentFighter());
+
+        turnList.remove(other.fighter());
+        turnList.next();
+        assertEquals(third, turnList.currentFighter());
+
+        turnList.next();
+        assertEquals(player.fighter(), turnList.currentFighter());
+    }
+
+    /**
+     * Bug: https://github.com/Arakne/Araknemu/issues/127
+     */
+    @Test
+    void removeFighterBeforeCurrentShouldNotSkipFighterTurn() throws SQLException {
+        PlayerFighter third = makePlayerFighter(makeSimpleGamePlayer(5));
+        fight.team(0).join(third);
+        PlayerFighter fourth = makePlayerFighter(makeSimpleGamePlayer(6));
+        fight.team(0).join(fourth);
+
+        turnList.init(teams -> new ArrayList<>(Arrays.asList(player.fighter(), other.fighter(), third, fourth)));
+        turnList.start();
+        assertEquals(player.fighter(), turnList.currentFighter());
+
+        turnList.next();
+        assertEquals(other.fighter(), turnList.currentFighter());
+
+        turnList.next();
+        turnList.remove(other.fighter());
+        assertEquals(third, turnList.currentFighter());
+
+        turnList.next();
+        assertEquals(fourth, turnList.currentFighter());
+
+        turnList.next();
+        assertEquals(player.fighter(), turnList.currentFighter());
+    }
+
+    @Test
+    void removeFighterNotFound() throws SQLException {
+        PlayerFighter third = makePlayerFighter(makeSimpleGamePlayer(5));
+
+        turnList.init(new AlternateTeamFighterOrder());
+        turnList.start();
+
+        assertThrows(NoSuchElementException.class, () -> turnList.remove(third));
     }
 }
