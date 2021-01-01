@@ -19,6 +19,9 @@
 
 package fr.quatrevieux.araknemu.game.listener.player;
 
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.event.GameJoined;
@@ -28,14 +31,17 @@ import fr.quatrevieux.araknemu.game.player.event.GameJoined;
  */
 final public class LifeTimer implements Listener<GameJoined> {
     final private GamePlayer player;
+    final private ScheduledExecutorService executor;
 
-    public LifeTimer(GamePlayer player) {
+    public LifeTimer(GamePlayer player, ScheduledExecutorService executor) {
         this.player = player;
+        this.executor = executor;
     }
 
     @Override
     public void on(GameJoined event) {
-        player.startLifeTimer(1000);
+        executor.scheduleAtFixedRate(player.lifeRegen(), 0, 1000, TimeUnit.MILLISECONDS);
+        player.startLifeRegen();
     }
 
     @Override

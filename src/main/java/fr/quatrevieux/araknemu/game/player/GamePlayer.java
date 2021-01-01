@@ -20,6 +20,8 @@
 package fr.quatrevieux.araknemu.game.player;
 
 import javax.swing.Timer;
+import javax.swing.text.html.parser.Entity;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -43,10 +45,12 @@ import fr.quatrevieux.araknemu.network.game.out.game.LifeTimerStart;
 import fr.quatrevieux.araknemu.network.game.out.game.LifeTimerStop;
 
 import java.util.Set;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
- * GamePlayer object
- * A player is a logged character, with associated game session
+ * GamePlayer object A player is a logged character, with associated game
+ * session
  */
 final public class GamePlayer implements PlayerSessionScope {
     final private GameAccount account;
@@ -59,13 +63,15 @@ final public class GamePlayer implements PlayerSessionScope {
     final private SpriteInfo spriteInfo;
     final private PlayerData data;
     final private Restrictions restrictions;
-    final private Timer lifeRegenerationTimer;
+    final private LifeRegeneration lifeRegen;
+    // final private Timer lifeRegenerationTimer;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
     private PlayerSessionScope scope = this;
 
-    public GamePlayer(GameAccount account, Player entity, GamePlayerRace race, GameSession session, PlayerService service, PlayerInventory inventory, SpellBook spells, GamePlayerExperience experience) {
+    public GamePlayer(GameAccount account, Player entity, GamePlayerRace race, GameSession session,
+            PlayerService service, PlayerInventory inventory, SpellBook spells, GamePlayerExperience experience) {
         this.account = account;
         this.entity = entity;
         this.race = race;
@@ -80,17 +86,7 @@ final public class GamePlayer implements PlayerSessionScope {
         this.data.build();
         this.restrictions.init(this);
 
-        this.lifeRegenerationTimer = new Timer(1000, new ActionListener(){
-			public void actionPerformed(ActionEvent e)
-			    {
-                    if(!session.isAlive()) return;
-
-                    if(session.player().isFighting() || session.player().properties().life().isFull())
-                        session.player().stopLifeTimer();
-                    
-                    session.player().entity.setLife(session.player().entity.life() + 1);
-			    }
-        });
+        this.lifeRegen = new LifeRegeneration(this, entity);
     }
 
     @Override
@@ -103,21 +99,20 @@ final public class GamePlayer implements PlayerSessionScope {
         return dispatcher;
     }
 
-    public void startLifeTimer(int time) {
-        this.lifeRegenerationTimer.setDelay(time);
-        this.lifeRegenerationTimer.start();
-        this.send(new LifeTimerStart(time));
+    public void startLifeRegen() {
+        lifeRegen.setRun(true);
+        this.send(new LifeTimerStart(1000));
     }
 
-    public void stopLifeTimer () {
-        this.lifeRegenerationTimer.stop();
+    public void stopLifeRegen() {
+        lifeRegen.setRun(false);
         this.send(new LifeTimerStop());
     }
 
     /**
-     * Get the base player data
-     * The data should be used for change the player data
-     * This value do not depends of the current player state (exploring / fighting) and should be modified carefully
+     * Get the base player data The data should be used for change the player data
+     * This value do not depends of the current player state (exploring / fighting)
+     * and should be modified carefully
      */
     @Override
     public PlayerData properties() {
@@ -296,5 +291,9 @@ final public class GamePlayer implements PlayerSessionScope {
 
     Player entity() {
         return entity;
+    }
+
+    public LifeRegeneration lifeRegen() {
+        return lifeRegen;
     }
 }
