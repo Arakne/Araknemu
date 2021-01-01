@@ -91,12 +91,12 @@ final public class GamePlayer implements PlayerSessionScope {
         return dispatcher;
     }
 
-    public void startLifeRegen() {
+    public void startLifeRegeneration() {
         lifeRegeneration.setRun(true);
         this.send(new LifeTimerStart(1000));
     }
 
-    public void stopLifeRegen() {
+    public void stopLifeRegeneration() {
         lifeRegeneration.setRun(false);
         this.send(new LifeTimerStop());
     }

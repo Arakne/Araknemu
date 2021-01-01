@@ -41,7 +41,7 @@ final public class LifeTimer implements Listener<GameJoined> {
     @Override
     public void on(GameJoined event) {
         executor.scheduleAtFixedRate(player.lifeRegeneration(), 0, 1000, TimeUnit.MILLISECONDS);
-        player.startLifeRegen();
+        player.startLifeRegeneration();
     }
 
     @Override
