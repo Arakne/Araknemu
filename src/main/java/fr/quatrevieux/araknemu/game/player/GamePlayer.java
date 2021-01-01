@@ -19,12 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.player;
 
-import javax.swing.Timer;
-import javax.swing.text.html.parser.Entity;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
@@ -45,8 +39,6 @@ import fr.quatrevieux.araknemu.network.game.out.game.LifeTimerStart;
 import fr.quatrevieux.araknemu.network.game.out.game.LifeTimerStop;
 
 import java.util.Set;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 /**
  * GamePlayer object A player is a logged character, with associated game
@@ -63,7 +55,7 @@ final public class GamePlayer implements PlayerSessionScope {
     final private SpriteInfo spriteInfo;
     final private PlayerData data;
     final private Restrictions restrictions;
-    final private LifeRegeneration lifeRegen;
+    final private LifeRegeneration lifeRegeneration;
     // final private Timer lifeRegenerationTimer;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
@@ -86,7 +78,7 @@ final public class GamePlayer implements PlayerSessionScope {
         this.data.build();
         this.restrictions.init(this);
 
-        this.lifeRegen = new LifeRegeneration(this, entity);
+        this.lifeRegeneration = new LifeRegeneration(this, entity);
     }
 
     @Override
@@ -100,12 +92,12 @@ final public class GamePlayer implements PlayerSessionScope {
     }
 
     public void startLifeRegen() {
-        lifeRegen.setRun(true);
+        lifeRegeneration.setRun(true);
         this.send(new LifeTimerStart(1000));
     }
 
     public void stopLifeRegen() {
-        lifeRegen.setRun(false);
+        lifeRegeneration.setRun(false);
         this.send(new LifeTimerStop());
     }
 
@@ -293,7 +285,7 @@ final public class GamePlayer implements PlayerSessionScope {
         return entity;
     }
 
-    public LifeRegeneration lifeRegen() {
-        return lifeRegen;
+    public LifeRegeneration lifeRegeneration() {
+        return lifeRegeneration;
     }
 }

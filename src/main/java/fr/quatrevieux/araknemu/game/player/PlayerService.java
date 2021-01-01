@@ -186,7 +186,7 @@ final public class PlayerService implements EventsSubscriber {
     }
 
     private void logout(GamePlayer player) {
-         ( (ThreadPoolExecutor) scheduledThreadPool).remove(player.lifeRegen());
+         ( (ThreadPoolExecutor) scheduledThreadPool).remove(player.lifeRegeneration());
         onlinePlayers.remove(player.id());
         playersByName.remove(player.name().toLowerCase());
     }
