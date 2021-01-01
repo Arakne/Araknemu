@@ -113,7 +113,7 @@ final public class PlayerFighter extends AbstractFighter implements Fighter, Pla
         destroy();
 
         session.setFighter(null);
-        session.player().startLifeRegen();
+        session.player().startLifeRegeneration();
     }
 
     @Override
