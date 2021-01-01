@@ -19,6 +19,10 @@
 
 package fr.quatrevieux.araknemu.game.player;
 
+import javax.swing.Timer;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
@@ -35,6 +39,8 @@ import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
 import fr.quatrevieux.araknemu.game.player.sprite.GamePlayerSpriteInfo;
 import fr.quatrevieux.araknemu.game.player.sprite.SpriteInfo;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+import fr.quatrevieux.araknemu.network.game.out.game.LifeTimerStart;
+import fr.quatrevieux.araknemu.network.game.out.game.LifeTimerStop;
 
 import java.util.Set;
 
@@ -53,6 +59,7 @@ final public class GamePlayer implements PlayerSessionScope {
     final private SpriteInfo spriteInfo;
     final private PlayerData data;
     final private Restrictions restrictions;
+    final private Timer lifeRegenerationTimer;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
@@ -72,6 +79,18 @@ final public class GamePlayer implements PlayerSessionScope {
 
         this.data.build();
         this.restrictions.init(this);
+
+        this.lifeRegenerationTimer = new Timer(1000, new ActionListener(){
+			public void actionPerformed(ActionEvent e)
+			    {
+                    if(!session.isAlive()) return;
+
+                    if(session.player().isFighting() || session.player().properties().life().isFull())
+                        session.player().stopLifeTimer();
+                    
+                    session.player().entity.setLife(session.player().entity.life() + 1);
+			    }
+        });
     }
 
     @Override
@@ -82,6 +101,17 @@ final public class GamePlayer implements PlayerSessionScope {
     @Override
     public ListenerAggregate dispatcher() {
         return dispatcher;
+    }
+
+    public void startLifeTimer(int time) {
+        this.lifeRegenerationTimer.setDelay(time);
+        this.lifeRegenerationTimer.start();
+        this.send(new LifeTimerStart(time));
+    }
+
+    public void stopLifeTimer () {
+        this.lifeRegenerationTimer.stop();
+        this.send(new LifeTimerStop());
     }
 
     /**

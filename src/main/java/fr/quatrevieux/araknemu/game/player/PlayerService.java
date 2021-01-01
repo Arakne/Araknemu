@@ -107,6 +107,7 @@ final public class PlayerService implements EventsSubscriber {
         gamePlayer.dispatcher().add(new SendRestrictions(gamePlayer));
         gamePlayer.dispatcher().add(new InitializeRestrictions(gamePlayer));
         gamePlayer.dispatcher().add(new StartTutorial(gamePlayer)); // @todo Move to "tutorial" package when implemented
+        gamePlayer.dispatcher().add(new LifeTimer(gamePlayer));
         this.dispatcher.dispatch(new PlayerLoaded(gamePlayer));
         gamePlayer.dispatcher().add(new SavePlayer(gamePlayer)); // After all events
 

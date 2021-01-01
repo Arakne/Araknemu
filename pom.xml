@@ -67,7 +67,7 @@
         <dependency>
             <groupId>fr.arakne</groupId>
             <artifactId>arakne-map</artifactId>
-            <version>0.1-alpha</version>
+            <version>0.2-alpha</version>
         </dependency>
         <dependency>
             <groupId>de.mkammerer</groupId>
