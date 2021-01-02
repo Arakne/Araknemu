@@ -111,9 +111,8 @@ final public class PlayerFighter extends AbstractFighter implements Fighter, Pla
     @Override
     public void unregister(GameSession session) {
         destroy();
-
+        player.startLifeRegeneration();
         session.setFighter(null);
-        session.player().startLifeRegeneration();
     }
 
     @Override
