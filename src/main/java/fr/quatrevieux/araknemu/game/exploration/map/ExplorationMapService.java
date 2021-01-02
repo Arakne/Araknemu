@@ -90,7 +90,6 @@ final public class ExplorationMapService implements PreloadableService, EventsSu
             new Listener<ExplorationPlayerCreated>() {
                 @Override
                 public void on(ExplorationPlayerCreated event) {
-                    event.player().player().startLifeRegeneration();
                     event.player().dispatcher().add(new SendMapData(event.player()));
                 }
 

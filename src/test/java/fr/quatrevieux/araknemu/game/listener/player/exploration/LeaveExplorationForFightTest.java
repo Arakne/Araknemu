@@ -23,7 +23,8 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
-import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.network.game.out.game.LifeTimerStop;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -57,6 +58,7 @@ class LeaveExplorationForFightTest extends FightBaseCase {
             )
         );
 
+        requestStack.assertContains(LifeTimerStop.class);
         assertFalse(player.player().isExploring());
         assertNull(session.exploration());
         assertFalse(map.creatures().contains(player));

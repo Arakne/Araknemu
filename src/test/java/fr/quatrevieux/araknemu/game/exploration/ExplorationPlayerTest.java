@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.core.event.Listener;
+import fr.quatrevieux.araknemu.game.exploration.event.ExplorationPlayerCreated;
 import fr.quatrevieux.araknemu.game.exploration.event.MapChanged;
 import fr.quatrevieux.araknemu.game.exploration.event.MapLeaved;
 import fr.quatrevieux.araknemu.game.exploration.event.MapJoined;
@@ -32,11 +33,14 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.event.PlayerMoveFini
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.sprite.PlayerSprite;
+import fr.quatrevieux.araknemu.game.listener.player.LifeRegeneration;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerLife;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
+import fr.quatrevieux.araknemu.network.game.out.game.LifeTimerStart;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -49,7 +53,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ExplorationPlayerTest extends GameBaseCase {
     private ExplorationPlayer player;
-
+    private LifeRegeneration listener;
     @Override
     @BeforeEach
     public void setUp() throws Exception {
@@ -58,6 +62,7 @@ class ExplorationPlayerTest extends GameBaseCase {
         dataSet.pushMaps().pushSubAreas().pushAreas();
         player = new ExplorationPlayer(gamePlayer());
         session.setExploration(player);
+        listener = new LifeRegeneration(player);
     }
 
     @Test
@@ -279,5 +284,13 @@ class ExplorationPlayerTest extends GameBaseCase {
         player.apply(operation);
 
         Mockito.verify(operation).onExplorationPlayer(player);
+    }
+
+    @Test
+    void lifeRegenerationShouldStartAfterCreation() {
+        listener.on(
+            new ExplorationPlayerCreated(player)
+        );
+        requestStack.assertContains(LifeTimerStart.class);
     }
 }
