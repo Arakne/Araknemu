@@ -39,9 +39,6 @@ import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -56,7 +53,6 @@ final public class PlayerService implements EventsSubscriber {
     final private PlayerRaceService playerRaceService;
     final private SpellBookService spellBookService;
     final private PlayerExperienceService experienceService;
-    final private ScheduledExecutorService scheduledThreadPool;
 
     final private ConcurrentMap<Integer, GamePlayer> onlinePlayers = new ConcurrentHashMap<>();
     final private ConcurrentMap<String, GamePlayer> playersByName  = new ConcurrentHashMap<>();
@@ -69,7 +65,6 @@ final public class PlayerService implements EventsSubscriber {
         this.playerRaceService = playerRaceService;
         this.spellBookService = spellBookService;
         this.experienceService = experienceService;
-        this.scheduledThreadPool = new ScheduledThreadPoolExecutor(1);
     }
 
     /**
@@ -112,7 +107,6 @@ final public class PlayerService implements EventsSubscriber {
         gamePlayer.dispatcher().add(new SendRestrictions(gamePlayer));
         gamePlayer.dispatcher().add(new InitializeRestrictions(gamePlayer));
         gamePlayer.dispatcher().add(new StartTutorial(gamePlayer)); // @todo Move to "tutorial" package when implemented
-        gamePlayer.dispatcher().add(new LifeTimer(gamePlayer, scheduledThreadPool));
         this.dispatcher.dispatch(new PlayerLoaded(gamePlayer));
         gamePlayer.dispatcher().add(new SavePlayer(gamePlayer)); // After all events
 
@@ -186,7 +180,6 @@ final public class PlayerService implements EventsSubscriber {
     }
 
     private void logout(GamePlayer player) {
-         ( (ThreadPoolExecutor) scheduledThreadPool).remove(player.lifeRegeneration());
         onlinePlayers.remove(player.id());
         playersByName.remove(player.name().toLowerCase());
     }

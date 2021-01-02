@@ -55,8 +55,7 @@ final public class GamePlayer implements PlayerSessionScope {
     final private SpriteInfo spriteInfo;
     final private PlayerData data;
     final private Restrictions restrictions;
-    final private LifeRegeneration lifeRegeneration;
-    // final private Timer lifeRegenerationTimer;
+    private long lifeRegeneration;
 
     final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
@@ -74,11 +73,8 @@ final public class GamePlayer implements PlayerSessionScope {
         this.data = new PlayerData(dispatcher, this, entity, spells, experience);
         this.spriteInfo = new GamePlayerSpriteInfo(entity, inventory);
         this.restrictions = new Restrictions(this);
-
         this.data.build();
         this.restrictions.init(this);
-
-        this.lifeRegeneration = new LifeRegeneration(this, entity);
     }
 
     @Override
@@ -92,12 +88,21 @@ final public class GamePlayer implements PlayerSessionScope {
     }
 
     public void startLifeRegeneration() {
-        lifeRegeneration.setRun(true);
+        lifeRegeneration = System.currentTimeMillis();
         this.send(new LifeTimerStart(1000));
     }
 
     public void stopLifeRegeneration() {
-        lifeRegeneration.setRun(false);
+        long currentTime = System.currentTimeMillis();
+
+        int pdvToAdd = (int) ( currentTime - lifeRegeneration ) / 1000;
+        int currentLife = this.properties().life().current();
+
+        if (this.properties().life().max() <= (pdvToAdd + currentLife) ) {
+            pdvToAdd = this.properties().life().max() - currentLife;
+        }
+
+        this.entity.setLife(this.entity.life() + pdvToAdd);
         this.send(new LifeTimerStop());
     }
 
