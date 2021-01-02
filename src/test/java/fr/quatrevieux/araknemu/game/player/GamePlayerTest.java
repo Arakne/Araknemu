@@ -68,7 +68,7 @@ class GamePlayerTest extends GameBaseCase {
             .pushSpells()
             .use(PlayerItem.class)
             .use(PlayerSpell.class)
-            ;
+        ;
 
         MutableCharacteristics characteristics = new DefaultCharacteristics();
 
@@ -87,10 +87,10 @@ class GamePlayerTest extends GameBaseCase {
             container.get(PlayerRaceService.class).get(Race.CRA),
             session,
             container.get(PlayerService.class),
-                container.get(InventoryService.class).load(entity),
-                container.get(SpellBookService.class).load(session, entity),
-                container.get(PlayerExperienceService.class).load(session, entity)
-            );
+            container.get(InventoryService.class).load(entity),
+            container.get(SpellBookService.class).load(session, entity),
+            container.get(PlayerExperienceService.class).load(session, entity)
+        );
     }
 
     @Test
@@ -270,13 +270,13 @@ class GamePlayerTest extends GameBaseCase {
     }
 
     @Test
-    void lifeRegenerationIsCorrect() {
+    void lifeRegenerationIsCorrect() throws Exception{
         long now = System.currentTimeMillis();
         player.properties().life().set(player.properties().life().max() - 5);
         int currentLife = player.properties().life().current();
         player.startLifeRegeneration();
 
-        try { Thread.sleep(1000);} catch (InterruptedException e) {}
+        Thread.sleep(1000);
 
         player.stopLifeRegeneration();
         long after = System.currentTimeMillis();
