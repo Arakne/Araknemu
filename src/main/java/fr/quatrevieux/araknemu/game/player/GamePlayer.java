@@ -41,8 +41,8 @@ import fr.quatrevieux.araknemu.network.game.out.game.LifeTimerStop;
 import java.util.Set;
 
 /**
- * GamePlayer object A player is a logged character, with associated game
- * session
+ * GamePlayer object
+ * A player is a logged character, with associated game session
  */
 final public class GamePlayer implements PlayerSessionScope {
     final private GameAccount account;
@@ -61,8 +61,7 @@ final public class GamePlayer implements PlayerSessionScope {
 
     private PlayerSessionScope scope = this;
 
-    public GamePlayer(GameAccount account, Player entity, GamePlayerRace race, GameSession session,
-            PlayerService service, PlayerInventory inventory, SpellBook spells, GamePlayerExperience experience) {
+    public GamePlayer(GameAccount account, Player entity, GamePlayerRace race, GameSession session, PlayerService service, PlayerInventory inventory, SpellBook spells, GamePlayerExperience experience) {
         this.account = account;
         this.entity = entity;
         this.race = race;
@@ -107,9 +106,9 @@ final public class GamePlayer implements PlayerSessionScope {
     }
 
     /**
-     * Get the base player data The data should be used for change the player data
-     * This value do not depends of the current player state (exploring / fighting)
-     * and should be modified carefully
+     * Get the base player data
+     * The data should be used for change the player data
+     * This value do not depends of the current player state (exploring / fighting) and should be modified carefully
      */
     @Override
     public PlayerData properties() {
@@ -288,9 +287,5 @@ final public class GamePlayer implements PlayerSessionScope {
 
     Player entity() {
         return entity;
-    }
-
-    public LifeRegeneration lifeRegeneration() {
-        return lifeRegeneration;
     }
 }
