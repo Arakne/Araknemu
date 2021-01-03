@@ -35,8 +35,6 @@ import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
 import fr.quatrevieux.araknemu.game.player.sprite.GamePlayerSpriteInfo;
 import fr.quatrevieux.araknemu.game.player.sprite.SpriteInfo;
 import fr.quatrevieux.araknemu.network.game.GameSession;
-import fr.quatrevieux.araknemu.network.game.out.game.LifeTimerStart;
-import fr.quatrevieux.araknemu.network.game.out.game.LifeTimerStop;
 
 import java.util.Set;
 

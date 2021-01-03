@@ -27,7 +27,6 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
 import fr.quatrevieux.araknemu.game.listener.map.SendSpriteRestrictions;
 import fr.quatrevieux.araknemu.game.listener.player.InitializeGame;
-import fr.quatrevieux.araknemu.game.listener.player.LifeRegeneration;
 import fr.quatrevieux.araknemu.game.listener.player.exploration.RefreshExplorationRestrictions;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 

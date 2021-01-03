@@ -35,7 +35,6 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
-import fr.quatrevieux.araknemu.network.game.out.game.LifeTimerStop;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
@@ -128,7 +127,6 @@ class JoinFightTest extends FightBaseCase {
         assertContains(player.fighter(), fight.team(0).fighters());
 
         requestStack.assertAll(
-            new LifeTimerStop(),
             new fr.quatrevieux.araknemu.network.game.out.fight.JoinFight(fight),
             new AddSprites(fight.fighters().stream().map(Fighter::sprite).collect(Collectors.toList())),
             new FightStartPositions(new List[] { fight.team(0).startPlaces(), fight.team(1).startPlaces() }, 0),
