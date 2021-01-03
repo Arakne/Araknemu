@@ -268,20 +268,4 @@ class GamePlayerTest extends GameBaseCase {
 
         assertFalse(player.isNew());
     }
-
-    @Test
-    void lifeRegenerationIsCorrect() throws Exception{
-        long now = System.currentTimeMillis();
-        player.properties().life().set(player.properties().life().max() - 5);
-        int currentLife = player.properties().life().current();
-        player.startLifeRegeneration();
-
-        Thread.sleep(1000);
-
-        player.stopLifeRegeneration();
-        long after = System.currentTimeMillis();
-        int expectedRegeneration = (int) (after - now) / 1000 ;
-        assertEquals(currentLife + expectedRegeneration , player.properties().life().current());
-
-    }
 }

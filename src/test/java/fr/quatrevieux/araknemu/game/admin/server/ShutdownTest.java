@@ -80,12 +80,12 @@ class ShutdownTest extends CommandTestCase {
 
     @Test
     void executeAt() throws SQLException, AdminException {
-        execute("shutdown", "at", "23:59");
+        execute("shutdown", "at", "22:45");
 
         LocalDateTime time = LocalDateTime.now().plus(container.get(ShutdownService.class).delay().get());
 
-        assertEquals(23, time.getHour());
-        assertBetween(58, 59, time.getMinute());
+        assertEquals(22, time.getHour());
+        assertBetween(44, 45, time.getMinute());
         performer.logs.get(0).message.startsWith("Shutdown scheduled at");
     }
 
