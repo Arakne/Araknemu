@@ -20,9 +20,9 @@ package fr.quatrevieux.araknemu.game.listener.player;
 
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.event.ExplorationPlayerCreated;
 import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.out.info.StartLifeTimer;
 import fr.quatrevieux.araknemu.network.game.out.info.StopLifeTimer;
 
@@ -31,9 +31,9 @@ import fr.quatrevieux.araknemu.network.game.out.info.StopLifeTimer;
  * This class handles a Player life regeneration
  */
 final public class LifeRegeneration implements EventsSubscriber {
-    final private ExplorationPlayer player;
+    final private GamePlayer player;
 
-    public LifeRegeneration(ExplorationPlayer player) {
+    public LifeRegeneration(GamePlayer player) {
         this.player = player;
     }
 
@@ -43,8 +43,8 @@ final public class LifeRegeneration implements EventsSubscriber {
             new Listener<ExplorationPlayerCreated>(){
                 @Override
                 public void on(ExplorationPlayerCreated event) {
-                    player.player().properties().life().startLifeRegeneration(1000);
-                    player.player().send(new StartLifeTimer(1000));
+                    player.properties().life().startLifeRegeneration(1000);
+                    player.send(new StartLifeTimer(1000));
                 }
                 @Override
                 public Class<ExplorationPlayerCreated> event() {
@@ -54,8 +54,8 @@ final public class LifeRegeneration implements EventsSubscriber {
             new Listener<FightJoined>(){
                 @Override
                 public void on(FightJoined event) {
-                    player.player().properties().life().stopLifeRegeneration();
-                    player.player().send(new StopLifeTimer());
+                    player.properties().life().stopLifeRegeneration();
+                    player.send(new StopLifeTimer());
                 }
                 @Override
                 public Class<FightJoined> event() {

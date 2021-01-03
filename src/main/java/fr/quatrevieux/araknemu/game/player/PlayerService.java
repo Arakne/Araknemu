@@ -101,6 +101,7 @@ final public class PlayerService implements EventsSubscriber {
         );
 
         gamePlayer.dispatcher().add(Disconnected.class, e -> logout(gamePlayer));
+        gamePlayer.dispatcher().register(new LifeRegeneration(gamePlayer));
         gamePlayer.dispatcher().add(new ComputeLifePoints(gamePlayer));
         gamePlayer.dispatcher().add(new SendLifeChanged(gamePlayer));
         gamePlayer.dispatcher().add(new SendStats(gamePlayer));
