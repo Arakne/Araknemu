@@ -51,7 +51,8 @@ final public class ExplorationService implements EventsSubscriber {
 
         exploration.dispatcher().add(new InitializeGame(exploration, mapService));
         exploration.dispatcher().add(new RefreshExplorationRestrictions(exploration));
-        exploration.dispatcher().add(new LifeRegeneration(exploration));
+        exploration.dispatcher().register(new LifeRegeneration(exploration));
+
         dispatcher.dispatch(new ExplorationPlayerCreated(exploration));
 
         return exploration;

@@ -39,7 +39,6 @@ import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
-import fr.quatrevieux.araknemu.network.game.out.game.LifeTimerStart;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,7 +52,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ExplorationPlayerTest extends GameBaseCase {
     private ExplorationPlayer player;
-    private LifeRegeneration listener;
+
     @Override
     @BeforeEach
     public void setUp() throws Exception {
@@ -62,7 +61,6 @@ class ExplorationPlayerTest extends GameBaseCase {
         dataSet.pushMaps().pushSubAreas().pushAreas();
         player = new ExplorationPlayer(gamePlayer());
         session.setExploration(player);
-        listener = new LifeRegeneration(player);
     }
 
     @Test
@@ -284,13 +282,5 @@ class ExplorationPlayerTest extends GameBaseCase {
         player.apply(operation);
 
         Mockito.verify(operation).onExplorationPlayer(player);
-    }
-
-    @Test
-    void lifeRegenerationShouldStartAfterCreation() {
-        listener.on(
-            new ExplorationPlayerCreated(player)
-        );
-        requestStack.assertContains(LifeTimerStart.class);
     }
 }

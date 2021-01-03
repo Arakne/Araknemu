@@ -14,14 +14,22 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux, Jean-Alexandre Valentin
  */
 
-package fr.quatrevieux.araknemu.network.game.out.game;
+package fr.quatrevieux.araknemu.network.game.out.info;
 
-public class LifeTimerStart {
-    final int time;
-    public LifeTimerStart(int time) {
+/**
+ * This packet tells the client to start the regeneration animation
+ */
+final public class StartLifeTimer {
+
+    /**
+     * The speed of the animation in milliseconds
+     */
+    final private int time;
+
+    public StartLifeTimer(int time) {
         this.time = time;
     }
 

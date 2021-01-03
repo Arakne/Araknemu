@@ -14,14 +14,32 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux, Jean-Alexandre Valentin
  */
 
-package fr.quatrevieux.araknemu.network.game.out.game;
+package fr.quatrevieux.araknemu.network.game.out.info;
 
-public class LifeTimerStop {
+/**
+ * This packet tells the client to stop the life regneration animation
+ */
+final public class StopLifeTimer {
+
+    /**
+     * Can be the amount of life regenerated
+     * It is usually used after the sit animation
+     */
+    final private int life;
+
+    public StopLifeTimer(int life) {
+        this.life = life;
+    }
+
+    public StopLifeTimer() {
+        this.life = 0;
+    }
+
     @Override
     public String toString() {
-        return "ILF0";
+        return "ILF" + this.life;
     }
 }

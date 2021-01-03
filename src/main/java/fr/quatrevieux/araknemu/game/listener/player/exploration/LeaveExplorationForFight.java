@@ -35,7 +35,6 @@ final public class LeaveExplorationForFight implements Listener<FightJoined> {
 
     @Override
     public void on(FightJoined event) {
-        player.player().stopLifeRegeneration();
         player.player().stop(player);
     }
 

@@ -41,7 +41,6 @@ import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
-import fr.quatrevieux.araknemu.network.game.out.game.LifeTimerStart;
 import fr.arakne.utils.maps.constant.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -288,7 +287,6 @@ class PlayerFighterTest extends FightBaseCase {
 
         fighter.unregister(session);
         assertNull(session.fighter());
-        requestStack.assertContains(LifeTimerStart.class);
     }
 
     @Test
