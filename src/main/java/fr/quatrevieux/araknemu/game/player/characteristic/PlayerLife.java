@@ -60,7 +60,7 @@ final public class PlayerLife implements Life {
         int lifeToAdd = (int) ( currentTime - lifeRegeneration ) / lifeRegenerationSpeed;
         int currentLife = this.entity.life();
 
-        if (this.max <= (lifeToAdd + currentLife) ) {
+        if (this.max <= (lifeToAdd + currentLife)) {
             lifeToAdd = this.max - currentLife;
         }
 
