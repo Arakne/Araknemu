@@ -20,9 +20,8 @@ package fr.quatrevieux.araknemu.game.listener.player;
 
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.game.exploration.event.ExplorationPlayerCreated;
-import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
-import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.exploration.event.StartExploration;
+import fr.quatrevieux.araknemu.game.exploration.event.StopExploration;
 import fr.quatrevieux.araknemu.network.game.out.info.StartLifeTimer;
 import fr.quatrevieux.araknemu.network.game.out.info.StopLifeTimer;
 
@@ -31,35 +30,30 @@ import fr.quatrevieux.araknemu.network.game.out.info.StopLifeTimer;
  * This class handles a Player life regeneration
  */
 final public class LifeRegeneration implements EventsSubscriber {
-    final private GamePlayer player;
-
-    public LifeRegeneration(GamePlayer player) {
-        this.player = player;
-    }
 
     @Override
     public Listener[] listeners() {
         return new Listener[]{
-            new Listener<ExplorationPlayerCreated>(){
+            new Listener<StartExploration>(){
                 @Override
-                public void on(ExplorationPlayerCreated event) {
-                    player.properties().life().startLifeRegeneration(1000);
-                    player.send(new StartLifeTimer(1000));
+                public void on(StartExploration event) {
+                    event.player().player().properties().life().startLifeRegeneration(1000);
+                    event.player().send(new StartLifeTimer(1000));
                 }
                 @Override
-                public Class<ExplorationPlayerCreated> event() {
-                    return ExplorationPlayerCreated.class;
+                public Class<StartExploration> event() {
+                    return StartExploration.class;
                 }
             },
-            new Listener<FightJoined>(){
+            new Listener<StopExploration>(){
                 @Override
-                public void on(FightJoined event) {
-                    player.properties().life().stopLifeRegeneration();
-                    player.send(new StopLifeTimer());
+                public void on(StopExploration event) {
+                    event.session().player().properties().life().stopLifeRegeneration();
+                    event.session().send(new StopLifeTimer());
                 }
                 @Override
-                public Class<FightJoined> event() {
-                    return FightJoined.class;
+                public Class<StopExploration> event() {
+                    return StopExploration.class;
                 }
             }
         };
