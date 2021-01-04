@@ -30,7 +30,6 @@ import fr.quatrevieux.araknemu.game.listener.player.InitializeGame;
 import fr.quatrevieux.araknemu.game.listener.player.LifeRegeneration;
 import fr.quatrevieux.araknemu.game.listener.player.exploration.RefreshExplorationRestrictions;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.network.game.out.info.StartLifeTimer;
 
 /**
  * Base service for handle game exploration
