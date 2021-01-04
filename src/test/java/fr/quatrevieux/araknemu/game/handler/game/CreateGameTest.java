@@ -31,6 +31,7 @@ import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import fr.quatrevieux.araknemu.network.game.out.game.GameCreated;
 import fr.quatrevieux.araknemu.network.game.out.game.GameCreationError;
 import fr.quatrevieux.araknemu.network.game.out.game.MapData;
+import fr.quatrevieux.araknemu.network.game.out.info.StartLifeTimer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -80,7 +81,8 @@ class CreateGameTest extends GameBaseCase {
         requestStack.assertAll(
             new GameCreated(CreateGameRequest.Type.EXPLORATION),
             new Stats(gamePlayer().properties()),
-            new MapData(explorationPlayer().map())
+            new MapData(explorationPlayer().map()),
+            new StartLifeTimer(1000)
         );
     }
 }

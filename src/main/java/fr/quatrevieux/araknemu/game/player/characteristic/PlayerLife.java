@@ -49,6 +49,7 @@ final public class PlayerLife implements Life {
 
     @Override
     public int current() {
+        calculateLifeRegeneration();
         return entity.life();
     }
 
@@ -126,6 +127,7 @@ final public class PlayerLife implements Life {
 
         max = computeMaxLife();
         entity.setLife(max * percent / 100);
+        calculateLifeRegeneration();
     }
 
     private int computeMaxLife() {
