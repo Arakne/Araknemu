@@ -35,6 +35,7 @@ final public class SavePlayer implements Listener<Disconnected> {
 
     @Override
     public void on(Disconnected event) {
+        player.properties().life().stopLifeRegeneration();
         player.save();
     }
 
