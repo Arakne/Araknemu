@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.listener.map.SendAccessories;
 import fr.quatrevieux.araknemu.game.listener.player.InitializeGame;
+import fr.quatrevieux.araknemu.game.listener.player.LifeRegeneration;
 import fr.quatrevieux.araknemu.game.listener.player.SendMapData;
 import fr.quatrevieux.araknemu.game.listener.player.exploration.LeaveExplorationForFight;
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
@@ -82,7 +83,7 @@ class CreateGameTest extends GameBaseCase {
             new GameCreated(CreateGameRequest.Type.EXPLORATION),
             new Stats(gamePlayer().properties()),
             new MapData(explorationPlayer().map()),
-            new StartLifeTimer(1000)
+            new StartLifeTimer(LifeRegeneration.STANDARD_LIFE_REGENERATION)
         );
     }
 }

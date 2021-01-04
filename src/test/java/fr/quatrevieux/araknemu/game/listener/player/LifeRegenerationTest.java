@@ -23,8 +23,11 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.event.StartExploration;
 import fr.quatrevieux.araknemu.game.exploration.event.StopExploration;
+import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 import fr.quatrevieux.araknemu.network.game.out.info.StartLifeTimer;
 import fr.quatrevieux.araknemu.network.game.out.info.StopLifeTimer;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,5 +56,17 @@ class LifeRegenerationTest extends GameBaseCase {
     void onStopExploration() {
         player.dispatch(new StopExploration(session));
         requestStack.assertContains(StopLifeTimer.class);
+    }
+
+    @Test
+    void saveCorrectLifeWhenPlayerDisconnect() throws Exception{
+
+        player.player().properties().life().set(5);
+        player.player().properties().life().startLifeRegeneration(10);
+        Thread.sleep(20);
+
+        player.dispatch(new Disconnected());
+
+        assertEquals(7, player.properties().life().current());
     }
 }
