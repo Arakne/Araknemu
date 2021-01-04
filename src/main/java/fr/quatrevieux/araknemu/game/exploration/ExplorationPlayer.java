@@ -101,8 +101,8 @@ final public class ExplorationPlayer implements ExplorationCreature, Explorer, P
         leave();
         interactions().stop();
 
+        this.dispatch(new StopExploration(session));
         session.setExploration(null);
-        dispatcher.dispatch(new StopExploration(session));
     }
 
     @Override
