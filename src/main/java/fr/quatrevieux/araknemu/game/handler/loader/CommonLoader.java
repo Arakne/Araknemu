@@ -31,6 +31,8 @@ import fr.quatrevieux.araknemu.game.handler.account.GenerateName;
 import fr.quatrevieux.araknemu.game.handler.account.Login;
 import fr.quatrevieux.araknemu.game.handler.account.SendRegionalVersion;
 import fr.quatrevieux.araknemu.game.handler.basic.SendDateAndTime;
+import fr.quatrevieux.araknemu.game.handler.basic.SendEmoteToPlayers;
+import fr.quatrevieux.araknemu.game.handler.emote.ChangeAnimation;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 /**
@@ -53,6 +55,8 @@ final public class CommonLoader implements Loader {
             new SendRegionalVersion(),
             new PongResponse(),
             new SendDateAndTime(),
+            new SendEmoteToPlayers(),
+            new ChangeAnimation(),
             new SendPong(),
             new GenerateName(container.get(NameGenerator.class)),
             new SendQuickPong()

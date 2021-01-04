@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.network.game.in;
 
 import fr.quatrevieux.araknemu.network.game.in.account.*;
 import fr.quatrevieux.araknemu.network.game.in.basic.AskDate;
+import fr.quatrevieux.araknemu.network.game.in.basic.PlayerEmote;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminCommand;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminMove;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
@@ -28,6 +29,7 @@ import fr.quatrevieux.araknemu.network.game.in.chat.SubscribeChannels;
 import fr.quatrevieux.araknemu.network.game.in.dialog.ChosenResponse;
 import fr.quatrevieux.araknemu.network.game.in.dialog.CreateDialogRequest;
 import fr.quatrevieux.araknemu.network.game.in.dialog.LeaveDialogRequest;
+import fr.quatrevieux.araknemu.network.game.in.emote.SetAnimationRequest;
 import fr.quatrevieux.araknemu.network.game.in.emote.SetOrientationRequest;
 import fr.quatrevieux.araknemu.network.game.in.exchange.AcceptExchangeRequest;
 import fr.quatrevieux.araknemu.network.game.in.exchange.ExchangeReady;
@@ -76,6 +78,7 @@ final public class GameParserLoader implements ParserLoader {
             new GameActionAcknowledge.Parser(),
             new GameActionCancel.Parser(),
             new AskDate.Parser(),
+            new PlayerEmote.Parser(),
             new Ping.Parser(),
             new Message.Parser(),
             new DeleteCharacterRequest.Parser(),
@@ -96,6 +99,7 @@ final public class GameParserLoader implements ParserLoader {
             new AskFightDetails.Parser(),
             new LeaveFightRequest.Parser(),
             new SetOrientationRequest.Parser(),
+            new SetAnimationRequest.Parser(),
             new CreateDialogRequest.Parser(),
             new LeaveDialogRequest.Parser(),
             new ChosenResponse.Parser(),
