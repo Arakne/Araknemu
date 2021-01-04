@@ -184,19 +184,19 @@ class PlayerLifeTest extends GameBaseCase {
 
     @Test
     void lifeRegenerationIsCorrect() throws Exception{
-        entity.setLife(life.max() - 5);
+        life.set(5);
         life.startLifeRegeneration(1000);
         Thread.sleep(1001);
         life.stopLifeRegeneration();
-        assertEquals(life.max() - 4, life.current());
+        assertEquals(6, life.current());
     }
 
     @Test
     void lifeRegenerationIsCorrectWithSpeed() throws Exception{
-        entity.setLife(life.max() - 5);
+        life.set(5);
         life.startLifeRegeneration(500);
         Thread.sleep(1001);
         life.stopLifeRegeneration();
-        assertEquals(life.max() - 3, life.current());
+        assertEquals(7, life.current());
     }
 }
