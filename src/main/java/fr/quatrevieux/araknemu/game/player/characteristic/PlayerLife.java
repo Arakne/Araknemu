@@ -70,8 +70,15 @@ final public class PlayerLife implements Life {
      * calculate the life regeneration and set the lifeRegeneration timestamp to zero
      */
     public void stopLifeRegeneration() {
-        rebuild();
+        setLifeWithCurrentRegeneration();
         lifeRegeneration = 0;
+    }
+
+    /**
+     * set the life to: entity.life() + calculateLifeRegeneration()
+     */
+    public void setLifeWithCurrentRegeneration() {
+        entity.setLife(current());
     }
 
     /**
