@@ -19,11 +19,13 @@
 
 package fr.quatrevieux.araknemu.game.listener.player;
 
+import fr.quatrevieux.araknemu.core.network.SessionClosed;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.event.StartExploration;
 import fr.quatrevieux.araknemu.game.exploration.event.StopExploration;
-import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
+import fr.quatrevieux.araknemu.game.handler.StopSession;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.out.info.StartLifeTimer;
 import fr.quatrevieux.araknemu.network.game.out.info.StopLifeTimer;
 
@@ -35,13 +37,18 @@ import org.junit.jupiter.api.Test;
 
 class LifeRegenerationTest extends GameBaseCase {
     private ExplorationPlayer player;
+    private GamePlayer gamePlayer;
+    private StopSession handler;
 
     @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
-        player = makeExplorationPlayer(gamePlayer());
+        player = makeExplorationPlayer(
+            gamePlayer = gamePlayer()
+        );
+        handler = new StopSession();
         requestStack.clear();
 
     }
@@ -59,14 +66,14 @@ class LifeRegenerationTest extends GameBaseCase {
     }
 
     @Test
-    void saveCorrectLifeWhenPlayerDisconnect() throws Exception{
-
+    void saveCorrectLifeWhenSessionClosed() throws Exception{
         player.player().properties().life().set(5);
-        player.player().properties().life().startLifeRegeneration(10);
-        Thread.sleep(20);
+        player.player().properties().life().startLifeRegeneration(20);
+        Thread.sleep(40);
 
-        player.dispatch(new Disconnected());
+        handler.handle(session, new SessionClosed());
 
-        assertEquals(7, player.properties().life().current());
+        ExplorationPlayer saved = makeExplorationPlayer(gamePlayer);
+        assertEquals(7, saved.properties().life().current());
     }
 }
