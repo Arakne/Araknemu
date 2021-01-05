@@ -49,12 +49,11 @@ final public class PlayerLife implements Life {
 
     @Override
     public int current() {
-        calculateLifeRegeneration();
-        return entity.life();
+        return entity.life() + calculateLifeRegeneration();
     }
 
-    private void calculateLifeRegeneration() {
-        if (lifeRegeneration == 0) return;
+    private int calculateLifeRegeneration() {
+        if (lifeRegeneration == 0) return 0;
 
         long currentTime = System.currentTimeMillis();
         int lifeToAdd = (int) ( currentTime - lifeRegeneration ) / lifeRegenerationSpeed;
@@ -64,15 +63,14 @@ final public class PlayerLife implements Life {
             lifeToAdd = this.max - currentLife;
         }
 
-        int life = this.entity.life() + lifeToAdd;
-        this.entity.setLife(life);
+        return lifeToAdd;
     }
 
     /**
      * calculate the life regeneration and set the lifeRegeneration timestamp to zero
      */
     public void stopLifeRegeneration() {
-        calculateLifeRegeneration();
+        rebuild();
         lifeRegeneration = 0;
     }
 
@@ -127,7 +125,6 @@ final public class PlayerLife implements Life {
 
         max = computeMaxLife();
         entity.setLife(max * percent / 100);
-        calculateLifeRegeneration();
     }
 
     private int computeMaxLife() {
