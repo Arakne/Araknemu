@@ -8,7 +8,7 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.basic.PlayerEmote;
-import fr.quatrevieux.araknemu.network.game.out.basic.PlayerEmoteToMap;
+import fr.quatrevieux.araknemu.network.game.out.basic.EmoteToPlayers;
 
 /**
  * Send the player emote to other players
@@ -16,11 +16,7 @@ import fr.quatrevieux.araknemu.network.game.out.basic.PlayerEmoteToMap;
 final public class SendEmoteToPlayers implements PacketHandler<GameSession, PlayerEmote>{
     @Override
     public void handle(GameSession session, PlayerEmote packet) throws Exception {
-        List<ExplorationCreature> playersOnMap = session.player().exploration().map().creatures()
-        .stream().filter(p -> p instanceof ExplorationPlayer)
-        .collect(Collectors.toList());
-
-        playersOnMap.forEach( p -> ((ExplorationPlayer)p).send(new PlayerEmoteToMap(packet.emote(), session)));
+        session.setEmote(packet.emote());
 
     }
 
