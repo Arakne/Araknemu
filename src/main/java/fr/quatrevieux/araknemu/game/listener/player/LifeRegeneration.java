@@ -46,6 +46,7 @@ final public class LifeRegeneration implements EventsSubscriber {
                     return StartExploration.class;
                 }
             },
+
             new Listener<StopExploration>(){
                 @Override
                 public void on(StopExploration event) {
