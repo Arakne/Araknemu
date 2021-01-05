@@ -23,7 +23,6 @@ package fr.quatrevieux.araknemu.network.game.out.info;
  * This packet tells the client to stop the life regneration animation
  */
 final public class StopLifeTimer {
-
     /**
      * Can be the amount of life regenerated
      * It is usually used after the sit animation

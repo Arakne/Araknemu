@@ -16,6 +16,7 @@
  *
  * Copyright (c) 2017-2021 Vincent Quatrevieux, Jean-Alexandre Valentin
  */
+
 package fr.quatrevieux.araknemu.game.listener.player;
 
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
@@ -24,7 +25,6 @@ import fr.quatrevieux.araknemu.game.exploration.event.StartExploration;
 import fr.quatrevieux.araknemu.game.exploration.event.StopExploration;
 import fr.quatrevieux.araknemu.network.game.out.info.StartLifeTimer;
 import fr.quatrevieux.araknemu.network.game.out.info.StopLifeTimer;
-
 
 /**
  * This class handles a Player life regeneration

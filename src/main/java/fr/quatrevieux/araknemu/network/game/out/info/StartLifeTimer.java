@@ -23,7 +23,6 @@ package fr.quatrevieux.araknemu.network.game.out.info;
  * This packet tells the client to start the regeneration animation
  */
 final public class StartLifeTimer {
-
     /**
      * The speed of the animation in milliseconds
      */
