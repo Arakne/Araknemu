@@ -202,6 +202,6 @@ class StopSessionTest extends FightBaseCase {
         Thread.sleep(40);
         handler.handle(session, new SessionClosed());
         
-        assertEquals(7, dataSet.refresh(new Player(explorationPlayer.id())).life());
+        assertBetween(6, 8, dataSet.refresh(new Player(explorationPlayer.id())).life());
     }
 }
