@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -86,6 +87,18 @@ class ShutdownTest extends CommandTestCase {
 
         assertEquals(22, time.getHour());
         assertBetween(44, 45, time.getMinute());
+        performer.logs.get(0).message.startsWith("Shutdown scheduled at");
+    }
+
+    @Test
+    void executeAtBeforeNowShouldBeScheduledNextDay() throws SQLException, AdminException {
+        execute("shutdown", "at", "00:01");
+
+        LocalDateTime time = LocalDateTime.now().plus(container.get(ShutdownService.class).delay().get());
+
+        assertEquals(0, time.getHour());
+        assertBetween(0, 1, time.getMinute());
+        assertEquals(LocalDateTime.now().getDayOfMonth() + 1, time.getDayOfMonth());
         performer.logs.get(0).message.startsWith("Shutdown scheduled at");
     }
 
