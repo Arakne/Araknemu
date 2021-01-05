@@ -19,17 +19,12 @@
 
 package fr.quatrevieux.araknemu.game.listener.player;
 
-import fr.quatrevieux.araknemu.core.network.SessionClosed;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.event.StartExploration;
 import fr.quatrevieux.araknemu.game.exploration.event.StopExploration;
-import fr.quatrevieux.araknemu.game.handler.StopSession;
-import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.out.info.StartLifeTimer;
 import fr.quatrevieux.araknemu.network.game.out.info.StopLifeTimer;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,8 +32,6 @@ import org.junit.jupiter.api.Test;
 
 class LifeRegenerationTest extends GameBaseCase {
     private ExplorationPlayer player;
-    private GamePlayer gamePlayer;
-    private StopSession handler;
 
     @Override
     @BeforeEach
@@ -46,9 +39,8 @@ class LifeRegenerationTest extends GameBaseCase {
         super.setUp();
 
         player = makeExplorationPlayer(
-            gamePlayer = gamePlayer()
+            gamePlayer()
         );
-        handler = new StopSession();
         requestStack.clear();
 
     }
@@ -63,17 +55,5 @@ class LifeRegenerationTest extends GameBaseCase {
     void onStopExploration() {
         player.dispatch(new StopExploration(session));
         requestStack.assertContains(StopLifeTimer.class);
-    }
-
-    @Test
-    void saveCorrectLifeWhenSessionClosed() throws Exception{
-        player.player().properties().life().set(5);
-        player.player().properties().life().startLifeRegeneration(20);
-        Thread.sleep(40);
-
-        handler.handle(session, new SessionClosed());
-
-        ExplorationPlayer saved = makeExplorationPlayer(gamePlayer);
-        assertEquals(7, saved.properties().life().current());
     }
 }
