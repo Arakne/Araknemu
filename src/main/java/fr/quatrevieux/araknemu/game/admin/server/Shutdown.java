@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin.server;
@@ -116,12 +116,17 @@ final public class Shutdown extends AbstractCommand {
             throw new CommandException(name(), "Missing the time");
         }
 
-        service.schedule(
-            Duration.between(
-                LocalTime.now(),
-                LocalTime.from(DateTimeFormatter.ofPattern("HH:mm[:ss]").parse(arguments.get(2)))
-            )
+        Duration delay = Duration.between(
+            LocalTime.now(),
+            LocalTime.from(DateTimeFormatter.ofPattern("HH:mm[:ss]").parse(arguments.get(2)))
         );
+
+        // scheduled time is before now : consider that it's scheduled for the next day
+        if (delay.isNegative()) {
+            delay = delay.plusDays(1);
+        }
+
+        service.schedule(delay);
         show(performer);
     }
 
