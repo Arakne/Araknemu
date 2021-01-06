@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.handler.EnsureInactiveFight;
 import fr.quatrevieux.araknemu.game.handler.EnsurePlaying;
 import fr.quatrevieux.araknemu.game.handler.account.BoostCharacteristic;
+import fr.quatrevieux.araknemu.game.handler.basic.ChangeEmote;
 import fr.quatrevieux.araknemu.game.handler.chat.SaveSubscription;
 import fr.quatrevieux.araknemu.game.handler.chat.SendMessage;
 import fr.quatrevieux.araknemu.game.handler.game.CreateGame;
@@ -60,6 +61,7 @@ final public class PlayingLoader extends AbstractLoader {
             new EnsureInactiveFight(new BoostCharacteristic()),
             new EnsureInactiveFight(new UpgradeSpell()),
             new MoveSpell(),
+            new ChangeEmote(),
         };
     }
 }

@@ -24,11 +24,11 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 /**
  * The player is loaded, ready to join the game
  */
-final public class PlayerEmote {
+final public class PlayerEmoteSent {
     final private GamePlayer player;
     final private String emote;
 
-    public PlayerEmote(GamePlayer player, String emote) {
+    public PlayerEmoteSent(GamePlayer player, String emote) {
         this.player = player;
         this.emote = emote;
     }

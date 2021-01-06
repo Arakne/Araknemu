@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.event.PlayerEmote;
+import fr.quatrevieux.araknemu.game.player.event.PlayerEmoteSent;
 import fr.quatrevieux.araknemu.network.AccountSession;
 
 /**
@@ -147,11 +148,11 @@ final public class GameSession extends AbstractDelegatedSession implements Accou
         }
     }
 
-    public void setEmote(String emote) {
+    public void changeEmote(String emote) {
         if (player.isFighting()) {
-            player.fighter().fight().dispatch(new PlayerEmote(player, emote));
+            player.fighter().fight().dispatch(new PlayerEmoteSent(player, emote));
         } else {
-            player.exploration().map().dispatch(new PlayerEmote(player, emote));
+            player.exploration().map().dispatch(new PlayerEmoteSent(player, emote));
         }
     }
 
