@@ -99,7 +99,6 @@ final public class GameParserLoader implements ParserLoader {
             new AskFightDetails.Parser(),
             new LeaveFightRequest.Parser(),
             new SetOrientationRequest.Parser(),
-            new SetAnimationRequest.Parser(),
             new CreateDialogRequest.Parser(),
             new LeaveDialogRequest.Parser(),
             new ChosenResponse.Parser(),
