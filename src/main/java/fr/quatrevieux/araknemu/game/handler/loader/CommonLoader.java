@@ -56,7 +56,6 @@ final public class CommonLoader implements Loader {
             new PongResponse(),
             new SendDateAndTime(),
             new SetEmote(),
-            new ChangeAnimation(),
             new SendPong(),
             new GenerateName(container.get(NameGenerator.class)),
             new SendQuickPong()

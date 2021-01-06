@@ -32,7 +32,6 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.event.FightCreated;
-import fr.quatrevieux.araknemu.game.listener.fight.SendEmoteToFight;
 import fr.quatrevieux.araknemu.game.listener.map.*;
 import fr.quatrevieux.araknemu.game.listener.map.fight.*;
 import fr.quatrevieux.araknemu.game.listener.player.SendMapData;

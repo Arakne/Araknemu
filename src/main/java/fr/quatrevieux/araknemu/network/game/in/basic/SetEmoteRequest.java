@@ -4,10 +4,10 @@ import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 
-final public class PlayerEmote implements Packet{
+final public class SetEmoteRequest implements Packet{
     final private String emote;
 
-    public PlayerEmote(String emote) {
+    public SetEmoteRequest(String emote) {
         this.emote = emote;
     }
 
@@ -15,10 +15,10 @@ final public class PlayerEmote implements Packet{
         return emote;
     }
 
-    final static public class Parser implements SinglePacketParser<PlayerEmote> {
+    final static public class Parser implements SinglePacketParser<SetEmoteRequest> {
         @Override
-        public PlayerEmote parse(String input) throws ParsePacketException {
-            return new PlayerEmote(input);
+        public SetEmoteRequest parse(String input) throws ParsePacketException {
+            return new SetEmoteRequest(input);
         }
 
         @Override

@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.network.game.in;
 
 import fr.quatrevieux.araknemu.network.game.in.account.*;
 import fr.quatrevieux.araknemu.network.game.in.basic.AskDate;
-import fr.quatrevieux.araknemu.network.game.in.basic.PlayerEmote;
+import fr.quatrevieux.araknemu.network.game.in.basic.SetEmoteRequest;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminCommand;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminMove;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
@@ -78,7 +78,7 @@ final public class GameParserLoader implements ParserLoader {
             new GameActionAcknowledge.Parser(),
             new GameActionCancel.Parser(),
             new AskDate.Parser(),
-            new PlayerEmote.Parser(),
+            new SetEmoteRequest.Parser(),
             new Ping.Parser(),
             new Message.Parser(),
             new DeleteCharacterRequest.Parser(),
