@@ -29,7 +29,6 @@ import fr.quatrevieux.araknemu.network.game.in.chat.SubscribeChannels;
 import fr.quatrevieux.araknemu.network.game.in.dialog.ChosenResponse;
 import fr.quatrevieux.araknemu.network.game.in.dialog.CreateDialogRequest;
 import fr.quatrevieux.araknemu.network.game.in.dialog.LeaveDialogRequest;
-import fr.quatrevieux.araknemu.network.game.in.emote.SetAnimationRequest;
 import fr.quatrevieux.araknemu.network.game.in.emote.SetOrientationRequest;
 import fr.quatrevieux.araknemu.network.game.in.exchange.AcceptExchangeRequest;
 import fr.quatrevieux.araknemu.network.game.in.exchange.ExchangeReady;

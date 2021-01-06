@@ -27,7 +27,6 @@ import fr.quatrevieux.araknemu.common.session.SessionLog;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.game.player.event.PlayerEmote;
 import fr.quatrevieux.araknemu.game.player.event.PlayerEmoteSent;
 import fr.quatrevieux.araknemu.network.AccountSession;
 
