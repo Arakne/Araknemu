@@ -62,7 +62,7 @@ class ValidateRestrictedDirectionsTest extends GameBaseCase {
     void validateWithoutRestrictions() throws SQLException, ContainerException {
         ExplorationPlayer player = explorationPlayer();
 
-        Path<ExplorationMapCell> path = new Path<>(
+        Path<ExplorationMapCell> path = new Path<ExplorationMapCell>(
             new Decoder<>(player.map()),
             Arrays.asList(
                 new PathStep(map.get(279), Direction.WEST),
@@ -80,7 +80,7 @@ class ValidateRestrictedDirectionsTest extends GameBaseCase {
         ExplorationPlayer player = explorationPlayer();
         player.player().restrictions().unset(Restrictions.Restriction.ALLOW_MOVE_ALL_DIRECTION);
 
-        Path<ExplorationMapCell> path = new Path<>(
+        Path<ExplorationMapCell> path = new Path<ExplorationMapCell>(
             new Decoder<>(player.map()),
             Arrays.asList(
                 new PathStep(map.get(279), Direction.WEST),
@@ -98,7 +98,7 @@ class ValidateRestrictedDirectionsTest extends GameBaseCase {
         ExplorationPlayer player = explorationPlayer();
         player.player().restrictions().unset(Restrictions.Restriction.ALLOW_MOVE_ALL_DIRECTION);
 
-        Path<ExplorationMapCell> path = new Path<>(
+        Path<ExplorationMapCell> path = new Path<ExplorationMapCell>(
             new Decoder<>(player.map()),
             Arrays.asList(
                 new PathStep(map.get(279), Direction.WEST),
