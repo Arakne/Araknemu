@@ -58,7 +58,7 @@ public interface Buffs {
     public void refresh();
 
     /**
-     * Remove all buffs than can be removed, and fire {@link BuffHook#onBuffStarted(Buff)}
+     * Remove all buffs than can be removed, and fire {@link BuffHook#onBuffTerminated(Buff)}
      */
     public void removeAll(PassiveFighter caster);
 }
