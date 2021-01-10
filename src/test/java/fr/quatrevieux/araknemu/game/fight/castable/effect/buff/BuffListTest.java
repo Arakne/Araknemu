@@ -231,4 +231,19 @@ class BuffListTest extends FightBaseCase {
 
         Mockito.verify(hook1).onBuffTerminated(buff1);
     }
+
+    @Test
+    void AddMultipleAndRemoveThoseThatCanBeRemoved(){
+        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), Mockito.mock(BuffHook.class));
+        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), Mockito.mock(BuffHook.class), false);
+        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), Mockito.mock(BuffHook.class), true);
+
+        list.add(buff1);
+        list.add(buff2);
+        list.add(buff3);
+
+        list.removeAll(buff1.caster());
+
+        assertArrayEquals(new Buff[] {buff2}, list.stream().toArray());
+    }
 }

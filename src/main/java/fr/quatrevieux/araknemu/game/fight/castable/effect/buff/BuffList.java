@@ -22,7 +22,9 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
+import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -115,5 +117,18 @@ final public class BuffList implements Iterable<Buff>, Buffs {
                 buff.hook().onBuffTerminated(buff);
             }
         }
+    }
+
+    @Override
+    public void removeAll(PassiveFighter caster) {
+        Iterator<Buff> iterator = buffs.iterator();
+        while (iterator.hasNext()) {
+            Buff buff = iterator.next();
+            if(buff.canBeDebuff()) {
+                iterator.remove();
+                buff.hook().onBuffTerminated(buff);
+            }
+        }
+        fighter.fight().send(ActionEffect.debuff(caster, fighter));
     }
 }

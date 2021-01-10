@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
  * Handle and store buff list for a fighter
@@ -55,4 +56,9 @@ public interface Buffs {
      * Refresh the buff list after turn end
      */
     public void refresh();
+
+    /**
+     * Remove all buffs than can be removed, and fire {@link BuffHook#onBuffStarted(Buff)}
+     */
+    public void removeAll(PassiveFighter caster);
 }
