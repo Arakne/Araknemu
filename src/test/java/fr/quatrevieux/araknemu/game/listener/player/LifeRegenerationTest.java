@@ -26,6 +26,11 @@ import fr.quatrevieux.araknemu.game.exploration.event.StopExploration;
 import fr.quatrevieux.araknemu.network.game.out.info.StartLifeTimer;
 import fr.quatrevieux.araknemu.network.game.out.info.StopLifeTimer;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
+import java.lang.reflect.Field;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -46,14 +51,22 @@ class LifeRegenerationTest extends GameBaseCase {
     }
 
     @Test
-    void onStartExploration() {
+    void onStartExploration() throws Exception{
         player.dispatch(new StartExploration(player));
         requestStack.assertContains(StartLifeTimer.class);
+
+        Field privateLongField = player.properties().life().getClass().getDeclaredField("lifeRegenerationStart");
+        privateLongField.setAccessible(true);
+        assertNotEquals(0, (long) privateLongField.get(player.properties().life()));
     }
 
     @Test
-    void onStopExploration() {
+    void onStopExploration() throws Exception{
         player.dispatch(new StopExploration(session));
         requestStack.assertContains(StopLifeTimer.class);
+
+        Field privateLongField = player.properties().life().getClass().getDeclaredField("lifeRegenerationStart");
+        privateLongField.setAccessible(true);
+        assertEquals(0, (long) privateLongField.get(player.properties().life()));
     }
 }
