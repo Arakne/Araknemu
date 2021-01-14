@@ -220,7 +220,7 @@ final public class ActionEffect {
      * @param caster The caster
      * @param targer The target
      */
-    static public ActionEffect debuff(PassiveFighter caster, PassiveFighter target) {
+    static public ActionEffect dispelBuffs(PassiveFighter caster, PassiveFighter target) {
         return new ActionEffect(132, caster, target.id());
     }
 }

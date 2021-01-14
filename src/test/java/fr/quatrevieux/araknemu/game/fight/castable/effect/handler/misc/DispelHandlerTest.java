@@ -19,13 +19,12 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc;
 
-import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddCharacteristicHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -41,13 +40,11 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DebuffHandlerTest extends FightBaseCase {
+class DispelHandlerTest extends FightBaseCase {
     private Fight fight;
     private PlayerFighter caster;
     private PlayerFighter target;
-    private DebuffHandler handler;
-    private AddCharacteristicHandler handler_luck;
-    private AddCharacteristicHandler handler_wisdom;
+    private DispelHandler handler;
 
     @Override
     @BeforeEach
@@ -63,9 +60,7 @@ class DebuffHandlerTest extends FightBaseCase {
 
         target.move(fight.map().get(123));
 
-        handler_luck = new AddCharacteristicHandler(fight, Characteristic.LUCK);
-        handler_wisdom = new AddCharacteristicHandler(fight, Characteristic.WISDOM);
-        handler = new DebuffHandler();
+        handler = new DispelHandler(fight);
 
         requestStack.clear();
     }
@@ -85,23 +80,9 @@ class DebuffHandlerTest extends FightBaseCase {
     }
 
     @Test
-    void buff() {
-        // can be debuff
-        Buff buff_luck = makeLuckBuffThatCanBeDebuff();
-        caster.buffs().add(buff_luck);
-
-        CastScope scope = makeDebuffSpell(caster.cell());
-        handler.buff(scope, scope.effects().get(0));
-
-        Optional<Buff> buff1 = caster.buffs().stream().filter(x -> x.effect().effect() == 123).findFirst();
-        assertFalse(buff1.isPresent());
-        requestStack.assertLast("GA;132;1;1");
-    }
-
-    @Test
     void notAllBuffsAreRemoved() {
         // can be debuff
-        Buff buff_luck = makeLuckBuffThatCanBeDebuff();
+        Buff buff_luck = makeLuckBuffThatcanBeDispelled();
         // cannot be debuff
         Buff buff_wisdom = makeWisdomBuffThatCannotBeDebuff();
 
@@ -109,13 +90,29 @@ class DebuffHandlerTest extends FightBaseCase {
         caster.buffs().add(buff_wisdom);
 
         CastScope scope = makeDebuffSpell(caster.cell());
-        handler.buff(scope, scope.effects().get(0));
+        handler.handle(scope, scope.effects().get(0));
 
         Optional<Buff> buff1 = caster.buffs().stream().filter(x -> x.effect().effect() == 123).findFirst();
         Optional<Buff> buff2 = caster.buffs().stream().filter(x -> x.effect().effect() == 124).findFirst();
 
         assertFalse(buff1.isPresent());
         assertTrue(buff2.isPresent());
+    }
+
+    @Test
+    void makeSureOnBuffTerminatedIsCalled() {
+        BuffHook hook = Mockito.mock(BuffHook.class);
+        SpellEffect effect1 = Mockito.mock(SpellEffect.class);
+
+        Buff buff1 = new Buff(effect1, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook);
+        caster.buffs().add(buff1);
+        assertArrayEquals(new Buff[] {buff1}, caster.buffs().stream().toArray());
+
+        CastScope scope = makeDebuffSpell(caster.cell());
+        handler.handle(scope, scope.effects().get(0));
+
+        assertArrayEquals(new Buff[] {}, caster.buffs().stream().toArray());
+        Mockito.verify(hook).onBuffTerminated(buff1);
     }
 
     private CastScope makeDebuffSpell(FightCell cell) {
@@ -132,14 +129,14 @@ class DebuffHandlerTest extends FightBaseCase {
         return makeCastScope(caster, spell, debuff, cell);
     }
 
-    private Buff makeLuckBuffThatCanBeDebuff() {
+    private Buff makeLuckBuffThatcanBeDispelled() {
         SpellEffect effect_luck = Mockito.mock(SpellEffect.class);
 
         Mockito.when(effect_luck.effect()).thenReturn(123);
         Mockito.when(effect_luck.min()).thenReturn(50);
         Mockito.when(effect_luck.duration()).thenReturn(5);
-
-        return new Buff(effect_luck, Mockito.mock(Spell.class), caster, caster, handler_luck);
+        
+        return new Buff(effect_luck, Mockito.mock(Spell.class), caster, caster, Mockito.mock(BuffHook.class));
     }
 
     private Buff makeWisdomBuffThatCannotBeDebuff() {
@@ -149,6 +146,6 @@ class DebuffHandlerTest extends FightBaseCase {
         Mockito.when(effect_wisdom.min()).thenReturn(50);
         Mockito.when(effect_wisdom.duration()).thenReturn(5);
 
-        return new Buff(effect_wisdom, Mockito.mock(Spell.class), caster, caster, handler_wisdom, false);
+        return new Buff(effect_wisdom, Mockito.mock(Spell.class), caster, caster, Mockito.mock(BuffHook.class), false);
     }
 }

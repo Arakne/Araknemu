@@ -120,15 +120,15 @@ final public class BuffList implements Iterable<Buff>, Buffs {
     }
 
     @Override
-    public void removeAll(PassiveFighter caster) {
+    public void removeAll() {
         Iterator<Buff> iterator = buffs.iterator();
         while (iterator.hasNext()) {
             Buff buff = iterator.next();
-            if(buff.canBeDebuff()) {
+
+            if (buff.canBeDispelled()) {
                 iterator.remove();
                 buff.hook().onBuffTerminated(buff);
             }
         }
-        fighter.fight().send(ActionEffect.debuff(caster, fighter));
     }
 }

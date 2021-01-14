@@ -36,22 +36,15 @@ final public class Buff {
     final private ActiveFighter caster;
     final private PassiveFighter target;
     final private BuffHook hook;
-    final private boolean canBeDebuff;
+    final private boolean canBeDispelled;
 
     private int remainingTurns;
 
     public Buff(SpellEffect effect, Castable action, ActiveFighter caster, PassiveFighter target, BuffHook hook) {
-        this.effect = effect;
-        this.action = action;
-        this.caster = caster;
-        this.target = target;
-        this.hook = hook;
-
-        this.remainingTurns = effect.duration();
-        this.canBeDebuff = true;
+        this(effect, action, caster, target, hook, true);
     }
 
-    public Buff(SpellEffect effect, Castable action, ActiveFighter caster, PassiveFighter target, BuffHook hook, boolean canBeDebuff) {
+    public Buff(SpellEffect effect, Castable action, ActiveFighter caster, PassiveFighter target, BuffHook hook, boolean canBeDispelled) {
         this.effect = effect;
         this.action = action;
         this.caster = caster;
@@ -59,7 +52,7 @@ final public class Buff {
         this.hook = hook;
 
         this.remainingTurns = effect.duration();
-        this.canBeDebuff = canBeDebuff;
+        this.canBeDispelled = canBeDispelled;
     }
 
     /**
@@ -133,7 +126,7 @@ final public class Buff {
     /**
      * Check if the buff can be removed
      */
-    public final boolean canBeDebuff() {
-        return canBeDebuff;
+    public final boolean canBeDispelled() {
+        return canBeDispelled;
     }
 }

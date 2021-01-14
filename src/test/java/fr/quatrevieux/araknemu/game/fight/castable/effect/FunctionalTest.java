@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -34,11 +35,13 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastSuccess;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.FightAction;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.Optional;
 
@@ -322,6 +325,22 @@ public class FunctionalTest extends FightBaseCase {
         assertFalse(fighter1.states().has(1));
     }
 
+    @Test
+    void dispelBuffs() {
+        SpellEffect effect1 = Mockito.mock(SpellEffect.class);
+        Mockito.when(effect1.duration()).thenReturn(2);
+
+        Buff buff1 = new Buff(effect1, Mockito.mock(Spell.class), other.fighter(), player.fighter(), Mockito.mock(BuffHook.class));
+        Buff buff2 = new Buff(effect1, Mockito.mock(Spell.class), other.fighter(), player.fighter(), Mockito.mock(BuffHook.class), false);
+        fighter1.buffs().add(buff1);
+        fighter1.buffs().add(buff2);
+
+        castCritical(49, fighter1.cell()); // Pelle Fantomatique
+
+        requestStack.assertOne(ActionEffect.dispelBuffs(fighter1, fighter1));
+        assertArrayEquals(new Buff[] {buff2}, fighter1.buffs().stream().toArray());
+    }
+
     private void passTurns(int number) {
         for (; number > 0; --number) {
             fighter1.turn().stop();
@@ -345,6 +364,31 @@ public class FunctionalTest extends FightBaseCase {
                 public int hitRate(int base) { return 0; }
                 public int failureRate(int base) { return 0; }
                 public boolean hit(int baseRate) { return false; }
+                public boolean failed(int baseRate) { return false; }
+            }
+        ));
+
+        currentTurn.terminate();
+
+        return spell;
+    }
+
+    private Spell castCritical(int spellId, FightCell target) {
+        FightTurn currentTurn = fight.turnList().current().get();
+        Spell spell = service.get(spellId).level(5);
+
+        currentTurn.perform(new Cast(
+            currentTurn,
+            currentTurn.fighter(),
+            spell,
+            target,
+            new SpellConstraintsValidator(),
+
+            // Ensure no critical hit / fail
+            new CriticalityStrategy() {
+                public int hitRate(int base) { return 100; }
+                public int failureRate(int base) { return 0; }
+                public boolean hit(int baseRate) { return true; }
                 public boolean failed(int baseRate) { return false; }
             }
         ));

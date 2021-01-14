@@ -19,22 +19,30 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc;
 
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope.EffectScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
-final public class DebuffHandler implements EffectHandler {
+final public class DispelHandler implements EffectHandler {
+    final private Fight fight;
+
+    public DispelHandler(Fight fight) {
+        this.fight = fight;
+    }
 
     @Override
     public void buff(CastScope cast, EffectScope effect) {
-        cast.caster().buffs().removeAll(cast.caster());
+        throw new UnsupportedOperationException("Cannot dispel buffs from a buff");
     }
 
     @Override
     public void handle(CastScope cast, EffectScope effect) {
         for (PassiveFighter fighter : cast.targets()) {
-            fighter.buffs().removeAll(cast.caster());
+            fighter.buffs().removeAll();
+            fight.send(ActionEffect.dispelBuffs(cast.caster(), fighter));
         }
     }
 }

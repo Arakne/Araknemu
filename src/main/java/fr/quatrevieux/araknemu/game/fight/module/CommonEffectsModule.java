@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.SpellRet
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.*;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.StealLifeHandler;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.DebuffHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.DispelHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.PushStateHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.RemoveStateHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.SkipTurnHandler;
@@ -50,7 +50,7 @@ final public class CommonEffectsModule implements FightModule {
     public void effects(EffectsHandler handler) {
         handler.register(4, new TeleportHandler(fight));
 
-        handler.register(132, new DebuffHandler());
+        handler.register(132, new DispelHandler(fight));
 
         handler.register(91, new StealLifeHandler(Element.WATER, fight));
         handler.register(92, new StealLifeHandler(Element.EARTH, fight));
