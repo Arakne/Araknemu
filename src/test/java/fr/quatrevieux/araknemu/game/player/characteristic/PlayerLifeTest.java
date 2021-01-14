@@ -183,7 +183,7 @@ class PlayerLifeTest extends GameBaseCase {
     }
 
     @Test
-    void lifeRegenerationIsCorrect() throws Exception{
+    void lifeRegenerationIsCorrect() throws Exception {
         life.set(5);
         life.startLifeRegeneration(15);
         Thread.sleep(30);
@@ -192,11 +192,39 @@ class PlayerLifeTest extends GameBaseCase {
     }
 
     @Test
-    void lifeRegenerationIsCorrectWithDifferentSpeed() throws Exception{
+    void lifeRegenerationIsCorrectWithDifferentSpeed() throws Exception {
         life.set(5);
-        life.startLifeRegeneration(20);
-        Thread.sleep(40);
+        life.startLifeRegeneration(10);
+        Thread.sleep(90);
         life.stopLifeRegeneration();
-        assertBetween(6, 8, life.current());
+        assertBetween(14, 16, life.current());
+    }
+
+    @Test
+    void callCurrentDuringRegeneration() throws Exception {
+        life.set(5);
+        life.startLifeRegeneration(30);
+
+        Thread.sleep(90);
+        assertBetween(7, 9, life.current());
+
+        Thread.sleep(90);
+        life.stopLifeRegeneration();
+
+        assertBetween(10, 12, life.current());
+    }
+
+    @Test
+    void setLifeRegeneration() throws Exception {
+        life.set(5);
+        life.setLifeWithCurrentRegeneration();
+
+        assertEquals(5, entity.life());
+
+        life.startLifeRegeneration(50);
+        Thread.sleep(100);
+        
+        life.setLifeWithCurrentRegeneration();
+        assertBetween(7,8, entity.life());
     }
 }
