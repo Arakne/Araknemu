@@ -1,8 +1,9 @@
 [realm]
-; Configuration du server
+; server configuration
 server.port = 4444
+password.defaultHash = plain
 
-; Configuration du client dofus
+; Dofus client configuration
 client.version = 1.29.1
 
 [database]
