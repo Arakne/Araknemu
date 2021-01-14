@@ -14,32 +14,24 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2021 Vincent Quatrevieux, Jean-Alexandre Valentin
+ * Copyright (c) 2017-2021 Vincent Quatrevieux Jean-Alexandre Valentin
  */
 
 package fr.quatrevieux.araknemu.network.game.out.info;
 
-/**
- * This packet tells the client to stop the life regneration animation
- * @see https://github.com/Emudofus/Dofus/blob/1b54a30e02f637c912bf14afdf6ea8b7df45ea73/dofus/aks/Infos.as#L336
- */
-final public class StopLifeTimer {
-    /**
-     * Can be the amount of life regenerated
-     * It is usually used after the sit animation
-     */
-    final private int life;
+import org.junit.jupiter.api.Test;
 
-    public StopLifeTimer(int life) {
-        this.life = life;
+import static org.junit.jupiter.api.Assertions.*;
+
+class StopLifeTimerTest {
+
+    @Test
+    void stop() {
+        assertEquals("ILF0", new StopLifeTimer().toString());
     }
 
-    public StopLifeTimer() {
-        this(0);
-    }
-
-    @Override
-    public String toString() {
-        return "ILF" + this.life;
+    @Test
+    void stopWithNumberOfLifeRegenerated() {
+        assertEquals("ILF53", new StopLifeTimer(53).toString());
     }
 }
