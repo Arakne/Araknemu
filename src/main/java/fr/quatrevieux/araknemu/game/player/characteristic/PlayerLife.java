@@ -33,10 +33,16 @@ final public class PlayerLife implements Life {
     final private Player entity;
 
     private int max;
+    /**
+     * Time in microseconds. The value should be set to 0 to disable the regeneration
+     */
+    private long lifeRegenerationStart;
+    private int lifeRegenerationSpeed;
 
     public PlayerLife(GamePlayer player, Player entity) {
         this.player = player;
         this.entity = entity;
+        this.lifeRegenerationStart = 0;
     }
 
     @Override
@@ -46,7 +52,47 @@ final public class PlayerLife implements Life {
 
     @Override
     public int current() {
-        return entity.life();
+        return entity.life() + calculateLifeRegeneration();
+    }
+
+    private int calculateLifeRegeneration() {
+        if (lifeRegenerationStart == 0) {
+            return 0;
+        }
+
+        long currentTime = System.currentTimeMillis();
+        int lifeToAdd = (int) (currentTime - lifeRegenerationStart) / lifeRegenerationSpeed;
+        int currentLife = this.entity.life();
+
+        if (this.max <= (lifeToAdd + currentLife)) {
+            lifeToAdd = this.max - currentLife;
+        }
+
+        return lifeToAdd;
+    }
+
+    /**
+     * calculate the life regeneration and set the lifeRegenerationStart timestamp to zero
+     */
+    public void stopLifeRegeneration() {
+        setLifeWithCurrentRegeneration();
+        lifeRegenerationStart = 0;
+    }
+
+    /**
+     * set the life to: entity.life() + calculateLifeRegeneration()
+     */
+    public void setLifeWithCurrentRegeneration() {
+        entity.setLife(current());
+    }
+
+    /**
+     * Set the lifeRegenerationStart timestamps to System.currentTimeMillis()
+     * @param lifeRegenerationSpeed The required delay in milliseconds to regenerate 1 life point
+     */
+    public void startLifeRegeneration(int lifeRegenerationSpeed) {
+        this.lifeRegenerationSpeed = lifeRegenerationSpeed;
+        lifeRegenerationStart = System.currentTimeMillis();
     }
 
     /**

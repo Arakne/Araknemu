@@ -193,4 +193,15 @@ class StopSessionTest extends FightBaseCase {
         assertNull(session.exploration());
         assertFalse(map.creatures().contains(player));
     }
+
+    @Test
+    void saveCorrectLifeWhenSessionClosed() throws Exception{
+        ExplorationPlayer explorationPlayer = explorationPlayer();
+        explorationPlayer.player().properties().life().set(5);
+        explorationPlayer.player().properties().life().startLifeRegeneration(20);
+        Thread.sleep(40);
+        handler.handle(session, new SessionClosed());
+        
+        assertBetween(6, 8, dataSet.refresh(new Player(explorationPlayer.id())).life());
+    }
 }

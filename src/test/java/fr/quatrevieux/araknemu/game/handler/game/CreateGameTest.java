@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.listener.map.SendAccessories;
 import fr.quatrevieux.araknemu.game.listener.player.InitializeGame;
+import fr.quatrevieux.araknemu.game.listener.player.LifeRegeneration;
 import fr.quatrevieux.araknemu.game.listener.player.SendMapData;
 import fr.quatrevieux.araknemu.game.listener.player.exploration.LeaveExplorationForFight;
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
@@ -31,6 +32,7 @@ import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import fr.quatrevieux.araknemu.network.game.out.game.GameCreated;
 import fr.quatrevieux.araknemu.network.game.out.game.GameCreationError;
 import fr.quatrevieux.araknemu.network.game.out.game.MapData;
+import fr.quatrevieux.araknemu.network.game.out.info.StartLifeTimer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -80,7 +82,8 @@ class CreateGameTest extends GameBaseCase {
         requestStack.assertAll(
             new GameCreated(CreateGameRequest.Type.EXPLORATION),
             new Stats(gamePlayer().properties()),
-            new MapData(explorationPlayer().map())
+            new MapData(explorationPlayer().map()),
+            new StartLifeTimer(LifeRegeneration.STANDARD_LIFE_REGENERATION)
         );
     }
 }

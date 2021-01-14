@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
 import fr.quatrevieux.araknemu.game.listener.map.SendSpriteRestrictions;
 import fr.quatrevieux.araknemu.game.listener.player.InitializeGame;
+import fr.quatrevieux.araknemu.game.listener.player.LifeRegeneration;
 import fr.quatrevieux.araknemu.game.listener.player.exploration.RefreshExplorationRestrictions;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 
@@ -50,6 +51,7 @@ final public class ExplorationService implements EventsSubscriber {
 
         exploration.dispatcher().add(new InitializeGame(exploration, mapService));
         exploration.dispatcher().add(new RefreshExplorationRestrictions(exploration));
+        exploration.dispatcher().register(new LifeRegeneration());
 
         dispatcher.dispatch(new ExplorationPlayerCreated(exploration));
 

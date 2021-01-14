@@ -236,6 +236,7 @@ final public class GamePlayer implements PlayerSessionScope {
      * Save the player
      */
     public void save() {
+        properties().life().setLifeWithCurrentRegeneration();
         service.save(this);
     }
 

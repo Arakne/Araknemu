@@ -215,17 +215,21 @@ class GamePlayerTest extends GameBaseCase {
     }
 
     @Test
-    void save() throws ContainerException {
+    void save() throws Exception {
         player.setPosition(
             new Position(7894, 12)
         );
 
         player.entity().stats().set(Characteristic.AGILITY, 123);
+        player.properties().life().set(5);
+        player.properties().life().startLifeRegeneration(50);
+        Thread.sleep(100);
 
         player.save();
 
         assertEquals(new Position(7894, 12), dataSet.refresh(entity).position());
         assertEquals(123, player.properties().characteristics().get(Characteristic.AGILITY));
+        assertBetween(6, 8, dataSet.refresh(entity).life());
     }
 
     @Test
