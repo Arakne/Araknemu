@@ -41,6 +41,7 @@ final public class LifeRegeneration implements EventsSubscriber {
                     event.player().player().properties().life().startLifeRegeneration(STANDARD_LIFE_REGENERATION);
                     event.player().send(new StartLifeTimer(STANDARD_LIFE_REGENERATION));
                 }
+
                 @Override
                 public Class<StartExploration> event() {
                     return StartExploration.class;
@@ -53,6 +54,7 @@ final public class LifeRegeneration implements EventsSubscriber {
                     event.session().player().properties().life().stopLifeRegeneration();
                     event.session().send(new StopLifeTimer());
                 }
+
                 @Override
                 public Class<StopExploration> event() {
                     return StopExploration.class;

@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.exploration.event.MapChanged;
 import fr.quatrevieux.araknemu.game.exploration.event.MapLeaved;
 import fr.quatrevieux.araknemu.game.exploration.event.MapJoined;
 import fr.quatrevieux.araknemu.game.exploration.event.OrientationChanged;
+import fr.quatrevieux.araknemu.game.exploration.event.StopExploration;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
 import fr.quatrevieux.araknemu.game.exploration.interaction.event.PlayerMoveFinished;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
@@ -36,6 +37,7 @@ import fr.quatrevieux.araknemu.game.player.characteristic.PlayerLife;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.arakne.utils.maps.constant.Direction;
+import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -234,6 +236,22 @@ class ExplorationPlayerTest extends GameBaseCase {
 
         assertNull(session.exploration());
         assertFalse(map.creatures().contains(player));
+    }
+
+    @Test
+    void unregisterShouldStopExploration() throws ContainerException {
+        session.setExploration(player);
+
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10300);
+        player.join(map);
+
+        AtomicReference<StopExploration> ref = new AtomicReference<>();
+        player.dispatcher().add(StopExploration.class, ref::set);
+
+        player.unregister(session);
+
+        assertNull(session.exploration());
+        assertSame(session, ref.get().session());
     }
 
     @Test

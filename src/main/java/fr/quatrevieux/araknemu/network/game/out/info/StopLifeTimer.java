@@ -34,7 +34,7 @@ final public class StopLifeTimer {
     }
 
     public StopLifeTimer() {
-        this.life = 0;
+        this(0);
     }
 
     @Override

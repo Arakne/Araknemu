@@ -32,14 +32,17 @@ final public class PlayerLife implements Life {
     final private GamePlayer player;
     final private Player entity;
 
-    private long lifeRegeneration;
     private int max;
+    /**
+     * Time in microseconds. The value should be set to 0 to disable the regeneration
+     */
+    private long lifeRegenerationStart;
     private int lifeRegenerationSpeed;
 
     public PlayerLife(GamePlayer player, Player entity) {
         this.player = player;
         this.entity = entity;
-        this.lifeRegeneration = 0;
+        this.lifeRegenerationStart = 0;
     }
 
     @Override
@@ -53,10 +56,12 @@ final public class PlayerLife implements Life {
     }
 
     private int calculateLifeRegeneration() {
-        if (lifeRegeneration == 0) return 0;
+        if (lifeRegenerationStart == 0) {
+            return 0;
+        }
 
         long currentTime = System.currentTimeMillis();
-        int lifeToAdd = (int) ( currentTime - lifeRegeneration ) / lifeRegenerationSpeed;
+        int lifeToAdd = (int) (currentTime - lifeRegenerationStart) / lifeRegenerationSpeed;
         int currentLife = this.entity.life();
 
         if (this.max <= (lifeToAdd + currentLife)) {
@@ -67,11 +72,11 @@ final public class PlayerLife implements Life {
     }
 
     /**
-     * calculate the life regeneration and set the lifeRegeneration timestamp to zero
+     * calculate the life regeneration and set the lifeRegenerationStart timestamp to zero
      */
     public void stopLifeRegeneration() {
         setLifeWithCurrentRegeneration();
-        lifeRegeneration = 0;
+        lifeRegenerationStart = 0;
     }
 
     /**
@@ -82,12 +87,12 @@ final public class PlayerLife implements Life {
     }
 
     /**
-     * Set the lifeRegeneration timestamps to System.currentTimeMillis()
-     * @param lifeRegenerationSpeed The speed of the life regeneration
+     * Set the lifeRegenerationStart timestamps to System.currentTimeMillis()
+     * @param lifeRegenerationSpeed The required delay in milliseconds to regenerate 1 life point
      */
     public void startLifeRegeneration(int lifeRegenerationSpeed) {
         this.lifeRegenerationSpeed = lifeRegenerationSpeed;
-        lifeRegeneration = System.currentTimeMillis();
+        lifeRegenerationStart = System.currentTimeMillis();
     }
 
     /**
