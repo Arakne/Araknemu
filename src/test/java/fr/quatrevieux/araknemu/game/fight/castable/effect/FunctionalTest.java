@@ -384,7 +384,7 @@ public class FunctionalTest extends FightBaseCase {
             target,
             new SpellConstraintsValidator(),
 
-            // Ensure no critical hit / fail
+            // Ensure critical hit
             new CriticalityStrategy() {
                 public int hitRate(int base) { return 100; }
                 public int failureRate(int base) { return 0; }
