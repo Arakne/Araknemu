@@ -43,6 +43,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -327,18 +328,14 @@ public class FunctionalTest extends FightBaseCase {
 
     @Test
     void dispelBuffs() {
-        SpellEffect effect1 = Mockito.mock(SpellEffect.class);
-        Mockito.when(effect1.duration()).thenReturn(2);
+        castNormal(42, fighter1.cell()); // Chance;
 
-        Buff buff1 = new Buff(effect1, Mockito.mock(Spell.class), other.fighter(), player.fighter(), Mockito.mock(BuffHook.class));
-        Buff buff2 = new Buff(effect1, Mockito.mock(Spell.class), other.fighter(), player.fighter(), Mockito.mock(BuffHook.class), false);
-        fighter1.buffs().add(buff1);
-        fighter1.buffs().add(buff2);
+        passTurns(1);
 
         castCritical(49, fighter1.cell()); // Pelle Fantomatique
 
         requestStack.assertOne(ActionEffect.dispelBuffs(fighter1, fighter1));
-        assertArrayEquals(new Buff[] {buff2}, fighter1.buffs().stream().toArray());
+        assertIterableEquals(Collections.EMPTY_LIST, fighter1.buffs());
     }
 
     private void passTurns(int number) {
