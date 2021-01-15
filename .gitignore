@@ -2,9 +2,3 @@
 /target/
 /logs
 araknemu.iml
-.vscode
-config.ini
-.classpath
-.factorypath
-.project
-.settings
