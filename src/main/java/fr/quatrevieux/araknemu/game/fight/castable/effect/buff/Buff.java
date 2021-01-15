@@ -50,9 +50,9 @@ final public class Buff {
         this.caster = caster;
         this.target = target;
         this.hook = hook;
+        this.canBeDispelled = canBeDispelled;
 
         this.remainingTurns = effect.duration();
-        this.canBeDispelled = canBeDispelled;
     }
 
     /**

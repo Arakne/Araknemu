@@ -21,7 +21,6 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
  * Handle and store buff list for a fighter

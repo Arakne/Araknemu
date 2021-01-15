@@ -80,6 +80,13 @@ class DispelHandlerTest extends FightBaseCase {
     }
 
     @Test
+    void buff() {
+        CastScope scope = makeDebuffSpell(target.cell());
+
+        assertThrows(UnsupportedOperationException.class, () -> handler.buff(scope, scope.effects().get(0)));
+    }
+
+    @Test
     void notAllBuffsAreRemoved() {
         // can be debuff
         Buff buff_luck = makeLuckBuffThatcanBeDispelled();
