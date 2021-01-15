@@ -1,0 +1,16 @@
+[realm]
+; Server Configuration
+server.port = 4444
+
+; Dofus client Configuration
+client.version = 1.29.1
+
+[database]
+
+realm.host = 127.0.0.1
+realm.user = araknemu
+realm.dbname = araknemu
+
+game.host = 127.0.0.1
+game.user = araknemu
+game.dbname = araknemu
