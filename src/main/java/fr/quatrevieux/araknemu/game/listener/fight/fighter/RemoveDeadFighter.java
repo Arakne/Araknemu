@@ -21,7 +21,12 @@ package fr.quatrevieux.araknemu.game.listener.fight.fighter;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.fighter.AbstractFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
+import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
+import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
+import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 
 /**
@@ -43,6 +48,15 @@ final public class RemoveDeadFighter implements Listener<FighterDie> {
             .filter(turn -> turn.fighter().equals(event.fighter()))
             .ifPresent(FightTurn::stop)
         ;
+        
+        if(event.fighter() instanceof MonsterFighter) {
+            if (((MonsterFighter)event.fighter()).invocated()) {
+                ((FightTeam)event.fighter().team()).kick((Fighter)event.fighter());
+                fight.turnList().remove((Fighter)event.fighter());
+            }
+        }
+
+        ((AbstractFighter) event.fighter()).removeAllInvocations();
     }
 
     @Override

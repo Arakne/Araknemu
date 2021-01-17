@@ -29,7 +29,11 @@ import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,6 +45,7 @@ abstract public class AbstractFighter implements Fighter {
     final private BuffList buffs = new BuffList(this);
     final private States states = new FighterStates(this);
     final private Map<Object, Object> attachments = new HashMap<>();
+    final private List<Fighter> invocations = new ArrayList<Fighter>();
 
     // Mutable attributes
     private FightCell cell;
@@ -168,5 +173,30 @@ abstract public class AbstractFighter implements Fighter {
     public void destroy() {
         this.fight = null;
         this.attachments.clear();
+    }
+
+    public void addInvocation(Fighter fighter, FightCell cell) {
+        fighter.joinFight(fight, cell);
+        fight.turnList().currentFighter().team().join(fighter);
+        fight.turnList().add(fighter);
+
+        fighter.init();
+
+        invocations.add(fighter);
+    }
+
+    public void removeAllInvocations() {
+        Iterator<Fighter> iterator = invocations.iterator();
+
+        while (iterator.hasNext()) {
+            Fighter fighter = iterator.next();
+            fight.turnList().remove(fighter);
+            fighter.team().kick(fighter);
+            iterator.remove();
+        }
+    }
+
+    public List<Fighter> invocations() {
+        return Collections.unmodifiableList(invocations);
     }
 }

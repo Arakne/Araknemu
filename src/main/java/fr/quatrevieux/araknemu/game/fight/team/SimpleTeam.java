@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.data.constant.Alignment;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 
@@ -36,7 +37,7 @@ import java.util.List;
  */
 final public class SimpleTeam implements FightTeam {
     final private PlayerFighter leader;
-    final private List<PlayerFighter> fighters;
+    final private List<Fighter> fighters;
     final private List<Integer> startPlaces;
     final private int number;
 
@@ -92,7 +93,11 @@ final public class SimpleTeam implements FightTeam {
 
     @Override
     public void send(Object packet) {
-        fighters.forEach(fighter -> fighter.send(packet));
+        fighters.forEach(fighter -> {
+            if(fighter instanceof PlayerFighter) {
+                ((PlayerFighter)fighter).send(packet);
+            }
+        });
     }
 
     @Override
@@ -116,6 +121,11 @@ final public class SimpleTeam implements FightTeam {
             @Override
             public void onGenericFighter(Fighter fighter) {
                 throw new JoinFightException(JoinFightError.TEAM_CLOSED);
+            }
+
+            @Override
+            public void onMonster(MonsterFighter fighter) {
+                fighters.add(fighter);
             }
         });
     }

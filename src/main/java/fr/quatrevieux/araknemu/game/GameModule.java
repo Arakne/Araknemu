@@ -553,7 +553,8 @@ final public class GameModule implements ContainerModule {
                     StatesModule::new,
                     RaulebaqueModule::new,
                     LaunchedSpellsModule::new,
-                    fight -> new AiModule(container.get(AiFactory.class))
+                    fight -> new AiModule(container.get(AiFactory.class)),
+                    fight -> new MonsterInvocationModule(container.get(MonsterService.class), fight)
                 )
             )
         );

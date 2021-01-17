@@ -93,6 +93,13 @@ final public class FightTurnList {
         fight.dispatch(new TurnListChanged(this));
     }
 
+    public void add(Fighter fighter) {
+        final int index = fighters.indexOf(current);
+        fighters.add(index + 1, fighter);
+
+        fight.dispatch(new TurnListChanged(this));
+    }
+
     /**
      * Get the current turn
      */
