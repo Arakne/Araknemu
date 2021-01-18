@@ -77,4 +77,6 @@ public interface PassiveFighter {
     }
 
     public Optional<Fighter> invoker();
+
+    public void setInvoker(Fighter invoker);
 }
