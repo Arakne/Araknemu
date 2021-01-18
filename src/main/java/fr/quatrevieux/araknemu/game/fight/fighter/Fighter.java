@@ -134,4 +134,12 @@ public interface Fighter extends Creature<FightCell>, Dispatcher, ActiveFighter 
     default public boolean isTeamLeader() {
         return equals(team().leader());
     }
+
+    /**
+     * invocated in the fight
+     *
+     * @param fight Fight to join
+     * @param startCell The target cell
+     */
+    public void invocationIntoFight(Fight fight, FightCell startCell);
 }

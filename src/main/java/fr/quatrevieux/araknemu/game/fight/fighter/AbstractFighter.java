@@ -173,16 +173,6 @@ abstract public class AbstractFighter implements Fighter {
     }
 
     @Override
-    public void addInvocation(Fighter fighter, FightCell cell) {
-        fighter.joinFight(fight, cell);
-        fighter.setInvoker(this);
-        fight.turnList().currentFighter().team().join(fighter);
-        fight.turnList().add(fighter);
-
-        fighter.init();
-    }
-
-    @Override
     public Optional<Fighter> invoker() {
         return invoker;
     }
@@ -192,4 +182,8 @@ abstract public class AbstractFighter implements Fighter {
         this.invoker = Optional.of(invoker);
     }
 
+    @Override
+    public void invocationIntoFight(Fight fight, FightCell startCell) {
+        joinFight(fight, startCell);
+    }
 }

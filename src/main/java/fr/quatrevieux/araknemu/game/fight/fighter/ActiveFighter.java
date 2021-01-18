@@ -53,6 +53,4 @@ public interface ActiveFighter extends PassiveFighter {
     }
 
     public void setInvoker(Fighter invoker);
-
-    public void addInvocation(Fighter fighter, FightCell cell);
 }
