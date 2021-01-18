@@ -45,21 +45,32 @@ final public class RemoveDeadFighter implements Listener<FighterDie> {
             .ifPresent(FightTurn::stop)
         ;
 
-        if (event.fighter().invoker().isPresent()) {
-            fight.team(event.fighter().team().number()).kick((Fighter)event.fighter());
-            fight.turnList().remove((Fighter)event.fighter());
-        }
+        
+        // Kills and remove from team all invocations of event.fighter()
         fight.fighters().forEach(fighter -> {
             fighter.invoker().ifPresent(invoker -> {
                 if(invoker.equals(event.fighter())) {
                     fighter.life().kill(invoker);
+                    removeFromTeamAndTurnList(fighter);
                 }
             });
         });
+
+        
+        // Remove from team and turnlist if even.fighter() is an invocation
+        if (event.fighter().invoker().isPresent()) {
+            removeFromTeamAndTurnList((Fighter)event.fighter());
+        }
+        
     }
 
     @Override
     public Class<FighterDie> event() {
         return FighterDie.class;
+    }
+
+    private void removeFromTeamAndTurnList(Fighter fighter) {
+        fight.team(fighter.team().number()).kick(fighter);
+        fight.turnList().remove(fighter);
     }
 }
