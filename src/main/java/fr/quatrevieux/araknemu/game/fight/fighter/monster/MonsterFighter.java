@@ -35,21 +35,15 @@ final public class MonsterFighter extends AbstractFighter {
     final private int id;
     final private Monster monster;
     final private FightTeam team;
-    final private boolean invocated;
 
     final private BaseFighterLife life;
     final private MonsterFighterCharacteristics characteristics;
     final private MonsterFighterSprite sprite;
 
     public MonsterFighter(int id, Monster monster, FightTeam team) {
-        this(id, monster, team, false);
-    }
-
-    public MonsterFighter(int id, Monster monster, FightTeam team, boolean invocated) {
         this.id = id;
         this.monster = monster;
         this.team = team;
-        this.invocated = invocated;
 
         this.life = new BaseFighterLife(this, monster.life());
         this.characteristics = new MonsterFighterCharacteristics(monster, this);
@@ -122,9 +116,5 @@ final public class MonsterFighter extends AbstractFighter {
      */
     public Monster monster() {
         return monster;
-    }
-
-    final public boolean invocated() {
-        return invocated;
     }
 }

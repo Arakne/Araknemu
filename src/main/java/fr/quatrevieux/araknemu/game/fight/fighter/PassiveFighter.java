@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter;
 
+import java.util.Optional;
+
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
@@ -73,4 +75,6 @@ public interface PassiveFighter {
     default public boolean dead() {
         return life().dead();
     }
+
+    public Optional<Fighter> invoker();
 }

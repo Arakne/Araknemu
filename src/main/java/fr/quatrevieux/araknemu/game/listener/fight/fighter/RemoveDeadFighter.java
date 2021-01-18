@@ -48,15 +48,18 @@ final public class RemoveDeadFighter implements Listener<FighterDie> {
             .filter(turn -> turn.fighter().equals(event.fighter()))
             .ifPresent(FightTurn::stop)
         ;
-        
-        if(event.fighter() instanceof MonsterFighter) {
-            if (((MonsterFighter)event.fighter()).invocated()) {
-                ((FightTeam)event.fighter().team()).kick((Fighter)event.fighter());
-                fight.turnList().remove((Fighter)event.fighter());
-            }
-        }
 
-        ((AbstractFighter) event.fighter()).removeAllInvocations();
+        if (event.fighter().invoker().isPresent()) {
+            fight.team(event.fighter().team().number()).kick((Fighter)event.fighter());
+            fight.turnList().remove((Fighter)event.fighter());
+        }
+        fight.fighters().forEach(fighter -> {
+            fighter.invoker().ifPresent(invoker -> {
+                if(invoker.equals(event.fighter())) {
+                    fighter.life().kill(invoker);
+                }
+            });
+        });
     }
 
     @Override

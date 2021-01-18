@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Base class for implements a fighter
@@ -45,13 +46,13 @@ abstract public class AbstractFighter implements Fighter {
     final private BuffList buffs = new BuffList(this);
     final private States states = new FighterStates(this);
     final private Map<Object, Object> attachments = new HashMap<>();
-    final private List<Fighter> invocations = new ArrayList<Fighter>();
 
     // Mutable attributes
     private FightCell cell;
     private Fight fight;
     private FightTurn turn;
     private Direction orientation = Direction.SOUTH_EAST;
+    private Optional<Fighter> invoker = Optional.empty();
 
     @Override
     public void init() {
@@ -175,28 +176,24 @@ abstract public class AbstractFighter implements Fighter {
         this.attachments.clear();
     }
 
+    @Override
     public void addInvocation(Fighter fighter, FightCell cell) {
         fighter.joinFight(fight, cell);
+        fighter.setInvoker(this);
         fight.turnList().currentFighter().team().join(fighter);
         fight.turnList().add(fighter);
 
         fighter.init();
-
-        invocations.add(fighter);
     }
 
-    public void removeAllInvocations() {
-        Iterator<Fighter> iterator = invocations.iterator();
-
-        while (iterator.hasNext()) {
-            Fighter fighter = iterator.next();
-            fight.turnList().remove(fighter);
-            fighter.team().kick(fighter);
-            iterator.remove();
-        }
+    @Override
+    public Optional<Fighter> invoker() {
+        return invoker;
     }
 
-    public List<Fighter> invocations() {
-        return Collections.unmodifiableList(invocations);
+    @Override
+    public void setInvoker(Fighter invoker) {
+        this.invoker = Optional.of(invoker);
     }
+
 }

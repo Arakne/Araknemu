@@ -105,7 +105,7 @@ final public class MonsterGroupTeam implements FightTeam {
 
     @Override
     public void join(Fighter fighter) throws JoinFightException {
-        if (((MonsterFighter) fighter).invocated()) {
+        if (fighter.invoker().isPresent()) {
             fighters.add((MonsterFighter) fighter);
         } else {
             throw new JoinFightException(JoinFightError.TEAM_CLOSED);
@@ -114,7 +114,7 @@ final public class MonsterGroupTeam implements FightTeam {
 
     @Override
     public void kick(Fighter fighter) {
-        if (((MonsterFighter) fighter).invocated()) {
+        if (fighter.invoker().isPresent()) {
             fighters.remove((MonsterFighter) fighter);
         } else {
             throw new UnsupportedOperationException("Read-only team");

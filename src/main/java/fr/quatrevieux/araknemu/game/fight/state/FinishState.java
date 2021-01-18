@@ -37,7 +37,11 @@ import java.util.List;
 final public class FinishState implements FightState {
     @Override
     public void start(Fight fight) {
-        fight.fighters().forEach(fighter -> ((AbstractFighter) fighter).removeAllInvocations());
+        fight.fighters().forEach(fighter -> {
+            if (fighter.invoker().isPresent()) {
+                fighter.team().kick(fighter);
+            }
+        });
 
         FightRewardsSheet rewardsSheet = fight.type().rewards().generate(results(fight));
 

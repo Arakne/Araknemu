@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter;
 
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 
 public interface ActiveFighter extends PassiveFighter {
@@ -50,4 +51,8 @@ public interface ActiveFighter extends PassiveFighter {
     default public <T> T attachment(Class<T> type) {
         return type.cast(attachment((Object) type));
     }
+
+    public void setInvoker(Fighter invoker);
+
+    public void addInvocation(Fighter fighter, FightCell cell);
 }
