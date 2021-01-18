@@ -95,13 +95,10 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
-        public void send(Object packet) {
-        }
+        public void send(Object packet) {}
 
         @Override
-        public boolean alive() {
-            return true;
-        }
+        public boolean alive() { return true; }
 
         @Override
         public void join(Fighter fighter) throws JoinFightException {
@@ -109,8 +106,7 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
-        public void kick(Fighter fighter) {
-        }
+        public void kick(Fighter fighter) {}
     }
 
     class FighterStub implements Fighter {
@@ -148,8 +144,7 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
-        public void move(FightCell cell) {
-        }
+        public void move(FightCell cell) {}
 
         @Override
         public Sprite sprite() {
@@ -157,8 +152,7 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
-        public void init() {
-        }
+        public void init() {}
 
         @Override
         public FighterLife life() {
@@ -221,8 +215,7 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
-        public void joinFight(Fight fight, FightCell startCell) {
-        }
+        public void joinFight(Fight fight, FightCell startCell) {}
 
         @Override
         public boolean ready() {
@@ -230,16 +223,13 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
-        public void dispatch(Object event) {
-        }
+        public void dispatch(Object event) {}
 
         @Override
-        public void play(FightTurn turn) {
-        }
+        public void play(FightTurn turn) {}
 
         @Override
-        public void stop() {
-        }
+        public void stop() {}
 
         @Override
         public BuffList buffs() {
@@ -267,12 +257,10 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
-        public void addInvocation(Fighter fighter, FightCell cell) {
-        }
+        public void addInvocation(Fighter fighter, FightCell cell) {}
 
         @Override
-        public void setInvoker(Fighter invoker) {
-        }
+        public void setInvoker(Fighter invoker) {}
 
         @Override
         public Optional<Fighter> invoker() {
