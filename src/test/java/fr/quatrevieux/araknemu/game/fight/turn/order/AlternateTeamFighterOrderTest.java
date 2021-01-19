@@ -257,15 +257,9 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
-        public void setInvoker(Fighter invoker) {}
-
-        @Override
-        public Optional<Fighter> invoker() {
+        public Optional<PassiveFighter> invoker() {
             return Optional.empty();
         }
-
-        @Override
-        public void invocationIntoFight(Fight fight, FightCell startCell) {}
 
     }
 
