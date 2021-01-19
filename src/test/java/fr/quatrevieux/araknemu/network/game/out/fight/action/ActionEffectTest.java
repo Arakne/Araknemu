@@ -219,4 +219,15 @@ class ActionEffectTest {
 
         assertEquals("GA;950;456;456,5,0", ActionEffect.removeState(fighter, 5).toString());
     }
+
+    @Test
+    void dispelBuffs() {
+        Fighter fighter = Mockito.mock(Fighter.class);
+        Fighter fighter2 = Mockito.mock(Fighter.class);
+
+        Mockito.when(fighter.id()).thenReturn(456);
+        Mockito.when(fighter2.id()).thenReturn(460);
+        
+        assertEquals("GA;132;456;460", ActionEffect.dispelBuffs(fighter, fighter2).toString());
+    }
 }

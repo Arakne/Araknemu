@@ -213,4 +213,14 @@ final public class ActionEffect {
     static public ActionEffect removeState(PassiveFighter fighter, int state) {
         return new ActionEffect(950, fighter, fighter.id(), state, 0);
     }
+
+    /**
+     * Remove all buffs that can be removed from the target
+     * 
+     * @param caster The caster
+     * @param targer The target
+     */
+    static public ActionEffect dispelBuffs(PassiveFighter caster, PassiveFighter target) {
+        return new ActionEffect(132, caster, target.id());
+    }
 }
