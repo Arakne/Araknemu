@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope.EffectScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.monster.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
@@ -73,13 +74,9 @@ final public class MonsterInvocationHandler implements EffectHandler {
         initMonstersIDs();
         Monster invoc = monsterService.load(effect.effect().min()).all().get(effect.effect().max() -1);
         MonsterFighter fighter = new MonsterFighter(--index, invoc, fight.turnList().currentFighter().team());
+        InvocationFighter invocation = new InvocationFighter(fighter, cast.caster());
 
-        fighter.invocationIntoFight(fight, cast.target());
-        fighter.setInvoker((Fighter)cast.caster());
-        fight.turnList().currentFighter().team().join(fighter);
-        fight.turnList().add(fighter);
-
-        fighter.init();
+        fight.addInvocation(invocation, cast.target());
 
         fight.send(new ActionEffect(181, cast.caster(), (new AddSprites(Collections.singleton(fighter.sprite()))).toString()));
         fight.send(new ActionEffect(999, cast.caster(), (new FighterTurnOrder(fight.turnList())).toString()));

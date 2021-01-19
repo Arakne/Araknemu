@@ -48,7 +48,6 @@ abstract public class AbstractFighter implements Fighter {
     private Fight fight;
     private FightTurn turn;
     private Direction orientation = Direction.SOUTH_EAST;
-    private Optional<Fighter> invoker = Optional.empty();
 
     @Override
     public void init() {
@@ -173,17 +172,7 @@ abstract public class AbstractFighter implements Fighter {
     }
 
     @Override
-    public Optional<Fighter> invoker() {
-        return invoker;
-    }
-
-    @Override
-    public void setInvoker(Fighter invoker) {
-        this.invoker = Optional.of(invoker);
-    }
-
-    @Override
-    public void invocationIntoFight(Fight fight, FightCell startCell) {
-        joinFight(fight, startCell);
+    public Optional<PassiveFighter> invoker() {
+        return Optional.empty();
     }
 }

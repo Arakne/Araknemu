@@ -21,8 +21,9 @@ package fr.quatrevieux.araknemu.game.listener.fight.fighter;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.RemoveInvocationFromTurnList;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.RemoveInvocations;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 
 /**
@@ -46,28 +47,14 @@ final public class RemoveDeadFighter implements Listener<FighterDie> {
         ;
         
         // Kills and remove from team all invocations of event.fighter()
-        fight.fighters().forEach(fighter -> {
-            fighter.invoker().ifPresent(invoker -> {
-                if(invoker.equals(event.fighter())) {
-                    fighter.life().kill(invoker);
-                    removeFromTeamAndTurnList(fighter);
-                }
-            });
-        });
+        fight.dispatch(new RemoveInvocations(event.fighter()));
         
         // Remove from team and turnlist if even.fighter() is an invocation
-        if (event.fighter().invoker().isPresent()) {
-            removeFromTeamAndTurnList((Fighter)event.fighter());
-        }
+        fight.dispatch(new RemoveInvocationFromTurnList(event.fighter()));
     }
 
     @Override
     public Class<FighterDie> event() {
         return FighterDie.class;
-    }
-
-    private void removeFromTeamAndTurnList(Fighter fighter) {
-        fight.team(fighter.team().number()).kick(fighter);
-        fight.turnList().remove(fighter);
     }
 }

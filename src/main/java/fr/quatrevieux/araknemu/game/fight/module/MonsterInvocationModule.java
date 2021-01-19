@@ -23,6 +23,10 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations.MonsterInvocationHandler;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.RemoveInvocationFromTurnList;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.RemoveInvocations;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 
 public class MonsterInvocationModule implements FightModule {
@@ -44,7 +48,39 @@ public class MonsterInvocationModule implements FightModule {
 
     @Override
     public Listener[] listeners() {
-        return new Listener[0];
-    }
+        return new Listener[] {
+            new Listener<RemoveInvocations>() {
+                @Override
+                public void on(RemoveInvocations event) {
+                    fight.fighters().forEach(fighter -> {
+                        if (fighter.invoker().isPresent() && fighter.invoker().get().equals(event.invoker())) {
+                            fighter.life().kill((ActiveFighter)event.invoker());
 
+                            fight.dispatch(new RemoveInvocationFromTurnList(fighter));
+                        }
+                    });
+                }
+
+                @Override
+                public Class<RemoveInvocations> event() {
+                    return RemoveInvocations.class;
+                }
+            },
+
+            new Listener<RemoveInvocationFromTurnList>() {
+                @Override
+                public void on(RemoveInvocationFromTurnList event) {
+                    if (event.fighter().invoker().isPresent()) {
+                        fight.team(event.fighter().team().number()).kick((Fighter)event.fighter());
+                        fight.turnList().remove((Fighter)event.fighter());
+                    }
+                }
+
+                @Override
+                public Class<RemoveInvocationFromTurnList> event() {
+                    return RemoveInvocationFromTurnList.class;
+                }
+            },
+        };
+    }
 }

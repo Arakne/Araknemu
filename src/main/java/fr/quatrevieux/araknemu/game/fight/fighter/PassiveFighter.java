@@ -76,7 +76,5 @@ public interface PassiveFighter {
         return life().dead();
     }
 
-    public Optional<Fighter> invoker();
-
-    public void setInvoker(Fighter invoker);
+    public Optional<PassiveFighter> invoker();
 }
