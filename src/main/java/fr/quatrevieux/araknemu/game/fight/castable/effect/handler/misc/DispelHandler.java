@@ -26,6 +26,12 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
+/**
+ * Handle the dispel effect (i.e. remove all active buffs of a fighter)
+ * The effect ID is 132
+ *
+ * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#removeAll()
+ */
 final public class DispelHandler implements EffectHandler {
     final private Fight fight;
 

@@ -126,7 +126,7 @@ final public class Buff {
     /**
      * Check if the buff can be removed
      */
-    public final boolean canBeDispelled() {
+    public boolean canBeDispelled() {
         return canBeDispelled;
     }
 }
