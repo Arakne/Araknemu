@@ -94,9 +94,12 @@ final public class SimpleTeam implements FightTeam {
     @Override
     public void send(Object packet) {
         fighters.forEach(fighter -> {
-            if(fighter instanceof PlayerFighter) {
-                ((PlayerFighter)fighter).send(packet);
-            }
+            fighter.apply(new FighterOperation(){
+                @Override
+                public void onPlayer(PlayerFighter player) {
+                    player.send(packet);
+                }
+            });
         });
     }
 
@@ -125,6 +128,10 @@ final public class SimpleTeam implements FightTeam {
 
             @Override
             public void onMonster(MonsterFighter fighter) {
+                if (!fighter.invoker().isPresent()) {
+                    throw new JoinFightException(JoinFightError.CANT_U_ARE_MUTANT);
+                }
+
                 fighters.add(fighter);
             }
         });

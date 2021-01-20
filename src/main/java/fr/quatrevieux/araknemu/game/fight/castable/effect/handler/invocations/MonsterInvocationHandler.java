@@ -38,9 +38,6 @@ final public class MonsterInvocationHandler implements EffectHandler {
     final private MonsterService monsterService;
     final private Fight fight;
 
-    private int index = 0;
-    private boolean initialized = false;
-
     public MonsterInvocationHandler(MonsterService monsterService, Fight fight) {
         this.monsterService = monsterService;
         this.fight = fight;
@@ -56,24 +53,10 @@ final public class MonsterInvocationHandler implements EffectHandler {
         addMonsterToFight(cast, effect); // normal invocations
     }
 
-    private void initMonstersIDs() {
-        if(initialized) {
-            return;
-        }
-        
-        fight.fighters().forEach(fighter -> {
-            if(index > fighter.id()) {
-                index = fighter.id();
-            }
-        });
-
-        initialized = true;
-    }
-
     private void addMonsterToFight(CastScope cast, EffectScope effect) {
-        initMonstersIDs();
-        Monster invoc = monsterService.load(effect.effect().min()).all().get(effect.effect().max() -1);
-        MonsterFighter fighter = new MonsterFighter(--index, invoc, fight.turnList().currentFighter().team());
+        int index = fight.fighters().stream().mapToInt(Fighter::id).min().getAsInt() - 1;
+        Monster invoc = monsterService.load(effect.effect().min()).get(effect.effect().max() -1);
+        MonsterFighter fighter = new MonsterFighter(index, invoc, fight.turnList().currentFighter().team());
         InvocationFighter invocation = new InvocationFighter(fighter, cast.caster());
 
         fight.addInvocation(invocation, cast.target());

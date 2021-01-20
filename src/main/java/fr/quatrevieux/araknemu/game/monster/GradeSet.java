@@ -47,6 +47,14 @@ final public class GradeSet {
     }
 
     /**
+     * Get one grade from the GradeSet
+     * @param i The grade to get from 0 to 5
+     */
+    public Monster get(int i) {
+        return grades.get(i);
+    }
+
+    /**
      * Get all grades that contained into the given level interval
      * The interval is inclusive (min <= grade level <= max)
      *
