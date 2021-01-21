@@ -158,8 +158,4 @@ final public class InvocationFighter implements Fighter {
     public States states() {
         return fighter.states();
     }
-
-    public Fighter inner() {
-        return fighter;
-    }
 }
