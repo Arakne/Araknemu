@@ -43,7 +43,6 @@ final public class RemoveDeadFighter implements Listener<FighterDie> {
             .filter(turn -> turn.fighter().equals(event.fighter()))
             .ifPresent(FightTurn::stop)
         ;
-
     }
 
     @Override

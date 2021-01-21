@@ -46,7 +46,7 @@ public interface FighterOperation {
     }
 
     /**
-     * Apply the operation to a InvocationFighter
+     * Apply the operation to an InvocationFighter
      */
     default public void onInvocation(InvocationFighter fighter) {
         onGenericFighter(fighter);
