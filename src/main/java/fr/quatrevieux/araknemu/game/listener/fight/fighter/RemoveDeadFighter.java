@@ -22,8 +22,6 @@ package fr.quatrevieux.araknemu.game.listener.fight.fighter;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
-import fr.quatrevieux.araknemu.game.fight.fighter.event.RemoveInvocationFromTurnList;
-import fr.quatrevieux.araknemu.game.fight.fighter.event.RemoveInvocations;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 
 /**

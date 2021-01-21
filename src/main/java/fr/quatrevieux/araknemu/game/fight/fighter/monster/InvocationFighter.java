@@ -12,6 +12,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
@@ -29,7 +30,9 @@ final public class InvocationFighter implements Fighter {
 
     @Override
     public <O extends FighterOperation> O apply(O operation) {
-        return fighter.apply(operation);
+        operation.onInvocation(this);
+
+        return operation;
     }
 
     @Override
@@ -155,5 +158,9 @@ final public class InvocationFighter implements Fighter {
     @Override
     public States states() {
         return fighter.states();
+    }
+
+    public Fighter inner() {
+        return fighter;
     }
 }

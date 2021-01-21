@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.data.constant.Alignment;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.monster.InvocationFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
@@ -127,7 +128,7 @@ final public class SimpleTeam implements FightTeam {
             }
 
             @Override
-            public void onMonster(MonsterFighter fighter) {
+            public void onInvocation(InvocationFighter fighter) {
                 if (!fighter.invoker().isPresent()) {
                     throw new JoinFightException(JoinFightError.TEAM_CLOSED);
                 }

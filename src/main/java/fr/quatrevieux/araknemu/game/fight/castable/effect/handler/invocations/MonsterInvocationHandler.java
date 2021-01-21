@@ -54,18 +54,14 @@ final public class MonsterInvocationHandler implements EffectHandler {
     }
 
     private void addMonsterToFight(CastScope cast, EffectScope effect) {
-        int index = fight.fighters().stream().mapToInt(Fighter::id).min().getAsInt() - 1;
-        InvocationFighter invocation = 
-            new InvocationFighter(
-                new MonsterFighter(
-                    index, 
-                    monsterService.load(effect.effect().min()).get(effect.effect().max() -1),
-                    fight.turnList().currentFighter().team()
-                ),
-                cast.caster()
-            );
-
-        fight.addInvocation(invocation, cast.target());
+        final Fighter invocation = fight.addInvocation((id) -> new InvocationFighter(
+            new MonsterFighter(
+                id,
+                monsterService.load(effect.effect().min()).get(effect.effect().max()),
+                fight.turnList().currentFighter().team()
+            ),
+            cast.caster()
+        ), cast.target());
 
         fight.send(new ActionEffect(181, cast.caster(), (new AddSprites(Collections.singleton(invocation.sprite()))).toString()));
         fight.send(new ActionEffect(999, cast.caster(), (new FighterTurnOrder(fight.turnList())).toString()));

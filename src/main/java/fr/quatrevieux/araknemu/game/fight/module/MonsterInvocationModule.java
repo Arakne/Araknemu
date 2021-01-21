@@ -25,10 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations.MonsterInvocationHandler;
 import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
-import fr.quatrevieux.araknemu.game.fight.fighter.event.RemoveInvocationFromTurnList;
-import fr.quatrevieux.araknemu.game.fight.fighter.event.RemoveInvocations;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 
 public class MonsterInvocationModule implements FightModule {

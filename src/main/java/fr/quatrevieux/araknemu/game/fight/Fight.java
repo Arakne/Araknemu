@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
 import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.monster.InvocationFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.monster.InvocationFighterFactory;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.module.FightModule;
@@ -339,11 +339,15 @@ final public class Fight implements Dispatcher, Sender {
         map.destroy();
     }
 
-    public void addInvocation(InvocationFighter invocation, FightCell cell) {
+    public Fighter addInvocation(InvocationFighterFactory factory, FightCell cell) {
+        final Fighter invocation = factory.create(fighters().stream().mapToInt(Fighter::id).min().getAsInt() - 1);
+
         invocation.joinFight(this, cell);
         turnList.currentFighter().team().join(invocation);
         turnList.add(invocation);
 
         invocation.init();
+
+        return invocation;
     }
 }
