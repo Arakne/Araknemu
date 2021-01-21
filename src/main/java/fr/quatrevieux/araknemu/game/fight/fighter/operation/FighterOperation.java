@@ -56,5 +56,4 @@ public interface FighterOperation {
      * Apply the operation to a generic fighter type
      */
     default public void onGenericFighter(Fighter fighter) {}
-
 }
