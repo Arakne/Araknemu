@@ -23,8 +23,10 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.invocations.MonsterInvocationHandler;
+import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.RemoveInvocationFromTurnList;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.RemoveInvocations;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
@@ -49,36 +51,36 @@ public class MonsterInvocationModule implements FightModule {
     @Override
     public Listener[] listeners() {
         return new Listener[] {
-            new Listener<RemoveInvocations>() {
+            new Listener<FighterDie>() {
                 @Override
-                public void on(RemoveInvocations event) {
+                public void on(FighterDie event) {
                     fight.fighters().forEach(fighter -> {
-                        if (fighter.invoker().isPresent() && fighter.invoker().get().equals(event.invoker())) {
-                            fighter.life().kill((ActiveFighter)event.invoker());
-
-                            fight.dispatch(new RemoveInvocationFromTurnList(fighter));
+                        if (fighter.invoker().isPresent() && fighter.invoker().get().equals(event.fighter())) {
+                            fighter.life().kill((ActiveFighter) event.fighter());
+                            fight.turnList().remove(fighter);
                         }
                     });
                 }
 
                 @Override
-                public Class<RemoveInvocations> event() {
-                    return RemoveInvocations.class;
+                public Class<FighterDie> event() {
+                    return FighterDie.class;
                 }
             },
 
-            new Listener<RemoveInvocationFromTurnList>() {
+            new Listener<FightStopped>() {
                 @Override
-                public void on(RemoveInvocationFromTurnList event) {
-                    if (event.fighter().invoker().isPresent()) {
-                        fight.team(event.fighter().team().number()).kick((Fighter)event.fighter());
-                        fight.turnList().remove((Fighter)event.fighter());
-                    }
+                public void on(FightStopped event) {
+                    event.fight().fighters().forEach(fighter -> {
+                        if (fighter.invoker().isPresent()) {
+                            fighter.team().kick(fighter);
+                        }
+                    });
                 }
 
                 @Override
-                public Class<RemoveInvocationFromTurnList> event() {
-                    return RemoveInvocationFromTurnList.class;
+                public Class<FightStopped> event() {
+                    return FightStopped.class;
                 }
             },
         };

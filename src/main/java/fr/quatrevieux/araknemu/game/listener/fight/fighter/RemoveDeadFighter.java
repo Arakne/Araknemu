@@ -47,10 +47,10 @@ final public class RemoveDeadFighter implements Listener<FighterDie> {
         ;
         
         // Kills and remove from team all invocations of event.fighter()
-        fight.dispatch(new RemoveInvocations(event.fighter()));
+        //fight.dispatch(new RemoveInvocations(event.fighter()));
         
         // Remove from team and turnlist if even.fighter() is an invocation
-        fight.dispatch(new RemoveInvocationFromTurnList(event.fighter()));
+        //fight.dispatch(new RemoveInvocationFromTurnList(event.fighter()));
     }
 
     @Override

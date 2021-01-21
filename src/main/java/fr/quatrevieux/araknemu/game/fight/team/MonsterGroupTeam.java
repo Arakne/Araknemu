@@ -43,7 +43,7 @@ final public class MonsterGroupTeam implements FightTeam {
     final private int number;
     final private List<Integer> startPlaces;
 
-    final private List<MonsterFighter> fighters;
+    final private List<Fighter> fighters;
 
     public MonsterGroupTeam(MonsterGroup monsterGroup, List<Integer> startPlaces, int number) {
         this.monsterGroup = monsterGroup;
@@ -109,7 +109,7 @@ final public class MonsterGroupTeam implements FightTeam {
             throw new JoinFightException(JoinFightError.TEAM_CLOSED);
         }
 
-        fighters.add((MonsterFighter) fighter);
+        fighters.add(fighter);
     }
 
     @Override
@@ -118,7 +118,7 @@ final public class MonsterGroupTeam implements FightTeam {
             throw new UnsupportedOperationException("Read-only team");
         }
 
-        fighters.remove((MonsterFighter) fighter);
+        fighters.remove(fighter);
     }
 
     /**
@@ -132,8 +132,8 @@ final public class MonsterGroupTeam implements FightTeam {
      * Creates fighters from monsters of the group
      * Ids of monsters are negative integer sequence (starting at -1 for the first monster)
      */
-    private List<MonsterFighter> makeFighters() {
-        List<MonsterFighter> fighters = new ArrayList<>(monsterGroup.monsters().size());
+    private List<Fighter> makeFighters() {
+        List<Fighter> fighters = new ArrayList<>(monsterGroup.monsters().size());
 
         int id = 0;
 

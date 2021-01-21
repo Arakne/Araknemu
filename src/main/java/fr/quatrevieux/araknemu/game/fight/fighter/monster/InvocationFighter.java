@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.fighter.AbstractFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
@@ -13,12 +14,12 @@ import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 
 final public class InvocationFighter extends AbstractFighter {
-    final private MonsterFighter fighter;
-    final private Optional<PassiveFighter> invoker;
+    final private Fighter fighter;
+    final private PassiveFighter invoker;
 
-    public InvocationFighter(MonsterFighter fighter, PassiveFighter invoker) {
+    public InvocationFighter(Fighter fighter, PassiveFighter invoker) {
         this.fighter = fighter;
-        this.invoker = Optional.of(invoker);
+        this.invoker = invoker;
     }
 
     @Override
@@ -73,6 +74,6 @@ final public class InvocationFighter extends AbstractFighter {
 
     @Override
     public Optional<PassiveFighter> invoker() {
-        return invoker;
+        return Optional.of(invoker);
     }
 }

@@ -129,7 +129,7 @@ final public class SimpleTeam implements FightTeam {
             @Override
             public void onMonster(MonsterFighter fighter) {
                 if (!fighter.invoker().isPresent()) {
-                    throw new JoinFightException(JoinFightError.CANT_U_ARE_MUTANT);
+                    throw new JoinFightException(JoinFightError.TEAM_CLOSED);
                 }
 
                 fighters.add(fighter);

@@ -48,10 +48,10 @@ final public class GradeSet {
 
     /**
      * Get one grade from the GradeSet
-     * @param i The grade to get from 0 to 5
+     * @param i The grade to get from 1 to 6
      */
     public Monster get(int i) {
-        return grades.get(i);
+        return grades.get(i - 1);
     }
 
     /**
