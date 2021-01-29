@@ -34,14 +34,14 @@ public enum AccessoryType {
     PET(8),
     SHIELD(15);
 
-    final private int slot;
-
     final static private Map<Integer, AccessoryType> typesBySlot = Arrays
         .stream(values())
         .collect(Collectors.toMap(AccessoryType::slot, Function.identity()))
     ;
 
     final static private int[] SLOT_IDS = Arrays.stream(values()).mapToInt(AccessoryType::slot).toArray();
+
+    final private int slot;
 
     AccessoryType(int slot) {
         this.slot = slot;

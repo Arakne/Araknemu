@@ -19,10 +19,10 @@
 
 package fr.quatrevieux.araknemu.game.handler.fight;
 
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.fight.state.LeavableState;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.fight.LeaveFightRequest;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Leave the fight

@@ -25,7 +25,7 @@ package fr.quatrevieux.araknemu.data.living.constraint;
  * @param <T> The entity type
  * @param <E> The error type
  */
-final public class NotEmpty<T, E> extends ValueConstraint<T, E, String> {
+final public class NotEmpty<T, E> extends AbstractValueConstraint<T, E, String> {
     public NotEmpty(E error, Getter<T, String> getter) {
         super(error, getter);
     }

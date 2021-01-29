@@ -31,10 +31,10 @@ public enum ActionType {
     CAST(300, 0),
     CLOSE_COMBAT(303, 0);
 
+    final static private Map<Integer, ActionType> actionsById = new HashMap<>();
+
     final private int id;
     final private int end;
-
-    final static private Map<Integer, ActionType> actionsById = new HashMap<>();
 
     static {
         for (ActionType actionType : values()) {

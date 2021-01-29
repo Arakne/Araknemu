@@ -31,7 +31,7 @@ public class JoinFightException extends RuntimeException {
         this.error = error;
     }
 
-    public JoinFightError error() {
+    final public JoinFightError error() {
         return error;
     }
 }

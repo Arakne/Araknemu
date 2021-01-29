@@ -73,7 +73,7 @@ final public class ConnectionPoolExecutor implements ConnectionPool, QueryExecut
     @Override
     public void query(String sql) throws SQLException {
         execute(connection -> {
-            try (Statement statement = connection.createStatement()){
+            try (Statement statement = connection.createStatement()) {
                 statement.execute(sql);
             }
 

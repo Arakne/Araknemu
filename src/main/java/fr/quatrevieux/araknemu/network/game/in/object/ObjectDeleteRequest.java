@@ -29,7 +29,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Items.as#L31
  */
-final public class ObjectDeleteRequest implements Packet{
+final public class ObjectDeleteRequest implements Packet {
     final static public class Parser implements SinglePacketParser<ObjectDeleteRequest> {
         @Override
         public ObjectDeleteRequest parse(String input) throws ParsePacketException {

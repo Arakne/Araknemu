@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.state.FightState;
  * The module instance is dedicated to one fight instance, and can safely be used as state object
  */
 public interface FightModule extends EventsSubscriber {
-    public interface Factory {
+    public static interface Factory {
         /**
          * Create the module for the given fight
          */

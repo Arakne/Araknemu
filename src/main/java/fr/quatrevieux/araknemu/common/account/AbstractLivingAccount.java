@@ -19,8 +19,8 @@
 
 package fr.quatrevieux.araknemu.common.account;
 
-import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.core.network.session.Session;
+import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 
 /**
  * Abstract class for Living Account

@@ -40,7 +40,7 @@ final public class StatesModule implements FightModule {
         this.fight = fight;
         this.subscriber = new ActiveFightSubscriber(new Listener[] {
             new RefreshStates(),
-            new SendState(fight)
+            new SendState(fight),
         });
     }
 

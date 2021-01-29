@@ -21,6 +21,8 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect;
 
 /**
  * Utility class for effects
+ *
+ * @todo Should be removed or refactored with Effect enum
  */
 final public class EffectsUtils {
     /**

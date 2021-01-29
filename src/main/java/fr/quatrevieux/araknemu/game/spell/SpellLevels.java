@@ -56,7 +56,7 @@ final public class SpellLevels {
         --level;
 
         if (level < 0 || level >= levels.length) {
-            throw new NoSuchElementException("Invalid level " + (level+1) + " for spell " + entity.id());
+            throw new NoSuchElementException("Invalid level " + (level + 1) + " for spell " + entity.id());
         }
 
         return levels[level];

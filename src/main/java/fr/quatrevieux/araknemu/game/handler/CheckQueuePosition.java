@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.game.handler;
 
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.in.AskQueuePosition;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Check the queue position (Af packet)

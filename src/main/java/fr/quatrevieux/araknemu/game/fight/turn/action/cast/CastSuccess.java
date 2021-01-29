@@ -56,9 +56,7 @@ final public class CastSuccess implements ActionResult {
 
     @Override
     public Object[] arguments() {
-        return new Object[] {
-            spell.id(), target.id(), spell.spriteId(), spell.level(), spell.spriteArgs()
-        };
+        return new Object[] {spell.id(), target.id(), spell.spriteId(), spell.level(), spell.spriteArgs()};
     }
 
     @Override

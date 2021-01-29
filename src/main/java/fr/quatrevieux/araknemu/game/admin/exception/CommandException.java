@@ -44,7 +44,12 @@ public class CommandException extends AdminException {
         this.command = command;
     }
 
-    public String command() {
+    /**
+     * The failing command name
+     *
+     * @see fr.quatrevieux.araknemu.game.admin.Command#name()
+     */
+    final public String command() {
         return command;
     }
 }

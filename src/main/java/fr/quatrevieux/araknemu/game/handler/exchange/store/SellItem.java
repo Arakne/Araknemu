@@ -19,10 +19,10 @@
 
 package fr.quatrevieux.araknemu.game.handler.exchange.store;
 
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.npc.StoreDialog;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.exchange.store.SellRequest;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Handle selling an item to an NPC store

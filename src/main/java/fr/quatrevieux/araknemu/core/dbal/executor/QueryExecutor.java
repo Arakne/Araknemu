@@ -27,7 +27,7 @@ import java.sql.SQLException;
  */
 public interface QueryExecutor {
     @FunctionalInterface
-    interface PreparedTask<T> {
+    static public interface PreparedTask<T> {
         public T execute(PreparedStatement statement) throws SQLException;
     }
 

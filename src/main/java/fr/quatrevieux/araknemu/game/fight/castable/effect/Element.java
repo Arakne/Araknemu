@@ -36,11 +36,11 @@ public enum Element {
     AIR(Characteristic.AGILITY,       Characteristic.RESISTANCE_AIR,     Characteristic.RESISTANCE_PERCENT_AIR),
     FIRE(Characteristic.INTELLIGENCE, Characteristic.RESISTANCE_FIRE,    Characteristic.RESISTANCE_PERCENT_FIRE);
 
+    final static private Map<Integer, Set<Element>> bitSetCache = new HashMap<>();
+
     final private Characteristic boost;
     final private Characteristic fixedResistance;
     final private Characteristic percentResistance;
-
-    static private Map<Integer, Set<Element>> bitSetCache = new HashMap<>();
 
     Element(Characteristic boost, Characteristic fixedResistance, Characteristic percentResistance) {
         this.boost = boost;

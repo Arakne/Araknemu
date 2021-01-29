@@ -28,8 +28,6 @@ import java.security.SecureRandom;
  * Authentication token
  */
 final public class ConnectionKey {
-    final private PasswordEncoder encoder;
-
     /**
      * The random generator for generate key
      */
@@ -37,6 +35,8 @@ final public class ConnectionKey {
         new SecureRandom(),
         "abcdefghijklmnopqrstuvwxyz"
     );
+
+    final private PasswordEncoder encoder;
 
     public ConnectionKey(String key) {
         encoder = new PasswordEncoder(key);

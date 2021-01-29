@@ -56,7 +56,7 @@ final public class CharactersList {
                 .append(character.serverId()).append(';')
                 .append(';') // @todo is dead
                 .append(';') // @todo dead count
-                // @todo level max
+            // @todo level max
             ;
         }
 

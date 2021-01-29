@@ -66,7 +66,7 @@ final public class RaulebaqueModule implements FightModule {
                 public Class<FightStarted> event() {
                     return FightStarted.class;
                 }
-            }
+            },
         };
     }
 

@@ -27,7 +27,7 @@ import fr.arakne.utils.maps.constant.Direction;
  * A sprite is a displayable creature
  */
 public interface Sprite {
-    public enum Type {
+    static public enum Type {
         PLAYER,
         CREATURE, //?
         MONSTER,

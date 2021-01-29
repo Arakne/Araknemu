@@ -36,7 +36,7 @@ final public class LoginError {
         this.errorType = errorType;
     }
 
-    public String toString(){
+    public String toString() {
         return "AlE" + errorType;
     }
 }

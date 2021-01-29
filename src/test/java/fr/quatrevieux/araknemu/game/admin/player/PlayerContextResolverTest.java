@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContext;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
-import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.context.NullContext;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
@@ -92,7 +92,7 @@ class PlayerContextResolverTest extends GameBaseCase {
         Command command = Mockito.mock(Command.class);
         Mockito.when(command.name()).thenReturn("mocked");
 
-        resolver.register(new ContextConfigurator<PlayerContext>() {
+        resolver.register(new AbstractContextConfigurator<PlayerContext>() {
             @Override
             public void configure(PlayerContext context) {
                 add(command);

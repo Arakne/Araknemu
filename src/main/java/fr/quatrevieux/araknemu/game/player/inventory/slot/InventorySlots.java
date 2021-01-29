@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
-import fr.quatrevieux.araknemu.game.item.type.Equipment;
+import fr.quatrevieux.araknemu.game.item.type.AbstractEquipment;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 
@@ -74,8 +74,8 @@ final public class InventorySlots {
     /**
      * Get current equipments
      */
-    public Collection<Equipment> equipments() {
-        Collection<Equipment> equipments = new ArrayList<>();
+    public Collection<AbstractEquipment> equipments() {
+        Collection<AbstractEquipment> equipments = new ArrayList<>();
 
         for (InventorySlot slot : slots) {
             slot.equipment().ifPresent(equipments::add);

@@ -31,7 +31,7 @@ public interface BuffHook {
      *
      * @return False the the fighter cannot start the turn
      */
-    default boolean onStartTurn(Buff buff) {
+    default public boolean onStartTurn(Buff buff) {
         return true;
     }
 

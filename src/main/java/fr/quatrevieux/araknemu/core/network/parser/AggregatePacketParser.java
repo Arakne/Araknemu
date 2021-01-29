@@ -49,10 +49,10 @@ final public class AggregatePacketParser implements PacketParser {
     public Packet parse(String input) throws ParsePacketException {
         int len = maxCodeLength > input.length() ? input.length() : maxCodeLength;
 
-        for(; len >= minCodeLength; --len) {
+        for (; len >= minCodeLength; --len) {
             String header = input.substring(0, len);
 
-            if(parsers.containsKey(header)){
+            if (parsers.containsKey(header)) {
                 return parsers
                     .get(header)
                     .parse(input.substring(len))

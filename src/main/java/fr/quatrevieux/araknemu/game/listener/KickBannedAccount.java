@@ -41,6 +41,6 @@ final public class KickBannedAccount implements Listener<AccountBanned<GameAccou
     @Override
     @SuppressWarnings("unchecked")
     public Class<AccountBanned<GameAccount>> event() {
-        return (Class<AccountBanned<GameAccount>>)(Class<?>) AccountBanned.class;
+        return (Class<AccountBanned<GameAccount>>) (Class<?>) AccountBanned.class;
     }
 }

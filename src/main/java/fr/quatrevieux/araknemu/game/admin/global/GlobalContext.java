@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.admin.global;
 
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContext;
-import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.context.NullContext;
 import fr.quatrevieux.araknemu.game.admin.context.SimpleContext;
 
@@ -32,9 +32,9 @@ import java.util.List;
  * This context should be available in all other contexts
  */
 final public class GlobalContext extends AbstractContext<GlobalContext> {
-    final private List<ContextConfigurator<GlobalContext>> configurators;
+    final private List<AbstractContextConfigurator<GlobalContext>> configurators;
 
-    public GlobalContext(List<ContextConfigurator<GlobalContext>> configurators) {
+    public GlobalContext(List<AbstractContextConfigurator<GlobalContext>> configurators) {
         super(configurators);
 
         this.configurators = configurators;
@@ -47,7 +47,7 @@ final public class GlobalContext extends AbstractContext<GlobalContext> {
     /**
      * Register a new configurator for the context
      */
-    public GlobalContext register(ContextConfigurator<GlobalContext> configurator) {
+    public GlobalContext register(AbstractContextConfigurator<GlobalContext> configurator) {
         configurators.add(configurator);
 
         return this;

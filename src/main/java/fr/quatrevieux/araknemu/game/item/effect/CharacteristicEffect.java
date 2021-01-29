@@ -46,7 +46,7 @@ final public class CharacteristicEffect implements ItemEffect {
 
     @Override
     public ItemTemplateEffectEntry toTemplate() {
-        return new ItemTemplateEffectEntry(effect, value, 0, 0, "0d0+"+value);
+        return new ItemTemplateEffectEntry(effect, value, 0, 0, "0d0+" + value);
     }
 
     /**

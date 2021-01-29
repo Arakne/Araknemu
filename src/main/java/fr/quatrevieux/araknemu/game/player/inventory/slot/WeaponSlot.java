@@ -43,7 +43,7 @@ final public class WeaponSlot extends AbstractEquipmentSlot {
                 new SlotConstraint[] {
                     new SingleItemConstraint(),
                     new ItemClassConstraint(Weapon.class),
-                    new EquipmentLevelConstraint(owner)
+                    new EquipmentLevelConstraint(owner),
                 },
                 storage
             )

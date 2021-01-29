@@ -26,7 +26,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.stream.Stream;
 
 /**
  * Configuration class for game server
@@ -153,7 +152,7 @@ final public class GameConfiguration implements ConfigurationModule {
         }
     }
 
-    final public class EconomyConfiguration{
+    final public class EconomyConfiguration {
         /**
          * Get the selling item to an NPC price multiplier
          * By default 0.1

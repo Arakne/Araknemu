@@ -42,7 +42,7 @@ final public class ScreenInfo implements Packet {
             String[] parts = StringUtils.split(input, ";", 3);
 
             if (parts.length != 3) {
-                throw new ParsePacketException("Ir"+input, "Screen info must be composed of 3 parts");
+                throw new ParsePacketException("Ir" + input, "Screen info must be composed of 3 parts");
             }
 
             return new ScreenInfo(

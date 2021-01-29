@@ -94,7 +94,11 @@ final public class DefaultDatabaseHandler implements DatabaseHandler {
         connections.clear();
 
         for (ConnectionPool pool : pools) {
-            try { pool.close(); } catch (Exception e) {}
+            try {
+                pool.close();
+            } catch (Exception e) {
+                // Stop is a no fail operation
+            }
         }
     }
 }

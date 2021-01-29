@@ -48,7 +48,9 @@ final public class GamePlayerRace {
                 Collectors.toMap(
                     SpellLevels::id,
                     Function.identity(),
-                    (o, o2) -> { throw new IllegalArgumentException("Duplicate"); },
+                    (o, o2) -> {
+                        throw new IllegalArgumentException("Duplicate");
+                    },
                     LinkedHashMap::new
                 )
             )

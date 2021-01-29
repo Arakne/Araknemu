@@ -29,7 +29,12 @@ import fr.quatrevieux.araknemu.game.exploration.exchange.BankExchangeParty;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeParty;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
-import fr.quatrevieux.araknemu.game.item.inventory.*;
+import fr.quatrevieux.araknemu.game.item.inventory.Inventory;
+import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
+import fr.quatrevieux.araknemu.game.item.inventory.SimpleItemStorage;
+import fr.quatrevieux.araknemu.game.item.inventory.SimpleWallet;
+import fr.quatrevieux.araknemu.game.item.inventory.StackableItemStorage;
+import fr.quatrevieux.araknemu.game.item.inventory.Wallet;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
 

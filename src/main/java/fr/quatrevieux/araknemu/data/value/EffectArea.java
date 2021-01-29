@@ -38,9 +38,9 @@ final public class EffectArea {
         RECTANGLE('R'), // Rectangle needs 2 sizes => cannot be used on spells
         RING('O');
 
-        final private char c;
-
         final static private Map<Character, Type> typeByC = new HashMap<>();
+
+        final private char c;
 
         static {
             for (Type type : values()) {

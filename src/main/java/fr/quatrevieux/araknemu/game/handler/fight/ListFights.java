@@ -19,11 +19,11 @@
 
 package fr.quatrevieux.araknemu.game.handler.fight;
 
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.fight.ListFightsRequest;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightList;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * List fights on the current map

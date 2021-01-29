@@ -80,7 +80,7 @@ final public class Movement extends AbstractCommand {
             new FightStartPositions(
                 new List[] {
                     cells,
-                    new ArrayList()
+                    new ArrayList(),
                 },
                 0
             )

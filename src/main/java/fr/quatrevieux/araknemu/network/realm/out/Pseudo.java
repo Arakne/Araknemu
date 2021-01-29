@@ -30,7 +30,7 @@ final public class Pseudo {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "Ad" + pseudo;
     }
 }

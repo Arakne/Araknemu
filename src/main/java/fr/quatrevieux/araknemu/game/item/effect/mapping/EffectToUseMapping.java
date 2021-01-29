@@ -23,7 +23,12 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
-import fr.quatrevieux.araknemu.game.item.effect.use.*;
+import fr.quatrevieux.araknemu.game.item.effect.use.AddCharacteristicEffect;
+import fr.quatrevieux.araknemu.game.item.effect.use.AddLifeEffect;
+import fr.quatrevieux.araknemu.game.item.effect.use.FireworkEffect;
+import fr.quatrevieux.araknemu.game.item.effect.use.LearnSpellEffect;
+import fr.quatrevieux.araknemu.game.item.effect.use.NullEffectHandler;
+import fr.quatrevieux.araknemu.game.item.effect.use.UseEffectHandler;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 
 import java.util.EnumMap;

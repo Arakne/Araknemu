@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.game.handler.fight;
 
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.fight.FighterReady;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Change the ready state of the fighter

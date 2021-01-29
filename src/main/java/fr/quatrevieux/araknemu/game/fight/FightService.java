@@ -83,7 +83,7 @@ final public class FightService implements EventsSubscriber {
                     return PlayerLoaded.class;
                 }
             },
-            new Listener<ExplorationPlayerCreated> () {
+            new Listener<ExplorationPlayerCreated>() {
                 @Override
                 public void on(ExplorationPlayerCreated event) {
                     event.player().dispatcher().add(new LeaveExplorationForFight(event.player()));
@@ -109,7 +109,7 @@ final public class FightService implements EventsSubscriber {
                 public Class<GameStopped> event() {
                     return GameStopped.class;
                 }
-            }
+            },
         };
     }
 

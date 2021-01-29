@@ -61,7 +61,7 @@ final public class AiModule implements FightModule {
                 public Class<TurnStarted> event() {
                     return TurnStarted.class;
                 }
-            }
+            },
         };
     }
 

@@ -84,8 +84,6 @@ final public class LaunchFirework implements BlockingAction {
 
     @Override
     public Object[] arguments() {
-        return new Object[] {
-            cell + "," + animation + ",11,8," + size
-        };
+        return new Object[] {cell + "," + animation + ",11,8," + size};
     }
 }

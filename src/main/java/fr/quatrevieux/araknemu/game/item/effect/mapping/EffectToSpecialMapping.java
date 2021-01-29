@@ -22,7 +22,12 @@ package fr.quatrevieux.araknemu.game.item.effect.mapping;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
-import fr.quatrevieux.araknemu.game.item.effect.special.*;
+import fr.quatrevieux.araknemu.game.item.effect.special.AddSpecialEffect;
+import fr.quatrevieux.araknemu.game.item.effect.special.BoostSpellEffect;
+import fr.quatrevieux.araknemu.game.item.effect.special.NullEffectHandler;
+import fr.quatrevieux.araknemu.game.item.effect.special.SetSpellModifierEffect;
+import fr.quatrevieux.araknemu.game.item.effect.special.SpecialEffectHandler;
+import fr.quatrevieux.araknemu.game.item.effect.special.SubSpecialEffect;
 import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
 import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
 

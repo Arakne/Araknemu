@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.admin.debug;
 
 import fr.quatrevieux.araknemu.game.admin.context.Context;
-import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import java.util.List;
  * Resolver for debug context
  */
 final public class DebugContextResolver implements ContextResolver {
-    final private List<ContextConfigurator<DebugContext>> configurators = new ArrayList<>();
+    final private List<AbstractContextConfigurator<DebugContext>> configurators = new ArrayList<>();
 
     @Override
     public Context resolve(Context globalContext, Object argument) {
@@ -45,7 +45,7 @@ final public class DebugContextResolver implements ContextResolver {
     /**
      * Register a configurator for the debug context
      */
-    public DebugContextResolver register(ContextConfigurator<DebugContext> configurator) {
+    public DebugContextResolver register(AbstractContextConfigurator<DebugContext> configurator) {
         configurators.add(configurator);
 
         return this;

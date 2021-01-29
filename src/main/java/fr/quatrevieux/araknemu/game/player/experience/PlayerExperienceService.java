@@ -75,7 +75,7 @@ final public class PlayerExperienceService implements PreloadableService, Events
                 public Class<PlayerLoaded> event() {
                     return PlayerLoaded.class;
                 }
-            }
+            },
         };
     }
 

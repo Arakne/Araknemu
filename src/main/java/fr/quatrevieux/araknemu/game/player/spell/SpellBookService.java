@@ -25,7 +25,15 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
-import fr.quatrevieux.araknemu.game.listener.player.spell.*;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SaveLearnedSpell;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SaveSpellPosition;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SaveUpgradedSpell;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SendAllSpellBoosts;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SendLearnedSpell;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SendSpellBoost;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SendSpellList;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SendUpgradedSpell;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SetDefaultPositionSpellBook;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
@@ -70,7 +78,7 @@ final public class SpellBookService implements EventsSubscriber {
                     return PlayerLoaded.class;
                 }
             },
-            new SetDefaultPositionSpellBook(playerRaceService, repository)
+            new SetDefaultPositionSpellBook(playerRaceService, repository),
         };
     }
 

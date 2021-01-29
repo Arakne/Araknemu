@@ -17,35 +17,37 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.network.game.out.chat;
-
-import fr.quatrevieux.araknemu.game.chat.ChannelType;
-
-import java.util.Collection;
+package fr.quatrevieux.araknemu.data.living.constraint;
 
 /**
- * Abstract class packet for subscription changed
+ * Base entity constraint class for build constraints
+ *
+ * @param <T> The entity type
+ * @param <E> The error type
  */
-abstract public class ChannelSubscriptionChanged {
-    final private char sign;
-    final private Collection<ChannelType> channels;
+abstract public class AbstractConstraintBuilderFactory<T, E> implements EntityConstraint<T, E>, BuilderFactory<T, E> {
+    private E error;
+    private EntityConstraint<T, E> constraint;
 
-
-    public ChannelSubscriptionChanged(char sign, Collection<ChannelType> channels) {
-        this.sign = sign;
-        this.channels = channels;
+    @Override
+    public boolean check(T entity) {
+        return constraint().check(entity);
     }
 
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder("cC");
+    public E error() {
+        return constraint().error();
+    }
 
-        sb.append(sign);
-
-        for (ChannelType type : channels) {
-            sb.append(type.identifier());
+    private EntityConstraint<T, E> constraint() {
+        if (constraint != null) {
+            return constraint;
         }
 
-        return sb.toString();
+        ConstraintBuilder<T, E> builder = new ConstraintBuilder<>();
+
+        build(builder);
+
+        return constraint = builder.build();
     }
 }

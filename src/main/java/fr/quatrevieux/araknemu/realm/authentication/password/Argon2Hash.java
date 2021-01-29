@@ -63,7 +63,7 @@ final public class Argon2Hash implements HashAlgorithm {
     final private Map<Argon2Factory.Argon2Types, Argon2> algorithms = new EnumMap<>(Argon2Factory.Argon2Types.class);
 
     private int iterations = 4;
-    private int memory = 64*1024;
+    private int memory = 64 * 1024;
     private int parallelism = 8;
     private Argon2Factory.Argon2Types type = Argon2Factory.Argon2Types.ARGON2id;
 

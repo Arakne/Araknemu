@@ -122,7 +122,7 @@ final public class ShutdownService implements EventsSubscriber {
                 public Class<GameStopped> event() {
                     return GameStopped.class;
                 }
-            }
+            },
         };
     }
 

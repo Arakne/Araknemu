@@ -130,7 +130,7 @@ final public class MonsterEnvironmentService implements EventsSubscriber, Preloa
                 public Class<MapLoaded> event() {
                     return MapLoaded.class;
                 }
-            }
+            },
         };
     }
 

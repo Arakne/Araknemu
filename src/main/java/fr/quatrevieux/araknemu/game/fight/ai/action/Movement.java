@@ -123,7 +123,7 @@ final public class Movement implements ActionGenerator {
         return selectedCells;
     }
 
-    static public class ScoredCell implements Comparable<ScoredCell> {
+    final static public class ScoredCell implements Comparable<ScoredCell> {
         final private CoordinateCell<FightCell> coordinates;
         final private int score;
 

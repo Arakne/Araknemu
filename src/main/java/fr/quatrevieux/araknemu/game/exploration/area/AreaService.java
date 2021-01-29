@@ -105,7 +105,7 @@ final public class AreaService implements PreloadableService, EventsSubscriber {
                 public Class<PlayerLoaded> event() {
                     return PlayerLoaded.class;
                 }
-            }
+            },
         };
     }
 }

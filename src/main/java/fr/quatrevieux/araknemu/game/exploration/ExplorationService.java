@@ -71,7 +71,7 @@ final public class ExplorationService implements EventsSubscriber {
                 public Class<MapLoaded> event() {
                     return MapLoaded.class;
                 }
-            }
+            },
         };
     }
 }

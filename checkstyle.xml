@@ -1,0 +1,251 @@
+
+
+<!--
+  ~ This file is part of Araknemu.
+  ~
+  ~ Araknemu is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Lesser General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Araknemu is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Lesser General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser General Public License
+  ~ along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
+  ~
+  ~ Copyright (c) 2017-2021 Vincent Quatrevieux
+  -->
+
+<!DOCTYPE module PUBLIC
+        "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
+<module name="Checker">
+    <module name="TreeWalker">
+        <module name="MissingDeprecated" />
+        <module name="MissingOverride" />
+        <module name="AnnotationLocation" />
+
+        <module name="AvoidNestedBlocks" />
+        <module name="EmptyBlock" />
+        <module name="EmptyCatchBlock" />
+        <module name="LeftCurly">
+            <property name="ignoreEnums" value="false" />
+        </module>
+        <module name="NeedBraces" />
+        <module name="RightCurly" />
+        <module name="DesignForExtension">
+            <!-- Ignore overridden methods ? -->
+            <property name="ignoredAnnotations" value="Override" />
+        </module>
+        <module name="FinalClass" />
+        <module name="HideUtilityClassConstructor" />
+        <!-- <module name="InnerTypeLast"/> --> <!-- Uncomment -->
+        <module name="InterfaceIsType" />
+        <module name="MutableException" />
+        <module name="OneTopLevelClass" />
+        <module name="ThrowsCount">
+            <property name="max" value="2" />
+        </module>
+        <module name="VisibilityModifier">
+            <property name="protectedAllowed" value="true" /> <!-- To remove ? Only final protected ? -->
+        </module>
+
+        <module name="ArrayTrailingComma" />
+<!--        <module name="AvoidDoubleBraceInitialization" />-->
+        <module name="CovariantEquals" />
+        <module name="DeclarationOrder" />
+        <module name="DefaultComesLast" />
+        <module name="EmptyStatement" />
+        <module name="EqualsAvoidNull" />
+        <!-- TODO -->
+<!--        <module name="FinalLocalVariable">-->
+<!--            <property name="severity" value="warning"/>-->
+<!--        </module>-->
+        <module name="IllegalType" />
+        <!-- Should be uncommented -->
+        <!-- TODO -->
+<!--        <module name="MagicNumber">-->
+<!--            <property name="ignoreHashCodeMethod" value="true" />-->
+<!--            <property name="severity" value="warning"/>-->
+<!--        </module>-->
+        <module name="ModifiedControlVariable" />
+        <module name="MultipleVariableDeclarations" />
+        <module name="NestedForDepth" />
+        <module name="NestedIfDepth" />
+        <module name="NestedTryDepth" />
+        <module name="NoFinalizer" />
+        <module name="OneStatementPerLine" />
+        <module name="PackageDeclaration" />
+        <module name="SimplifyBooleanExpression" />
+        <module name="SimplifyBooleanReturn" />
+        <module name="StringLiteralEquality" />
+<!--        <module name="UnnecessarySemicolonAfterOuterTypeDeclaration" />--> <!-- No supported -->
+        <module name="UnnecessarySemicolonAfterTypeMemberDeclaration" />
+        <module name="UnnecessarySemicolonInEnumeration" />
+
+        <module name="AvoidStarImport" />
+        <module name="AvoidStaticImport" />
+        <module name="RedundantImport" />
+        <module name="UnusedImports" />
+
+        <module name="BooleanExpressionComplexity" />
+        <!-- TODO -->
+<!--        <module name="CyclomaticComplexity" />-->
+        <module name="JavaNCSS">
+            <property name="severity" value="warning"/>
+        </module>
+
+        <module name="ArrayTypeStyle" />
+        <module name="CommentsIndentation" />
+        <module name="OuterTypeFilename" />
+        <module name="TodoComment">
+            <property name="format" value="(TODO:)|(@todo )" />
+            <property name="severity" value="info" />
+        </module>
+        <module name="UncommentedMain">
+            <property name="excludedClasses" value="Araknemu" />
+        </module>
+        <module name="UpperEll" />
+<!--        <module name="ClassMemberImpliedModifier" />--> <!-- No supported -->
+        <module name="InterfaceMemberImpliedModifier">
+            <property name="violateImpliedAbstractMethod" value="false" />
+        </module>
+<!--        <module name="ModifierOrder" />--> <!-- TODO -->
+
+        <module name="AbstractClassName" />
+        <module name="ClassTypeParameterName" />
+        <module name="InterfaceTypeParameterName" />
+        <module name="ConstantName">
+            <property name="applyToPrivate" value="false" />
+        </module>
+        <module name="LambdaParameterName">
+            <!-- Allow only words or in format a1, a2, ... -->
+            <property name="format" value="^[a-z]([0-9]|[a-zA-Z]*)$" />
+        </module>
+        <module name="LocalFinalVariableName">
+            <!-- Allow only words -->
+            <property name="format" value="^[a-z][a-zA-Z]*$" />
+        </module>
+        <module name="LocalVariableName">
+            <!-- Allow only words -->
+            <property name="format" value="^[a-z][a-zA-Z]*$" />
+        </module>
+        <module name="MemberName">
+            <!-- Allow only words -->
+            <property name="format" value="^[a-z][a-zA-Z]*$" />
+        </module>
+        <module name="MethodName">
+            <!-- Allow only words -->
+            <property name="format" value="^([a-z][a-zA-Z]*|argon2)$" />
+        </module>
+        <module name="MethodTypeParameterName" />
+        <module name="PackageName">
+            <!-- Allow only lower case word -->
+            <property name="format" value="^fr.quatrevieux.araknemu(.[a-z]+)*$" />
+        </module>
+        <module name="ParameterName">
+            <!-- Allow only words -->
+            <property name="format" value="^[a-z][a-zA-Z]*$" />
+        </module>
+        <module name="StaticVariableName">
+            <!-- Allow only words -->
+            <property name="format" value="^[a-z][a-zA-Z]*$" />
+        </module>
+        <module name="TypeName">
+            <!-- Allow only words -->
+            <property name="format" value="^([A-Z][a-zA-Z]*|Argon2(Hash|Password)?)$" />
+        </module>
+
+<!--        <module name="AnonInnerLength" />--> <!-- TODO -->
+<!--        <module name="LambdaBodyLength" />--> <!-- TODO after refactoring modules -->
+        <module name="MethodCount">
+            <property name="maxTotal" value="30" />
+        </module>
+        <module name="MethodLength" />
+        <module name="OuterTypeNumber">
+            <property name="max" value="1" />
+        </module>
+        <module name="ParameterNumber">
+            <property name="max" value="5" />
+            <!-- Ignore constructors -->
+            <property name="tokens" value="METHOD_DEF" />
+        </module>
+
+        <module name="EmptyForInitializerPad" />
+        <module name="EmptyForIteratorPad" />
+        <module name="GenericWhitespace" />
+        <module name="MethodParamPad" />
+        <module name="NoLineWrap" />
+        <module name="NoWhitespaceAfter">
+            <property name="tokens" value="AT, INC, DEC, BNOT, LNOT, DOT, ARRAY_DECLARATOR, INDEX_OP" />
+        </module>
+        <module name="NoWhitespaceBefore">
+            <property name="allowLineBreaks" value="true" />
+            <property name="tokens" value="COMMA, SEMI, POST_INC, POST_DEC, DOT, GENERIC_END, ELLIPSIS, METHOD_REF" />
+        </module>
+        <module name="OperatorWrap">
+            <property name="tokens" value="QUESTION, COLON, EQUAL, NOT_EQUAL, DIV, MINUS, STAR, MOD, SR, BSR, GE, GT, SL, LE, LT, BXOR, BOR, LOR, BAND, LAND, TYPE_EXTENSION_AND, LITERAL_INSTANCEOF" />
+        </module>
+        <module name="ParenPad" />
+        <module name="SeparatorWrap">
+            <property name="tokens" value="DOT"/>
+            <property name="tokens" value="AT"/>
+            <property name="tokens" value="METHOD_REF"/>
+            <property name="option" value="nl"/>
+        </module>
+        <module name="SeparatorWrap">
+            <property name="tokens" value="COMMA"/>
+            <property name="tokens" value="RBRACK"/>
+            <property name="tokens" value="ARRAY_DECLARATOR"/>
+            <property name="tokens" value="ELLIPSIS"/>
+            <property name="option" value="eol"/>
+        </module>
+<!--        <module name="SingleSpaceSeparator" />--> <!-- Do not handle aligned statements -->
+        <module name="TypecastParenPad" />
+        <module name="WhitespaceAfter" />
+        <module name="WhitespaceAround">
+            <property name="allowEmptyMethods" value="true" />
+            <property name="allowEmptyLambdas" value="true" />
+            <property name="allowEmptyConstructors" value="true" />
+        </module>
+    </module>
+
+    <module name="NewlineAtEndOfFile" />
+    <module name="FileLength">
+        <property name="max" value="1000" /> <!-- Should be lowered to 500 -->
+    </module>
+    <module name="FileTabCharacter" />
+
+    <!-- Ignore magic number on packets generation -->
+    <module name="SuppressionSingleFilter">
+        <property name="checks" value="MagicNumberCheck"/>
+        <property name="files" value="network"/>
+    </module>
+
+    <!-- Ignore modified control variable on CLI argument parsing -->
+    <module name="SuppressionSingleFilter">
+        <property name="checks" value="ModifiedControlVariableCheck"/>
+        <property name="files" value="admin"/>
+    </module>
+
+    <!-- Ignore EffectUtils : this class should be refactored -->
+    <module name="SuppressionSingleFilter">
+        <property name="checks" value="BooleanExpressionComplexityCheck"/>
+        <property name="files" value="EffectsUtils"/>
+    </module>
+
+    <!-- Ignore Modules. TODO remove after modules refactor -->
+    <module name="SuppressionSingleFilter">
+        <property name="checks" value="MethodLengthCheck"/>
+        <property name="files" value="Module.java$"/>
+    </module>
+
+    <!-- Ignore entity classes -->
+    <module name="SuppressionSingleFilter">
+        <property name="checks" value="ParameterNumberCheck" />
+        <property name="files" value="data.*entity" />
+    </module>
+</module>

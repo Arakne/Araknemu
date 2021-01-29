@@ -19,11 +19,11 @@
 
 package fr.quatrevieux.araknemu.game.handler.basic;
 
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.basic.AskDate;
 import fr.quatrevieux.araknemu.network.game.out.basic.ServerDate;
 import fr.quatrevieux.araknemu.network.game.out.basic.ServerTime;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 import java.util.Calendar;
 

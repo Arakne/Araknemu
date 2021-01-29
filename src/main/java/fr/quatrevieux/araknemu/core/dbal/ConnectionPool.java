@@ -68,7 +68,7 @@ public interface ConnectionPool extends AutoCloseable {
     /**
      * Execute a connection pool task
      *
-     * pool.execute( connection -> {
+     * <pre>{@code pool.execute( connection -> {
      *     ResultSet rs = connection.executeQuery("select * from xxx");
      *     List<Result> result = new ArrayList<>();
      *
@@ -77,7 +77,7 @@ public interface ConnectionPool extends AutoCloseable {
      *     }
      *
      *     return result;
-     * });
+     * });}</pre>
      *
      * @param task Task to execute
      * @param <T> Result of the task

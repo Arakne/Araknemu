@@ -35,7 +35,7 @@ final public class LifeRegeneration implements EventsSubscriber {
     @Override
     public Listener[] listeners() {
         return new Listener[]{
-            new Listener<StartExploration>(){
+            new Listener<StartExploration>() {
                 @Override
                 public void on(StartExploration event) {
                     event.player().player().properties().life().startLifeRegeneration(STANDARD_LIFE_REGENERATION);
@@ -48,7 +48,7 @@ final public class LifeRegeneration implements EventsSubscriber {
                 }
             },
 
-            new Listener<StopExploration>(){
+            new Listener<StopExploration>() {
                 @Override
                 public void on(StopExploration event) {
                     event.session().player().properties().life().stopLifeRegeneration();
@@ -59,7 +59,7 @@ final public class LifeRegeneration implements EventsSubscriber {
                 public Class<StopExploration> event() {
                     return StopExploration.class;
                 }
-            }
+            },
         };
     }
 }

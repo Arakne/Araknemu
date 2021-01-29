@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.data.living.constraint.player;
 
 import fr.quatrevieux.araknemu.data.living.constraint.ConstraintBuilder;
-import fr.quatrevieux.araknemu.data.living.constraint.ConstraintBuilderFactory;
+import fr.quatrevieux.araknemu.data.living.constraint.AbstractConstraintBuilderFactory;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
@@ -28,7 +28,7 @@ import fr.quatrevieux.araknemu.game.GameConfiguration;
 /**
  * Constraints for {@link Player} entity
  */
-final public class PlayerConstraints extends ConstraintBuilderFactory<Player, PlayerConstraints.Error> {
+final public class PlayerConstraints extends AbstractConstraintBuilderFactory<Player, PlayerConstraints.Error> {
     /**
      * List of error codes
      * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L580

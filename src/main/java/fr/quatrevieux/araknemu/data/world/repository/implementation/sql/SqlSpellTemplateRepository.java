@@ -19,10 +19,10 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository;
@@ -51,7 +51,7 @@ final class SqlSpellTemplateRepository implements SpellTemplateRepository {
                     levelTransformer.unserialize(rs.getString("SPELL_LVL_3")),
                     levelTransformer.unserialize(rs.getString("SPELL_LVL_4")),
                     levelTransformer.unserialize(rs.getString("SPELL_LVL_5")),
-                    levelTransformer.unserialize(rs.getString("SPELL_LVL_6"))
+                    levelTransformer.unserialize(rs.getString("SPELL_LVL_6")),
                 },
                 Arrays.stream(StringUtils.split(rs.getString("SPELL_TARGET"), ";"))
                     .mapToInt(Integer::parseInt)

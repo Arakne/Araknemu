@@ -26,9 +26,9 @@ import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
  * Serialize item entry
  */
 final public class ItemSerializer {
-    final private ItemEntry entry;
-
     final static private ItemEffectsTransformer EFFECTS_TRANSFORMER = new ItemEffectsTransformer();
+
+    final private ItemEntry entry;
 
     public ItemSerializer(ItemEntry entry) {
         this.entry = entry;

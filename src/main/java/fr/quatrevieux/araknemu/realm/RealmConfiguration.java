@@ -44,7 +44,7 @@ final public class RealmConfiguration implements ConfigurationModule {
          * Get the memory, in kilobits. Default: 65536 (64Mo)
          */
         public int memory() {
-            return pool.integer("password.argon2.memory", 64*1024);
+            return pool.integer("password.argon2.memory", 64 * 1024);
         }
 
         /**

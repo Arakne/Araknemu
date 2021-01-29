@@ -80,7 +80,7 @@ final public class NpcService implements EventsSubscriber, PreloadableService {
                 public Class<MapLoaded> event() {
                     return MapLoaded.class;
                 }
-            }
+            },
         };
     }
 

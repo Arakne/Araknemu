@@ -22,10 +22,14 @@ package fr.quatrevieux.araknemu.game.player.inventory;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.item.Item;
-import fr.quatrevieux.araknemu.game.item.inventory.*;
+import fr.quatrevieux.araknemu.game.item.inventory.Inventory;
+import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
+import fr.quatrevieux.araknemu.game.item.inventory.SimpleItemStorage;
+import fr.quatrevieux.araknemu.game.item.inventory.SimpleWallet;
+import fr.quatrevieux.araknemu.game.item.inventory.Wallet;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
-import fr.quatrevieux.araknemu.game.item.type.Equipment;
+import fr.quatrevieux.araknemu.game.item.type.AbstractEquipment;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.accessory.InventoryAccessories;
 import fr.quatrevieux.araknemu.game.player.inventory.itemset.ItemSets;
@@ -126,7 +130,7 @@ final public class PlayerInventory implements Inventory<InventoryEntry>, Dispatc
     /**
      * Get current player equipments
      */
-    public Collection<Equipment> equipments() {
+    public Collection<AbstractEquipment> equipments() {
         return slots.equipments();
     }
 

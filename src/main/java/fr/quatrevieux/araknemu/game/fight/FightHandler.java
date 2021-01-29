@@ -83,7 +83,7 @@ final public class FightHandler<B extends FightBuilder> implements EventsSubscri
                 public Class<FightCancelled> event() {
                     return FightCancelled.class;
                 }
-            }
+            },
         };
     }
 }

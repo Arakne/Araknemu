@@ -19,11 +19,11 @@
 
 package fr.quatrevieux.araknemu.game.handler.object;
 
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.BadLevelException;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectMoveRequest;
 import fr.quatrevieux.araknemu.network.game.out.object.AddItemError;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Move an object from the repository

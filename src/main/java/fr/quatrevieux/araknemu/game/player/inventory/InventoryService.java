@@ -31,7 +31,17 @@ import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterAccessories;
 import fr.quatrevieux.araknemu.game.listener.map.SendAccessories;
-import fr.quatrevieux.araknemu.game.listener.player.inventory.*;
+import fr.quatrevieux.araknemu.game.listener.player.inventory.SaveDeletedItem;
+import fr.quatrevieux.araknemu.game.listener.player.inventory.SaveItemPosition;
+import fr.quatrevieux.araknemu.game.listener.player.inventory.SaveItemQuantity;
+import fr.quatrevieux.araknemu.game.listener.player.inventory.SaveNewItem;
+import fr.quatrevieux.araknemu.game.listener.player.inventory.SendItemData;
+import fr.quatrevieux.araknemu.game.listener.player.inventory.SendItemDeleted;
+import fr.quatrevieux.araknemu.game.listener.player.inventory.SendItemPosition;
+import fr.quatrevieux.araknemu.game.listener.player.inventory.SendItemQuantity;
+import fr.quatrevieux.araknemu.game.listener.player.inventory.SendKamas;
+import fr.quatrevieux.araknemu.game.listener.player.inventory.SendWeight;
+import fr.quatrevieux.araknemu.game.listener.player.inventory.UpdateStuffStats;
 import fr.quatrevieux.araknemu.game.listener.player.inventory.itemset.ApplyItemSetSpecialEffects;
 import fr.quatrevieux.araknemu.game.listener.player.inventory.itemset.InitializeItemSets;
 import fr.quatrevieux.araknemu.game.listener.player.inventory.itemset.SendItemSetChange;
@@ -72,7 +82,8 @@ final public class InventoryService implements EventsSubscriber {
     @Override
     public Listener[] listeners() {
         return new Listener[] {
-            new Listener<PlayerLoaded> () {
+            // @todo refactor to external class
+            new Listener<PlayerLoaded>() {
                 @Override
                 public void on(PlayerLoaded event) {
                     ListenerAggregate dispatcher = event.player().dispatcher();
@@ -128,7 +139,7 @@ final public class InventoryService implements EventsSubscriber {
                 public Class<PlayerFighterCreated> event() {
                     return PlayerFighterCreated.class;
                 }
-            }
+            },
         };
     }
 

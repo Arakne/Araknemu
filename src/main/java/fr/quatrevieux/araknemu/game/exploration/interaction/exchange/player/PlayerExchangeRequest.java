@@ -71,7 +71,7 @@ final public class PlayerExchangeRequest implements ExchangeInteraction, Invitat
 
     @Override
     public void accept(Invitation invitation, TargetRequestDialog dialog) {
-        for(PlayerExchangeParty party : PlayerExchangeParty.make(invitation.initiator(), invitation.target())) {
+        for (PlayerExchangeParty party : PlayerExchangeParty.make(invitation.initiator(), invitation.target())) {
             party.start();
         }
     }

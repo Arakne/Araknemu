@@ -25,7 +25,6 @@ import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
  * Throw when error occurs during character creation
  */
 public class CharacterCreationException extends Exception {
-
     final private PlayerConstraints.Error error;
 
     public CharacterCreationException(PlayerConstraints.Error error) {
@@ -37,7 +36,7 @@ public class CharacterCreationException extends Exception {
         error = PlayerConstraints.Error.CREATE_CHARACTER_ERROR;
     }
 
-    public PlayerConstraints.Error error() {
+    final public PlayerConstraints.Error error() {
         return error;
     }
 }

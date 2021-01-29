@@ -33,11 +33,11 @@ import java.util.Set;
  * @fixme Use ConcurrentHashMap instead of HashMap ?
  */
 final public class DefaultListenerAggregate implements ListenerAggregate {
+    final static private Logger defaultLogger = LogManager.getLogger(DefaultListenerAggregate.class);
+
     final private Logger logger;
     final private Map<Class<? extends Listener>, Listener> listeners = new HashMap<>();
     final private Map<Class, Set<Class<? extends Listener>>> events = new HashMap<>();
-
-    final static private Logger defaultLogger = LogManager.getLogger(DefaultListenerAggregate.class);
 
     public DefaultListenerAggregate() {
         this(defaultLogger);

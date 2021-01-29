@@ -23,7 +23,11 @@ import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.chat.event.ChannelSubscriptionAdded;
 import fr.quatrevieux.araknemu.game.chat.event.ChannelSubscriptionRemoved;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Set of subscribed channels with a dispatcher for synchronise operations

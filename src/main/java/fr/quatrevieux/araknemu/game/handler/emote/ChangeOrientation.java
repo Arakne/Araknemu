@@ -20,10 +20,10 @@
 package fr.quatrevieux.araknemu.game.handler.emote;
 
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.emote.SetOrientationRequest;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Change the exploration player orientation for role player

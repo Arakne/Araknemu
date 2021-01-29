@@ -25,7 +25,14 @@ import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
-import fr.quatrevieux.araknemu.game.exploration.event.*;
+import fr.quatrevieux.araknemu.game.exploration.creature.Explorer;
+import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
+import fr.quatrevieux.araknemu.game.exploration.event.CellChanged;
+import fr.quatrevieux.araknemu.game.exploration.event.MapChanged;
+import fr.quatrevieux.araknemu.game.exploration.event.MapJoined;
+import fr.quatrevieux.araknemu.game.exploration.event.MapLeaved;
+import fr.quatrevieux.araknemu.game.exploration.event.OrientationChanged;
+import fr.quatrevieux.araknemu.game.exploration.event.StopExploration;
 import fr.quatrevieux.araknemu.game.exploration.interaction.InteractionHandler;
 import fr.quatrevieux.araknemu.game.exploration.interaction.event.PlayerMoveFinished;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
@@ -35,8 +42,6 @@ import fr.quatrevieux.araknemu.game.player.CharacterProperties;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerSessionScope;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
-import fr.quatrevieux.araknemu.game.exploration.creature.Explorer;
-import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
@@ -126,7 +131,7 @@ final public class ExplorationPlayer implements ExplorationCreature, Explorer, P
     }
 
     /**
-     * @todo Returns Optional<ExplorationMap>
+     * @todo Returns {@code Optional<ExplorationMap>}
      */
     @Override
     public ExplorationMap map() {

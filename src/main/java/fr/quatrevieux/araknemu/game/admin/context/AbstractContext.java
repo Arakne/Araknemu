@@ -27,15 +27,15 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Base context implementation for handle external configuration using {@link ContextConfigurator}
+ * Base context implementation for handle external configuration using {@link AbstractContextConfigurator}
  *
  * @param <C> The implementation class
  */
 abstract public class AbstractContext<C extends AbstractContext> implements Context {
-    final private List<ContextConfigurator<C>> configurators;
+    final private List<AbstractContextConfigurator<C>> configurators;
     private SimpleContext context;
 
-    public AbstractContext(List<ContextConfigurator<C>> configurators) {
+    public AbstractContext(List<AbstractContextConfigurator<C>> configurators) {
         this.configurators = configurators;
     }
 
@@ -69,7 +69,7 @@ abstract public class AbstractContext<C extends AbstractContext> implements Cont
 
         context = createContext();
 
-        for (ContextConfigurator<C> configurator : configurators) {
+        for (AbstractContextConfigurator<C> configurator : configurators) {
             configurator.with(context).configure((C) this);
         }
 

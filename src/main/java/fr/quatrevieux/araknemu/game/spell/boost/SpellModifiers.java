@@ -45,91 +45,91 @@ public interface SpellModifiers {
     /**
      * Get the range modifier
      */
-    default int range() {
+    default public int range() {
         return value(SpellsBoosts.Modifier.RANGE);
     }
 
     /**
      * Check the spell modifiable range modifier
      */
-    default boolean modifiableRange() {
+    default public boolean modifiableRange() {
         return value(SpellsBoosts.Modifier.MODIFIABLE_RANGE) > 0;
     }
 
     /**
      * Get the damage boost
      */
-    default int damage() {
+    default public int damage() {
         return value(SpellsBoosts.Modifier.DAMAGE);
     }
 
     /**
      * Get the heal boost
      */
-    default int heal() {
+    default public int heal() {
         return value(SpellsBoosts.Modifier.HEAL);
     }
 
     /**
      * Get the AP cost modifier
      */
-    default int apCost() {
+    default public int apCost() {
         return value(SpellsBoosts.Modifier.AP_COST);
     }
 
     /**
      * Get the launch delay reduce
      */
-    default int delay() {
+    default public int delay() {
         return value(SpellsBoosts.Modifier.REDUCE_DELAY);
     }
 
     /**
      * Check if the a fixed delay modifier is present
      */
-    default boolean hasFixedDelay() {
+    default public boolean hasFixedDelay() {
         return has(SpellsBoosts.Modifier.SET_DELAY);
     }
 
     /**
      * Get the fixed delay value
      */
-    default int fixedDelay() {
+    default public int fixedDelay() {
         return value(SpellsBoosts.Modifier.SET_DELAY);
     }
 
     /**
      * Check if can launch spell out of line
      */
-    default boolean launchOutline() {
+    default public boolean launchOutline() {
         return value(SpellsBoosts.Modifier.LAUNCH_LINE) > 0;
     }
 
     /**
      * Check if can launch ignoring line of sight
      */
-    default boolean lineOfSight() {
+    default public boolean lineOfSight() {
         return value(SpellsBoosts.Modifier.LINE_OF_SIGHT) > 0;
     }
 
     /**
      * Get the launch per target modifier
      */
-    default int launchPerTarget() {
+    default public int launchPerTarget() {
         return value(SpellsBoosts.Modifier.LAUNCH_PER_TARGET);
     }
 
     /**
      * Get the launch per turn modifier
      */
-    default int launchPerTurn() {
+    default public int launchPerTurn() {
         return value(SpellsBoosts.Modifier.LAUNCH_PER_TURN);
     }
 
     /**
      * Get the critical hit rate modifier
      */
-    default int criticalHit() {
+    default public int criticalHit() {
         return value(SpellsBoosts.Modifier.CRITICAL);
     }
 }

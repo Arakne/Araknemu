@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * Class for weapons
  */
-final public class Weapon extends Equipment {
+final public class Weapon extends AbstractEquipment {
     final static public class WeaponInfo {
         final private int apCost;
         final private Interval range;

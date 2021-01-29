@@ -29,7 +29,7 @@ import java.util.List;
  * Template for a spell
  */
 final public class SpellTemplate {
-    static public class Level {
+    final static public class Level {
         final private List<SpellTemplateEffect> effects;
         final private List<SpellTemplateEffect> criticalEffects;
         final private int apCost;
@@ -72,78 +72,143 @@ final public class SpellTemplate {
             this.endsTurnOnFailure = endsTurnOnFailure;
         }
 
+        /**
+         * List of normal effects
+         */
         public List<SpellTemplateEffect> effects() {
             return effects;
         }
 
+        /**
+         * List of critical effects
+         */
         public List<SpellTemplateEffect> criticalEffects() {
             return criticalEffects;
         }
 
+        /**
+         * AP cost for launch the spell
+         */
         public int apCost() {
             return apCost;
         }
 
+        /**
+         * The cast range
+         */
         public Interval range() {
             return range;
         }
 
+        /**
+         * Percent of chance to get a critical hit
+         *
+         * @see fr.quatrevieux.araknemu.game.fight.castable.Castable#criticalHit()
+         */
         public int criticalHit() {
             return criticalHit;
         }
 
+        /**
+         * Percent of chance to get a critical failure
+         *
+         * @see fr.quatrevieux.araknemu.game.fight.castable.Castable#criticalFailure()
+         */
         public int criticalFailure() {
             return criticalFailure;
         }
 
+        /**
+         * Force spell to be launched in line
+         */
         public boolean lineLaunch() {
             return lineLaunch;
         }
 
+        /**
+         * Launch blocked by line of sight (cannot go through obstacle)
+         */
         public boolean lineOfSight() {
             return lineOfSight;
         }
 
+        /**
+         * Requires a free cell (i.e. without fighter) to be launched
+         */
         public boolean freeCell() {
             return freeCell;
         }
 
+        /**
+         * The spell range can be modified with buff or items
+         */
         public boolean modifiableRange() {
             return modifiableRange;
         }
 
+        /**
+         * The character class id
+         */
         public int classId() {
             return classId;
         }
 
+        /**
+         * Maximum launch count per turn
+         * Zero for no limit
+         */
         public int launchPerTurn() {
             return launchPerTurn;
         }
 
+        /**
+         * Maximum launch count per target (i.e. fighter)
+         * Zero for no limit
+         */
         public int launchPerTarget() {
             return launchPerTarget;
         }
 
+        /**
+         * Number of turns between two launch
+         * Zero for ignore le delay
+         */
         public int launchDelay() {
             return launchDelay;
         }
 
+        /**
+         * Get the area per spell effect
+         * The areas are indexed by the effect index (i.e. first effect (index=0) as the first area (index=0))
+         */
         public List<EffectArea> effectAreas() {
             return effectAreas;
         }
 
+        /**
+         * Get ids of required stats to launch the spell
+         */
         public int[] requiredStates() {
             return requiredStates;
         }
 
+        /**
+         * Get ids of forbidden stats to launch the spell
+         */
         public int[] forbiddenStates() {
             return forbiddenStates;
         }
 
+        /**
+         * Get the minimal player level (inclusive) for use the spell
+         */
         public int minPlayerLevel() {
             return minPlayerLevel;
         }
 
+        /**
+         * Critical hit will end the current fighter turn
+         */
         public boolean endsTurnOnFailure() {
             return endsTurnOnFailure;
         }

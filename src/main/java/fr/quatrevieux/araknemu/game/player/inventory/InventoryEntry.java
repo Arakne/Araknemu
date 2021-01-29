@@ -23,8 +23,8 @@ import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.item.inventory.AbstractItemEntry;
-import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectMoved;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 
 import java.util.stream.Collectors;
 

@@ -40,7 +40,7 @@ final public class ColorsTransformer implements Transformer<Colors> {
 
     @Override
     public Colors unserialize(String serialize) throws TransformerException {
-        if (serialize.equals("-1,-1,-1")) {
+        if ("-1,-1,-1".equals(serialize)) {
             return Colors.DEFAULT;
         }
 

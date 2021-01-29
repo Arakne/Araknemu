@@ -83,7 +83,7 @@ final public class NpcExchangeService implements PreloadableService, EventsSubsc
                 public Class<GameStarted> event() {
                     return GameStarted.class;
                 }
-            }
+            },
         };
     }
 

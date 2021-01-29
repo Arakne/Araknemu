@@ -50,16 +50,6 @@ final public class NpcExchangeParty extends AbstractPlayerExchangeParty {
         this(player, npc, exchange, new PlayerExchangeStorage(player));
     }
 
-    @Override
-    public ExchangeType type() {
-        return ExchangeType.NPC_EXCHANGE;
-    }
-
-    @Override
-    public Creature target() {
-        return npc;
-    }
-
     private NpcExchangeParty(ExplorationPlayer player, GameNpc npc, NpcExchangePartyProcessor npcExchangePartyProcessor, PlayerExchangeStorage storage) {
         super(
             player,
@@ -79,5 +69,15 @@ final public class NpcExchangeParty extends AbstractPlayerExchangeParty {
 
     private NpcExchangeParty(ExplorationPlayer player, GameNpc npc, GameNpcExchange exchange, PlayerExchangeStorage storage) {
         this(player, npc, new NpcExchangePartyProcessor(npc, exchange), storage);
+    }
+
+    @Override
+    public ExchangeType type() {
+        return ExchangeType.NPC_EXCHANGE;
+    }
+
+    @Override
+    public Creature target() {
+        return npc;
     }
 }

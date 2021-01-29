@@ -26,7 +26,7 @@ package fr.quatrevieux.araknemu.data.living.constraint;
  * @param <E> The error type
  * @param <V> The value type
  */
-final public class ValueCheck<T, E, V> extends ValueConstraint<T, E, V> {
+final public class ValueCheck<T, E, V> extends AbstractValueConstraint<T, E, V> {
     public interface Checker<V> {
         public boolean check(V value);
     }

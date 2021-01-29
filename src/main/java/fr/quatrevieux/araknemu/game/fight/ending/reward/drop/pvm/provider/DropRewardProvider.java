@@ -29,7 +29,7 @@ public interface DropRewardProvider {
     /**
      * Scoped provider for end fight results
      */
-    public interface Scope {
+    public static interface Scope {
         /**
          * No-operation scope instance
          */

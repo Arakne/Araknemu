@@ -33,7 +33,7 @@ final public class AskCharacterList implements Packet {
         @Override
         public AskCharacterList parse(String input) throws ParsePacketException {
             return new AskCharacterList(
-                input.equals("f")
+                "f".equals(input)
             );
         }
 

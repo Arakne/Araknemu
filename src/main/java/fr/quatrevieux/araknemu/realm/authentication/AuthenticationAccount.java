@@ -87,8 +87,13 @@ final public class AuthenticationAccount extends AbstractLivingAccount<RealmSess
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         AuthenticationAccount that = (AuthenticationAccount) o;
 

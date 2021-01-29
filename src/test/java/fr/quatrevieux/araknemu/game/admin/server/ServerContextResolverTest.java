@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
-import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.context.NullContext;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,7 +57,7 @@ class ServerContextResolverTest extends GameBaseCase {
         Command command = Mockito.mock(Command.class);
         Mockito.when(command.name()).thenReturn("mocked");
 
-        resolver.register(new ContextConfigurator<ServerContext>() {
+        resolver.register(new AbstractContextConfigurator<ServerContext>() {
             @Override
             public void configure(ServerContext context) {
                 add(command);

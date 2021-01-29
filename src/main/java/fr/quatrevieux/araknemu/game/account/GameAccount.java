@@ -108,7 +108,7 @@ final public class GameAccount extends AbstractLivingAccount<GameSession> {
     /**
      * Grant list of permissions
      */
-    public void grant(Permission ...permission) {
+    public void grant(Permission... permission) {
         Collections.addAll(account.permissions(), permission);
     }
 

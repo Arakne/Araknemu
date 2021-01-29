@@ -24,7 +24,7 @@ import org.ini4j.Profile;
 /**
  * Configuration Pool for ini
  */
-final public class IniPool implements Pool{
+final public class IniPool implements Pool {
     final private Profile.Section section;
 
     public IniPool(Profile.Section section) {

@@ -83,7 +83,7 @@ final public class PlayerSprite implements Sprite {
             ";;" + // @todo emote; emote timer
             ";;" + // @todo guild; guild emblem
             Integer.toString(exploration.restrictions().toInt(), 36) + ";"
-            // @todo mount
+        // @todo mount
         ;
     }
 }

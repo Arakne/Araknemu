@@ -24,7 +24,7 @@ import fr.arakne.utils.value.Interval;
 /**
  * Error message
  */
-final public class Error extends InformationMessage {
+final public class Error extends AbstractInformationMessage {
     public Error(Entry... entries) {
         super(Type.ERROR, entries);
     }

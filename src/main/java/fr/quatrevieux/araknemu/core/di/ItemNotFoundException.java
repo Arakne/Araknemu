@@ -30,7 +30,10 @@ public class ItemNotFoundException extends ContainerException {
         this.type = type;
     }
 
-    public Class type() {
+    /**
+     * The request class
+     */
+    final public Class type() {
         return type;
     }
 }

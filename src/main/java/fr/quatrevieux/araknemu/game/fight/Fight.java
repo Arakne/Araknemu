@@ -84,8 +84,7 @@ final public class Fight implements Dispatcher, Sender {
     /**
      * Register a module
      */
-    public void register(FightModule module)
-    {
+    public void register(FightModule module) {
         modules.add(module);
         dispatcher.register(module);
         module.effects(effects);

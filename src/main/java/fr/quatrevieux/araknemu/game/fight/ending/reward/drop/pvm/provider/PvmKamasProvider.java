@@ -22,8 +22,8 @@ package fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider;
 import fr.arakne.utils.value.Interval;
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
-import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 
 /**
  * Provide win kamas on Pvm fight

@@ -20,16 +20,37 @@
 package fr.quatrevieux.araknemu.network.game.out.chat;
 
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
+import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
-/**
- * Remove chat channel subscriptions
- *
- * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Chat.as#L149
- */
-final public class ChannelUnsubscribed extends AbstractChannelSubscriptionChanged {
-    public ChannelUnsubscribed(Collection<ChannelType> channels) {
-        super('-', channels);
+import static org.junit.jupiter.api.Assertions.*;
+
+class AbstractChannelSubscriptionChangedTest {
+    class Impl extends AbstractChannelSubscriptionChanged {
+        public Impl(char sign, Collection<ChannelType> channels) {
+            super(sign, channels);
+        }
+    }
+
+    @Test
+    void withOneChannel() {
+        assertEquals(
+            "cC+@",
+            new Impl('+', Collections.singleton(ChannelType.ADMIN)).toString()
+        );
+    }
+
+    @Test
+    void withMultipleChannels() {
+        assertEquals(
+            "cC-ip*",
+            new Impl(
+                '-',
+                Arrays.asList(ChannelType.INFO, ChannelType.PRIVATE, ChannelType.MESSAGES)
+            ).toString()
+        );
     }
 }

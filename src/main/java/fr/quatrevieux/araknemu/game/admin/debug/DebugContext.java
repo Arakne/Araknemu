@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.admin.debug;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContext;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
-import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.context.SimpleContext;
 
 import java.util.List;
@@ -33,7 +33,7 @@ import java.util.List;
 final public class DebugContext extends AbstractContext<DebugContext> {
     final private Context globalContext;
 
-    public DebugContext(Context globalContext, List<ContextConfigurator<DebugContext>> configurators) throws ContainerException {
+    public DebugContext(Context globalContext, List<AbstractContextConfigurator<DebugContext>> configurators) throws ContainerException {
         super(configurators);
 
         this.globalContext = globalContext;

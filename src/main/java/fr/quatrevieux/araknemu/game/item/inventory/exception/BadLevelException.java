@@ -29,7 +29,10 @@ public class BadLevelException extends InventoryException {
         this.level = level;
     }
 
-    public int level() {
+    /**
+     * The expected level
+     */
+    final public int level() {
         return level;
     }
 }

@@ -28,7 +28,7 @@ import java.util.List;
  * Parser for console command line
  */
 public interface CommandParser {
-    final public class Arguments {
+    static final public class Arguments {
         final private String line;
         final private String contextPath;
         final private String command;

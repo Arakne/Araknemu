@@ -28,7 +28,7 @@ import java.time.ZoneId;
 /**
  * Information messages
  */
-final public class Information extends InformationMessage {
+final public class Information extends AbstractInformationMessage {
     public Information(Entry... entries) {
         super(Type.INFO, entries);
     }

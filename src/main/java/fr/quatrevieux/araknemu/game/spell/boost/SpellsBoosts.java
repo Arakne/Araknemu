@@ -27,7 +27,7 @@ import java.util.Collection;
  * Handle spells boosts effects
  */
 public interface SpellsBoosts {
-    public enum Modifier {
+    static public enum Modifier {
         RANGE(281),
         MODIFIABLE_RANGE(282),
         DAMAGE(283),

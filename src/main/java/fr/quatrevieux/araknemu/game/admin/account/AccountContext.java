@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.admin.account;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContext;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
-import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.context.SimpleContext;
 
 import java.util.List;
@@ -34,7 +34,7 @@ final public class AccountContext extends AbstractContext<AccountContext> {
     final private Context globalContext;
     final private GameAccount account;
 
-    public AccountContext(Context globalContext, GameAccount account, List<ContextConfigurator<AccountContext>> configurators) {
+    public AccountContext(Context globalContext, GameAccount account, List<AbstractContextConfigurator<AccountContext>> configurators) {
         super(configurators);
 
         this.globalContext = globalContext;

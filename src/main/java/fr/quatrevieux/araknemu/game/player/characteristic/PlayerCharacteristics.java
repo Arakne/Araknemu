@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.value.BoostStatsData;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
-import fr.quatrevieux.araknemu.game.item.type.Equipment;
+import fr.quatrevieux.araknemu.game.item.type.AbstractEquipment;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsChanged;
 import fr.quatrevieux.araknemu.game.player.race.GamePlayerRace;
@@ -159,7 +159,7 @@ final public class PlayerCharacteristics implements CharacterCharacteristics {
     public void rebuildSpecialEffects() {
         specials.clear();
 
-        for (Equipment equipment : player.inventory().equipments()) {
+        for (AbstractEquipment equipment : player.inventory().equipments()) {
             for (SpecialEffect effect : equipment.specials()) {
                 effect.apply(player);
             }
@@ -174,7 +174,7 @@ final public class PlayerCharacteristics implements CharacterCharacteristics {
     private Characteristics computeStuffStats() {
         MutableCharacteristics characteristics = new DefaultCharacteristics();
 
-        for (Equipment equipment : player.inventory().equipments()) {
+        for (AbstractEquipment equipment : player.inventory().equipments()) {
             equipment.apply(characteristics);
         }
 

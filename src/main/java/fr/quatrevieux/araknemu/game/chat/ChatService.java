@@ -25,7 +25,12 @@ import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.living.transformer.ChannelsTransformer;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.chat.channel.Channel;
-import fr.quatrevieux.araknemu.game.listener.player.chat.*;
+import fr.quatrevieux.araknemu.game.listener.player.chat.AddChatChannels;
+import fr.quatrevieux.araknemu.game.listener.player.chat.InitializeChat;
+import fr.quatrevieux.araknemu.game.listener.player.chat.MessageReceived;
+import fr.quatrevieux.araknemu.game.listener.player.chat.PrivateMessageReceived;
+import fr.quatrevieux.araknemu.game.listener.player.chat.SubscriptionAddedAcknowledge;
+import fr.quatrevieux.araknemu.game.listener.player.chat.SubscriptionRemovedAcknowledge;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
@@ -70,7 +75,7 @@ final public class ChatService implements EventsSubscriber {
                     return PlayerLoaded.class;
                 }
             },
-            new AddChatChannels(configuration, new ChannelsTransformer())
+            new AddChatChannels(configuration, new ChannelsTransformer()),
         };
     }
 

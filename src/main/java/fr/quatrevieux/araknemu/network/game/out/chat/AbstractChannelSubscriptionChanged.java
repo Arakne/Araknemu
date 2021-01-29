@@ -20,37 +20,32 @@
 package fr.quatrevieux.araknemu.network.game.out.chat;
 
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
-import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+/**
+ * Abstract class packet for subscription changed
+ */
+abstract public class AbstractChannelSubscriptionChanged {
+    final private char sign;
+    final private Collection<ChannelType> channels;
 
-class ChannelSubscriptionChangedTest {
-    class Impl extends ChannelSubscriptionChanged {
-        public Impl(char sign, Collection<ChannelType> channels) {
-            super(sign, channels);
+
+    public AbstractChannelSubscriptionChanged(char sign, Collection<ChannelType> channels) {
+        this.sign = sign;
+        this.channels = channels;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("cC");
+
+        sb.append(sign);
+
+        for (ChannelType type : channels) {
+            sb.append(type.identifier());
         }
-    }
 
-    @Test
-    void withOneChannel() {
-        assertEquals(
-            "cC+@",
-            new Impl('+', Collections.singleton(ChannelType.ADMIN)).toString()
-        );
-    }
-
-    @Test
-    void withMultipleChannels() {
-        assertEquals(
-            "cC-ip*",
-            new Impl(
-                '-',
-                Arrays.asList(ChannelType.INFO, ChannelType.PRIVATE, ChannelType.MESSAGES)
-            ).toString()
-        );
+        return sb.toString();
     }
 }

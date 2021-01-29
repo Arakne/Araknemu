@@ -97,8 +97,7 @@ final public class ItemService implements PreloadableService {
             itemTypeRepository.get(template.type()),
             template.itemSet() == 0
                 ? null
-                : itemSet(template.itemSet())
-            ,
+                : itemSet(template.itemSet()),
             maximize
         );
     }
@@ -146,8 +145,7 @@ final public class ItemService implements PreloadableService {
             itemTypeRepository.get(template.type()),
             template.itemSet() == 0
                 ? null
-                : itemSet(template.itemSet())
-            ,
+                : itemSet(template.itemSet()),
             effects
         );
     }

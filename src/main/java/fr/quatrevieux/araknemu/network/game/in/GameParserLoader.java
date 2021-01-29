@@ -19,7 +19,18 @@
 
 package fr.quatrevieux.araknemu.network.game.in;
 
-import fr.quatrevieux.araknemu.network.game.in.account.*;
+import fr.quatrevieux.araknemu.core.network.parser.ParserLoader;
+import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import fr.quatrevieux.araknemu.network.game.in.account.AddCharacterRequest;
+import fr.quatrevieux.araknemu.network.game.in.account.AskBoost;
+import fr.quatrevieux.araknemu.network.game.in.account.AskCharacterList;
+import fr.quatrevieux.araknemu.network.game.in.account.AskGift;
+import fr.quatrevieux.araknemu.network.game.in.account.AskRandomName;
+import fr.quatrevieux.araknemu.network.game.in.account.AskRegionalVersion;
+import fr.quatrevieux.araknemu.network.game.in.account.ChoosePlayingCharacter;
+import fr.quatrevieux.araknemu.network.game.in.account.ClientUid;
+import fr.quatrevieux.araknemu.network.game.in.account.DeleteCharacterRequest;
+import fr.quatrevieux.araknemu.network.game.in.account.LoginToken;
 import fr.quatrevieux.araknemu.network.game.in.basic.AskDate;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminCommand;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminMove;
@@ -37,7 +48,12 @@ import fr.quatrevieux.araknemu.network.game.in.exchange.movement.ItemsMovement;
 import fr.quatrevieux.araknemu.network.game.in.exchange.movement.KamasMovement;
 import fr.quatrevieux.araknemu.network.game.in.exchange.store.BuyRequest;
 import fr.quatrevieux.araknemu.network.game.in.exchange.store.SellRequest;
-import fr.quatrevieux.araknemu.network.game.in.fight.*;
+import fr.quatrevieux.araknemu.network.game.in.fight.AskFightDetails;
+import fr.quatrevieux.araknemu.network.game.in.fight.FighterChangePlace;
+import fr.quatrevieux.araknemu.network.game.in.fight.FighterReady;
+import fr.quatrevieux.araknemu.network.game.in.fight.LeaveFightRequest;
+import fr.quatrevieux.araknemu.network.game.in.fight.ListFightsRequest;
+import fr.quatrevieux.araknemu.network.game.in.fight.TurnEnd;
 import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
@@ -49,8 +65,6 @@ import fr.quatrevieux.araknemu.network.game.in.object.ObjectMoveRequest;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectUseRequest;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellMove;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellUpgrade;
-import fr.quatrevieux.araknemu.core.network.parser.ParserLoader;
-import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 
 import java.util.Arrays;
 import java.util.Collection;

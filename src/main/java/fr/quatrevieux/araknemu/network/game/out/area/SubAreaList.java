@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.network.game.out.area;
 
 import fr.quatrevieux.araknemu.data.constant.Alignment;
-import fr.quatrevieux.araknemu.data.world.entity.environment.area.SubArea;
 import fr.quatrevieux.araknemu.game.exploration.area.ExplorationSubArea;
 
 import java.util.Collection;
@@ -42,7 +41,7 @@ final public class SubAreaList {
         StringBuilder sb = new StringBuilder("al");
 
         for (ExplorationSubArea subArea : subAreas) {
-            if(subArea.alignment() == Alignment.NONE) {
+            if (subArea.alignment() == Alignment.NONE) {
                 continue;
             }
 

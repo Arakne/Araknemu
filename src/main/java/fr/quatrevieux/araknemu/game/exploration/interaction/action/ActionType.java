@@ -35,9 +35,9 @@ public enum ActionType {
     REFUSE_CHALLENGE(902),
     JOIN_FIGHT(903);
 
-    final private int id;
-
     final static private Map<Integer, ActionType> actionsById = new HashMap<>();
+
+    final private int id;
 
     static {
         for (ActionType actionType : values()) {

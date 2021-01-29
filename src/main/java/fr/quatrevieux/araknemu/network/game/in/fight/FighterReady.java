@@ -32,7 +32,7 @@ final public class FighterReady implements Packet {
     final static public class Parser implements SinglePacketParser<FighterReady> {
         @Override
         public FighterReady parse(String input) throws ParsePacketException {
-            return new FighterReady(input.equals("1"));
+            return new FighterReady("1".equals(input));
         }
 
         @Override

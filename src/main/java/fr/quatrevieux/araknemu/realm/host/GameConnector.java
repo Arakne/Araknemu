@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
  * GameConnector for communicate between game and realm server
  */
 public interface GameConnector {
-    public interface HostResponse<T> {
+    public static interface HostResponse<T> {
         /**
          * Response of the game host
          */

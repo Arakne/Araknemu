@@ -31,7 +31,10 @@ public class ItemNotFoundException extends InventoryException {
         this.id = id;
     }
 
-    public int id() {
+    /**
+     * The request item id
+     */
+    final public int id() {
         return id;
     }
 }

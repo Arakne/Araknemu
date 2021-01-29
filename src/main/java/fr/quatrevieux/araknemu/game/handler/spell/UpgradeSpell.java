@@ -20,10 +20,10 @@
 package fr.quatrevieux.araknemu.game.handler.spell;
 
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellUpgrade;
 import fr.quatrevieux.araknemu.network.game.out.spell.SpellUpgradeError;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Upgrade the spell

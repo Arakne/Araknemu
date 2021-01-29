@@ -57,7 +57,7 @@ final public class SendFightJoined implements Listener<FightJoined> {
             new FightStartPositions(
                 new List[] {
                     event.fight().team(0).startPlaces(),
-                    event.fight().team(1).startPlaces()
+                    event.fight().team(1).startPlaces(),
                 },
                 fighter.team().number()
             )

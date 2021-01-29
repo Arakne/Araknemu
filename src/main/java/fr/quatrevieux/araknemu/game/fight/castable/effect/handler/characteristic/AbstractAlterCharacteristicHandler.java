@@ -34,11 +34,11 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 /**
  * Alter a characteristic with buff effect
  */
-abstract public class AlterCharacteristicHandler implements EffectHandler, BuffHook {
+abstract public class AbstractAlterCharacteristicHandler implements EffectHandler, BuffHook {
     final private Fight fight;
     final private Characteristic characteristic;
 
-    public AlterCharacteristicHandler(Fight fight, Characteristic characteristic) {
+    public AbstractAlterCharacteristicHandler(Fight fight, Characteristic characteristic) {
         this.fight = fight;
         this.characteristic = characteristic;
     }

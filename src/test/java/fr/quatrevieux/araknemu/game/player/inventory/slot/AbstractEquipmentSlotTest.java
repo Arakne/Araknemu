@@ -31,7 +31,7 @@ import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SlotConstra
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
-import fr.quatrevieux.araknemu.game.item.type.Equipment;
+import fr.quatrevieux.araknemu.game.item.type.AbstractEquipment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -60,7 +60,7 @@ class AbstractEquipmentSlotTest extends GameBaseCase {
         storage = Mockito.mock(ItemStorage.class);
         slot = new AbstractEquipmentSlot(dispatcher = new DefaultListenerAggregate(), new SimpleSlot(1, new SlotConstraint[]{}, storage)) {
             @Override
-            public Optional<Equipment> equipment() {
+            public Optional<AbstractEquipment> equipment() {
                 return Optional.empty();
             }
         };

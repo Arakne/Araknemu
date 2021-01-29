@@ -42,7 +42,7 @@ final public class UsableSlot implements InventorySlot {
         slot = new SimpleSlot(
             id,
             new SlotConstraint[] {
-                new ItemClassConstraint(UsableItem.class)
+                new ItemClassConstraint(UsableItem.class),
             },
             storage
         );

@@ -26,6 +26,8 @@ package fr.quatrevieux.araknemu.util;
 final public class LogFormatter {
     final static private String PLACEHOLDER = "{}";
 
+    private LogFormatter() {}
+
     /**
      * Format the given message
      *
@@ -47,7 +49,7 @@ final public class LogFormatter {
         int lastPlaceholder = 0;
         int parameterNumber = 0;
 
-        for (int placeholderIndex; (placeholderIndex = message.indexOf(PLACEHOLDER, lastPlaceholder)) != -1; ) {
+        for (int placeholderIndex; (placeholderIndex = message.indexOf(PLACEHOLDER, lastPlaceholder)) != -1;) {
             if (parameterNumber >= parameters.length) {
                 throw new IndexOutOfBoundsException("Missing parameter " + parameterNumber);
             }

@@ -28,7 +28,6 @@ import fr.quatrevieux.araknemu.core.dbal.DatabaseConfiguration;
 import fr.quatrevieux.araknemu.core.dbal.DatabaseHandler;
 import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
 import fr.quatrevieux.araknemu.core.di.Container;
-import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.di.ItemPoolContainer;
 import fr.quatrevieux.araknemu.data.living.repository.implementation.sql.SqlLivingRepositoriesModule;
 import fr.quatrevieux.araknemu.data.world.repository.implementation.sql.SqlWorldRepositoriesModule;
@@ -43,7 +42,6 @@ import org.apache.logging.log4j.Logger;
 import org.ini4j.Ini;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -157,7 +155,7 @@ public class Araknemu {
     /**
      * Application entry point
      */
-    public static void main(String[] args) throws IOException, SQLException, ContainerException, BootException {
+    public static void main(String[] args) throws Exception {
         Configuration configuration = new DefaultConfiguration(
             new IniDriver(
                 new Ini(new File("config.ini"))

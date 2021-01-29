@@ -35,6 +35,8 @@ final public class Escape {
     final static private String[] TO_ESCAPE = new String[] {"&lt;", "&gt;", "<", ">", "&", "|"};
     final static private String[] REPLACEMENT = new String[] {"&lt;", "&gt;", "&lt;", "&gt;", "&amp;", ""};
 
+    private Escape() {}
+
     /**
      * Escape HTML chars
      * Note: "&lt;" and "&gt;" sequences are ignored due to client side encoding

@@ -34,9 +34,6 @@ import java.util.List;
  * - For each monster, a random one is choose from group data
  */
 final public class RandomMonsterListGenerator implements MonsterListGenerator {
-    final private MonsterService service;
-    final private RandomUtil random;
-
     final static private int[][] SIZE_PROBABILITIES = new int[][] {
         {50, 50},
         {33, 34, 33},
@@ -46,6 +43,9 @@ final public class RandomMonsterListGenerator implements MonsterListGenerator {
         {9, 11, 15, 20, 20, 16, 9},
         {9, 11, 13, 17, 17, 13, 11, 9},
     };
+
+    final private MonsterService service;
+    final private RandomUtil random;
 
     public RandomMonsterListGenerator(MonsterService service) {
         this.service = service;

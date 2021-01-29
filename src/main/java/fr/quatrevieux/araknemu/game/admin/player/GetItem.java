@@ -87,7 +87,10 @@ final public class GetItem extends AbstractCommand {
 
     @Override
     public void execute(AdminPerformer performer, List<String> arguments) throws CommandException {
-        boolean max = false, each = false;
+        // @todo argument struct
+        boolean max = false;
+        boolean each = false;
+
         List<ItemTemplateEffectEntry> effects = null;
 
         int i;

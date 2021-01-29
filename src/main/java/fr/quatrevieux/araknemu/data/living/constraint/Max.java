@@ -26,7 +26,7 @@ package fr.quatrevieux.araknemu.data.living.constraint;
  * @param <E> The error type
  * @param <V> The value type (should be comparable
  */
-final public class Max<T, E, V extends Comparable> extends ValueConstraint<T, E, V> {
+final public class Max<T, E, V extends Comparable> extends AbstractValueConstraint<T, E, V> {
     final private V value;
 
     public Max(E error, Getter<T, V> getter, V value) {

@@ -19,10 +19,10 @@
 
 package fr.quatrevieux.araknemu.network.game.in.chat;
 
-import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import fr.quatrevieux.araknemu.game.chat.ChannelType;
 
 import java.util.Collection;
 import java.util.EnumSet;

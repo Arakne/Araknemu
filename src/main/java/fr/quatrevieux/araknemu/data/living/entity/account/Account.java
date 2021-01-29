@@ -104,14 +104,28 @@ final public class Account {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Account account = (Account) o;
 
-        if (id != account.id) return false;
-        if (name != null ? !name.equals(account.name) : account.name != null) return false;
-        if (password != null ? !password.equals(account.password) : account.password != null) return false;
+        if (id != account.id) {
+            return false;
+        }
+
+        if (name != null ? !name.equals(account.name) : account.name != null) {
+            return false;
+        }
+
+        if (password != null ? !password.equals(account.password) : account.password != null) {
+            return false;
+        }
+
         return pseudo != null ? pseudo.equals(account.pseudo) : account.pseudo == null;
     }
 

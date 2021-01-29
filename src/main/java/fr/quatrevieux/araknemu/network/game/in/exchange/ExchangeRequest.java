@@ -19,10 +19,10 @@
 
 package fr.quatrevieux.araknemu.network.game.in.exchange;
 
-import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;

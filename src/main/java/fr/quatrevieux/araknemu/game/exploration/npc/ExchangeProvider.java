@@ -33,7 +33,7 @@ public interface ExchangeProvider {
     /**
      * Factory for creates an Npc exchange
      */
-    public interface Factory {
+    public static interface Factory {
         /**
          * Creates the exchange
          *

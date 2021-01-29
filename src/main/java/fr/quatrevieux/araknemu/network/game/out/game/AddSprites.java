@@ -41,7 +41,7 @@ final public class AddSprites {
 
         sb.append("GM");
 
-        for(Sprite sprite : sprites){
+        for (Sprite sprite : sprites) {
             sb.append("|+").append(sprite);
         }
 

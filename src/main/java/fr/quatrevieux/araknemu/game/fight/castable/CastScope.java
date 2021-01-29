@@ -26,14 +26,22 @@ import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  * Wrap casting arguments
  */
 final public class CastScope {
-    public class EffectScope {
+    final public class EffectScope {
         final private SpellEffect effect;
         final private Collection<PassiveFighter> targets;
 
@@ -42,10 +50,16 @@ final public class CastScope {
             this.targets = targets;
         }
 
+        /**
+         * The related effect
+         */
         public SpellEffect effect() {
             return effect;
         }
 
+        /**
+         * Get all targeted fighters for the current effect
+         */
         public Collection<PassiveFighter> targets() {
             return targets.stream()
                 .map(targetMapping::get)

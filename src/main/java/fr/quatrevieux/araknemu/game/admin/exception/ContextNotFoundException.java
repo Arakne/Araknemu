@@ -29,7 +29,10 @@ public class ContextNotFoundException extends ContextException {
         this.context = context;
     }
 
-    public String context() {
+    /**
+     * The context name
+     */
+    final public String context() {
         return context;
     }
 }

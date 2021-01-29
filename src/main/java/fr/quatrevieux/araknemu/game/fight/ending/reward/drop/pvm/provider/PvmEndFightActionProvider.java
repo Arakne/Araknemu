@@ -42,7 +42,7 @@ final public class PvmEndFightActionProvider implements DropRewardProvider {
 
         @Override
         public void provide(DropReward reward) {
-            reward.addAction((reward1, fighter) -> fighter.apply(new FighterOperation() {
+            reward.addAction((toApply, fighter) -> fighter.apply(new FighterOperation() {
                 @Override
                 public void onPlayer(PlayerFighter fighter) {
                     fighter.player().setPosition(position);

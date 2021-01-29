@@ -27,7 +27,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Infos.as#L96
  */
-abstract public class InformationMessage {
+abstract public class AbstractInformationMessage {
     public enum Type {
         INFO,
         ERROR,
@@ -58,7 +58,7 @@ abstract public class InformationMessage {
     final private Type type;
     final private Entry[] entries;
 
-    InformationMessage(Type type, Entry... entries) {
+    AbstractInformationMessage(Type type, Entry... entries) {
         this.type = type;
         this.entries = entries;
     }

@@ -227,13 +227,13 @@ public enum Effect {
         SPECIAL
     }
 
+    final static private Map<Integer, Effect> effects = new HashMap<>();
+
     final private int id;
     final private Type type;
-    
-    final static private Map<Integer, Effect> effects = new HashMap<>();
-    
+
     static {
-        for(Effect effect : values()){
+        for (Effect effect : values()) {
             effects.put(effect.id, effect);
         }
     }
@@ -262,7 +262,7 @@ public enum Effect {
      *
      * @see Effect#id()
      */
-    static public Effect byId(int id){
+    static public Effect byId(int id) {
         if (!effects.containsKey(id)) {
             throw new NoSuchElementException("Effect " + id + " is not supported");
         }

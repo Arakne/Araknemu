@@ -34,7 +34,12 @@ public class CommandPermissionsException extends CommandException {
         this.permissions = permissions;
     }
 
-    public Set<Permission> permissions() {
+    /**
+     * Get the required permissions to execute the command
+     *
+     * @see fr.quatrevieux.araknemu.game.admin.Command#permissions()
+     */
+    final public Set<Permission> permissions() {
         return permissions;
     }
 }

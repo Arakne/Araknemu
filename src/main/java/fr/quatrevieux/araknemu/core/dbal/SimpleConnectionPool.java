@@ -73,13 +73,17 @@ final public class SimpleConnectionPool implements ConnectionPool {
             if (connection.isClosed()) {
                 return;
             }
-        } catch (SQLException e) { }
+        } catch (SQLException e) {
+            // Ignore exception
+        }
 
         // Cannot post the connection, close the connection
         if (!connections.offer(connection)) {
             try {
                 connection.close();
-            } catch (SQLException e) { }
+            } catch (SQLException e) {
+                // Ignore: the failed connection is not kept here
+            }
         }
     }
 
@@ -98,7 +102,9 @@ final public class SimpleConnectionPool implements ConnectionPool {
         for (Connection connection : toClose) {
             try {
                 connection.close();
-            } catch (SQLException e) { }
+            } catch (SQLException e) {
+                // Ignore: the failed connection is not kept here
+            }
         }
     }
 }

@@ -48,7 +48,7 @@ public class ChatException extends Exception {
         this.error = error;
     }
 
-    public Error error() {
+    final public Error error() {
         return error;
     }
 }

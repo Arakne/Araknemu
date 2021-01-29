@@ -29,7 +29,7 @@ import java.util.NoSuchElementException;
  * Data for boost stats per class
  */
 final public class BoostStatsData {
-    static public class Interval {
+    final static public class Interval {
         final private int start;
         final private int cost;
         final private int boost;
@@ -40,14 +40,24 @@ final public class BoostStatsData {
             this.boost = boost;
         }
 
+        /**
+         * The start characteristics points interval for the current boost rule
+         * This value is inclusive
+         */
         public int start() {
             return start;
         }
 
+        /**
+         * The cost for boot the characteristic
+         */
         public int cost() {
             return cost;
         }
 
+        /**
+         * The boost value : how many characteristics points are added on boost
+         */
         public int boost() {
             return boost;
         }

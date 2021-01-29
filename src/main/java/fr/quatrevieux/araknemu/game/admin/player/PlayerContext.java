@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.admin.player;
 
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContext;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
-import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.context.SimpleContext;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 
@@ -34,7 +34,7 @@ final public class PlayerContext extends AbstractContext<PlayerContext> {
     final private GamePlayer player;
     final private Context accountContext;
 
-    public PlayerContext(GamePlayer player, Context accountContext, List<ContextConfigurator<PlayerContext>> configurators) {
+    public PlayerContext(GamePlayer player, Context accountContext, List<AbstractContextConfigurator<PlayerContext>> configurators) {
         super(configurators);
 
         this.player = player;

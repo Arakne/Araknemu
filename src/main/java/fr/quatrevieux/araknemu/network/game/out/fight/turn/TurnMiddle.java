@@ -40,10 +40,10 @@ final public class TurnMiddle {
     public String toString() {
         StringBuilder sb = new StringBuilder("GTM");
 
-        for(Fighter fighter : fighters){
+        for (Fighter fighter : fighters) {
             sb.append('|').append(fighter.id()).append(';');
 
-            if(fighter.dead()){
+            if (fighter.dead()) {
                 sb.append(1);
                 continue;
             }
