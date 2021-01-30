@@ -79,6 +79,7 @@ abstract public class AbstractEquipment implements Item {
     public ItemType type() {
         return type;
     }
+
     /**
      * Get item characteristics
      */

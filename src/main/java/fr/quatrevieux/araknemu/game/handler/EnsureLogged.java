@@ -30,7 +30,6 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 final public class EnsureLogged<P extends Packet> implements PacketHandler<GameSession, P> {
     final private PacketHandler<GameSession, P> handler;
 
-
     public EnsureLogged(PacketHandler<GameSession, P> handler) {
         this.handler = handler;
     }

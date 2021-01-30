@@ -36,6 +36,7 @@ final public class Error extends AbstractInformationMessage {
     public Error(int id, Object... arguments) {
         this(new Entry(id, arguments));
     }
+
     /**
      * Get the welcome message
      */

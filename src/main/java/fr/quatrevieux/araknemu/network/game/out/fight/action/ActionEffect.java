@@ -218,7 +218,7 @@ final public class ActionEffect {
      * Remove all buffs that can be removed from the target
      * 
      * @param caster The caster
-     * @param targer The target
+     * @param target The target
      */
     static public ActionEffect dispelBuffs(PassiveFighter caster, PassiveFighter target) {
         return new ActionEffect(132, caster, target.id());

@@ -38,7 +38,6 @@ final public class HostService {
     final private PlayerRepository playerRepository;
     final private ConcurrentMap<Integer, GameHost> hosts = new ConcurrentHashMap<>();
 
-
     public HostService(PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;
     }

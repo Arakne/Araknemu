@@ -172,6 +172,7 @@ final public class DropReward implements FightReward {
     public void addItem(int itemId, int quantity) {
         items.put(itemId, items.getOrDefault(itemId, 0) + quantity);
     }
+
     /**
      * Add one item to the win items
      *

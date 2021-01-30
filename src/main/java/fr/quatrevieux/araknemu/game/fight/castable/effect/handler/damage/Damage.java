@@ -69,7 +69,6 @@ final public class Damage {
             this.percent = 0;
         }
 
-
         this.percent -= percent;
 
         return this;

@@ -138,8 +138,8 @@ final public class DatabaseConfiguration implements ConfigurationModule {
 
     /**
      * Get a connection configuration
+     *
      * @param name The connection name
-     * @return
      */
     public Connection connection(String name) {
         return new Connection(name, pool);

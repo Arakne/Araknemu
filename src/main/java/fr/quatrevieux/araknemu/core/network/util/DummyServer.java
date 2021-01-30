@@ -31,7 +31,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * Fake server implementation
  *
- * @param <S>
+ * @param <S> The handled session type
  */
 final public class DummyServer<S extends Session> implements Server<S> {
     final private SessionFactory<S> factory;

@@ -68,7 +68,6 @@ final public class MonsterEnvironmentService implements EventsSubscriber, Preloa
      */
     private boolean preloaded = false;
 
-
     public MonsterEnvironmentService(ActivityService activityService, FightService fightService, MonsterGroupFactory factory, MonsterGroupPositionRepository positionRepository, MonsterGroupDataRepository dataRepository, GameConfiguration.ActivityConfiguration configuration) {
         this.activityService = activityService;
         this.fightService = fightService;

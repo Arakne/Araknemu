@@ -229,6 +229,7 @@ final public class Banip extends AbstractCommand {
             Link.Type.EXECUTE.create("${server} banip remove " + rule.ipAddress().toNormalizedString()).text("remove")
         ;
     }
+
     /**
      * Extract the ban cause
      */

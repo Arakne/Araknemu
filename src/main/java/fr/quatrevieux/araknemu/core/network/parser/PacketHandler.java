@@ -27,7 +27,6 @@ package fr.quatrevieux.araknemu.core.network.parser;
 public interface PacketHandler<S, P extends Packet> {
     /**
      * Handle the incoming packet
-     * @param packet
      *
      * @throws Exception When an error occurs during handle the packet
      */
@@ -35,7 +34,6 @@ public interface PacketHandler<S, P extends Packet> {
 
     /**
      * Get the handled packet class
-     * @return
      */
     public Class<P> packet();
 }

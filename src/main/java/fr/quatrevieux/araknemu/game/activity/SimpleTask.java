@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.activity;
 
-
 import org.apache.logging.log4j.Logger;
 
 import java.time.Duration;

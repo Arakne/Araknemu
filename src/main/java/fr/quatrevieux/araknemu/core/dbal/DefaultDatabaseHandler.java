@@ -81,8 +81,9 @@ final public class DefaultDatabaseHandler implements DatabaseHandler {
 
     /**
      * Register a new factory
-     * @param type
-     * @param factory
+     *
+     * @param type The factory type. {@link Driver#type()}
+     * @param factory The factory for create the driver
      */
     public void factory(String type, Driver.Factory factory) {
         factories.put(type, factory);

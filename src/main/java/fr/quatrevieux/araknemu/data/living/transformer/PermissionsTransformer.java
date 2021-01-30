@@ -28,6 +28,13 @@ import java.util.Set;
  * Transformer for permissions set
  */
 final public class PermissionsTransformer {
+    /**
+     * Get the bitfield values of the permissions set
+     *
+     * @param value The permission set
+     *
+     * @return Integer consists of a bitfield of all permissions
+     */
     public int serialize(Set<Permission> value) {
         if (value == null)  {
             return 0;
@@ -42,6 +49,13 @@ final public class PermissionsTransformer {
         return ret;
     }
 
+    /**
+     * Parse a bitfield to get a set of permissions
+     *
+     * @param serialized The bitfield
+     *
+     * @return The set of permissions
+     */
     public Set<Permission> unserialize(int serialized) {
         Set<Permission> permissions = EnumSet.noneOf(Permission.class);
 

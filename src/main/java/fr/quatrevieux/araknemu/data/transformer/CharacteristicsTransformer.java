@@ -28,11 +28,12 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Transform characteristics string
  */
-final public class CharacteristicsTransformer {
+final public class CharacteristicsTransformer implements Transformer<Characteristics> {
     final static private int SERIALIZED_BASE    = 32;
     final static private String VALUE_SEPARATOR = ":";
     final static private String STATS_SEPARATOR = ";";
 
+    @Override
     public String serialize(Characteristics characteristics) {
         if (characteristics == null) {
             return null;
@@ -58,6 +59,7 @@ final public class CharacteristicsTransformer {
         return sb.toString();
     }
 
+    @Override
     public MutableCharacteristics unserialize(String serialized) {
         if (serialized == null) {
             return null;

@@ -43,7 +43,7 @@ public class RepositoryUtils<E> {
          *
          * @return The created entity
          *
-         * @throws SQLException
+         * @throws SQLException Throws by ResultSet
          */
         public E create(ResultSet rs) throws SQLException;
 
@@ -55,7 +55,7 @@ public class RepositoryUtils<E> {
          *
          * @return The filled entity instance (may be new instance)
          *
-         * @throws SQLException
+         * @throws SQLException Throws by ResultSet
          */
         public E fillKeys(E entity, ResultSet keys) throws SQLException;
     }

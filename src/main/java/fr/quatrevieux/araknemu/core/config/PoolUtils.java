@@ -41,6 +41,9 @@ final public class PoolUtils implements Pool {
         return pool.get(key);
     }
 
+    /**
+     * Parse a config item as integer
+     */
     public int integer(String key, int defaultValue) {
         return pool.has(key)
             ? Integer.parseInt(pool.get(key))
@@ -48,10 +51,18 @@ final public class PoolUtils implements Pool {
         ;
     }
 
+    /**
+     * Parse a config item as integer
+     * If the item is not configured, will return zero
+     */
     public int integer(String key) {
         return integer(key, 0);
     }
 
+    /**
+     * Parse a config item as boolean
+     * This method handle values like "1", "true", "yes", "on" as true
+     */
     public boolean bool(String key, boolean defaultValue) {
         if (!pool.has(key)) {
             return defaultValue;
@@ -68,10 +79,18 @@ final public class PoolUtils implements Pool {
         return false;
     }
 
+    /**
+     * Parse a config item as boolean
+     * This method handle values like "1", "true", "yes", "on" as true
+     * If the item is not configured, will return false
+     */
     public boolean bool(String key) {
         return bool(key, false);
     }
 
+    /**
+     * Parse a config item as String
+     */
     public String string(String key, String defaultValue) {
         return pool.has(key)
             ? pool.get(key)
@@ -79,10 +98,17 @@ final public class PoolUtils implements Pool {
         ;
     }
 
+    /**
+     * Parse a config item as String
+     * If the item is not configured, will return an empty string
+     */
     public String string(String key) {
         return string(key, "");
     }
 
+    /**
+     * Parse a config item as double
+     */
     public double decimal(String key, double defaultValue) {
         return pool.has(key)
             ? Double.parseDouble(pool.get(key))
@@ -90,6 +116,10 @@ final public class PoolUtils implements Pool {
         ;
     }
 
+    /**
+     * Parse a config item as integer
+     * If the item is not configured, will return zero
+     */
     public double decimal(String key) {
         return decimal(key, 0d);
     }

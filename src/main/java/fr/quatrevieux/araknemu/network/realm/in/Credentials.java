@@ -39,9 +39,9 @@ final public class Credentials implements Packet {
         ;
 
         /**
-         * Get method from method race char
+         * Get method from method char
+         *
          * @param id The race char. Should be a number
-         * @return
          */
         static public Method get(char id) {
             if (id > '9' || id < '0') {

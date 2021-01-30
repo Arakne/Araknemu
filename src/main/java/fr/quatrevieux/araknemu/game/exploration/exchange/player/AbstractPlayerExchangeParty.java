@@ -41,7 +41,6 @@ abstract public class AbstractPlayerExchangeParty implements ExchangeParty {
      */
     final private ExchangeProcessor processor;
 
-
     protected AbstractPlayerExchangeParty(ExplorationPlayer player, ExchangeProcessor processor, PlayerExchangeStorage storage) {
         this.player = player;
         this.processor = processor;

@@ -90,6 +90,14 @@ final public class Account {
         this.password = password;
     }
 
+    /**
+     * Define the entity id
+     * This method will create a new instance of the account entity
+     *
+     * @param id The id to set
+     *
+     * @return The new entity instance
+     */
     public Account withId(int id) {
         return new Account(
             id,

@@ -30,7 +30,6 @@ abstract public class AbstractChannelSubscriptionChanged {
     final private char sign;
     final private Collection<ChannelType> channels;
 
-
     public AbstractChannelSubscriptionChanged(char sign, Collection<ChannelType> channels) {
         this.sign = sign;
         this.channels = channels;

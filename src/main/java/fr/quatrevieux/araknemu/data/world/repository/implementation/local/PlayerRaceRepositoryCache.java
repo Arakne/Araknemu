@@ -69,7 +69,6 @@ final public class PlayerRaceRepositoryCache implements PlayerRaceRepository {
         return races.containsKey(entity.race()) || repository.has(entity);
     }
 
-
     @Override
     public Collection<PlayerRace> load() {
         Collection<PlayerRace> loaded = repository.load();

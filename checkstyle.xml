@@ -211,6 +211,24 @@
             <property name="allowEmptyLambdas" value="true" />
             <property name="allowEmptyConstructors" value="true" />
         </module>
+        <module name="EmptyLineSeparator">
+            <property name="allowNoEmptyLineBetweenFields" value="true" />
+            <property name="allowMultipleEmptyLinesInsideClassMembers" value="false" />
+            <property name="allowMultipleEmptyLines" value="false" />
+        </module>
+
+        <module name="JavadocContentLocationCheck" />
+        <module name="JavadocMethod">
+            <property name="scope" value="public" />
+            <property name="allowMissingParamTags" value="true" />
+            <property name="allowMissingReturnTag" value="true" />
+        </module>
+        <module name="MissingJavadocMethod">
+            <property name="tokens" value="METHOD_DEF, ANNOTATION_FIELD_DEF" />
+            <property name="minLineCount" value="1" /> <!-- TODO: should be removed -->
+        </module>
+<!--        <module name="MissingJavadocType" />--> <!-- Cannot ignore inner class -->
+        <module name="NonEmptyAtclauseDescription" />
     </module>
 
     <module name="NewlineAtEndOfFile" />
@@ -218,6 +236,10 @@
         <property name="max" value="1000" /> <!-- Should be lowered to 500 -->
     </module>
     <module name="FileTabCharacter" />
+    <module name="RegexpHeader">
+        <property name="headerFile" value="java.header" />
+        <property name="multiLines" value="18" />
+    </module>
 
     <!-- Ignore magic number on packets generation -->
     <module name="SuppressionSingleFilter">

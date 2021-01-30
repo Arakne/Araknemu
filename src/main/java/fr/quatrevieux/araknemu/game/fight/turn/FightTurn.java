@@ -49,7 +49,6 @@ final public class FightTurn implements Turn {
     private ScheduledFuture timer;
     private FighterTurnPoints points;
 
-
     public FightTurn(Fighter fighter, Fight fight, Duration duration) {
         this.fighter = fighter;
         this.fight = fight;

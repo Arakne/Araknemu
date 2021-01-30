@@ -41,7 +41,6 @@ final public class AskFightDetails implements Packet {
         }
     }
 
-
     final private int fightId;
 
     public AskFightDetails(int fightId) {

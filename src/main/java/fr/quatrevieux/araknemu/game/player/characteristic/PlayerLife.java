@@ -143,6 +143,10 @@ final public class PlayerLife implements Life {
         return player.race().life(entity.level()) + player.properties().characteristics().get(Characteristic.VITALITY);
     }
 
+    /**
+     * Initialize player life
+     * This method will compute max life points
+     */
     public void init() {
         max = computeMaxLife();
 

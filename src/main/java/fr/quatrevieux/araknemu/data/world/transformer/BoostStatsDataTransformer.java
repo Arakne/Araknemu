@@ -63,7 +63,6 @@ final public class BoostStatsDataTransformer implements Transformer<BoostStatsDa
 
             intervals.sort(Comparator.comparingInt(BoostStatsData.Interval::start));
 
-
             data.put(characteristic, intervals);
         }
 

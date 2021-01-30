@@ -40,8 +40,8 @@ final public class RandomStringUtil {
 
     /**
      * Generate the random string
+     *
      * @param length The required string length
-     * @return
      */
     public String generate(int length) {
         char[] buffer = new char[length];

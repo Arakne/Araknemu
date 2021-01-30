@@ -56,7 +56,6 @@ public interface EffectMapper<E extends ItemEffect> {
     public List<E> create(List<ItemTemplateEffectEntry> effects, boolean maximize);
 
     /**
-     *
      * Create list of item effects without maximize effects
      *
      * @param effects The template effects

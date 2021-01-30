@@ -95,7 +95,7 @@ final public class Info extends AbstractCommand {
         return formatted.toString();
     }
 
-    public static String formatBytes(long bytes) {
+    private static String formatBytes(long bytes) {
         long absB = bytes == Long.MIN_VALUE ? Long.MAX_VALUE : Math.abs(bytes);
         if (absB < 1024) {
             return bytes + " B";

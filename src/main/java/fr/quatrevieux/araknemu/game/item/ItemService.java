@@ -181,7 +181,7 @@ final public class ItemService implements PreloadableService {
         return new GameItemSet(entity, bonuses);
     }
 
-    public void loadItems(Logger logger) {
+    private void loadItems(Logger logger) {
         logger.info("Loading items...");
 
         int loaded = repository.load().size();
@@ -189,7 +189,7 @@ final public class ItemService implements PreloadableService {
         logger.info("Successfully load {} items", loaded);
     }
 
-    public void loadItemSets(Logger logger) {
+    private void loadItemSets(Logger logger) {
         logger.info("Loading item sets...");
 
         for (ItemSet entity : itemSetRepository.load()) {
@@ -199,7 +199,7 @@ final public class ItemService implements PreloadableService {
         logger.info("Successfully load {} item sets", itemSetsById.size());
     }
 
-    public void loadItemTypes(Logger logger) {
+    private void loadItemTypes(Logger logger) {
         logger.info("Loading item types...");
         logger.info("Successfully load {} item sets", itemTypeRepository.load().size());
     }

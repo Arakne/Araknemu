@@ -51,6 +51,11 @@ final public class Link {
             }
         };
 
+        /**
+         * Create a link to the given target, and use this target as inner text
+         *
+         * Ex: {@code Link.Type.PLAYER.create("Bob")} will create a link for open player menu of "Bob" player with text "Bob"
+         */
         final public Link create(String target) {
             final Link link = new Link().text(target);
 

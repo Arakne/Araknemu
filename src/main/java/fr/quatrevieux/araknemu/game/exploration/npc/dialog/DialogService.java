@@ -57,7 +57,6 @@ final public class DialogService implements PreloadableService {
     final private Map<Integer, NpcQuestion> questions = new ConcurrentHashMap<>();
     final private Map<Integer, Response> responses = new ConcurrentHashMap<>();
 
-
     public DialogService(QuestionRepository questionRepository, ResponseActionRepository responseActionRepository, ActionFactory[] actionFactories, ParametersResolver parametersResolver, Logger logger) {
         this.questionRepository = questionRepository;
         this.responseActionRepository = responseActionRepository;

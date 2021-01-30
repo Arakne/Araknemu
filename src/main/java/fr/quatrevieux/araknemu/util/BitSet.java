@@ -27,7 +27,6 @@ package fr.quatrevieux.araknemu.util;
 final public class BitSet<E extends Enum> {
     private int value;
 
-
     /**
      * Set the item to the bit set
      *
