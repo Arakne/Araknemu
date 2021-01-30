@@ -32,9 +32,8 @@ final public class CamelizeName implements NameGenerator {
 
     @Override
     public String generate() throws NameGenerationException {
-        String generated = generator.generate();
-
-        StringBuilder sb = new StringBuilder(generated.length());
+        final String generated = generator.generate();
+        final StringBuilder sb = new StringBuilder(generated.length());
 
         for (int i = 0; i < generated.length(); ++i) {
             char c = generated.charAt(i);

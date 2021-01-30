@@ -79,7 +79,7 @@ final public class SpellEffectService {
      * @param targets The effects targets
      */
     public List<SpellEffect> makeAll(List<SpellTemplateEffect> templates, List<EffectArea> areas, int[] targets) {
-        List<SpellEffect> effects = new ArrayList<>(templates.size());
+        final List<SpellEffect> effects = new ArrayList<>(templates.size());
 
         for (int i = 0; i < templates.size(); ++i) {
             effects.add(make(templates.get(i), areas.get(i), targets.length > i ? new SpellEffectTarget(targets[i]) : SpellEffectTarget.DEFAULT));

@@ -74,7 +74,7 @@ final public class GeolocationService {
          * Build the map comparator
          */
         private Comparator<MapTemplate> buildComparator() {
-            Comparator<MapTemplate> comparator = this::compareSubArea;
+            final Comparator<MapTemplate> comparator = this::compareSubArea;
 
             return comparator
                 .thenComparing(this::compareIndoor)

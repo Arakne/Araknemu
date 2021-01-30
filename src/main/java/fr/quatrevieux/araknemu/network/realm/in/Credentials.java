@@ -48,7 +48,7 @@ final public class Credentials implements Packet {
                 throw new NumberFormatException();
             }
 
-            int index = id - '0';
+            final int index = id - '0';
 
             if (values().length <= index) {
                 throw new IndexOutOfBoundsException();
@@ -93,14 +93,14 @@ final public class Credentials implements Packet {
      */
     static public PacketParser parser() {
         return input -> {
-            String[] parts = StringUtils.split(input, "\n", 2);
+            final String[] parts = StringUtils.split(input, "\n", 2);
 
             if (parts.length != 2) {
                 throw new ParsePacketException(input, "Missing password");
             }
 
-            String username = parts[0].trim();
-            String hash     = parts[1].trim();
+            final String username = parts[0].trim();
+            final String hash     = parts[1].trim();
 
             if (hash.charAt(0) != '#') {
                 throw new ParsePacketException(input, "Invalid hash format");

@@ -84,7 +84,7 @@ final public class CharacteristicEffect implements ItemEffect {
             return false;
         }
 
-        CharacteristicEffect that = (CharacteristicEffect) o;
+        final CharacteristicEffect that = (CharacteristicEffect) o;
 
         return value == that.value
             && effect == that.effect

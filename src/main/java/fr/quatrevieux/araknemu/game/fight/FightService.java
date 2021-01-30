@@ -159,7 +159,7 @@ final public class FightService implements EventsSubscriber {
             throw new NoSuchElementException("Fight not found");
         }
 
-        Map<Integer, Fight> fights = fightsByMapId.get(mapId);
+        final Map<Integer, Fight> fights = fightsByMapId.get(mapId);
 
         if (!fights.containsKey(fightId)) {
             throw new NoSuchElementException("Fight not found");
@@ -182,7 +182,7 @@ final public class FightService implements EventsSubscriber {
         if (fightsByMapId.containsKey(fight.map().id())) {
             fightsByMapId.get(fight.map().id()).put(fight.id(), fight);
         } else {
-            Map<Integer, Fight> fights = new ConcurrentHashMap<>();
+            final Map<Integer, Fight> fights = new ConcurrentHashMap<>();
 
             fights.put(fight.id(), fight);
 

@@ -86,7 +86,7 @@ final public class InventoryService implements EventsSubscriber {
             new Listener<PlayerLoaded>() {
                 @Override
                 public void on(PlayerLoaded event) {
-                    ListenerAggregate dispatcher = event.player().dispatcher();
+                    final ListenerAggregate dispatcher = event.player().dispatcher();
 
                     dispatcher.add(new SendKamas(event.player()));
 

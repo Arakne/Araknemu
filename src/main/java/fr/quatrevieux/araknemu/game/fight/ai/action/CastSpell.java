@@ -23,7 +23,6 @@ import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.ai.util.SpellCaster;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -68,13 +67,7 @@ final public class CastSpell implements ActionGenerator {
     public Optional<Action> generate(AI ai) {
         final int actionPoints = ai.turn().points().actionPoints();
 
-        if (actionPoints < 1) {
-            return Optional.empty();
-        }
-
-        Optional<? extends PassiveFighter> enemy = ai.enemy();
-
-        if (!enemy.isPresent()) {
+        if (actionPoints < 1 || !ai.enemy().isPresent()) {
             return Optional.empty();
         }
 
@@ -92,7 +85,7 @@ final public class CastSpell implements ActionGenerator {
                 }
 
                 // Simulate spell effects
-                CastSimulation simulation = simulator.simulate(spell, ai.fighter(), targetCell);
+                final CastSimulation simulation = simulator.simulate(spell, ai.fighter(), targetCell);
 
                 // The spell is not valid for the selector
                 if (!selector.valid(simulation)) {

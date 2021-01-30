@@ -33,7 +33,7 @@ final public class SpellMove implements Packet {
     final static public class Parser implements SinglePacketParser<SpellMove> {
         @Override
         public SpellMove parse(String input) throws ParsePacketException {
-            String[] parts = StringUtils.split(input, "|", 2);
+            final String[] parts = StringUtils.split(input, "|", 2);
 
             return new SpellMove(
                 Integer.parseUnsignedInt(parts[0]),

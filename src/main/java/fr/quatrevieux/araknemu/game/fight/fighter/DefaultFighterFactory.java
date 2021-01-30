@@ -43,7 +43,7 @@ final public class DefaultFighterFactory implements FighterFactory {
 
     @Override
     public PlayerFighter create(GamePlayer player) {
-        PlayerFighter fighter = new PlayerFighter(player);
+        final PlayerFighter fighter = new PlayerFighter(player);
 
         fighter.dispatcher().add(new SendFightJoined(fighter));
         fighter.dispatcher().add(new ApplyEndFightReward(fighter));

@@ -58,11 +58,11 @@ final public class MonsterListTransformer implements Transformer<List<MonsterGro
     public List<MonsterGroupData.Monster> unserialize(String serialize) throws TransformerException {
         final String[] monstersStr = StringUtils.split(serialize, "|");
 
-        List<MonsterGroupData.Monster> monsters = new ArrayList<>(monstersStr.length);
+        final List<MonsterGroupData.Monster> monsters = new ArrayList<>(monstersStr.length);
 
         for (String monsterStr : monstersStr) {
-            String[] dataAndRate = StringUtils.split(monsterStr, "x", 2);
-            String[] data = StringUtils.split(dataAndRate[0], ",", 3);
+            final String[] dataAndRate = StringUtils.split(monsterStr, "x", 2);
+            final String[] data = StringUtils.split(dataAndRate[0], ",", 3);
 
             int rate = 1;
 
@@ -70,7 +70,8 @@ final public class MonsterListTransformer implements Transformer<List<MonsterGro
                 rate = Integer.parseInt(dataAndRate[1]);
             }
 
-            int monsterId = Integer.parseInt(data[0]);
+            final int monsterId = Integer.parseInt(data[0]);
+
             int minLevel = 1;
             int maxLevel = Integer.MAX_VALUE;
 

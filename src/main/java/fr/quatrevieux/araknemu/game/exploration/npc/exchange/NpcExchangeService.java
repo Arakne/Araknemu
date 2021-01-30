@@ -100,7 +100,7 @@ final public class NpcExchangeService implements PreloadableService, EventsSubsc
         }
 
         // Try loading from database
-        List<NpcExchange> exchangeEntities = repository.byNpcTemplate(template);
+        final List<NpcExchange> exchangeEntities = repository.byNpcTemplate(template);
 
         if (exchangeEntities.isEmpty()) {
             return Optional.empty();
@@ -125,7 +125,7 @@ final public class NpcExchangeService implements PreloadableService, EventsSubsc
      * Creates the exchange from exchange entities
      */
     private GameNpcExchange createNpcExchange(List<NpcExchange> exchangeEntities) {
-        GameNpcExchange exchange = new GameNpcExchange(
+        final GameNpcExchange exchange = new GameNpcExchange(
             exchangeEntities.stream()
                 .map(entity -> new NpcExchangeEntry(itemService, entity, loadItemTemplates(entity.exchangedItems())))
                 .collect(Collectors.toList())

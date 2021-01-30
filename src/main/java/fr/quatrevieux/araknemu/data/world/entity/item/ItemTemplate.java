@@ -101,7 +101,7 @@ final public class ItemTemplate {
             return false;
         }
 
-        ItemTemplate template = (ItemTemplate) o;
+        final ItemTemplate template = (ItemTemplate) o;
 
         return id == template.id;
     }

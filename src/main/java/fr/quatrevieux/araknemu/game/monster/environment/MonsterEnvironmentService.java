@@ -147,7 +147,7 @@ final public class MonsterEnvironmentService implements EventsSubscriber, Preloa
             return Collections.emptyList();
         }
 
-        Collection<LivingMonsterGroupPosition> groups = new ArrayList<>();
+        final Collection<LivingMonsterGroupPosition> groups = new ArrayList<>();
 
         for (MonsterGroupPosition position : positionRepository.byMap(mapId)) {
             groups.add(new LivingMonsterGroupPosition(

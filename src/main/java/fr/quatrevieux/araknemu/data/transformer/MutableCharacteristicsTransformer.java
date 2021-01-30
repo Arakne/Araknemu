@@ -35,7 +35,7 @@ final public class MutableCharacteristicsTransformer implements Transformer<Muta
 
     @Override
     public MutableCharacteristics unserialize(String serialize) {
-        MutableCharacteristics characteristics = inner.unserialize(serialize);
+        final MutableCharacteristics characteristics = inner.unserialize(serialize);
 
         if (characteristics == null) {
             return new DefaultCharacteristics();

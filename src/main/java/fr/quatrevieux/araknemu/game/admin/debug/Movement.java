@@ -62,13 +62,11 @@ final public class Movement extends AbstractCommand {
 
     @Override
     public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
-        AdminUser user = AdminUser.class.cast(performer);
+        final AdminUser user = AdminUser.class.cast(performer);
+        final int mov = Integer.parseInt(arguments.get(1));
+        final MapTemplate map = repository.get(user.player().position().map());
 
-        int mov = Integer.parseInt(arguments.get(1));
-
-        MapTemplate map = repository.get(user.player().position().map());
-
-        List<Integer> cells = new ArrayList<>();
+        final List<Integer> cells = new ArrayList<>();
 
         for (int i = 0; i < map.cells().length; ++i) {
             if (map.cells()[i].movement().ordinal() == mov) {

@@ -240,7 +240,7 @@ final class SqlPlayerRepository implements PlayerRepository {
                     stmt.setInt(1, accountId);
 
                     try (ResultSet rs = stmt.executeQuery()) {
-                        Collection<ServerCharacters> list = new ArrayList<>();
+                        final Collection<ServerCharacters> list = new ArrayList<>();
 
                         while (rs.next()) {
                             list.add(
@@ -269,7 +269,7 @@ final class SqlPlayerRepository implements PlayerRepository {
                     stmt.setString(1, accountPseudo);
 
                     try (ResultSet rs = stmt.executeQuery()) {
-                        Collection<ServerCharacters> list = new ArrayList<>();
+                        final Collection<ServerCharacters> list = new ArrayList<>();
 
                         while (rs.next()) {
                             list.add(new ServerCharacters(rs.getInt("SERVER_ID"), rs.getInt("COUNT(*)")));
@@ -298,7 +298,7 @@ final class SqlPlayerRepository implements PlayerRepository {
 
     @Override
     public void save(Player player) {
-        int rows = utils.update(
+        final int rows = utils.update(
             "UPDATE PLAYER SET " +
                 "PLAYER_LEVEL = ?, PLAYER_STATS = ?, MAP_ID = ?, CELL_ID = ?, CHANNELS = ?, BOOST_POINTS = ?, SPELL_POINTS = ?, LIFE_POINTS = ?, PLAYER_EXPERIENCE = ?, SAVED_MAP_ID = ?, SAVED_CELL_ID = ?, PLAYER_KAMAS = ? " +
                 "WHERE PLAYER_ID = ?",

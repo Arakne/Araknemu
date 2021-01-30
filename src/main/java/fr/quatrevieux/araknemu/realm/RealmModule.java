@@ -227,7 +227,7 @@ final public class RealmModule implements ContainerModule {
         configurator.factory(
             Argon2Hash.class,
             container -> {
-                RealmConfiguration.Argon2 config = container.get(RealmConfiguration.class).argon2();
+                final RealmConfiguration.Argon2 config = container.get(RealmConfiguration.class).argon2();
 
                 return new Argon2Hash()
                     .setIterations(config.iterations())

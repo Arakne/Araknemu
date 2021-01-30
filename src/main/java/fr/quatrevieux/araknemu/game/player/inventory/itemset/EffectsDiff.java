@@ -49,7 +49,7 @@ final public class EffectsDiff {
             return Collections.emptyList();
         }
 
-        List<SpecialEffect> effects = new ArrayList<>();
+        final List<SpecialEffect> effects = new ArrayList<>();
 
         for (SpecialEffect effect : to) {
             if (!from.contains(effect)) {
@@ -72,7 +72,7 @@ final public class EffectsDiff {
             return from;
         }
 
-        List<SpecialEffect> effects = new ArrayList<>();
+        final List<SpecialEffect> effects = new ArrayList<>();
 
         for (SpecialEffect effect : from) {
             if (!to.contains(effect)) {

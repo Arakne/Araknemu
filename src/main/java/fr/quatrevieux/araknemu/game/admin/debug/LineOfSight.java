@@ -63,15 +63,14 @@ final public class LineOfSight extends AbstractCommand {
 
     @Override
     public void execute(AdminPerformer performer, List<String> arguments) {
-        AdminUser user = AdminUser.class.cast(performer);
+        final AdminUser user = AdminUser.class.cast(performer);
+        final FightMap map = new FightMap(repository.get(user.player().position().map()));
 
-        FightMap map = new FightMap(repository.get(user.player().position().map()));
+        final List<Integer> accessible = new ArrayList<>();
+        final List<Integer> blocked = new ArrayList<>();
 
-        List<Integer> accessible = new ArrayList<>();
-        List<Integer> blocked = new ArrayList<>();
-
-        CoordinateCell<FightCell> current = new CoordinateCell<>(map.get(user.player().position().cell()));
-        fr.arakne.utils.maps.LineOfSight<FightCell> lineOfSight = new fr.arakne.utils.maps.LineOfSight<>(map);
+        final CoordinateCell<FightCell> current = new CoordinateCell<>(map.get(user.player().position().cell()));
+        final fr.arakne.utils.maps.LineOfSight<FightCell> lineOfSight = new fr.arakne.utils.maps.LineOfSight<>(map);
 
         for (int i = 0; i < map.size(); ++i) {
             if (lineOfSight.between(current, new CoordinateCell<>(map.get(i)))) {

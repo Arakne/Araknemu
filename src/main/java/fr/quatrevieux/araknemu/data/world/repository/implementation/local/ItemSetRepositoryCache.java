@@ -50,7 +50,7 @@ final public class ItemSetRepositoryCache implements ItemSetRepository {
 
     @Override
     public Collection<ItemSet> load() {
-        Collection<ItemSet> loaded = repository.load();
+        final Collection<ItemSet> loaded = repository.load();
 
         for (ItemSet template : loaded) {
             cacheById.put(template.id(), template);

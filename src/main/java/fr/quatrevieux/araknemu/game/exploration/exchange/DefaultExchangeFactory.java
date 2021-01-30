@@ -70,7 +70,7 @@ final public class DefaultExchangeFactory implements ExchangeFactory<Exploration
 
     @Override
     public ExchangeInteraction create(ExchangeType type, ExplorationPlayer initiator, ExplorationCreature target) {
-        CreateExchange operation = new CreateExchange(type, initiator);
+        final CreateExchange operation = new CreateExchange(type, initiator);
 
         target.apply(operation);
 

@@ -113,7 +113,7 @@ final public class NpcStore implements ExchangeProvider.Factory {
      * @return The cost in kamas
      */
     public long sellPrice(Item item, int quantity) {
-        long basePrice = (long) (configuration.npcSellPriceMultiplier() * item.template().price());
+        final long basePrice = (long) (configuration.npcSellPriceMultiplier() * item.template().price());
 
         return basePrice * quantity;
     }

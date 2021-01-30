@@ -88,7 +88,7 @@ final public class PlayerService implements EventsSubscriber {
             throw new IllegalStateException("The player is already loaded");
         }
 
-        Player player = repository.getForGame(
+        final Player player = repository.getForGame(
             Player.forGame(
                 id,
                 session.account().id(),
@@ -96,7 +96,7 @@ final public class PlayerService implements EventsSubscriber {
             )
         );
 
-        GamePlayer gamePlayer = new GamePlayer(
+        final GamePlayer gamePlayer = new GamePlayer(
             session.account(),
             player,
             playerRaceService.get(player.race()),

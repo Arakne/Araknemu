@@ -199,7 +199,7 @@ final public class Fight implements Dispatcher, Sender {
 
     @Override
     public void send(Object packet) {
-        String sPacket = packet.toString();
+        final String sPacket = packet.toString();
 
         for (FightTeam team : teams) {
             team.send(sPacket);

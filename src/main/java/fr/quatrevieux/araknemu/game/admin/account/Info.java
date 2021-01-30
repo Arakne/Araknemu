@@ -64,7 +64,7 @@ final public class Info extends AbstractCommand {
 
     @Override
     public void execute(AdminPerformer performer, List<String> arguments) {
-        Account entity = repository.get(new Account(account.id()));
+        final Account entity = repository.get(new Account(account.id()));
 
         performer.success("Account info : {}", entity.name());
         performer.success("=================================");

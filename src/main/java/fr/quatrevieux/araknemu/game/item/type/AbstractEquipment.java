@@ -53,7 +53,7 @@ abstract public class AbstractEquipment implements Item {
 
     @Override
     public List<? extends ItemEffect> effects() {
-        List<ItemEffect> effects = new ArrayList<>(characteristics);
+        final List<ItemEffect> effects = new ArrayList<>(characteristics);
 
         effects.addAll(specials);
 
@@ -102,7 +102,7 @@ abstract public class AbstractEquipment implements Item {
             return false;
         }
 
-        AbstractEquipment equipment = (AbstractEquipment) obj;
+        final AbstractEquipment equipment = (AbstractEquipment) obj;
 
         return
             template.equals(equipment.template)

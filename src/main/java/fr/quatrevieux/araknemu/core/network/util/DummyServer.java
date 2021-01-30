@@ -68,11 +68,13 @@ final public class DummyServer<S extends Session> implements Server<S> {
      * Create a new session
      */
     public S createSession(String ipAddress) {
-        DummyChannel channel = new DummyChannel(ipAddress);
+        final DummyChannel channel = new DummyChannel(ipAddress);
+
         channel.setId(++lastId);
         channel.setServer(this);
 
-        S session = factory.create(channel);
+        final S session = factory.create(channel);
+
         sessions.add(session);
 
         return session;

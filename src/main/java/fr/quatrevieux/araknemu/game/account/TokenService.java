@@ -52,7 +52,7 @@ final public class TokenService {
      * @param account Account to register
      */
     public String generate(Account account) {
-        String token = generateToken();
+        final String token = generateToken();
 
         accounts.put(
             token,
@@ -74,7 +74,7 @@ final public class TokenService {
             throw new NoSuchElementException();
         }
 
-        ExpirableAccount account = accounts.remove(token);
+        final ExpirableAccount account = accounts.remove(token);
 
         if (System.currentTimeMillis() > account.expiration) {
             throw new NoSuchElementException();

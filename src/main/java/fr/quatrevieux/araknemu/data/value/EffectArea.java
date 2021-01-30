@@ -99,7 +99,7 @@ final public class EffectArea {
             return false;
         }
 
-        EffectArea area = (EffectArea) o;
+        final EffectArea area = (EffectArea) o;
 
         return
             size == area.size

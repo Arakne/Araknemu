@@ -37,7 +37,7 @@ final public class ConstraintsAggregateValidator<T extends Castable> implements 
     @Override
     public Error validate(Turn turn, T action, FightCell target) {
         for (CastConstraintValidator<? super T> validator : validators) {
-            Error error = validator.validate(turn, action, target);
+            final Error error = validator.validate(turn, action, target);
 
             if (error != null) {
                 return error;

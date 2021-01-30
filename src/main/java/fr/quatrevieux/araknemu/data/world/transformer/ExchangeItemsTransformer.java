@@ -39,10 +39,10 @@ final public class ExchangeItemsTransformer implements Transformer<Map<Integer, 
 
     @Override
     public Map<Integer, Integer> unserialize(String serialize) throws TransformerException {
-        Map<Integer, Integer> items = new HashMap<>();
+        final Map<Integer, Integer> items = new HashMap<>();
 
         for (String itemData : StringUtils.split(serialize, ";")) {
-            String[] parts = StringUtils.split(itemData, ":", 2);
+            final String[] parts = StringUtils.split(itemData, ":", 2);
 
             items.put(
                 Integer.parseInt(parts[0]),

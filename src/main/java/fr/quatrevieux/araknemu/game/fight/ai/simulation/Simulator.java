@@ -55,17 +55,16 @@ final public class Simulator {
      * @return The simulation result
      */
     public CastSimulation simulate(Spell spell, ActiveFighter caster, FightCell target) {
-        CastSimulation normalSimulation = simulate(spell, new CastScope(spell, caster, target).withEffects(spell.effects()));
+        final CastSimulation normalSimulation = simulate(spell, new CastScope(spell, caster, target).withEffects(spell.effects()));
 
         if (spell.criticalHit() < 2) {
             return normalSimulation;
         }
 
-        CastSimulation criticalSimulation = simulate(spell, new CastScope(spell, caster, target).withEffects(spell.criticalEffects()));
+        final CastSimulation criticalSimulation = simulate(spell, new CastScope(spell, caster, target).withEffects(spell.criticalEffects()));
+        final CastSimulation simulation = new CastSimulation(spell, caster, target);
 
-        int criticalRate = 100 / new BaseCriticalityStrategy(caster).hitRate(spell.criticalHit());
-
-        CastSimulation simulation = new CastSimulation(spell, caster, target);
+        final int criticalRate = 100 / new BaseCriticalityStrategy(caster).hitRate(spell.criticalHit());
 
         simulation.merge(normalSimulation, 100 - criticalRate);
         simulation.merge(criticalSimulation, criticalRate);
@@ -79,19 +78,19 @@ final public class Simulator {
      * @param scope The cast scope
      */
     private CastSimulation simulate(Spell spell, CastScope scope) {
-        CastSimulation simulation = new CastSimulation(spell, scope.caster(), scope.target());
+        final CastSimulation simulation = new CastSimulation(spell, scope.caster(), scope.target());
 
         for (CastScope.EffectScope effect : scope.effects()) {
             if (!simulators.containsKey(effect.effect().effect())) {
                 continue;
             }
 
-            EffectSimulator simulator = simulators.get(effect.effect().effect());
+            final EffectSimulator simulator = simulators.get(effect.effect().effect());
 
             if (effect.effect().probability() > 0) {
-                CastSimulation probableSimulation = new CastSimulation(spell, scope.caster(), scope.target());
-                simulator.simulate(probableSimulation, effect);
+                final CastSimulation probableSimulation = new CastSimulation(spell, scope.caster(), scope.target());
 
+                simulator.simulate(probableSimulation, effect);
                 simulation.merge(probableSimulation, effect.effect().probability());
             } else {
                 simulator.simulate(simulation, effect);

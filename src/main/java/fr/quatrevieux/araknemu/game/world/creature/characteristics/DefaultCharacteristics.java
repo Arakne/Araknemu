@@ -78,7 +78,7 @@ final public class DefaultCharacteristics implements MutableCharacteristics {
         int h = 0;
 
         for (Characteristic characteristic : Characteristic.values()) {
-            int value = get(characteristic);
+            final int value = get(characteristic);
 
             if (value != 0) {
                 h += characteristic.hashCode() ^ value;

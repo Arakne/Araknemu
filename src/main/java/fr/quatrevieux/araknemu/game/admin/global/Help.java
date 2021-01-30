@@ -61,7 +61,7 @@ final public class Help extends AbstractCommand {
      * Show help for the given command
      */
     private void command(AdminPerformer performer, CommandParser.Arguments arguments, String commandName) throws AdminException {
-        Command command = arguments.context().command(commandName);
+        final Command command = arguments.context().command(commandName);
 
         performer.success("<b>Help for {}</b>", command.name());
         performer.info(command.help());

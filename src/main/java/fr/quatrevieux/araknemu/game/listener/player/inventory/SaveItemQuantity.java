@@ -40,7 +40,7 @@ final public class SaveItemQuantity implements Listener<ObjectQuantityChanged> {
             return;
         }
 
-        InventoryEntry entry = (InventoryEntry) event.entry();
+        final InventoryEntry entry = (InventoryEntry) event.entry();
 
         repository.update(entry.entity());
     }

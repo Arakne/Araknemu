@@ -54,7 +54,7 @@ final public class Login implements PacketHandler<GameSession, LoginToken> {
             throw new CloseImmediately("Account already attached");
         }
 
-        GameAccount account;
+        final GameAccount account;
 
         try {
             account = service.load(tokens.get(packet.token()));

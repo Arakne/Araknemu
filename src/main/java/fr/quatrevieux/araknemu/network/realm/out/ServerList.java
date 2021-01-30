@@ -41,7 +41,7 @@ final public class ServerList {
 
     @Override
     public String toString() {
-        StringBuilder ret = new StringBuilder(64);
+        final StringBuilder ret = new StringBuilder(64);
         
         ret.append("AxK").append(aboTime);
         

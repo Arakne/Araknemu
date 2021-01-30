@@ -165,7 +165,7 @@ final public class EffectToCharacteristicMapping implements EffectMapper<Charact
      * @throws NoSuchElementException When effect is not registered
      */
     public CharacteristicEffect create(Effect effect, int value) {
-        MappedCharacteristic mapped = get(effect);
+        final MappedCharacteristic mapped = get(effect);
 
         return new CharacteristicEffect(effect, value, mapped.multiplier, mapped.characteristic);
     }
@@ -187,7 +187,7 @@ final public class EffectToCharacteristicMapping implements EffectMapper<Charact
      * Create new characteristic effect with maximal value
      */
     public CharacteristicEffect createMaximize(ItemTemplateEffectEntry entry) {
-        int value;
+        final int value;
 
         if (isNegative(entry.effect())) {
             value = entry.min();

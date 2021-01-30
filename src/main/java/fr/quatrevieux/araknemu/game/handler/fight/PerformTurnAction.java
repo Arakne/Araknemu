@@ -34,7 +34,7 @@ final public class PerformTurnAction implements PacketHandler<GameSession, GameA
     @Override
     public void handle(GameSession session, GameActionRequest packet) {
         try {
-            FightTurn turn = session.fighter().turn();
+            final FightTurn turn = session.fighter().turn();
 
             turn.perform(turn.actions().create(ActionType.byId(packet.type()), packet.arguments()));
         } catch (Exception e) {

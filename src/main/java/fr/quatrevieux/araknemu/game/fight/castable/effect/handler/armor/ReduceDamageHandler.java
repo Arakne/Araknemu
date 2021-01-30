@@ -53,8 +53,8 @@ final public class ReduceDamageHandler implements EffectHandler, BuffHook {
 
         final Characteristics characteristics = buff.target().characteristics();
 
-        int boost = 200 + characteristics.get(Characteristic.INTELLIGENCE) + characteristics.get(value.element().boost());
-        int reduce = buff.effect().min() * boost / 200;
+        final int boost = 200 + characteristics.get(Characteristic.INTELLIGENCE) + characteristics.get(value.element().boost());
+        final int reduce = buff.effect().min() * boost / 200;
 
         if (reduce < 0) {
             return;

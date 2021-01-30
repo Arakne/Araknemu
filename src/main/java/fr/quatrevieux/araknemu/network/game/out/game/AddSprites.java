@@ -37,7 +37,7 @@ final public class AddSprites {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(64 * sprites.size());
+        final StringBuilder sb = new StringBuilder(64 * sprites.size());
 
         sb.append("GM");
 

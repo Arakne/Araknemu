@@ -75,7 +75,7 @@ final public class Resource implements Item {
             return false;
         }
 
-        Resource item = (Resource) obj;
+        final Resource item = (Resource) obj;
 
         return template.equals(item.template)
             && specials.equals(item.specials)

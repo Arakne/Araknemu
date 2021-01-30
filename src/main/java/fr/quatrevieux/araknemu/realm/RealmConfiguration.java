@@ -120,7 +120,7 @@ final public class RealmConfiguration implements ConfigurationModule {
      * Default value: "argon2, plain"
      */
     public String[] passwordHashAlgorithms() {
-        String[] algorithms = StringUtils.split(pool.string("password.defaultHash", "argon2, plain"), ",");
+        final String[] algorithms = StringUtils.split(pool.string("password.defaultHash", "argon2, plain"), ",");
 
         for (int i = 0; i < algorithms.length; ++i) {
             algorithms[i] = algorithms[i].toLowerCase().trim();

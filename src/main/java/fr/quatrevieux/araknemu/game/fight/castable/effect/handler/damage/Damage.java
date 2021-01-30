@@ -52,7 +52,7 @@ final public class Damage {
      * Compute the value
      */
     public int value() {
-        int base = (value * percent / 100 - fixed - reduce);
+        final int base = (value * percent / 100 - fixed - reduce);
 
         if (base <= 0) {
             return 0;

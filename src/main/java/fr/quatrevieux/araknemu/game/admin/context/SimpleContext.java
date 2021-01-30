@@ -52,7 +52,7 @@ final public class SimpleContext implements Context {
 
     @Override
     public Collection<Command> commands() {
-        Collection<Command> allCommands = new ArrayList<>(commands.values());
+        final Collection<Command> allCommands = new ArrayList<>(commands.values());
 
         // Filter commands overridden by current context
         for (Command command : parent.commands()) {

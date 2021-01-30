@@ -49,7 +49,7 @@ final public class ConnectGame implements PacketHandler<RealmSession, ChooseServ
             return;
         }
 
-        GameHost host = service.get(packet.id());
+        final GameHost host = service.get(packet.id());
 
         host.connector().token(
             session.account(),

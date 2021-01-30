@@ -34,7 +34,7 @@ import java.util.List;
 final public class ChallengeRewardsGenerator implements RewardsGenerator {
     @Override
     public FightRewardsSheet generate(EndFightResults results) {
-        List<DropReward> rewards = new ArrayList<>();
+        final List<DropReward> rewards = new ArrayList<>();
 
         results.winners().stream().map(fighter -> new DropReward(RewardType.WINNER, fighter, Collections.emptyList())).forEach(rewards::add);
         results.loosers().stream().map(fighter -> new DropReward(RewardType.LOOSER, fighter, Collections.emptyList())).forEach(rewards::add);

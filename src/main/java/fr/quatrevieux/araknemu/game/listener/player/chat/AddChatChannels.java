@@ -41,9 +41,7 @@ final public class AddChatChannels implements Listener<CharacterCreationStarted>
 
     @Override
     public void on(CharacterCreationStarted event) {
-        Set<ChannelType> channels = transformer.unserialize(
-            configuration.defaultChannels()
-        );
+        final Set<ChannelType> channels = transformer.unserialize(configuration.defaultChannels());
 
         if (event.character().account().isMaster()) {
             channels.addAll(

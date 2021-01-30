@@ -69,7 +69,7 @@ final public class PlacementCellsGenerator {
      * Returns the next available start cell
      */
     private FightCell nextAvailableCell() {
-        FightCell cell = map.get(available.get(++number));
+        final FightCell cell = map.get(available.get(++number));
 
         if (cell.walkable()) {
             return cell;
@@ -83,7 +83,7 @@ final public class PlacementCellsGenerator {
      */
     private FightCell randomFightCell() {
         for (;;) {
-            FightCell cell = map.get(random.nextInt(map.size()));
+            final FightCell cell = map.get(random.nextInt(map.size()));
 
             if (cell.walkable()) {
                 return cell;
@@ -98,7 +98,7 @@ final public class PlacementCellsGenerator {
      * @param available The available cells
      */
     static public PlacementCellsGenerator randomized(FightMap map, List<Integer> available) {
-        RandomUtil random = new RandomUtil();
+        final RandomUtil random = new RandomUtil(); // @todo keep static instance ?
 
         return new PlacementCellsGenerator(map, random.shuffle(available), random);
     }

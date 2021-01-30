@@ -91,7 +91,7 @@ final public class FighterAI implements Runnable, AI {
                 return;
             }
 
-            Optional<Action> action = generator.generate(this);
+            final Optional<Action> action = generator.generate(this);
 
             if (action.isPresent()) {
                 currentTurn.perform(action.get());

@@ -36,7 +36,7 @@ final public class AddCharacterRequest implements Packet {
     final static public class Parser implements SinglePacketParser<AddCharacterRequest> {
         @Override
         public AddCharacterRequest parse(String input) throws ParsePacketException {
-            String[] data = StringUtils.split(input, "|", 6);
+            final String[] data = StringUtils.split(input, "|", 6);
 
             if (data.length != 6) {
                 throw new ParsePacketException(code() + input, "Invalid data : required 6 parts");

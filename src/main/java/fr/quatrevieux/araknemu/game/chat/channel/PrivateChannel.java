@@ -47,8 +47,8 @@ final public class PrivateChannel implements Channel {
             throw new ChatException(ChatException.Error.USER_NOT_CONNECTED);
         }
 
-        GamePlayer to = service.get(message.target());
-        ConcealedMessage event = new ConcealedMessage(
+        final GamePlayer to = service.get(message.target());
+        final ConcealedMessage event = new ConcealedMessage(
             from,
             to,
             message.message(),

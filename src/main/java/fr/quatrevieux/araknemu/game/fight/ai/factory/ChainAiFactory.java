@@ -37,7 +37,7 @@ final public class ChainAiFactory implements AiFactory {
     @Override
     public Optional<AI> create(Fighter fighter) {
         for (AiFactory factory : factories) {
-            Optional<AI> ai = factory.create(fighter);
+            final Optional<AI> ai = factory.create(fighter);
 
             if (ai.isPresent()) {
                 return ai;

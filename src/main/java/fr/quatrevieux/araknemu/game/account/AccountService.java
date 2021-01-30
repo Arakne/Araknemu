@@ -82,9 +82,8 @@ final public class AccountService implements EventsSubscriber {
      * @return The loaded accounts, indexed by account id
      */
     public Map<Integer, GameAccount> getByIds(int[] ids) {
-        Map<Integer, GameAccount> loadedAccounts = new HashMap<>();
-
-        int[] toLoad = Arrays.stream(ids)
+        final Map<Integer, GameAccount> loadedAccounts = new HashMap<>();
+        final int[] toLoad = Arrays.stream(ids)
             .filter(id -> {
                 if (accounts.containsKey(id)) {
                     loadedAccounts.put(id, accounts.get(id));
@@ -113,7 +112,7 @@ final public class AccountService implements EventsSubscriber {
      */
     public Optional<GameAccount> findByPseudo(String pseudo) {
         // @todo need index ? actually only used by admin command
-        Optional<GameAccount> loggedAccount = accounts.values().stream()
+        final Optional<GameAccount> loggedAccount = accounts.values().stream()
             .filter(gameAccount -> gameAccount.pseudo().equalsIgnoreCase(pseudo))
             .findFirst()
         ;

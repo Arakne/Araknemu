@@ -865,7 +865,7 @@ final public class GameModule implements ContainerModule {
         configurator.persist(
             MonsterAiFactory.class,
             container -> {
-                MonsterAiFactory factory = new MonsterAiFactory();
+                final MonsterAiFactory factory = new MonsterAiFactory();
                 final Simulator simulator = container.get(Simulator.class);
 
                 factory.register("AGGRESSIVE", new Aggressive(simulator));

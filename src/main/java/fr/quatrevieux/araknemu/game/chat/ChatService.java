@@ -61,7 +61,7 @@ final public class ChatService implements EventsSubscriber {
             new Listener<PlayerLoaded>() {
                 @Override
                 public void on(PlayerLoaded event) {
-                    ListenerAggregate dispatcher = event.player().dispatcher();
+                    final ListenerAggregate dispatcher = event.player().dispatcher();
 
                     dispatcher.add(new InitializeChat(event.player()));
                     dispatcher.add(new MessageReceived(event.player()));
@@ -98,7 +98,7 @@ final public class ChatService implements EventsSubscriber {
     }
 
     private boolean checkItemSyntax(String message, String items) {
-        String[] parts = StringUtils.splitByWholeSeparatorPreserveAllTokens(items, "!");
+        final String[] parts = StringUtils.splitByWholeSeparatorPreserveAllTokens(items, "!");
 
         if (parts.length % 2 != 0) {
             return false;
@@ -117,7 +117,7 @@ final public class ChatService implements EventsSubscriber {
                 continue;
             }
 
-            int effects = StringUtils.countMatches(parts[i + 1], ',') + 1;
+            final int effects = StringUtils.countMatches(parts[i + 1], ',') + 1;
 
             if (StringUtils.countMatches(parts[i + 1], '#') != 4 * effects) {
                 return false;

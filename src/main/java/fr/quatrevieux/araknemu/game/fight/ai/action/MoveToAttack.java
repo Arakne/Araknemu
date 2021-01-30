@@ -113,7 +113,7 @@ final public class MoveToAttack implements ActionGenerator {
                     }
 
                     // Simulate spell effects
-                    CastSimulation simulation = simulator.simulate(spell, fighter, targetCell);
+                    final CastSimulation simulation = simulator.simulate(spell, fighter, targetCell);
 
                     // The spell cause damage
                     if (simulation.enemiesLife() < 0) {

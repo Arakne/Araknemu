@@ -40,7 +40,7 @@ final public class SaveNewItem implements Listener<ObjectAdded> {
             return;
         }
 
-        InventoryEntry entry = (InventoryEntry) event.entry();
+        final InventoryEntry entry = (InventoryEntry) event.entry();
 
         repository.add(entry.entity());
     }

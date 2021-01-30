@@ -48,7 +48,7 @@ final public class LoadExtraInfo implements PacketHandler<GameSession, AskExtraI
 
     @Override
     public void handle(GameSession session, AskExtraInfo packet) throws Exception {
-        ExplorationMap map = session.exploration().map();
+        final ExplorationMap map = session.exploration().map();
 
         if (map == null) {
             throw new CloseImmediately("A map should be loaded before get extra info");
@@ -56,7 +56,7 @@ final public class LoadExtraInfo implements PacketHandler<GameSession, AskExtraI
 
         session.send(new AddSprites(map.sprites()));
 
-        Collection<Fight> fights = fightService.fightsByMap(map.id());
+        final Collection<Fight> fights = fightService.fightsByMap(map.id());
 
         for (Fight fight : fights) {
             if (!(fight.state() instanceof PlacementState)) {

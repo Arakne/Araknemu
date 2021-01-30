@@ -33,7 +33,7 @@ final public class SetOrientationRequest implements Packet {
     final static public class Parser implements SinglePacketParser<SetOrientationRequest> {
         @Override
         public SetOrientationRequest parse(String input) throws ParsePacketException {
-            int number = input.charAt(0) - '0';
+            final int number = input.charAt(0) - '0';
 
             if (number >= Direction.values().length) {
                 throw new ParsePacketException(code() + input, "Invalid direction");

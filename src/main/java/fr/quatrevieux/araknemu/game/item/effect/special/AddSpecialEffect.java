@@ -49,7 +49,7 @@ final public class AddSpecialEffect implements SpecialEffectHandler {
 
     @Override
     public SpecialEffect create(ItemTemplateEffectEntry entry, boolean maximize) {
-        int value = maximize
+        final int value = maximize
             ? Math.max(entry.min(), entry.max())
             : random.rand(entry.min(), entry.max())
         ;

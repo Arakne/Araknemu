@@ -39,9 +39,8 @@ final public class SimpleNameGenerator implements NameGenerator {
 
     @Override
     public String generate() {
-        int length = random.rand(configuration.minNameGeneratedLength(), configuration.maxNameGeneratedLength());
-
-        StringBuilder sb = new StringBuilder(length);
+        final int length = random.rand(configuration.minNameGeneratedLength(), configuration.maxNameGeneratedLength());
+        final StringBuilder sb = new StringBuilder(length);
 
         boolean isVowel = random.bool();
 

@@ -40,7 +40,7 @@ final public class SaveItemPosition implements Listener<ObjectMoved> {
             return;
         }
 
-        InventoryEntry entry = (InventoryEntry) event.entry();
+        final InventoryEntry entry = (InventoryEntry) event.entry();
 
         repository.update(entry.entity());
     }

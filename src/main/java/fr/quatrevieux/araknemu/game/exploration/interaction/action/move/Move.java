@@ -77,7 +77,7 @@ final public class Move implements BlockingAction {
             return;
         }
 
-        int cellId = Integer.parseInt(argument);
+        final int cellId = Integer.parseInt(argument);
 
         for (PathStep<ExplorationMapCell> step : path) {
             if (step.cell().id() == cellId) {

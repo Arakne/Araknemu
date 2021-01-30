@@ -67,7 +67,7 @@ final public class BoostedSpellConstraints implements SpellConstraints {
 
     @Override
     public int launchDelay() {
-        int base = modifiers.hasFixedDelay()
+        final int base = modifiers.hasFixedDelay()
             ? modifiers.fixedDelay()
             : constraints.launchDelay()
         ;

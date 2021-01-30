@@ -62,7 +62,7 @@ final public class UsableItem implements Item {
 
     @Override
     public List<? extends ItemEffect> effects() {
-        List<ItemEffect> effects = new ArrayList<>(useEffects);
+        final List<ItemEffect> effects = new ArrayList<>(useEffects);
 
         effects.addAll(specials);
 
@@ -151,7 +151,7 @@ final public class UsableItem implements Item {
             return false;
         }
 
-        UsableItem usable = (UsableItem) obj;
+        final UsableItem usable = (UsableItem) obj;
 
         return
             template.equals(usable.template)

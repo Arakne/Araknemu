@@ -52,7 +52,7 @@ final public class GameActionResponse {
 
     @Override
     public String toString() {
-        StringBuilder packet = new StringBuilder("GA" + id + ";" + type.id());
+        final StringBuilder packet = new StringBuilder("GA" + id + ";" + type.id());
 
         for (Object argument : arguments) {
             packet.append(';').append(argument.toString());
@@ -68,14 +68,13 @@ final public class GameActionResponse {
 
             case 1:
                 return new Object[] {spriteId, arguments[0]};
-
-            default:
-                Object[] newArguments = new Object[arguments.length + 1];
-
-                newArguments[0] = spriteId;
-                System.arraycopy(arguments, 0, newArguments, 1, arguments.length);
-
-                return newArguments;
         }
+
+        final Object[] newArguments = new Object[arguments.length + 1];
+
+        newArguments[0] = spriteId;
+        System.arraycopy(arguments, 0, newArguments, 1, arguments.length);
+
+        return newArguments;
     }
 }

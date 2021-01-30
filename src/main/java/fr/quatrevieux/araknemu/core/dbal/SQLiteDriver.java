@@ -44,7 +44,7 @@ final public class SQLiteDriver implements Driver {
     }
 
     private String jdbcUrl() {
-        String base = "jdbc:sqlite:";
+        final String base = "jdbc:sqlite:";
 
         if (configuration.memory()) {
             if (!configuration.shared()) {

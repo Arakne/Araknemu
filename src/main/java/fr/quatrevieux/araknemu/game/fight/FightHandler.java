@@ -47,7 +47,7 @@ final public class FightHandler<B extends FightBuilder> implements EventsSubscri
     public Fight start(Consumer<B> configuration) {
         configuration.accept(builder);
 
-        Fight fight = builder.build(service.newFightId());
+        final Fight fight = builder.build(service.newFightId());
 
         service.modules(fight).forEach(fight::register);
         fight.nextState();

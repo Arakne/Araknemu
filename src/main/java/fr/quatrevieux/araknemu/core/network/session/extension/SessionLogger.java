@@ -45,7 +45,7 @@ final public class SessionLogger implements ConfigurableSession.ExceptionHandler
 
         @Override
         public void configure(ConfigurableSession inner, Session session) {
-            SessionLogger sessionLogger = new SessionLogger(session, logger);
+            final SessionLogger sessionLogger = new SessionLogger(session, logger);
 
             inner.addExceptionHandler(sessionLogger);
             inner.addSendTransformer(sessionLogger);

@@ -41,16 +41,16 @@ final public class BoostStatsDataTransformer implements Transformer<BoostStatsDa
 
     @Override
     public BoostStatsData unserialize(String serialize) {
-        Map<Characteristic, List<BoostStatsData.Interval>> data = new EnumMap<>(Characteristic.class);
+        final Map<Characteristic, List<BoostStatsData.Interval>> data = new EnumMap<>(Characteristic.class);
 
         for (String characteristicData : StringUtils.split(serialize, ";")) {
-            String[] entry = StringUtils.split(characteristicData, ":", 2);
+            final String[] entry = StringUtils.split(characteristicData, ":", 2);
 
-            Characteristic characteristic = Characteristic.fromId(Integer.parseInt(entry[0]));
-            List<BoostStatsData.Interval> intervals = new ArrayList<>();
+            final Characteristic characteristic = Characteristic.fromId(Integer.parseInt(entry[0]));
+            final List<BoostStatsData.Interval> intervals = new ArrayList<>();
 
             for (String intervalData : StringUtils.split(entry[1], ",")) {
-                String[] parts = StringUtils.split(intervalData, "@", 3);
+                final String[] parts = StringUtils.split(intervalData, "@", 3);
 
                 intervals.add(
                     new BoostStatsData.Interval(

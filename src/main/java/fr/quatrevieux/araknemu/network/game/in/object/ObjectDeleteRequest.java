@@ -33,7 +33,7 @@ final public class ObjectDeleteRequest implements Packet {
     final static public class Parser implements SinglePacketParser<ObjectDeleteRequest> {
         @Override
         public ObjectDeleteRequest parse(String input) throws ParsePacketException {
-            String[] parts = StringUtils.split(input, "|", 2);
+            final String[] parts = StringUtils.split(input, "|", 2);
 
             if (parts.length != 2) {
                 throw new ParsePacketException("Od" + input, "Needs 2 parts");

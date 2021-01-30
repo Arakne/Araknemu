@@ -59,7 +59,7 @@ final public class NpcStoreService implements ExchangeProvider {
 
         return template.storeItems()
             .map(items -> {
-                NpcStore store = new NpcStore(
+                final NpcStore store = new NpcStore(
                     itemService,
                     configuration,
                     Arrays.stream(items)

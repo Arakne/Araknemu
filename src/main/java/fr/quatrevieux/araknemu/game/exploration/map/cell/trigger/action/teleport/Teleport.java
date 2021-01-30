@@ -44,7 +44,7 @@ final public class Teleport implements CellAction {
 
     @Override
     public void perform(ExplorationPlayer player) {
-        ExplorationMap map = service.load(target.map());
+        final ExplorationMap map = service.load(target.map());
 
         // teleport on same map
         if (map.equals(player.map())) {

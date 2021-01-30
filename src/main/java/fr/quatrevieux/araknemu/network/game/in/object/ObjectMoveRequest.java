@@ -33,7 +33,7 @@ final public class ObjectMoveRequest implements Packet {
     final static public class Parser implements SinglePacketParser<ObjectMoveRequest> {
         @Override
         public ObjectMoveRequest parse(String input) throws ParsePacketException {
-            String[] parts = StringUtils.split(input, "|", 3);
+            final String[] parts = StringUtils.split(input, "|", 3);
 
             return new ObjectMoveRequest(
                 Integer.parseInt(parts[0]),

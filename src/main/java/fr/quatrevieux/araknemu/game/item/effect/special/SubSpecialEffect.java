@@ -49,7 +49,7 @@ final public class SubSpecialEffect implements SpecialEffectHandler {
 
     @Override
     public SpecialEffect create(ItemTemplateEffectEntry entry, boolean maximize) {
-        int value = maximize ? entry.min() : random.rand(entry.min(), entry.max());
+        final int value = maximize ? entry.min() : random.rand(entry.min(), entry.max());
 
         return new SpecialEffect(this, entry.effect(), new int[] {value, 0, entry.special()}, "0d0+" + value);
     }

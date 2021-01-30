@@ -44,7 +44,7 @@ final public class RandomStringUtil {
      * @param length The required string length
      */
     public String generate(int length) {
-        char[] buffer = new char[length];
+        final char[] buffer = new char[length];
 
         for (int i = 0; i < length; ++i) {
             buffer[i] = charset.charAt(random.nextInt(charset.length()));

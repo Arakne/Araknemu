@@ -109,9 +109,8 @@ final public class Online extends AbstractCommand {
     public void execute(AdminPerformer performer, List<String> arguments) {
         performer.success("There is {} online players with {} active sessions", service.online().size(), gameService.sessions().size());
 
-        Options options = new Options(arguments);
-
-        long count = options
+        final Options options = new Options(arguments);
+        final long count = options
             .apply(service.online().stream())
             .map(this::format)
             .peek(performer::info)

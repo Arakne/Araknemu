@@ -43,7 +43,7 @@ final public class DialogQuestion {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(64);
+        final StringBuilder sb = new StringBuilder(64);
 
         sb.append("DQ").append(question.id());
 

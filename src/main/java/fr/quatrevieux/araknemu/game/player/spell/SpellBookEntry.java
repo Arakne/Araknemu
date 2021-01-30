@@ -85,8 +85,8 @@ final public class SpellBookEntry {
             throw new IllegalStateException("Maximum spell level reached");
         }
 
-        int nextLevel = entity.level() + 1;
-        Spell nextSpell = spell.level(nextLevel);
+        final int nextLevel = entity.level() + 1;
+        final Spell nextSpell = spell.level(nextLevel);
 
         if (!spellBook.canUpgrade(nextSpell)) {
             throw new IllegalStateException("Cannot upgrade spell");

@@ -50,7 +50,7 @@ final public class ItemTypeRepositoryCache implements ItemTypeRepository {
 
     @Override
     public Collection<ItemType> load() {
-        Collection<ItemType> loaded = repository.load();
+        final Collection<ItemType> loaded = repository.load();
 
         for (ItemType template : loaded) {
             cacheById.put(template.id(), template);

@@ -75,13 +75,12 @@ final public class Restriction extends AbstractCommand {
 
     @Override
     public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
-        List<Restrictions.Restriction> toSet = new ArrayList<>();
-        List<Restrictions.Restriction> toUnset = new ArrayList<>();
+        final List<Restrictions.Restriction> toSet = new ArrayList<>();
+        final List<Restrictions.Restriction> toUnset = new ArrayList<>();
 
         for (int i = 1; i < arguments.size(); ++i) {
-            String argument = arguments.get(i);
-
-            Restrictions.Restriction restriction = Restrictions.Restriction.valueOf(argument.substring(1).toUpperCase());
+            final String argument = arguments.get(i);
+            final Restrictions.Restriction restriction = Restrictions.Restriction.valueOf(argument.substring(1).toUpperCase());
 
             switch (argument.charAt(0)) {
                 case '+':

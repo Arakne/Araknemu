@@ -35,7 +35,7 @@ final public class LineOfSightValidator implements CastConstraintValidator {
             return null;
         }
 
-        LineOfSight<FightCell> lineOfSight = new LineOfSight<>(target.map());
+        final LineOfSight<FightCell> lineOfSight = new LineOfSight<>(target.map());
 
         if (lineOfSight.between(turn.fighter().cell(), target)) {
             return null;

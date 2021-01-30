@@ -70,10 +70,10 @@ public enum Element {
             return bitSetCache.get(value);
         }
 
-        Set<Element> elements = EnumSet.noneOf(Element.class);
+        final Set<Element> elements = EnumSet.noneOf(Element.class);
 
         for (Element element : values()) {
-            int id = 1 << (element.ordinal());
+            final int id = 1 << (element.ordinal());
 
             if ((value & id) == id) {
                 elements.add(element);

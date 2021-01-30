@@ -45,7 +45,7 @@ final public class FightActionsFactories implements ExplorationActionRegistry.Se
     }
 
     private JoinFight join(ExplorationPlayer player, ActionType action, String[] arguments) {
-        Fight fight = fightService.getFromMap(player.map().id(), Integer.parseInt(arguments[0]));
+        final Fight fight = fightService.getFromMap(player.map().id(), Integer.parseInt(arguments[0]));
 
         return new JoinFight(
             player,

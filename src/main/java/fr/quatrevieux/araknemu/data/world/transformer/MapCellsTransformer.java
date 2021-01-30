@@ -33,7 +33,8 @@ final public class MapCellsTransformer implements Transformer<CellData[]> {
     final private MapDataSerializer serializer;
 
     public MapCellsTransformer() {
-        DefaultMapDataSerializer serializer = new DefaultMapDataSerializer();
+        final DefaultMapDataSerializer serializer = new DefaultMapDataSerializer();
+
         serializer.enableCache();
 
         this.serializer = serializer;

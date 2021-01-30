@@ -50,7 +50,7 @@ final public class ItemTemplateRepositoryCache implements ItemTemplateRepository
 
     @Override
     public Collection<ItemTemplate> load() {
-        Collection<ItemTemplate> loaded = repository.load();
+        final Collection<ItemTemplate> loaded = repository.load();
 
         for (ItemTemplate template : loaded) {
             cacheById.put(template.id(), template);

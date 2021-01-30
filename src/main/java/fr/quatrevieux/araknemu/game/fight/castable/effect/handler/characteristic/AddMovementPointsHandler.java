@@ -42,8 +42,8 @@ final public class AddMovementPointsHandler extends AddCharacteristicHandler {
     @Override
     public void handle(CastScope cast, CastScope.EffectScope effect) {
         fight.turnList().current().ifPresent(turn -> {
-            EffectValue value = new EffectValue(effect.effect());
-            int mp = value.value();
+            final EffectValue value = new EffectValue(effect.effect());
+            final int mp = value.value();
 
             turn.points().addMovementPoints(mp);
             fight.send(ActionEffect.addMovementPoints(turn.fighter(), mp));

@@ -98,7 +98,7 @@ final class SqlPlayerSpellRepository implements PlayerSpellRepository {
 
     @Override
     public void delete(PlayerSpell item) {
-        int count = utils.update(
+        final int count = utils.update(
             "DELETE FROM PLAYER_SPELL WHERE PLAYER_ID = ? AND SPELL_ID = ?",
             stmt -> {
                 stmt.setInt(1, item.playerId());

@@ -38,7 +38,7 @@ final public class TeleportFactory implements CellActionFactory {
 
     @Override
     public CellAction create(MapTrigger trigger) {
-        String[] position = StringUtils.split(trigger.arguments(), ",", 2);
+        final String[] position = StringUtils.split(trigger.arguments(), ",", 2);
 
         return new Teleport(
             service,

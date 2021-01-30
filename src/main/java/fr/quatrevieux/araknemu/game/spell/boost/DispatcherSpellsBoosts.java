@@ -39,7 +39,8 @@ final public class DispatcherSpellsBoosts implements SpellsBoosts {
 
     @Override
     public int boost(int spellId, Modifier modifier, int value) {
-        int newValue = boosts.boost(spellId, modifier, value);
+        final int newValue = boosts.boost(spellId, modifier, value);
+
         dispatcher.dispatch(new SpellBoostChanged(spellId, modifier, newValue));
 
         return newValue;

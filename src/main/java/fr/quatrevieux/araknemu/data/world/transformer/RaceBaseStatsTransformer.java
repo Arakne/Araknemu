@@ -44,10 +44,10 @@ final public class RaceBaseStatsTransformer implements Transformer<SortedMap<Int
 
     @Override
     public SortedMap<Integer, Characteristics> unserialize(String serialize) {
-        SortedMap<Integer, Characteristics> stats = new TreeMap<>(Collections.reverseOrder());
+        final SortedMap<Integer, Characteristics> stats = new TreeMap<>(Collections.reverseOrder());
 
         for (String levelStats : StringUtils.split(serialize, "|")) {
-            String[] parts = StringUtils.split(levelStats, "@", 2);
+            final String[] parts = StringUtils.split(levelStats, "@", 2);
 
             stats.put(
                 Integer.parseUnsignedInt(parts[1]),

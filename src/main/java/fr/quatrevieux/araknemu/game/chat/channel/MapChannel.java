@@ -42,7 +42,7 @@ final public class MapChannel implements Channel {
             return;
         }
 
-        BroadcastedMessage event = new BroadcastedMessage(
+        final BroadcastedMessage event = new BroadcastedMessage(
             type(),
             from,
             message.message(),

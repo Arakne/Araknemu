@@ -34,7 +34,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.ChangeFighterPlaceError;
 final public class ChangeFighterStartPlace implements PacketHandler<GameSession, FighterChangePlace> {
     @Override
     public void handle(GameSession session, FighterChangePlace packet) throws Exception {
-        Fight fight = session.fighter().fight();
+        final Fight fight = session.fighter().fight();
 
         try {
             fight

@@ -44,7 +44,7 @@ final public class ColorsTransformer implements Transformer<Colors> {
             return Colors.DEFAULT;
         }
 
-        String[] parts = StringUtils.split(serialize, ",", 3);
+        final String[] parts = StringUtils.split(serialize, ",", 3);
 
         if (parts.length != 3) {
             throw new TransformerException("Invalid color expression '" + serialize + "'");

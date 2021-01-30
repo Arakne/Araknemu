@@ -68,7 +68,7 @@ final public class TriggerCell implements ExplorationMapCell {
             return false;
         }
 
-        TriggerCell that = (TriggerCell) o;
+        final TriggerCell that = (TriggerCell) o;
 
         return id == that.id && map == that.map;
     }

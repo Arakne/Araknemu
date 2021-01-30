@@ -55,7 +55,7 @@ final public class NpcRepositoryCache implements NpcRepository {
 
     @Override
     public Collection<Npc> all() {
-        Collection<Npc> loaded = repository.all();
+        final Collection<Npc> loaded = repository.all();
 
         loaded.forEach(this::saveInCache);
         this.loaded = true;
@@ -96,7 +96,7 @@ final public class NpcRepositoryCache implements NpcRepository {
             return Collections.emptyList();
         }
 
-        Collection<Npc> entities = repository.byMapId(mapId);
+        final Collection<Npc> entities = repository.byMapId(mapId);
 
         entities.forEach(this::saveInCache);
 
@@ -106,7 +106,7 @@ final public class NpcRepositoryCache implements NpcRepository {
     private void saveInCache(Npc entity) {
         cacheById.put(entity.id(), entity);
 
-        Collection<Npc> onMap;
+        final Collection<Npc> onMap;
 
         if (cacheByMap.containsKey(entity.position().map())) {
             onMap = cacheByMap.get(entity.position().map());

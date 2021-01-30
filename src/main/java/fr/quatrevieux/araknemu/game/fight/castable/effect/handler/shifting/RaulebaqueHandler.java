@@ -45,7 +45,7 @@ final public class RaulebaqueHandler implements EffectHandler {
                 return;
             }
 
-            FightCell lastCell = fighter.cell();
+            final FightCell lastCell = fighter.cell();
 
             if (lastCell.equals(startCell)) {
                 return;

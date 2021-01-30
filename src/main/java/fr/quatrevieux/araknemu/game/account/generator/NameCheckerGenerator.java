@@ -40,7 +40,7 @@ final public class NameCheckerGenerator implements NameGenerator {
     @Override
     public String generate() throws NameGenerationException {
         for (int i = 0; i < 15; ++i) {
-            String generated = generator.generate();
+            final String generated = generator.generate();
 
             if (!repository.nameExists(Player.forCreation(0, configuration.id(), generated, null, null, null))) {
                 return generated;

@@ -39,7 +39,7 @@ final public class FighterStates implements States {
 
     @Override
     public void push(int state, int duration) {
-        boolean defined = states.containsKey(state);
+        final boolean defined = states.containsKey(state);
 
         if (defined && !higherDuration(states.get(state), duration)) {
             return;
@@ -93,7 +93,7 @@ final public class FighterStates implements States {
     @Override
     public void refresh() {
         for (int state : new ArrayList<>(states.keySet())) {
-            int turns = states.get(state);
+            final int turns = states.get(state);
 
             switch (turns) {
                 case -1:

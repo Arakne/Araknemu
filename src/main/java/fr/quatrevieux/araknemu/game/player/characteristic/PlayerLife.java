@@ -60,9 +60,10 @@ final public class PlayerLife implements Life {
             return 0;
         }
 
-        long currentTime = System.currentTimeMillis();
+        final long currentTime = System.currentTimeMillis();
+        final int currentLife = entity.life();
+
         int lifeToAdd = (int) (currentTime - lifeRegenerationStart) / lifeRegenerationSpeed;
-        int currentLife = this.entity.life();
 
         if (this.max <= (lifeToAdd + currentLife)) {
             lifeToAdd = this.max - currentLife;
@@ -117,13 +118,13 @@ final public class PlayerLife implements Life {
      * @param value The new life value
      */
     public void set(int value) {
+        final int last = current();
+
         if (value < 0) {
             value = 0;
         } else if (value > max) {
             value = max;
         }
-
-        int last = current();
 
         entity.setLife(value);
         player.dispatch(new LifeChanged(last, value));
@@ -133,7 +134,7 @@ final public class PlayerLife implements Life {
      * Rebuild the life points
      */
     public void rebuild() {
-        int percent = percent();
+        final int percent = percent();
 
         max = computeMaxLife();
         entity.setLife(max * percent / 100);

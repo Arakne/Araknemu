@@ -144,7 +144,7 @@ final public class HelpFormatter {
      */
     @Override
     public String toString() {
-        OutputBuilder builder = new OutputBuilder();
+        final OutputBuilder builder = new OutputBuilder();
 
         buildHeader(builder);
         buildSynopsis(builder);

@@ -55,10 +55,11 @@ final public class PvmItemDropProvider implements DropRewardProvider {
 
         @Override
         public void provide(DropReward reward) {
-            ItemDropIterator iterator = new ItemDropIterator(dropsAndQuantity);
+            final ItemDropIterator iterator = new ItemDropIterator(dropsAndQuantity);
 
             for (int count = maxPerFighter; count > 0 && iterator.hasNext(); --count) {
-                MonsterRewardItem drop = iterator.next();
+                final MonsterRewardItem drop = iterator.next();
+
                 iterator.remove();
 
                 if (random.decimal(100) > drop.rate()) {
@@ -91,7 +92,7 @@ final public class PvmItemDropProvider implements DropRewardProvider {
 
         @Override
         public void remove() {
-            Pair<MonsterRewardItem, Integer> currentPair = dropsAndQuantity.get(current);
+            final Pair<MonsterRewardItem, Integer> currentPair = dropsAndQuantity.get(current);
 
             // Remove one from the quantity
             currentPair.setValue(currentPair.getValue() - 1);
@@ -126,7 +127,7 @@ final public class PvmItemDropProvider implements DropRewardProvider {
 
     @Override
     public DropRewardProvider.Scope initialize(EndFightResults results) {
-        ExtractDrops operation = new ExtractDrops(
+        final ExtractDrops operation = new ExtractDrops(
             results.winners().stream()
                 .mapToInt(fighter -> fighter.characteristics().discernment())
                 .sum()

@@ -63,7 +63,7 @@ final public class FightPos extends AbstractCommand {
 
     @Override
     public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
-        AdminUser user = AdminUser.class.cast(performer);
+        final AdminUser user = AdminUser.class.cast(performer);
 
         if (arguments.size() > 1 && arguments.get(1).equalsIgnoreCase("hide")) {
             user.player().exploration().leave();
@@ -71,7 +71,7 @@ final public class FightPos extends AbstractCommand {
             return;
         }
 
-        MapTemplate map = repository.get(user.player().position().map());
+        final MapTemplate map = repository.get(user.player().position().map());
 
         if (
             map.fightPlaces().length < 2

@@ -34,13 +34,13 @@ final public class Message implements Packet {
     final static public class Parser implements SinglePacketParser<Message> {
         @Override
         public Message parse(String input) throws ParsePacketException {
-            String[] parts = StringUtils.split(input, "|", 3);
+            final String[] parts = StringUtils.split(input, "|", 3);
 
             if (parts.length < 2) {
                 throw new ParsePacketException("BM" + input, "Needs at least 2 parts");
             }
 
-            String extra = parts.length == 3 ? parts[2] : "";
+            final String extra = parts.length == 3 ? parts[2] : "";
 
             if (parts[0].length() == 1) {
                 return new Message(

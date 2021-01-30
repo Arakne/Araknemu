@@ -104,7 +104,7 @@ final public class WalkableFightCell implements FightCell {
             return false;
         }
 
-        WalkableFightCell that = (WalkableFightCell) o;
+        final WalkableFightCell that = (WalkableFightCell) o;
 
         return id == that.id && map == that.map;
     }

@@ -56,13 +56,13 @@ final public class DamageApplier {
      * @return The real damage value
      */
     public int apply(ActiveFighter caster, SpellEffect effect, PassiveFighter target) {
-        EffectValue value = new EffectValue(effect)
+        final EffectValue value = new EffectValue(effect)
             .percent(caster.characteristics().get(element.boost()))
             .percent(caster.characteristics().get(Characteristic.PERCENT_DAMAGE))
             .fixed(caster.characteristics().get(Characteristic.FIXED_DAMAGE))
         ;
 
-        Damage damage = new Damage(value.value(), element)
+        final Damage damage = new Damage(value.value(), element)
             .percent(target.characteristics().get(element.percentResistance()))
             .fixed(target.characteristics().get(element.fixedResistance()))
         ;

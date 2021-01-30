@@ -104,10 +104,11 @@ final public class BuffList implements Iterable<Buff>, Buffs {
 
     @Override
     public void refresh() {
-        Iterator<Buff> iterator = buffs.iterator();
+        final Iterator<Buff> iterator = buffs.iterator();
 
         while (iterator.hasNext()) {
-            Buff buff = iterator.next();
+            final Buff buff = iterator.next();
+
             buff.decrementRemainingTurns();
 
             if (!buff.valid()) {
@@ -119,9 +120,10 @@ final public class BuffList implements Iterable<Buff>, Buffs {
 
     @Override
     public void removeAll() {
-        Iterator<Buff> iterator = buffs.iterator();
+        final Iterator<Buff> iterator = buffs.iterator();
+
         while (iterator.hasNext()) {
-            Buff buff = iterator.next();
+            final Buff buff = iterator.next();
 
             if (buff.canBeDispelled()) {
                 iterator.remove();

@@ -74,7 +74,7 @@ final public class FloodGuardChannel implements Channel {
             return true;
         }
 
-        int remainingTime = (int) ((lastSentTime.get(sender.id()) + configuration.floodTime() * 1000 - System.currentTimeMillis()) / 1000);
+        final int remainingTime = (int) ((lastSentTime.get(sender.id()) + configuration.floodTime() * 1000 - System.currentTimeMillis()) / 1000);
 
         if (remainingTime <= 0) {
             return true;

@@ -93,12 +93,12 @@ final public class PlayerCharacteristics implements CharacterCharacteristics {
      * Boost a characteristic
      */
     public void boostCharacteristic(Characteristic characteristic) {
-        BoostStatsData.Interval interval = race.boost(
+        final BoostStatsData.Interval interval = race.boost(
             characteristic,
             base.get(characteristic)
         );
 
-        int points = entity.boostPoints() - interval.cost();
+        final int points = entity.boostPoints() - interval.cost();
 
         if (points < 0) {
             throw new IllegalArgumentException("Not enough points for boost stats");
@@ -115,17 +115,19 @@ final public class PlayerCharacteristics implements CharacterCharacteristics {
 
     @Override
     public int initiative() {
-        int value = race.initiative(player.properties().life().max());
+        final int value =
+            race.initiative(player.properties().life().max())
+            + get(Characteristic.STRENGTH)
+            + get(Characteristic.LUCK)
+            + get(Characteristic.AGILITY)
+            + get(Characteristic.INTELLIGENCE)
+            + specials.get(SpecialEffects.Type.INITIATIVE)
+        ;
 
-        value += get(Characteristic.STRENGTH);
-        value += get(Characteristic.LUCK);
-        value += get(Characteristic.AGILITY);
-        value += get(Characteristic.INTELLIGENCE);
-        value += specials.get(SpecialEffects.Type.INITIATIVE);
-
-        int init = value * player.properties().life().current() / player.properties().life().max();
-
-        return Math.max(1, init);
+        return Math.max(
+            value * player.properties().life().current() / player.properties().life().max(),
+            1
+        );
     }
 
     @Override
@@ -172,7 +174,7 @@ final public class PlayerCharacteristics implements CharacterCharacteristics {
      * Compute the stuff stats
      */
     private Characteristics computeStuffStats() {
-        MutableCharacteristics characteristics = new DefaultCharacteristics();
+        final MutableCharacteristics characteristics = new DefaultCharacteristics();
 
         for (AbstractEquipment equipment : player.inventory().equipments()) {
             equipment.apply(characteristics);

@@ -68,7 +68,7 @@ final public class PoolUtils implements Pool {
             return defaultValue;
         }
 
-        String value = pool.get(key).toLowerCase();
+        final String value = pool.get(key).toLowerCase();
 
         for (String v : new String[] {"1", "true", "yes", "on"}) {
             if (value.equals(v)) {

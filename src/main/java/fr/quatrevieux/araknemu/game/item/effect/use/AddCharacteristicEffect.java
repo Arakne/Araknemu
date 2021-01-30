@@ -39,14 +39,13 @@ final public class AddCharacteristicEffect implements UseEffectHandler {
 
     @Override
     public void apply(UseEffect effect, ExplorationPlayer caster) {
-        int value = random.rand(effect.arguments());
+        final int value = random.rand(effect.arguments());
+        final Information info = Information.characteristicBoosted(characteristic, value);
 
         caster.player().properties().characteristics().base().add(characteristic, value);
 
-        Information info = Information.characteristicBoosted(characteristic, value);
-
         if (info != null) {
-            caster.send(Information.characteristicBoosted(characteristic, value));
+            caster.send(info);
         }
     }
 

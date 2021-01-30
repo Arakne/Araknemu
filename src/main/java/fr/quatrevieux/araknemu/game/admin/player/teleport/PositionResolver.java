@@ -45,7 +45,7 @@ final public class PositionResolver implements LocationResolver {
 
     @Override
     public void resolve(String argument, Target target) {
-        String[] parts = argument.split("[;,]", 2);
+        final String[] parts = argument.split("[;,]", 2);
 
         // @todo area ?
         if (parts.length != 2) {

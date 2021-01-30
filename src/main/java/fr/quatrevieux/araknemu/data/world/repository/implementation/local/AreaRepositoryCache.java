@@ -50,7 +50,7 @@ final public class AreaRepositoryCache implements AreaRepository {
 
     @Override
     public Collection<Area> all() {
-        Collection<Area> loaded = repository.all();
+        final Collection<Area> loaded = repository.all();
 
         for (Area template : loaded) {
             cacheById.put(template.id(), template);

@@ -76,11 +76,11 @@ final public class UseObject implements PacketHandler<GameSession, ObjectUseRequ
             throw new ErrorPacket(Error.cantDoOnCurrentState());
         }
 
-        InventoryEntry entry = session.player().inventory().get(packet.objectId());
-
-        UsableItem item = UsableItem.class.cast(entry.item());
+        final InventoryEntry entry = session.player().inventory().get(packet.objectId());
+        final UsableItem item = UsableItem.class.cast(entry.item());
 
         boolean result = true;
+
         try {
             result = packet.isTarget()
                 ? handleForTarget(session, item, packet)

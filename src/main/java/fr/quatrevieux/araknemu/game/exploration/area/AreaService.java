@@ -68,8 +68,8 @@ final public class AreaService implements PreloadableService, EventsSubscriber {
 
         final SubArea subArea = subAreaRepository.get(id);
         final Area area = areaRepository.get(subArea.area());
+        final ExplorationSubArea explorationSubArea = new ExplorationSubArea(subArea, area);
 
-        ExplorationSubArea explorationSubArea = new ExplorationSubArea(subArea, area);
         subAreas.put(explorationSubArea.id(), explorationSubArea);
 
         return explorationSubArea;
@@ -79,7 +79,7 @@ final public class AreaService implements PreloadableService, EventsSubscriber {
     public void preload(Logger logger) {
         logger.info("Loading areas...");
 
-        Map<Integer, Area> areas = areaRepository.all().stream().collect(Collectors.toMap(Area::id, Function.identity()));
+        final Map<Integer, Area> areas = areaRepository.all().stream().collect(Collectors.toMap(Area::id, Function.identity()));
 
         for (SubArea subArea : subAreaRepository.all()) {
             if (!areas.containsKey(subArea.area())) {

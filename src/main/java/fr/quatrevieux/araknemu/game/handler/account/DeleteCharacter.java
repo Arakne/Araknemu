@@ -44,7 +44,7 @@ final public class DeleteCharacter implements PacketHandler<GameSession, DeleteC
     @Override
     public void handle(GameSession session, DeleteCharacterRequest packet) throws Exception {
         try {
-            AccountCharacter character = service.get(
+            final AccountCharacter character = service.get(
                 session.account(),
                 packet.id()
             );

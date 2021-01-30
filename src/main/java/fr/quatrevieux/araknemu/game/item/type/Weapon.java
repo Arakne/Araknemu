@@ -92,7 +92,7 @@ final public class Weapon extends AbstractEquipment {
 
     @Override
     public List<? extends ItemEffect> effects() {
-        List<ItemEffect> effects = new ArrayList<>(weaponEffects);
+        final List<ItemEffect> effects = new ArrayList<>(weaponEffects);
 
         effects.addAll(super.effects());
 
@@ -123,7 +123,7 @@ final public class Weapon extends AbstractEquipment {
             return false;
         }
 
-        Weapon weapon = (Weapon) obj;
+        final Weapon weapon = (Weapon) obj;
 
         return weaponEffects.equals(weapon.weaponEffects);
     }

@@ -41,7 +41,7 @@ final class SqlConnectionLogRepository implements ConnectionLogRepository {
     private class Loader implements RepositoryUtils.Loader<ConnectionLog> {
         @Override
         public ConnectionLog create(ResultSet rs) throws SQLException {
-            ConnectionLog log = new ConnectionLog(
+            final ConnectionLog log = new ConnectionLog(
                 rs.getInt("ACCOUNT_ID"),
                 instantTransformer.unserialize(rs.getString("START_DATE")),
                 rs.getString("IP_ADDRESS")
@@ -50,13 +50,13 @@ final class SqlConnectionLogRepository implements ConnectionLogRepository {
             log.setEndDate(instantTransformer.unserialize(rs.getString("END_DATE")));
             log.setClientUid(rs.getString("CLIENT_UID"));
 
-            int serverId = rs.getInt("SERVER_ID");
+            final int serverId = rs.getInt("SERVER_ID");
 
             if (!rs.wasNull()) {
                 log.setServerId(serverId);
             }
 
-            int playerId = rs.getInt("PLAYER_ID");
+            final int playerId = rs.getInt("PLAYER_ID");
 
             if (!rs.wasNull()) {
                 log.setPlayerId(playerId);

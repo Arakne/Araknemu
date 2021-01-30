@@ -103,7 +103,7 @@ final public class AdminUserCommandParser implements CommandParser {
          * @return The "move" part, starting at the current cursor position (included), and ending with the last valid position (excluded)
          */
         public String moveWhile(Predicate<Character> predicate) {
-            int position = cursor;
+            final int position = cursor;
 
             while (hasNext() && predicate.test(current())) {
                 next();
@@ -144,16 +144,16 @@ final public class AdminUserCommandParser implements CommandParser {
 
     @Override
     public Arguments parse(String line) throws AdminException {
-        State state = new State(line.trim());
+        final State state = new State(line.trim());
 
         if (state.line.isEmpty()) {
             throw new CommandException("Empty command");
         }
 
-        Context context = parseContext(state);
-        String contextPath = state.before().trim();
-        String command = parseCommand(state);
-        List<String> arguments = parseArguments(state);
+        final Context context = parseContext(state);
+        final String contextPath = state.before().trim();
+        final String command = parseCommand(state);
+        final List<String> arguments = parseArguments(state);
 
         return new Arguments(
             state.line,
@@ -193,7 +193,7 @@ final public class AdminUserCommandParser implements CommandParser {
      * After resolve the root context, resolve the child contexts separated by >
      */
     private Context parseContext(State state) throws AdminException {
-        Context context;
+        final Context context;
 
         switch (state.current()) {
             case '!':
@@ -226,7 +226,7 @@ final public class AdminUserCommandParser implements CommandParser {
             return context;
         }
 
-        String name = state.next().skipBlank().nextWord();
+        final String name = state.next().skipBlank().nextWord();
 
         return resolveChildContext(state, context.child(name));
     }
@@ -251,7 +251,7 @@ final public class AdminUserCommandParser implements CommandParser {
      * The anonymous context is in form : ${type:argument}
      */
     private Context resolveAnonymousContext(State state) throws AdminException {
-        String[] arguments = StringUtils.split(state.moveWhile(c -> c != '}'), ":", 2);
+        final String[] arguments = StringUtils.split(state.moveWhile(c -> c != '}'), ":", 2);
 
         if (!state.hasNext()) {
             throw new CommandException("Syntax error : missing closing accolade");

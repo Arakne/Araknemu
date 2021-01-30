@@ -42,8 +42,8 @@ final public class RemoveMovementPointsHandler extends RemoveCharacteristicHandl
     @Override
     public void handle(CastScope cast, CastScope.EffectScope effect) {
         fight.turnList().current().ifPresent(turn -> {
-            EffectValue value = new EffectValue(effect.effect());
-            int mp = turn.points().removeMovementPoints(value.value());
+            final EffectValue value = new EffectValue(effect.effect());
+            final int mp = turn.points().removeMovementPoints(value.value());
 
             fight.send(ActionEffect.removeMovementPoints(turn.fighter(), mp));
         });

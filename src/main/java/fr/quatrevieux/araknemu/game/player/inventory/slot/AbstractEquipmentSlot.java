@@ -52,7 +52,7 @@ abstract public class AbstractEquipmentSlot implements InventorySlot {
 
     @Override
     public InventoryEntry set(InventoryEntry entry) throws InventoryException {
-        InventoryEntry newEntry = slot.set(entry);
+        final InventoryEntry newEntry = slot.set(entry);
 
         dispatcher.dispatch(new EquipmentChanged(entry, id(), true));
 
@@ -61,7 +61,7 @@ abstract public class AbstractEquipmentSlot implements InventorySlot {
 
     @Override
     public InventoryEntry set(Item item, int quantity) throws InventoryException {
-        InventoryEntry entry = slot.set(item, quantity);
+        final InventoryEntry entry = slot.set(item, quantity);
 
         dispatcher.dispatch(new EquipmentChanged(entry, id(), true));
 

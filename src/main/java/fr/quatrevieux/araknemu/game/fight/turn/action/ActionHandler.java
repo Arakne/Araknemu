@@ -58,7 +58,7 @@ final public class ActionHandler {
             return false;
         }
 
-        ActionResult result = action.start();
+        final ActionResult result = action.start();
 
         if (result.success()) {
             current = action;
@@ -84,7 +84,7 @@ final public class ActionHandler {
 
         future.cancel(false);
 
-        Action action = current;
+        final Action action = current;
 
         try {
             action.end();

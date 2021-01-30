@@ -47,10 +47,8 @@ final public class AggregatePacketParser implements PacketParser {
 
     @Override
     public Packet parse(String input) throws ParsePacketException {
-        int len = maxCodeLength > input.length() ? input.length() : maxCodeLength;
-
-        for (; len >= minCodeLength; --len) {
-            String header = input.substring(0, len);
+        for (int len = Math.min(maxCodeLength, input.length()); len >= minCodeLength; --len) {
+            final String header = input.substring(0, len);
 
             if (parsers.containsKey(header)) {
                 return parsers

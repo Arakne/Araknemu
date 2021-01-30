@@ -62,7 +62,7 @@ final public class ItemSets {
      * Get all player item sets
      */
     public Collection<PlayerItemSet> all() {
-        Map<Integer, PlayerItemSet> sets = new HashMap<>();
+        final Map<Integer, PlayerItemSet> sets = new HashMap<>();
 
         for (AbstractEquipment equipment : inventory.equipments()) {
             equipment.set().ifPresent(set -> {

@@ -57,7 +57,7 @@ final public class PermissionsTransformer {
      * @return The set of permissions
      */
     public Set<Permission> unserialize(int serialized) {
-        Set<Permission> permissions = EnumSet.noneOf(Permission.class);
+        final Set<Permission> permissions = EnumSet.noneOf(Permission.class);
 
         for (Permission permission : Permission.values()) {
             if (permission.match(serialized)) {

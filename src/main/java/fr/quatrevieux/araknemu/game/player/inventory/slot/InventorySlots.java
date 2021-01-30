@@ -75,7 +75,7 @@ final public class InventorySlots {
      * Get current equipments
      */
     public Collection<AbstractEquipment> equipments() {
-        Collection<AbstractEquipment> equipments = new ArrayList<>();
+        final Collection<AbstractEquipment> equipments = new ArrayList<>();
 
         for (InventorySlot slot : slots) {
             slot.equipment().ifPresent(equipments::add);

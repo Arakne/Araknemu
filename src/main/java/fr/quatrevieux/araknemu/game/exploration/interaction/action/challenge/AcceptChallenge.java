@@ -39,7 +39,7 @@ final public class AcceptChallenge implements Action {
 
     @Override
     public void start(ActionQueue queue) {
-        ChallengerDialog dialog = player.interactions().get(ChallengerDialog.class);
+        final ChallengerDialog dialog = player.interactions().get(ChallengerDialog.class);
 
         if (dialog.initiator().id() != target) {
             throw new IllegalArgumentException("Invalid challenge target");

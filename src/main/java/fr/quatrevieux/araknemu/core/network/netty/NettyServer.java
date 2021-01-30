@@ -73,12 +73,13 @@ final public class NettyServer<S extends Session> implements Server<S> {
 
     @Override
     public void start() {
-        ServerBootstrap bootstrap = new ServerBootstrap();
+        final ServerBootstrap bootstrap = new ServerBootstrap();
 
         handlerAdapter = new SessionHandlerAdapter<>(factory);
-        StringDecoder decoder = new StringDecoder(CharsetUtil.UTF_8);
-        StringEncoder encoder = new StringEncoder(CharsetUtil.UTF_8);
-        MessageToMessageEncoder<Object> messageEncoder = new MessageEndEncoder();
+
+        final StringDecoder decoder = new StringDecoder(CharsetUtil.UTF_8);
+        final StringEncoder encoder = new StringEncoder(CharsetUtil.UTF_8);
+        final MessageToMessageEncoder<Object> messageEncoder = new MessageEndEncoder();
 
         bootstrap
             .group(loopGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors()))

@@ -65,7 +65,7 @@ final public class TeleportNearEnemy implements ActionGenerator {
          * Push the teleport parameters and check if there are better than the previous
          */
         public void push(Spell spell, FightCell cell) {
-            int currentDistance = new CoordinateCell<>(cell).distance(enemyCell);
+            final int currentDistance = new CoordinateCell<>(cell).distance(enemyCell);
 
             if (currentDistance < distance) {
                 this.spell = spell;
@@ -113,7 +113,7 @@ final public class TeleportNearEnemy implements ActionGenerator {
             return Optional.empty();
         }
 
-        Optional<? extends PassiveFighter> enemy = ai.enemy();
+        final Optional<? extends PassiveFighter> enemy = ai.enemy();
 
         if (!enemy.isPresent()) {
             return Optional.empty();

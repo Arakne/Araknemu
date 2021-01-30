@@ -39,7 +39,7 @@ final public class ScreenInfo implements Packet {
     final static public class Parser implements SinglePacketParser<ScreenInfo> {
         @Override
         public ScreenInfo parse(String input) throws ParsePacketException {
-            String[] parts = StringUtils.split(input, ";", 3);
+            final String[] parts = StringUtils.split(input, ";", 3);
 
             if (parts.length != 3) {
                 throw new ParsePacketException("Ir" + input, "Screen info must be composed of 3 parts");

@@ -116,7 +116,7 @@ final public class PlayerExperienceService implements PreloadableService, Events
      * @param newLevel The reached level
      */
     void applyLevelUpBonus(Player entity, int newLevel) {
-        int diff = newLevel - entity.level();
+        final int diff = newLevel - entity.level();
 
         entity.setSpellPoints(entity.spellPoints() + configuration.spellBoostPointsOnLevelUp() * diff);
         entity.setBoostPoints(entity.boostPoints() + configuration.characteristicPointsOnLevelUp() * diff);

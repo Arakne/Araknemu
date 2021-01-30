@@ -47,7 +47,7 @@ final public class SaveBank implements EventsSubscriber {
                         return;
                     }
 
-                    BankEntry entry = (BankEntry) event.entry();
+                    final BankEntry entry = (BankEntry) event.entry();
 
                     repository.add(entry.entity());
                 }
@@ -65,7 +65,7 @@ final public class SaveBank implements EventsSubscriber {
                         return;
                     }
 
-                    BankEntry entry = (BankEntry) event.entry();
+                    final BankEntry entry = (BankEntry) event.entry();
 
                     repository.delete(entry.entity());
                 }
@@ -83,7 +83,7 @@ final public class SaveBank implements EventsSubscriber {
                         return;
                     }
 
-                    BankEntry entry = (BankEntry) event.entry();
+                    final BankEntry entry = (BankEntry) event.entry();
 
                     repository.update(entry.entity());
                 }

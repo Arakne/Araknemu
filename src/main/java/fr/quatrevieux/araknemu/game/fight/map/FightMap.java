@@ -90,10 +90,10 @@ final public class FightMap implements BattlefieldMap {
     }
 
     private List<FightCell> makeCells(CellData[] template) {
-        List<FightCell> cells = new ArrayList<>(template.length);
+        final List<FightCell> cells = new ArrayList<>(template.length);
 
         for (int i = 0; i < template.length; ++i) {
-            CellData cell = template[i];
+            final CellData cell = template[i];
 
             if (!cell.active() || !cell.movement().walkable()) {
                 cells.add(new UnwalkableFightCell(this, template[i], i));

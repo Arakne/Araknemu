@@ -83,7 +83,8 @@ final public class DefaultListenerAggregate implements ListenerAggregate {
             return;
         }
 
-        Listener listener = listeners.remove(listenerClass);
+        final Listener listener = listeners.remove(listenerClass);
+
         events.get(listener.event()).remove(listenerClass);
     }
 

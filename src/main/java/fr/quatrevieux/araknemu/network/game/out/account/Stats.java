@@ -36,7 +36,7 @@ final public class Stats {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("As");
+        final StringBuilder sb = new StringBuilder("As");
 
         sb
             .append(player.experience().current()).append(',').append(player.experience().min()).append(',').append(player.experience().max()).append('|')

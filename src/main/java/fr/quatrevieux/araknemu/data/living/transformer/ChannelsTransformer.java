@@ -35,7 +35,7 @@ final public class ChannelsTransformer implements Transformer<Set<ChannelType>> 
             return "";
         }
 
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
 
         for (ChannelType channel : value) {
             sb.append(channel.identifier());
@@ -46,7 +46,7 @@ final public class ChannelsTransformer implements Transformer<Set<ChannelType>> 
 
     @Override
     public Set<ChannelType> unserialize(String serialize) {
-        Set<ChannelType> channels = EnumSet.noneOf(ChannelType.class);
+        final Set<ChannelType> channels = EnumSet.noneOf(ChannelType.class);
 
         if (serialize == null || serialize.isEmpty()) {
             return channels;

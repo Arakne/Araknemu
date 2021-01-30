@@ -80,7 +80,7 @@ final public class PlayerInventory implements Inventory<InventoryEntry>, Dispatc
 
     @Override
     public InventoryEntry add(Item item, int quantity, int position) throws InventoryException {
-        InventorySlot target = slots.get(position);
+        final InventorySlot target = slots.get(position);
 
         target.check(item, quantity);
 
@@ -89,7 +89,7 @@ final public class PlayerInventory implements Inventory<InventoryEntry>, Dispatc
 
     @Override
     public InventoryEntry delete(int id) throws InventoryException {
-        InventoryEntry entry = get(id);
+        final InventoryEntry entry = get(id);
 
         slots.get(entry.position()).unset();
 
@@ -212,7 +212,7 @@ final public class PlayerInventory implements Inventory<InventoryEntry>, Dispatc
      *         false if the entry is destroyed (like stacking or eat)
      */
     boolean move(InventoryEntry entry, int position) throws InventoryException {
-        InventorySlot target = slots.get(position);
+        final InventorySlot target = slots.get(position);
 
         target.check(entry.item(), entry.quantity());
 

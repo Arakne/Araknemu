@@ -83,7 +83,7 @@ public interface ConnectionPool extends AutoCloseable {
      * @param <T> Result of the task
      */
     default public <T> T execute(Task<T> task) throws SQLException {
-        Connection connection = acquire();
+        final Connection connection = acquire();
 
         try {
             return task.perform(connection);

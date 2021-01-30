@@ -35,7 +35,7 @@ final public class AdminMove implements Packet {
     final static public class Parser implements SinglePacketParser<AdminMove> {
         @Override
         public AdminMove parse(String input) throws ParsePacketException {
-            String[] parts = StringUtils.split(input, ",", 2);
+            final String[] parts = StringUtils.split(input, ",", 2);
 
             if (parts.length != 2) {
                 throw new ParsePacketException(code() + input, "Missing coordinates");

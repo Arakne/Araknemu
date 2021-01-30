@@ -37,7 +37,7 @@ abstract public class AbstractChannelSubscriptionChanged {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("cC");
+        final StringBuilder sb = new StringBuilder("cC");
 
         sb.append(sign);
 

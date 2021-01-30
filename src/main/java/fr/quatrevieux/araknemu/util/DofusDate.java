@@ -59,7 +59,8 @@ final public class DofusDate {
      * @param duration The duration in milliseconds
      */
     static public DofusDate fromDuration(long duration) {
-        DofusDate date = new DofusDate();
+        final DofusDate date = new DofusDate();
+
         date.calendar.setTimeInMillis(date.calendar.getTimeInMillis() - duration);
 
         return date;

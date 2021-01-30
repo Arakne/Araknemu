@@ -75,10 +75,10 @@ final public class SpellService implements PreloadableService {
      * @param template The spell template
      */
     private SpellLevels load(SpellTemplate template) {
-        List<Spell> levels = new ArrayList<>(template.levels().length);
+        final List<Spell> levels = new ArrayList<>(template.levels().length);
 
         for (int i = 0; i < template.levels().length; ++i) {
-            SpellTemplate.Level level = template.levels()[i];
+            final SpellTemplate.Level level = template.levels()[i];
 
             if (level == null) {
                 break;

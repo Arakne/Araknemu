@@ -71,7 +71,7 @@ final public class PlayerRaceRepositoryCache implements PlayerRaceRepository {
 
     @Override
     public Collection<PlayerRace> load() {
-        Collection<PlayerRace> loaded = repository.load();
+        final Collection<PlayerRace> loaded = repository.load();
 
         for (PlayerRace race : loaded) {
             races.put(race.race(), race);

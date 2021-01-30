@@ -120,7 +120,7 @@ final public class GameHost {
             return false;
         }
 
-        GameHost host = (GameHost) o;
+        final GameHost host = (GameHost) o;
 
         return id == host.id;
     }

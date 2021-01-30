@@ -64,7 +64,7 @@ final public class OpenBank implements Action {
 
     @Override
     public void apply(ExplorationPlayer player) {
-        Bank bank = service.load(player.account());
+        final Bank bank = service.load(player.account());
 
         if (payBankTax(player, bank)) {
             player.interactions().start(bank.exchange(player).dialog());

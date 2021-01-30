@@ -90,7 +90,7 @@ final public class SpecialEffect implements ItemEffect {
             return false;
         }
 
-        SpecialEffect that = (SpecialEffect) o;
+        final SpecialEffect that = (SpecialEffect) o;
 
         return effect == that.effect
             && Arrays.equals(arguments, that.arguments)

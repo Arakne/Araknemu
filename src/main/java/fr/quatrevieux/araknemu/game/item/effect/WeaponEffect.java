@@ -70,7 +70,7 @@ final public class WeaponEffect implements ItemEffect {
             return false;
         }
 
-        WeaponEffect that = (WeaponEffect) o;
+        final WeaponEffect that = (WeaponEffect) o;
 
         return min == that.min
             && max == that.max

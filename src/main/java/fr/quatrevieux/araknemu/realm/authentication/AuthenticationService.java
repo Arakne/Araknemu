@@ -67,7 +67,7 @@ final public class AuthenticationService {
      * in the same time
      */
     synchronized public void authenticate(AuthenticationRequest request) {
-        AuthenticationAccount account;
+        final AuthenticationAccount account;
 
         try {
             account = getAccount(request.username());

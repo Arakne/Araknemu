@@ -44,7 +44,7 @@ abstract public class AbstractConstraintBuilderFactory<T, E> implements EntityCo
             return constraint;
         }
 
-        ConstraintBuilder<T, E> builder = new ConstraintBuilder<>();
+        final ConstraintBuilder<T, E> builder = new ConstraintBuilder<>();
 
         build(builder);
 

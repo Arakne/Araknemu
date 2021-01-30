@@ -76,13 +76,11 @@ final public class Area extends AbstractCommand {
 
     @Override
     public void execute(AdminPerformer performer, List<String> arguments) {
-        AdminUser user = AdminUser.class.cast(performer);
+        final AdminUser user = AdminUser.class.cast(performer);
+        final EffectArea area = areaTransformer.unserialize(arguments.get(1));
+        final ExplorationMap map = user.player().exploration().map();
 
-        EffectArea area = areaTransformer.unserialize(arguments.get(1));
-
-        ExplorationMap map = user.player().exploration().map();
-
-        List<Integer> cells = service.area(area)
+        final List<Integer> cells = service.area(area)
             .resolve(
                 map.get(user.player().position().cell()),
                 map.get(user.player().position().cell())

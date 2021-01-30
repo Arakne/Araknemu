@@ -50,7 +50,7 @@ final public class BankService {
      * Load the bank for the given account
      */
     public Bank load(GameAccount account) {
-        Bank bank = new Bank(this, bankRepository.get(new AccountBank(account.id(), account.serverId(), 0)));
+        final Bank bank = new Bank(this, bankRepository.get(new AccountBank(account.id(), account.serverId(), 0)));
 
         bank.dispatcher().register(new SaveBank(itemRepository));
 

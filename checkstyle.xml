@@ -61,9 +61,7 @@
         <module name="EmptyStatement" />
         <module name="EqualsAvoidNull" />
         <!-- TODO -->
-<!--        <module name="FinalLocalVariable">-->
-<!--            <property name="severity" value="warning"/>-->
-<!--        </module>-->
+        <module name="FinalLocalVariable" />
         <module name="IllegalType" />
         <!-- Should be uncommented -->
         <!-- TODO -->

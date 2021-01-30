@@ -41,7 +41,7 @@ final public class SendNewSprite implements Listener<NewSpriteOnMap> {
     @Override
     public void on(NewSpriteOnMap event) {
         // Save the string value for optimisation
-        String packet = new AddSprites(Collections.singleton(event.sprite())).toString();
+        final String packet = new AddSprites(Collections.singleton(event.sprite())).toString();
 
         map.apply(new Operation() {
             @Override

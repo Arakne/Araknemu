@@ -115,7 +115,7 @@ final public class ActiveState implements LeavableState, EventsSubscriber {
         fighter.team().kick(fighter);
         fight.turnList().remove(fighter);
 
-        FightRewardsSheet rewardsSheet = fight.type().rewards().generate(
+        final FightRewardsSheet rewardsSheet = fight.type().rewards().generate(
             new EndFightResults(
                 fight,
                 Collections.emptyList(),

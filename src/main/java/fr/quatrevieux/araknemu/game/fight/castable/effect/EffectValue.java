@@ -142,7 +142,7 @@ final public class EffectValue {
      * Get the dice value
      */
     public int value() {
-        int value = ((boost + jet()) * percent / 100 + fixed + effect.boost()) * multiply;
+        final int value = ((boost + jet()) * percent / 100 + fixed + effect.boost()) * multiply;
 
         return Math.max(value, 0);
     }

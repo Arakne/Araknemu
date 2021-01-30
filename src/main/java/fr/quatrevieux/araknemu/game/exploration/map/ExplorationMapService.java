@@ -84,11 +84,11 @@ final public class ExplorationMapService implements PreloadableService, EventsSu
     public void preload(Logger logger) {
         logger.info("Loading maps...");
 
-        long start = System.currentTimeMillis();
+        final long start = System.currentTimeMillis();
 
         repository.all().forEach(this::createMap);
 
-        long time = System.currentTimeMillis() - start;
+        final long time = System.currentTimeMillis() - start;
 
         logger.info("{} maps successfully loaded in {}ms", maps.size(), time);
     }
@@ -112,7 +112,7 @@ final public class ExplorationMapService implements PreloadableService, EventsSu
             new Listener<FightCreated>() {
                 @Override
                 public void on(FightCreated event) {
-                    ExplorationMap map = load(event.fight().map().id());
+                    final ExplorationMap map = load(event.fight().map().id());
 
                     event.fight().dispatcher().add(new HideFightOnStart(map));
                     event.fight().dispatcher().add(new SendFightsCount(map, fightService));
@@ -141,7 +141,8 @@ final public class ExplorationMapService implements PreloadableService, EventsSu
     }
 
     private ExplorationMap createMap(MapTemplate template) {
-        ExplorationMap map = new ExplorationMap(template, loader, areaService.get(template.subAreaId()));
+        final ExplorationMap map = new ExplorationMap(template, loader, areaService.get(template.subAreaId()));
+
         maps.put(map.id(), map);
 
         map.dispatcher().add(new SendNewSprite(map));

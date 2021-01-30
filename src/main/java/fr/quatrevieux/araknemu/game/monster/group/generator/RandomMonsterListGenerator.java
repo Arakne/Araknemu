@@ -55,8 +55,7 @@ final public class RandomMonsterListGenerator implements MonsterListGenerator {
     @Override
     public List<Monster> generate(MonsterGroupData data) {
         final int size = groupSize(data.maxSize());
-
-        List<Monster> monsters = new ArrayList<>(size);
+        final List<Monster> monsters = new ArrayList<>(size);
 
         for (int i = size; i > 0; --i) {
             monsters.add(monster(data));

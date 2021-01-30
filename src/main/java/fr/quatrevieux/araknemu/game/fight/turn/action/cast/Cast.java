@@ -67,7 +67,7 @@ final public class Cast implements Action {
 
     @Override
     public boolean validate() {
-        Error error = spell == null
+        final Error error = spell == null
             ? Error.cantCastNotFound()
             : validator.validate(turn, spell, target)
         ;

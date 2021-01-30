@@ -63,7 +63,7 @@ final public class LaunchedSpells {
             return;
         }
 
-        Entry entry = spells.get(spell.id());
+        final Entry entry = spells.get(spell.id());
 
         ++entry.count;
         target.fighter().ifPresent(
@@ -87,7 +87,7 @@ final public class LaunchedSpells {
             return true;
         }
 
-        Entry entry = spells.get(spell.id());
+        final Entry entry = spells.get(spell.id());
 
         if (entry.cooldown > 0) {
             return false;

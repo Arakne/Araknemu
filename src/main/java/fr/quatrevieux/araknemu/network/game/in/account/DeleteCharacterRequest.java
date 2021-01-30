@@ -33,7 +33,7 @@ final public class DeleteCharacterRequest implements Packet {
     final static public class Parser implements SinglePacketParser<DeleteCharacterRequest> {
         @Override
         public DeleteCharacterRequest parse(String input) throws ParsePacketException {
-            String[] parts = StringUtils.split(input, "|", 2);
+            final String[] parts = StringUtils.split(input, "|", 2);
 
             return new DeleteCharacterRequest(
                 Integer.parseInt(parts[0]),

@@ -86,7 +86,7 @@ final public class SpellBookService implements EventsSubscriber {
      * Load the spell book
      */
     public SpellBook load(Dispatcher dispatcher, Player player) {
-        Map<Integer, SpellBookEntry> entries = repository.byPlayer(player)
+        final Map<Integer, SpellBookEntry> entries = repository.byPlayer(player)
             .stream()
             .map(entity -> new SpellBookEntry(entity, service.get(entity.spellId())))
             .collect(

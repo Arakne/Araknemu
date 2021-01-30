@@ -90,7 +90,8 @@ final public class InteractionHandler {
             throw new IllegalStateException("No interaction found");
         }
 
-        Interaction interaction = current;
+        final Interaction interaction = current;
+
         current = null;
 
         return interaction;

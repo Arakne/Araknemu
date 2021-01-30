@@ -95,7 +95,7 @@ final public class AuthenticationAccount extends AbstractLivingAccount<RealmSess
             return false;
         }
 
-        AuthenticationAccount that = (AuthenticationAccount) o;
+        final AuthenticationAccount that = (AuthenticationAccount) o;
 
         return account.id() == that.account.id();
     }

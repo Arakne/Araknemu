@@ -211,7 +211,7 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
      * Punish the deserter fighter
      */
     private void punishDeserter(Fighter fighter) {
-        FightRewardsSheet rewardsSheet = fight.type().rewards().generate(
+        final FightRewardsSheet rewardsSheet = fight.type().rewards().generate(
             new EndFightResults(
                 fight,
                 Collections.emptyList(),

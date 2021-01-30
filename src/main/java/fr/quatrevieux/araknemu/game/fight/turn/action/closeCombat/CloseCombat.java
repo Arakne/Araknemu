@@ -61,7 +61,7 @@ final public class CloseCombat implements Action {
 
     @Override
     public boolean validate() {
-        Error error = validator.validate(turn, caster.weapon(), target);
+        final Error error = validator.validate(turn, caster.weapon(), target);
 
         if (error != null) {
             caster.apply(new SendPacket(error));

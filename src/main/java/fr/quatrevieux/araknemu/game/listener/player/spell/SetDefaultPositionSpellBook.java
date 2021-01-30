@@ -41,7 +41,7 @@ final public class SetDefaultPositionSpellBook implements Listener<CharacterCrea
 
     @Override
     public void on(CharacterCreated event) {
-        Player player = event.character().character();
+        final Player player = event.character().character();
 
         char position = 1;
 

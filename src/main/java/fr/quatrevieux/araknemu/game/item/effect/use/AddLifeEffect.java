@@ -32,7 +32,7 @@ final public class AddLifeEffect implements UseEffectHandler {
 
     @Override
     public void apply(UseEffect effect, ExplorationPlayer caster) {
-        int value = random.rand(effect.arguments());
+        final int value = random.rand(effect.arguments());
 
         caster.player().properties().life().add(value);
     }
@@ -59,7 +59,7 @@ final public class AddLifeEffect implements UseEffectHandler {
 
     @Override
     public void applyToFighter(UseEffect effect, PlayerFighter fighter) {
-        int value = random.rand(effect.arguments());
+        final int value = random.rand(effect.arguments());
 
         fighter.player().properties().life().add(value);
     }

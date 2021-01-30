@@ -46,8 +46,7 @@ final public class GoToGeolocation implements PacketHandler<GameSession, AdminMo
         }
 
         final ExplorationPlayer player = session.exploration();
-
-        ExplorationMap target = service.find(packet.geolocation(), GeolocationService.GeolocationContext.fromMap(player.map()));
+        final ExplorationMap target = service.find(packet.geolocation(), GeolocationService.GeolocationContext.fromMap(player.map()));
 
         if (player.position().cell() < target.size() && target.get(player.position().cell()).walkable()) {
             player.interactions().push(new ChangeMap(player, target, player.position().cell()));

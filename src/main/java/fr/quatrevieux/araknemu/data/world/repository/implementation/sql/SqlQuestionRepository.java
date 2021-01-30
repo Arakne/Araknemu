@@ -154,14 +154,13 @@ final class SqlQuestionRepository implements QuestionRepository {
      * @param ids The sorted ids
      */
     private Collection<Question> sortByIds(Collection<Question> data, int[] ids) {
-        Collection<Question> sorted = new ArrayList<>(data.size());
-
-        Map<Integer, Question> questions = new HashMap<>();
+        final Collection<Question> sorted = new ArrayList<>(data.size());
+        final Map<Integer, Question> questions = new HashMap<>();
 
         data.forEach(question -> questions.put(question.id(), question));
 
         for (int id : ids) {
-            Question question = questions.get(id);
+            final Question question = questions.get(id);
 
             if (question != null) {
                 sorted.add(question);

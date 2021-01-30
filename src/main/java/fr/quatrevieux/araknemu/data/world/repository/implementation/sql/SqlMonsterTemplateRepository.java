@@ -65,19 +65,19 @@ final class SqlMonsterTemplateRepository implements MonsterTemplateRepository {
         }
 
         private MonsterTemplate.Grade[] parseGrades(String[] characteristics, String[] lifePoints, String[] initiatives, String[] spells) {
-            MonsterTemplate.Grade[] grades = new MonsterTemplate.Grade[characteristics.length];
+            final MonsterTemplate.Grade[] grades = new MonsterTemplate.Grade[characteristics.length];
 
             for (int i = 0; i < characteristics.length; ++i) {
-                String[] grade = StringUtils.splitPreserveAllTokens(characteristics[i], "@", 2);
+                final String[] grade = StringUtils.splitPreserveAllTokens(characteristics[i], "@", 2);
 
                 if (grade.length != 2) {
                     throw new TransformerException("Invalid grade '" + grades[i] + "'");
                 }
 
-                Map<Integer, Integer> gradeSpells = new HashMap<>();
+                final Map<Integer, Integer> gradeSpells = new HashMap<>();
 
                 for (String spell : StringUtils.split(spells[i], ";")) {
-                    String[] data = StringUtils.split(spell, "@", 2);
+                    final String[] data = StringUtils.split(spell, "@", 2);
 
                     if (data.length != 2) {
                         throw new TransformerException("Invalid spell list '" + spells[i] + "'");

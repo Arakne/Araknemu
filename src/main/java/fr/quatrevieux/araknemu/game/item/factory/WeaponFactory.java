@@ -77,7 +77,7 @@ final public class WeaponFactory implements ItemFactory {
     }
 
     private Weapon.WeaponInfo parseInfo(String info) {
-        String[] parts = StringUtils.split(info, ";");
+        final String[] parts = StringUtils.split(info, ";");
 
         return new Weapon.WeaponInfo(
             Integer.parseInt(parts[0]),

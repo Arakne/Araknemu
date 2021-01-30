@@ -50,7 +50,7 @@ final public class MonsterGroupDataRepositoryCache implements MonsterGroupDataRe
 
     @Override
     public List<MonsterGroupData> all() {
-        List<MonsterGroupData> loaded = repository.all();
+        final List<MonsterGroupData> loaded = repository.all();
 
         for (MonsterGroupData template : loaded) {
             cacheById.put(template.id(), template);

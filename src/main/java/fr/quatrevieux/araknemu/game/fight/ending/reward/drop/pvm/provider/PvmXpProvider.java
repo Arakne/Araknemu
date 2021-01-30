@@ -45,7 +45,7 @@ final public class PvmXpProvider implements DropRewardProvider {
 
         @Override
         public void provide(DropReward reward) {
-            long winXp = (long) (
+            final long winXp = (long) (
                 totalXp
                 * teamsLevelsRate
                 * teamLevelDeviationBonus

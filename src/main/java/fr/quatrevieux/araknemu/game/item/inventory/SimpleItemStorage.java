@@ -77,7 +77,7 @@ final public class SimpleItemStorage<E extends ItemEntry> implements ItemStorage
 
     @Override
     public E add(Item item, int quantity, int position) {
-        E entry = factory.create(++lastId, item, quantity, position);
+        final E entry = factory.create(++lastId, item, quantity, position);
 
         push(entry);
         dispatcher.dispatch(new ObjectAdded(entry));
@@ -91,7 +91,7 @@ final public class SimpleItemStorage<E extends ItemEntry> implements ItemStorage
             throw new ItemNotFoundException(id);
         }
 
-        E entry = items.remove(id);
+        final E entry = items.remove(id);
 
         dispatcher.dispatch(new ObjectDeleted(entry));
 

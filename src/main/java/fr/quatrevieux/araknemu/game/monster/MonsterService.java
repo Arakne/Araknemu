@@ -84,13 +84,13 @@ final public class MonsterService implements PreloadableService {
      * @param template The template to load
      */
     private GradeSet createMonsterGrades(MonsterTemplate template) {
-        List<Monster> monsterGrades = new ArrayList<>(template.grades().length);
+        final List<Monster> monsterGrades = new ArrayList<>(template.grades().length);
 
         for (int grade = 0; grade < template.grades().length; ++grade) {
             monsterGrades.add(createMonster(template, grade));
         }
 
-        GradeSet grades = new GradeSet(monsterGrades);
+        final GradeSet grades = new GradeSet(monsterGrades);
 
         monsters.put(template.id(), grades);
 
@@ -102,8 +102,7 @@ final public class MonsterService implements PreloadableService {
      */
     private Monster createMonster(MonsterTemplate template, int grade) {
         final MonsterTemplate.Grade gradeData = template.grades()[grade];
-
-        Map<Integer, Spell> spells = new HashMap<>(gradeData.spells().size());
+        final Map<Integer, Spell> spells = new HashMap<>(gradeData.spells().size());
 
         for (Map.Entry<Integer, Integer> entry : gradeData.spells().entrySet()) {
             spells.put(entry.getKey(), spellService.get(entry.getKey()).level(entry.getValue()));

@@ -33,7 +33,8 @@ import java.util.Calendar;
 final public class SendDateAndTime implements PacketHandler<GameSession, AskDate> {
     @Override
     public void handle(GameSession session, AskDate packet) throws Exception {
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
+
         calendar.add(Calendar.YEAR, -1370);
 
         session.send(new ServerDate(calendar));

@@ -37,12 +37,12 @@ final public class StealLifeSimulator implements EffectSimulator {
 
     @Override
     public void simulate(CastSimulation simulation, CastScope.EffectScope effect) {
-        int lastDamage = -simulation.alliesLife() - simulation.enemiesLife();
+        final int lastDamage = -simulation.alliesLife() - simulation.enemiesLife();
 
         // Poison is already handled by the DamageSimulator
         simulator.simulate(simulation, effect);
 
-        int totalDamage = (-simulation.alliesLife() - simulation.enemiesLife()) - lastDamage;
+        final int totalDamage = (-simulation.alliesLife() - simulation.enemiesLife()) - lastDamage;
 
         if (totalDamage > 0) {
             simulation.alterLife(totalDamage / 2, simulation.caster());

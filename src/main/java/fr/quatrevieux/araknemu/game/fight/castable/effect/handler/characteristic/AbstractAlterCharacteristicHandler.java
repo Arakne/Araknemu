@@ -50,7 +50,7 @@ abstract public class AbstractAlterCharacteristicHandler implements EffectHandle
 
     @Override
     public void buff(CastScope cast, CastScope.EffectScope effect) {
-        SpellEffect buffEffect = computeBuffEffect(cast, effect.effect());
+        final SpellEffect buffEffect = computeBuffEffect(cast, effect.effect());
 
         for (PassiveFighter target : effect.targets()) {
             target.buffs().add(new Buff(buffEffect, cast.action(), cast.caster(), target, this));
@@ -63,7 +63,7 @@ abstract public class AbstractAlterCharacteristicHandler implements EffectHandle
      * @fixme One dice for all targets, or one dice per target ?
      */
     private SpellEffect computeBuffEffect(CastScope cast, SpellEffect effect) {
-        EffectValue value = new EffectValue(effect);
+        final EffectValue value = new EffectValue(effect);
 
         return new BuffEffect(effect, value.value());
     }

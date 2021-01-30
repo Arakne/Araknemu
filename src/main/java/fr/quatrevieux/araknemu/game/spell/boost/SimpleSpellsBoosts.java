@@ -44,9 +44,9 @@ final public class SimpleSpellsBoosts implements SpellsBoosts {
             return set(spellId, modifier, value);
         }
 
-        Map<Modifier, Integer> modifiers = spellsModifiers.get(spellId);
+        final Map<Modifier, Integer> modifiers = spellsModifiers.get(spellId);
+        final int newValue = modifiers.get(modifier) + value;
 
-        int newValue = modifiers.get(modifier) + value;
         modifiers.put(modifier, newValue);
 
         return newValue;

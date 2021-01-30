@@ -105,7 +105,7 @@ public class RepositoryUtils<E> {
                 statement -> {
                     binder.bind(statement);
 
-                    ResultSet rs = statement.executeQuery();
+                    final ResultSet rs = statement.executeQuery();
 
                     if (!rs.next()) {
                         throw new EntityNotFoundException();
@@ -143,9 +143,8 @@ public class RepositoryUtils<E> {
                 statement -> {
                     binder.bind(statement);
 
-                    ResultSet rs = statement.executeQuery();
-
-                    List<E> result = new ArrayList<>();
+                    final ResultSet rs = statement.executeQuery();
+                    final List<E> result = new ArrayList<>();
 
                     while (rs.next()) {
                         result.add(loader.create(rs));
@@ -200,7 +199,7 @@ public class RepositoryUtils<E> {
                 statement -> {
                     binder.bind(statement);
 
-                    ResultSet rs = statement.executeQuery();
+                    final ResultSet rs = statement.executeQuery();
 
                     if (!rs.next()) {
                         throw new RepositoryException("Invalid aggregate query");
@@ -273,7 +272,7 @@ public class RepositoryUtils<E> {
                     binder.bind(statement);
                     statement.execute();
 
-                    ResultSet rs = statement.getGeneratedKeys();
+                    final ResultSet rs = statement.getGeneratedKeys();
 
                     if (!rs.next()) {
                         throw new RepositoryException("No generated keys. Use RepositoryUtils#update(String, Binder) instead");

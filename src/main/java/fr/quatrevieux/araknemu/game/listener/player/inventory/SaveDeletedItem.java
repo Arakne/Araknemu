@@ -40,7 +40,7 @@ final public class SaveDeletedItem implements Listener<ObjectDeleted> {
             return;
         }
 
-        InventoryEntry entry = (InventoryEntry) event.entry();
+        final InventoryEntry entry = (InventoryEntry) event.entry();
 
         repository.delete(entry.entity());
     }

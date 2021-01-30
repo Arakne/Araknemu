@@ -80,7 +80,7 @@ final public class Info extends AbstractCommand {
     }
 
     private String formatDuration(Duration duration) {
-        StringBuilder formatted = new StringBuilder();
+        final StringBuilder formatted = new StringBuilder();
 
         if (duration.toDays() > 0) {
             formatted.append(duration.toDays()).append(" days ");
@@ -96,13 +96,16 @@ final public class Info extends AbstractCommand {
     }
 
     private static String formatBytes(long bytes) {
-        long absB = bytes == Long.MIN_VALUE ? Long.MAX_VALUE : Math.abs(bytes);
+        final long absB = bytes == Long.MIN_VALUE ? Long.MAX_VALUE : Math.abs(bytes);
+
         if (absB < 1024) {
             return bytes + " B";
         }
+
         long value = absB;
 
-        char[] units = new char[] {'K', 'M', 'G'};
+        final char[] units = new char[] {'K', 'M', 'G'};
+
         int currentUnit = 0;
 
         for (int i = 40; i >= 0 && absB > 0xfffccccccccccccL >> i; i -= 10) {
@@ -116,7 +119,7 @@ final public class Info extends AbstractCommand {
     }
 
     private int cpuUsage() {
-        OperatingSystemMXBean os = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
+        final OperatingSystemMXBean os = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
 
         return (int) (100 * os.getProcessCpuLoad());
     }

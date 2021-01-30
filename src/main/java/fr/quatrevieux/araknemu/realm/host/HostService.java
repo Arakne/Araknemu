@@ -64,7 +64,7 @@ final public class HostService {
      * @param canLog Can log into server
      */
     public void updateHost(int id, GameHost.State state, boolean canLog) {
-        GameHost host = hosts.get(id);
+        final GameHost host = hosts.get(id);
 
         host.setState(state);
         host.setCanLog(canLog);

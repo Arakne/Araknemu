@@ -78,7 +78,7 @@ final public class Movement implements ActionGenerator {
                 continue;
             }
 
-            Path<FightCell> path;
+            final Path<FightCell> path;
 
             try {
                 path = pathfinder.findPath(ai.fighter().cell(), cell.coordinates.cell());
@@ -111,7 +111,7 @@ final public class Movement implements ActionGenerator {
                 continue;
             }
 
-            CoordinateCell<FightCell> coordinates = new CoordinateCell<>(cell);
+            final CoordinateCell<FightCell> coordinates = new CoordinateCell<>(cell);
 
             if (coordinates.distance(currentCell) > movementPoints) {
                 continue;

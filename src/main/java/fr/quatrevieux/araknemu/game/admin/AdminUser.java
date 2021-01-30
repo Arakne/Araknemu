@@ -134,7 +134,7 @@ final public class AdminUser implements AdminPerformer {
     }
 
     private void execute(CommandParser.Arguments arguments) throws AdminException {
-        Command command = arguments.context().command(arguments.command());
+        final Command command = arguments.context().command(arguments.command());
 
         if (!isGranted(command.permissions())) {
             throw new CommandPermissionsException(command.name(), command.permissions());

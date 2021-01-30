@@ -32,9 +32,8 @@ import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 final public class UseObjectBeforeStart implements PacketHandler<GameSession, ObjectUseRequest> {
     @Override
     public void handle(GameSession session, ObjectUseRequest packet) {
-        InventoryEntry entry = session.player().inventory().get(packet.objectId());
-
-        UsableItem item = UsableItem.class.cast(entry.item());
+        final InventoryEntry entry = session.player().inventory().get(packet.objectId());
+        final UsableItem item = UsableItem.class.cast(entry.item());
 
         if (!item.checkFighter(session.fighter())) {
             session.send(new Noop());

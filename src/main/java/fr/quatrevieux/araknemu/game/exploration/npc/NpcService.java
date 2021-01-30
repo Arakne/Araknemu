@@ -107,9 +107,8 @@ final public class NpcService implements EventsSubscriber, PreloadableService {
             return npcByEntityId.get(entity.id());
         }
 
-        NpcTemplate template = templateRepository.get(entity.templateId());
-
-        GameNpc npc = new GameNpc(
+        final NpcTemplate template = templateRepository.get(entity.templateId());
+        final GameNpc npc = new GameNpc(
             entity,
             template,
             dialogService.forNpc(entity),

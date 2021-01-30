@@ -156,13 +156,13 @@ public class Araknemu {
      * Application entry point
      */
     public static void main(String[] args) throws Exception {
-        Configuration configuration = new DefaultConfiguration(
+        final Configuration configuration = new DefaultConfiguration(
             new IniDriver(
                 new Ini(new File("config.ini"))
             )
         );
 
-        Araknemu app = new Araknemu(
+        final Araknemu app = new Araknemu(
             configuration,
             new DefaultDatabaseHandler(
                 configuration.module(DatabaseConfiguration.class),
@@ -170,8 +170,8 @@ public class Araknemu {
             )
         );
 
-        Container realmContainer = makeRealmContainer(app);
-        Container gameContainer  = makeGameContainer(app, realmContainer);
+        final Container realmContainer = makeRealmContainer(app);
+        final Container gameContainer  = makeGameContainer(app, realmContainer);
 
         app.add(realmContainer.get(RealmService.class));
         app.add(gameContainer.get(GameService.class));
@@ -182,7 +182,7 @@ public class Araknemu {
     }
 
     static private Container makeRealmContainer(Araknemu app) throws SQLException {
-        Container container = new ItemPoolContainer();
+        final Container container = new ItemPoolContainer();
 
         container.register(new SqlLivingRepositoriesModule(
             app.database().get("realm")
@@ -193,7 +193,7 @@ public class Araknemu {
     }
 
     static private Container makeGameContainer(Araknemu app, Container realmContainer) throws SQLException {
-        Container container = new ItemPoolContainer();
+        final Container container = new ItemPoolContainer();
 
         container.register(new SqlLivingRepositoriesModule(
             app.database().get("game")

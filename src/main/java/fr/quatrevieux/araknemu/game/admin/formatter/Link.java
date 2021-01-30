@@ -128,7 +128,7 @@ final public class Link {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("<u><a href='asfunction:onHref");
+        final StringBuilder sb = new StringBuilder("<u><a href='asfunction:onHref");
 
         for (String argument : arguments) {
             sb.append(',').append(argument.replace(",", "%2C"));

@@ -39,7 +39,7 @@ final public class CharactersList {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("ALK");
+        final StringBuilder sb = new StringBuilder("ALK");
 
         sb.append(remainingTime).append('|').append(characters.size());
 

@@ -83,8 +83,8 @@ final public class BaseBuilder implements FightBuilder {
     }
 
     private List<FightTeam> buildTeams() {
-        List<TeamFactory> factories = random != null ? random.shuffle(teamFactories) : teamFactories;
-        List<FightTeam> teams = new ArrayList<>(factories.size());
+        final List<TeamFactory> factories = random != null ? random.shuffle(teamFactories) : teamFactories;
+        final List<FightTeam> teams = new ArrayList<>(factories.size());
 
         for (int number = 0; number < factories.size(); ++number) {
             teams.add(factories.get(number).create(number, map.startPlaces(number)));

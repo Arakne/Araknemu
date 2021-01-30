@@ -50,7 +50,7 @@ final public class MonsterRewardService implements PreloadableService {
     public void preload(Logger logger) {
         logger.info("Loading monsters rewards...");
 
-        Map<Integer, List<MonsterRewardItem>> itemDrops = itemRepository.all();
+        final Map<Integer, List<MonsterRewardItem>> itemDrops = itemRepository.all();
 
         for (MonsterRewardData data : repository.all()) {
             rewards.put(

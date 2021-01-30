@@ -50,7 +50,7 @@ final public class NpcTemplateRepositoryCache implements NpcTemplateRepository {
 
     @Override
     public Collection<NpcTemplate> all() {
-        Collection<NpcTemplate> loaded = repository.all();
+        final Collection<NpcTemplate> loaded = repository.all();
 
         for (NpcTemplate template : loaded) {
             cacheById.put(template.id(), template);

@@ -47,7 +47,7 @@ final public class ExplorationService implements EventsSubscriber {
      * Start exploration for a player
      */
     public ExplorationPlayer create(GamePlayer player) {
-        ExplorationPlayer exploration = new ExplorationPlayer(player);
+        final ExplorationPlayer exploration = new ExplorationPlayer(player);
 
         exploration.dispatcher().add(new InitializeGame(exploration, mapService));
         exploration.dispatcher().add(new RefreshExplorationRestrictions(exploration));

@@ -171,8 +171,8 @@ final public class CastScope {
      * @param effects Effects to resolve and add
      */
     public CastScope withRandomEffects(List<SpellEffect> effects) {
-        List<SpellEffect> selectedEffects = new ArrayList<>(effects.size());
-        List<SpellEffect> probableEffects = new ArrayList<>();
+        final List<SpellEffect> selectedEffects = new ArrayList<>(effects.size());
+        final List<SpellEffect> probableEffects = new ArrayList<>();
 
         for (SpellEffect effect : effects) {
             if (effect.probability() == 0) {

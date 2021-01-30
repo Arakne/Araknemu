@@ -135,7 +135,7 @@ final public class SpellBook implements SpellList, Dispatcher {
             throw new IllegalArgumentException("Cannot learn the spell " + spell.name() + " (" + spell.id() + ")");
         }
 
-        SpellBookEntry entry = new SpellBookEntry(
+        final SpellBookEntry entry = new SpellBookEntry(
             new PlayerSpell(player.id(), spell.id(), false),
             spell
         );

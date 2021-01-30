@@ -56,7 +56,7 @@ final public class Geolocation {
             return false;
         }
 
-        Geolocation that = (Geolocation) o;
+        final Geolocation that = (Geolocation) o;
 
         return x == that.x && y == that.y;
     }

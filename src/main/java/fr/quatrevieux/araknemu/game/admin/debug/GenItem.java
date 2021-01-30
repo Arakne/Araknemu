@@ -68,9 +68,8 @@ final public class GenItem extends AbstractCommand {
             ++param;
         }
 
-        int itemId = Integer.parseInt(arguments.get(param));
-
-        Item item = service.create(itemId, maximize);
+        final int itemId = Integer.parseInt(arguments.get(param));
+        final Item item = service.create(itemId, maximize);
 
         performer.success("Generate item {} ({}) : {}", item.template().name(), item.template().id(), item.getClass().getSimpleName());
 
@@ -89,7 +88,7 @@ final public class GenItem extends AbstractCommand {
             return;
         }
 
-        AdminUser user = (AdminUser) performer;
+        final AdminUser user = (AdminUser) performer;
 
         user.send(
             new MessageSent(

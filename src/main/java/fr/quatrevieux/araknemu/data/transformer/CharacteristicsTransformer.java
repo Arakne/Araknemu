@@ -39,10 +39,10 @@ final public class CharacteristicsTransformer implements Transformer<Characteris
             return null;
         }
 
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
 
         for (Characteristic characteristic : Characteristic.values()) {
-            int value = characteristics.get(characteristic);
+            final int value = characteristics.get(characteristic);
 
             if (value == 0) {
                 continue;
@@ -65,14 +65,14 @@ final public class CharacteristicsTransformer implements Transformer<Characteris
             return null;
         }
 
-        MutableCharacteristics characteristics = new DefaultCharacteristics();
+        final MutableCharacteristics characteristics = new DefaultCharacteristics();
 
         for (String stats : StringUtils.split(serialized, STATS_SEPARATOR)) {
             if (stats.isEmpty()) {
                 continue;
             }
 
-            String[] data = StringUtils.split(stats, VALUE_SEPARATOR, 2);
+            final String[] data = StringUtils.split(stats, VALUE_SEPARATOR, 2);
 
             characteristics.set(
                 Characteristic.fromId(Integer.parseInt(data[0], SERIALIZED_BASE)),

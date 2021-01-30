@@ -73,7 +73,7 @@ public class SpellTemplateLevelTransformer implements Transformer<SpellTemplate.
             return null;
         }
 
-        String[] parts = StringUtils.splitByWholeSeparatorPreserveAllTokens(serialize, "|", 20);
+        final String[] parts = StringUtils.splitByWholeSeparatorPreserveAllTokens(serialize, "|", 20);
 
         try {
             return check(
@@ -127,7 +127,7 @@ public class SpellTemplateLevelTransformer implements Transformer<SpellTemplate.
     }
 
     private SpellTemplateEffect effect(String sEffect) {
-        String[] params = StringUtils.splitByWholeSeparatorPreserveAllTokens(sEffect, ",", 7);
+        final String[] params = StringUtils.splitByWholeSeparatorPreserveAllTokens(sEffect, ",", 7);
 
         return new SpellTemplateEffect(
             integer(params[0]),
@@ -141,7 +141,7 @@ public class SpellTemplateLevelTransformer implements Transformer<SpellTemplate.
     }
 
     private List<EffectArea> areas(String sAreas) {
-        List<EffectArea> areas = new ArrayList<>(sAreas.length() / 2);
+        final List<EffectArea> areas = new ArrayList<>(sAreas.length() / 2);
 
         for (int i = 0; i < sAreas.length(); i += 2) {
             areas.add(areaTransformer.unserialize(sAreas.substring(i, i + 2)));

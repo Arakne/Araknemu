@@ -117,7 +117,7 @@ final public class PlayerItemSet {
     }
 
     private void applySpecialEffectsDiff(GamePlayer player, int lastNb) {
-        EffectsDiff diff = new EffectsDiff(
+        final EffectsDiff diff = new EffectsDiff(
             itemSet.bonus(lastNb).specials(),
             bonus().specials()
         );

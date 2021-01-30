@@ -94,7 +94,7 @@ final public class UnwalkableFightCell implements FightCell {
             return false;
         }
 
-        UnwalkableFightCell that = (UnwalkableFightCell) o;
+        final UnwalkableFightCell that = (UnwalkableFightCell) o;
 
         return id == that.id && map == that.map;
     }

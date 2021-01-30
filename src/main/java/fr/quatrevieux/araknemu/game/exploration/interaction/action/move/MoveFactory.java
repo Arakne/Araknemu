@@ -44,7 +44,7 @@ final public class MoveFactory implements SingleActionFactory {
 
     @Override
     public Action create(ExplorationPlayer player, ActionType action, String[] arguments) {
-        ExplorationMap map = player.map();
+        final ExplorationMap map = player.map();
 
         return new Move(
             player,

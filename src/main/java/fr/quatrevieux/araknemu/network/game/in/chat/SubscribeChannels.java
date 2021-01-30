@@ -36,7 +36,7 @@ final public class SubscribeChannels implements Packet {
     final static public class Parser implements SinglePacketParser<SubscribeChannels> {
         @Override
         public SubscribeChannels parse(String input) throws ParsePacketException {
-            Collection<ChannelType> channels = EnumSet.noneOf(ChannelType.class);
+            final Collection<ChannelType> channels = EnumSet.noneOf(ChannelType.class);
 
             for (int i = 1; i < input.length(); ++i) {
                 channels.add(

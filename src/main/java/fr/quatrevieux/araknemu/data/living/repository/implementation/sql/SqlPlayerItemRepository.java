@@ -108,7 +108,7 @@ final class SqlPlayerItemRepository implements PlayerItemRepository {
 
     @Override
     public void update(PlayerItem item) {
-        int count = utils.update(
+        final int count = utils.update(
             "UPDATE PLAYER_ITEM SET QUANTITY = ?, POSITION = ? WHERE PLAYER_ID = ? AND ITEM_ENTRY_ID = ?",
             stmt -> {
                 stmt.setInt(1, item.quantity());
@@ -125,7 +125,7 @@ final class SqlPlayerItemRepository implements PlayerItemRepository {
 
     @Override
     public void delete(PlayerItem item) {
-        int count = utils.update(
+        final int count = utils.update(
             "DELETE FROM PLAYER_ITEM WHERE PLAYER_ID = ? AND ITEM_ENTRY_ID = ?",
             stmt -> {
                 stmt.setInt(1, item.playerId());

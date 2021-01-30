@@ -57,7 +57,7 @@ final public class GlobalChannel implements Channel {
             throw new ChatException(ChatException.Error.UNAUTHORIZED);
         }
 
-        BroadcastedMessage event = new BroadcastedMessage(
+        final BroadcastedMessage event = new BroadcastedMessage(
             type(),
             from,
             message.message(),

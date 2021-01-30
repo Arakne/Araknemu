@@ -43,7 +43,7 @@ final public class SendCreatedFight implements Listener<FightCreated> {
 
     @Override
     public void on(FightCreated event) {
-        ExplorationMap map = mapService.load(event.fight().map().id());
+        final ExplorationMap map = mapService.load(event.fight().map().id());
 
         map.send(new ShowFight(event.fight()));
 

@@ -99,7 +99,7 @@ final public class CharactersService {
      * @param account The account
      */
     public List<AccountCharacter> list(GameAccount account) {
-        Map<Integer, List<PlayerItem>> items = itemRepository.forCharacterList(
+        final Map<Integer, List<PlayerItem>> items = itemRepository.forCharacterList(
             account.serverId(),
             account.id(),
             AccessoryType.slots()

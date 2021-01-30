@@ -42,8 +42,8 @@ final public class AddActionPointsHandler extends AddCharacteristicHandler {
     @Override
     public void handle(CastScope cast, CastScope.EffectScope effect) {
         fight.turnList().current().ifPresent(turn -> {
-            EffectValue value = new EffectValue(effect.effect());
-            int ap = value.value();
+            final EffectValue value = new EffectValue(effect.effect());
+            final int ap = value.value();
 
             turn.points().addActionPoints(ap);
             fight.send(ActionEffect.addActionPoints(turn.fighter(), ap));

@@ -151,7 +151,7 @@ final public class ActionQueue {
         RuntimeException error = null;
 
         while (this.current == null && !actions.isEmpty()) {
-            Action action = actions.remove();
+            final Action action = actions.remove();
 
             try {
                 action.start(this);

@@ -97,7 +97,7 @@ final public class CastSimulation {
      */
     public void alterLife(int value, PassiveFighter target) {
         // @todo compute chance
-        boolean killed = target.life().current() + value <= 0;
+        final boolean killed = target.life().current() + value <= 0;
 
         if (value < 0) {
             value = Math.max(value, -target.life().current());
@@ -220,7 +220,7 @@ final public class CastSimulation {
             return 0;
         }
 
-        int withPercent = (value * percent) / 100;
+        final int withPercent = (value * percent) / 100;
 
         if (withPercent == 0) {
             return value > 0 ? 1 : -1;

@@ -97,7 +97,7 @@ final class SqlBankItemRepository implements BankItemRepository {
 
     @Override
     public void update(BankItem item) {
-        int count = utils.update(
+        final int count = utils.update(
             "UPDATE BANK_ITEM SET QUANTITY = ? WHERE ACCOUNT_ID = ? AND SERVER_ID = ? AND ITEM_ENTRY_ID = ?",
             stmt -> {
                 stmt.setInt(1, item.quantity());
@@ -114,7 +114,7 @@ final class SqlBankItemRepository implements BankItemRepository {
 
     @Override
     public void delete(BankItem item) {
-        int count = utils.update(
+        final int count = utils.update(
             "DELETE FROM BANK_ITEM WHERE ACCOUNT_ID = ? AND SERVER_ID = ? AND ITEM_ENTRY_ID = ?",
             stmt -> {
                 stmt.setInt(1, item.accountId());

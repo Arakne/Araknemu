@@ -56,7 +56,7 @@ final public class DefaultDatabaseHandler implements DatabaseHandler {
             return connections.get(name);
         }
 
-        DatabaseConfiguration.Connection config = configuration.connection(name);
+        final DatabaseConfiguration.Connection config = configuration.connection(name);
 
         ConnectionPool pool = new SimpleConnectionPool(
             factories.get(config.type()).create(config),
@@ -91,7 +91,8 @@ final public class DefaultDatabaseHandler implements DatabaseHandler {
 
     @Override
     public void stop() {
-        Collection<ConnectionPool> pools = new ArrayList<>(connections.values());
+        final Collection<ConnectionPool> pools = new ArrayList<>(connections.values());
+
         connections.clear();
 
         for (ConnectionPool pool : pools) {

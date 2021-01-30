@@ -96,7 +96,8 @@ final public class SimpleConnectionPool implements ConnectionPool {
     public void close() {
         logger.info("Closing database connections...");
 
-        Collection<Connection> toClose = new ArrayList<>(connections);
+        final Collection<Connection> toClose = new ArrayList<>(connections);
+
         connections.clear();
 
         for (Connection connection : toClose) {

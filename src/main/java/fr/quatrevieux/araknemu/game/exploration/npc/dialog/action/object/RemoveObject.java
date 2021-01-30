@@ -102,7 +102,7 @@ final public class RemoveObject implements Action {
         int currentQuantity = quantity;
 
         for (InventoryEntry entry : entries) {
-            int toRemove = Math.min(entry.quantity(), currentQuantity);
+            final int toRemove = Math.min(entry.quantity(), currentQuantity);
 
             entry.remove(toRemove);
             currentQuantity -= toRemove;

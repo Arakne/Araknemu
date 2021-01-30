@@ -49,7 +49,7 @@ final public class SessionHandlerAdapter<S extends Session> extends ChannelInbou
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        S session = factory.create(new ChannelAdapter(ctx));
+        final S session = factory.create(new ChannelAdapter(ctx));
 
         ctx
             .channel()

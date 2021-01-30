@@ -33,9 +33,8 @@ import java.util.Queue;
 final public class AlternateTeamFighterOrder implements FighterOrderStrategy {
     @Override
     public List<Fighter> compute(List<FightTeam> teams) {
-        List<Queue<Fighter>> fightersByTeam = computeTeamsOrder(teams);
-
-        List<Fighter> orderedFighters = new ArrayList<>();
+        final List<Queue<Fighter>> fightersByTeam = computeTeamsOrder(teams);
+        final List<Fighter> orderedFighters = new ArrayList<>();
 
         boolean hasChanges;
 
@@ -55,11 +54,11 @@ final public class AlternateTeamFighterOrder implements FighterOrderStrategy {
     }
 
     private List<Queue<Fighter>> computeTeamsOrder(List<FightTeam> teams) {
-        List<Queue<Fighter>> fightersByTeam = new ArrayList<>();
+        final List<Queue<Fighter>> fightersByTeam = new ArrayList<>();
 
         for (FightTeam team : teams) {
             // Sort team fighters by their initiative desc
-            Queue<Fighter> fighters = new PriorityQueue<>(
+            final Queue<Fighter> fighters = new PriorityQueue<>(
                 team.fighters().size(),
                 (f1, f2) -> f2.characteristics().initiative() - f1.characteristics().initiative()
             );

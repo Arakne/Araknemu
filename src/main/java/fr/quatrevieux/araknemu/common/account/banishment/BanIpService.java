@@ -81,17 +81,16 @@ final public class BanIpService<A extends LivingAccount> {
          * @return The created rule
          */
         public BanIpRule<A> apply() {
-            BanIp entity = repository.add(new BanIp(
+            final BanIp entity = repository.add(new BanIp(
                 ipAddress,
                 Instant.now(),
                 duration == null ? null : Instant.now().plus(duration),
                 cause,
                 banisher == null ? -1 : banisher.id()
             ));
+            final BanIpRule<A> rule = new BanIpRule<>(entity, banisher);
 
             banIps.add(entity);
-            BanIpRule<A> rule = new BanIpRule<>(entity, banisher);
-
             dispatcher.dispatch(new IpBanned<>(rule));
 
             return rule;

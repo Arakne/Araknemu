@@ -57,7 +57,8 @@ final public class GameService implements Service {
 
     @Override
     public void boot() throws BootException {
-        long startTime = System.currentTimeMillis();
+        final long startTime = System.currentTimeMillis();
+
         logger.info(
             "Starting game server {} at {}:{}",
             configuration.id(),

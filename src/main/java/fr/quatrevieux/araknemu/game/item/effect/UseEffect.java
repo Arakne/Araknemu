@@ -71,7 +71,7 @@ final public class UseEffect implements ItemEffect {
             return false;
         }
 
-        UseEffect useEffect = (UseEffect) o;
+        final UseEffect useEffect = (UseEffect) o;
 
         return effect == useEffect.effect
             && Arrays.equals(arguments, useEffect.arguments)

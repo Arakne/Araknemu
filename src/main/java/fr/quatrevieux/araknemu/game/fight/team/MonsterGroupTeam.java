@@ -125,7 +125,7 @@ final public class MonsterGroupTeam implements FightTeam {
      * Ids of monsters are negative integer sequence (starting at -1 for the first monster)
      */
     private List<MonsterFighter> makeFighters() {
-        List<MonsterFighter> fighters = new ArrayList<>(monsterGroup.monsters().size());
+        final List<MonsterFighter> fighters = new ArrayList<>(monsterGroup.monsters().size());
 
         int id = 0;
 

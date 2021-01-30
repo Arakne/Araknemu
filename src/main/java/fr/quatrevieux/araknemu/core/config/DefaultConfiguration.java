@@ -41,7 +41,7 @@ final public class DefaultConfiguration implements Configuration {
             return (M) modules.get(moduleClass);
         }
 
-        M module;
+        final M module;
 
         try {
             module = moduleClass.newInstance();

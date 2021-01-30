@@ -47,7 +47,7 @@ final public class HealOrMultiplyDamageHandler implements EffectHandler, BuffHoo
 
     @Override
     public void onDamage(Buff buff, Damage value) {
-        boolean heal = random.bool(buff.effect().special());
+        final boolean heal = random.bool(buff.effect().special());
 
         if (heal) {
             value.multiply(-buff.effect().max());

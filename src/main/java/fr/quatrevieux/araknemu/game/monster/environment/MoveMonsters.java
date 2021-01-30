@@ -94,7 +94,7 @@ final public class MoveMonsters implements Task {
         }
 
         try {
-            Path<ExplorationMapCell> path = new Decoder<>(newCell.map())
+            final Path<ExplorationMapCell> path = new Decoder<>(newCell.map())
                 .pathfinder()
                 .exploredCellLimit(50)
                 .findPath(group.cell(), newCell)

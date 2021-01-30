@@ -76,7 +76,7 @@ final public class AiModule implements FightModule {
      * Starts the AI on turn start
      */
     private void start(FightTurn turn) {
-        FighterAI ai = turn.fighter().attachment(FighterAI.class);
+        final FighterAI ai = turn.fighter().attachment(FighterAI.class);
 
         if (ai != null) {
             ai.start(turn);

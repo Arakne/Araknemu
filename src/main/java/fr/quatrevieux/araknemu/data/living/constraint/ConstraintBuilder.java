@@ -138,7 +138,7 @@ public class ConstraintBuilder<T, E> {
      * );
      */
     public ConstraintBuilder<T, E> not(BuilderFactory<T, E> factory) {
-        ConstraintBuilder<T, E> builder = new ConstraintBuilder<>();
+        final ConstraintBuilder<T, E> builder = new ConstraintBuilder<>();
 
         builder.error  = error;
         builder.getter = getter;

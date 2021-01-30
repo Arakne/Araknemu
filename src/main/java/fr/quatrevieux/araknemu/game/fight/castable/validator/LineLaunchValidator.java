@@ -46,8 +46,8 @@ final public class LineLaunchValidator implements CastConstraintValidator {
                 continue;
             }
 
-            int diff = Math.abs(turn.fighter().cell().id() - target.id());
-            int inc  = direction.nextCellIncrement(mapWidth);
+            final int diff = Math.abs(turn.fighter().cell().id() - target.id());
+            final int inc  = direction.nextCellIncrement(mapWidth);
 
             // cell ids diff is multiple of inc => cells are in same line
             if (diff / inc < (mapWidth * 2 + 1) && diff % inc == 0) {

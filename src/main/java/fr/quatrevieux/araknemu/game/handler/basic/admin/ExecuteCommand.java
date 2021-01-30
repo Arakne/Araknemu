@@ -37,7 +37,7 @@ final public class ExecuteCommand implements PacketHandler<GameSession, AdminCom
 
     @Override
     public void handle(GameSession session, AdminCommand packet) throws Exception {
-        AdminUser user = service.user(session.player());
+        final AdminUser user = service.user(session.player());
 
         try {
             user.execute(packet.command());

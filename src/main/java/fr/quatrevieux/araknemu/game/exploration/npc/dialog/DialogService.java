@@ -117,7 +117,7 @@ final public class DialogService implements PreloadableService {
      * If at least one question is not into the cache, will returns nothing (and let loading from database)
      */
     private Optional<Collection<NpcQuestion>> loadQuestionFromCache(int[] ids) {
-        Collection<NpcQuestion> questions = new ArrayList<>(ids.length);
+        final Collection<NpcQuestion> questions = new ArrayList<>(ids.length);
 
         for (int id : ids) {
             if (!this.questions.containsKey(id)) {
@@ -134,7 +134,7 @@ final public class DialogService implements PreloadableService {
      * Load all questions from database
      */
     private Collection<NpcQuestion> loadQuestionFromDatabase(int[] ids) {
-        Collection<NpcQuestion> questions = questionRepository.byIds(ids)
+        final Collection<NpcQuestion> questions = questionRepository.byIds(ids)
             .stream()
             .map(question -> createQuestion(question, true))
             .collect(Collectors.toList())
@@ -186,7 +186,7 @@ final public class DialogService implements PreloadableService {
      * @param responsesActions Actions, grouping by the response id
      */
     private Collection<Response> createResponses(Map<Integer, List<ResponseAction>> responsesActions) {
-        Collection<Response> responses = new ArrayList<>();
+        final Collection<Response> responses = new ArrayList<>();
 
         for (Map.Entry<Integer, List<ResponseAction>> entry : responsesActions.entrySet()) {
             responses.add(

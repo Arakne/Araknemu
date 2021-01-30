@@ -35,7 +35,8 @@ final public class HostList {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("AH");
+        final StringBuilder sb = new StringBuilder("AH");
+
         boolean first = true;
 
         for (GameHost host : list) {

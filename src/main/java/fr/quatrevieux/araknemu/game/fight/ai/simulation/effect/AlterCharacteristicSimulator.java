@@ -48,7 +48,7 @@ final public class AlterCharacteristicSimulator implements EffectSimulator {
 
     @Override
     public void simulate(CastSimulation simulation, CastScope.EffectScope effect) {
-        int value = new EffectValue(effect.effect()).mean().value()
+        final int value = new EffectValue(effect.effect()).mean().value()
             * multiplier
             * Math.max(effect.effect().duration(), 1)
         ;

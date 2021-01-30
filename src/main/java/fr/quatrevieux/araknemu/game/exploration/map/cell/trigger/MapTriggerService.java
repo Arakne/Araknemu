@@ -58,7 +58,7 @@ final public class MapTriggerService implements PreloadableService, EventsSubscr
     public void preload(Logger logger) {
         logger.info("Loading map cells triggers...");
 
-        Collection<MapTrigger> mapTriggers = repository.all();
+        final Collection<MapTrigger> mapTriggers = repository.all();
 
         for (MapTrigger trigger : mapTriggers) {
             if (!triggers.containsKey(trigger.map())) {

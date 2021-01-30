@@ -54,7 +54,7 @@ final public class ItemSetBonusTransformer implements Transformer<List<List<Item
             return Collections.emptyList();
         }
 
-        List<List<ItemTemplateEffectEntry>> bonus = new ArrayList<>();
+        final List<List<ItemTemplateEffectEntry>> bonus = new ArrayList<>();
 
         try {
             for (String effects : StringUtils.splitByWholeSeparatorPreserveAllTokens(serialize, ";")) {
@@ -63,7 +63,7 @@ final public class ItemSetBonusTransformer implements Transformer<List<List<Item
                     continue;
                 }
 
-                String[] aEffects = StringUtils.split(effects, ',');
+                final String[] aEffects = StringUtils.split(effects, ',');
 
                 if (aEffects.length == 1) {
                     bonus.add(Collections.singletonList(parseEffect(aEffects[0])));
@@ -84,7 +84,7 @@ final public class ItemSetBonusTransformer implements Transformer<List<List<Item
     }
 
     private ItemTemplateEffectEntry parseEffect(String effect) {
-        String[] parts = StringUtils.split(effect, ":", 2);
+        final String[] parts = StringUtils.split(effect, ":", 2);
 
         return new ItemTemplateEffectEntry(
             Effect.byId(Integer.parseInt(parts[0])),

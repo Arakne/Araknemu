@@ -59,7 +59,7 @@ final public class PvmBuilder implements FightBuilder {
 
     @Override
     public Fight build(int fightId) {
-        BaseBuilder builder = new BaseBuilder(service, randomize ? random : null, type, logger);
+        final BaseBuilder builder = new BaseBuilder(service, randomize ? random : null, type, logger);
 
         builder.map(map);
         builder.addTeam((number, startPlaces) -> new SimpleTeam(

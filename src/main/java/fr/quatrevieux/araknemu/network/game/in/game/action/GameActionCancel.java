@@ -33,7 +33,7 @@ final public class GameActionCancel implements Packet {
     final static public class Parser implements SinglePacketParser<GameActionCancel> {
         @Override
         public GameActionCancel parse(String input) throws ParsePacketException {
-            String[] parts = StringUtils.split(input, "|", 2);
+            final String[] parts = StringUtils.split(input, "|", 2);
 
             if (parts.length != 2) {
                 throw new ParsePacketException("GKE" + input, "The packet should have 2 parts separated by a pipe");

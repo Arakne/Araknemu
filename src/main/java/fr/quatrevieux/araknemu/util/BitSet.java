@@ -33,7 +33,7 @@ final public class BitSet<E extends Enum> {
      * @return true if the set has changed
      */
     public boolean set(E item) {
-        int oldValue = value;
+        final int oldValue = value;
 
         value |= 1 << item.ordinal();
 
@@ -46,7 +46,7 @@ final public class BitSet<E extends Enum> {
      * @return true if the set has changed
      */
     public boolean unset(E item) {
-        int oldValue = value;
+        final int oldValue = value;
 
         value &= ~(1 << item.ordinal());
 

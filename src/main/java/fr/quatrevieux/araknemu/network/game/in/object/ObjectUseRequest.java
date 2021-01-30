@@ -33,7 +33,7 @@ final public class ObjectUseRequest implements Packet {
     final static public class Parser implements SinglePacketParser<ObjectUseRequest> {
         @Override
         public ObjectUseRequest parse(String input) throws ParsePacketException {
-            String[] parts = StringUtils.splitByWholeSeparatorPreserveAllTokens(input, "|", 3);
+            final String[] parts = StringUtils.splitByWholeSeparatorPreserveAllTokens(input, "|", 3);
 
             if (parts.length == 3) {
                 return new ObjectUseRequest(

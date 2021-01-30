@@ -97,10 +97,10 @@ final public class BoostStatsData {
             throw new IllegalArgumentException("The stats value must be positive");
         }
 
-        List<Interval> intervals = characteristics.get(characteristic);
+        final List<Interval> intervals = characteristics.get(characteristic);
 
         for (int i = intervals.size() - 1; i >= 0; --i) {
-            Interval interval = intervals.get(i);
+            final Interval interval = intervals.get(i);
 
             if (interval.start <= value) {
                 return interval;

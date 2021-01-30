@@ -140,8 +140,7 @@ final public class Ban extends AbstractCommand {
         }
 
         final Duration duration = parseDuration(arguments.get(2));
-
-        BanEntry<GameAccount> entry = performer.account().isPresent()
+        final BanEntry<GameAccount> entry = performer.account().isPresent()
             ? service.ban(account, duration, cause(arguments), performer.account().get())
             : service.ban(account, duration, cause(arguments))
         ;

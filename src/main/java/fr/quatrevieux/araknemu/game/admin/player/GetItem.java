@@ -115,9 +115,9 @@ final public class GetItem extends AbstractCommand {
             throw new CommandException(arguments.get(0), "Missing argument item_id");
         }
 
-        int itemId   = Integer.parseInt(arguments.get(i));
-        int quantity = arguments.size() > i + 1 ? Integer.parseInt(arguments.get(i + 1)) : 1;
+        final int itemId = Integer.parseInt(arguments.get(i));
 
+        int quantity = arguments.size() > i + 1 ? Integer.parseInt(arguments.get(i + 1)) : 1;
         int times = 1;
 
         if (each) {
@@ -126,7 +126,7 @@ final public class GetItem extends AbstractCommand {
         }
 
         for (int j = 0; j < times; ++j) {
-            Item item = effects == null
+            final Item item = effects == null
                 ? service.create(itemId, max)
                 : service.retrieve(itemId, effects)
             ;
@@ -150,12 +150,11 @@ final public class GetItem extends AbstractCommand {
             return new ItemEffectsTransformer().unserialize(value);
         }
 
-        List<ItemTemplateEffectEntry> effects = new ArrayList<>();
+        final List<ItemTemplateEffectEntry> effects = new ArrayList<>();
 
         for (String strEffect : StringUtils.split(value, ",")) {
-            String[] parts = StringUtils.split(strEffect, ":", 5);
-
-            Effect effect;
+            final String[] parts = StringUtils.split(strEffect, ":", 5);
+            final Effect effect;
 
             try {
                 effect = Effect.valueOf(parts[0].toUpperCase());
