@@ -19,8 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.fight.fighter;
 
-import java.util.Optional;
-
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.fight.Fight;
