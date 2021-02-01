@@ -28,9 +28,9 @@ import fr.quatrevieux.araknemu.game.fight.turn.event.MovementPointsUsed;
 /**
  * Handle fighter turn points (AP / MP)
  */
-final public class FighterTurnPoints implements TurnPoints {
-    final private Fight fight;
-    final private Fighter fighter;
+public final class FighterTurnPoints implements TurnPoints {
+    private final Fight fight;
+    private final Fighter fighter;
 
     private int movementPoints;
     private int actionPoints;

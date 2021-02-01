@@ -28,10 +28,10 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Transform characteristics string
  */
-final public class CharacteristicsTransformer implements Transformer<Characteristics> {
-    final static private int SERIALIZED_BASE    = 32;
-    final static private String VALUE_SEPARATOR = ":";
-    final static private String STATS_SEPARATOR = ";";
+public final class CharacteristicsTransformer implements Transformer<Characteristics> {
+    private static final int SERIALIZED_BASE    = 32;
+    private static final String VALUE_SEPARATOR = ":";
+    private static final String STATS_SEPARATOR = ";";
 
     @Override
     public String serialize(Characteristics characteristics) {

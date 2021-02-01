@@ -27,7 +27,7 @@ import java.time.Duration;
 /**
  * Fight type for challenge
  */
-final public class ChallengeType implements FightType {
+public final class ChallengeType implements FightType {
     @Override
     public int id() {
         return 0;

@@ -29,8 +29,8 @@ import java.util.List;
 /**
  * Add experience to player
  */
-final public class AddXp extends AbstractCommand {
-    final private GamePlayer player;
+public final class AddXp extends AbstractCommand {
+    private final GamePlayer player;
 
     public AddXp(GamePlayer player) {
         this.player = player;

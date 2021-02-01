@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.network.game.in.fight.LeaveFightRequest;
 /**
  * Leave the fight
  */
-final public class LeaveFight implements PacketHandler<GameSession, LeaveFightRequest> {
+public final class LeaveFight implements PacketHandler<GameSession, LeaveFightRequest> {
     @Override
     public void handle(GameSession session, LeaveFightRequest packet) {
         session.fighter().fight().state(LeavableState.class).leave(session.fighter());

@@ -35,9 +35,9 @@ import java.util.function.Consumer;
 /**
  * Add loggers to a session
  */
-final public class SessionLogger implements ConfigurableSession.ExceptionHandler<Throwable>, ConfigurableSession.ReceivePacketMiddleware, ConfigurableSession.SendPacketTransformer {
-    static public class Configurator<S extends Session> implements SessionConfigurator.Configurator<S> {
-        final private Logger logger;
+public final class SessionLogger implements ConfigurableSession.ExceptionHandler<Throwable>, ConfigurableSession.ReceivePacketMiddleware, ConfigurableSession.SendPacketTransformer {
+    public static class Configurator<S extends Session> implements SessionConfigurator.Configurator<S> {
+        private final Logger logger;
 
         public Configurator(Logger logger) {
             this.logger = logger;
@@ -53,13 +53,13 @@ final public class SessionLogger implements ConfigurableSession.ExceptionHandler
         }
     }
 
-    final static private Marker RECEIVED_MARKER = MarkerManager.getMarker("RECEIVED");
-    final static private Marker SENT_MARKER = MarkerManager.getMarker("SENT");
-    final static private Marker SESSION_MARKER = MarkerManager.getMarker("SESSION");
-    final static private Marker NETWORK_ERROR_MARKER = MarkerManager.getMarker("NETWORK_ERROR");
+    private static final Marker RECEIVED_MARKER = MarkerManager.getMarker("RECEIVED");
+    private static final Marker SENT_MARKER = MarkerManager.getMarker("SENT");
+    private static final Marker SESSION_MARKER = MarkerManager.getMarker("SESSION");
+    private static final Marker NETWORK_ERROR_MARKER = MarkerManager.getMarker("NETWORK_ERROR");
 
-    final private Session session;
-    final private Logger logger;
+    private final Session session;
+    private final Logger logger;
 
     public SessionLogger(Session session, Logger logger) {
         this.session = session;

@@ -34,10 +34,10 @@ import java.util.stream.Collectors;
 /**
  * Generate rewards for PvM fight
  */
-final public class PvmRewardsGenerator implements RewardsGenerator {
-    final private List<DropRewardAction> winnerActions;
-    final private List<DropRewardAction> looserActions;
-    final private List<DropRewardProvider> providers;
+public final class PvmRewardsGenerator implements RewardsGenerator {
+    private final List<DropRewardAction> winnerActions;
+    private final List<DropRewardAction> looserActions;
+    private final List<DropRewardProvider> providers;
 
     public PvmRewardsGenerator(List<DropRewardAction> winnerActions, List<DropRewardAction> looserActions, List<DropRewardProvider> providers) {
         this.winnerActions = winnerActions;

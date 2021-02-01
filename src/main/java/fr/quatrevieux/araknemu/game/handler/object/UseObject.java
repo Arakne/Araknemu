@@ -35,11 +35,11 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 /**
  * Use an object
  */
-final public class UseObject implements PacketHandler<GameSession, ObjectUseRequest> {
-    static private class ApplyItemOperation implements Operation {
-        final private UsableItem item;
-        final private ExplorationPlayer caster;
-        final private int targetCell;
+public final class UseObject implements PacketHandler<GameSession, ObjectUseRequest> {
+    private static class ApplyItemOperation implements Operation {
+        private final UsableItem item;
+        private final ExplorationPlayer caster;
+        private final int targetCell;
 
         private boolean success = false;
 

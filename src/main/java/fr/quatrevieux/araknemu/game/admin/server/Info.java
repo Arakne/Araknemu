@@ -34,10 +34,10 @@ import java.util.List;
 /**
  * Display information about the server
  */
-final public class Info extends AbstractCommand {
-    final private Araknemu app;
-    final private PlayerService playerService;
-    final private GameService gameService;
+public final class Info extends AbstractCommand {
+    private final Araknemu app;
+    private final PlayerService playerService;
+    private final GameService gameService;
 
     public Info(Araknemu app, PlayerService playerService, GameService gameService) {
         this.app = app;

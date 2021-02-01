@@ -35,8 +35,8 @@ import java.util.List;
 /**
  * Factory for usable items.
  */
-final public class UsableFactory implements ItemFactory {
-    final private EffectMappers mappers;
+public final class UsableFactory implements ItemFactory {
+    private final EffectMappers mappers;
 
     public UsableFactory(EffectMappers mappers) {
         this.mappers = mappers;

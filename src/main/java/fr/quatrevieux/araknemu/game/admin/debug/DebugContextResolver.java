@@ -29,8 +29,8 @@ import java.util.List;
 /**
  * Resolver for debug context
  */
-final public class DebugContextResolver implements ContextResolver {
-    final private List<AbstractContextConfigurator<DebugContext>> configurators = new ArrayList<>();
+public final class DebugContextResolver implements ContextResolver {
+    private final List<AbstractContextConfigurator<DebugContext>> configurators = new ArrayList<>();
 
     @Override
     public Context resolve(Context globalContext, Object argument) {

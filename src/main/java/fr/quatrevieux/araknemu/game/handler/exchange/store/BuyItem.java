@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.network.game.in.exchange.store.BuyRequest;
 /**
  * Handle buying an item from a store
  */
-final public class BuyItem implements PacketHandler<GameSession, BuyRequest> {
+public final class BuyItem implements PacketHandler<GameSession, BuyRequest> {
     @Override
     public void handle(GameSession session, BuyRequest packet) {
         session.exploration().interactions().get(StoreDialog.class).buy(packet.itemId(), packet.quantity());

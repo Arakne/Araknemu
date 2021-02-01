@@ -24,12 +24,12 @@ package fr.quatrevieux.araknemu.network.game.out.info;
  *
  * https://github.com/Emudofus/Dofus/blob/1b54a30e02f637c912bf14afdf6ea8b7df45ea73/dofus/aks/Infos.as#L336
  */
-final public class StopLifeTimer {
+public final class StopLifeTimer {
     /**
      * Can be the amount of life regenerated
      * It is usually used after the sit animation
      */
-    final private int life;
+    private final int life;
 
     public StopLifeTimer(int life) {
         this.life = life;

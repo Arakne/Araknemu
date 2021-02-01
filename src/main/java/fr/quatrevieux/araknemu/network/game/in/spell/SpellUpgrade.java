@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Spells.as#L23
  */
-final public class SpellUpgrade implements Packet {
-    final static public class Parser implements SinglePacketParser<SpellUpgrade> {
+public final class SpellUpgrade implements Packet {
+    public static final class Parser implements SinglePacketParser<SpellUpgrade> {
         @Override
         public SpellUpgrade parse(String input) throws ParsePacketException {
             return new SpellUpgrade(Integer.parseUnsignedInt(input));
@@ -41,7 +41,7 @@ final public class SpellUpgrade implements Packet {
         }
     }
 
-    final private int spellId;
+    private final int spellId;
 
     public SpellUpgrade(int spellId) {
         this.spellId = spellId;

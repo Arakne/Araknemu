@@ -36,8 +36,8 @@ import fr.quatrevieux.araknemu.network.game.out.object.ItemQuantity;
 /**
  * Send packets for synchronize inventory with client
  */
-final public class SendInventoryUpdate implements EventsSubscriber {
-    final private GamePlayer player;
+public final class SendInventoryUpdate implements EventsSubscriber {
+    private final GamePlayer player;
 
     public SendInventoryUpdate(GamePlayer player) {
         this.player = player;

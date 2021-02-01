@@ -23,7 +23,7 @@ package fr.quatrevieux.araknemu.core.network.exception;
  * Write error packet and close the session
  */
 public class CloseWithPacket extends HandlingException implements CloseSession, WritePacket {
-    final private Object packet;
+    private final Object packet;
 
     public CloseWithPacket(Object packet) {
         this.packet = packet;

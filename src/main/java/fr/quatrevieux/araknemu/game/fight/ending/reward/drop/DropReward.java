@@ -35,12 +35,12 @@ import java.util.stream.Collectors;
 /**
  * Reward for drop
  */
-final public class DropReward implements FightReward {
-    final private RewardType type;
-    final private Fighter fighter;
+public final class DropReward implements FightReward {
+    private final RewardType type;
+    private final Fighter fighter;
 
-    final private Map<Integer, Integer> items = new HashMap<>();
-    final private Collection<DropRewardAction> actions;
+    private final Map<Integer, Integer> items = new HashMap<>();
+    private final Collection<DropRewardAction> actions;
 
     private long xp = 0;
     private long mountXp = 0;
@@ -195,7 +195,7 @@ final public class DropReward implements FightReward {
     /**
      * Format the experience string for the reward line
      */
-    static private class FormatExperience implements FighterOperation {
+    private static class FormatExperience implements FighterOperation {
         private String format = "0;0;0";
 
         @Override

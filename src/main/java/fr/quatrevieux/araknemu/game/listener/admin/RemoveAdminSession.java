@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 /**
  * Remove admin session on disconnect
  */
-final public class RemoveAdminSession implements Listener<Disconnected> {
-    final private AdminUser user;
+public final class RemoveAdminSession implements Listener<Disconnected> {
+    private final AdminUser user;
 
     public RemoveAdminSession(AdminUser user) {
         this.user = user;

@@ -30,9 +30,9 @@ import java.util.List;
 /**
  * Context for account
  */
-final public class AccountContext extends AbstractContext<AccountContext> {
-    final private Context globalContext;
-    final private GameAccount account;
+public final class AccountContext extends AbstractContext<AccountContext> {
+    private final Context globalContext;
+    private final GameAccount account;
 
     public AccountContext(Context globalContext, GameAccount account, List<AbstractContextConfigurator<AccountContext>> configurators) {
         super(configurators);

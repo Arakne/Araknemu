@@ -29,8 +29,8 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Items.as#L19
  */
-final public class ObjectMoveRequest implements Packet {
-    final static public class Parser implements SinglePacketParser<ObjectMoveRequest> {
+public final class ObjectMoveRequest implements Packet {
+    public static final class Parser implements SinglePacketParser<ObjectMoveRequest> {
         @Override
         public ObjectMoveRequest parse(String input) throws ParsePacketException {
             final String[] parts = StringUtils.split(input, "|", 3);
@@ -48,9 +48,9 @@ final public class ObjectMoveRequest implements Packet {
         }
     }
 
-    final private int id;
-    final private int position;
-    final private int quantity;
+    private final int id;
+    private final int position;
+    private final int quantity;
 
     public ObjectMoveRequest(int id, int position, int quantity) {
         this.id = id;

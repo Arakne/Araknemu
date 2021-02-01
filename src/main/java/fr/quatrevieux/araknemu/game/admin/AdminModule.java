@@ -71,8 +71,8 @@ import java.util.Arrays;
  *
  * Note: Only commands which needs dependencies from the container should be defined here. "simple" commands may be defined directly on the context
  */
-final public class AdminModule implements ContainerModule {
-    final private Araknemu app;
+public final class AdminModule implements ContainerModule {
+    private final Araknemu app;
 
     public AdminModule(Araknemu app) {
         this.app = app;

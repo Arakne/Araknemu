@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.network.game.in.spell.SpellMove;
 /**
  * Move the spell from spell book
  */
-final public class MoveSpell implements PacketHandler<GameSession, SpellMove> {
+public final class MoveSpell implements PacketHandler<GameSession, SpellMove> {
     @Override
     public void handle(GameSession session, SpellMove packet) throws Exception {
         session.player().properties().spells()

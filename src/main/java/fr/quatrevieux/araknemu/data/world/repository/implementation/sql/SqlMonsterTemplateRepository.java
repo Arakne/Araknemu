@@ -102,10 +102,10 @@ final class SqlMonsterTemplateRepository implements MonsterTemplateRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<MonsterTemplate> utils;
-    final private Transformer<Colors> colorsTransformer;
-    final private Transformer<Characteristics> characteristicsTransformer;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<MonsterTemplate> utils;
+    private final Transformer<Colors> colorsTransformer;
+    private final Transformer<Characteristics> characteristicsTransformer;
 
     public SqlMonsterTemplateRepository(QueryExecutor executor, Transformer<Colors> colorsTransformer, Transformer<Characteristics> characteristicsTransformer) {
         this.executor = executor;

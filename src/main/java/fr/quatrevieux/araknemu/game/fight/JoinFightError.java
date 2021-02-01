@@ -41,7 +41,7 @@ public enum JoinFightError {
     TEAM_CLOSED('f'),
     NO_ZOMBIE_ALLOWED('d');
 
-    final private char error;
+    private final char error;
 
     JoinFightError(char error) {
         this.error = error;

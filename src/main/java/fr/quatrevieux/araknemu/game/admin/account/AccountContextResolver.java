@@ -33,9 +33,9 @@ import java.util.Optional;
 /**
  * Context resolver for account
  */
-final public class AccountContextResolver implements ContextResolver {
-    final private AccountService service;
-    final private List<AbstractContextConfigurator<AccountContext>> configurators = new ArrayList<>();
+public final class AccountContextResolver implements ContextResolver {
+    private final AccountService service;
+    private final List<AbstractContextConfigurator<AccountContext>> configurators = new ArrayList<>();
 
     public AccountContextResolver(AccountService service) {
         this.service = service;

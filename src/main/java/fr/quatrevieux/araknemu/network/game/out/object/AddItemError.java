@@ -24,20 +24,20 @@ package fr.quatrevieux.araknemu.network.game.out.object;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Items.as#L109
  */
-final public class AddItemError {
+public final class AddItemError {
     public enum Error {
         INVENTORY_FULL('F'),
         TOO_LOW_LEVEL('L'),
         ALREADY_EQUIPED('A');
 
-        final private char c;
+        private final char c;
 
         Error(char c) {
             this.c = c;
         }
     }
 
-    final private Error error;
+    private final Error error;
 
     public AddItemError(Error error) {
         this.error = error;

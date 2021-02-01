@@ -54,22 +54,22 @@ import java.util.stream.Collectors;
 /**
  * Handle fight
  */
-final public class Fight implements Dispatcher, Sender {
-    final private int id;
-    final private FightType type;
-    final private FightMap map;
-    final private List<FightTeam> teams;
-    final private StatesFlow statesFlow;
-    final private Logger logger;
-    final private List<FightModule> modules = new ArrayList<>();
-    final private Map<Class, Object> attachments = new HashMap<>();
-    final private ListenerAggregate dispatcher;
+public final class Fight implements Dispatcher, Sender {
+    private final int id;
+    private final FightType type;
+    private final FightMap map;
+    private final List<FightTeam> teams;
+    private final StatesFlow statesFlow;
+    private final Logger logger;
+    private final List<FightModule> modules = new ArrayList<>();
+    private final Map<Class, Object> attachments = new HashMap<>();
+    private final ListenerAggregate dispatcher;
 
-    final private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    final private FightTurnList turnList = new FightTurnList(this);
-    final private EffectsHandler effects = new EffectsHandler();
+    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private final FightTurnList turnList = new FightTurnList(this);
+    private final EffectsHandler effects = new EffectsHandler();
 
-    final private StopWatch duration = new StopWatch();
+    private final StopWatch duration = new StopWatch();
 
     public Fight(int id, FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow, Logger logger) {
         this.id = id;

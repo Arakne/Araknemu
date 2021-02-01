@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.player.CharacterProperties;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L797
  */
-final public class Stats {
-    final private CharacterProperties player;
+public final class Stats {
+    private final CharacterProperties player;
 
     public Stats(CharacterProperties player) {
         this.player = player;

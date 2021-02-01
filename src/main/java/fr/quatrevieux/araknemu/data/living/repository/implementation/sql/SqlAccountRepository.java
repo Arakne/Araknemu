@@ -36,7 +36,7 @@ import java.util.Optional;
 
 final class SqlAccountRepository implements AccountRepository {
     private static class Loader implements RepositoryUtils.Loader<Account> {
-        final private PermissionsTransformer permissionsTransformer;
+        private final PermissionsTransformer permissionsTransformer;
 
         public Loader(PermissionsTransformer permissionsTransformer) {
             this.permissionsTransformer = permissionsTransformer;
@@ -63,9 +63,9 @@ final class SqlAccountRepository implements AccountRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<Account> utils;
-    final private PermissionsTransformer permissionsTransformer;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<Account> utils;
+    private final PermissionsTransformer permissionsTransformer;
 
     public SqlAccountRepository(QueryExecutor executor, PermissionsTransformer permissionsTransformer) {
         this.executor = executor;

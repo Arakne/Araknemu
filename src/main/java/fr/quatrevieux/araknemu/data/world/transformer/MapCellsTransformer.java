@@ -29,8 +29,8 @@ import fr.quatrevieux.araknemu.data.transformer.Transformer;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/ank/battlefield/utils/Compressor.as#L54
  */
-final public class MapCellsTransformer implements Transformer<CellData[]> {
-    final private MapDataSerializer serializer;
+public final class MapCellsTransformer implements Transformer<CellData[]> {
+    private final MapDataSerializer serializer;
 
     public MapCellsTransformer() {
         final DefaultMapDataSerializer serializer = new DefaultMapDataSerializer();

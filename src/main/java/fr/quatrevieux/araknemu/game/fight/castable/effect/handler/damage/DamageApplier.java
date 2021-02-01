@@ -37,9 +37,9 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
  * When no effect, zero will be returned
  * When damage is transformed to heal, will return a positive value (50 => The target win 50 LP)
  */
-final public class DamageApplier {
-    final private Element element;
-    final private Fight fight;
+public final class DamageApplier {
+    private final Element element;
+    private final Fight fight;
 
     public DamageApplier(Element element, Fight fight) {
         this.element = element;

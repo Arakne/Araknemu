@@ -30,11 +30,11 @@ import java.util.Map;
 /**
  * Container implementation using {@link fr.quatrevieux.araknemu.core.di.item.ContainerItem}
  */
-final public class ItemPoolContainer implements Container {
+public final class ItemPoolContainer implements Container {
     /**
      * Configuration class for {@link ItemPoolContainer}
      */
-    final public class Configurator implements ContainerConfigurator {
+    public final class Configurator implements ContainerConfigurator {
         @Override
         public Configurator set(Object object) {
             ItemPoolContainer.this.set(new ValueItem<>(object));
@@ -79,7 +79,7 @@ final public class ItemPoolContainer implements Container {
         }
     }
 
-    final private Map<Class, ContainerItem> items = new HashMap<>();
+    private final Map<Class, ContainerItem> items = new HashMap<>();
 
     @Override
     public <T> T get(Class<T> type) throws ContainerException {

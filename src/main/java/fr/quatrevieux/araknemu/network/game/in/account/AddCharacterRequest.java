@@ -32,8 +32,8 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L90
  */
-final public class AddCharacterRequest implements Packet {
-    final static public class Parser implements SinglePacketParser<AddCharacterRequest> {
+public final class AddCharacterRequest implements Packet {
+    public static final class Parser implements SinglePacketParser<AddCharacterRequest> {
         @Override
         public AddCharacterRequest parse(String input) throws ParsePacketException {
             final String[] data = StringUtils.split(input, "|", 6);
@@ -60,10 +60,10 @@ final public class AddCharacterRequest implements Packet {
         }
     }
 
-    final private String name;
-    final private Race race;
-    final private Gender gender;
-    final private Colors colors;
+    private final String name;
+    private final Race race;
+    private final Gender gender;
+    private final Colors colors;
 
     public AddCharacterRequest(String name, Race race, Gender gender, Colors colors) {
         this.name = name;

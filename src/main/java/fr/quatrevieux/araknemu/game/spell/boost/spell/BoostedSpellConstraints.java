@@ -26,9 +26,9 @@ import fr.quatrevieux.araknemu.game.spell.boost.SpellModifiers;
 /**
  * Spell constraints with modifiers
  */
-final public class BoostedSpellConstraints implements SpellConstraints {
-    final private SpellConstraints constraints;
-    final private SpellModifiers modifiers;
+public final class BoostedSpellConstraints implements SpellConstraints {
+    private final SpellConstraints constraints;
+    private final SpellModifiers modifiers;
 
     public BoostedSpellConstraints(SpellConstraints constraints, SpellModifiers modifiers) {
         this.constraints = constraints;

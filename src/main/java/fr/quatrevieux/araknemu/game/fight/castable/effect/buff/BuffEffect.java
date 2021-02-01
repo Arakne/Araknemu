@@ -26,13 +26,13 @@ import fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget;
 /**
  * Overrides effect parameters for buff effect
  */
-final public class BuffEffect implements SpellEffect {
-    final private SpellEffect baseEffect;
+public final class BuffEffect implements SpellEffect {
+    private final SpellEffect baseEffect;
 
-    final private int min;
-    final private int max;
-    final private int special;
-    final private String text;
+    private final int min;
+    private final int max;
+    private final int special;
+    private final String text;
 
     public BuffEffect(SpellEffect baseEffect, int min) {
         this(baseEffect, min, 0, 0);

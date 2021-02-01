@@ -34,11 +34,11 @@ import java.util.List;
 /**
  * Simple fight team for player fighters
  */
-final public class SimpleTeam implements FightTeam {
-    final private PlayerFighter leader;
-    final private List<PlayerFighter> fighters;
-    final private List<Integer> startPlaces;
-    final private int number;
+public final class SimpleTeam implements FightTeam {
+    private final PlayerFighter leader;
+    private final List<PlayerFighter> fighters;
+    private final List<Integer> startPlaces;
+    private final int number;
 
     public SimpleTeam(PlayerFighter leader, List<Integer> startPlaces, int number) {
         this.leader = leader;

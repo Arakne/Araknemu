@@ -54,9 +54,9 @@ final class SqlBanishmentRepository implements BanishmentRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<Banishment> utils;
-    final private Transformer<Instant> instantTransformer;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<Banishment> utils;
+    private final Transformer<Instant> instantTransformer;
 
     public SqlBanishmentRepository(QueryExecutor executor, Transformer<Instant> instantTransformer) {
         this.executor = executor;

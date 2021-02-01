@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
  * Decorate a container item to cache its value (useful for persistent values)
  * @param <T> Item type
  */
-final public class CachedItem<T> implements ContainerItem<T> {
-    final private ContainerItem<T> inner;
+public final class CachedItem<T> implements ContainerItem<T> {
+    private final ContainerItem<T> inner;
     private T value;
 
     public CachedItem(ContainerItem<T> inner) {

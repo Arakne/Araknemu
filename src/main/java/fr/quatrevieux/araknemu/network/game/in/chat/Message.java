@@ -30,8 +30,8 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Chat.as#L19
  */
-final public class Message implements Packet {
-    final static public class Parser implements SinglePacketParser<Message> {
+public final class Message implements Packet {
+    public static final class Parser implements SinglePacketParser<Message> {
         @Override
         public Message parse(String input) throws ParsePacketException {
             final String[] parts = StringUtils.split(input, "|", 3);
@@ -65,10 +65,10 @@ final public class Message implements Packet {
         }
     }
 
-    final private ChannelType channel;
-    final private String target;
-    final private String message;
-    final private String items;
+    private final ChannelType channel;
+    private final String target;
+    private final String message;
+    private final String items;
 
     public Message(ChannelType channel, String target, String message, String items) {
         this.channel = channel;

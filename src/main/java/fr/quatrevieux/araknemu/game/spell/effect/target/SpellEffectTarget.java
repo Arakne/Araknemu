@@ -25,17 +25,17 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 /**
  * Implementation of effect target using spell flags
  */
-final public class SpellEffectTarget implements EffectTarget {
-    final static public SpellEffectTarget DEFAULT = new SpellEffectTarget(0);
+public final class SpellEffectTarget implements EffectTarget {
+    public static final SpellEffectTarget DEFAULT = new SpellEffectTarget(0);
 
-    final static public int NOT_TEAM    = 1;
-    final static public int NOT_SELF    = 2;
-    final static public int NOT_ENEMY   = 4;
-    final static public int ONLY_INVOC  = 8;
-    final static public int NOT_INVOC   = 16;
-    final static public int ONLY_CASTER = 32;
+    public static final int NOT_TEAM    = 1;
+    public static final int NOT_SELF    = 2;
+    public static final int NOT_ENEMY   = 4;
+    public static final int ONLY_INVOC  = 8;
+    public static final int NOT_INVOC   = 16;
+    public static final int ONLY_CASTER = 32;
 
-    final private int flags;
+    private final int flags;
 
     public SpellEffectTarget(int flags) {
         this.flags = flags;

@@ -60,9 +60,9 @@ final class SqlPlayerItemRepository implements PlayerItemRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<PlayerItem> utils;
-    final private Transformer<List<ItemTemplateEffectEntry>> effectsTransformer;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<PlayerItem> utils;
+    private final Transformer<List<ItemTemplateEffectEntry>> effectsTransformer;
 
     public SqlPlayerItemRepository(QueryExecutor executor, Transformer<List<ItemTemplateEffectEntry>> effectsTransformer) {
         this.executor = executor;

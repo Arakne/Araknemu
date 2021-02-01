@@ -39,8 +39,8 @@ import java.util.stream.Collectors;
 /**
  * Map template effect to use effect
  */
-final public class EffectToUseMapping implements EffectMapper<UseEffect> {
-    final private Map<Effect, UseEffectHandler> handlers = new EnumMap<>(Effect.class);
+public final class EffectToUseMapping implements EffectMapper<UseEffect> {
+    private final Map<Effect, UseEffectHandler> handlers = new EnumMap<>(Effect.class);
 
     public EffectToUseMapping(SpellService spellService) {
         handlers.put(Effect.ADD_CHARACT_WISDOM,       new AddCharacteristicEffect(Characteristic.WISDOM));

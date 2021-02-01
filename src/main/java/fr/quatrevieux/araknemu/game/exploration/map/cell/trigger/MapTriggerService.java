@@ -42,11 +42,11 @@ import java.util.stream.Collectors;
 /**
  * Handle exploration map triggers
  */
-final public class MapTriggerService implements PreloadableService, EventsSubscriber {
-    final private MapTriggerRepository repository;
-    final private CellActionFactory actionFactory;
+public final class MapTriggerService implements PreloadableService, EventsSubscriber {
+    private final MapTriggerRepository repository;
+    private final CellActionFactory actionFactory;
 
-    final private Map<Integer, Collection<MapTrigger>> triggers = new HashMap<>();
+    private final Map<Integer, Collection<MapTrigger>> triggers = new HashMap<>();
     private boolean preloading = false;
 
     public MapTriggerService(MapTriggerRepository repository, CellActionFactory actionFactory) {

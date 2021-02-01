@@ -31,8 +31,8 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 /**
  * Send a message
  */
-final public class SendMessage implements PacketHandler<GameSession, Message> {
-    final private ChatService service;
+public final class SendMessage implements PacketHandler<GameSession, Message> {
+    private final ChatService service;
 
     public SendMessage(ChatService service) {
         this.service = service;

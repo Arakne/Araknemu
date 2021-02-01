@@ -43,7 +43,7 @@ public interface EffectMapper<E extends ItemEffect> {
      *
      * @param effect The template effect
      */
-    default public E create(ItemTemplateEffectEntry effect) {
+    public default E create(ItemTemplateEffectEntry effect) {
         return create(effect, false);
     }
 
@@ -60,7 +60,7 @@ public interface EffectMapper<E extends ItemEffect> {
      *
      * @param effects The template effects
      */
-    default public List<E> create(List<ItemTemplateEffectEntry> effects) {
+    public default List<E> create(List<ItemTemplateEffectEntry> effects) {
         return create(effects, false);
     }
 

@@ -27,8 +27,8 @@ import java.util.concurrent.ConcurrentMap;
  * Base packet parser
  * Will aggregate multiple {@link SinglePacketParser} for parse the incoming packet
  */
-final public class AggregatePacketParser implements PacketParser {
-    final private ConcurrentMap<String, SinglePacketParser> parsers = new ConcurrentHashMap<>();
+public final class AggregatePacketParser implements PacketParser {
+    private final ConcurrentMap<String, SinglePacketParser> parsers = new ConcurrentHashMap<>();
 
     private int minCodeLength = 2;
     private int maxCodeLength = 2;

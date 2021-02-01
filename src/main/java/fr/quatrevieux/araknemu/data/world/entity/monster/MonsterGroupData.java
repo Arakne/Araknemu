@@ -28,11 +28,11 @@ import java.util.List;
 /**
  * Store information for generate monster groups
  */
-final public class MonsterGroupData {
-    final static public class Monster {
-        final private int id;
-        final private Interval level;
-        final private int rate;
+public final class MonsterGroupData {
+    public static final class Monster {
+        private final int id;
+        private final Interval level;
+        private final int rate;
 
         public Monster(int id, Interval level, int rate) {
             this.id = id;
@@ -73,16 +73,16 @@ final public class MonsterGroupData {
         }
     }
 
-    final private int id;
-    final private Duration respawnTime;
-    final private int maxSize;
-    final private int maxCount;
-    final private List<Monster> monsters;
-    final private String comment;
-    final private Position winFightTeleport;
-    final private boolean fixedTeamNumber;
+    private final int id;
+    private final Duration respawnTime;
+    private final int maxSize;
+    private final int maxCount;
+    private final List<Monster> monsters;
+    private final String comment;
+    private final Position winFightTeleport;
+    private final boolean fixedTeamNumber;
 
-    final private int totalRate;
+    private final int totalRate;
 
     public MonsterGroupData(int id, Duration respawnTime, int maxSize, int maxCount, List<Monster> monsters, String comment, Position winFightTeleport, boolean fixedTeamNumber) {
         this.id = id;

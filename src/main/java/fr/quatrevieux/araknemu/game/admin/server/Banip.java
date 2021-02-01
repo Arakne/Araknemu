@@ -40,8 +40,8 @@ import java.util.stream.Collectors;
 /**
  * Bandle banned IP addresses
  */
-final public class Banip extends AbstractCommand {
-    final private BanIpService<GameAccount> service;
+public final class Banip extends AbstractCommand {
+    private final BanIpService<GameAccount> service;
 
     public Banip(BanIpService<GameAccount> service) {
         this.service = service;

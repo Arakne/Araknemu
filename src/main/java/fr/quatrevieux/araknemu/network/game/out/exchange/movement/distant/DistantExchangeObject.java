@@ -31,11 +31,11 @@ import java.util.List;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L761
  */
-final public class DistantExchangeObject {
-    final static private Transformer<List<ItemTemplateEffectEntry>> effectsTransformer = new ItemEffectsTransformer();
+public final class DistantExchangeObject {
+    private static final Transformer<List<ItemTemplateEffectEntry>> effectsTransformer = new ItemEffectsTransformer();
 
-    final private ItemEntry entry;
-    final private int quantity;
+    private final ItemEntry entry;
+    private final int quantity;
 
     public DistantExchangeObject(ItemEntry entry, int quantity) {
         this.entry = entry;

@@ -28,9 +28,9 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengeR
 /**
  * Refuse or cancel the challenge invitation
  */
-final public class RefuseChallenge implements Action {
-    final private ExplorationPlayer player;
-    final private int target;
+public final class RefuseChallenge implements Action {
+    private final ExplorationPlayer player;
+    private final int target;
 
     public RefuseChallenge(ExplorationPlayer player, int target) {
         this.player = player;

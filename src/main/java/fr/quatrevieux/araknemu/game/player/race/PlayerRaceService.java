@@ -34,11 +34,11 @@ import java.util.stream.Collectors;
 /**
  * Handle player race data
  */
-final public class PlayerRaceService implements PreloadableService {
-    final private PlayerRaceRepository repository;
-    final private SpellService spellService;
+public final class PlayerRaceService implements PreloadableService {
+    private final PlayerRaceRepository repository;
+    private final SpellService spellService;
 
-    final private Map<Race, GamePlayerRace> races = new EnumMap<>(Race.class);
+    private final Map<Race, GamePlayerRace> races = new EnumMap<>(Race.class);
 
     public PlayerRaceService(PlayerRaceRepository repository, SpellService spellService) {
         this.repository = repository;

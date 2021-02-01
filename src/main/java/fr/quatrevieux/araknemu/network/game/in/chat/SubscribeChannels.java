@@ -32,8 +32,8 @@ import java.util.EnumSet;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Chat.as#L92
  */
-final public class SubscribeChannels implements Packet {
-    final static public class Parser implements SinglePacketParser<SubscribeChannels> {
+public final class SubscribeChannels implements Packet {
+    public static final class Parser implements SinglePacketParser<SubscribeChannels> {
         @Override
         public SubscribeChannels parse(String input) throws ParsePacketException {
             final Collection<ChannelType> channels = EnumSet.noneOf(ChannelType.class);
@@ -56,8 +56,8 @@ final public class SubscribeChannels implements Packet {
         }
     }
 
-    final private boolean subscribe;
-    final private Collection<ChannelType> channels;
+    private final boolean subscribe;
+    private final Collection<ChannelType> channels;
 
     public SubscribeChannels(boolean subscribe, Collection<ChannelType> channels) {
         this.subscribe = subscribe;

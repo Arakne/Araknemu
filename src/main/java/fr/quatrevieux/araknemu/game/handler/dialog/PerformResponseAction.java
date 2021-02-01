@@ -28,7 +28,7 @@ import fr.quatrevieux.araknemu.network.game.in.dialog.ChosenResponse;
 /**
  * Perform actions for the given dialog response
  */
-final public class PerformResponseAction implements PacketHandler<GameSession, ChosenResponse> {
+public final class PerformResponseAction implements PacketHandler<GameSession, ChosenResponse> {
     @Override
     public void handle(GameSession session, ChosenResponse packet) {
         final ExplorationPlayer player = session.exploration();

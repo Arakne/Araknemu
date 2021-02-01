@@ -37,9 +37,9 @@ import java.util.stream.Collectors;
 /**
  * Handle banishment for an account
  */
-final public class Ban extends AbstractCommand {
-    final private GameAccount account;
-    final private BanishmentService<GameAccount> service;
+public final class Ban extends AbstractCommand {
+    private final GameAccount account;
+    private final BanishmentService<GameAccount> service;
 
     public Ban(GameAccount account, BanishmentService<GameAccount> service) {
         this.account = account;

@@ -27,7 +27,7 @@ import java.util.Objects;
 /**
  * Value object for spell effect area
  */
-final public class EffectArea {
+public final class EffectArea {
     public enum Type {
         CELL('P'),
         CIRCLE('C'),
@@ -38,9 +38,9 @@ final public class EffectArea {
         RECTANGLE('R'), // Rectangle needs 2 sizes => cannot be used on spells
         RING('O');
 
-        final static private Map<Character, Type> typeByC = new HashMap<>();
+        private static final Map<Character, Type> typeByC = new HashMap<>();
 
-        final private char c;
+        private final char c;
 
         static {
             for (Type type : values()) {
@@ -59,7 +59,7 @@ final public class EffectArea {
         /**
          * Get the effect area type by char id
          */
-        static public Type byChar(char c) {
+        public static Type byChar(char c) {
             if (!typeByC.containsKey(c)) {
                 throw new NoSuchElementException("Invalid effect area " + c);
             }
@@ -68,8 +68,8 @@ final public class EffectArea {
         }
     }
 
-    final private Type type;
-    final private int size;
+    private final Type type;
+    private final int size;
 
     public EffectArea(Type type, int size) {
         this.type = type;

@@ -27,9 +27,9 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
  * Formula :
  * (value * percent / 100 - fixed - reduce) * multiply
  */
-final public class Damage {
-    final private int value;
-    final private Element element;
+public final class Damage {
+    private final int value;
+    private final Element element;
 
     private int multiply = 1;
     private int fixed = 0;

@@ -25,7 +25,7 @@ package fr.quatrevieux.araknemu.data.living.constraint;
  * @param <T> The entity type
  * @param <E> The error type
  */
-abstract public class AbstractConstraintBuilderFactory<T, E> implements EntityConstraint<T, E>, BuilderFactory<T, E> {
+public abstract class AbstractConstraintBuilderFactory<T, E> implements EntityConstraint<T, E>, BuilderFactory<T, E> {
     private E error;
     private EntityConstraint<T, E> constraint;
 

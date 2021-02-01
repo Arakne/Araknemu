@@ -29,10 +29,10 @@ import java.util.NoSuchElementException;
 /**
  * Argon2 hash algorithm implementation for password
  */
-final public class Argon2Hash implements HashAlgorithm {
+public final class Argon2Hash implements HashAlgorithm {
     class Argon2Password implements Password {
-        final private String hash;
-        final private Argon2Factory.Argon2Types hashType;
+        private final String hash;
+        private final Argon2Factory.Argon2Types hashType;
 
         public Argon2Password(String hash) {
             this.hash = hash;
@@ -60,7 +60,7 @@ final public class Argon2Hash implements HashAlgorithm {
         }
     }
 
-    final private Map<Argon2Factory.Argon2Types, Argon2> algorithms = new EnumMap<>(Argon2Factory.Argon2Types.class);
+    private final Map<Argon2Factory.Argon2Types, Argon2> algorithms = new EnumMap<>(Argon2Factory.Argon2Types.class);
 
     private int iterations = 4;
     private int memory = 64 * 1024;
@@ -143,7 +143,7 @@ final public class Argon2Hash implements HashAlgorithm {
      * @param typeName The type name, in case insensitive
      * @throws NoSuchElementException When the given name is invalid
      */
-    static public Argon2Factory.Argon2Types typeByName(String typeName) {
+    public static Argon2Factory.Argon2Types typeByName(String typeName) {
         switch (typeName.toLowerCase()) {
             case "argon2i":
                 return Argon2Factory.Argon2Types.ARGON2i;

@@ -31,9 +31,9 @@ import fr.quatrevieux.araknemu.network.out.ServerMessage;
 /**
  * Action for open the bank
  */
-final public class OpenBank implements Action {
-    final static public class Factory implements ActionFactory {
-        final private BankService service;
+public final class OpenBank implements Action {
+    public static final class Factory implements ActionFactory {
+        private final BankService service;
 
         public Factory(BankService service) {
             this.service = service;
@@ -50,7 +50,7 @@ final public class OpenBank implements Action {
         }
     }
 
-    final private BankService service;
+    private final BankService service;
 
     public OpenBank(BankService service) {
         this.service = service;

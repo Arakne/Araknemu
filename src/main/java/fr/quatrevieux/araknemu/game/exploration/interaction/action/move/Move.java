@@ -33,9 +33,9 @@ import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 /**
  * Move the player
  */
-final public class Move implements BlockingAction {
-    final private ExplorationPlayer player;
-    final private PathValidator[] validators;
+public final class Move implements BlockingAction {
+    private final ExplorationPlayer player;
+    private final PathValidator[] validators;
     private Path<ExplorationMapCell> path;
 
     private int id;

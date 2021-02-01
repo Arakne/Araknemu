@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.network.game.in.account.AskBoost;
 /**
  * Boost player characteristic
  */
-final public class BoostCharacteristic implements PacketHandler<GameSession, AskBoost> {
+public final class BoostCharacteristic implements PacketHandler<GameSession, AskBoost> {
     @Override
     public void handle(GameSession session, AskBoost packet) throws Exception {
         session.player()

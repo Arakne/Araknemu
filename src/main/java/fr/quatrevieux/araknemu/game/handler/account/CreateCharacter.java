@@ -33,8 +33,8 @@ import fr.quatrevieux.araknemu.network.game.out.account.CharactersList;
 /**
  * Handle character creation {@link AddCharacterRequest}
  */
-final public class CreateCharacter implements PacketHandler<GameSession, AddCharacterRequest> {
-    final private CharactersService service;
+public final class CreateCharacter implements PacketHandler<GameSession, AddCharacterRequest> {
+    private final CharactersService service;
 
     public CreateCharacter(CharactersService service) {
         this.service = service;

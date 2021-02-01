@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 /**
  * An object is added to the inventory
  */
-final public class ObjectAdded implements ItemChanged {
-    final private ItemEntry entry;
+public final class ObjectAdded implements ItemChanged {
+    private final ItemEntry entry;
 
     public ObjectAdded(ItemEntry entry) {
         this.entry = entry;

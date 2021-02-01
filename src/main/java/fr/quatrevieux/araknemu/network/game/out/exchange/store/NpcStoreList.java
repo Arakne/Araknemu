@@ -30,10 +30,10 @@ import java.util.stream.Collectors;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L1043
  */
-final public class NpcStoreList {
-    final static private ItemEffectsTransformer effectsSerializer = new ItemEffectsTransformer();
+public final class NpcStoreList {
+    private static final ItemEffectsTransformer effectsSerializer = new ItemEffectsTransformer();
 
-    final private Collection<ItemTemplate> items;
+    private final Collection<ItemTemplate> items;
 
     public NpcStoreList(Collection<ItemTemplate> items) {
         this.items = items;

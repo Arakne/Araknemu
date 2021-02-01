@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 /**
  * Validate the cast range
  */
-final public class RangeValidator implements CastConstraintValidator {
+public final class RangeValidator implements CastConstraintValidator {
     @Override
     public Error validate(Turn turn, Castable castable, FightCell target) {
         final CoordinateCell<FightCell> from = new CoordinateCell<>(turn.fighter().cell());

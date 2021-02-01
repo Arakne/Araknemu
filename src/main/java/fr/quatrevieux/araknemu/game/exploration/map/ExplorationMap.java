@@ -48,14 +48,14 @@ import java.util.stream.Collectors;
 /**
  * Map object for exploration
  */
-final public class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispatcher {
-    final private MapTemplate template;
-    final private ExplorationSubArea subArea;
+public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispatcher {
+    private final MapTemplate template;
+    private final ExplorationSubArea subArea;
 
-    final private Map<Integer, ExplorationMapCell> cells;
-    final private ConcurrentMap<Integer, ExplorationCreature> creatures = new ConcurrentHashMap<>();
+    private final Map<Integer, ExplorationMapCell> cells;
+    private final ConcurrentMap<Integer, ExplorationCreature> creatures = new ConcurrentHashMap<>();
 
-    final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
+    private final ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
     public ExplorationMap(MapTemplate template, CellLoader loader, ExplorationSubArea subArea) {
         this.template = template;

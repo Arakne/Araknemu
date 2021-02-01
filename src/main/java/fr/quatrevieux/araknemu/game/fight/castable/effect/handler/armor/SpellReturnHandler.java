@@ -34,10 +34,10 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 /**
  * Handle spell return buff effect
  */
-final public class SpellReturnHandler implements EffectHandler, BuffHook {
-    final private Fight fight;
+public final class SpellReturnHandler implements EffectHandler, BuffHook {
+    private final Fight fight;
 
-    final private RandomUtil random = new RandomUtil();
+    private final RandomUtil random = new RandomUtil();
 
     public SpellReturnHandler(Fight fight) {
         this.fight = fight;

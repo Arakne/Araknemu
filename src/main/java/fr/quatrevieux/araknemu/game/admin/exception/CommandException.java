@@ -23,7 +23,7 @@ package fr.quatrevieux.araknemu.game.admin.exception;
  * Base exception for commands
  */
 public class CommandException extends AdminException {
-    final private String command;
+    private final String command;
 
     public CommandException(String command) {
         this.command = command;
@@ -49,7 +49,7 @@ public class CommandException extends AdminException {
      *
      * @see fr.quatrevieux.araknemu.game.admin.Command#name()
      */
-    final public String command() {
+    public final String command() {
         return command;
     }
 }

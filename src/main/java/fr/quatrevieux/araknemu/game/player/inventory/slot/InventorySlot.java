@@ -70,14 +70,14 @@ public interface InventorySlot {
     /**
      * Remove the current entry
      */
-    default public void unset() {
+    public default void unset() {
         uncheckedSet(null);
     }
 
     /**
      * Get the current equipment
      */
-    default public Optional<AbstractEquipment> equipment() {
+    public default Optional<AbstractEquipment> equipment() {
         return Optional.empty();
     }
 }

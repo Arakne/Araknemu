@@ -23,8 +23,8 @@ package fr.quatrevieux.araknemu.util;
  * Handle simple log formatting, like SLF4J / Log4j (See: http://www.slf4j.org/api/org/slf4j/helpers/MessageFormatter.html)
  * The message can be formatted using "{}" placeholder.
  */
-final public class LogFormatter {
-    final static private String PLACEHOLDER = "{}";
+public final class LogFormatter {
+    private static final String PLACEHOLDER = "{}";
 
     private LogFormatter() {}
 
@@ -43,7 +43,7 @@ final public class LogFormatter {
      *
      * @throws IndexOutOfBoundsException When an invalid parameters count is given
      */
-    static public String format(String message, Object... parameters) {
+    public static String format(String message, Object... parameters) {
         final StringBuilder formatted = new StringBuilder(message.length());
 
         int lastPlaceholder = 0;

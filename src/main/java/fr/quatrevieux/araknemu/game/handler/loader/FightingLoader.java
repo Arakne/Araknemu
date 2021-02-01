@@ -31,7 +31,7 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 /**
  * Loader for fight packets
  */
-final public class FightingLoader extends AbstractLoader {
+public final class FightingLoader extends AbstractLoader {
     public FightingLoader() {
         super(EnsureFighting::new);
     }

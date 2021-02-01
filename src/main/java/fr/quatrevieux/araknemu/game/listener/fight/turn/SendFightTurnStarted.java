@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
 /**
  * Send packets on start turn
  */
-final public class SendFightTurnStarted implements Listener<TurnStarted> {
-    final private Fight fight;
+public final class SendFightTurnStarted implements Listener<TurnStarted> {
+    private final Fight fight;
 
     public SendFightTurnStarted(Fight fight) {
         this.fight = fight;

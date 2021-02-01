@@ -25,8 +25,8 @@ import fr.quatrevieux.araknemu.util.BitSet;
 /**
  * Handle exploration player restrictions
  */
-final public class Restrictions {
-    static public enum Restriction {
+public final class Restrictions {
+    public static enum Restriction {
         /** Value : 1 */
         DENY_ASSAULT,
         /** Value : 2 */
@@ -45,13 +45,13 @@ final public class Restrictions {
         IS_TOMB,
     }
 
-    final static private class LocalToExplorationMapping {
+    private static final class LocalToExplorationMapping {
         interface Checker {
             public boolean check(fr.quatrevieux.araknemu.game.player.Restrictions restrictions);
         }
 
-        final private Checker checker;
-        final private Restriction restriction;
+        private final Checker checker;
+        private final Restriction restriction;
 
         public LocalToExplorationMapping(Checker checker, Restriction restriction) {
             this.checker = checker;
@@ -59,15 +59,15 @@ final public class Restrictions {
         }
     }
 
-    final static private LocalToExplorationMapping[] LOCAL_TO_EXPLORATION_MAPPING = new LocalToExplorationMapping[] {
+    private static final LocalToExplorationMapping[] LOCAL_TO_EXPLORATION_MAPPING = new LocalToExplorationMapping[] {
         new LocalToExplorationMapping(fr.quatrevieux.araknemu.game.player.Restrictions::canAssault,   Restriction.DENY_ASSAULT),
         new LocalToExplorationMapping(fr.quatrevieux.araknemu.game.player.Restrictions::canChallenge, Restriction.DENY_CHALLENGE),
         new LocalToExplorationMapping(fr.quatrevieux.araknemu.game.player.Restrictions::canAttack,    Restriction.DENY_ATTACK),
         new LocalToExplorationMapping(fr.quatrevieux.araknemu.game.player.Restrictions::canExchange,  Restriction.DENY_EXCHANGE),
     };
 
-    final private ExplorationPlayer player;
-    final private BitSet<Restriction> set;
+    private final ExplorationPlayer player;
+    private final BitSet<Restriction> set;
 
     public Restrictions(ExplorationPlayer player) {
         this.player = player;

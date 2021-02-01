@@ -25,8 +25,8 @@ import java.util.Collection;
 /**
  * Aggregate of parser loaders
  */
-final public class AggregateParserLoader implements ParserLoader {
-    final private ParserLoader[] loaders;
+public final class AggregateParserLoader implements ParserLoader {
+    private final ParserLoader[] loaders;
 
     public AggregateParserLoader(ParserLoader[] loaders) {
         this.loaders = loaders;

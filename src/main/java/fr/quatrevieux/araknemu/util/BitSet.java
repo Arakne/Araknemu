@@ -24,7 +24,7 @@ package fr.quatrevieux.araknemu.util;
  *
  * @param <E> The set items
  */
-final public class BitSet<E extends Enum> {
+public final class BitSet<E extends Enum> {
     private int value;
 
     /**

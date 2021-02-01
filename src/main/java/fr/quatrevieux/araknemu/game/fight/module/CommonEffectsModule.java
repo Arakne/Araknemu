@@ -44,8 +44,8 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.Telep
 /**
  * Module for register common fight effects
  */
-final public class CommonEffectsModule implements FightModule {
-    final private Fight fight;
+public final class CommonEffectsModule implements FightModule {
+    private final Fight fight;
 
     public CommonEffectsModule(Fight fight) {
         this.fight = fight;

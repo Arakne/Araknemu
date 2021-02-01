@@ -49,8 +49,8 @@ final class SqlAccountBankRepository implements AccountBankRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<AccountBank> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<AccountBank> utils;
 
     public SqlAccountBankRepository(QueryExecutor executor) {
         this.executor = executor;

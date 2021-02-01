@@ -32,8 +32,8 @@ import java.util.Optional;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L23
  */
-final public class ExchangeRequest implements Packet {
-    final static public class Parser implements SinglePacketParser<ExchangeRequest> {
+public final class ExchangeRequest implements Packet {
+    public static final class Parser implements SinglePacketParser<ExchangeRequest> {
         @Override
         public ExchangeRequest parse(String input) throws ParsePacketException {
             final String[] parts = StringUtils.splitPreserveAllTokens(input, "|", 3);
@@ -61,9 +61,9 @@ final public class ExchangeRequest implements Packet {
         }
     }
 
-    final private ExchangeType type;
-    final private Integer id;
-    final private Integer cell;
+    private final ExchangeType type;
+    private final Integer id;
+    private final Integer cell;
 
     public ExchangeRequest(ExchangeType type, Integer id, Integer cell) {
         this.type = type;

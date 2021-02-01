@@ -34,9 +34,9 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 /**
  * Alter a characteristic with buff effect
  */
-abstract public class AbstractAlterCharacteristicHandler implements EffectHandler, BuffHook {
-    final private Fight fight;
-    final private Characteristic characteristic;
+public abstract class AbstractAlterCharacteristicHandler implements EffectHandler, BuffHook {
+    private final Fight fight;
+    private final Characteristic characteristic;
 
     public AbstractAlterCharacteristicHandler(Fight fight, Characteristic characteristic) {
         this.fight = fight;
@@ -82,5 +82,5 @@ abstract public class AbstractAlterCharacteristicHandler implements EffectHandle
     /**
      * Get the buff effect value
      */
-    abstract protected int value(Buff buff);
+    protected abstract int value(Buff buff);
 }

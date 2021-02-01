@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/GameActions.as#L24
  */
-final public class GameActionAcknowledge implements Packet {
-    final static public class Parser implements SinglePacketParser<GameActionAcknowledge> {
+public final class GameActionAcknowledge implements Packet {
+    public static final class Parser implements SinglePacketParser<GameActionAcknowledge> {
         @Override
         public GameActionAcknowledge parse(String input) throws ParsePacketException {
             return new GameActionAcknowledge(
@@ -43,7 +43,7 @@ final public class GameActionAcknowledge implements Packet {
         }
     }
 
-    final private int actionId;
+    private final int actionId;
 
     public GameActionAcknowledge(int actionId) {
         this.actionId = actionId;

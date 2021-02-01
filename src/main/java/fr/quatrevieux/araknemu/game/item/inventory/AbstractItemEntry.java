@@ -30,11 +30,11 @@ import java.util.List;
 /**
  * Base implementation for inventory item entry
  */
-abstract public class AbstractItemEntry implements ItemEntry {
-    final private ItemStorage storage;
-    final private fr.quatrevieux.araknemu.data.living.entity.Item entity;
-    final private Item item;
-    final private Dispatcher dispatcher;
+public abstract class AbstractItemEntry implements ItemEntry {
+    private final ItemStorage storage;
+    private final fr.quatrevieux.araknemu.data.living.entity.Item entity;
+    private final Item item;
+    private final Dispatcher dispatcher;
 
     public AbstractItemEntry(ItemStorage<? extends AbstractItemEntry> storage, fr.quatrevieux.araknemu.data.living.entity.Item entity, Item item, Dispatcher dispatcher) {
         this.storage = storage;
@@ -44,22 +44,22 @@ abstract public class AbstractItemEntry implements ItemEntry {
     }
 
     @Override
-    final public int id() {
+    public final int id() {
         return entity.entryId();
     }
 
     @Override
-    final public Item item() {
+    public final Item item() {
         return item;
     }
 
     @Override
-    final public int quantity() {
+    public final int quantity() {
         return entity.quantity();
     }
 
     @Override
-    final public void add(int quantity) {
+    public final void add(int quantity) {
         if (quantity <= 0) {
             throw new InventoryException("Invalid quantity given");
         }
@@ -69,7 +69,7 @@ abstract public class AbstractItemEntry implements ItemEntry {
 
     @SuppressWarnings("unchecked")
     @Override
-    final public void remove(int quantity) throws InventoryException {
+    public final void remove(int quantity) throws InventoryException {
         if (quantity > quantity() || quantity <= 0) {
             throw new InventoryException("Invalid quantity given");
         }
@@ -84,12 +84,12 @@ abstract public class AbstractItemEntry implements ItemEntry {
     }
 
     @Override
-    final public List<ItemTemplateEffectEntry> effects() {
+    public final List<ItemTemplateEffectEntry> effects() {
         return entity.effects();
     }
 
     @Override
-    final public int templateId() {
+    public final int templateId() {
         return entity.itemTemplateId();
     }
 

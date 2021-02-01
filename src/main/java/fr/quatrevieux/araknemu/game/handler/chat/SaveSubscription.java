@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.network.game.in.chat.SubscribeChannels;
 /**
  * Save chat channel subscriptions
  */
-final public class SaveSubscription implements PacketHandler<GameSession, SubscribeChannels> {
+public final class SaveSubscription implements PacketHandler<GameSession, SubscribeChannels> {
     @Override
     public void handle(GameSession session, SubscribeChannels packet) throws Exception {
         if (packet.isSubscribe()) {

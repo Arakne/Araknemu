@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L110
  */
-final public class JoinFight {
-    final private Fight fight;
+public final class JoinFight {
+    private final Fight fight;
 
     public JoinFight(Fight fight) {
         this.fight = fight;

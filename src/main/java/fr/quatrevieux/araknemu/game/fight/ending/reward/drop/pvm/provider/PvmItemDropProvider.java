@@ -43,10 +43,10 @@ import java.util.List;
  *
  * Note: each winners can only have one occurrence of an item, per monster
  */
-final public class PvmItemDropProvider implements DropRewardProvider {
+public final class PvmItemDropProvider implements DropRewardProvider {
     private class Scope implements DropRewardProvider.Scope {
-        final private List<Pair<MonsterRewardItem, Integer>> dropsAndQuantity;
-        final private int maxPerFighter;
+        private final List<Pair<MonsterRewardItem, Integer>> dropsAndQuantity;
+        private final int maxPerFighter;
 
         public Scope(List<Pair<MonsterRewardItem, Integer>> dropsAndQuantity, int maxPerFighter) {
             this.dropsAndQuantity = dropsAndQuantity;
@@ -71,8 +71,8 @@ final public class PvmItemDropProvider implements DropRewardProvider {
         }
     }
 
-    static private class ItemDropIterator implements Iterator<MonsterRewardItem> {
-        final private List<Pair<MonsterRewardItem, Integer>> dropsAndQuantity;
+    private static class ItemDropIterator implements Iterator<MonsterRewardItem> {
+        private final List<Pair<MonsterRewardItem, Integer>> dropsAndQuantity;
 
         private int current = -1;
 
@@ -104,10 +104,10 @@ final public class PvmItemDropProvider implements DropRewardProvider {
         }
     }
 
-    static private class ExtractDrops implements FighterOperation {
-        final private int discernment;
+    private static class ExtractDrops implements FighterOperation {
+        private final int discernment;
 
-        final private List<Pair<MonsterRewardItem, Integer>> dropsAndQuantity = new ArrayList<>();
+        private final List<Pair<MonsterRewardItem, Integer>> dropsAndQuantity = new ArrayList<>();
 
         public ExtractDrops(int discernment) {
             this.discernment = discernment;
@@ -123,7 +123,7 @@ final public class PvmItemDropProvider implements DropRewardProvider {
         }
     }
 
-    final private RandomUtil random = new RandomUtil();
+    private final RandomUtil random = new RandomUtil();
 
     @Override
     public DropRewardProvider.Scope initialize(EndFightResults results) {

@@ -29,8 +29,8 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L111
  */
-final public class AskBoost implements Packet {
-    final static public class Parser implements SinglePacketParser<AskBoost> {
+public final class AskBoost implements Packet {
+    public static final class Parser implements SinglePacketParser<AskBoost> {
         @Override
         public AskBoost parse(String input) throws ParsePacketException {
             return new AskBoost(
@@ -46,7 +46,7 @@ final public class AskBoost implements Packet {
         }
     }
 
-    final private Characteristic characteristic;
+    private final Characteristic characteristic;
 
     public AskBoost(Characteristic characteristic) {
         this.characteristic = characteristic;

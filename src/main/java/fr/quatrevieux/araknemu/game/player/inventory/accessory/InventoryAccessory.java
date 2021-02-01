@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.world.creature.accessory.AccessoryType;
 /**
  * Adapt inventory entry to accessory
  */
-final public class InventoryAccessory implements Accessory {
-    final private ItemEntry entry;
+public final class InventoryAccessory implements Accessory {
+    private final ItemEntry entry;
 
     public InventoryAccessory(ItemEntry entry) {
         this.entry = entry;

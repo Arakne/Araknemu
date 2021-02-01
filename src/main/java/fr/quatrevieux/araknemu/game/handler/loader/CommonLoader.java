@@ -42,7 +42,7 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 /**
  * Loader for common packets
  */
-final public class CommonLoader implements Loader {
+public final class CommonLoader implements Loader {
     @Override
     @SuppressWarnings("unchecked")
     public PacketHandler<GameSession, ?>[] load(Container container) throws ContainerException {

@@ -30,11 +30,11 @@ import java.util.List;
 /**
  * Format the help page of a command
  */
-final public class HelpFormatter {
+public final class HelpFormatter {
     private static class LinkItem {
-        final private String command;
-        final private String description;
-        final private Link.Type linkType;
+        private final String command;
+        private final String description;
+        private final Link.Type linkType;
 
         public LinkItem(String command, String description, Link.Type linkType) {
             this.command = command;
@@ -59,12 +59,12 @@ final public class HelpFormatter {
         }
     }
 
-    final private Command command;
+    private final Command command;
     private String synopsis;
-    final private List<Pair<String, String>> options = new ArrayList<>();
-    final private List<LinkItem> examples = new ArrayList<>();
-    final private List<LinkItem> seeAlso = new ArrayList<>();
-    final private List<String> custom = new ArrayList<>();
+    private final List<Pair<String, String>> options = new ArrayList<>();
+    private final List<LinkItem> examples = new ArrayList<>();
+    private final List<LinkItem> seeAlso = new ArrayList<>();
+    private final List<String> custom = new ArrayList<>();
 
     public HelpFormatter(Command command) {
         this.command = command;

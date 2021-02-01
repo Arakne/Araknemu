@@ -28,9 +28,9 @@ import java.util.Collection;
 /**
  * SpellsBoosts with dispatcher
  */
-final public class DispatcherSpellsBoosts implements SpellsBoosts {
-    final private SpellsBoosts boosts;
-    final private Dispatcher dispatcher;
+public final class DispatcherSpellsBoosts implements SpellsBoosts {
+    private final SpellsBoosts boosts;
+    private final Dispatcher dispatcher;
 
     public DispatcherSpellsBoosts(SpellsBoosts boosts, Dispatcher dispatcher) {
         this.boosts = boosts;

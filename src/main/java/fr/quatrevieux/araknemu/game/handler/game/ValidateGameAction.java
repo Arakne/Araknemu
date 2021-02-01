@@ -30,8 +30,8 @@ import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 /**
  * Validate and start a game action
  */
-final public class ValidateGameAction implements PacketHandler<GameSession, GameActionRequest> {
-    final private ActionFactory factory;
+public final class ValidateGameAction implements PacketHandler<GameSession, GameActionRequest> {
+    private final ActionFactory factory;
 
     public ValidateGameAction(ActionFactory factory) {
         this.factory = factory;

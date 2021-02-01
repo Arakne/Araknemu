@@ -36,14 +36,14 @@ import java.util.Collection;
 /**
  * Service for game server
  */
-final public class GameService implements Service {
-    final private GameConfiguration configuration;
-    final private RealmConnector connector;
-    final private Server<GameSession> server;
-    final private Logger logger;
-    final private Collection<PreloadableService> preloadables;
-    final private ListenerAggregate dispatcher;
-    final private Collection<EventsSubscriber> subscribers;
+public final class GameService implements Service {
+    private final GameConfiguration configuration;
+    private final RealmConnector connector;
+    private final Server<GameSession> server;
+    private final Logger logger;
+    private final Collection<PreloadableService> preloadables;
+    private final ListenerAggregate dispatcher;
+    private final Collection<EventsSubscriber> subscribers;
 
     public GameService(GameConfiguration configuration, RealmConnector connector, Server<GameSession> server, Logger logger, ListenerAggregate dispatcher, Collection<PreloadableService> preloadables, Collection<EventsSubscriber> subscribers) {
         this.configuration = configuration;

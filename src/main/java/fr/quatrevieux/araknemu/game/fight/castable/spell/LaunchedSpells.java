@@ -29,11 +29,11 @@ import java.util.Map;
 /**
  * Handle launch spells history for check constraints
  */
-final public class LaunchedSpells {
+public final class LaunchedSpells {
     private class Entry {
         private int cooldown;
         private int count = 1;
-        final private Map<PassiveFighter, Integer> countPerTarget = new HashMap<>();
+        private final Map<PassiveFighter, Integer> countPerTarget = new HashMap<>();
 
         Entry(Spell spell, FightCell cell) {
             cooldown = spell.constraints().launchDelay();
@@ -42,7 +42,7 @@ final public class LaunchedSpells {
         }
     }
 
-    final private Map<Integer, Entry> spells = new HashMap<>();
+    private final Map<Integer, Entry> spells = new HashMap<>();
 
     /**
      * Decrement cooldown and refresh the list

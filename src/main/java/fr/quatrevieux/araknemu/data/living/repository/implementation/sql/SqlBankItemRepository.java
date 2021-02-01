@@ -57,9 +57,9 @@ final class SqlBankItemRepository implements BankItemRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<BankItem> utils;
-    final private Transformer<List<ItemTemplateEffectEntry>> effectsTransformer;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<BankItem> utils;
+    private final Transformer<List<ItemTemplateEffectEntry>> effectsTransformer;
 
     public SqlBankItemRepository(QueryExecutor executor, Transformer<List<ItemTemplateEffectEntry>> effectsTransformer) {
         this.executor = executor;

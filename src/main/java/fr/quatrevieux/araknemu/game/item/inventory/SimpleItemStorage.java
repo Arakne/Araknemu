@@ -34,7 +34,7 @@ import java.util.Map;
 /**
  * Simple implementation for {@link ItemStorage}
  */
-final public class SimpleItemStorage<E extends ItemEntry> implements ItemStorage<E> {
+public final class SimpleItemStorage<E extends ItemEntry> implements ItemStorage<E> {
     public interface EntryFactory<E> {
         /**
          * Create the inventory entry for the current item storage
@@ -42,10 +42,10 @@ final public class SimpleItemStorage<E extends ItemEntry> implements ItemStorage
         public E create(int id, Item item, int quantity, int position);
     }
 
-    final private Dispatcher dispatcher;
-    final private EntryFactory<E> factory;
+    private final Dispatcher dispatcher;
+    private final EntryFactory<E> factory;
 
-    final private Map<Integer, E> items = new HashMap<>();
+    private final Map<Integer, E> items = new HashMap<>();
 
     private int lastId = 0;
 

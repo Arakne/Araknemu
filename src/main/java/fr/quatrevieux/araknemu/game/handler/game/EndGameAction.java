@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge
 /**
  * End the current game action with success
  */
-final public class EndGameAction implements PacketHandler<GameSession, GameActionAcknowledge> {
+public final class EndGameAction implements PacketHandler<GameSession, GameActionAcknowledge> {
     @Override
     public void handle(GameSession session, GameActionAcknowledge packet) throws Exception {
         session

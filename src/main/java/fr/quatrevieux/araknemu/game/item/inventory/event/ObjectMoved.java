@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 /**
  * Event sent when an inventory entry is moved
  */
-final public class ObjectMoved implements ItemChanged {
-    final private ItemEntry entry;
+public final class ObjectMoved implements ItemChanged {
+    private final ItemEntry entry;
 
     public ObjectMoved(ItemEntry entry) {
         this.entry = entry;

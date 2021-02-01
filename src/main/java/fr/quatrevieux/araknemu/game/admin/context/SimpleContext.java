@@ -31,11 +31,11 @@ import java.util.Map;
 /**
  * Simple context
  */
-final public class SimpleContext implements Context {
-    final private Context parent;
+public final class SimpleContext implements Context {
+    private final Context parent;
 
-    final private Map<String, Command> commands = new HashMap<>();
-    final private Map<String, Context> children = new HashMap<>();
+    private final Map<String, Command> commands = new HashMap<>();
+    private final Map<String, Context> children = new HashMap<>();
 
     public SimpleContext(Context parent) {
         this.parent = parent;

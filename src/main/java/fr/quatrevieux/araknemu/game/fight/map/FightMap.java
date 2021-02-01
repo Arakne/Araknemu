@@ -30,9 +30,9 @@ import java.util.List;
 /**
  * Map for the fight
  */
-final public class FightMap implements BattlefieldMap {
-    final private MapTemplate template;
-    final private List<FightCell> cells;
+public final class FightMap implements BattlefieldMap {
+    private final MapTemplate template;
+    private final List<FightCell> cells;
 
     public FightMap(MapTemplate template) {
         this.template = template;

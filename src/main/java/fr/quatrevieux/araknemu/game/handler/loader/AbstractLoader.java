@@ -30,14 +30,14 @@ import java.util.function.Function;
 /**
  * Base loader class
  */
-abstract public class AbstractLoader implements Loader {
-    final private Function<PacketHandler, PacketHandler> wrapper;
+public abstract class AbstractLoader implements Loader {
+    private final Function<PacketHandler, PacketHandler> wrapper;
 
     public AbstractLoader(Function<PacketHandler, PacketHandler> wrapper) {
         this.wrapper = wrapper;
     }
 
-    abstract protected PacketHandler<GameSession, ?>[] handlers(Container container) throws ContainerException;
+    protected abstract PacketHandler<GameSession, ?>[] handlers(Container container) throws ContainerException;
 
     @Override
     @SuppressWarnings("unchecked")

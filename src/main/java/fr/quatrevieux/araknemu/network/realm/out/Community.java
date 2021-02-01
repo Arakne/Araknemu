@@ -22,8 +22,8 @@ package fr.quatrevieux.araknemu.network.realm.out;
 /**
  * Send the current community (i.e. country)
  */
-final public class Community {
-    final private int communityId;
+public final class Community {
+    private final int communityId;
 
     public Community(int communityId) {
         this.communityId = communityId;

@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.network.game.out.Pong;
 /**
  * Send pong for ping request
  */
-final public class SendPong implements PacketHandler<GameSession, Ping> {
+public final class SendPong implements PacketHandler<GameSession, Ping> {
     @Override
     public void handle(GameSession session, Ping packet) throws Exception {
         session.send(new Pong());

@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 /**
  * Send the packet to creatures which supports sending packet
  */
-final public class SendPacket implements Operation {
-    final private String packet;
+public final class SendPacket implements Operation {
+    private final String packet;
 
     public SendPacket(Object packet) {
         this.packet = packet.toString();

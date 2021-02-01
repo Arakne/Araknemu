@@ -28,9 +28,9 @@ import java.util.Collection;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L471
  */
-final public class CharactersList {
-    final private long remainingTime;
-    final private Collection<AccountCharacter> characters;
+public final class CharactersList {
+    private final long remainingTime;
+    private final Collection<AccountCharacter> characters;
 
     public CharactersList(long remainingTime, Collection<AccountCharacter> characters) {
         this.remainingTime = remainingTime;

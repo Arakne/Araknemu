@@ -32,8 +32,8 @@ import java.util.Set;
  * Perform admin operations
  */
 public interface AdminPerformer extends AdminLogger {
-    final static public Marker EXECUTE_MARKER = MarkerManager.getMarker("EXECUTE");
-    final static public Marker OUTPUT_MARKER = MarkerManager.getMarker("OUTPUT");
+    public static final Marker EXECUTE_MARKER = MarkerManager.getMarker("EXECUTE");
+    public static final Marker OUTPUT_MARKER = MarkerManager.getMarker("OUTPUT");
 
     /**
      * Parse and execute a command

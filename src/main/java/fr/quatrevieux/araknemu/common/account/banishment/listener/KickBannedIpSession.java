@@ -31,8 +31,8 @@ import java.util.function.Supplier;
 /**
  * Kick all session matching with the banned IP address
  */
-final public class KickBannedIpSession implements Listener<IpBanned> {
-    final private Supplier<Collection<? extends Session>> sessionsSupplier;
+public final class KickBannedIpSession implements Listener<IpBanned> {
+    private final Supplier<Collection<? extends Session>> sessionsSupplier;
 
     public KickBannedIpSession(Supplier<Collection<? extends Session>> sessionsSupplier) {
         this.sessionsSupplier = sessionsSupplier;

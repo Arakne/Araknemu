@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeCreated;
 /**
  * The interaction dialog for an exchange
  */
-final public class ExchangeDialog implements ExchangeInteraction, Accaptable {
-    final private ExchangeParty exchange;
+public final class ExchangeDialog implements ExchangeInteraction, Accaptable {
+    private final ExchangeParty exchange;
 
     public ExchangeDialog(ExchangeParty exchange) {
         this.exchange = exchange;

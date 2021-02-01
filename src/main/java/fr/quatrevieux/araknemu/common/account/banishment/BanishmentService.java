@@ -36,10 +36,10 @@ import java.util.stream.Collectors;
 /**
  * Handle banishment
  */
-final public class BanishmentService<A extends LivingAccount> {
-    final private BanishmentRepository repository;
-    final private Dispatcher dispatcher;
-    final private Function<int[], Map<Integer, A>> loadAccountsByIds;
+public final class BanishmentService<A extends LivingAccount> {
+    private final BanishmentRepository repository;
+    private final Dispatcher dispatcher;
+    private final Function<int[], Map<Integer, A>> loadAccountsByIds;
 
     public BanishmentService(BanishmentRepository repository, Dispatcher dispatcher) {
         this(repository, dispatcher, ids -> Collections.emptyMap());

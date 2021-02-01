@@ -32,8 +32,8 @@ import fr.quatrevieux.araknemu.network.game.out.object.InventoryWeight;
 /**
  * Send inventory weight when inventory operations or characteristics changes occurs
  */
-final public class SendWeight implements EventsSubscriber {
-    final private GamePlayer player;
+public final class SendWeight implements EventsSubscriber {
+    private final GamePlayer player;
 
     public SendWeight(GamePlayer player) {
         this.player = player;

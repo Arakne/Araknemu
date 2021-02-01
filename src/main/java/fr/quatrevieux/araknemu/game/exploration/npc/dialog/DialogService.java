@@ -47,15 +47,15 @@ import java.util.stream.Collectors;
 /**
  * Manage dialogs, questions, responses and actions
  */
-final public class DialogService implements PreloadableService {
-    final private QuestionRepository questionRepository;
-    final private ResponseActionRepository responseActionRepository;
-    final private ParametersResolver parametersResolver;
-    final private Logger logger;
+public final class DialogService implements PreloadableService {
+    private final QuestionRepository questionRepository;
+    private final ResponseActionRepository responseActionRepository;
+    private final ParametersResolver parametersResolver;
+    private final Logger logger;
 
-    final private Map<String, ActionFactory> actionFactories = new HashMap<>();
-    final private Map<Integer, NpcQuestion> questions = new ConcurrentHashMap<>();
-    final private Map<Integer, Response> responses = new ConcurrentHashMap<>();
+    private final Map<String, ActionFactory> actionFactories = new HashMap<>();
+    private final Map<Integer, NpcQuestion> questions = new ConcurrentHashMap<>();
+    private final Map<Integer, Response> responses = new ConcurrentHashMap<>();
 
     public DialogService(QuestionRepository questionRepository, ResponseActionRepository responseActionRepository, ActionFactory[] actionFactories, ParametersResolver parametersResolver, Logger logger) {
         this.questionRepository = questionRepository;

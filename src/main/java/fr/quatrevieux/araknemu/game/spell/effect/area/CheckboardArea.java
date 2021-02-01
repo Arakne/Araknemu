@@ -27,8 +27,8 @@ import java.util.Set;
 /**
  * Resolve ring area (circle border)
  */
-final public class CheckboardArea implements SpellEffectArea {
-    final private CircularArea area;
+public final class CheckboardArea implements SpellEffectArea {
+    private final CircularArea area;
 
     public CheckboardArea(EffectArea area) {
         final int mod = area.size() % 2;

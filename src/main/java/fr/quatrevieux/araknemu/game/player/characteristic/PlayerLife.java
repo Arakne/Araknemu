@@ -28,9 +28,9 @@ import fr.quatrevieux.araknemu.game.world.creature.Life;
 /**
  * Handle player life
  */
-final public class PlayerLife implements Life {
-    final private GamePlayer player;
-    final private Player entity;
+public final class PlayerLife implements Life {
+    private final GamePlayer player;
+    private final Player entity;
 
     private int max;
     /**

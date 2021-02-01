@@ -31,7 +31,7 @@ import java.util.Map;
  *
  * @see fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcExchange#requiredItems()
  */
-final public class ExchangeItemsTransformer implements Transformer<Map<Integer, Integer>> {
+public final class ExchangeItemsTransformer implements Transformer<Map<Integer, Integer>> {
     @Override
     public String serialize(Map<Integer, Integer> value) {
         throw new UnsupportedOperationException();

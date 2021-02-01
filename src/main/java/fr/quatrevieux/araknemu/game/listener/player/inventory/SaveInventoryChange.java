@@ -35,8 +35,8 @@ import java.util.function.Consumer;
 /**
  * Save item changes into database
  */
-final public class SaveInventoryChange implements EventsSubscriber {
-    final private InventoryService service;
+public final class SaveInventoryChange implements EventsSubscriber {
+    private final InventoryService service;
 
     public SaveInventoryChange(InventoryService service) {
         this.service = service;

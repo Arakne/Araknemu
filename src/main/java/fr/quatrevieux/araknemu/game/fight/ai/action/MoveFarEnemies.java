@@ -35,8 +35,8 @@ import java.util.stream.Collectors;
  * The selected cell is the cell with the highest distance from the nearest enemy
  * Select only cells with higher distance than current cell
  */
-final public class MoveFarEnemies implements ActionGenerator {
-    final private Movement movement;
+public final class MoveFarEnemies implements ActionGenerator {
+    private final Movement movement;
 
     private List<CoordinateCell<FightCell>> enemiesCells;
     private int currentCellScore = 0;

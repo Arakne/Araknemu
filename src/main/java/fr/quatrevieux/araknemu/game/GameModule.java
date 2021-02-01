@@ -206,8 +206,8 @@ import java.util.Arrays;
 /**
  * Module for game service
  */
-final public class GameModule implements ContainerModule {
-    final private Araknemu app;
+public final class GameModule implements ContainerModule {
+    private final Araknemu app;
 
     public GameModule(Araknemu app) {
         this.app = app;

@@ -32,8 +32,8 @@ import fr.quatrevieux.araknemu.network.game.out.exchange.movement.local.LocalExc
 /**
  * Send packets for the local exchange
  */
-final public class SendLocalPackets implements EventsSubscriber {
-    final private ExchangeParty party;
+public final class SendLocalPackets implements EventsSubscriber {
+    private final ExchangeParty party;
 
     public SendLocalPackets(ExchangeParty party) {
         this.party = party;

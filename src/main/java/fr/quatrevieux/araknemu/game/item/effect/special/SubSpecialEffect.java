@@ -28,10 +28,10 @@ import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
 /**
  * Sub special effect to player {@link SpecialEffects}
  */
-final public class SubSpecialEffect implements SpecialEffectHandler {
-    final private SpecialEffects.Type type;
+public final class SubSpecialEffect implements SpecialEffectHandler {
+    private final SpecialEffects.Type type;
 
-    final private RandomUtil random = new RandomUtil();
+    private final RandomUtil random = new RandomUtil();
 
     public SubSpecialEffect(SpecialEffects.Type type) {
         this.type = type;

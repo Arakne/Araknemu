@@ -24,7 +24,7 @@ package fr.quatrevieux.araknemu.network.game.out;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Aks.as#L616
  */
-final public class QuickPong {
+public final class QuickPong {
     @Override
     public String toString() {
         return "qpong";

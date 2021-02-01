@@ -31,8 +31,8 @@ import java.time.Duration;
 /**
  * Configuration for realm
  */
-final public class RealmConfiguration implements ConfigurationModule {
-    final public class Argon2 {
+public final class RealmConfiguration implements ConfigurationModule {
+    public final class Argon2 {
         /**
          * Get the number of iterations. Default: 4
          */

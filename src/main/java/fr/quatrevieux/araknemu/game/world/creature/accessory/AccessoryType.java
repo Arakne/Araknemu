@@ -34,14 +34,14 @@ public enum AccessoryType {
     PET(8),
     SHIELD(15);
 
-    final static private Map<Integer, AccessoryType> typesBySlot = Arrays
+    private static final Map<Integer, AccessoryType> typesBySlot = Arrays
         .stream(values())
         .collect(Collectors.toMap(AccessoryType::slot, Function.identity()))
     ;
 
-    final static private int[] SLOT_IDS = Arrays.stream(values()).mapToInt(AccessoryType::slot).toArray();
+    private static final int[] SLOT_IDS = Arrays.stream(values()).mapToInt(AccessoryType::slot).toArray();
 
-    final private int slot;
+    private final int slot;
 
     AccessoryType(int slot) {
         this.slot = slot;
@@ -59,21 +59,21 @@ public enum AccessoryType {
      *
      * @return The accessory type or null if no accessory is related to the slot
      */
-    static public AccessoryType bySlot(int slot) {
+    public static AccessoryType bySlot(int slot) {
         return typesBySlot.get(slot);
     }
 
     /**
      * Get accessories slot ids
      */
-    static public int[] slots() {
+    public static int[] slots() {
         return SLOT_IDS;
     }
 
     /**
      * Check if the slot is an accessory
      */
-    static public boolean isAccessorySlot(int slotId) {
+    public static boolean isAccessorySlot(int slotId) {
         return typesBySlot.containsKey(slotId);
     }
 }

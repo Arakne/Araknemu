@@ -52,8 +52,8 @@ final class SqlMonsterGroupPositionRepository implements MonsterGroupPositionRep
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<MonsterGroupPosition> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<MonsterGroupPosition> utils;
 
     public SqlMonsterGroupPositionRepository(QueryExecutor executor) {
         this.executor = executor;

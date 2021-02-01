@@ -26,31 +26,31 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Aks.as#L619
  */
-final public class ServerMessage {
+public final class ServerMessage {
     /**
      * Message should be directly displayed, or on connection closed ?
      *
      * Set to false for display message on connection closed
      */
-    final private boolean displayNow;
+    private final boolean displayNow;
 
     /**
      * The message ID
      *
      * See lang.swf SRV_MSG_[message id]
      */
-    final private int messageId;
+    private final int messageId;
 
     /**
      * Parameters for the message
      */
-    final private Object[] parameters;
+    private final Object[] parameters;
 
     /**
      * The message box name
      * Can be null
      */
-    final private String name;
+    private final String name;
 
     public ServerMessage(boolean displayNow, int messageId, Object[] parameters, String name) {
         this.displayNow = displayNow;
@@ -73,21 +73,21 @@ final public class ServerMessage {
      *
      * @param cost The bank cost
      */
-    static public ServerMessage notEnoughKamasForBank(long cost) {
+    public static ServerMessage notEnoughKamasForBank(long cost) {
         return new ServerMessage(true, 10, new Object[] { cost }, null);
     }
 
     /**
      * The session is closed because of the inactivity
      */
-    static public ServerMessage inactivity() {
+    public static ServerMessage inactivity() {
         return new ServerMessage(false, 1, new Object[] {}, null);
     }
 
     /**
      * The server has been stopped
      */
-    static public ServerMessage shutdown() {
+    public static ServerMessage shutdown() {
         return new ServerMessage(false, 4, new Object[] {}, null);
     }
 
@@ -97,7 +97,7 @@ final public class ServerMessage {
      * @param performer The kicker pseudo
      * @param cause The kick message
      */
-    static public ServerMessage kick(String performer, String cause) {
+    public static ServerMessage kick(String performer, String cause) {
         return new ServerMessage(false, 18, new Object[] {performer, cause}, null);
     }
 }

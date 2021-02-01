@@ -27,8 +27,8 @@ import java.util.Optional;
 /**
  * Chain AI factories
  */
-final public class ChainAiFactory implements AiFactory {
-    final private AiFactory[] factories;
+public final class ChainAiFactory implements AiFactory {
+    private final AiFactory[] factories;
 
     public ChainAiFactory(AiFactory... factories) {
         this.factories = factories;

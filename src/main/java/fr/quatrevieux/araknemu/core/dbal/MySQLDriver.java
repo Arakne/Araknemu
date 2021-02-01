@@ -26,15 +26,15 @@ import java.sql.SQLException;
 /**
  * Driver for MySQL connection
  */
-final public class MySQLDriver implements Driver {
-    final private DatabaseConfiguration.Connection configuration;
+public final class MySQLDriver implements Driver {
+    private final DatabaseConfiguration.Connection configuration;
 
     public MySQLDriver(DatabaseConfiguration.Connection configuration) {
         this.configuration = configuration;
     }
 
     @Override
-    synchronized public Connection newConnection() throws SQLException {
+    public synchronized Connection newConnection() throws SQLException {
         return DriverManager.getConnection(
             jdbcUrl(),
             configuration.user(),

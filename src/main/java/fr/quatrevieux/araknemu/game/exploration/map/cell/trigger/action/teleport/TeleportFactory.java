@@ -29,8 +29,8 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Create the teleport action
  */
-final public class TeleportFactory implements CellActionFactory {
-    final private ExplorationMapService service;
+public final class TeleportFactory implements CellActionFactory {
+    private final ExplorationMapService service;
 
     public TeleportFactory(ExplorationMapService service) {
         this.service = service;

@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.network.game.out.HelloGame;
 /**
  * Handle session creation
  */
-final public class StartSession implements PacketHandler<GameSession, SessionCreated> {
+public final class StartSession implements PacketHandler<GameSession, SessionCreated> {
     @Override
     public void handle(GameSession session, SessionCreated packet) {
         session.send(

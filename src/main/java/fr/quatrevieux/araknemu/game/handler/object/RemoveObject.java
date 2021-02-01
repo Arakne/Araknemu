@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.network.game.out.object.ItemDeletionError;
 /**
  * Handle object deletion
  */
-final public class RemoveObject implements PacketHandler<GameSession, ObjectDeleteRequest> {
+public final class RemoveObject implements PacketHandler<GameSession, ObjectDeleteRequest> {
     @Override
     public void handle(GameSession session, ObjectDeleteRequest packet) throws Exception {
         try {

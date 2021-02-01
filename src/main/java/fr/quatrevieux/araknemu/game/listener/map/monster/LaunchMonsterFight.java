@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 /**
  * Start the PvM fight if the player reach a monster group cell
  */
-final public class LaunchMonsterFight implements Listener<PlayerMoveFinished> {
+public final class LaunchMonsterFight implements Listener<PlayerMoveFinished> {
     @Override
     public void on(PlayerMoveFinished event) {
         event.cell().apply(new Operation() {

@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 /**
  * Simulator for simple alter characteristic effect
  */
-final public class AlterCharacteristicSimulator implements EffectSimulator {
-    final private int multiplier;
+public final class AlterCharacteristicSimulator implements EffectSimulator {
+    private final int multiplier;
 
     /**
      * Creates without multiplier

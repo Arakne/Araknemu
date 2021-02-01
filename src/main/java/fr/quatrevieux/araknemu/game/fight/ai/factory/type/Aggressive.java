@@ -36,8 +36,8 @@ import java.util.Optional;
  * Creates the aggressive AI
  * This is the default AI
  */
-final public class Aggressive implements AiFactory {
-    final private Simulator simulator;
+public final class Aggressive implements AiFactory {
+    private final Simulator simulator;
 
     public Aggressive(Simulator simulator) {
         this.simulator = simulator;

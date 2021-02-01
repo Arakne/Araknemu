@@ -35,14 +35,14 @@ import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 /**
  * Fighter for a monster
  */
-final public class MonsterFighter extends AbstractFighter {
-    final private int id;
-    final private Monster monster;
-    final private MonsterGroupTeam team;
+public final class MonsterFighter extends AbstractFighter {
+    private final int id;
+    private final Monster monster;
+    private final MonsterGroupTeam team;
 
-    final private BaseFighterLife life;
-    final private MonsterFighterCharacteristics characteristics;
-    final private MonsterFighterSprite sprite;
+    private final BaseFighterLife life;
+    private final MonsterFighterCharacteristics characteristics;
+    private final MonsterFighterSprite sprite;
 
     public MonsterFighter(int id, Monster monster, MonsterGroupTeam team) {
         this.id = id;

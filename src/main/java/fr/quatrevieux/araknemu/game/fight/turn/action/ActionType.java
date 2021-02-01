@@ -31,10 +31,10 @@ public enum ActionType {
     CAST(300, 0),
     CLOSE_COMBAT(303, 0);
 
-    final static private Map<Integer, ActionType> actionsById = new HashMap<>();
+    private static final Map<Integer, ActionType> actionsById = new HashMap<>();
 
-    final private int id;
-    final private int end;
+    private final int id;
+    private final int end;
 
     static {
         for (ActionType actionType : values()) {
@@ -64,7 +64,7 @@ public enum ActionType {
     /**
      * Get an action by id
      */
-    static public ActionType byId(int id) {
+    public static ActionType byId(int id) {
         return actionsById.get(id);
     }
 }

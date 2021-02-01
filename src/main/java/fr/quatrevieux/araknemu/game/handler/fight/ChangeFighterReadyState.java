@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.network.game.in.fight.FighterReady;
 /**
  * Change the ready state of the fighter
  */
-final public class ChangeFighterReadyState implements PacketHandler<GameSession, FighterReady> {
+public final class ChangeFighterReadyState implements PacketHandler<GameSession, FighterReady> {
     @Override
     public void handle(GameSession session, FighterReady packet) {
         session.fighter().setReady(packet.ready());

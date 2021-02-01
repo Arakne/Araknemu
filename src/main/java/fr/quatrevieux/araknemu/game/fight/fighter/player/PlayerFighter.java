@@ -39,10 +39,10 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 /**
  * Fighter for a player
  */
-final public class PlayerFighter extends AbstractFighter implements Fighter, PlayerSessionScope {
-    final private GamePlayer player;
-    final private PlayerFighterProperties properties;
-    final private PlayerFighterSprite sprite;
+public final class PlayerFighter extends AbstractFighter implements Fighter, PlayerSessionScope {
+    private final GamePlayer player;
+    private final PlayerFighterProperties properties;
+    private final PlayerFighterSprite sprite;
 
     private boolean ready = false;
     private CastableWeapon weapon;

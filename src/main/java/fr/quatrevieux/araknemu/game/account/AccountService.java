@@ -36,14 +36,14 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Service for game accounts
  */
-final public class AccountService implements EventsSubscriber {
-    final private AccountRepository repository;
-    final private GameConfiguration configuration;
+public final class AccountService implements EventsSubscriber {
+    private final AccountRepository repository;
+    private final GameConfiguration configuration;
 
     /**
      * Accounts indexed by race
      */
-    final private ConcurrentMap<Integer, GameAccount> accounts = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, GameAccount> accounts = new ConcurrentHashMap<>();
 
     public AccountService(AccountRepository repository, GameConfiguration configuration) {
         this.repository = repository;

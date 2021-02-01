@@ -27,18 +27,18 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Infos.as#L96
  */
-abstract public class AbstractInformationMessage {
+public abstract class AbstractInformationMessage {
     public enum Type {
         INFO,
         ERROR,
         PVP
     }
 
-    final static class Entry {
-        final static private Object[] EMPTY = new Object[0];
+    static final class Entry {
+        private static final Object[] EMPTY = new Object[0];
 
-        final private int id;
-        final private Object[] arguments;
+        private final int id;
+        private final Object[] arguments;
 
         Entry(int id, Object... arguments) {
             this.id = id;
@@ -55,8 +55,8 @@ abstract public class AbstractInformationMessage {
         }
     }
 
-    final private Type type;
-    final private Entry[] entries;
+    private final Type type;
+    private final Entry[] entries;
 
     AbstractInformationMessage(Type type, Entry... entries) {
         this.type = type;

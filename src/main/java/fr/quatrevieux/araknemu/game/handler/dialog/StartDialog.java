@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.network.game.in.dialog.CreateDialogRequest;
 /**
  * Start a new dialog with NPC
  */
-final public class StartDialog implements PacketHandler<GameSession, CreateDialogRequest> {
+public final class StartDialog implements PacketHandler<GameSession, CreateDialogRequest> {
     @Override
     public void handle(GameSession session, CreateDialogRequest packet) {
         final ExplorationPlayer exploration = session.exploration();

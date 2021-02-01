@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Transform item effects
  */
-final public class ItemEffectsTransformer implements Transformer<List<ItemTemplateEffectEntry>> {
+public final class ItemEffectsTransformer implements Transformer<List<ItemTemplateEffectEntry>> {
     @Override
     public String serialize(List<ItemTemplateEffectEntry> value) {
         if (value == null || value.isEmpty()) {

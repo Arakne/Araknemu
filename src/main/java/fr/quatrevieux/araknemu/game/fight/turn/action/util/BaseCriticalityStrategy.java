@@ -26,13 +26,13 @@ import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 /**
  * Base algorithm for compute criticality
  */
-final public class BaseCriticalityStrategy implements CriticalityStrategy {
+public final class BaseCriticalityStrategy implements CriticalityStrategy {
     /**
      * BaseCriticalityStrategy is a short life object, and the random is only used twice per instance
      */
-    final static private RandomUtil RANDOM = RandomUtil.createShared();
+    private static final RandomUtil RANDOM = RandomUtil.createShared();
 
-    final private ActiveFighter fighter;
+    private final ActiveFighter fighter;
 
     public BaseCriticalityStrategy(ActiveFighter fighter) {
         this.fighter = fighter;

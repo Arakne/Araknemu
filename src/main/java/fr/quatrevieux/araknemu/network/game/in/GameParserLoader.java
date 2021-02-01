@@ -72,7 +72,7 @@ import java.util.Collection;
 /**
  * Parser loader for game packets
  */
-final public class GameParserLoader implements ParserLoader {
+public final class GameParserLoader implements ParserLoader {
     @Override
     public Collection<SinglePacketParser> load() {
         return Arrays.asList(

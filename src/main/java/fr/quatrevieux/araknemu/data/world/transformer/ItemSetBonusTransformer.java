@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 /**
  * Transformer for item set bonus effects
  */
-final public class ItemSetBonusTransformer implements Transformer<List<List<ItemTemplateEffectEntry>>> {
+public final class ItemSetBonusTransformer implements Transformer<List<List<ItemTemplateEffectEntry>>> {
     @Override
     public String serialize(List<List<ItemTemplateEffectEntry>> value) {
         return value.stream()

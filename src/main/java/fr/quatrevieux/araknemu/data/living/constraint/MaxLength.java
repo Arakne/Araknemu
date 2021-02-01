@@ -25,8 +25,8 @@ package fr.quatrevieux.araknemu.data.living.constraint;
  * @param <T> Entity type
  * @param <E> Error type
  */
-final public class MaxLength<T, E> extends AbstractValueConstraint<T, E, String> {
-    final private int length;
+public final class MaxLength<T, E> extends AbstractValueConstraint<T, E, String> {
+    private final int length;
 
     public MaxLength(E error, Getter<T, String> getter, int length) {
         super(error, getter);

@@ -29,10 +29,10 @@ import fr.quatrevieux.araknemu.game.spell.Spell;
  *
  * @todo use double instead of int
  */
-final public class CastSimulation {
-    final private Spell spell;
-    final private ActiveFighter caster;
-    final private FightCell target;
+public final class CastSimulation {
+    private final Spell spell;
+    private final ActiveFighter caster;
+    private final FightCell target;
 
     private int enemiesLife;
     private int alliesLife;

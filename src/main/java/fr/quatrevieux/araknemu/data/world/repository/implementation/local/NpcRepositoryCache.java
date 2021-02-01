@@ -32,11 +32,11 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Cache repository for {@link Npc}
  */
-final public class NpcRepositoryCache implements NpcRepository {
-    final private NpcRepository repository;
+public final class NpcRepositoryCache implements NpcRepository {
+    private final NpcRepository repository;
 
-    final private ConcurrentMap<Integer, Npc> cacheById = new ConcurrentHashMap<>();
-    final private ConcurrentMap<Integer, Collection<Npc>> cacheByMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, Npc> cacheById = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, Collection<Npc>> cacheByMap = new ConcurrentHashMap<>();
 
     private boolean loaded = false;
 

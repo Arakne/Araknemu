@@ -39,10 +39,10 @@ public interface FightModule extends EventsSubscriber {
     /**
      * Register fight effects into the effect handle
      */
-    default public void effects(EffectsHandler handler) {}
+    public default void effects(EffectsHandler handler) {}
 
     /**
      * The fight has changed its current state
      */
-    default public void stateChanged(FightState newState) {}
+    public default void stateChanged(FightState newState) {}
 }

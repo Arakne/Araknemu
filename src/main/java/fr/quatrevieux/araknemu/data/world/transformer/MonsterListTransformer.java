@@ -48,7 +48,7 @@ import java.util.List;
  * @see MonsterGroupData#monsters()
  * @see MonsterGroupData.Monster
  */
-final public class MonsterListTransformer implements Transformer<List<MonsterGroupData.Monster>> {
+public final class MonsterListTransformer implements Transformer<List<MonsterGroupData.Monster>> {
     @Override
     public String serialize(List<MonsterGroupData.Monster> value) {
         throw new UnsupportedOperationException();

@@ -35,10 +35,10 @@ import java.util.stream.Stream;
 /**
  * List online players on the current server
  */
-final public class Online extends AbstractCommand {
-    final private PlayerService service;
-    final private ExplorationMapService mapService;
-    final private GameService gameService;
+public final class Online extends AbstractCommand {
+    private final PlayerService service;
+    private final ExplorationMapService mapService;
+    private final GameService gameService;
 
     /**
      * Store the command options

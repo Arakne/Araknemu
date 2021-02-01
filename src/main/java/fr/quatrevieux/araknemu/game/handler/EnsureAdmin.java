@@ -29,8 +29,8 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
  *
  * @param <P> The packet to handle
  */
-final public class EnsureAdmin<P extends Packet> implements PacketHandler<GameSession, P> {
-    final private PacketHandler<GameSession, P> inner;
+public final class EnsureAdmin<P extends Packet> implements PacketHandler<GameSession, P> {
+    private final PacketHandler<GameSession, P> inner;
 
     public EnsureAdmin(PacketHandler<GameSession, P> inner) {
         this.inner = inner;

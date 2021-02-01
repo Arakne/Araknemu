@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge
 /**
  * Fight game action acknowledge
  */
-final public class TerminateTurnAction implements PacketHandler<GameSession, GameActionAcknowledge> {
+public final class TerminateTurnAction implements PacketHandler<GameSession, GameActionAcknowledge> {
     @Override
     public void handle(GameSession session, GameActionAcknowledge packet) {
         session.fighter().turn().terminate();

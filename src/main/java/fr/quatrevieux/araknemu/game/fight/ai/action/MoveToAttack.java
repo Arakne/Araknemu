@@ -45,9 +45,9 @@ import java.util.Optional;
  * Note: This selected cell is not the best cell for perform an attack, but the nearest cell.
  *       So, it do not perform the best move for maximize damage.
  */
-final public class MoveToAttack implements ActionGenerator {
-    final private Movement movement;
-    final private Simulator simulator;
+public final class MoveToAttack implements ActionGenerator {
+    private final Movement movement;
+    private final Simulator simulator;
 
     private SpellCaster caster;
     private ActiveFighter fighter;

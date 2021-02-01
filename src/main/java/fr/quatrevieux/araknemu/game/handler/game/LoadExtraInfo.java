@@ -39,8 +39,8 @@ import java.util.Collection;
 /**
  * Load map extra info for join the map
  */
-final public class LoadExtraInfo implements PacketHandler<GameSession, AskExtraInfo> {
-    final private FightService fightService;
+public final class LoadExtraInfo implements PacketHandler<GameSession, AskExtraInfo> {
+    private final FightService fightService;
 
     public LoadExtraInfo(FightService fightService) {
         this.fightService = fightService;

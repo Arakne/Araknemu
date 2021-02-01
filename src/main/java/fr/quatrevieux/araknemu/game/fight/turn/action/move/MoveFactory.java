@@ -29,8 +29,8 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 /**
  * Factory for move action
  */
-final public class MoveFactory implements MoveActionFactory {
-    final private FightTurn turn;
+public final class MoveFactory implements MoveActionFactory {
+    private final FightTurn turn;
 
     public MoveFactory(FightTurn turn) {
         this.turn = turn;

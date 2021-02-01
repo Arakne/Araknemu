@@ -33,9 +33,9 @@ import java.util.stream.StreamSupport;
 /**
  * Handle buff list for a fighter
  */
-final public class BuffList implements Iterable<Buff>, Buffs {
-    final private Fighter fighter;
-    final private Collection<Buff> buffs = new LinkedList<>();
+public final class BuffList implements Iterable<Buff>, Buffs {
+    private final Fighter fighter;
+    private final Collection<Buff> buffs = new LinkedList<>();
 
     public BuffList(Fighter fighter) {
         this.fighter = fighter;

@@ -47,14 +47,14 @@ import java.util.Map;
  * - When a matching exchange is found, notify the new exchange entry
  * - When the player accept the exchange, generates items and process the exchange
  */
-final public class NpcExchangePartyProcessor implements ExchangePartyProcessor, EventsSubscriber {
+public final class NpcExchangePartyProcessor implements ExchangePartyProcessor, EventsSubscriber {
     /**
      * Store the current Npc exchange state
      * The storage is immutable to permit check changes
      */
     private class Storage implements ExchangeStorage {
-        final private NpcExchangeEntry entry;
-        final private Map<ItemEntry, Integer> items;
+        private final NpcExchangeEntry entry;
+        private final Map<ItemEntry, Integer> items;
 
         public Storage(NpcExchangeEntry entry) {
             this.entry = entry;
@@ -117,9 +117,9 @@ final public class NpcExchangePartyProcessor implements ExchangePartyProcessor, 
         }
     }
 
-    final private GameNpc npc;
-    final private GameNpcExchange exchange;
-    final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
+    private final GameNpc npc;
+    private final GameNpcExchange exchange;
+    private final ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
     private Storage storage;
 

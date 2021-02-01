@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightDetails;
 /**
  * Show details on the fight
  */
-final public class ShowFightDetails implements PacketHandler<GameSession, AskFightDetails> {
-    final private FightService service;
+public final class ShowFightDetails implements PacketHandler<GameSession, AskFightDetails> {
+    private final FightService service;
 
     public ShowFightDetails(FightService service) {
         this.service = service;

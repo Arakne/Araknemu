@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.network.game.out.info.Information;
 /**
  * The default chat channel : send to all map
  */
-final public class MapChannel implements Channel {
+public final class MapChannel implements Channel {
     @Override
     public ChannelType type() {
         return ChannelType.MESSAGES;

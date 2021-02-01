@@ -27,8 +27,8 @@ import java.util.Map;
 /**
  * Simple implementation for characteristics map
  */
-final public class DefaultCharacteristics implements MutableCharacteristics {
-    final private Map<Characteristic, Integer> map = new EnumMap<>(Characteristic.class);
+public final class DefaultCharacteristics implements MutableCharacteristics {
+    private final Map<Characteristic, Integer> map = new EnumMap<>(Characteristic.class);
 
     @Override
     public int get(Characteristic characteristic) {

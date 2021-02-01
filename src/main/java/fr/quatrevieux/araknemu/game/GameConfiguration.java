@@ -30,8 +30,8 @@ import java.util.Arrays;
 /**
  * Configuration class for game server
  */
-final public class GameConfiguration implements ConfigurationModule {
-    final public class PlayerConfiguration {
+public final class GameConfiguration implements ConfigurationModule {
+    public final class PlayerConfiguration {
         /**
          * The player name regex
          */
@@ -101,7 +101,7 @@ final public class GameConfiguration implements ConfigurationModule {
         }
     }
 
-    final public class ChatConfiguration {
+    public final class ChatConfiguration {
         /**
          * Get the waiting time in seconds for global channel flood
          *
@@ -126,7 +126,7 @@ final public class GameConfiguration implements ConfigurationModule {
         }
     }
 
-    final public class ActivityConfiguration {
+    public final class ActivityConfiguration {
         /**
          * Number of threads to use for the activity service
          */
@@ -152,7 +152,7 @@ final public class GameConfiguration implements ConfigurationModule {
         }
     }
 
-    final public class EconomyConfiguration {
+    public final class EconomyConfiguration {
         /**
          * Get the selling item to an NPC price multiplier
          * By default 0.1

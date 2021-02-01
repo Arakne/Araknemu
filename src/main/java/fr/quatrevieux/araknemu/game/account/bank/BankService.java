@@ -33,11 +33,11 @@ import java.util.stream.Collectors;
 /**
  * Handle the bank accounts
  */
-final public class BankService {
-    final private ItemService itemService;
-    final private AccountBankRepository bankRepository;
-    final private BankItemRepository itemRepository;
-    final private GameConfiguration.EconomyConfiguration configuration;
+public final class BankService {
+    private final ItemService itemService;
+    private final AccountBankRepository bankRepository;
+    private final BankItemRepository itemRepository;
+    private final GameConfiguration.EconomyConfiguration configuration;
 
     public BankService(ItemService itemService, AccountBankRepository bankRepository, BankItemRepository itemRepository, GameConfiguration.EconomyConfiguration configuration) {
         this.itemService = itemService;

@@ -35,8 +35,8 @@ import java.util.List;
 /**
  * Show / hide fight places
  */
-final public class FightPos extends AbstractCommand {
-    final private MapTemplateRepository repository;
+public final class FightPos extends AbstractCommand {
+    private final MapTemplateRepository repository;
 
     public FightPos(MapTemplateRepository repository) {
         this.repository = repository;

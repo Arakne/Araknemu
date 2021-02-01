@@ -25,10 +25,10 @@ import java.util.Map;
 /**
  * Default implementation of configuration system
  */
-final public class DefaultConfiguration implements Configuration {
-    final private Map<Class<? extends ConfigurationModule>, ConfigurationModule> modules = new HashMap<>();
+public final class DefaultConfiguration implements Configuration {
+    private final Map<Class<? extends ConfigurationModule>, ConfigurationModule> modules = new HashMap<>();
 
-    final private Driver driver;
+    private final Driver driver;
 
     public DefaultConfiguration(Driver driver) {
         this.driver = driver;

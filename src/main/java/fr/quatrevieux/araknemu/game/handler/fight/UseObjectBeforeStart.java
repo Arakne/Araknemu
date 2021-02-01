@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 /**
  * Use an object before start the fight
  */
-final public class UseObjectBeforeStart implements PacketHandler<GameSession, ObjectUseRequest> {
+public final class UseObjectBeforeStart implements PacketHandler<GameSession, ObjectUseRequest> {
     @Override
     public void handle(GameSession session, ObjectUseRequest packet) {
         final InventoryEntry entry = session.player().inventory().get(packet.objectId());

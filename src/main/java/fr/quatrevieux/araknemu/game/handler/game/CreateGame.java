@@ -33,8 +33,8 @@ import fr.quatrevieux.araknemu.network.game.out.game.GameCreationError;
 /**
  * Create the game session
  */
-final public class CreateGame implements PacketHandler<GameSession, CreateGameRequest> {
-    final private ExplorationService service;
+public final class CreateGame implements PacketHandler<GameSession, CreateGameRequest> {
+    private final ExplorationService service;
 
     public CreateGame(ExplorationService service) {
         this.service = service;

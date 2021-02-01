@@ -28,9 +28,9 @@ import java.util.List;
 /**
  * Compute special effects diff
  */
-final public class EffectsDiff {
-    final private List<SpecialEffect> from;
-    final private List<SpecialEffect> to;
+public final class EffectsDiff {
+    private final List<SpecialEffect> from;
+    private final List<SpecialEffect> to;
 
     public EffectsDiff(List<SpecialEffect> from, List<SpecialEffect> to) {
         this.from = from;

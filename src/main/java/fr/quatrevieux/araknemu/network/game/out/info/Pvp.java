@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.network.game.out.info;
 /**
  * Pvp messages
  */
-final public class Pvp extends AbstractInformationMessage {
+public final class Pvp extends AbstractInformationMessage {
     public Pvp(Entry... entries) {
         super(Type.PVP, entries);
     }

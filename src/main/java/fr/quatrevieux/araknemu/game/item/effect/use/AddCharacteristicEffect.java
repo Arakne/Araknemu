@@ -28,10 +28,10 @@ import fr.quatrevieux.araknemu.network.game.out.info.Information;
 /**
  * Effect handler for add characteristic
  */
-final public class AddCharacteristicEffect implements UseEffectHandler {
-    final private Characteristic characteristic;
+public final class AddCharacteristicEffect implements UseEffectHandler {
+    private final Characteristic characteristic;
 
-    final private RandomUtil random = new RandomUtil();
+    private final RandomUtil random = new RandomUtil();
 
     public AddCharacteristicEffect(Characteristic characteristic) {
         this.characteristic = characteristic;

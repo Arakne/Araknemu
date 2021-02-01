@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L63
  */
-final public class AskCharacterList implements Packet {
-    final static public class Parser implements SinglePacketParser<AskCharacterList> {
+public final class AskCharacterList implements Packet {
+    public static final class Parser implements SinglePacketParser<AskCharacterList> {
         @Override
         public AskCharacterList parse(String input) throws ParsePacketException {
             return new AskCharacterList(
@@ -43,7 +43,7 @@ final public class AskCharacterList implements Packet {
         }
     }
 
-    final private boolean forced;
+    private final boolean forced;
 
     public AskCharacterList(boolean forced) {
         this.forced = forced;

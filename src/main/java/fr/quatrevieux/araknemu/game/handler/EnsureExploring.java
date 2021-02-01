@@ -29,8 +29,8 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
  *
  * @param <P> Packet to handler
  */
-final public class EnsureExploring<P extends Packet> implements PacketHandler<GameSession, P> {
-    final private PacketHandler<GameSession, P> handler;
+public final class EnsureExploring<P extends Packet> implements PacketHandler<GameSession, P> {
+    private final PacketHandler<GameSession, P> handler;
 
     public EnsureExploring(PacketHandler<GameSession, P> handler) {
         this.handler = handler;

@@ -36,8 +36,8 @@ import java.util.stream.Collectors;
 /**
  * Try to generate item
  */
-final public class GenItem extends AbstractCommand {
-    final private ItemService service;
+public final class GenItem extends AbstractCommand {
+    private final ItemService service;
 
     public GenItem(ItemService service) {
         this.service = service;

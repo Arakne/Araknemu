@@ -24,10 +24,10 @@ import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 /**
  * Event trigger when equipment is changed
  */
-final public class EquipmentChanged {
-    final private ItemEntry entry;
-    final private int slot;
-    final private boolean equiped;
+public final class EquipmentChanged {
+    private final ItemEntry entry;
+    private final int slot;
+    private final boolean equiped;
 
     public EquipmentChanged(ItemEntry entry, int slot, boolean equiped) {
         this.entry   = entry;

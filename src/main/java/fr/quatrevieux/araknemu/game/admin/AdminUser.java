@@ -38,14 +38,14 @@ import java.util.Set;
 /**
  * Admin user session
  */
-final public class AdminUser implements AdminPerformer {
-    final private AdminService service;
-    final private GamePlayer player;
-    final private Logger logger;
+public final class AdminUser implements AdminPerformer {
+    private final AdminService service;
+    private final GamePlayer player;
+    private final Logger logger;
 
-    final private AdminUserContext context;
-    final private AdminUserCommandParser parser;
-    final private ExceptionHandler errorHandler;
+    private final AdminUserContext context;
+    private final AdminUserCommandParser parser;
+    private final ExceptionHandler errorHandler;
 
     public AdminUser(AdminService service, GamePlayer player, Logger logger) throws ContextException {
         this.service = service;

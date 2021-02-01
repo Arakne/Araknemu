@@ -30,10 +30,10 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Handle login tokens
  */
-final public class TokenService {
-    static private class ExpirableAccount {
-        final private Account account;
-        final private long expiration;
+public final class TokenService {
+    private static class ExpirableAccount {
+        private final Account account;
+        private final long expiration;
 
         public ExpirableAccount(Account account, long expiration) {
             this.account = account;
@@ -41,8 +41,8 @@ final public class TokenService {
         }
     }
 
-    final private ConcurrentMap<String, ExpirableAccount> accounts = new ConcurrentHashMap<>();
-    final private RandomStringUtil randomStringUtil = new RandomStringUtil(
+    private final ConcurrentMap<String, ExpirableAccount> accounts = new ConcurrentHashMap<>();
+    private final RandomStringUtil randomStringUtil = new RandomStringUtil(
         new SecureRandom(),
         "abcdefghijklmnopqrstuvwxyz"
     );

@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.network.game.out.account.CharactersList;
 /**
  * Handle {@link AskCharacterList}
  */
-final public class ListCharacters implements PacketHandler<GameSession, AskCharacterList> {
-    final private CharactersService service;
+public final class ListCharacters implements PacketHandler<GameSession, AskCharacterList> {
+    private final CharactersService service;
 
     public ListCharacters(CharactersService service) {
         this.service = service;

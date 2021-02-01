@@ -48,18 +48,18 @@ import java.util.concurrent.TimeUnit;
 /**
  * Server adapter for Netty
  */
-final public class NettyServer<S extends Session> implements Server<S> {
+public final class NettyServer<S extends Session> implements Server<S> {
     @ChannelHandler.Sharable
-    final static public class MessageEndEncoder extends MessageToMessageEncoder<Object> {
+    public static final class MessageEndEncoder extends MessageToMessageEncoder<Object> {
         @Override
         protected void encode(ChannelHandlerContext ctx, Object msg, List<Object> out) {
             out.add(msg + "\000");
         }
     }
 
-    final private SessionFactory<S> factory;
-    final private int port;
-    final private Duration readTimeout;
+    private final SessionFactory<S> factory;
+    private final int port;
+    private final Duration readTimeout;
 
     private Channel serverChannel;
     private EventLoopGroup loopGroup;

@@ -28,7 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Incoming login credentials
  */
-final public class Credentials implements Packet {
+public final class Credentials implements Packet {
     public enum Method {
         /** Method not used */
         NONE,
@@ -43,7 +43,7 @@ final public class Credentials implements Packet {
          *
          * @param id The race char. Should be a number
          */
-        static public Method get(char id) {
+        public static Method get(char id) {
             if (id > '9' || id < '0') {
                 throw new NumberFormatException();
             }
@@ -58,9 +58,9 @@ final public class Credentials implements Packet {
         }
     }
 
-    final private String username;
-    final private String password;
-    final private Method method;
+    private final String username;
+    private final String password;
+    private final Method method;
 
     public Credentials(String username, String password, Method method) {
         this.username = username;
@@ -91,7 +91,7 @@ final public class Credentials implements Packet {
     /**
      * Get the packet parser instance
      */
-    static public PacketParser parser() {
+    public static PacketParser parser() {
         return input -> {
             final String[] parts = StringUtils.split(input, "\n", 2);
 

@@ -52,17 +52,17 @@ import java.util.stream.Stream;
 /**
  * Service for handle {@link GamePlayer}
  */
-final public class PlayerService implements EventsSubscriber {
-    final private PlayerRepository repository;
-    final private GameConfiguration configuration;
-    final private Dispatcher dispatcher;
-    final private InventoryService inventoryService;
-    final private PlayerRaceService playerRaceService;
-    final private SpellBookService spellBookService;
-    final private PlayerExperienceService experienceService;
+public final class PlayerService implements EventsSubscriber {
+    private final PlayerRepository repository;
+    private final GameConfiguration configuration;
+    private final Dispatcher dispatcher;
+    private final InventoryService inventoryService;
+    private final PlayerRaceService playerRaceService;
+    private final SpellBookService spellBookService;
+    private final PlayerExperienceService experienceService;
 
-    final private ConcurrentMap<Integer, GamePlayer> onlinePlayers = new ConcurrentHashMap<>();
-    final private ConcurrentMap<String, GamePlayer> playersByName  = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, GamePlayer> onlinePlayers = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, GamePlayer> playersByName  = new ConcurrentHashMap<>();
 
     public PlayerService(PlayerRepository repository, GameConfiguration configuration, Dispatcher dispatcher, InventoryService inventoryService, PlayerRaceService playerRaceService, SpellBookService spellBookService, PlayerExperienceService experienceService) {
         this.repository = repository;

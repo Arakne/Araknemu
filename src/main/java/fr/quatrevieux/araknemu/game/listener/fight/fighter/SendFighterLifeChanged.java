@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 /**
  * Send the damage or heal
  */
-final public class SendFighterLifeChanged implements Listener<FighterLifeChanged> {
-    final private Fight fight;
+public final class SendFighterLifeChanged implements Listener<FighterLifeChanged> {
+    private final Fight fight;
 
     public SendFighterLifeChanged(Fight fight) {
         this.fight = fight;

@@ -53,8 +53,8 @@ final class SqlPlayerSpellRepository implements PlayerSpellRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<PlayerSpell> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<PlayerSpell> utils;
 
     public SqlPlayerSpellRepository(QueryExecutor executor) {
         this.executor = executor;

@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.game.admin.formatter.Link;
 /**
  * Show help about the console usage
  */
-final public class Help extends AbstractCommand {
+public final class Help extends AbstractCommand {
     @Override
     protected void build(AbstractCommand.Builder builder) {
         builder

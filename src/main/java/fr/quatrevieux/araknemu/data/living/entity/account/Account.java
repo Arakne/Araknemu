@@ -28,8 +28,8 @@ import java.util.Set;
 /**
  * AuthenticationAccount data
  */
-final public class Account {
-    final private int id;
+public final class Account {
+    private final int id;
 
     private String name;
     private String password;

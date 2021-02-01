@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.network.game.in.exchange.LeaveExchangeRequest;
 /**
  * Leave the current exchange or request
  */
-final public class LeaveExchange implements PacketHandler<GameSession, LeaveExchangeRequest> {
+public final class LeaveExchange implements PacketHandler<GameSession, LeaveExchangeRequest> {
     @Override
     public void handle(GameSession session, LeaveExchangeRequest packet) {
         session.exploration().interactions().get(ExchangeInteraction.class).leave();

@@ -59,8 +59,8 @@ final class SqlMonsterRewardRepository implements MonsterRewardRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<MonsterRewardData> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<MonsterRewardData> utils;
 
     public SqlMonsterRewardRepository(QueryExecutor executor) {
         this.executor = executor;

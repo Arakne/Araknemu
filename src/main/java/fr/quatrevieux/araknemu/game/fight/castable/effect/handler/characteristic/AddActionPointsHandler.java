@@ -30,8 +30,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
  * Buff effect for adding action points
  * If this effect is not used as buff, it will add actions points to the current turn
  */
-final public class AddActionPointsHandler extends AddCharacteristicHandler {
-    final private Fight fight;
+public final class AddActionPointsHandler extends AddCharacteristicHandler {
+    private final Fight fight;
 
     public AddActionPointsHandler(Fight fight) {
         super(fight, Characteristic.ACTION_POINT);

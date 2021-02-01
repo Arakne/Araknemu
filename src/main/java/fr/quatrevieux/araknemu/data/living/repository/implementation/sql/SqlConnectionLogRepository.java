@@ -71,9 +71,9 @@ final class SqlConnectionLogRepository implements ConnectionLogRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<ConnectionLog> utils;
-    final private Transformer<Instant> instantTransformer;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<ConnectionLog> utils;
+    private final Transformer<Instant> instantTransformer;
 
     public SqlConnectionLogRepository(QueryExecutor executor, Transformer<Instant> instantTransformer) {
         this.executor = executor;

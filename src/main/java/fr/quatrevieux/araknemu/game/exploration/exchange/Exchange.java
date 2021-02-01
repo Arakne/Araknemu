@@ -36,5 +36,5 @@ public interface Exchange {
      * Send all required packets, and register listeners
      * This method is called when the exchange dialog starts
      */
-    default public void initialize() {}
+    public default void initialize() {}
 }

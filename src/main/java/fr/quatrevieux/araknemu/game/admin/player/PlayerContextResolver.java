@@ -33,11 +33,11 @@ import java.util.NoSuchElementException;
 /**
  * Context resolver for player
  */
-final public class PlayerContextResolver implements ContextResolver {
-    final private PlayerService service;
-    final private ContextResolver accountContextResolver;
+public final class PlayerContextResolver implements ContextResolver {
+    private final PlayerService service;
+    private final ContextResolver accountContextResolver;
 
-    final private List<AbstractContextConfigurator<PlayerContext>> configurators = new ArrayList<>();
+    private final List<AbstractContextConfigurator<PlayerContext>> configurators = new ArrayList<>();
 
     public PlayerContextResolver(PlayerService service, ContextResolver accountContextResolver) {
         this.service = service;

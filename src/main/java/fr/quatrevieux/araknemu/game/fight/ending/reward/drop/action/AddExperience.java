@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 /**
  * Add experience to fighter
  */
-final public class AddExperience implements DropRewardAction {
+public final class AddExperience implements DropRewardAction {
     @Override
     public void apply(DropReward reward, Fighter fighter) {
         if (reward.xp() == 0) {

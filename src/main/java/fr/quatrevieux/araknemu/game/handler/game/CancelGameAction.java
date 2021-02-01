@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionCancel;
 /**
  * Cancel the current game action
  */
-final public class CancelGameAction implements PacketHandler<GameSession, GameActionCancel> {
+public final class CancelGameAction implements PacketHandler<GameSession, GameActionCancel> {
     @Override
     public void handle(GameSession session, GameActionCancel packet) throws Exception {
         session

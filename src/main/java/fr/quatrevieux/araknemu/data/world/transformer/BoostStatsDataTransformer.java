@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * Transformer for {@link BoostStatsData}
  */
-final public class BoostStatsDataTransformer implements Transformer<BoostStatsData> {
+public final class BoostStatsDataTransformer implements Transformer<BoostStatsData> {
     @Override
     public String serialize(BoostStatsData value) {
         return null;

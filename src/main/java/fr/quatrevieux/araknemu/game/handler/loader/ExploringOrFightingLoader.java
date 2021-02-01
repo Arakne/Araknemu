@@ -37,7 +37,7 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 /**
  * Loader for exploring or fighter switch packet handlers
  */
-final public class ExploringOrFightingLoader implements Loader {
+public final class ExploringOrFightingLoader implements Loader {
     @Override
     @SuppressWarnings("unchecked")
     public PacketHandler<GameSession, ?>[] load(Container container) throws ContainerException {

@@ -49,8 +49,8 @@ import java.util.Collections;
 /**
  * State for active fight
  */
-final public class ActiveState implements LeavableState, EventsSubscriber {
-    final private FighterOrderStrategy orderStrategy;
+public final class ActiveState implements LeavableState, EventsSubscriber {
+    private final FighterOrderStrategy orderStrategy;
 
     private Fight fight;
     private Listener[] listeners;

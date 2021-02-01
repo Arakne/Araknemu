@@ -30,8 +30,8 @@ import java.util.Set;
 /**
  * Resolve perpendicular line (i.e. baton area)
  */
-final public class PerpendicularLineArea implements SpellEffectArea {
-    final private EffectArea area;
+public final class PerpendicularLineArea implements SpellEffectArea {
+    private final EffectArea area;
 
     public PerpendicularLineArea(EffectArea area) {
         this.area = area;

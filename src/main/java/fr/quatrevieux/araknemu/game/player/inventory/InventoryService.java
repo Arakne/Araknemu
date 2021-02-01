@@ -46,10 +46,10 @@ import java.util.stream.Collectors;
 /**
  * Service for handle player inventory
  */
-final public class InventoryService implements EventsSubscriber {
+public final class InventoryService implements EventsSubscriber {
     static class LoadedItem {
-        final private PlayerItem entity;
-        final private Item item;
+        private final PlayerItem entity;
+        private final Item item;
 
         public LoadedItem(PlayerItem entity, Item item) {
             this.entity = entity;
@@ -65,8 +65,8 @@ final public class InventoryService implements EventsSubscriber {
         }
     }
 
-    final private PlayerItemRepository repository;
-    final private ItemService service;
+    private final PlayerItemRepository repository;
+    private final ItemService service;
 
     public InventoryService(PlayerItemRepository repository, ItemService service) {
         this.repository = repository;

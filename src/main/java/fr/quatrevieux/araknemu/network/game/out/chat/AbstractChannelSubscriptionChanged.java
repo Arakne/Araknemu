@@ -26,9 +26,9 @@ import java.util.Collection;
 /**
  * Abstract class packet for subscription changed
  */
-abstract public class AbstractChannelSubscriptionChanged {
-    final private char sign;
-    final private Collection<ChannelType> channels;
+public abstract class AbstractChannelSubscriptionChanged {
+    private final char sign;
+    private final Collection<ChannelType> channels;
 
     public AbstractChannelSubscriptionChanged(char sign, Collection<ChannelType> channels) {
         this.sign = sign;

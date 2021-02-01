@@ -33,12 +33,12 @@ import java.util.Collection;
 /**
  * All inventory slots
  */
-final public class InventorySlots {
-    final private Dispatcher dispatcher;
-    final private ItemStorage<InventoryEntry> storage;
+public final class InventorySlots {
+    private final Dispatcher dispatcher;
+    private final ItemStorage<InventoryEntry> storage;
 
-    final private InventorySlot defaultSlot;
-    final private InventorySlot[] slots = new InventorySlot[58];
+    private final InventorySlot defaultSlot;
+    private final InventorySlot[] slots = new InventorySlot[58];
 
     public InventorySlots(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage) {
         this.dispatcher  = dispatcher;

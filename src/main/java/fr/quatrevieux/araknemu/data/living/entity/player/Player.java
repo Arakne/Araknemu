@@ -34,10 +34,10 @@ import java.util.Set;
 /**
  * Entity class for player
  */
-final public class Player implements WalletEntity {
-    final private int id;
-    final private int accountId;
-    final private int serverId;
+public final class Player implements WalletEntity {
+    private final int id;
+    private final int accountId;
+    private final int serverId;
     private String name;
     private Race race;
     private Gender gender;
@@ -218,7 +218,7 @@ final public class Player implements WalletEntity {
      * Constructor for character creation
      * The player race will be set to -1
      */
-    static public Player forCreation(int accountId, int serverId, String name, Race race, Gender gender, Colors colors) {
+    public static Player forCreation(int accountId, int serverId, String name, Race race, Gender gender, Colors colors) {
         return new Player(-1, accountId, serverId, name, race, gender, colors, 1, new DefaultCharacteristics());
     }
 
@@ -227,7 +227,7 @@ final public class Player implements WalletEntity {
      *
      * @see fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository#getForGame(Player)
      */
-    static public Player forGame(int playerId, int accountId, int serverId) {
+    public static Player forGame(int playerId, int accountId, int serverId) {
         return new Player(playerId, accountId, serverId, null, null, null, null, 1, null, null, null, 0, 0, -1, 0, null, 0);
     }
 }

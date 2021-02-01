@@ -30,10 +30,10 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Cache repository for {@link MonsterGroupData}
  */
-final public class MonsterGroupDataRepositoryCache implements MonsterGroupDataRepository {
-    final private MonsterGroupDataRepository repository;
+public final class MonsterGroupDataRepositoryCache implements MonsterGroupDataRepository {
+    private final MonsterGroupDataRepository repository;
 
-    final private ConcurrentMap<Integer, MonsterGroupData> cacheById = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, MonsterGroupData> cacheById = new ConcurrentHashMap<>();
 
     public MonsterGroupDataRepositoryCache(MonsterGroupDataRepository repository) {
         this.repository = repository;

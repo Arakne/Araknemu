@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.account.AlterRestrictions;
 /**
  * Send restrictions to client when changed
  */
-final public class SendRestrictions implements Listener<RestrictionsChanged> {
-    final private GamePlayer player;
+public final class SendRestrictions implements Listener<RestrictionsChanged> {
+    private final GamePlayer player;
 
     public SendRestrictions(GamePlayer player) {
         this.player = player;

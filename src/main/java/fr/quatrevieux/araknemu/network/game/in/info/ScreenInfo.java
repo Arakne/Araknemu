@@ -29,14 +29,14 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Infos.as#L23
  */
-final public class ScreenInfo implements Packet {
+public final class ScreenInfo implements Packet {
     public enum State {
         NORMAL,
         FULLSCREEN,
         OTHER
     }
 
-    final static public class Parser implements SinglePacketParser<ScreenInfo> {
+    public static final class Parser implements SinglePacketParser<ScreenInfo> {
         @Override
         public ScreenInfo parse(String input) throws ParsePacketException {
             final String[] parts = StringUtils.split(input, ";", 3);
@@ -58,9 +58,9 @@ final public class ScreenInfo implements Packet {
         }
     }
 
-    final private int width;
-    final private int height;
-    final private State state;
+    private final int width;
+    private final int height;
+    private final State state;
 
     public ScreenInfo(int width, int height, State state) {
         this.width = width;

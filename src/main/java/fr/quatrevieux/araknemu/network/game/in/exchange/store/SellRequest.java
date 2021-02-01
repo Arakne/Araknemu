@@ -29,8 +29,8 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L70
  */
-final public class SellRequest implements Packet {
-    final static public class Parser implements SinglePacketParser<SellRequest> {
+public final class SellRequest implements Packet {
+    public static final class Parser implements SinglePacketParser<SellRequest> {
         @Override
         public SellRequest parse(String input) throws ParsePacketException {
             final String[] parts = StringUtils.split(input, "|", 2);
@@ -51,8 +51,8 @@ final public class SellRequest implements Packet {
         }
     }
 
-    final private int itemId;
-    final private int quantity;
+    private final int itemId;
+    private final int quantity;
 
     public SellRequest(int itemId, int quantity) {
         this.itemId = itemId;

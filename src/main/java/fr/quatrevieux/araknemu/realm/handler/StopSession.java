@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
 /**
  * Handle session closed
  */
-final public class StopSession implements PacketHandler<RealmSession, SessionClosed> {
-    final private AuthenticationService service;
+public final class StopSession implements PacketHandler<RealmSession, SessionClosed> {
+    private final AuthenticationService service;
 
     public StopSession(AuthenticationService service) {
         this.service = service;

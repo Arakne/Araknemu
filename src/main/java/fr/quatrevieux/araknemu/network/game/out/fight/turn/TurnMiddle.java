@@ -29,8 +29,8 @@ import java.util.Collection;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L326
  */
-final public class TurnMiddle {
-    final private Collection<Fighter> fighters;
+public final class TurnMiddle {
+    private final Collection<Fighter> fighters;
 
     public TurnMiddle(Collection<Fighter> fighters) {
         this.fighters = fighters;

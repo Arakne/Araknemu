@@ -42,12 +42,12 @@ import java.util.stream.Collectors;
 /**
  * Service for handle account characters
  */
-final public class CharactersService {
-    final private PlayerRepository repository;
-    final private EntityConstraint<Player, PlayerConstraints.Error> constraint;
-    final private PlayerRaceRepository playerRaceRepository;
-    final private Dispatcher dispatcher;
-    final private PlayerItemRepository itemRepository;
+public final class CharactersService {
+    private final PlayerRepository repository;
+    private final EntityConstraint<Player, PlayerConstraints.Error> constraint;
+    private final PlayerRaceRepository playerRaceRepository;
+    private final Dispatcher dispatcher;
+    private final PlayerItemRepository itemRepository;
 
     public CharactersService(PlayerRepository repository, EntityConstraint<Player, PlayerConstraints.Error> constraint, PlayerRaceRepository playerRaceRepository, Dispatcher dispatcher, PlayerItemRepository itemRepository) {
         this.repository = repository;

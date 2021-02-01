@@ -24,7 +24,7 @@ package fr.quatrevieux.araknemu.network.game.out.basic;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/DataProcessor.as#L84
  */
-final public class Noop {
+public final class Noop {
     @Override
     public String toString() {
         return "BN";

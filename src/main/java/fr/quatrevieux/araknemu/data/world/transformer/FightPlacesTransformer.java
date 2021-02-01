@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Transform map fight places
  */
-final public class FightPlacesTransformer implements Transformer<List<Integer>[]> {
+public final class FightPlacesTransformer implements Transformer<List<Integer>[]> {
     @Override
     public String serialize(List<Integer>[] value) {
         throw new UnsupportedOperationException();

@@ -30,9 +30,9 @@ import fr.quatrevieux.araknemu.game.world.creature.Life;
  *
  * The life points will be saved when fight started
  */
-final public class PlayerFighterLife implements FighterLife {
-    final private Life baseLife;
-    final private Fighter fighter;
+public final class PlayerFighterLife implements FighterLife {
+    private final Life baseLife;
+    private final Fighter fighter;
 
     private BaseFighterLife delegate;
 

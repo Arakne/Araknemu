@@ -28,11 +28,11 @@ import java.util.NoSuchElementException;
 /**
  * Data for boost stats per class
  */
-final public class BoostStatsData {
-    final static public class Interval {
-        final private int start;
-        final private int cost;
-        final private int boost;
+public final class BoostStatsData {
+    public static final class Interval {
+        private final int start;
+        private final int cost;
+        private final int boost;
 
         public Interval(int start, int cost, int boost) {
             this.start = start;
@@ -68,7 +68,7 @@ final public class BoostStatsData {
         }
     }
 
-    final private Map<Characteristic, List<Interval>> characteristics;
+    private final Map<Characteristic, List<Interval>> characteristics;
 
     /**
      * BoostStatsData constructor

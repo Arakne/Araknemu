@@ -23,7 +23,7 @@ package fr.quatrevieux.araknemu.game.item.inventory.exception;
  * Raise when an item is to high level for the player
  */
 public class BadLevelException extends InventoryException {
-    final private int level;
+    private final int level;
 
     public BadLevelException(int level) {
         this.level = level;
@@ -32,7 +32,7 @@ public class BadLevelException extends InventoryException {
     /**
      * The expected level
      */
-    final public int level() {
+    public final int level() {
         return level;
     }
 }

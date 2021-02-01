@@ -39,11 +39,11 @@ import java.util.List;
 /**
  * Handle player experience and levels
  */
-final public class PlayerExperienceService implements PreloadableService, EventsSubscriber {
-    final private PlayerExperienceRepository repository;
-    final private GameConfiguration.PlayerConfiguration configuration;
+public final class PlayerExperienceService implements PreloadableService, EventsSubscriber {
+    private final PlayerExperienceRepository repository;
+    private final GameConfiguration.PlayerConfiguration configuration;
 
-    final private List<PlayerExperience> levels = new ArrayList<>();
+    private final List<PlayerExperience> levels = new ArrayList<>();
 
     public PlayerExperienceService(PlayerExperienceRepository repository, GameConfiguration.PlayerConfiguration configuration) {
         this.repository = repository;

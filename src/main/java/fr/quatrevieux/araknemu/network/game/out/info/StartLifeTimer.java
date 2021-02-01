@@ -24,11 +24,11 @@ package fr.quatrevieux.araknemu.network.game.out.info;
  *
  * https://github.com/Emudofus/Dofus/blob/1b54a30e02f637c912bf14afdf6ea8b7df45ea73/dofus/aks/Infos.as#L326
  */
-final public class StartLifeTimer {
+public final class StartLifeTimer {
     /**
      * The speed of the animation in milliseconds
      */
-    final private int time;
+    private final int time;
 
     public StartLifeTimer(int time) {
         this.time = time;

@@ -32,8 +32,8 @@ import java.util.Optional;
  * Select spells causing damage on enemies
  * All cells are tested for select the most effective target for each spells
  */
-final public class Attack implements ActionGenerator, CastSpell.SimulationSelector {
-    final private CastSpell generator;
+public final class Attack implements ActionGenerator, CastSpell.SimulationSelector {
+    private final CastSpell generator;
 
     public Attack(Simulator simulator) {
         this.generator = new CastSpell(simulator, this);

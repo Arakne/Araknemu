@@ -27,7 +27,7 @@ import java.util.Set;
 /**
  * Transformer for permissions set
  */
-final public class PermissionsTransformer {
+public final class PermissionsTransformer {
     /**
      * Get the bitfield values of the permissions set
      *

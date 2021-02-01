@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.TriggerCell;
 /**
  * Stop the path on the first trigger
  */
-final public class StopOnTrigger implements PathValidator {
+public final class StopOnTrigger implements PathValidator {
     @Override
     public Path<ExplorationMapCell> validate(Move move, Path<ExplorationMapCell> path) {
         for (int step = 1; step < path.size(); step++) {

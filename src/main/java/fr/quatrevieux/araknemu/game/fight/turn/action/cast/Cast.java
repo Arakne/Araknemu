@@ -42,13 +42,13 @@ import java.time.Duration;
 /**
  * Cast a spell
  */
-final public class Cast implements Action {
-    final private FightTurn turn;
-    final private Fighter caster;
-    final private Spell spell;
-    final private FightCell target;
-    final private CastConstraintValidator<Spell> validator;
-    final private CriticalityStrategy criticalityStrategy;
+public final class Cast implements Action {
+    private final FightTurn turn;
+    private final Fighter caster;
+    private final Spell spell;
+    private final FightCell target;
+    private final CastConstraintValidator<Spell> validator;
+    private final CriticalityStrategy criticalityStrategy;
 
     private CastSuccess result;
 

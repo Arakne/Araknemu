@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 /**
  * Choose a game server
  */
-final public class ChooseServer implements Packet {
-    final static public class Parser implements SinglePacketParser<ChooseServer> {
+public final class ChooseServer implements Packet {
+    public static final class Parser implements SinglePacketParser<ChooseServer> {
         @Override
         public ChooseServer parse(String input) throws ParsePacketException {
             try {
@@ -43,7 +43,7 @@ final public class ChooseServer implements Packet {
         }
     }
 
-    final private int id;
+    private final int id;
 
     public ChooseServer(int id) {
         this.id = id;

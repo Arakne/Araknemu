@@ -47,14 +47,14 @@ import java.util.stream.Collectors;
 /**
  * Service for create fights
  */
-final public class FightService implements EventsSubscriber {
-    final private MapTemplateRepository mapRepository;
-    final private Dispatcher dispatcher;
-    final private Map<Class, FightBuilderFactory> builderFactories;
-    final private Collection<FightModule.Factory> moduleFactories;
+public final class FightService implements EventsSubscriber {
+    private final MapTemplateRepository mapRepository;
+    private final Dispatcher dispatcher;
+    private final Map<Class, FightBuilderFactory> builderFactories;
+    private final Collection<FightModule.Factory> moduleFactories;
 
-    final private Map<Integer, Map<Integer, Fight>> fightsByMapId = new ConcurrentHashMap<>();
-    final private AtomicInteger lastFightId = new AtomicInteger();
+    private final Map<Integer, Map<Integer, Fight>> fightsByMapId = new ConcurrentHashMap<>();
+    private final AtomicInteger lastFightId = new AtomicInteger();
 
     public FightService(MapTemplateRepository mapRepository, Dispatcher dispatcher, Collection<? extends FightBuilderFactory> factories, Collection<FightModule.Factory> moduleFactories) {
         this.mapRepository = mapRepository;

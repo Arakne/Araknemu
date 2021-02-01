@@ -26,7 +26,7 @@ package fr.quatrevieux.araknemu.data.living.constraint;
  * @param <E> The error type
  * @param <V> The value type
  */
-abstract public class AbstractValueConstraint<T, E, V> implements EntityConstraint<T, E> {
+public abstract class AbstractValueConstraint<T, E, V> implements EntityConstraint<T, E> {
     public interface Getter<T, V> {
         /**
          * Get the value from the entity
@@ -34,8 +34,8 @@ abstract public class AbstractValueConstraint<T, E, V> implements EntityConstrai
         public V get(T entity);
     }
 
-    final private E error;
-    final private Getter<T, V> getter;
+    private final E error;
+    private final Getter<T, V> getter;
 
     public AbstractValueConstraint(E error, Getter<T, V> getter) {
         this.error = error;
@@ -52,5 +52,5 @@ abstract public class AbstractValueConstraint<T, E, V> implements EntityConstrai
         return error;
     }
 
-    abstract protected boolean checkValue(V value);
+    protected abstract boolean checkValue(V value);
 }

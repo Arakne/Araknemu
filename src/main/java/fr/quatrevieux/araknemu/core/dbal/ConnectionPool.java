@@ -31,7 +31,7 @@ public interface ConnectionPool extends AutoCloseable {
      * Task for a connection
      * @param <T> Type of the result
      */
-    static public interface Task<T> {
+    public static interface Task<T> {
         /**
          * Perform a request into the pool
          * @param connection The acquired connection
@@ -82,7 +82,7 @@ public interface ConnectionPool extends AutoCloseable {
      * @param task Task to execute
      * @param <T> Result of the task
      */
-    default public <T> T execute(Task<T> task) throws SQLException {
+    public default <T> T execute(Task<T> task) throws SQLException {
         final Connection connection = acquire();
 
         try {

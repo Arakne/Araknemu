@@ -32,11 +32,11 @@ import java.util.Optional;
 /**
  * Slot for usable items
  */
-final public class UsableSlot implements InventorySlot {
-    final static public int SLOT_ID_START = 35;
-    final static public int SLOT_ID_END   = 57;
+public final class UsableSlot implements InventorySlot {
+    public static final int SLOT_ID_START = 35;
+    public static final int SLOT_ID_END   = 57;
 
-    final private InventorySlot slot;
+    private final InventorySlot slot;
 
     public UsableSlot(ItemStorage<InventoryEntry> storage, int id) {
         slot = new SimpleSlot(

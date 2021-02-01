@@ -29,8 +29,8 @@ import fr.quatrevieux.araknemu.network.game.out.info.StopLifeTimer;
 /**
  * This class handles a Player life regeneration
  */
-final public class LifeRegeneration implements EventsSubscriber {
-    final static public int STANDARD_LIFE_REGENERATION = 1000;
+public final class LifeRegeneration implements EventsSubscriber {
+    public static final int STANDARD_LIFE_REGENERATION = 1000;
 
     @Override
     public Listener[] listeners() {

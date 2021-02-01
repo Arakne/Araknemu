@@ -28,27 +28,27 @@ import java.util.List;
 /**
  * Template for a spell
  */
-final public class SpellTemplate {
-    final static public class Level {
-        final private List<SpellTemplateEffect> effects;
-        final private List<SpellTemplateEffect> criticalEffects;
-        final private int apCost;
-        final private Interval range;
-        final private int criticalHit;
-        final private int criticalFailure;
-        final private boolean lineLaunch;
-        final private boolean lineOfSight;
-        final private boolean freeCell;
-        final private boolean modifiableRange;
-        final private int classId;
-        final private int launchPerTurn;
-        final private int launchPerTarget;
-        final private int launchDelay;
-        final private List<EffectArea> effectAreas;
-        final private int[] requiredStates;
-        final private int[] forbiddenStates;
-        final private int minPlayerLevel;
-        final private boolean endsTurnOnFailure;
+public final class SpellTemplate {
+    public static final class Level {
+        private final List<SpellTemplateEffect> effects;
+        private final List<SpellTemplateEffect> criticalEffects;
+        private final int apCost;
+        private final Interval range;
+        private final int criticalHit;
+        private final int criticalFailure;
+        private final boolean lineLaunch;
+        private final boolean lineOfSight;
+        private final boolean freeCell;
+        private final boolean modifiableRange;
+        private final int classId;
+        private final int launchPerTurn;
+        private final int launchPerTarget;
+        private final int launchDelay;
+        private final List<EffectArea> effectAreas;
+        private final int[] requiredStates;
+        private final int[] forbiddenStates;
+        private final int minPlayerLevel;
+        private final boolean endsTurnOnFailure;
 
         public Level(List<SpellTemplateEffect> effects, List<SpellTemplateEffect> criticalEffects, int apCost, Interval range, int criticalHit, int criticalFailure, boolean lineLaunch, boolean lineOfSight, boolean freeCell, boolean modifiableRange, int classId, int launchPerTurn, int launchPerTarget, int launchDelay, List<EffectArea> effectAreas, int[] requiredStates, int[] forbiddenStates, int minPlayerLevel, boolean endsTurnOnFailure) {
             this.effects = effects;
@@ -214,12 +214,12 @@ final public class SpellTemplate {
         }
     }
 
-    final private int id;
-    final private String name;
-    final private int sprite;
-    final private String spriteArgs;
-    final private Level[] levels;
-    final private int[] targets;
+    private final int id;
+    private final String name;
+    private final int sprite;
+    private final String spriteArgs;
+    private final Level[] levels;
+    private final int[] targets;
 
     public SpellTemplate(int id, String name, int sprite, String spriteArgs, Level[] levels, int[] targets) {
         this.id = id;

@@ -30,7 +30,7 @@ import java.util.function.Predicate;
 /**
  * Simple session implementation with configurable handlers for each methods
  */
-final public class ConfigurableSession implements Session {
+public final class ConfigurableSession implements Session {
     /**
      * Handle exceptions thrown during a session
      *
@@ -79,11 +79,11 @@ final public class ConfigurableSession implements Session {
         public Object transformPacket(Object packet);
     }
 
-    final private Channel channel;
+    private final Channel channel;
 
-    final private List<SendPacketTransformer> sendTransformers = new ArrayList<>();
-    final private List<ReceivePacketMiddleware> receiveMiddlewares = new ArrayList<>();
-    final private List<ExceptionHandler> exceptionHandlers = new ArrayList<>();
+    private final List<SendPacketTransformer> sendTransformers = new ArrayList<>();
+    private final List<ReceivePacketMiddleware> receiveMiddlewares = new ArrayList<>();
+    private final List<ExceptionHandler> exceptionHandlers = new ArrayList<>();
 
     public ConfigurableSession(Channel channel) {
         this.channel = channel;

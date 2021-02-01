@@ -26,8 +26,8 @@ import java.util.Collection;
 /**
  * Send list of game servers
  */
-final public class HostList {
-    final private Collection<GameHost> list;
+public final class HostList {
+    private final Collection<GameHost> list;
 
     public HostList(Collection<GameHost> list) {
         this.list = list;

@@ -39,9 +39,9 @@ import java.util.List;
 /**
  * Get an item for the player
  */
-final public class GetItem extends AbstractCommand {
-    final private GamePlayer player;
-    final private ItemService service;
+public final class GetItem extends AbstractCommand {
+    private final GamePlayer player;
+    private final ItemService service;
 
     public GetItem(GamePlayer player, ItemService service) {
         this.player = player;
@@ -109,7 +109,7 @@ final public class GetItem extends AbstractCommand {
         }
     }
 
-    static private class Options {
+    private static class Options {
         private boolean max = false;
         private boolean each = false;
         private List<ItemTemplateEffectEntry> effects = null;

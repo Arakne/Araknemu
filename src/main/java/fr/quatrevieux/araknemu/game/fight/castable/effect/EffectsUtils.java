@@ -24,7 +24,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect;
  *
  * @todo Should be removed or refactored with Effect enum
  */
-final public class EffectsUtils {
+public final class EffectsUtils {
     /**
      * Disable constructor
      */
@@ -35,7 +35,7 @@ final public class EffectsUtils {
      *
      * @param id The effect id
      */
-    static public boolean isDamageEffect(int id) {
+    public static boolean isDamageEffect(int id) {
         return
             id == 82
             || (id >= 85 && id <= 89)
@@ -49,7 +49,7 @@ final public class EffectsUtils {
      *
      * @param id The effect id
      */
-    static public boolean isLooseApEffect(int id) {
+    public static boolean isLooseApEffect(int id) {
         return
             id == 84
             || id == 101

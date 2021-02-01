@@ -32,8 +32,8 @@ import java.util.List;
 /**
  * Add stats to player base stats
  */
-final public class AddStats extends AbstractCommand {
-    final private GamePlayer player;
+public final class AddStats extends AbstractCommand {
+    private final GamePlayer player;
 
     public AddStats(GamePlayer player) {
         this.player = player;

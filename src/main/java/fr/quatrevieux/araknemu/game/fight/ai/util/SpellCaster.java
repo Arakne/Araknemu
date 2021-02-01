@@ -30,10 +30,10 @@ import fr.quatrevieux.araknemu.game.spell.Spell;
 /**
  * Utility class for cast spells
  */
-final public class SpellCaster {
-    final private Turn turn;
-    final private CastConstraintValidator<Spell> validator;
-    final private CastActionFactory factory;
+public final class SpellCaster {
+    private final Turn turn;
+    private final CastConstraintValidator<Spell> validator;
+    private final CastActionFactory factory;
 
     public SpellCaster(AI ai) {
         turn = ai.turn();

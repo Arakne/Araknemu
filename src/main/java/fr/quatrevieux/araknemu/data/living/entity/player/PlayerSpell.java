@@ -22,12 +22,12 @@ package fr.quatrevieux.araknemu.data.living.entity.player;
 /**
  * Save player spell data
  */
-final public class PlayerSpell {
-    final static public int DEFAULT_POSITION = 63;
+public final class PlayerSpell {
+    public static final int DEFAULT_POSITION = 63;
 
-    final private int playerId;
-    final private int spellId;
-    final private boolean classSpell;
+    private final int playerId;
+    private final int spellId;
+    private final boolean classSpell;
     private int level;
     private int position;
 

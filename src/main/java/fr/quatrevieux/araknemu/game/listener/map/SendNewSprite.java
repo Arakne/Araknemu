@@ -31,8 +31,8 @@ import java.util.Collections;
 /**
  * Send new sprites added on the current map
  */
-final public class SendNewSprite implements Listener<NewSpriteOnMap> {
-    final private ExplorationMap map;
+public final class SendNewSprite implements Listener<NewSpriteOnMap> {
+    private final ExplorationMap map;
 
     public SendNewSprite(ExplorationMap map) {
         this.map = map;

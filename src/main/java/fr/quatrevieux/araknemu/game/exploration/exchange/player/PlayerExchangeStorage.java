@@ -36,13 +36,13 @@ import java.util.Map;
 /**
  * Store the pending exchange for a player
  */
-final public class PlayerExchangeStorage implements ExchangeStorage {
-    final private ExplorationPlayer player;
-    final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
+public final class PlayerExchangeStorage implements ExchangeStorage {
+    private final ExplorationPlayer player;
+    private final ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
-    final private Map<ItemEntry, Integer> items = new HashMap<>();
+    private final Map<ItemEntry, Integer> items = new HashMap<>();
     private long kamas = 0;
-    volatile private boolean accepted = false;
+    private volatile boolean accepted = false;
 
     public PlayerExchangeStorage(ExplorationPlayer player) {
         this.player = player;

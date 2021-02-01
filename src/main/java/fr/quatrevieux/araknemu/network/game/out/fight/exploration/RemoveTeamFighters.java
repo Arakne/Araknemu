@@ -30,9 +30,9 @@ import java.util.stream.Collectors;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L1155
  */
-final public class RemoveTeamFighters {
-    final private FightTeam team;
-    final private Collection<? extends Fighter> fighters;
+public final class RemoveTeamFighters {
+    private final FightTeam team;
+    private final Collection<? extends Fighter> fighters;
 
     public RemoveTeamFighters(FightTeam team, Collection<? extends Fighter> fighters) {
         this.team = team;

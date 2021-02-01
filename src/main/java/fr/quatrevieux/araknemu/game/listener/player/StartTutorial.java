@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.tutorial.GameBegin;
 /**
  * Start the tutorial when the player join the game for the first time
  */
-final public class StartTutorial implements Listener<GameJoined> {
-    final private GamePlayer player;
+public final class StartTutorial implements Listener<GameJoined> {
+    private final GamePlayer player;
 
     public StartTutorial(GamePlayer player) {
         this.player = player;

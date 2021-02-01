@@ -24,7 +24,7 @@ package fr.quatrevieux.araknemu.game.admin.formatter;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/graphics/gapi/ui/Debug.as#L245
  */
-final public class Link {
+public final class Link {
     public enum Type {
         WRITE {
             @Override
@@ -56,7 +56,7 @@ final public class Link {
          *
          * Ex: {@code Link.Type.PLAYER.create("Bob")} will create a link for open player menu of "Bob" player with text "Bob"
          */
-        final public Link create(String target) {
+        public final Link create(String target) {
             final Link link = new Link().text(target);
 
             configure(link, target);
@@ -64,7 +64,7 @@ final public class Link {
             return link;
         }
 
-        abstract protected void configure(Link link, String target);
+        protected abstract void configure(Link link, String target);
     }
 
     private String text;

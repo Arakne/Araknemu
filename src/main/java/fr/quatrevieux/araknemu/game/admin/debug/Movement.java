@@ -35,8 +35,8 @@ import java.util.List;
 /**
  * Display cells by their movement value
  */
-final public class Movement extends AbstractCommand {
-    final private MapTemplateRepository repository;
+public final class Movement extends AbstractCommand {
+    private final MapTemplateRepository repository;
 
     public Movement(MapTemplateRepository repository) {
         this.repository = repository;

@@ -29,8 +29,8 @@ import java.sql.Statement;
 /**
  * Utility class for connection pool queries
  */
-final public class ConnectionPoolExecutor implements ConnectionPool, QueryExecutor {
-    final private ConnectionPool pool;
+public final class ConnectionPoolExecutor implements ConnectionPool, QueryExecutor {
+    private final ConnectionPool pool;
 
     public ConnectionPoolExecutor(ConnectionPool pool) {
         this.pool = pool;

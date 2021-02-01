@@ -22,15 +22,15 @@ package fr.quatrevieux.araknemu.network.realm.out;
 /**
  * An error occurs during login process
  */
-final public class LoginError {
-    final static public char ALREADY_LOGGED_GAME_SERVER = 'c';
-    final static public char ALREADY_LOGGED = 'a';
-    final static public char BANNED = 'b';
-    final static public char U_DISCONNECT_ACCOUNT = 'd';
-    final static public char KICKED = 'k';
-    final static public char LOGIN_ERROR = 'f';
+public final class LoginError {
+    public static final char ALREADY_LOGGED_GAME_SERVER = 'c';
+    public static final char ALREADY_LOGGED = 'a';
+    public static final char BANNED = 'b';
+    public static final char U_DISCONNECT_ACCOUNT = 'd';
+    public static final char KICKED = 'k';
+    public static final char LOGIN_ERROR = 'f';
     
-    final private char errorType;
+    private final char errorType;
 
     public LoginError(char errorType) {
         this.errorType = errorType;

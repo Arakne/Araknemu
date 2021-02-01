@@ -36,7 +36,7 @@ import java.util.function.Supplier;
 /**
  * Synchronize ban ip table for authentication service
  */
-final public class AuthBanIpSynchronizer extends AbstractBanIpSynchronizer implements EventsSubscriber, PreloadableService {
+public final class AuthBanIpSynchronizer extends AbstractBanIpSynchronizer implements EventsSubscriber, PreloadableService {
     public AuthBanIpSynchronizer(BanIpService<AuthenticationAccount> service, Supplier<Collection<? extends Session>> sessionsSupplier, Logger logger, Duration refreshDelay) {
         super(service, sessionsSupplier, logger, refreshDelay);
     }

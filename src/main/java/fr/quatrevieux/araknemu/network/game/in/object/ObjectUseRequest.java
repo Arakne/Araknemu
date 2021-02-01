@@ -29,8 +29,8 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Items.as#L35
  */
-final public class ObjectUseRequest implements Packet {
-    final static public class Parser implements SinglePacketParser<ObjectUseRequest> {
+public final class ObjectUseRequest implements Packet {
+    public static final class Parser implements SinglePacketParser<ObjectUseRequest> {
         @Override
         public ObjectUseRequest parse(String input) throws ParsePacketException {
             final String[] parts = StringUtils.splitByWholeSeparatorPreserveAllTokens(input, "|", 3);
@@ -53,10 +53,10 @@ final public class ObjectUseRequest implements Packet {
         }
     }
 
-    final private int objectId;
-    final private int target;
-    final private int cell;
-    final private boolean isTarget;
+    private final int objectId;
+    private final int target;
+    private final int cell;
+    private final boolean isTarget;
 
     public ObjectUseRequest(int objectId, int target, int cell, boolean isTarget) {
         this.objectId = objectId;

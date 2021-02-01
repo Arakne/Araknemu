@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
  *
  * @see fr.quatrevieux.araknemu.game.item.inventory.ItemStorage#delete(int)
  */
-final public class ObjectDeleted implements ItemChanged {
-    final private ItemEntry entry;
+public final class ObjectDeleted implements ItemChanged {
+    private final ItemEntry entry;
 
     public ObjectDeleted(ItemEntry entry) {
         this.entry = entry;

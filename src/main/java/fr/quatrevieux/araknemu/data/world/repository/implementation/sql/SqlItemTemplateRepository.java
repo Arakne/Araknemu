@@ -59,10 +59,10 @@ final class SqlItemTemplateRepository implements ItemTemplateRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<ItemTemplate> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<ItemTemplate> utils;
 
-    final private Transformer<List<ItemTemplateEffectEntry>> effectsTransformer;
+    private final Transformer<List<ItemTemplateEffectEntry>> effectsTransformer;
 
     public SqlItemTemplateRepository(QueryExecutor executor, Transformer<List<ItemTemplateEffectEntry>> effectsTransformer) {
         this.executor = executor;

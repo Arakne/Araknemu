@@ -31,10 +31,10 @@ import java.util.function.Predicate;
 /**
  * Channels which send to all online players
  */
-final public class GlobalChannel implements Channel {
-    final private ChannelType channel;
-    final private Predicate<GamePlayer> filter;
-    final private PlayerService service;
+public final class GlobalChannel implements Channel {
+    private final ChannelType channel;
+    private final Predicate<GamePlayer> filter;
+    private final PlayerService service;
 
     public GlobalChannel(ChannelType channel, Predicate<GamePlayer> filter, PlayerService service) {
         this.channel = channel;

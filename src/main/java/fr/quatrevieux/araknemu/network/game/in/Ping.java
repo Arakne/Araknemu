@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 /**
  * Ping request received
  */
-final public class Ping implements Packet {
-    final static public class Parser implements SinglePacketParser<Ping> {
+public final class Ping implements Packet {
+    public static final class Parser implements SinglePacketParser<Ping> {
         @Override
         public Ping parse(String input) throws ParsePacketException {
             return new Ping();

@@ -32,8 +32,8 @@ import java.util.Optional;
  * Self boost is priorized to allies boost.
  * The selected spell must, at least, boost allies or self.
  */
-final public class Boost implements ActionGenerator, CastSpell.SimulationSelector {
-    final private CastSpell generator;
+public final class Boost implements ActionGenerator, CastSpell.SimulationSelector {
+    private final CastSpell generator;
 
     public Boost(Simulator simulator) {
         this.generator = new CastSpell(simulator, this);

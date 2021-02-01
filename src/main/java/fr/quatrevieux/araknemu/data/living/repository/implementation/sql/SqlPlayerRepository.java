@@ -85,11 +85,11 @@ final class SqlPlayerRepository implements PlayerRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private Transformer<MutableCharacteristics> characteristicsTransformer;
-    final private Transformer<Set<ChannelType>> channelsTransformer;
+    private final QueryExecutor executor;
+    private final Transformer<MutableCharacteristics> characteristicsTransformer;
+    private final Transformer<Set<ChannelType>> channelsTransformer;
 
-    final private RepositoryUtils<Player> utils;
+    private final RepositoryUtils<Player> utils;
 
     public SqlPlayerRepository(QueryExecutor executor, Transformer<MutableCharacteristics> characteristicsTransformer, Transformer<Set<ChannelType>> channelsTransformer) {
         this.executor = executor;

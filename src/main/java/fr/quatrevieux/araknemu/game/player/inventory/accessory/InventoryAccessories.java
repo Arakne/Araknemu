@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.game.world.creature.accessory.NullAccessory;
 /**
  * Accessories implementation using inventory
  */
-final public class InventoryAccessories extends AbstractAccessories {
-    final private InventorySlots slots;
+public final class InventoryAccessories extends AbstractAccessories {
+    private final InventorySlots slots;
 
     public InventoryAccessories(InventorySlots slots) {
         this.slots = slots;

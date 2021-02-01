@@ -35,14 +35,14 @@ import java.util.List;
 /**
  * Class for weapons
  */
-final public class Weapon extends AbstractEquipment {
-    final static public class WeaponInfo {
-        final private int apCost;
-        final private Interval range;
-        final private int criticalRate;
-        final private int failureRate;
-        final private int criticalBonus;
-        final private boolean isTwoHanded;
+public final class Weapon extends AbstractEquipment {
+    public static final class WeaponInfo {
+        private final int apCost;
+        private final Interval range;
+        private final int criticalRate;
+        private final int failureRate;
+        private final int criticalBonus;
+        private final boolean isTwoHanded;
 
         public WeaponInfo(int apCost, Interval range, int criticalRate, int failureRate, int criticalBonus, boolean isTwoHanded) {
             this.apCost = apCost;
@@ -78,9 +78,9 @@ final public class Weapon extends AbstractEquipment {
         }
     }
 
-    final private List<WeaponEffect> weaponEffects;
-    final private WeaponInfo info;
-    final private SpellEffectArea area;
+    private final List<WeaponEffect> weaponEffects;
+    private final WeaponInfo info;
+    private final SpellEffectArea area;
 
     public Weapon(ItemTemplate template, ItemType type, GameItemSet set, List<WeaponEffect> weaponEffects, List<CharacteristicEffect> characteristics, List<SpecialEffect> specials, WeaponInfo info, SpellEffectArea area) {
         super(template, type, set, characteristics, specials);

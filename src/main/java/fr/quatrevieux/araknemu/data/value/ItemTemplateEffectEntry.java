@@ -24,12 +24,12 @@ import fr.quatrevieux.araknemu.data.constant.Effect;
 /**
  * Item effect entry
  */
-final public class ItemTemplateEffectEntry {
-    final private Effect effect;
-    final private int min;
-    final private int max;
-    final private int special;
-    final private String text;
+public final class ItemTemplateEffectEntry {
+    private final Effect effect;
+    private final int min;
+    private final int max;
+    private final int special;
+    private final String text;
 
     public ItemTemplateEffectEntry(Effect effect, int min, int max, int special, String text) {
         this.effect = effect;

@@ -36,12 +36,12 @@ import java.util.Optional;
 /**
  * Base class for equipment items
  */
-abstract public class AbstractEquipment implements Item {
-    final private ItemTemplate template;
-    final private ItemType type;
-    final private GameItemSet set;
-    final private List<CharacteristicEffect> characteristics;
-    final private List<SpecialEffect> specials;
+public abstract class AbstractEquipment implements Item {
+    private final ItemTemplate template;
+    private final ItemType type;
+    private final GameItemSet set;
+    private final List<CharacteristicEffect> characteristics;
+    private final List<SpecialEffect> specials;
 
     public AbstractEquipment(ItemTemplate template, ItemType type, GameItemSet set, List<CharacteristicEffect> characteristics, List<SpecialEffect> specials) {
         this.template = template;

@@ -66,10 +66,10 @@ final class SqlMapTemplateRepository implements MapTemplateRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<MapTemplate> utils;
-    final private Transformer<CellData[]> cellsTransformer;
-    final private Transformer<List<Integer>[]> fightPlacesTransformer;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<MapTemplate> utils;
+    private final Transformer<CellData[]> cellsTransformer;
+    private final Transformer<List<Integer>[]> fightPlacesTransformer;
 
     public SqlMapTemplateRepository(QueryExecutor executor, Transformer<CellData[]> cellsTransformer, Transformer<List<Integer>[]> fightPlacesTransformer) {
         this.executor = executor;

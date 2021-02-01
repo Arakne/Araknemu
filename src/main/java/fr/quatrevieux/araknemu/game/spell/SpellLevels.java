@@ -26,9 +26,9 @@ import java.util.NoSuchElementException;
 /**
  * Wrap spell levels
  */
-final public class SpellLevels {
-    final private SpellTemplate entity;
-    final private Spell[] levels;
+public final class SpellLevels {
+    private final SpellTemplate entity;
+    private final Spell[] levels;
 
     public SpellLevels(SpellTemplate entity, Spell[] levels) {
         this.entity = entity;

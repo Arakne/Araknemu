@@ -31,10 +31,10 @@ import java.util.Map;
 /**
  * Cache for {@link PlayerRaceRepository}
  */
-final public class PlayerRaceRepositoryCache implements PlayerRaceRepository {
-    final private PlayerRaceRepository repository;
+public final class PlayerRaceRepositoryCache implements PlayerRaceRepository {
+    private final PlayerRaceRepository repository;
 
-    final private Map<Race, PlayerRace> races = new EnumMap<>(Race.class);
+    private final Map<Race, PlayerRace> races = new EnumMap<>(Race.class);
 
     public PlayerRaceRepositoryCache(PlayerRaceRepository repository) {
         this.repository = repository;

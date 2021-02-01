@@ -37,7 +37,7 @@ import java.util.Optional;
 /**
  * Try to teleport near enemy
  */
-final public class TeleportNearEnemy implements ActionGenerator {
+public final class TeleportNearEnemy implements ActionGenerator {
     private SpellCaster caster;
     private List<Spell> teleportSpells;
 
@@ -45,7 +45,7 @@ final public class TeleportNearEnemy implements ActionGenerator {
      * Select the best spell and cell couple for teleport
      */
     private class Selector {
-        final private CoordinateCell<FightCell> enemyCell;
+        private final CoordinateCell<FightCell> enemyCell;
         private int distance;
         private FightCell cell;
         private Spell spell;

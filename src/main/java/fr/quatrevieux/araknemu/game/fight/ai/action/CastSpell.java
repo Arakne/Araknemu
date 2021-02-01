@@ -32,7 +32,7 @@ import java.util.Optional;
 /**
  * Try to cast the best spell
  */
-final public class CastSpell implements ActionGenerator {
+public final class CastSpell implements ActionGenerator {
     public interface SimulationSelector {
         /**
          * Check if the simulation is valid
@@ -48,8 +48,8 @@ final public class CastSpell implements ActionGenerator {
         public boolean compare(CastSimulation a, CastSimulation b);
     }
 
-    final private Simulator simulator;
-    final private SimulationSelector selector;
+    private final Simulator simulator;
+    private final SimulationSelector selector;
 
     private SpellCaster caster;
 

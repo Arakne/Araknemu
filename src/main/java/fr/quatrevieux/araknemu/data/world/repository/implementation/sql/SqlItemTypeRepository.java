@@ -53,10 +53,10 @@ final class SqlItemTypeRepository implements ItemTypeRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<ItemType> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<ItemType> utils;
 
-    final private Transformer<EffectArea> areaTransformer;
+    private final Transformer<EffectArea> areaTransformer;
 
     public SqlItemTypeRepository(QueryExecutor executor, Transformer<EffectArea> areaTransformer) {
         this.executor = executor;

@@ -31,8 +31,8 @@ import java.util.Optional;
 /**
  * Registry of AI factories for monsters
  */
-final public class MonsterAiFactory implements AiFactory {
-    final private Map<String, AiFactory> factories = new HashMap<>();
+public final class MonsterAiFactory implements AiFactory {
+    private final Map<String, AiFactory> factories = new HashMap<>();
 
     class ResolveAi implements FighterOperation {
         private AI ai;

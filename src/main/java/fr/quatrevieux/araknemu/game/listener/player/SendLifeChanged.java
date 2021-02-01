@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.network.game.out.info.Information;
 /**
  * Send packet after life changed
  */
-final public class SendLifeChanged implements Listener<LifeChanged> {
-    final private GamePlayer player;
+public final class SendLifeChanged implements Listener<LifeChanged> {
+    private final GamePlayer player;
 
     public SendLifeChanged(GamePlayer player) {
         this.player = player;

@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Fights.as#L23
  */
-final public class AskFightDetails implements Packet {
-    final static public class Parser implements SinglePacketParser<AskFightDetails> {
+public final class AskFightDetails implements Packet {
+    public static final class Parser implements SinglePacketParser<AskFightDetails> {
         @Override
         public AskFightDetails parse(String input) throws ParsePacketException {
             return new AskFightDetails(Integer.parseInt(input));
@@ -41,7 +41,7 @@ final public class AskFightDetails implements Packet {
         }
     }
 
-    final private int fightId;
+    private final int fightId;
 
     public AskFightDetails(int fightId) {
         this.fightId = fightId;

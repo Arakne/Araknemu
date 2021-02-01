@@ -32,7 +32,7 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristi
 /**
  * Handle reducing damages
  */
-final public class ReduceDamageHandler implements EffectHandler, BuffHook {
+public final class ReduceDamageHandler implements EffectHandler, BuffHook {
     @Override
     public void handle(CastScope cast, CastScope.EffectScope effect) {
         throw new UnsupportedOperationException("ReduceDamageHandler can only be used as buff");

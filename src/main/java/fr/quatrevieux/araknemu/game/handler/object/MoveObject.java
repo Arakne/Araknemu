@@ -28,7 +28,7 @@ import fr.quatrevieux.araknemu.network.game.out.object.AddItemError;
 /**
  * Move an object from the repository
  */
-final public class MoveObject implements PacketHandler<GameSession, ObjectMoveRequest> {
+public final class MoveObject implements PacketHandler<GameSession, ObjectMoveRequest> {
     @Override
     public void handle(GameSession session, ObjectMoveRequest packet) throws Exception {
         try {

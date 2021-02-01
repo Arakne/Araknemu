@@ -30,8 +30,8 @@ import java.util.TreeMap;
 /**
  *
  */
-final public class RaceBaseStatsTransformer implements Transformer<SortedMap<Integer, Characteristics>> {
-    final private Transformer<Characteristics> characteristicsTransformer;
+public final class RaceBaseStatsTransformer implements Transformer<SortedMap<Integer, Characteristics>> {
+    private final Transformer<Characteristics> characteristicsTransformer;
 
     public RaceBaseStatsTransformer(Transformer<Characteristics> characteristicsTransformer) {
         this.characteristicsTransformer = characteristicsTransformer;

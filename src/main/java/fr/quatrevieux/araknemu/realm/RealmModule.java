@@ -75,8 +75,8 @@ import java.util.Arrays;
 /**
  * DI module for RealmService
  */
-final public class RealmModule implements ContainerModule {
-    final private Araknemu app;
+public final class RealmModule implements ContainerModule {
+    private final Araknemu app;
 
     public RealmModule(Araknemu app) {
         this.app = app;

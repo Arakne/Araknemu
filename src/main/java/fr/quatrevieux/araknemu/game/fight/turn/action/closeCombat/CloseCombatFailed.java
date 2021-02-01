@@ -25,8 +25,8 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 /**
  * Result for critical failure for weapon cast
  */
-final public class CloseCombatFailed implements ActionResult {
-    final private Fighter caster;
+public final class CloseCombatFailed implements ActionResult {
+    private final Fighter caster;
 
     public CloseCombatFailed(Fighter caster) {
         this.caster = caster;

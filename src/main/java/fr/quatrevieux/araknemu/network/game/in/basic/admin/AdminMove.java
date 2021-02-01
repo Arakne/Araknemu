@@ -31,8 +31,8 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Basics.as#L23
  */
-final public class AdminMove implements Packet {
-    final static public class Parser implements SinglePacketParser<AdminMove> {
+public final class AdminMove implements Packet {
+    public static final class Parser implements SinglePacketParser<AdminMove> {
         @Override
         public AdminMove parse(String input) throws ParsePacketException {
             final String[] parts = StringUtils.split(input, ",", 2);
@@ -55,7 +55,7 @@ final public class AdminMove implements Packet {
         }
     }
 
-    final private Geolocation geolocation;
+    private final Geolocation geolocation;
 
     public AdminMove(Geolocation geolocation) {
         this.geolocation = geolocation;

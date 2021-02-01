@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.network.game.in.exchange.AcceptExchangeRequest;
 /**
  * Accept the exchange request and start the exchange
  */
-final public class StartExchange implements PacketHandler<GameSession, AcceptExchangeRequest> {
+public final class StartExchange implements PacketHandler<GameSession, AcceptExchangeRequest> {
     @Override
     public void handle(GameSession session, AcceptExchangeRequest packet) {
         session.exploration().interactions().get(TargetExchangeRequestDialog.class).accept();

@@ -30,10 +30,10 @@ import java.util.concurrent.ScheduledFuture;
 /**
  * Handle fight action
  */
-final public class ActionHandler {
-    final private Fight fight;
+public final class ActionHandler {
+    private final Fight fight;
 
-    final private Collection<Runnable> termination = new ArrayList<>();
+    private final Collection<Runnable> termination = new ArrayList<>();
 
     private Action current;
     private ScheduledFuture future;

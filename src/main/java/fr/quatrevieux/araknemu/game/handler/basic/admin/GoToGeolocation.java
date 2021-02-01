@@ -32,8 +32,8 @@ import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 /**
  * Go to the requested geolocation
  */
-final public class GoToGeolocation implements PacketHandler<GameSession, AdminMove> {
-    final private GeolocationService service;
+public final class GoToGeolocation implements PacketHandler<GameSession, AdminMove> {
+    private final GeolocationService service;
 
     public GoToGeolocation(GeolocationService service) {
         this.service = service;

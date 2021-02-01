@@ -32,9 +32,9 @@ import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendState;
 /**
  * Module for handle fighter states
  */
-final public class StatesModule implements FightModule {
-    final private Fight fight;
-    final private EventsSubscriber subscriber;
+public final class StatesModule implements FightModule {
+    private final Fight fight;
+    private final EventsSubscriber subscriber;
 
     public StatesModule(Fight fight) {
         this.fight = fight;

@@ -26,9 +26,9 @@ import fr.quatrevieux.araknemu.game.admin.LogType;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Basics.as#L78
  */
-final public class CommandResult {
-    final private LogType type;
-    final private String message;
+public final class CommandResult {
+    private final LogType type;
+    private final String message;
 
     public CommandResult(LogType type, String message) {
         this.type = type;

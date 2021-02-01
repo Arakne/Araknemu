@@ -28,7 +28,7 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 /**
  * Check if spell should be cast in line launch
  */
-final public class LineLaunchValidator implements CastConstraintValidator {
+public final class LineLaunchValidator implements CastConstraintValidator {
     @Override
     public Error validate(Turn turn, Castable castable, FightCell target) {
         if (!castable.constraints().lineLaunch()) {

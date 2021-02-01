@@ -26,9 +26,9 @@ import fr.quatrevieux.araknemu.game.spell.Spell;
 /**
  * Result for critical failure for spell cast
  */
-final public class CastFailed implements ActionResult {
-    final private Fighter caster;
-    final private Spell spell;
+public final class CastFailed implements ActionResult {
+    private final Fighter caster;
+    private final Spell spell;
 
     public CastFailed(Fighter caster, Spell spell) {
         this.caster = caster;

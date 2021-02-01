@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.network.game.out.object.SpriteAccessories;
 /**
  * Send accessories when an equipment is changed during fight placement
  */
-final public class SendFighterAccessories implements Listener<EquipmentChanged> {
-    final private PlayerFighter fighter;
+public final class SendFighterAccessories implements Listener<EquipmentChanged> {
+    private final PlayerFighter fighter;
 
     public SendFighterAccessories(PlayerFighter fighter) {
         this.fighter = fighter;

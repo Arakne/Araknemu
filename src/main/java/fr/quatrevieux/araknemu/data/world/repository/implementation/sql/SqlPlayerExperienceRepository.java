@@ -48,8 +48,8 @@ final class SqlPlayerExperienceRepository implements PlayerExperienceRepository 
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<PlayerExperience> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<PlayerExperience> utils;
 
     public SqlPlayerExperienceRepository(QueryExecutor executor) {
         this.executor = executor;

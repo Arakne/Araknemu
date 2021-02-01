@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.network.game.in.exchange.movement.KamasMovement;
 /**
  * Set the kamas on the current exchange
  */
-final public class SetExchangeKamas implements PacketHandler<GameSession, KamasMovement> {
+public final class SetExchangeKamas implements PacketHandler<GameSession, KamasMovement> {
     @Override
     public void handle(GameSession session, KamasMovement packet) {
         session.exploration().interactions().get(ExchangeDialog.class).kamas(packet.quantity());

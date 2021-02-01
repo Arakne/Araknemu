@@ -52,8 +52,8 @@ final class SqlSubAreaRepository implements SubAreaRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<SubArea> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<SubArea> utils;
 
     public SqlSubAreaRepository(QueryExecutor executor) {
         this.executor = executor;

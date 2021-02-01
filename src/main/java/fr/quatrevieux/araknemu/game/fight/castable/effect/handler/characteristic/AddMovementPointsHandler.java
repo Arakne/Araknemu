@@ -30,8 +30,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
  * Buff effect for adding movement points
  * If this effect is not used as buff, it will add movement points to the current turn
  */
-final public class AddMovementPointsHandler extends AddCharacteristicHandler {
-    final private Fight fight;
+public final class AddMovementPointsHandler extends AddCharacteristicHandler {
+    private final Fight fight;
 
     public AddMovementPointsHandler(Fight fight) {
         super(fight, Characteristic.MOVEMENT_POINT);

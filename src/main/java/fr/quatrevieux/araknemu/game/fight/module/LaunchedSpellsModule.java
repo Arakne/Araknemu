@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.event.TurnTerminated;
 /**
  * Fight module for handle launch spell validation (cooldown, launch per turn, per target)
  */
-final public class LaunchedSpellsModule implements FightModule {
+public final class LaunchedSpellsModule implements FightModule {
     /**
      * @param fight For compatibility with {@link fr.quatrevieux.araknemu.game.fight.module.FightModule.Factory}
      */

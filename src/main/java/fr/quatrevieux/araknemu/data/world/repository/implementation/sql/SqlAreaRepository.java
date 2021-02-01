@@ -49,8 +49,8 @@ final class SqlAreaRepository implements AreaRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<Area> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<Area> utils;
 
     public SqlAreaRepository(QueryExecutor executor) {
         this.executor = executor;

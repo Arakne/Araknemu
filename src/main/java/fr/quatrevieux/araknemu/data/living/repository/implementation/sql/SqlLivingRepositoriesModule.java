@@ -45,8 +45,8 @@ import org.apache.logging.log4j.LogManager;
 /**
  * DI module for living repositories
  */
-final public class SqlLivingRepositoriesModule implements ContainerModule {
-    final private QueryExecutor executor;
+public final class SqlLivingRepositoriesModule implements ContainerModule {
+    private final QueryExecutor executor;
 
     public SqlLivingRepositoriesModule(ConnectionPool connection) {
         this.executor = new LoggedQueryExecutor(

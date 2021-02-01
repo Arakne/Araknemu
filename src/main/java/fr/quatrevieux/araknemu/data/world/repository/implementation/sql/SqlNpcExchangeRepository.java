@@ -56,9 +56,9 @@ final class SqlNpcExchangeRepository implements NpcExchangeRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<NpcExchange> utils;
-    final private Transformer<Map<Integer, Integer>> itemsTransformer;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<NpcExchange> utils;
+    private final Transformer<Map<Integer, Integer>> itemsTransformer;
 
     public SqlNpcExchangeRepository(QueryExecutor executor, Transformer<Map<Integer, Integer>> itemsTransformer) {
         this.executor = executor;

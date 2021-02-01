@@ -29,9 +29,9 @@ import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
 /**
  * Handle the Raulebaque effect
  */
-final public class RaulebaqueHandler implements EffectHandler {
-    final private Fight fight;
-    final private RaulebaqueModule module;
+public final class RaulebaqueHandler implements EffectHandler {
+    private final Fight fight;
+    private final RaulebaqueModule module;
 
     public RaulebaqueHandler(Fight fight, RaulebaqueModule module) {
         this.fight = fight;

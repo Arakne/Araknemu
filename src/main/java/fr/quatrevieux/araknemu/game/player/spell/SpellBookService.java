@@ -45,10 +45,10 @@ import java.util.stream.Collectors;
 /**
  * Service for handle player spells
  */
-final public class SpellBookService implements EventsSubscriber {
-    final private PlayerSpellRepository repository;
-    final private SpellService service;
-    final private PlayerRaceService playerRaceService;
+public final class SpellBookService implements EventsSubscriber {
+    private final PlayerSpellRepository repository;
+    private final SpellService service;
+    private final PlayerRaceService playerRaceService;
 
     public SpellBookService(PlayerSpellRepository repository, SpellService service, PlayerRaceService playerRaceService) {
         this.repository = repository;

@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 /**
  * The object quantity is changed
  */
-final public class ObjectQuantityChanged implements ItemChanged {
-    final private ItemEntry entry;
+public final class ObjectQuantityChanged implements ItemChanged {
+    private final ItemEntry entry;
 
     public ObjectQuantityChanged(ItemEntry entry) {
         this.entry = entry;

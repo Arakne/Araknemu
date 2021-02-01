@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.network.game.in.exchange.movement.ItemsMovement;
 /**
  * Set items into the exchange
  */
-final public class SetExchangeItems implements PacketHandler<GameSession, ItemsMovement> {
+public final class SetExchangeItems implements PacketHandler<GameSession, ItemsMovement> {
     @Override
     public void handle(GameSession session, ItemsMovement packet) {
         session.exploration().interactions().get(ExchangeDialog.class).item(packet.id(), packet.quantity());

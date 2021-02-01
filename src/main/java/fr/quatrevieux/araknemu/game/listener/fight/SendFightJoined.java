@@ -33,8 +33,8 @@ import java.util.stream.Collectors;
 /**
  * Send fight joined packets
  */
-final public class SendFightJoined implements Listener<FightJoined> {
-    final private PlayerFighter fighter;
+public final class SendFightJoined implements Listener<FightJoined> {
+    private final PlayerFighter fighter;
 
     public SendFightJoined(PlayerFighter fighter) {
         this.fighter = fighter;

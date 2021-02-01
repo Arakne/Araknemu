@@ -64,7 +64,7 @@ public class RepositoryUtils<E> {
         /**
          * Do nothing binder
          */
-        final static public Binder NOP_BINDER = statement -> {};
+        public static final Binder NOP_BINDER = statement -> {};
 
         /**
          * Bind data into PreparedStatement
@@ -72,8 +72,8 @@ public class RepositoryUtils<E> {
         public void bind(PreparedStatement statement) throws SQLException;
     }
 
-    final private QueryExecutor executor;
-    final private Loader<E> loader;
+    private final QueryExecutor executor;
+    private final Loader<E> loader;
 
     public RepositoryUtils(QueryExecutor executor, Loader<E> loader) {
         this.executor = executor;

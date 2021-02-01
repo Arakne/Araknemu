@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
  *
  * @see SetOrientationRequest
  */
-final public class ChangeOrientation implements PacketHandler<GameSession, SetOrientationRequest> {
+public final class ChangeOrientation implements PacketHandler<GameSession, SetOrientationRequest> {
     @Override
     public void handle(GameSession session, SetOrientationRequest packet) throws Exception {
         if (!session.player().restrictions().canMoveAllDirections() && !packet.orientation().restricted()) {

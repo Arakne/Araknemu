@@ -34,16 +34,16 @@ import java.util.stream.Collectors;
 /**
  * Handle Npc stores
  */
-final public class NpcStoreService implements ExchangeProvider {
-    final private ItemService itemService;
-    final private GameConfiguration.EconomyConfiguration configuration;
-    final private ItemTemplateRepository itemTemplateRepository;
+public final class NpcStoreService implements ExchangeProvider {
+    private final ItemService itemService;
+    private final GameConfiguration.EconomyConfiguration configuration;
+    private final ItemTemplateRepository itemTemplateRepository;
 
     /**
      * Already loaded stores
      * Indexed by the npc template id
      */
-    final private Map<Integer, NpcStore> stores = new ConcurrentHashMap<>();
+    private final Map<Integer, NpcStore> stores = new ConcurrentHashMap<>();
 
     public NpcStoreService(ItemService itemService, ItemTemplateRepository itemTemplateRepository, GameConfiguration.EconomyConfiguration configuration) {
         this.itemService = itemService;

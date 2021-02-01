@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget;
 /**
  * Effect target for weapon
  */
-final public class WeaponEffectTarget implements EffectTarget {
-    final static public EffectTarget INSTANCE = new WeaponEffectTarget();
+public final class WeaponEffectTarget implements EffectTarget {
+    public static final EffectTarget INSTANCE = new WeaponEffectTarget();
 
     @Override
     public boolean onlyCaster() {

@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.game.fight.event.FightStopped;
 /**
  * Subscribe to events when fight is started, and remove the listener when stopped
  */
-final public class ActiveFightSubscriber implements EventsSubscriber {
-    final private Listener[] listeners;
+public final class ActiveFightSubscriber implements EventsSubscriber {
+    private final Listener[] listeners;
 
     public ActiveFightSubscriber(Listener[] listeners) {
         this.listeners = listeners;

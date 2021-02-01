@@ -29,8 +29,8 @@ import java.util.Map;
 /**
  * Handle fight effects
  */
-final public class EffectsHandler {
-    final private Map<Integer, EffectHandler> handlers = new HashMap<>();
+public final class EffectsHandler {
+    private final Map<Integer, EffectHandler> handlers = new HashMap<>();
 
     public void register(int effectId, EffectHandler applier) {
         handlers.put(effectId, applier);

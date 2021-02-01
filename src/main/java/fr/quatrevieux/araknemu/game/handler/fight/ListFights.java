@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightList;
 /**
  * List fights on the current map
  */
-final public class ListFights implements PacketHandler<GameSession, ListFightsRequest> {
-    final private FightService service;
+public final class ListFights implements PacketHandler<GameSession, ListFightsRequest> {
+    private final FightService service;
 
     public ListFights(FightService service) {
         this.service = service;

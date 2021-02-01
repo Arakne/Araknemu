@@ -37,11 +37,11 @@ import java.util.Optional;
 /**
  * Usable item
  */
-final public class UsableItem implements Item {
-    final private ItemTemplate template;
-    final private ItemType type;
-    final private List<UseEffect> useEffects;
-    final private List<SpecialEffect> specials;
+public final class UsableItem implements Item {
+    private final ItemTemplate template;
+    private final ItemType type;
+    private final List<UseEffect> useEffects;
+    private final List<SpecialEffect> specials;
 
     public UsableItem(ItemTemplate template, ItemType type, List<UseEffect> useEffects, List<SpecialEffect> specials) {
         this.template = template;

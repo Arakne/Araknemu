@@ -27,11 +27,11 @@ import fr.quatrevieux.araknemu.util.Escape;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Chat.as#L225
  */
-abstract public class AbstractChatMessage {
-    final private GamePlayer sender;
-    final private String message;
-    final private String extra;
-    final private boolean unescape;
+public abstract class AbstractChatMessage {
+    private final GamePlayer sender;
+    private final String message;
+    private final String extra;
+    private final boolean unescape;
 
     /**
      * @param sender The message sender
@@ -47,14 +47,14 @@ abstract public class AbstractChatMessage {
     }
 
     @Override
-    final public String toString() {
+    public final String toString() {
         return "cMK" + channel() + "|" + sender.id() + "|" + escape(sender.name()) + "|" + escape(message) + "|" + escape(extra);
     }
 
     /**
      * @return The channel identifier
      */
-    abstract protected char channel();
+    protected abstract char channel();
 
     /**
      * Escape HTML chars

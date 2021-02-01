@@ -29,8 +29,8 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L94
  */
-final public class DeleteCharacterRequest implements Packet {
-    final static public class Parser implements SinglePacketParser<DeleteCharacterRequest> {
+public final class DeleteCharacterRequest implements Packet {
+    public static final class Parser implements SinglePacketParser<DeleteCharacterRequest> {
         @Override
         public DeleteCharacterRequest parse(String input) throws ParsePacketException {
             final String[] parts = StringUtils.split(input, "|", 2);
@@ -47,8 +47,8 @@ final public class DeleteCharacterRequest implements Packet {
         }
     }
 
-    final private int id;
-    final private String answer;
+    private final int id;
+    private final String answer;
 
     public DeleteCharacterRequest(int id, String answer) {
         this.id = id;

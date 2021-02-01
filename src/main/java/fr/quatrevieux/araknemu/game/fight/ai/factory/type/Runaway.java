@@ -37,8 +37,8 @@ import java.util.Optional;
  *
  * This AI use the smallest MP quantity for attack, and flees farthest from enemies
  */
-final public class Runaway implements AiFactory {
-    final private Simulator simulator;
+public final class Runaway implements AiFactory {
+    private final Simulator simulator;
 
     public Runaway(Simulator simulator) {
         this.simulator = simulator;

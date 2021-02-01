@@ -36,8 +36,8 @@ import java.util.List;
 /**
  * Display accessible cells by line of sight
  */
-final public class LineOfSight extends AbstractCommand {
-    final private MapTemplateRepository repository;
+public final class LineOfSight extends AbstractCommand {
+    private final MapTemplateRepository repository;
 
     public LineOfSight(MapTemplateRepository repository) {
         this.repository = repository;

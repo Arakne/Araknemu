@@ -33,8 +33,8 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
  *
  * @see fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler
  */
-final public class DamageSimulator implements EffectSimulator {
-    final private Element element;
+public final class DamageSimulator implements EffectSimulator {
+    private final Element element;
 
     public DamageSimulator(Element element) {
         this.element = element;

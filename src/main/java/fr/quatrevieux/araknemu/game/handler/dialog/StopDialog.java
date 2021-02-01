@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.network.game.in.dialog.LeaveDialogRequest;
 /**
  * Stop the current NPC dialog
  */
-final public class StopDialog implements PacketHandler<GameSession, LeaveDialogRequest> {
+public final class StopDialog implements PacketHandler<GameSession, LeaveDialogRequest> {
     @Override
     public void handle(GameSession session, LeaveDialogRequest packet) {
         session.exploration().interactions().get(NpcDialog.class).stop();

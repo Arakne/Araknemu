@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 /**
  * Effect for learn a new spell
  */
-final public class LearnSpellEffect implements UseEffectHandler {
-    final private SpellService service;
+public final class LearnSpellEffect implements UseEffectHandler {
+    private final SpellService service;
 
     public LearnSpellEffect(SpellService service) {
         this.service = service;

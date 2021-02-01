@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L1235
  */
-final public class FriendServerList {
-    final private Collection<ServerCharacters> servers;
+public final class FriendServerList {
+    private final Collection<ServerCharacters> servers;
 
     public FriendServerList(Collection<ServerCharacters> servers) {
         this.servers = servers;

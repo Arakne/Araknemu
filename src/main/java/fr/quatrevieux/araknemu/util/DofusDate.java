@@ -24,10 +24,10 @@ import java.util.Calendar;
 /**
  * Handle date for Dofus server
  */
-final public class DofusDate {
-    final static public int YEAR_OFFSET = -1370;
+public final class DofusDate {
+    public static final int YEAR_OFFSET = -1370;
 
-    final private Calendar calendar;
+    private final Calendar calendar;
 
     public DofusDate() {
         calendar = Calendar.getInstance();
@@ -58,7 +58,7 @@ final public class DofusDate {
      *
      * @param duration The duration in milliseconds
      */
-    static public DofusDate fromDuration(long duration) {
+    public static DofusDate fromDuration(long duration) {
         final DofusDate date = new DofusDate();
 
         date.calendar.setTimeInMillis(date.calendar.getTimeInMillis() - duration);

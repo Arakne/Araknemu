@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.network.game.in.exchange.store.SellRequest;
 /**
  * Handle selling an item to an NPC store
  */
-final public class SellItem implements PacketHandler<GameSession, SellRequest> {
+public final class SellItem implements PacketHandler<GameSession, SellRequest> {
     @Override
     public void handle(GameSession session, SellRequest packet) {
         session.exploration().interactions().get(StoreDialog.class).sell(packet.itemId(), packet.quantity());

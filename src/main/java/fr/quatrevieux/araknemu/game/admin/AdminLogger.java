@@ -49,7 +49,7 @@ public interface AdminLogger {
      * @param message Message to log
      * @param arguments Message arguments
      */
-    default public void info(String message, Object... arguments) {
+    public default void info(String message, Object... arguments) {
         log(LogType.DEFAULT, message, arguments);
     }
 
@@ -59,7 +59,7 @@ public interface AdminLogger {
      * @param message Message to log
      * @param arguments Message arguments
      */
-    default public void error(String message, Object... arguments) {
+    public default void error(String message, Object... arguments) {
         log(LogType.ERROR, message, arguments);
     }
 
@@ -69,7 +69,7 @@ public interface AdminLogger {
      * @param message Message to log
      * @param arguments Message arguments
      */
-    default public void success(String message, Object... arguments) {
+    public default void success(String message, Object... arguments) {
         log(LogType.SUCCESS, message, arguments);
     }
 }

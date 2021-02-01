@@ -33,12 +33,12 @@ import java.util.concurrent.TimeUnit;
 /**
  * Perform regularly ping on connections for keeping alive, or refresh if connection is lost
  */
-final public class RefreshConnectionPool implements ConnectionPool {
-    final private ConnectionPool pool;
-    final private long interval;
-    final private Logger logger;
+public final class RefreshConnectionPool implements ConnectionPool {
+    private final ConnectionPool pool;
+    private final long interval;
+    private final Logger logger;
 
-    final private ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
     public RefreshConnectionPool(ConnectionPool pool, long interval, Logger logger) {
         this.pool = pool;

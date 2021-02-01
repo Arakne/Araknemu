@@ -26,7 +26,7 @@ import java.sql.SQLException;
  * Driver for connection
  */
 public interface Driver {
-    static public interface Factory {
+    public static interface Factory {
         /**
          * Create the driver instance
          * @param configuration Connection configuration

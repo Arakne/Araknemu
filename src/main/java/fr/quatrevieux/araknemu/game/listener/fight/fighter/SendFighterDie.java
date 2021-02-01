@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 /**
  * Send fighter die
  */
-final public class SendFighterDie implements Listener<FighterDie> {
-    final private Fight fight;
+public final class SendFighterDie implements Listener<FighterDie> {
+    private final Fight fight;
 
     public SendFighterDie(Fight fight) {
         this.fight = fight;

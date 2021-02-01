@@ -24,9 +24,9 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 /**
  * The fighter has changed a characteristic value
  */
-final public class FighterCharacteristicChanged {
-    final private Characteristic characteristic;
-    final private int value;
+public final class FighterCharacteristicChanged {
+    private final Characteristic characteristic;
+    private final int value;
 
     public FighterCharacteristicChanged(Characteristic characteristic, int value) {
         this.characteristic = characteristic;

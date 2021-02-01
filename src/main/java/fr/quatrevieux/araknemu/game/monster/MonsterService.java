@@ -37,15 +37,15 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Handle loading monsters
  */
-final public class MonsterService implements PreloadableService {
-    final private SpellService spellService;
-    final private MonsterRewardService rewardService;
-    final private MonsterTemplateRepository repository;
+public final class MonsterService implements PreloadableService {
+    private final SpellService spellService;
+    private final MonsterRewardService rewardService;
+    private final MonsterTemplateRepository repository;
 
     /**
      * Monster grade indexed by monster id
      */
-    final private ConcurrentMap<Integer, GradeSet> monsters = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, GradeSet> monsters = new ConcurrentHashMap<>();
 
     public MonsterService(SpellService spellService, MonsterRewardService rewardService, MonsterTemplateRepository repository) {
         this.spellService = spellService;

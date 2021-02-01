@@ -60,9 +60,9 @@ final class SqlMonsterGroupDataRepository implements MonsterGroupDataRepository 
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<MonsterGroupData> utils;
-    final private Transformer<List<MonsterGroupData.Monster>> monstersTransformer;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<MonsterGroupData> utils;
+    private final Transformer<List<MonsterGroupData.Monster>> monstersTransformer;
 
     public SqlMonsterGroupDataRepository(QueryExecutor executor, Transformer<List<MonsterGroupData.Monster>> monstersTransformer) {
         this.executor = executor;

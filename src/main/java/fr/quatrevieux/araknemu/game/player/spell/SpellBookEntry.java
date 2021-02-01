@@ -28,9 +28,9 @@ import fr.quatrevieux.araknemu.game.spell.SpellLevels;
 /**
  * Entry for the spell book
  */
-final public class SpellBookEntry {
-    final private PlayerSpell entity;
-    final private SpellLevels spell;
+public final class SpellBookEntry {
+    private final PlayerSpell entity;
+    private final SpellLevels spell;
 
     private SpellBook spellBook;
 

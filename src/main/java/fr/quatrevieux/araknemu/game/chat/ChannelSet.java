@@ -32,9 +32,9 @@ import java.util.Set;
 /**
  * Set of subscribed channels with a dispatcher for synchronise operations
  */
-final public class ChannelSet implements Set<ChannelType> {
-    final private Set<ChannelType> set;
-    final private Dispatcher dispatcher;
+public final class ChannelSet implements Set<ChannelType> {
+    private final Set<ChannelType> set;
+    private final Dispatcher dispatcher;
 
     public ChannelSet(Set<ChannelType> set, Dispatcher dispatcher) {
         this.set = set;

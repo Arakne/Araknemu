@@ -29,8 +29,8 @@ import java.util.Set;
 /**
  * Resolver for cross area
  */
-final public class CrossArea implements SpellEffectArea {
-    final private EffectArea area;
+public final class CrossArea implements SpellEffectArea {
+    private final EffectArea area;
 
     public CrossArea(EffectArea area) {
         this.area = area;

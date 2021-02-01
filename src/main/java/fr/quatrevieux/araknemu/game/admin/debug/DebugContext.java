@@ -30,8 +30,8 @@ import java.util.List;
 /**
  * Context for debug commands
  */
-final public class DebugContext extends AbstractContext<DebugContext> {
-    final private Context globalContext;
+public final class DebugContext extends AbstractContext<DebugContext> {
+    private final Context globalContext;
 
     public DebugContext(Context globalContext, List<AbstractContextConfigurator<DebugContext>> configurators) throws ContainerException {
         super(configurators);

@@ -30,8 +30,8 @@ import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectQuantityChanged;
 /**
  * Save the bank on changes
  */
-final public class SaveBank implements EventsSubscriber {
-    final private BankItemRepository repository;
+public final class SaveBank implements EventsSubscriber {
+    private final BankItemRepository repository;
 
     public SaveBank(BankItemRepository repository) {
         this.repository = repository;

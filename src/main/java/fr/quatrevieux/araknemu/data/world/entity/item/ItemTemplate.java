@@ -26,17 +26,17 @@ import java.util.List;
 /**
  * Template for game items
  */
-final public class ItemTemplate {
-    final private int id;
-    final private int type;
-    final private String name;
-    final private int level;
-    final private List<ItemTemplateEffectEntry> effects;
-    final private int weight;
-    final private String condition;
-    final private int itemSet;
-    final private String weaponInfo;
-    final private int price;
+public final class ItemTemplate {
+    private final int id;
+    private final int type;
+    private final String name;
+    private final int level;
+    private final List<ItemTemplateEffectEntry> effects;
+    private final int weight;
+    private final String condition;
+    private final int itemSet;
+    private final String weaponInfo;
+    private final int price;
 
     public ItemTemplate(int id, int type, String name, int level, List<ItemTemplateEffectEntry> effects, int weight, String condition, int itemSet, String weaponInfo, int price) {
         this.id = id;

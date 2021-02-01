@@ -30,10 +30,10 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Cache repository for {@link NpcTemplate}
  */
-final public class NpcTemplateRepositoryCache implements NpcTemplateRepository {
-    final private NpcTemplateRepository repository;
+public final class NpcTemplateRepositoryCache implements NpcTemplateRepository {
+    private final NpcTemplateRepository repository;
 
-    final private ConcurrentMap<Integer, NpcTemplate> cacheById = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, NpcTemplate> cacheById = new ConcurrentHashMap<>();
 
     public NpcTemplateRepositoryCache(NpcTemplateRepository repository) {
         this.repository = repository;

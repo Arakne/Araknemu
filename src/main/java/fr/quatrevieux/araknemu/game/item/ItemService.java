@@ -42,14 +42,14 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Service for handle items
  */
-final public class ItemService implements PreloadableService {
-    final private ItemTemplateRepository repository;
-    final private ItemFactory factory;
-    final private ItemSetRepository itemSetRepository;
-    final private ItemTypeRepository itemTypeRepository;
-    final private EffectMappers mappers;
+public final class ItemService implements PreloadableService {
+    private final ItemTemplateRepository repository;
+    private final ItemFactory factory;
+    private final ItemSetRepository itemSetRepository;
+    private final ItemTypeRepository itemTypeRepository;
+    private final EffectMappers mappers;
 
-    final private ConcurrentMap<Integer, GameItemSet> itemSetsById = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, GameItemSet> itemSetsById = new ConcurrentHashMap<>();
 
     public ItemService(ItemTemplateRepository repository, ItemFactory factory, ItemSetRepository itemSetRepository, ItemTypeRepository itemTypeRepository, EffectMappers mappers) {
         this.repository = repository;

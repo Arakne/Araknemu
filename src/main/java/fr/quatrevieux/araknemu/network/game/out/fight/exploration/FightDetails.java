@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Fights.as#L86
  */
-final public class FightDetails {
-    final private Fight fight;
+public final class FightDetails {
+    private final Fight fight;
 
     public FightDetails(Fight fight) {
         this.fight = fight;

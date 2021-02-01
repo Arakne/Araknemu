@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 /**
  * Wrap IoSession for Realm
  */
-final public class RealmSession extends AbstractDelegatedSession implements AccountSession<AuthenticationAccount> {
-    final private ConnectionKey key;
+public final class RealmSession extends AbstractDelegatedSession implements AccountSession<AuthenticationAccount> {
+    private final ConnectionKey key;
 
     private AuthenticationAccount account;
 

@@ -36,8 +36,8 @@ import fr.quatrevieux.araknemu.game.world.creature.Creature;
  *
  * @see ExchangeType#NPC_EXCHANGE
  */
-final public class NpcExchangeParty extends AbstractPlayerExchangeParty {
-    final private GameNpc npc;
+public final class NpcExchangeParty extends AbstractPlayerExchangeParty {
+    private final GameNpc npc;
 
     /**
      * Construct the exchange party

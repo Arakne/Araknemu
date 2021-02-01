@@ -32,9 +32,9 @@ import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
  *
  * Actually only teleport action is available
  */
-final public class PvmEndFightActionProvider implements DropRewardProvider {
-    static private class Scope implements DropRewardProvider.Scope {
-        final private Position position;
+public final class PvmEndFightActionProvider implements DropRewardProvider {
+    private static class Scope implements DropRewardProvider.Scope {
+        private final Position position;
 
         public Scope(Position position) {
             this.position = position;

@@ -29,9 +29,9 @@ import fr.quatrevieux.araknemu.game.player.spell.event.SpellUpgraded;
  *
  * @todo optimize save
  */
-final public class SaveUpgradedSpell implements Listener<SpellUpgraded> {
-    final private GamePlayer player;
-    final private PlayerSpellRepository repository;
+public final class SaveUpgradedSpell implements Listener<SpellUpgraded> {
+    private final GamePlayer player;
+    private final PlayerSpellRepository repository;
 
     public SaveUpgradedSpell(GamePlayer player, PlayerSpellRepository repository) {
         this.player = player;

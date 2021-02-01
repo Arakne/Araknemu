@@ -24,7 +24,7 @@ package fr.quatrevieux.araknemu.network.game.out.exchange.movement.storage;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L960
  */
-final public class StorageMovementError {
+public final class StorageMovementError {
     @Override
     public String toString() {
         return "EsE";

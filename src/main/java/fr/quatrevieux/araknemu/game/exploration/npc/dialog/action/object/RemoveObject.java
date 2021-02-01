@@ -41,8 +41,8 @@ import java.util.stream.Collectors;
  *              If set to 1 (or not given) the quantity of the item is checked before display the response
  *              If set to 0, the response is always displayed
  */
-final public class RemoveObject implements Action {
-    final static public class Factory implements ActionFactory {
+public final class RemoveObject implements Action {
+    public static final class Factory implements ActionFactory {
         @Override
         public String type() {
             return "REM_OBJECT";
@@ -60,9 +60,9 @@ final public class RemoveObject implements Action {
         }
     }
 
-    final private int itemId;
-    final private int quantity;
-    final private boolean required;
+    private final int itemId;
+    private final int quantity;
+    private final boolean required;
 
     public RemoveObject(int itemId, int quantity, boolean required) {
         this.itemId = itemId;

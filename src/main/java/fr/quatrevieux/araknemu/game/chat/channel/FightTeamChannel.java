@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.network.game.out.info.Information;
 /**
  * The fight team chat : send to all teammates fighters
  */
-final public class FightTeamChannel implements Channel {
+public final class FightTeamChannel implements Channel {
     @Override
     public ChannelType type() {
         return ChannelType.FIGHT_TEAM;

@@ -29,8 +29,8 @@ import java.util.List;
 /**
  * Resolve the server context
  */
-final public class ServerContextResolver implements ContextResolver {
-    final private List<AbstractContextConfigurator<ServerContext>> configurators = new ArrayList<>();
+public final class ServerContextResolver implements ContextResolver {
+    private final List<AbstractContextConfigurator<ServerContext>> configurators = new ArrayList<>();
 
     @Override
     public Context resolve(Context globalContext, Object argument) {

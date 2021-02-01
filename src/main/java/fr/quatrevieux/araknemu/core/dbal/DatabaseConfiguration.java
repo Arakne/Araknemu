@@ -26,10 +26,10 @@ import fr.quatrevieux.araknemu.core.config.PoolUtils;
 /**
  * Configuration module for database system
  */
-final public class DatabaseConfiguration implements ConfigurationModule {
-    final static public class Connection {
-        final private String name;
-        final private PoolUtils pool;
+public final class DatabaseConfiguration implements ConfigurationModule {
+    public static final class Connection {
+        private final String name;
+        private final PoolUtils pool;
 
         public Connection(String name, PoolUtils pool) {
             this.name = name;

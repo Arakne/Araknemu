@@ -28,10 +28,10 @@ import java.util.Map;
 /**
  * Handler fighter states
  */
-final public class FighterStates implements States {
-    final private Fighter fighter;
+public final class FighterStates implements States {
+    private final Fighter fighter;
 
-    final private Map<Integer, Integer> states = new HashMap<>();
+    private final Map<Integer, Integer> states = new HashMap<>();
 
     public FighterStates(Fighter fighter) {
         this.fighter = fighter;

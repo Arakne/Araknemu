@@ -25,8 +25,8 @@ import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 /**
  * GameConnector for local game server
  */
-final public class LocalGameConnector implements GameConnector {
-    final private ConnectorService service;
+public final class LocalGameConnector implements GameConnector {
+    private final ConnectorService service;
 
     public LocalGameConnector(ConnectorService service) {
         this.service = service;

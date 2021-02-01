@@ -28,7 +28,7 @@ import java.util.Set;
 /**
  * Transformer for subscribed channels
  */
-final public class ChannelsTransformer implements Transformer<Set<ChannelType>> {
+public final class ChannelsTransformer implements Transformer<Set<ChannelType>> {
     @Override
     public String serialize(Set<ChannelType> value) {
         if (value == null || value.isEmpty()) {

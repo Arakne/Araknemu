@@ -38,12 +38,12 @@ import java.time.Duration;
 /**
  * Use weapon / close combat attack
  */
-final public class CloseCombat implements Action {
-    final private FightTurn turn;
-    final private Fighter caster;
-    final private FightCell target;
-    final private WeaponConstraintsValidator validator;
-    final private CriticalityStrategy criticalityStrategy;
+public final class CloseCombat implements Action {
+    private final FightTurn turn;
+    private final Fighter caster;
+    private final FightCell target;
+    private final WeaponConstraintsValidator validator;
+    private final CriticalityStrategy criticalityStrategy;
 
     private CloseCombatSuccess result;
 

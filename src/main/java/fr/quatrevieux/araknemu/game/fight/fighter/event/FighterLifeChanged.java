@@ -25,10 +25,10 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 /**
  * Fighter life is changed
  */
-final public class FighterLifeChanged {
-    final private PassiveFighter fighter;
-    final private ActiveFighter caster;
-    final private int value;
+public final class FighterLifeChanged {
+    private final PassiveFighter fighter;
+    private final ActiveFighter caster;
+    private final int value;
 
     public FighterLifeChanged(PassiveFighter fighter, ActiveFighter caster, int value) {
         this.fighter = fighter;

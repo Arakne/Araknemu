@@ -29,8 +29,8 @@ import java.util.List;
 /**
  * Context for server management
  */
-final public class ServerContext extends AbstractContext<ServerContext> {
-    final private Context baseContext;
+public final class ServerContext extends AbstractContext<ServerContext> {
+    private final Context baseContext;
 
     public ServerContext(Context baseContext, List<AbstractContextConfigurator<ServerContext>> contextConfigurators) {
         super(contextConfigurators);

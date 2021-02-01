@@ -39,8 +39,8 @@ import java.util.stream.Collectors;
 /**
  * Map item effect to special effect
  */
-final public class EffectToSpecialMapping implements EffectMapper<SpecialEffect> {
-    final private Map<Effect, SpecialEffectHandler> handlers = new EnumMap<>(Effect.class);
+public final class EffectToSpecialMapping implements EffectMapper<SpecialEffect> {
+    private final Map<Effect, SpecialEffectHandler> handlers = new EnumMap<>(Effect.class);
 
     public EffectToSpecialMapping() {
         handlers.put(Effect.ADD_DISCERNMENT, new AddSpecialEffect(SpecialEffects.Type.DISCERNMENT));

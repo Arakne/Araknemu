@@ -32,8 +32,8 @@ import java.util.stream.Collectors;
 /**
  * Simple implementation of spell boosts
  */
-final public class SimpleSpellsBoosts implements SpellsBoosts {
-    final private Map<Integer, Map<Modifier, Integer>> spellsModifiers = new HashMap<>();
+public final class SimpleSpellsBoosts implements SpellsBoosts {
+    private final Map<Integer, Map<Modifier, Integer>> spellsModifiers = new HashMap<>();
 
     @Override
     public int boost(int spellId, Modifier modifier, int value) {

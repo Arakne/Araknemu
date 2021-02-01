@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
  *
  * @see fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.StealLifeHandler
  */
-final public class StealLifeSimulator implements EffectSimulator {
-    final private DamageSimulator simulator;
+public final class StealLifeSimulator implements EffectSimulator {
+    private final DamageSimulator simulator;
 
     public StealLifeSimulator(Element element) {
         this.simulator = new DamageSimulator(element);

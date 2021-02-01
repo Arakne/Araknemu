@@ -32,8 +32,8 @@ import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 /**
  * Handler for challenge (duel fight) invitation dialog
  */
-final public class ChallengeInvitationHandler implements InvitationHandler {
-    final private FightHandler<ChallengeBuilder> fightHandler;
+public final class ChallengeInvitationHandler implements InvitationHandler {
+    private final FightHandler<ChallengeBuilder> fightHandler;
 
     public ChallengeInvitationHandler(FightHandler<ChallengeBuilder> fightHandler) {
         this.fightHandler = fightHandler;

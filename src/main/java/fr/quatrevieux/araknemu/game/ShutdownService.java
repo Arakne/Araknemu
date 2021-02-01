@@ -37,11 +37,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * Handle the scheduled shutdown
  */
-final public class ShutdownService implements EventsSubscriber {
-    final private Araknemu app;
-    final private Dispatcher dispatcher;
-    final private GameConfiguration configuration;
-    final private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+public final class ShutdownService implements EventsSubscriber {
+    private final Araknemu app;
+    private final Dispatcher dispatcher;
+    private final GameConfiguration configuration;
+    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     private ScheduledFuture<?> scheduledShutdown;
     private ScheduledFuture<?> shutdownReminder;
@@ -57,7 +57,7 @@ final public class ShutdownService implements EventsSubscriber {
      *
      * @throws IllegalStateException When a shutdown is already scheduled
      */
-    synchronized public void now() {
+    public synchronized void now() {
         checkNotScheduled();
 
         executor.submit(app::shutdown);
@@ -68,7 +68,7 @@ final public class ShutdownService implements EventsSubscriber {
      *
      * @throws IllegalStateException When a shutdown is already scheduled
      */
-    synchronized public void schedule(Duration delay) {
+    public synchronized void schedule(Duration delay) {
         checkNotScheduled();
 
         scheduledShutdown = executor.schedule(app::shutdown, delay.toMillis(), TimeUnit.MILLISECONDS);
@@ -81,7 +81,7 @@ final public class ShutdownService implements EventsSubscriber {
      *
      * @return false if there is no scheduled shutdown, or cannot cancel.
      */
-    synchronized public boolean cancel() {
+    public synchronized boolean cancel() {
         if (scheduledShutdown == null) {
             return false;
         }

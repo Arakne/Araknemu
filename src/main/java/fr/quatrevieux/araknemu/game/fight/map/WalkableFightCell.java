@@ -28,10 +28,10 @@ import java.util.Optional;
 /**
  * Base fight cell
  */
-final public class WalkableFightCell implements FightCell {
-    final private FightMap map;
-    final private CellData template;
-    final private int id;
+public final class WalkableFightCell implements FightCell {
+    private final FightMap map;
+    private final CellData template;
+    private final int id;
 
     private PassiveFighter fighter;
 

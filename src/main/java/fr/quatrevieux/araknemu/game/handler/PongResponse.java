@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.network.in.PingResponse;
 /**
  * Handle rpong packet {@link GameSession#isAlive()}
  */
-final public class PongResponse implements PacketHandler<GameSession, PingResponse> {
+public final class PongResponse implements PacketHandler<GameSession, PingResponse> {
     @Override
     public void handle(GameSession session, PingResponse packet) {
         //session.onPingResponse(packet);

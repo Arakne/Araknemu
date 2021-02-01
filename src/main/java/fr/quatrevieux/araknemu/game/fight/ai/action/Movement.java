@@ -44,9 +44,9 @@ import java.util.function.Predicate;
  * - Try to find the path
  * - If a path is found, and can be performed by the current number of MPs, return the move action
  */
-final public class Movement implements ActionGenerator {
-    final private Function<CoordinateCell<FightCell>, Integer> scoreFunction;
-    final private Predicate<ScoredCell> filter;
+public final class Movement implements ActionGenerator {
+    private final Function<CoordinateCell<FightCell>, Integer> scoreFunction;
+    private final Predicate<ScoredCell> filter;
 
     private Pathfinder<FightCell> pathfinder;
 
@@ -123,9 +123,9 @@ final public class Movement implements ActionGenerator {
         return selectedCells;
     }
 
-    final static public class ScoredCell implements Comparable<ScoredCell> {
-        final private CoordinateCell<FightCell> coordinates;
-        final private int score;
+    public static final class ScoredCell implements Comparable<ScoredCell> {
+        private final CoordinateCell<FightCell> coordinates;
+        private final int score;
 
         public ScoredCell(CoordinateCell<FightCell> coordinates, int score) {
             this.coordinates = coordinates;

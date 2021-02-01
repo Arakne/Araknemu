@@ -34,12 +34,12 @@ import java.util.stream.Collectors;
 /**
  * Server for admin
  */
-final public class AdminService {
-    final private Context globalContext;
-    final private Map<String, ContextResolver> resolvers;
-    final private Logger logger;
+public final class AdminService {
+    private final Context globalContext;
+    private final Map<String, ContextResolver> resolvers;
+    private final Logger logger;
 
-    final private Map<Integer, AdminUser> usersById = new HashMap<>();
+    private final Map<Integer, AdminUser> usersById = new HashMap<>();
 
     public AdminService(Context globalContext, Collection<ContextResolver> resolvers, Logger logger) {
         this.globalContext = globalContext;

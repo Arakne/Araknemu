@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.network.game.out.account.RegionalVersion;
 /**
  * Send the regional version of the server
  */
-final public class SendRegionalVersion implements PacketHandler<GameSession, AskRegionalVersion> {
+public final class SendRegionalVersion implements PacketHandler<GameSession, AskRegionalVersion> {
     @Override
     public void handle(GameSession session, AskRegionalVersion packet) throws Exception {
         session.send(new RegionalVersion(0)); // @todo configure

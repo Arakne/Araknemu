@@ -24,9 +24,9 @@ import java.util.Random;
 /**
  * Random generation for strings
  */
-final public class RandomStringUtil {
-    final private Random random;
-    final private CharSequence charset;
+public final class RandomStringUtil {
+    private final Random random;
+    private final CharSequence charset;
 
     /**
      * Create instance

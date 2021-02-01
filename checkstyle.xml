@@ -108,7 +108,7 @@
         <module name="InterfaceMemberImpliedModifier">
             <property name="violateImpliedAbstractMethod" value="false" />
         </module>
-<!--        <module name="ModifierOrder" />--> <!-- TODO -->
+        <module name="ModifierOrder" />
 
         <module name="AbstractClassName" />
         <module name="ClassTypeParameterName" />

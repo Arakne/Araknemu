@@ -31,9 +31,9 @@ import java.util.Optional;
 /**
  * Base slot class for equipments
  */
-abstract public class AbstractEquipmentSlot implements InventorySlot {
-    final private Dispatcher dispatcher;
-    final private InventorySlot slot;
+public abstract class AbstractEquipmentSlot implements InventorySlot {
+    private final Dispatcher dispatcher;
+    private final InventorySlot slot;
 
     public AbstractEquipmentSlot(Dispatcher dispatcher, InventorySlot slot) {
         this.dispatcher = dispatcher;

@@ -32,9 +32,9 @@ import java.util.Set;
 /**
  * Wrap item set data for a player
  */
-final public class PlayerItemSet {
-    final private GameItemSet itemSet;
-    final private Set<ItemTemplate> items;
+public final class PlayerItemSet {
+    private final GameItemSet itemSet;
+    private final Set<ItemTemplate> items;
 
     public PlayerItemSet(GameItemSet itemSet) {
         this(itemSet, new HashSet<>());

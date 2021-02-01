@@ -42,10 +42,10 @@ import java.util.Map;
 /**
  * Service for handle chat system
  */
-final public class ChatService implements EventsSubscriber {
-    final private GameConfiguration.ChatConfiguration configuration;
+public final class ChatService implements EventsSubscriber {
+    private final GameConfiguration.ChatConfiguration configuration;
 
-    final private Map<ChannelType, Channel> channels = new EnumMap<>(ChannelType.class);
+    private final Map<ChannelType, Channel> channels = new EnumMap<>(ChannelType.class);
 
     public ChatService(GameConfiguration.ChatConfiguration configuration, Channel[] channels) {
         this.configuration = configuration;

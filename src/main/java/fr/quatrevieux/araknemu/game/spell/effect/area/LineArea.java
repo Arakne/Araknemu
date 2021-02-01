@@ -32,8 +32,8 @@ import java.util.Set;
 /**
  * Resolve in line area
  */
-final public class LineArea implements SpellEffectArea {
-    final private EffectArea area;
+public final class LineArea implements SpellEffectArea {
+    private final EffectArea area;
 
     public LineArea(EffectArea area) {
         this.area = area;

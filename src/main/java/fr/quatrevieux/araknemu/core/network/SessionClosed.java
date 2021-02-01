@@ -22,5 +22,5 @@ package fr.quatrevieux.araknemu.core.network;
 /**
  * Pseudo packet for session closed event
  */
-final public class SessionClosed implements InternalPacket {
+public final class SessionClosed implements InternalPacket {
 }

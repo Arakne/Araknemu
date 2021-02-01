@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.NoneAction;
 /**
  * Perform a game action into the fight
  */
-final public class PerformTurnAction implements PacketHandler<GameSession, GameActionRequest> {
+public final class PerformTurnAction implements PacketHandler<GameSession, GameActionRequest> {
     @Override
     public void handle(GameSession session, GameActionRequest packet) {
         try {

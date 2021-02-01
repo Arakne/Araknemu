@@ -55,10 +55,10 @@ final class SqlBanIpRepository implements BanIpRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<BanIp> utils;
-    final private Transformer<Instant> instantTransformer;
-    final private Transformer<IPAddressString> ipAddressTransformer;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<BanIp> utils;
+    private final Transformer<Instant> instantTransformer;
+    private final Transformer<IPAddressString> ipAddressTransformer;
 
     public SqlBanIpRepository(QueryExecutor executor, Transformer<IPAddressString> ipAddressTransformer, Transformer<Instant> instantTransformer) {
         this.executor = executor;

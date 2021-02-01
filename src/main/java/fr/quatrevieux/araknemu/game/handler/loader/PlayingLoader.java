@@ -39,7 +39,7 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 /**
  * Loader for playing packets
  */
-final public class PlayingLoader extends AbstractLoader {
+public final class PlayingLoader extends AbstractLoader {
     public PlayingLoader() {
         super(EnsurePlaying::new);
     }

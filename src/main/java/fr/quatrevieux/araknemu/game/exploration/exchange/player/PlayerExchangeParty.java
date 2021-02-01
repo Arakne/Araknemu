@@ -32,7 +32,7 @@ import fr.quatrevieux.araknemu.game.world.creature.Creature;
  *
  * The party is linked to the distant party (other)
  */
-final public class PlayerExchangeParty extends AbstractPlayerExchangeParty {
+public final class PlayerExchangeParty extends AbstractPlayerExchangeParty {
     private PlayerExchangeParty(ExplorationPlayer player, ExchangeProcessor processor, PlayerExchangeStorage storage) {
         super(player, processor, storage);
     }
@@ -58,7 +58,7 @@ final public class PlayerExchangeParty extends AbstractPlayerExchangeParty {
     /**
      * Make exchange parties between two players
      */
-    static public PlayerExchangeParty[] make(ExplorationPlayer initiator, ExplorationPlayer target) {
+    public static PlayerExchangeParty[] make(ExplorationPlayer initiator, ExplorationPlayer target) {
         final PlayerExchangeStorage initiatorStorage = new PlayerExchangeStorage(initiator);
         final PlayerExchangeStorage targetStorage = new PlayerExchangeStorage(target);
 

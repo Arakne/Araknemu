@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 /**
  * Stop the fight session on leave fight
  */
-final public class StopFightSession implements Listener<FightLeaved> {
-    final private PlayerFighter fighter;
+public final class StopFightSession implements Listener<FightLeaved> {
+    private final PlayerFighter fighter;
 
     public StopFightSession(PlayerFighter fighter) {
         this.fighter = fighter;

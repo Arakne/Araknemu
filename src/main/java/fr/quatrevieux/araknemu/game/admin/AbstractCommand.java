@@ -32,8 +32,8 @@ import java.util.function.Consumer;
 /**
  * Base command class
  */
-abstract public class AbstractCommand implements Command {
-    final protected class Builder {
+public abstract class AbstractCommand implements Command {
+    protected final class Builder {
         /**
          * Set a command description
          */
@@ -71,32 +71,32 @@ abstract public class AbstractCommand implements Command {
         }
     }
 
-    final private HelpFormatter help = new HelpFormatter(this);
-    final private EnumSet<Permission> permissions = EnumSet.of(Permission.ACCESS);
+    private final HelpFormatter help = new HelpFormatter(this);
+    private final EnumSet<Permission> permissions = EnumSet.of(Permission.ACCESS);
     private String description = "No description";
     private boolean initialized = false;
 
     /**
      * Build the command
      */
-    abstract protected void build(Builder builder);
+    protected abstract void build(Builder builder);
 
     @Override
-    final public String description() {
+    public final String description() {
         initialize();
 
         return description;
     }
 
     @Override
-    final public String help() {
+    public final String help() {
         initialize();
 
         return help.toString();
     }
 
     @Override
-    final public Set<Permission> permissions() {
+    public final Set<Permission> permissions() {
         initialize();
 
         return permissions;

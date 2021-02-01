@@ -30,8 +30,8 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L177
  */
-final public class ClientUid implements Packet {
-    final static public class Parser implements SinglePacketParser<ClientUid> {
+public final class ClientUid implements Packet {
+    public static final class Parser implements SinglePacketParser<ClientUid> {
         @Override
         public ClientUid parse(String input) throws ParsePacketException {
             return new ClientUid(input);
@@ -43,7 +43,7 @@ final public class ClientUid implements Packet {
         }
     }
 
-    final private String uid;
+    private final String uid;
 
     public ClientUid(String uid) {
         this.uid = uid;

@@ -30,9 +30,9 @@ import java.util.Set;
 /**
  * Add chat channels on character creation
  */
-final public class AddChatChannels implements Listener<CharacterCreationStarted> {
-    final private GameConfiguration.ChatConfiguration configuration;
-    final private Transformer<Set<ChannelType>> transformer;
+public final class AddChatChannels implements Listener<CharacterCreationStarted> {
+    private final GameConfiguration.ChatConfiguration configuration;
+    private final Transformer<Set<ChannelType>> transformer;
 
     public AddChatChannels(GameConfiguration.ChatConfiguration configuration, Transformer<Set<ChannelType>> transformer) {
         this.configuration = configuration;

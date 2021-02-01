@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.network.in.AskQueuePosition;
  *
  * Empty class to not fail for not found handler
  */
-final public class CheckQueuePosition implements PacketHandler<GameSession, AskQueuePosition> {
+public final class CheckQueuePosition implements PacketHandler<GameSession, AskQueuePosition> {
     @Override
     public void handle(GameSession session, AskQueuePosition packet) {
     }

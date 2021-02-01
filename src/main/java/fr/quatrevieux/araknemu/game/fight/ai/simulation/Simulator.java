@@ -32,8 +32,8 @@ import java.util.Map;
 /**
  * Perform simulation on fight
  */
-final public class Simulator {
-    final private Map<Integer, EffectSimulator> simulators = new HashMap<>();
+public final class Simulator {
+    private final Map<Integer, EffectSimulator> simulators = new HashMap<>();
 
     /**
      * Register an effect simulator

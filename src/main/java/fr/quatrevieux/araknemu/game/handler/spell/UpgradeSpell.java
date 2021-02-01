@@ -28,7 +28,7 @@ import fr.quatrevieux.araknemu.network.game.out.spell.SpellUpgradeError;
 /**
  * Upgrade the spell
  */
-final public class UpgradeSpell implements PacketHandler<GameSession, SpellUpgrade> {
+public final class UpgradeSpell implements PacketHandler<GameSession, SpellUpgrade> {
     @Override
     public void handle(GameSession session, SpellUpgrade packet) throws Exception {
         try {

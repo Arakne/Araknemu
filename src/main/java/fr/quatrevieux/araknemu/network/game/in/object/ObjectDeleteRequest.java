@@ -29,8 +29,8 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Items.as#L31
  */
-final public class ObjectDeleteRequest implements Packet {
-    final static public class Parser implements SinglePacketParser<ObjectDeleteRequest> {
+public final class ObjectDeleteRequest implements Packet {
+    public static final class Parser implements SinglePacketParser<ObjectDeleteRequest> {
         @Override
         public ObjectDeleteRequest parse(String input) throws ParsePacketException {
             final String[] parts = StringUtils.split(input, "|", 2);
@@ -51,8 +51,8 @@ final public class ObjectDeleteRequest implements Packet {
         }
     }
 
-    final private int id;
-    final private int quantity;
+    private final int id;
+    private final int quantity;
 
     public ObjectDeleteRequest(int id, int quantity) {
         this.id = id;

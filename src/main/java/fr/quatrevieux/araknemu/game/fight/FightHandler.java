@@ -30,9 +30,9 @@ import java.util.function.Consumer;
 /**
  * Handle fight creation
  */
-final public class FightHandler<B extends FightBuilder> implements EventsSubscriber {
-    final private FightService service;
-    final private B builder;
+public final class FightHandler<B extends FightBuilder> implements EventsSubscriber {
+    private final FightService service;
+    private final B builder;
 
     public FightHandler(FightService service, B builder) {
         this.service = service;

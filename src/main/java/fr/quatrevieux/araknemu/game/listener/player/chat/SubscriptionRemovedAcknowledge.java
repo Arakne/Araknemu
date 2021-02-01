@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.chat.ChannelUnsubscribed;
 /**
  * Send to client the subscribed channels
  */
-final public class SubscriptionRemovedAcknowledge implements Listener<ChannelSubscriptionRemoved> {
-    final private GamePlayer player;
+public final class SubscriptionRemovedAcknowledge implements Listener<ChannelSubscriptionRemoved> {
+    private final GamePlayer player;
 
     public SubscriptionRemovedAcknowledge(GamePlayer player) {
         this.player = player;

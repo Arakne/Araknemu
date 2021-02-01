@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 /**
  * Send to client new player xp
  */
-final public class SendPlayerXp implements Listener<PlayerXpChanged> {
-    final private GamePlayer player;
+public final class SendPlayerXp implements Listener<PlayerXpChanged> {
+    private final GamePlayer player;
 
     public SendPlayerXp(GamePlayer player) {
         this.player = player;

@@ -45,13 +45,13 @@ import java.util.stream.Collectors;
 /**
  * Inventory for player
  */
-final public class PlayerInventory implements Inventory<InventoryEntry>, Dispatcher {
-    final private Player player;
-    final private ItemStorage<InventoryEntry> storage;
-    final private Wallet wallet;
-    final private InventorySlots slots;
-    final private Accessories accessories;
-    final private ItemSets itemSets;
+public final class PlayerInventory implements Inventory<InventoryEntry>, Dispatcher {
+    private final Player player;
+    private final ItemStorage<InventoryEntry> storage;
+    private final Wallet wallet;
+    private final InventorySlots slots;
+    private final Accessories accessories;
+    private final ItemSets itemSets;
 
     private GamePlayer owner;
     private int weight;

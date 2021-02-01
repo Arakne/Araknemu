@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 /**
  * Apply reward when fight is terminated
  */
-final public class ApplyEndFightReward implements Listener<FightFinished> {
-    final private PlayerFighter fighter;
+public final class ApplyEndFightReward implements Listener<FightFinished> {
+    private final PlayerFighter fighter;
 
     public ApplyEndFightReward(PlayerFighter fighter) {
         this.fighter = fighter;

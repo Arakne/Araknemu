@@ -34,8 +34,8 @@ import java.util.stream.Collectors;
 /**
  * All available item sets for a player
  */
-final public class ItemSets {
-    final private PlayerInventory inventory;
+public final class ItemSets {
+    private final PlayerInventory inventory;
 
     public ItemSets(PlayerInventory inventory) {
         this.inventory = inventory;

@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * Base builder for fight
  */
-final public class BaseBuilder implements FightBuilder {
+public final class BaseBuilder implements FightBuilder {
     public interface TeamFactory {
         /**
          * Creates the fight team
@@ -51,13 +51,13 @@ final public class BaseBuilder implements FightBuilder {
         public FightTeam create(int number, List<Integer> startPlaces);
     }
 
-    final private FightService service;
-    final private RandomUtil random;
-    final private FightType type;
-    final private Logger logger;
+    private final FightService service;
+    private final RandomUtil random;
+    private final FightType type;
+    private final Logger logger;
 
     private FightMap map;
-    final private List<TeamFactory> teamFactories = new ArrayList<>();
+    private final List<TeamFactory> teamFactories = new ArrayList<>();
 
     public BaseBuilder(FightService service, RandomUtil random, FightType type, Logger logger) {
         this.service = service;

@@ -28,9 +28,9 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.Challenger
 /**
  * Accept the challenge invitation
  */
-final public class AcceptChallenge implements Action {
-    final private ExplorationPlayer player;
-    final private int target;
+public final class AcceptChallenge implements Action {
+    private final ExplorationPlayer player;
+    private final int target;
 
     public AcceptChallenge(ExplorationPlayer player, int target) {
         this.player = player;

@@ -34,8 +34,8 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 /**
  * Default implementation of the fighter factory
  */
-final public class DefaultFighterFactory implements FighterFactory {
-    final private Dispatcher dispatcher;
+public final class DefaultFighterFactory implements FighterFactory {
+    private final Dispatcher dispatcher;
 
     public DefaultFighterFactory(Dispatcher dispatcher) {
         this.dispatcher = dispatcher;

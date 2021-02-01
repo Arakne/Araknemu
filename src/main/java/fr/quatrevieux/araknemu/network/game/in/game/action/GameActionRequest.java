@@ -29,8 +29,8 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/GameActions.as#L19
  */
-final public class GameActionRequest implements Packet {
-    final static public class Parser implements SinglePacketParser<GameActionRequest> {
+public final class GameActionRequest implements Packet {
+    public static final class Parser implements SinglePacketParser<GameActionRequest> {
         @Override
         public GameActionRequest parse(String input) throws ParsePacketException {
             return new GameActionRequest(
@@ -45,8 +45,8 @@ final public class GameActionRequest implements Packet {
         }
     }
 
-    final private int type;
-    final private String[] arguments;
+    private final int type;
+    private final String[] arguments;
 
     public GameActionRequest(int type, String[] arguments) {
         this.type = type;

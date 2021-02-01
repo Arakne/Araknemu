@@ -37,10 +37,10 @@ import java.util.Map;
 /**
  * Teleport the player to the desired location
  */
-final public class Goto extends AbstractCommand {
-    final private GamePlayer player;
-    final private ExplorationMapService mapService;
-    final private Map<String, LocationResolver> resolvers = new LinkedHashMap<>();
+public final class Goto extends AbstractCommand {
+    private final GamePlayer player;
+    private final ExplorationMapService mapService;
+    private final Map<String, LocationResolver> resolvers = new LinkedHashMap<>();
 
     /**
      * @param player The teleported player

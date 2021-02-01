@@ -22,9 +22,9 @@ package fr.quatrevieux.araknemu.data.world.entity.character;
 /**
  * Player level and experience
  */
-final public class PlayerExperience {
-    final private int level;
-    final private long experience;
+public final class PlayerExperience {
+    private final int level;
+    private final long experience;
 
     public PlayerExperience(int level, long experience) {
         this.level = level;

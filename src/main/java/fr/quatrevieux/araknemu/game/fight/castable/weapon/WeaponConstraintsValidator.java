@@ -33,8 +33,8 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 /**
  * Validate weapon cast constraints
  */
-final public class WeaponConstraintsValidator implements CastConstraintValidator<CastableWeapon> {
-    final private CastConstraintValidator<CastableWeapon> validator;
+public final class WeaponConstraintsValidator implements CastConstraintValidator<CastableWeapon> {
+    private final CastConstraintValidator<CastableWeapon> validator;
 
     @SuppressWarnings("unchecked")
     public WeaponConstraintsValidator() {

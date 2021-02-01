@@ -54,16 +54,16 @@ public class Araknemu {
     /**
      * Get the current version of the server (retrieved from pom.xml)
      */
-    final static public String VERSION = Araknemu.class.getPackage().getImplementationVersion();
-    final static public String NAME = "Araknemu";
-    final static public String YEAR = "2017-2020";
-    final static public String AUTHOR = "Vincent Quatrevieux";
+    public static final String VERSION = Araknemu.class.getPackage().getImplementationVersion();
+    public static final String NAME = "Araknemu";
+    public static final String YEAR = "2017-2020";
+    public static final String AUTHOR = "Vincent Quatrevieux";
 
-    final private Logger logger = LogManager.getLogger(getClass());
+    private final Logger logger = LogManager.getLogger(getClass());
 
-    final private Configuration configuration;
-    final private DatabaseHandler database;
-    final private List<Service> services = new ArrayList<>();
+    private final Configuration configuration;
+    private final DatabaseHandler database;
+    private final List<Service> services = new ArrayList<>();
     private boolean started = false;
     private Instant startDate;
 
@@ -181,7 +181,7 @@ public class Araknemu {
         Runtime.getRuntime().addShutdownHook(new Thread(app::shutdown));
     }
 
-    static private Container makeRealmContainer(Araknemu app) throws SQLException {
+    private static Container makeRealmContainer(Araknemu app) throws SQLException {
         final Container container = new ItemPoolContainer();
 
         container.register(new SqlLivingRepositoriesModule(
@@ -192,7 +192,7 @@ public class Araknemu {
         return container;
     }
 
-    static private Container makeGameContainer(Araknemu app, Container realmContainer) throws SQLException {
+    private static Container makeGameContainer(Araknemu app, Container realmContainer) throws SQLException {
         final Container container = new ItemPoolContainer();
 
         container.register(new SqlLivingRepositoriesModule(

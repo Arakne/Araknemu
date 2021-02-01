@@ -73,10 +73,10 @@ final class SqlPlayerRaceRepository implements PlayerRaceRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<PlayerRace> utils;
-    final private Transformer<SortedMap<Integer, Characteristics>> characteristicsTransformer;
-    final private Transformer<BoostStatsData> boostStatsDataTransformer;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<PlayerRace> utils;
+    private final Transformer<SortedMap<Integer, Characteristics>> characteristicsTransformer;
+    private final Transformer<BoostStatsData> boostStatsDataTransformer;
 
     public SqlPlayerRaceRepository(QueryExecutor executor, Transformer<SortedMap<Integer, Characteristics>> characteristicsTransformer, Transformer<BoostStatsData> boostStatsDataTransformer) {
         this.characteristicsTransformer = characteristicsTransformer;

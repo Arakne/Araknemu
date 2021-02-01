@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 /**
  * Event trigger when a player change map
  */
-final public class MapChanged {
-    final private ExplorationMap map;
+public final class MapChanged {
+    private final ExplorationMap map;
 
     public MapChanged(ExplorationMap map) {
         this.map = map;

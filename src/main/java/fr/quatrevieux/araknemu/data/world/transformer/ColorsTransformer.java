@@ -32,7 +32,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * Ex: ffebcd,-1,ffebcd
  */
-final public class ColorsTransformer implements Transformer<Colors> {
+public final class ColorsTransformer implements Transformer<Colors> {
     @Override
     public String serialize(Colors value) {
         return value.toHexString(",");

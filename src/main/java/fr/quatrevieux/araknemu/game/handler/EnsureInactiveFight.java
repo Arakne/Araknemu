@@ -30,8 +30,8 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
  *
  * @param <P> Packet to handler
  */
-final public class EnsureInactiveFight<P extends Packet> implements PacketHandler<GameSession, P> {
-    final private PacketHandler<GameSession, P> handler;
+public final class EnsureInactiveFight<P extends Packet> implements PacketHandler<GameSession, P> {
+    private final PacketHandler<GameSession, P> handler;
 
     public EnsureInactiveFight(PacketHandler<GameSession, P> handler) {
         this.handler = handler;

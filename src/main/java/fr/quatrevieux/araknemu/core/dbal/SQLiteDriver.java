@@ -26,15 +26,15 @@ import java.sql.SQLException;
 /**
  * Driver for SQLite connection
  */
-final public class SQLiteDriver implements Driver {
-    final private DatabaseConfiguration.Connection configuration;
+public final class SQLiteDriver implements Driver {
+    private final DatabaseConfiguration.Connection configuration;
 
     public SQLiteDriver(DatabaseConfiguration.Connection configuration) {
         this.configuration = configuration;
     }
 
     @Override
-    synchronized public Connection newConnection() throws SQLException {
+    public synchronized Connection newConnection() throws SQLException {
         return DriverManager.getConnection(jdbcUrl());
     }
 

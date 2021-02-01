@@ -29,12 +29,12 @@ import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 /**
  * Base formula for compute the Pvm experience
  */
-final public class PvmXpProvider implements DropRewardProvider {
-    static private class Scope implements DropRewardProvider.Scope {
-        final private long totalXp;
-        final private double teamsLevelsRate;
-        final private double teamLevelDeviationBonus;
-        final private double winnersLevel;
+public final class PvmXpProvider implements DropRewardProvider {
+    private static class Scope implements DropRewardProvider.Scope {
+        private final long totalXp;
+        private final double teamsLevelsRate;
+        private final double teamLevelDeviationBonus;
+        private final double winnersLevel;
 
         public Scope(long totalXp, double teamsLevelsRate, double teamLevelDeviationBonus, double winnersLevel) {
             this.totalXp = totalXp;
@@ -57,7 +57,7 @@ final public class PvmXpProvider implements DropRewardProvider {
         }
     }
 
-    static private class ExtractXp implements FighterOperation {
+    private static class ExtractXp implements FighterOperation {
         private long xp;
 
         @Override

@@ -47,10 +47,10 @@ import java.util.stream.Stream;
  *       and the next action is scheduled after the last one.
  *       So the AI execution is not blocking, and executed in parallel of the turn timer.
  */
-final public class FighterAI implements Runnable, AI {
-    final private ActiveFighter fighter;
-    final private Fight fight;
-    final private ActionGenerator[] actions;
+public final class FighterAI implements Runnable, AI {
+    private final ActiveFighter fighter;
+    private final Fight fight;
+    private final ActionGenerator[] actions;
 
     private Turn turn;
 

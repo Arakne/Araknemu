@@ -31,11 +31,11 @@ import java.util.Optional;
 /**
  * Add stack capabilities to an item storage
  */
-final public class StackableItemStorage<E extends ItemEntry> implements ItemStorage<E> {
-    final private ItemStorage<E> storage;
-    final private int stackPosition;
+public final class StackableItemStorage<E extends ItemEntry> implements ItemStorage<E> {
+    private final ItemStorage<E> storage;
+    private final int stackPosition;
 
-    final private Map<Item, E> stackMap = new HashMap<>();
+    private final Map<Item, E> stackMap = new HashMap<>();
 
     public StackableItemStorage(ItemStorage<E> storage) {
         this(storage, ItemEntry.DEFAULT_POSITION);

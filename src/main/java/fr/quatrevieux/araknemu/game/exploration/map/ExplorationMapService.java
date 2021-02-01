@@ -52,14 +52,14 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Service for handle exploration maps
  */
-final public class ExplorationMapService implements PreloadableService, EventsSubscriber {
-    final private MapTemplateRepository repository;
-    final private FightService fightService;
-    final private AreaService areaService;
-    final private Dispatcher dispatcher;
-    final private CellLoader loader;
+public final class ExplorationMapService implements PreloadableService, EventsSubscriber {
+    private final MapTemplateRepository repository;
+    private final FightService fightService;
+    private final AreaService areaService;
+    private final Dispatcher dispatcher;
+    private final CellLoader loader;
 
-    final private ConcurrentMap<Integer, ExplorationMap> maps = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, ExplorationMap> maps = new ConcurrentHashMap<>();
 
     public ExplorationMapService(MapTemplateRepository repository, FightService fightService, AreaService areaService, Dispatcher dispatcher, CellLoader loader) {
         this.repository = repository;

@@ -30,8 +30,8 @@ import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeRequestError;
 /**
  * Handle the exchange request
  */
-final public class AskExchange implements PacketHandler<GameSession, ExchangeRequest> {
-    final private ExchangeFactory factory;
+public final class AskExchange implements PacketHandler<GameSession, ExchangeRequest> {
+    private final ExchangeFactory factory;
 
     public AskExchange(ExchangeFactory factory) {
         this.factory = factory;

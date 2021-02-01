@@ -31,8 +31,8 @@ import java.util.List;
  * Global context.
  * This context should be available in all other contexts
  */
-final public class GlobalContext extends AbstractContext<GlobalContext> {
-    final private List<AbstractContextConfigurator<GlobalContext>> configurators;
+public final class GlobalContext extends AbstractContext<GlobalContext> {
+    private final List<AbstractContextConfigurator<GlobalContext>> configurators;
 
     public GlobalContext(List<AbstractContextConfigurator<GlobalContext>> configurators) {
         super(configurators);

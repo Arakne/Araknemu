@@ -29,8 +29,8 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Spells.as#L19
  */
-final public class SpellMove implements Packet {
-    final static public class Parser implements SinglePacketParser<SpellMove> {
+public final class SpellMove implements Packet {
+    public static final class Parser implements SinglePacketParser<SpellMove> {
         @Override
         public SpellMove parse(String input) throws ParsePacketException {
             final String[] parts = StringUtils.split(input, "|", 2);
@@ -47,8 +47,8 @@ final public class SpellMove implements Packet {
         }
     }
 
-    final private int spellId;
-    final private int position;
+    private final int spellId;
+    private final int position;
 
     public SpellMove(int spellId, int position) {
         this.spellId = spellId;

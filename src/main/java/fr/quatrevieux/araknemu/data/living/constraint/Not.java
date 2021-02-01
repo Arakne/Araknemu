@@ -25,8 +25,8 @@ package fr.quatrevieux.araknemu.data.living.constraint;
  * @param <T> The entity type
  * @param <E> The error type
  */
-final public class Not<T, E> implements EntityConstraint<T, E> {
-    final private EntityConstraint<T, E> constraint;
+public final class Not<T, E> implements EntityConstraint<T, E> {
+    private final EntityConstraint<T, E> constraint;
 
     public Not(EntityConstraint<T, E> constraint) {
         this.constraint = constraint;

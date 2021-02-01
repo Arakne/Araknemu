@@ -28,12 +28,12 @@ import java.nio.charset.StandardCharsets;
 /**
  * Utility class for escape string
  */
-final public class Escape {
+public final class Escape {
     // Replacement pairs
     // The two firsts pairs are used to ignore substrings :
     // the client already escape < and > when sending message, so ignore &lt; and &gt; to ensure that sending ">" will not be displayed as "&gt;"
-    final static private String[] TO_ESCAPE = new String[] {"&lt;", "&gt;", "<", ">", "&", "|"};
-    final static private String[] REPLACEMENT = new String[] {"&lt;", "&gt;", "&lt;", "&gt;", "&amp;", ""};
+    private static final String[] TO_ESCAPE = new String[] {"&lt;", "&gt;", "<", ">", "&", "|"};
+    private static final String[] REPLACEMENT = new String[] {"&lt;", "&gt;", "&lt;", "&gt;", "&amp;", ""};
 
     private Escape() {}
 
@@ -45,7 +45,7 @@ final public class Escape {
      *
      * @return Escaped (safe) value
      */
-    static public String html(String value) {
+    public static String html(String value) {
         return StringUtils.replaceEach(value, TO_ESCAPE, REPLACEMENT);
     }
 
@@ -56,7 +56,7 @@ final public class Escape {
      *
      * @return Encoded value
      */
-    static public String url(String value) {
+    public static String url(String value) {
         try {
             return URLEncoder.encode(value, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {

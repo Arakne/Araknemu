@@ -30,12 +30,12 @@ import java.util.Map;
 /**
  * Base database handler
  */
-final public class DefaultDatabaseHandler implements DatabaseHandler {
-    final private DatabaseConfiguration configuration;
-    final private Map<String, Driver.Factory> factories;
-    final private Logger logger;
+public final class DefaultDatabaseHandler implements DatabaseHandler {
+    private final DatabaseConfiguration configuration;
+    private final Map<String, Driver.Factory> factories;
+    private final Logger logger;
 
-    final private Map<String, ConnectionPool> connections = new HashMap<>();
+    private final Map<String, ConnectionPool> connections = new HashMap<>();
 
     public DefaultDatabaseHandler(DatabaseConfiguration configuration, Logger logger, Map<String, Driver.Factory> factories) {
         this.configuration = configuration;

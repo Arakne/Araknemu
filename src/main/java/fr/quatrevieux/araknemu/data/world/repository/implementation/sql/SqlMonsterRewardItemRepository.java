@@ -53,8 +53,8 @@ final class SqlMonsterRewardItemRepository implements MonsterRewardItemRepositor
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<MonsterRewardItem> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<MonsterRewardItem> utils;
 
     public SqlMonsterRewardItemRepository(QueryExecutor executor) {
         this.executor = executor;

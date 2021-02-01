@@ -51,8 +51,8 @@ final class SqlMapTriggerRepository implements MapTriggerRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<MapTrigger> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<MapTrigger> utils;
 
     public SqlMapTriggerRepository(QueryExecutor executor) {
         this.executor = executor;

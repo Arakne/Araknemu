@@ -30,8 +30,8 @@ import java.util.List;
 /**
  * Select a random cell from all free cells of the map
  */
-final public class RandomCellSelector implements SpawnCellSelector {
-    final static private RandomUtil RANDOM = RandomUtil.createShared();
+public final class RandomCellSelector implements SpawnCellSelector {
+    private static final RandomUtil RANDOM = RandomUtil.createShared();
 
     private ExplorationMap map;
     private int[] availableCells;

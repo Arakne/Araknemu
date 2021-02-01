@@ -32,9 +32,9 @@ import fr.quatrevieux.araknemu.network.game.out.fight.exploration.ShowFight;
 /**
  * Send to the exploration map the new created fight
  */
-final public class SendCreatedFight implements Listener<FightCreated> {
-    final private ExplorationMapService mapService;
-    final private FightService fightService;
+public final class SendCreatedFight implements Listener<FightCreated> {
+    private final ExplorationMapService mapService;
+    private final FightService fightService;
 
     public SendCreatedFight(ExplorationMapService mapService, FightService fightService) {
         this.mapService = mapService;

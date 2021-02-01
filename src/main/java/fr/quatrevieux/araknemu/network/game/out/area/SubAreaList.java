@@ -29,8 +29,8 @@ import java.util.Collection;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Subareas.as#L19
  */
-final public class SubAreaList {
-    final private Collection<ExplorationSubArea> subAreas;
+public final class SubAreaList {
+    private final Collection<ExplorationSubArea> subAreas;
 
     public SubAreaList(Collection<ExplorationSubArea> subAreas) {
         this.subAreas = subAreas;

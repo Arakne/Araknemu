@@ -32,7 +32,7 @@ import fr.quatrevieux.araknemu.network.AccountSession;
 /**
  * Session wrapper for game server
  */
-final public class GameSession extends AbstractDelegatedSession implements AccountSession<GameAccount>, Dispatcher {
+public final class GameSession extends AbstractDelegatedSession implements AccountSession<GameAccount>, Dispatcher {
     private GameAccount account;
     private GamePlayer player;
     private ExplorationPlayer exploration;

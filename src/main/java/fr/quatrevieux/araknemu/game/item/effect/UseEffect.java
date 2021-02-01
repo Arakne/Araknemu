@@ -30,10 +30,10 @@ import java.util.Arrays;
 /**
  * Effect for usable items
  */
-final public class UseEffect implements ItemEffect {
-    final private UseEffectHandler handler;
-    final private Effect effect;
-    final private int[] arguments;
+public final class UseEffect implements ItemEffect {
+    private final UseEffectHandler handler;
+    private final Effect effect;
+    private final int[] arguments;
 
     public UseEffect(UseEffectHandler handler, Effect effect, int[] arguments) {
         this.handler = handler;

@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L213
  */
-final public class FighterReady implements Packet {
-    final static public class Parser implements SinglePacketParser<FighterReady> {
+public final class FighterReady implements Packet {
+    public static final class Parser implements SinglePacketParser<FighterReady> {
         @Override
         public FighterReady parse(String input) throws ParsePacketException {
             return new FighterReady("1".equals(input));

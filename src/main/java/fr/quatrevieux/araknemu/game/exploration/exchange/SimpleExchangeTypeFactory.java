@@ -28,14 +28,14 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeInt
  *
  * @param <C> The creature type target
  */
-final public class SimpleExchangeTypeFactory<C extends ExplorationCreature> implements ExchangeTypeFactory<C> {
+public final class SimpleExchangeTypeFactory<C extends ExplorationCreature> implements ExchangeTypeFactory<C> {
     @FunctionalInterface
     public interface Factory<C extends ExplorationCreature> {
         public ExchangeInteraction create(ExplorationPlayer initiator, C target);
     }
 
-    final private ExchangeType type;
-    final private Factory<C> factory;
+    private final ExchangeType type;
+    private final Factory<C> factory;
 
     public SimpleExchangeTypeFactory(ExchangeType type, Factory<C> factory) {
         this.type = type;

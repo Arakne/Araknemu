@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Items.as#L191
  */
-final public class DestroyItem {
-    final private ItemEntry entry;
+public final class DestroyItem {
+    private final ItemEntry entry;
 
     public DestroyItem(ItemEntry entry) {
         this.entry = entry;

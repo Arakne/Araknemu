@@ -25,8 +25,8 @@ package fr.quatrevieux.araknemu.data.living.constraint;
  * @param <T> The entity type
  * @param <E> The error type
  */
-final public class Must<T, E> implements EntityConstraint<T, E> {
-    final private EntityConstraint<T, E>[] constraints;
+public final class Must<T, E> implements EntityConstraint<T, E> {
+    private final EntityConstraint<T, E>[] constraints;
     private E error;
 
     public Must(EntityConstraint<T, E>[] constraints) {

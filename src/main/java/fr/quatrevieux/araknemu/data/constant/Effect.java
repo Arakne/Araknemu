@@ -229,10 +229,10 @@ public enum Effect {
         SPECIAL
     }
 
-    final static private Map<Integer, Effect> effects = new HashMap<>();
+    private static final Map<Integer, Effect> effects = new HashMap<>();
 
-    final private int id;
-    final private Type type;
+    private final int id;
+    private final Type type;
 
     static {
         for (Effect effect : values()) {
@@ -264,7 +264,7 @@ public enum Effect {
      *
      * @see Effect#id()
      */
-    static public Effect byId(int id) {
+    public static Effect byId(int id) {
         if (!effects.containsKey(id)) {
             throw new NoSuchElementException("Effect " + id + " is not supported");
         }

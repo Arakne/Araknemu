@@ -33,9 +33,9 @@ import java.util.Set;
 /**
  * Account for game
  */
-final public class GameAccount extends AbstractLivingAccount<GameSession> {
-    final private AccountService service;
-    final private int serverId;
+public final class GameAccount extends AbstractLivingAccount<GameSession> {
+    private final AccountService service;
+    private final int serverId;
 
     public GameAccount(Account account, AccountService service, int serverId) {
         super(account);

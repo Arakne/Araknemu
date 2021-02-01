@@ -28,11 +28,11 @@ import java.util.List;
 /**
  * Null object for rewards
  */
-final public class NullMonsterGradesReward implements MonsterGradesReward {
-    final static public NullMonsterGradesReward INSTANCE = new NullMonsterGradesReward();
+public final class NullMonsterGradesReward implements MonsterGradesReward {
+    public static final NullMonsterGradesReward INSTANCE = new NullMonsterGradesReward();
 
-    final static private Interval NULL_INTERVAL = new Interval(0, 0);
-    final static private MonsterReward NULL_REWARD = new MonsterReward() {
+    private static final Interval NULL_INTERVAL = new Interval(0, 0);
+    private static final MonsterReward NULL_REWARD = new MonsterReward() {
         @Override
         public Interval kamas() {
             return NULL_INTERVAL;

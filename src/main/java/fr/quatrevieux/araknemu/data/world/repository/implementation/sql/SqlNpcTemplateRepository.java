@@ -70,8 +70,8 @@ final class SqlNpcTemplateRepository implements NpcTemplateRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<NpcTemplate> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<NpcTemplate> utils;
 
     public SqlNpcTemplateRepository(QueryExecutor executor) {
         this.executor = executor;

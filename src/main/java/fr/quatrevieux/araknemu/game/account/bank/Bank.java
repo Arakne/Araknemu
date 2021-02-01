@@ -44,11 +44,11 @@ import java.util.stream.Collectors;
 /**
  * The bank storage
  */
-final public class Bank implements Inventory<BankEntry>, Dispatcher {
-    final private BankService service;
-    final private AccountBank entity;
-    final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
-    final private Wallet wallet;
+public final class Bank implements Inventory<BankEntry>, Dispatcher {
+    private final BankService service;
+    private final AccountBank entity;
+    private final ListenerAggregate dispatcher = new DefaultListenerAggregate();
+    private final Wallet wallet;
 
     private ItemStorage<BankEntry> storage;
 

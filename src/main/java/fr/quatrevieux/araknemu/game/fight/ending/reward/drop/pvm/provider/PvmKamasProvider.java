@@ -28,10 +28,10 @@ import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 /**
  * Provide win kamas on Pvm fight
  */
-final public class PvmKamasProvider implements DropRewardProvider {
-    final private RandomUtil random = new RandomUtil();
+public final class PvmKamasProvider implements DropRewardProvider {
+    private final RandomUtil random = new RandomUtil();
 
-    static private class ExtractKamas implements FighterOperation {
+    private static class ExtractKamas implements FighterOperation {
         private int minKamas = 0;
         private int maxKamas = 0;
 

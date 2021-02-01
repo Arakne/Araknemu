@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
 /**
  * Add life to the use target
  */
-final public class AddLifeEffect implements UseEffectHandler {
-    final private RandomUtil random = new RandomUtil();
+public final class AddLifeEffect implements UseEffectHandler {
+    private final RandomUtil random = new RandomUtil();
 
     @Override
     public void apply(UseEffect effect, ExplorationPlayer caster) {

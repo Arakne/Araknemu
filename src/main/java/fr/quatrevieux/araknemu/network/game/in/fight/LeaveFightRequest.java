@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L27
  */
-final public class LeaveFightRequest implements Packet {
-    final static public class Parser implements SinglePacketParser<LeaveFightRequest> {
+public final class LeaveFightRequest implements Packet {
+    public static final class Parser implements SinglePacketParser<LeaveFightRequest> {
         @Override
         public LeaveFightRequest parse(String input) throws ParsePacketException {
             return new LeaveFightRequest();

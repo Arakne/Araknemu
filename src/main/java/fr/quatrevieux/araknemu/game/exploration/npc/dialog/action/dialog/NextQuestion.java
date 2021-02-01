@@ -36,9 +36,9 @@ import java.util.Collection;
  *
  * The check will failed if cannot found an available question (condition check)
  */
-final public class NextQuestion implements Action {
-    final static public class Factory implements ActionFactory {
-        final private DialogService service;
+public final class NextQuestion implements Action {
+    public static final class Factory implements ActionFactory {
+        private final DialogService service;
 
         public Factory(DialogService service) {
             this.service = service;
@@ -60,8 +60,8 @@ final public class NextQuestion implements Action {
         }
     }
 
-    final private DialogService service;
-    final private int[] questionIds;
+    private final DialogService service;
+    private final int[] questionIds;
 
     // Lazy loading of questions : prevent from stack overflow
     private Collection<NpcQuestion> questions;

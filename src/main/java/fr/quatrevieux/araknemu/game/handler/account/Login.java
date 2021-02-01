@@ -37,10 +37,10 @@ import java.util.NoSuchElementException;
 /**
  * Handle login token to start client session
  */
-final public class Login implements PacketHandler<GameSession, LoginToken> {
-    final private TokenService tokens;
-    final private AccountService service;
-    final private SessionLogService logService;
+public final class Login implements PacketHandler<GameSession, LoginToken> {
+    private final TokenService tokens;
+    private final AccountService service;
+    private final SessionLogService logService;
 
     public Login(TokenService tokens, AccountService service, SessionLogService logService) {
         this.tokens = tokens;

@@ -29,8 +29,8 @@ import java.util.Collections;
 /**
  * Send the sprite restrictions when changed
  */
-final public class SendSpriteRestrictions implements Listener<RestrictionsChanged> {
-    final private ExplorationMap map;
+public final class SendSpriteRestrictions implements Listener<RestrictionsChanged> {
+    private final ExplorationMap map;
 
     public SendSpriteRestrictions(ExplorationMap map) {
         this.map = map;

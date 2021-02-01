@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.network.game.in.fight.TurnEnd;
 /**
  * End the turn of the current fighter
  */
-final public class EndFighterTurn implements PacketHandler<GameSession, TurnEnd> {
+public final class EndFighterTurn implements PacketHandler<GameSession, TurnEnd> {
     @Override
     public void handle(GameSession session, TurnEnd packet) {
         session.fighter().turn().stop();

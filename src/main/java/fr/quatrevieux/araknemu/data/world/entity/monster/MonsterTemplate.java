@@ -28,13 +28,13 @@ import java.util.Map;
  * Template for monster
  * Store characteristics for create real monsters
  */
-final public class MonsterTemplate {
-    final static public class Grade {
-        final private int level;
-        final private int life;
-        final private int initiative;
-        final private Characteristics characteristics;
-        final private Map<Integer, Integer> spells;
+public final class MonsterTemplate {
+    public static final class Grade {
+        private final int level;
+        private final int life;
+        private final int initiative;
+        private final Characteristics characteristics;
+        private final Map<Integer, Integer> spells;
 
         public Grade(int level, int life, int initiative, Characteristics characteristics, Map<Integer, Integer> spells) {
             this.level = level;
@@ -83,12 +83,12 @@ final public class MonsterTemplate {
         }
     }
 
-    final private int id;
-    final private String name;
-    final private int gfxId;
-    final private Colors colors;
-    final private String ai;
-    final private Grade[] grades;
+    private final int id;
+    private final String name;
+    private final int gfxId;
+    private final Colors colors;
+    private final String ai;
+    private final Grade[] grades;
 
     public MonsterTemplate(int id, String name, int gfxId, Colors colors, String ai, Grade[] grades) {
         this.id = id;

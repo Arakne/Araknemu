@@ -24,8 +24,8 @@ import java.time.Duration;
 /**
  * Define utility methods for Pool
  */
-final public class PoolUtils implements Pool {
-    final private Pool pool;
+public final class PoolUtils implements Pool {
+    private final Pool pool;
 
     public PoolUtils(Pool pool) {
         this.pool = pool;

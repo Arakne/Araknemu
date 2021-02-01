@@ -34,9 +34,9 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 /**
  * Base service for handle game exploration
  */
-final public class ExplorationService implements EventsSubscriber {
-    final private ExplorationMapService mapService;
-    final private Dispatcher dispatcher;
+public final class ExplorationService implements EventsSubscriber {
+    private final ExplorationMapService mapService;
+    private final Dispatcher dispatcher;
 
     public ExplorationService(ExplorationMapService mapService, Dispatcher dispatcher) {
         this.mapService = mapService;

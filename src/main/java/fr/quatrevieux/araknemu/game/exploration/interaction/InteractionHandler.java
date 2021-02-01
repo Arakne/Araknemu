@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingActio
 /**
  * Handle exploration player interactions
  */
-final public class InteractionHandler {
-    final private ActionQueue gameActions = new ActionQueue();
+public final class InteractionHandler {
+    private final ActionQueue gameActions = new ActionQueue();
 
     private Interaction current;
 

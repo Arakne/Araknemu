@@ -28,7 +28,7 @@ import java.util.Collection;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L434
  */
-final public class AddSprites {
+public final class AddSprites {
     private Collection<? extends Sprite> sprites;
 
     public AddSprites(Collection<? extends Sprite> sprites) {

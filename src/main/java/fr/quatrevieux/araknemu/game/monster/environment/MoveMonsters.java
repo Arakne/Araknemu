@@ -37,12 +37,12 @@ import java.time.Duration;
  * At most one group move per map per execution.
  * The move is performed if its randomly selected with moveChange and if the path is not too complex
  */
-final public class MoveMonsters implements Task {
-    final private MonsterEnvironmentService service;
-    final private Duration delay;
-    final private int moveChance;
+public final class MoveMonsters implements Task {
+    private final MonsterEnvironmentService service;
+    private final Duration delay;
+    private final int moveChance;
 
-    final private RandomUtil random = new RandomUtil();
+    private final RandomUtil random = new RandomUtil();
 
     /**
      * Initialise the move task

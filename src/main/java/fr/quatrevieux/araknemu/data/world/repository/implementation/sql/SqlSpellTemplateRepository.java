@@ -65,10 +65,10 @@ final class SqlSpellTemplateRepository implements SpellTemplateRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<SpellTemplate> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<SpellTemplate> utils;
 
-    final private Transformer<SpellTemplate.Level> levelTransformer;
+    private final Transformer<SpellTemplate.Level> levelTransformer;
 
     public SqlSpellTemplateRepository(QueryExecutor executor, Transformer<SpellTemplate.Level> levelTransformer) {
         this.executor = executor;

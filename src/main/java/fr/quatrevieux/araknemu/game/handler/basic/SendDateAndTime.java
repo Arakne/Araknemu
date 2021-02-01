@@ -30,7 +30,7 @@ import java.util.Calendar;
 /**
  * Send the current server date
  */
-final public class SendDateAndTime implements PacketHandler<GameSession, AskDate> {
+public final class SendDateAndTime implements PacketHandler<GameSession, AskDate> {
     @Override
     public void handle(GameSession session, AskDate packet) throws Exception {
         final Calendar calendar = Calendar.getInstance();

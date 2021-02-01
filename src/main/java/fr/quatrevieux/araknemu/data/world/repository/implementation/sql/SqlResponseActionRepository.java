@@ -56,8 +56,8 @@ final class SqlResponseActionRepository implements ResponseActionRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<ResponseAction> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<ResponseAction> utils;
 
     public SqlResponseActionRepository(QueryExecutor executor) {
         this.executor = executor;

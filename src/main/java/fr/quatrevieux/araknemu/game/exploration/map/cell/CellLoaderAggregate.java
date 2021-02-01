@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
 /**
  * Aggregate cells loaders
  */
-final public class CellLoaderAggregate implements CellLoader {
-    final private CellLoader[] loaders;
+public final class CellLoaderAggregate implements CellLoader {
+    private final CellLoader[] loaders;
 
     public CellLoaderAggregate(CellLoader[] loaders) {
         this.loaders = loaders;

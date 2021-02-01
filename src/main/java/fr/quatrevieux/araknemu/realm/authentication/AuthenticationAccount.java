@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.realm.authentication.password.Password;
 /**
  * AuthenticationAccount entity for realm
  */
-final public class AuthenticationAccount extends AbstractLivingAccount<RealmSession> {
-    final private AuthenticationService service;
+public final class AuthenticationAccount extends AbstractLivingAccount<RealmSession> {
+    private final AuthenticationService service;
     private Password password;
 
     public AuthenticationAccount(Account account, Password password, AuthenticationService service) {

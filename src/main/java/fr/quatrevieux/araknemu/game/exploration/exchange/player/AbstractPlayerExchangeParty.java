@@ -30,16 +30,16 @@ import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
  * The base player party for an exchange between two parties
  * This implementation is thread safe : all modifier methods are synchronized on both parties
  */
-abstract public class AbstractPlayerExchangeParty implements ExchangeParty {
-    final private ExplorationPlayer player;
-    final private PlayerExchangeStorage storage;
+public abstract class AbstractPlayerExchangeParty implements ExchangeParty {
+    private final ExplorationPlayer player;
+    private final PlayerExchangeStorage storage;
 
     /**
      * The common exchange processor
      * The instance is shared between two parties, and is used for synchronization
      * All modifier methods must be synchronized with this instance
      */
-    final private ExchangeProcessor processor;
+    private final ExchangeProcessor processor;
 
     protected AbstractPlayerExchangeParty(ExplorationPlayer player, ExchangeProcessor processor, PlayerExchangeStorage storage) {
         this.player = player;
@@ -48,22 +48,22 @@ abstract public class AbstractPlayerExchangeParty implements ExchangeParty {
     }
 
     @Override
-    final public ExplorationPlayer actor() {
+    public final ExplorationPlayer actor() {
         return player;
     }
 
     @Override
-    final public ExchangeInteraction dialog() {
+    public final ExchangeInteraction dialog() {
         return new ExchangeDialog(this);
     }
 
     @Override
-    final public void leave() {
+    public final void leave() {
         processor.cancel();
     }
 
     @Override
-    final public void toggleAccept() {
+    public final void toggleAccept() {
         synchronized (processor) {
             processor.assertNotAccepted();
 
@@ -76,7 +76,7 @@ abstract public class AbstractPlayerExchangeParty implements ExchangeParty {
     }
 
     @Override
-    final public void kamas(long quantity) {
+    public final void kamas(long quantity) {
         synchronized (processor) {
             processor.assertNotAccepted();
 
@@ -91,7 +91,7 @@ abstract public class AbstractPlayerExchangeParty implements ExchangeParty {
     }
 
     @Override
-    final public void item(int itemEntryId, int quantity) {
+    public final void item(int itemEntryId, int quantity) {
         final ItemEntry entry = player.inventory().get(itemEntryId);
 
         synchronized (processor) {
@@ -103,7 +103,7 @@ abstract public class AbstractPlayerExchangeParty implements ExchangeParty {
     }
 
     @Override
-    final public void send(Object packet) {
+    public final void send(Object packet) {
         player.send(packet);
     }
 }

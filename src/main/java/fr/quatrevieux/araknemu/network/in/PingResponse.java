@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 /**
  * Response for RPing request
  */
-final public class PingResponse implements Packet {
+public final class PingResponse implements Packet {
     public static class Parser implements SinglePacketParser<PingResponse> {
         @Override
         public PingResponse parse(String input) throws ParsePacketException {
@@ -39,7 +39,7 @@ final public class PingResponse implements Packet {
         }
     }
 
-    final private String payload;
+    private final String payload;
 
     public PingResponse(String payload) {
         this.payload = payload;

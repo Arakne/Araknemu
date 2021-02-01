@@ -32,8 +32,8 @@ import fr.quatrevieux.araknemu.realm.host.HostService;
  *
  * @todo Do not use SelectServerPlain
  */
-final public class ConnectGame implements PacketHandler<RealmSession, ChooseServer> {
-    final private HostService service;
+public final class ConnectGame implements PacketHandler<RealmSession, ChooseServer> {
+    private final HostService service;
 
     public ConnectGame(HostService service) {
         this.service = service;

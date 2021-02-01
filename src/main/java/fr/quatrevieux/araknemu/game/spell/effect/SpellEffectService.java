@@ -41,8 +41,8 @@ import java.util.function.Function;
 /**
  * Handle spell effects
  */
-final public class SpellEffectService {
-    final private Map<EffectArea.Type, Function<EffectArea, SpellEffectArea>> areaFactories;
+public final class SpellEffectService {
+    private final Map<EffectArea.Type, Function<EffectArea, SpellEffectArea>> areaFactories;
 
     public SpellEffectService() {
         this(new EnumMap<>(EffectArea.Type.class));

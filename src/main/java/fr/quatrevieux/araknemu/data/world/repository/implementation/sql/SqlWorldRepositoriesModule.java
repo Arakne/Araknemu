@@ -70,8 +70,8 @@ import org.apache.logging.log4j.LogManager;
 /**
  * DI module for world repositories
  */
-final public class SqlWorldRepositoriesModule implements ContainerModule {
-    final private QueryExecutor executor;
+public final class SqlWorldRepositoriesModule implements ContainerModule {
+    private final QueryExecutor executor;
 
     public SqlWorldRepositoriesModule(ConnectionPool connection) {
         this.executor = new LoggedQueryExecutor(

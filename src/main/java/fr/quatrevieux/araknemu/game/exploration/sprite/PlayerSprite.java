@@ -30,8 +30,8 @@ import fr.quatrevieux.araknemu.game.world.creature.Sprite;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L764
  */
-final public class PlayerSprite implements Sprite {
-    final private ExplorationPlayer exploration;
+public final class PlayerSprite implements Sprite {
+    private final ExplorationPlayer exploration;
 
     public PlayerSprite(ExplorationPlayer exploration) {
         this.exploration = exploration;

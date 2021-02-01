@@ -34,7 +34,7 @@ import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SlotConstra
 /**
  * Base slot class for wearable
  */
-abstract public class AbstractWearableSlot extends AbstractEquipmentSlot {
+public abstract class AbstractWearableSlot extends AbstractEquipmentSlot {
     public AbstractWearableSlot(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage, GamePlayer owner, int id, SuperType type) {
         super(
             dispatcher,

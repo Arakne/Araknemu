@@ -30,7 +30,7 @@ import java.util.Queue;
 /**
  * Sort fighters by initiative with alternate teams
  */
-final public class AlternateTeamFighterOrder implements FighterOrderStrategy {
+public final class AlternateTeamFighterOrder implements FighterOrderStrategy {
     @Override
     public List<Fighter> compute(List<FightTeam> teams) {
         final List<Queue<Fighter>> fightersByTeam = computeTeamsOrder(teams);

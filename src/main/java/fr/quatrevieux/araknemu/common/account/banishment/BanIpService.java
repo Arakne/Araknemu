@@ -40,9 +40,9 @@ import java.util.stream.Collectors;
 /**
  * Handle ban ip table
  */
-final public class BanIpService<A extends LivingAccount> {
-    final public class RuleBuilder {
-        final private IPAddressString ipAddress;
+public final class BanIpService<A extends LivingAccount> {
+    public final class RuleBuilder {
+        private final IPAddressString ipAddress;
         private String cause = "";
         private Duration duration = null;
         private A banisher = null;
@@ -97,9 +97,9 @@ final public class BanIpService<A extends LivingAccount> {
         }
     }
 
-    final private BanIpRepository repository;
-    final private Dispatcher dispatcher;
-    final private Function<int[], Map<Integer, A>> loadAccountsByIds;
+    private final BanIpRepository repository;
+    private final Dispatcher dispatcher;
+    private final Function<int[], Map<Integer, A>> loadAccountsByIds;
 
     private Collection<BanIp> banIps = new CopyOnWriteArrayList<>();
     private Instant lastUpdate = Instant.EPOCH;

@@ -40,10 +40,10 @@ import java.util.stream.Collectors;
 /**
  * Wrap casting arguments
  */
-final public class CastScope {
-    final public class EffectScope {
-        final private SpellEffect effect;
-        final private Collection<PassiveFighter> targets;
+public final class CastScope {
+    public final class EffectScope {
+        private final SpellEffect effect;
+        private final Collection<PassiveFighter> targets;
 
         public EffectScope(SpellEffect effect, Collection<PassiveFighter> targets) {
             this.effect = effect;
@@ -72,11 +72,11 @@ final public class CastScope {
     /**
      * Cast scope is a temporary object, and the random is rarely used (only for "probable effects")
      */
-    final static private RandomUtil RANDOM = RandomUtil.createShared();
+    private static final RandomUtil RANDOM = RandomUtil.createShared();
 
-    final private Castable action;
-    final private ActiveFighter caster;
-    final private FightCell target;
+    private final Castable action;
+    private final ActiveFighter caster;
+    private final FightCell target;
 
     private List<EffectScope> effects;
     private Map<PassiveFighter, PassiveFighter> targetMapping;

@@ -31,10 +31,10 @@ import java.util.stream.Collectors;
 /**
  * Entry for player repository
  */
-final public class InventoryEntry extends AbstractItemEntry {
-    final private PlayerInventory inventory;
-    final private PlayerItem entity;
-    final private Item item;
+public final class InventoryEntry extends AbstractItemEntry {
+    private final PlayerInventory inventory;
+    private final PlayerItem entity;
+    private final Item item;
 
     public InventoryEntry(PlayerInventory inventory, PlayerItem entity, Item item) {
         super(inventory, entity, item, inventory);

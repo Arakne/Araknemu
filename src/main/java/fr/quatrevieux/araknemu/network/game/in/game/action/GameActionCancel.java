@@ -29,8 +29,8 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/GameActions.as#L28
  */
-final public class GameActionCancel implements Packet {
-    final static public class Parser implements SinglePacketParser<GameActionCancel> {
+public final class GameActionCancel implements Packet {
+    public static final class Parser implements SinglePacketParser<GameActionCancel> {
         @Override
         public GameActionCancel parse(String input) throws ParsePacketException {
             final String[] parts = StringUtils.split(input, "|", 2);
@@ -51,8 +51,8 @@ final public class GameActionCancel implements Packet {
         }
     }
 
-    final private int actionId;
-    final private String argument;
+    private final int actionId;
+    private final String argument;
 
     public GameActionCancel(int actionId, String argument) {
         this.actionId = actionId;

@@ -30,9 +30,9 @@ import java.util.Optional;
 /**
  * Factory for exchanges
  */
-final public class DefaultExchangeFactory implements ExchangeFactory<ExplorationCreature> {
-    final private ExchangeFactory<ExplorationPlayer> playerFactory;
-    final private ExchangeFactory<GameNpc> npcFactory;
+public final class DefaultExchangeFactory implements ExchangeFactory<ExplorationCreature> {
+    private final ExchangeFactory<ExplorationPlayer> playerFactory;
+    private final ExchangeFactory<GameNpc> npcFactory;
 
     public DefaultExchangeFactory(ExchangeFactory<ExplorationPlayer> playerFactory, ExchangeFactory<GameNpc> npcFactory) {
         this.playerFactory = playerFactory;
@@ -42,9 +42,9 @@ final public class DefaultExchangeFactory implements ExchangeFactory<Exploration
     /**
      * Visitor operation for create the exchange on the valid target
      */
-    final private class CreateExchange implements Operation {
-        final private ExchangeType type;
-        final private ExplorationPlayer initiator;
+    private final class CreateExchange implements Operation {
+        private final ExchangeType type;
+        private final ExplorationPlayer initiator;
 
         private ExchangeInteraction exchange;
 

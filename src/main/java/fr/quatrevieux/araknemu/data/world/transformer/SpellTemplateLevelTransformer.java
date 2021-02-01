@@ -35,28 +35,28 @@ import java.util.stream.Collectors;
  * Transform {@link fr.quatrevieux.araknemu.data.world.entity.SpellTemplate.Level}
  */
 public class SpellTemplateLevelTransformer implements Transformer<SpellTemplate.Level> {
-    final static public int NORMAL_EFFECTS = 0;
-    final static public int CRITICAL_EFFECTS = 1;
-    final static public int AP_COST = 2;
-    final static public int RANGE_MIN = 3;
-    final static public int RANGE_MAX = 4;
-    final static public int CRITICAL_RATE = 5;
-    final static public int FAILURE_RATE = 6;
-    final static public int LINE_ONLY = 7;
-    final static public int LINE_OF_SIGHT = 8;
-    final static public int FREE_CELL = 9;
-    final static public int BOOST_RANGE = 10;
-    final static public int CLASS_ID = 11;
-    final static public int LAUNCH_BY_TURN = 12;
-    final static public int LAUNCH_BY_PLAYER = 13;
-    final static public int LAUNCH_DELAY = 14;
-    final static public int EFFECT_AREAS = 15;
-    final static public int REQUIRED_STATES = 16;
-    final static public int FORBIDDEN_STATES = 17;
-    final static public int MIN_PLAYE_LEVEL = 18;
-    final static public int ENDS_TURN_ON_FAILURE = 19;
+    public static final int NORMAL_EFFECTS = 0;
+    public static final int CRITICAL_EFFECTS = 1;
+    public static final int AP_COST = 2;
+    public static final int RANGE_MIN = 3;
+    public static final int RANGE_MAX = 4;
+    public static final int CRITICAL_RATE = 5;
+    public static final int FAILURE_RATE = 6;
+    public static final int LINE_ONLY = 7;
+    public static final int LINE_OF_SIGHT = 8;
+    public static final int FREE_CELL = 9;
+    public static final int BOOST_RANGE = 10;
+    public static final int CLASS_ID = 11;
+    public static final int LAUNCH_BY_TURN = 12;
+    public static final int LAUNCH_BY_PLAYER = 13;
+    public static final int LAUNCH_DELAY = 14;
+    public static final int EFFECT_AREAS = 15;
+    public static final int REQUIRED_STATES = 16;
+    public static final int FORBIDDEN_STATES = 17;
+    public static final int MIN_PLAYE_LEVEL = 18;
+    public static final int ENDS_TURN_ON_FAILURE = 19;
 
-    final private Transformer<EffectArea> areaTransformer;
+    private final Transformer<EffectArea> areaTransformer;
 
     public SpellTemplateLevelTransformer(Transformer<EffectArea> areaTransformer) {
         this.areaTransformer = areaTransformer;

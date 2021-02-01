@@ -33,9 +33,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *
  * @param <S> The handled session type
  */
-final public class DummyServer<S extends Session> implements Server<S> {
-    final private SessionFactory<S> factory;
-    final private Collection<S> sessions = new CopyOnWriteArrayList<>();
+public final class DummyServer<S extends Session> implements Server<S> {
+    private final SessionFactory<S> factory;
+    private final Collection<S> sessions = new CopyOnWriteArrayList<>();
     private int lastId = 0;
 
     public DummyServer(SessionFactory<S> factory) {

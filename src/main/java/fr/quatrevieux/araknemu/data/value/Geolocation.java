@@ -24,9 +24,9 @@ import java.util.Objects;
 /**
  * Position using 2D coordinates
  */
-final public class Geolocation {
-    final private int x;
-    final private int y;
+public final class Geolocation {
+    private final int x;
+    private final int y;
 
     public Geolocation(int x, int y) {
         this.x = x;

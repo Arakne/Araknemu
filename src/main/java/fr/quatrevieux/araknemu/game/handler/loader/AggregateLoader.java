@@ -31,8 +31,8 @@ import java.util.Collection;
 /**
  * Aggregate loaders
  */
-final public class AggregateLoader implements Loader {
-    final private Loader[] loaders;
+public final class AggregateLoader implements Loader {
+    private final Loader[] loaders;
 
     public AggregateLoader(Loader... loaders) {
         this.loaders = loaders;

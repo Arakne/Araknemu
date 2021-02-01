@@ -32,9 +32,9 @@ import fr.quatrevieux.araknemu.network.game.out.account.CharactersList;
 /**
  * Delete the character
  */
-final public class DeleteCharacter implements PacketHandler<GameSession, DeleteCharacterRequest> {
-    final private CharactersService service;
-    final private GameConfiguration.PlayerConfiguration configuration;
+public final class DeleteCharacter implements PacketHandler<GameSession, DeleteCharacterRequest> {
+    private final CharactersService service;
+    private final GameConfiguration.PlayerConfiguration configuration;
 
     public DeleteCharacter(CharactersService service, GameConfiguration.PlayerConfiguration configuration) {
         this.service = service;

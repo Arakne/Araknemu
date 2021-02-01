@@ -32,9 +32,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Handle game activity
  */
-final public class ActivityService implements EventsSubscriber {
-    final private Logger logger;
-    final private ScheduledExecutorService executor;
+public final class ActivityService implements EventsSubscriber {
+    private final Logger logger;
+    private final ScheduledExecutorService executor;
 
     public ActivityService(GameConfiguration.ActivityConfiguration configuration, Logger logger) {
         this.logger = logger;

@@ -34,13 +34,13 @@ import java.util.Map;
  *
  * The entry associate a matching set of items and kamas to exchanged items and kamas
  */
-final public class NpcExchangeEntry {
+public final class NpcExchangeEntry {
     /** Null instance for an exchange entry */
-    final static public NpcExchangeEntry NULL_ENTRY = new NpcExchangeEntry(null, new NpcExchange(-1, -1, 0, null, 0, null), Collections.emptyMap());
+    public static final NpcExchangeEntry NULL_ENTRY = new NpcExchangeEntry(null, new NpcExchange(-1, -1, 0, null, 0, null), Collections.emptyMap());
 
-    final private ItemService itemService;
-    final private NpcExchange entity;
-    final private Map<ItemTemplate, Integer> templatesAndQuantity;
+    private final ItemService itemService;
+    private final NpcExchange entity;
+    private final Map<ItemTemplate, Integer> templatesAndQuantity;
 
     public NpcExchangeEntry(ItemService itemService, NpcExchange entity, Map<ItemTemplate, Integer> templatesAndQuantity) {
         this.itemService = itemService;

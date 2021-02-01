@@ -22,9 +22,9 @@ package fr.quatrevieux.araknemu.realm.authentication.password;
 /**
  * Simple password algorithm using plain text (i.e. no hash)
  */
-final public class PlainTextHash implements HashAlgorithm {
+public final class PlainTextHash implements HashAlgorithm {
     class PlainTextPassword implements Password {
-        final private String password;
+        private final String password;
 
         public PlainTextPassword(String password) {
             this.password = password;

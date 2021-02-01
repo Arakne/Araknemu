@@ -23,8 +23,8 @@ package fr.quatrevieux.araknemu.game.account.generator;
  * Camelize generated name
  * Set to upper the first letter, and letter following an hyphen
  */
-final public class CamelizeName implements NameGenerator {
-    final private NameGenerator generator;
+public final class CamelizeName implements NameGenerator {
+    private final NameGenerator generator;
 
     public CamelizeName(NameGenerator generator) {
         this.generator = generator;

@@ -34,10 +34,10 @@ import java.util.stream.Collectors;
 /**
  * Map item effect to characteristic
  */
-final public class EffectToCharacteristicMapping implements EffectMapper<CharacteristicEffect> {
-    static private class MappedCharacteristic {
-        final private int multiplier;
-        final private Characteristic characteristic;
+public final class EffectToCharacteristicMapping implements EffectMapper<CharacteristicEffect> {
+    private static class MappedCharacteristic {
+        private final int multiplier;
+        private final Characteristic characteristic;
 
         public MappedCharacteristic(int multiplier, Characteristic characteristic) {
             this.multiplier = multiplier;
@@ -45,9 +45,9 @@ final public class EffectToCharacteristicMapping implements EffectMapper<Charact
         }
     }
 
-    final private Map<Effect, MappedCharacteristic> map = new EnumMap<>(Effect.class);
+    private final Map<Effect, MappedCharacteristic> map = new EnumMap<>(Effect.class);
 
-    final private RandomUtil random = new RandomUtil();
+    private final RandomUtil random = new RandomUtil();
 
     public EffectToCharacteristicMapping() {
         // @todo refactor

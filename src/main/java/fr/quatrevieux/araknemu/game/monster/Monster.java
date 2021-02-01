@@ -29,11 +29,11 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristi
  * Monster grade data
  * This object is immutable, and shared between "real" creatures (fighters and groups)
  */
-final public class Monster {
-    final private MonsterTemplate template;
-    final private SpellList spellList;
-    final private MonsterReward reward;
-    final private int grade;
+public final class Monster {
+    private final MonsterTemplate template;
+    private final SpellList spellList;
+    private final MonsterReward reward;
+    private final int grade;
 
     public Monster(MonsterTemplate template, SpellList spellList, MonsterReward reward, int grade) {
         this.template = template;

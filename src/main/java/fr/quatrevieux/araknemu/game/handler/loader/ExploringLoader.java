@@ -48,7 +48,7 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 /**
  * Loader for exploration packets
  */
-final public class ExploringLoader extends AbstractLoader {
+public final class ExploringLoader extends AbstractLoader {
     public ExploringLoader() {
         super(EnsureExploring::new);
     }

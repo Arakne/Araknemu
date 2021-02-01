@@ -52,11 +52,11 @@ import java.util.function.Predicate;
  * Child anonymous context :
  * ${player:Robert} > account gift 45 3
  */
-final public class AdminUserCommandParser implements CommandParser {
-    final private AdminUser user;
+public final class AdminUserCommandParser implements CommandParser {
+    private final AdminUser user;
 
-    static private class State {
-        final private String line;
+    private static class State {
+        private final String line;
         private int cursor = 0;
 
         public State(String line) {

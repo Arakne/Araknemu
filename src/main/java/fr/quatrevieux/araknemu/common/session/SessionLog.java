@@ -28,9 +28,9 @@ import java.util.Optional;
 /**
  * Handle log for the current session
  */
-final public class SessionLog {
-    final private ConnectionLog log;
-    final private SessionLogService service;
+public final class SessionLog {
+    private final ConnectionLog log;
+    private final SessionLogService service;
 
     SessionLog(ConnectionLog log, SessionLogService service) {
         this.log = log;

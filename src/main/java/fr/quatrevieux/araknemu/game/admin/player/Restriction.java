@@ -35,8 +35,8 @@ import java.util.stream.Collectors;
 /**
  * Change the player restrictions
  */
-final public class Restriction extends AbstractCommand {
-    final private GamePlayer player;
+public final class Restriction extends AbstractCommand {
+    private final GamePlayer player;
 
     public Restriction(GamePlayer player) {
         this.player = player;

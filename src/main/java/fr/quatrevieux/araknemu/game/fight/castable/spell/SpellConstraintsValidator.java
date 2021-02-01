@@ -36,8 +36,8 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 /**
  * Validate spell constraints
  */
-final public class SpellConstraintsValidator implements CastConstraintValidator<Spell> {
-    final private CastConstraintValidator<Spell> validator;
+public final class SpellConstraintsValidator implements CastConstraintValidator<Spell> {
+    private final CastConstraintValidator<Spell> validator;
 
     @SuppressWarnings("unchecked")
     public SpellConstraintsValidator() {

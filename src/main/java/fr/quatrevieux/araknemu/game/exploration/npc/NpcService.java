@@ -39,13 +39,13 @@ import java.util.stream.Collectors;
 /**
  * Manage living NPCs
  */
-final public class NpcService implements EventsSubscriber, PreloadableService {
-    final private DialogService dialogService;
-    final private NpcTemplateRepository templateRepository;
-    final private NpcRepository npcRepository;
-    final private Collection<ExchangeProvider> exchangeProviders;
+public final class NpcService implements EventsSubscriber, PreloadableService {
+    private final DialogService dialogService;
+    private final NpcTemplateRepository templateRepository;
+    private final NpcRepository npcRepository;
+    private final Collection<ExchangeProvider> exchangeProviders;
 
-    final private ConcurrentMap<Integer, GameNpc> npcByEntityId = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, GameNpc> npcByEntityId = new ConcurrentHashMap<>();
 
     public NpcService(DialogService dialogService, NpcTemplateRepository templateRepository, NpcRepository npcRepository, Collection<ExchangeProvider> exchangeProviders) {
         this.dialogService = dialogService;

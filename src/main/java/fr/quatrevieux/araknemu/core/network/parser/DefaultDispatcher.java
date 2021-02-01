@@ -27,8 +27,8 @@ import java.util.Map;
  *
  * @param <S> The handled session type
  */
-final public class DefaultDispatcher<S> implements Dispatcher<S> {
-    final private Map<Class, PacketHandler> handlers = new HashMap<>();
+public final class DefaultDispatcher<S> implements Dispatcher<S> {
+    private final Map<Class, PacketHandler> handlers = new HashMap<>();
 
     public DefaultDispatcher(PacketHandler<S, ?>[] handlers) {
         for (PacketHandler<S, ?> handler : handlers) {

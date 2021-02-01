@@ -61,8 +61,8 @@ final class SqlQuestionRepository implements QuestionRepository {
         }
     }
 
-    final private QueryExecutor executor;
-    final private RepositoryUtils<Question> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<Question> utils;
 
     public SqlQuestionRepository(QueryExecutor executor) {
         this.executor = executor;

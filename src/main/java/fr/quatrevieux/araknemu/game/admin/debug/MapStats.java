@@ -32,8 +32,8 @@ import java.util.List;
 /**
  * Get stats on map cells
  */
-final public class MapStats extends AbstractCommand {
-    final private MapTemplateRepository repository;
+public final class MapStats extends AbstractCommand {
+    private final MapTemplateRepository repository;
 
     public MapStats(MapTemplateRepository repository) {
         this.repository = repository;

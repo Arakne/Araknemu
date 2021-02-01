@@ -31,8 +31,8 @@ import fr.quatrevieux.araknemu.network.game.out.account.RandomNameGenerationErro
 /**
  * Generate a random name for character creation
  */
-final public class GenerateName implements PacketHandler<GameSession, AskRandomName> {
-    final private NameGenerator generator;
+public final class GenerateName implements PacketHandler<GameSession, AskRandomName> {
+    private final NameGenerator generator;
 
     public GenerateName(NameGenerator generator) {
         this.generator = generator;

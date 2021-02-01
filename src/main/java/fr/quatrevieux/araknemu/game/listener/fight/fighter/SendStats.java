@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 /**
  * Send fighter stats when characteristics has changed
  */
-final public class SendStats implements Listener<FighterCharacteristicChanged> {
-    final private PlayerFighter fighter;
+public final class SendStats implements Listener<FighterCharacteristicChanged> {
+    private final PlayerFighter fighter;
 
     public SendStats(PlayerFighter fighter) {
         this.fighter = fighter;

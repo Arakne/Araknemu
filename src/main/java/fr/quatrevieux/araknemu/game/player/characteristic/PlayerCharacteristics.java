@@ -36,14 +36,14 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharac
  * Characteristic map for player
  * This class will handle aggregation of stats, and computed stats
  */
-final public class PlayerCharacteristics implements CharacterCharacteristics {
-    final private MutableCharacteristics base;
-    final private Dispatcher dispatcher;
-    final private Player entity;
-    final private GamePlayerRace race;
-    final private GamePlayer player;
+public final class PlayerCharacteristics implements CharacterCharacteristics {
+    private final MutableCharacteristics base;
+    private final Dispatcher dispatcher;
+    private final Player entity;
+    private final GamePlayerRace race;
+    private final GamePlayer player;
 
-    final private SpecialEffects specials = new SpecialEffects();
+    private final SpecialEffects specials = new SpecialEffects();
 
     private Characteristics stuff;
 

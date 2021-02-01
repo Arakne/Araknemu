@@ -28,7 +28,7 @@ import java.util.Collection;
 /**
  * Loader for commons input packet parsers
  */
-final public class CommonParserLoader implements ParserLoader {
+public final class CommonParserLoader implements ParserLoader {
     @Override
     public Collection<SinglePacketParser> load() {
         return Arrays.asList(

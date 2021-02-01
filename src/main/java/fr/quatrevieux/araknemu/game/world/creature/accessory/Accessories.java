@@ -34,7 +34,7 @@ public interface Accessories {
     /**
      * Get all accessories
      */
-    default public List<Accessory> all() {
+    public default List<Accessory> all() {
         final ArrayList<Accessory> accessories = new ArrayList<>(AccessoryType.values().length);
 
         for (AccessoryType type : AccessoryType.values()) {

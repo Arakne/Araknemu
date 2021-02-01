@@ -27,8 +27,8 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/GameActions.as#L127
  */
-final public class FightAction {
-    final private ActionResult result;
+public final class FightAction {
+    private final ActionResult result;
 
     public FightAction(ActionResult result) {
         this.result = result;

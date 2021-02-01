@@ -39,10 +39,10 @@ import java.util.stream.Collectors;
  *
  * Note: the store is related to a npc template and not a npc, so the same store can be shared between two npcs
  */
-final public class NpcStore implements ExchangeProvider.Factory {
-    final private ItemService itemService;
-    final private GameConfiguration.EconomyConfiguration configuration;
-    final private Map<Integer, ItemTemplate> itemTemplates;
+public final class NpcStore implements ExchangeProvider.Factory {
+    private final ItemService itemService;
+    private final GameConfiguration.EconomyConfiguration configuration;
+    private final Map<Integer, ItemTemplate> itemTemplates;
 
     public NpcStore(ItemService itemService, GameConfiguration.EconomyConfiguration configuration, Collection<ItemTemplate> itemTemplates) {
         this.itemService = itemService;

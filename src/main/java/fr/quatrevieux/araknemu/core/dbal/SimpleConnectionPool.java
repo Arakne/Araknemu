@@ -31,10 +31,10 @@ import java.util.concurrent.BlockingQueue;
 /**
  * Simple implementation of connection pool
  */
-final public class SimpleConnectionPool implements ConnectionPool {
-    final private Driver driver;
-    final private BlockingQueue<Connection> connections;
-    final private Logger logger;
+public final class SimpleConnectionPool implements ConnectionPool {
+    private final Driver driver;
+    private final BlockingQueue<Connection> connections;
+    private final Logger logger;
 
     public SimpleConnectionPool(Driver driver, int size, Logger logger) {
         this.driver = driver;

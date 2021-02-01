@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Generate rewards for challenge fight
  */
-final public class ChallengeRewardsGenerator implements RewardsGenerator {
+public final class ChallengeRewardsGenerator implements RewardsGenerator {
     @Override
     public FightRewardsSheet generate(EndFightResults results) {
         final List<DropReward> rewards = new ArrayList<>();

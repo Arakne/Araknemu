@@ -33,7 +33,7 @@ public interface DropRewardProvider {
         /**
          * No-operation scope instance
          */
-        final static public Scope NOOP = reward -> {};
+        public static final Scope NOOP = reward -> {};
 
         /**
          * Provide the reward data

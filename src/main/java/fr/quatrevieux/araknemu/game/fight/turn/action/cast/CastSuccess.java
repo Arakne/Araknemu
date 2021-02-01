@@ -31,11 +31,11 @@ import java.util.List;
 /**
  * Result for successfully spell cast
  */
-final public class CastSuccess implements ActionResult {
-    final private Fighter caster;
-    final private Spell spell;
-    final private FightCell target;
-    final private boolean critical;
+public final class CastSuccess implements ActionResult {
+    private final Fighter caster;
+    private final Spell spell;
+    private final FightCell target;
+    private final boolean critical;
 
     public CastSuccess(Fighter caster, Spell spell, FightCell target, boolean critical) {
         this.caster = caster;

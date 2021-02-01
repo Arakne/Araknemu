@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.network.game.out.QuickPong;
 /**
  * Send pong for qping request
  */
-final public class SendQuickPong implements PacketHandler<GameSession, QuickPing> {
+public final class SendQuickPong implements PacketHandler<GameSession, QuickPing> {
     @Override
     public void handle(GameSession session, QuickPing packet) {
         session.send(new QuickPong());

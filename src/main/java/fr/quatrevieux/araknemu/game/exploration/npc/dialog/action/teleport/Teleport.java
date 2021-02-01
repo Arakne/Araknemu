@@ -35,9 +35,9 @@ import org.apache.commons.lang3.StringUtils;
  *
  * Cinematic is not required (if not set, or set to 0, no cinematic will be displayed)
  */
-final public class Teleport implements Action {
-    final static public class Factory implements ActionFactory {
-        final private ExplorationMapService service;
+public final class Teleport implements Action {
+    public static final class Factory implements ActionFactory {
+        private final ExplorationMapService service;
 
         public Factory(ExplorationMapService service) {
             this.service = service;
@@ -63,9 +63,9 @@ final public class Teleport implements Action {
         }
     }
 
-    final private ExplorationMapService service;
-    final private Position position;
-    final private int cinematic;
+    private final ExplorationMapService service;
+    private final Position position;
+    private final int cinematic;
 
     public Teleport(ExplorationMapService service, Position position, int cinematic) {
         this.service = service;

@@ -23,7 +23,7 @@ package fr.quatrevieux.araknemu.game.item.inventory.exception;
  * Exception raised when cannot found the item to the inventory
  */
 public class ItemNotFoundException extends InventoryException {
-    final private int id;
+    private final int id;
 
     public ItemNotFoundException(int id) {
         super("Cannot found the item " + id);
@@ -34,7 +34,7 @@ public class ItemNotFoundException extends InventoryException {
     /**
      * The request item id
      */
-    final public int id() {
+    public final int id() {
         return id;
     }
 }

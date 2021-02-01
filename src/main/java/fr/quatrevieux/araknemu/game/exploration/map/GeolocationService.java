@@ -30,14 +30,14 @@ import java.util.Comparator;
 /**
  * Handle map geolocation
  */
-final public class GeolocationService {
-    final static public class GeolocationContext {
+public final class GeolocationService {
+    public static final class GeolocationContext {
         /** The first map is more pertinent */
-        final static private int FIRST = -1;
+        private static final int FIRST = -1;
         /** The second map is more pertinent */
-        final static private int SECOND = 1;
+        private static final int SECOND = 1;
         /** Both maps have the same pertinence */
-        final static private int NONE = 0;
+        private static final int NONE = 0;
 
         private int superArea = 0;
         private Integer subArea;
@@ -136,7 +136,7 @@ final public class GeolocationService {
         /**
          * Create a context from a map
          */
-        static public GeolocationContext fromMap(ExplorationMap map) {
+        public static GeolocationContext fromMap(ExplorationMap map) {
             return new GeolocationContext()
                 .superArea(map.subArea().area().superarea())
                 .subArea(map.subArea().id())
@@ -145,9 +145,9 @@ final public class GeolocationService {
         }
     }
 
-    final private ExplorationMapService mapService;
-    final private AreaService areaService;
-    final private MapTemplateRepository repository;
+    private final ExplorationMapService mapService;
+    private final AreaService areaService;
+    private final MapTemplateRepository repository;
 
     public GeolocationService(ExplorationMapService mapService, AreaService areaService, MapTemplateRepository repository) {
         this.mapService = mapService;

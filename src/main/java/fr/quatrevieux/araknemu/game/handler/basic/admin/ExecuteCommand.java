@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminCommand;
 /**
  * Execute an admin command
  */
-final public class ExecuteCommand implements PacketHandler<GameSession, AdminCommand> {
-    final private AdminService service;
+public final class ExecuteCommand implements PacketHandler<GameSession, AdminCommand> {
+    private final AdminService service;
 
     public ExecuteCommand(AdminService service) {
         this.service = service;

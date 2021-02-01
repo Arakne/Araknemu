@@ -43,7 +43,7 @@ import java.util.List;
  * @param <E> The error type
  */
 public class ConstraintBuilder<T, E> {
-    final private List<EntityConstraint<T, E>> constraints = new ArrayList<>();
+    private final List<EntityConstraint<T, E>> constraints = new ArrayList<>();
 
     private AbstractValueConstraint.Getter<T, ?> getter;
     private E error;

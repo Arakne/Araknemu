@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * The fight is terminated
  */
-final public class FinishState implements FightState {
+public final class FinishState implements FightState {
     @Override
     public void start(Fight fight) {
         final FightRewardsSheet rewardsSheet = fight.type().rewards().generate(results(fight));

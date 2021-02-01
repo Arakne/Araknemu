@@ -28,7 +28,7 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
  * Computed value is :
  * ( [jet + boost] * percent / 100 + fixed + effectBonus ) * multiply
  */
-final public class EffectValue {
+public final class EffectValue {
     enum State {
         MINIMIZED,
         RANDOMIZED,
@@ -39,9 +39,9 @@ final public class EffectValue {
     /**
      * EffectValue is a short life object, and random is only used 1 time
      */
-    final static private RandomUtil RANDOM = RandomUtil.createShared();
+    private static final RandomUtil RANDOM = RandomUtil.createShared();
 
-    final private SpellEffect effect;
+    private final SpellEffect effect;
 
     private State state = State.RANDOMIZED;
     private int boost = 0;

@@ -31,9 +31,9 @@ import java.util.function.Predicate;
 /**
  * Area with circular form around center cell
  */
-final public class CircularArea implements SpellEffectArea {
-    final private EffectArea area;
-    final private Predicate<Integer> distanceChecker;
+public final class CircularArea implements SpellEffectArea {
+    private final EffectArea area;
+    private final Predicate<Integer> distanceChecker;
 
     public CircularArea(EffectArea area, Predicate<Integer> distanceChecker) {
         this.area = area;

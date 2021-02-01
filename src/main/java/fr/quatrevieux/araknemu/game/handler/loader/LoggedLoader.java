@@ -36,7 +36,7 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 /**
  * Loader for logged packets
  */
-final public class LoggedLoader extends AbstractLoader {
+public final class LoggedLoader extends AbstractLoader {
     public LoggedLoader() {
         super(EnsureLogged::new);
     }

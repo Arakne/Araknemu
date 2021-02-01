@@ -24,7 +24,7 @@ import fr.arakne.utils.value.Interval;
 /**
  * Error message
  */
-final public class Error extends AbstractInformationMessage {
+public final class Error extends AbstractInformationMessage {
     public Error(Entry... entries) {
         super(Type.ERROR, entries);
     }
@@ -40,21 +40,21 @@ final public class Error extends AbstractInformationMessage {
     /**
      * Get the welcome message
      */
-    static public Error welcome() {
+    public static Error welcome() {
         return new Error(89);
     }
 
     /**
      * Cannot do the action on this server
      */
-    static public Error cantDoOnServer() {
+    public static Error cantDoOnServer() {
         return new Error(226);
     }
 
     /**
      * Cannot do the action on the current state
      */
-    static public Error cantDoOnCurrentState() {
+    public static Error cantDoOnCurrentState() {
         return new Error(116);
     }
 
@@ -63,14 +63,14 @@ final public class Error extends AbstractInformationMessage {
      *
      * @param spellId The spell
      */
-    static public Error cantLearnSpell(int spellId) {
+    public static Error cantLearnSpell(int spellId) {
         return new Error(7, spellId);
     }
 
     /**
      * Cannot cast the spell : not in the spell list
      */
-    static public Error cantCastNotFound() {
+    public static Error cantCastNotFound() {
         return new Error(169);
     }
 
@@ -80,42 +80,42 @@ final public class Error extends AbstractInformationMessage {
      * @param available The available action points
      * @param required The required action points for cast the spell
      */
-    static public Error cantCastNotEnoughActionPoints(int available, int required) {
+    public static Error cantCastNotEnoughActionPoints(int available, int required) {
         return new Error(170, available, required);
     }
 
     /**
      * Cannot cast the spell : The target cell is invalid
      */
-    static public Error cantCastInvalidCell() {
+    public static Error cantCastInvalidCell() {
         return new Error(193);
     }
 
     /**
      * Cannot cast the spell : The target cell is not available
      */
-    static public Error cantCastCellNotAvailable() {
+    public static Error cantCastCellNotAvailable() {
         return new Error(172);
     }
 
     /**
      * Cannot cast the spell : The target cell is not in line
      */
-    static public Error cantCastLineLaunch() {
+    public static Error cantCastLineLaunch() {
         return new Error(173);
     }
 
     /**
      * Cannot cast the spell : The sight is blocked
      */
-    static public Error cantCastSightBlocked() {
+    public static Error cantCastSightBlocked() {
         return new Error(174);
     }
 
     /**
      * Cannot cast the spell : The cast is in invalid state
      */
-    static public Error cantCastBadState() {
+    public static Error cantCastBadState() {
         return new Error(116);
     }
 
@@ -132,21 +132,21 @@ final public class Error extends AbstractInformationMessage {
     /**
      * Cannot cast the spell
      */
-    static public Error cantCast() {
+    public static Error cantCast() {
         return new Error(175);
     }
 
     /**
      * Cannot perform the action during fight
      */
-    static public Error cantDoDuringFight() {
+    public static Error cantDoDuringFight() {
         return new Error(91);
     }
 
     /**
      * Cannot move : the player is overweight
      */
-    static public Error cantMoveOverweight() {
+    public static Error cantMoveOverweight() {
         return new Error(12);
     }
 
@@ -155,7 +155,7 @@ final public class Error extends AbstractInformationMessage {
      *
      * @param delay The delay string. The value is not translated.
      */
-    static public Error shutdownScheduled(String delay) {
+    public static Error shutdownScheduled(String delay) {
         return new Error(15, delay);
     }
 }

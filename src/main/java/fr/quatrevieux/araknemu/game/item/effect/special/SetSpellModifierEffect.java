@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
 /**
  * Set fixed value for spell modifier
  */
-final public class SetSpellModifierEffect implements SpecialEffectHandler {
-    final private SpellsBoosts.Modifier modifier;
+public final class SetSpellModifierEffect implements SpecialEffectHandler {
+    private final SpellsBoosts.Modifier modifier;
 
     public SetSpellModifierEffect(SpellsBoosts.Modifier modifier) {
         this.modifier = modifier;

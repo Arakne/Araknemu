@@ -38,9 +38,9 @@ import java.util.stream.Collectors;
 /**
  * Display effect area
  */
-final public class Area extends AbstractCommand {
-    final private SpellEffectService service;
-    final private EffectAreaTransformer areaTransformer;
+public final class Area extends AbstractCommand {
+    private final SpellEffectService service;
+    private final EffectAreaTransformer areaTransformer;
 
     public Area(SpellEffectService service) {
         this.service = service;

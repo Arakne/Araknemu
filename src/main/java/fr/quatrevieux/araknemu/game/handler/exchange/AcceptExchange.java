@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.network.game.in.exchange.ExchangeReady;
 /**
  * Toggle the accept state of the exchange party
  */
-final public class AcceptExchange implements PacketHandler<GameSession, ExchangeReady> {
+public final class AcceptExchange implements PacketHandler<GameSession, ExchangeReady> {
     @Override
     public void handle(GameSession session, ExchangeReady packet) {
         session.exploration().interactions().get(ExchangeDialog.class).accept();

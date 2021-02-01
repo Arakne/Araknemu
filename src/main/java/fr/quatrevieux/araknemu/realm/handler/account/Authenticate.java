@@ -37,10 +37,10 @@ import fr.quatrevieux.araknemu.realm.host.HostService;
 /**
  * Authenticate the client
  */
-final public class Authenticate implements PacketHandler<RealmSession, Credentials> {
+public final class Authenticate implements PacketHandler<RealmSession, Credentials> {
     private class Request implements AuthenticationRequest {
-        final private RealmSession session;
-        final private Credentials credentials;
+        private final RealmSession session;
+        private final Credentials credentials;
 
         public Request(RealmSession session, Credentials credentials) {
             this.session = session;
@@ -94,9 +94,9 @@ final public class Authenticate implements PacketHandler<RealmSession, Credentia
         }
     }
 
-    final private AuthenticationService service;
-    final private HostService hosts;
-    final private SessionLogService logService;
+    private final AuthenticationService service;
+    private final HostService hosts;
+    private final SessionLogService logService;
 
     public Authenticate(AuthenticationService service, HostService hosts, SessionLogService logService) {
         this.service = service;

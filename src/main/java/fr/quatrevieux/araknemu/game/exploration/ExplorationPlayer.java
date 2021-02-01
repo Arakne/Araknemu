@@ -48,13 +48,13 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 /**
  * Player for exploration game session
  */
-final public class ExplorationPlayer implements ExplorationCreature, Explorer, PlayerSessionScope {
-    final private GamePlayer player;
+public final class ExplorationPlayer implements ExplorationCreature, Explorer, PlayerSessionScope {
+    private final GamePlayer player;
 
-    final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
-    final private InteractionHandler interactions = new InteractionHandler();
-    final private Restrictions restrictions = new Restrictions(this);
-    final private Sprite sprite;
+    private final ListenerAggregate dispatcher = new DefaultListenerAggregate();
+    private final InteractionHandler interactions = new InteractionHandler();
+    private final Restrictions restrictions = new Restrictions(this);
+    private final Sprite sprite;
 
     private ExplorationMap map;
     private ExplorationMapCell cell;

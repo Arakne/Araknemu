@@ -31,8 +31,8 @@ import java.util.List;
  *
  * @param <C> The implementation class
  */
-abstract public class AbstractContext<C extends AbstractContext> implements Context {
-    final private List<AbstractContextConfigurator<C>> configurators;
+public abstract class AbstractContext<C extends AbstractContext> implements Context {
+    private final List<AbstractContextConfigurator<C>> configurators;
     private SimpleContext context;
 
     public AbstractContext(List<AbstractContextConfigurator<C>> configurators) {
@@ -42,20 +42,20 @@ abstract public class AbstractContext<C extends AbstractContext> implements Cont
     /**
      * Create the base context
      */
-    abstract protected SimpleContext createContext();
+    protected abstract SimpleContext createContext();
 
     @Override
-    final public Command command(String name) throws CommandNotFoundException {
+    public final Command command(String name) throws CommandNotFoundException {
         return context().command(name);
     }
 
     @Override
-    final public Collection<Command> commands() {
+    public final Collection<Command> commands() {
         return context().commands();
     }
 
     @Override
-    final public Context child(String name) throws ContextNotFoundException {
+    public final Context child(String name) throws ContextNotFoundException {
         return context().child(name);
     }
 
