@@ -31,20 +31,14 @@ import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterAccessories;
 import fr.quatrevieux.araknemu.game.listener.map.SendAccessories;
-import fr.quatrevieux.araknemu.game.listener.player.inventory.SaveDeletedItem;
-import fr.quatrevieux.araknemu.game.listener.player.inventory.SaveItemPosition;
-import fr.quatrevieux.araknemu.game.listener.player.inventory.SaveItemQuantity;
-import fr.quatrevieux.araknemu.game.listener.player.inventory.SaveNewItem;
-import fr.quatrevieux.araknemu.game.listener.player.inventory.SendItemData;
-import fr.quatrevieux.araknemu.game.listener.player.inventory.SendItemDeleted;
-import fr.quatrevieux.araknemu.game.listener.player.inventory.SendItemPosition;
-import fr.quatrevieux.araknemu.game.listener.player.inventory.SendItemQuantity;
-import fr.quatrevieux.araknemu.game.listener.player.inventory.SendKamas;
+import fr.quatrevieux.araknemu.game.listener.player.inventory.SaveInventoryChange;
+import fr.quatrevieux.araknemu.game.listener.player.inventory.SendInventoryUpdate;
 import fr.quatrevieux.araknemu.game.listener.player.inventory.SendWeight;
 import fr.quatrevieux.araknemu.game.listener.player.inventory.UpdateStuffStats;
 import fr.quatrevieux.araknemu.game.listener.player.inventory.itemset.ApplyItemSetSpecialEffects;
 import fr.quatrevieux.araknemu.game.listener.player.inventory.itemset.InitializeItemSets;
 import fr.quatrevieux.araknemu.game.listener.player.inventory.itemset.SendItemSetChange;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 
 import java.util.stream.Collectors;
@@ -82,33 +76,10 @@ final public class InventoryService implements EventsSubscriber {
     @Override
     public Listener[] listeners() {
         return new Listener[] {
-            // @todo refactor to external class
             new Listener<PlayerLoaded>() {
                 @Override
                 public void on(PlayerLoaded event) {
-                    final ListenerAggregate dispatcher = event.player().dispatcher();
-
-                    dispatcher.add(new SendKamas(event.player()));
-
-                    dispatcher.add(new SendItemData(event.player()));
-                    dispatcher.add(new SendItemPosition(event.player()));
-                    dispatcher.add(new SendItemQuantity(event.player()));
-                    dispatcher.add(new SendItemDeleted(event.player()));
-
-                    dispatcher.add(new SaveNewItem(repository));
-                    dispatcher.add(new SaveItemPosition(repository));
-                    dispatcher.add(new SaveItemQuantity(repository));
-                    dispatcher.add(new SaveDeletedItem(repository));
-
-                    dispatcher.add(new InitializeItemSets(event.player()));
-                    dispatcher.add(new SendItemSetChange(event.player()));
-                    dispatcher.add(new ApplyItemSetSpecialEffects(event.player()));
-
-                    // Must be the last registered listener : the stats will be sent
-                    dispatcher.add(new UpdateStuffStats(event.player()));
-
-                    // Compute and send weight after stats updated
-                    dispatcher.register(new SendWeight(event.player()));
+                    registerInventoryListeners(event.player());
                 }
 
                 @Override
@@ -161,5 +132,46 @@ final public class InventoryService implements EventsSubscriber {
                 )
                 .collect(Collectors.toList())
         );
+    }
+
+    /**
+     * Insert the item into database
+     */
+    public void saveItemEntry(InventoryEntry item) {
+        repository.add(item.entity());
+    }
+
+    /**
+     * Update the item data into database
+     */
+    public void updateItemEntry(InventoryEntry item) {
+        repository.update(item.entity());
+    }
+
+    /**
+     * Delete the item from database
+     */
+    public void deleteItemEntry(InventoryEntry item) {
+        repository.delete(item.entity());
+    }
+
+    /**
+     * Register inventory listeners for a player
+     */
+    private void registerInventoryListeners(GamePlayer player) {
+        final ListenerAggregate dispatcher = player.dispatcher();
+
+        dispatcher.register(new SendInventoryUpdate(player));
+        dispatcher.register(new SaveInventoryChange(this));
+
+        dispatcher.add(new InitializeItemSets(player));
+        dispatcher.add(new SendItemSetChange(player));
+        dispatcher.add(new ApplyItemSetSpecialEffects(player));
+
+        // Must be the last registered listener : the stats will be sent
+        dispatcher.add(new UpdateStuffStats(player));
+
+        // Compute and send weight after stats updated
+        dispatcher.register(new SendWeight(player));
     }
 }

@@ -73,9 +73,17 @@ final public class InventoryEntry extends AbstractItemEntry {
     }
 
     /**
+     * Set the item to the default position
+     * Note: this method is internal and should not be called
+     */
+    public void setToDefaultPosition() {
+        entity.setPosition(DEFAULT_POSITION);
+    }
+
+    /**
      * Get the database entity
      */
-    public PlayerItem entity() {
+    PlayerItem entity() {
         return entity;
     }
 

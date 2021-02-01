@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.item.inventory.event;
@@ -24,13 +24,14 @@ import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 /**
  * Event sent when an inventory entry is moved
  */
-final public class ObjectMoved {
+final public class ObjectMoved implements ItemChanged {
     final private ItemEntry entry;
 
     public ObjectMoved(ItemEntry entry) {
         this.entry = entry;
     }
 
+    @Override
     public ItemEntry entry() {
         return entry;
     }

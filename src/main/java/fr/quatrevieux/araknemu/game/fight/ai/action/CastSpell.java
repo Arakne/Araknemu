@@ -78,30 +78,36 @@ final public class CastSpell implements ActionGenerator {
                 continue;
             }
 
-            for (FightCell targetCell : ai.map()) {
-                // Target or launch is not valid
-                if (!targetCell.walkableIgnoreFighter() || !caster.validate(spell, targetCell)) {
-                    continue;
-                }
-
-                // Simulate spell effects
-                final CastSimulation simulation = simulator.simulate(spell, ai.fighter(), targetCell);
-
-                // The spell is not valid for the selector
-                if (!selector.valid(simulation)) {
-                    continue;
-                }
-
-                // Select the best simulation
-                if (bestSimulation == null || selector.compare(simulation, bestSimulation)) {
-                    bestSimulation = simulation;
-                }
-            }
+            bestSimulation = bestTargetForSpell(ai, spell, bestSimulation);
         }
 
         return Optional
             .ofNullable(bestSimulation)
             .map(simulation -> caster.create(simulation.spell(), simulation.target()))
         ;
+    }
+
+    private CastSimulation bestTargetForSpell(AI ai, Spell spell, CastSimulation bestSimulation) {
+        for (FightCell targetCell : ai.map()) {
+            // Target or launch is not valid
+            if (!targetCell.walkableIgnoreFighter() || !caster.validate(spell, targetCell)) {
+                continue;
+            }
+
+            // Simulate spell effects
+            final CastSimulation simulation = simulator.simulate(spell, ai.fighter(), targetCell);
+
+            // The spell is not valid for the selector
+            if (!selector.valid(simulation)) {
+                continue;
+            }
+
+            // Select the best simulation
+            if (bestSimulation == null || selector.compare(simulation, bestSimulation)) {
+                bestSimulation = simulation;
+            }
+        }
+
+        return bestSimulation;
     }
 }

@@ -87,53 +87,17 @@ final public class GetItem extends AbstractCommand {
 
     @Override
     public void execute(AdminPerformer performer, List<String> arguments) throws CommandException {
-        // @todo argument struct
-        boolean max = false;
-        boolean each = false;
+        final Options options = new Options(arguments);
 
-        List<ItemTemplateEffectEntry> effects = null;
-
-        int i;
-
-        for (i = 1; i < arguments.size() && arguments.get(i).startsWith("--"); ++i) {
-            switch (arguments.get(i)) {
-                case "--max":
-                    max = true;
-                    break;
-                case "--each":
-                    each = true;
-                    break;
-                case "--effects":
-                    effects = parseEffects(arguments.get(++i));
-                    break;
-                default:
-                    throw new CommandException(arguments.get(0), "Undefined option " + arguments.get(i));
-            }
-        }
-
-        if (i == arguments.size()) {
-            throw new CommandException(arguments.get(0), "Missing argument item_id");
-        }
-
-        final int itemId = Integer.parseInt(arguments.get(i));
-
-        int quantity = arguments.size() > i + 1 ? Integer.parseInt(arguments.get(i + 1)) : 1;
-        int times = 1;
-
-        if (each) {
-            times = quantity;
-            quantity = 1;
-        }
-
-        for (int j = 0; j < times; ++j) {
-            final Item item = effects == null
-                ? service.create(itemId, max)
-                : service.retrieve(itemId, effects)
+        for (int j = 0; j < options.times; ++j) {
+            final Item item = options.effects == null
+                ? service.create(options.itemId, options.max)
+                : service.retrieve(options.itemId, options.effects)
             ;
 
-            player.inventory().add(item, quantity);
+            player.inventory().add(item, options.quantity);
 
-            performer.success("Generate {} '{}'", quantity, item.template().name());
+            performer.success("Generate {} '{}'", options.quantity, item.template().name());
 
             if (!item.effects().isEmpty()) {
                 performer.success("Effects :");
@@ -145,34 +109,86 @@ final public class GetItem extends AbstractCommand {
         }
     }
 
-    private List<ItemTemplateEffectEntry> parseEffects(String value) throws CommandException {
-        if (value.contains("#")) {
-            return new ItemEffectsTransformer().unserialize(value);
+    static private class Options {
+        private boolean max = false;
+        private boolean each = false;
+        private List<ItemTemplateEffectEntry> effects = null;
+        private int quantity = 1;
+        private int times = 1;
+        private int itemId;
+
+        public Options(List<String> arguments) throws CommandException {
+            parseArguments(parseOptions(arguments), arguments);
         }
 
-        final List<ItemTemplateEffectEntry> effects = new ArrayList<>();
+        private int parseOptions(List<String> arguments) throws CommandException {
+            int i;
 
-        for (String strEffect : StringUtils.split(value, ",")) {
-            final String[] parts = StringUtils.split(strEffect, ":", 5);
-            final Effect effect;
-
-            try {
-                effect = Effect.valueOf(parts[0].toUpperCase());
-            } catch (IllegalArgumentException e) {
-                throw new CommandException("getitem", "Undefined effect " + parts[0]);
+            for (i = 1; i < arguments.size() && arguments.get(i).startsWith("--"); ++i) {
+                switch (arguments.get(i)) {
+                    case "--max":
+                        max = true;
+                        break;
+                    case "--each":
+                        each = true;
+                        break;
+                    case "--effects":
+                        effects = parseEffects(arguments.get(++i));
+                        break;
+                    default:
+                        throw new CommandException(arguments.get(0), "Undefined option " + arguments.get(i));
+                }
             }
 
-            effects.add(
-                new ItemTemplateEffectEntry(
-                    effect,
-                    parts.length > 1 ? Integer.parseInt(parts[1]) : 0,
-                    parts.length > 2 ? Integer.parseInt(parts[2]) : 0,
-                    parts.length > 3 ? Integer.parseInt(parts[3]) : 0,
-                    parts.length > 4 ? parts[4]                   : ""
-                )
-            );
+            return i;
         }
 
-        return effects;
+        private void parseArguments(int argIndex, List<String> arguments) throws CommandException {
+            if (argIndex == arguments.size()) {
+                throw new CommandException(arguments.get(0), "Missing argument item_id");
+            }
+
+            itemId = Integer.parseInt(arguments.get(argIndex));
+
+            if (arguments.size() > argIndex + 1) {
+                quantity = Integer.parseInt(arguments.get(argIndex + 1));
+            }
+
+            if (each) {
+                times = quantity;
+                quantity = 1;
+            }
+        }
+
+        private static List<ItemTemplateEffectEntry> parseEffects(String value) throws CommandException {
+            if (value.contains("#")) {
+                return new ItemEffectsTransformer().unserialize(value);
+            }
+
+            final List<ItemTemplateEffectEntry> effects = new ArrayList<>();
+
+            for (String strEffect : StringUtils.split(value, ",")) {
+                final String[] parts = StringUtils.split(strEffect, ":", 5);
+                final Effect effect;
+
+                try {
+                    effect = Effect.valueOf(parts[0].toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    throw new CommandException("getitem", "Undefined effect " + parts[0]);
+                }
+
+                effects.add(
+                    new ItemTemplateEffectEntry(
+                        effect,
+                        parts.length > 1 ? Integer.parseInt(parts[1]) : 0,
+                        parts.length > 2 ? Integer.parseInt(parts[2]) : 0,
+                        parts.length > 3 ? Integer.parseInt(parts[3]) : 0,
+                        parts.length > 4 ? parts[4]                   : ""
+                    )
+                );
+            }
+
+            return effects;
+        }
     }
 }

@@ -22,17 +22,11 @@ package fr.quatrevieux.araknemu.game.item.inventory.event;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 
 /**
- * The object quantity is changed
+ * Base type for inventory item change events
  */
-final public class ObjectQuantityChanged implements ItemChanged {
-    final private ItemEntry entry;
-
-    public ObjectQuantityChanged(ItemEntry entry) {
-        this.entry = entry;
-    }
-
-    @Override
-    public ItemEntry entry() {
-        return entry;
-    }
+public interface ItemChanged {
+    /**
+     * The updated item entry
+     */
+    public ItemEntry entry();
 }

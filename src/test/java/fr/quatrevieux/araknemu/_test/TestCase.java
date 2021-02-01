@@ -19,7 +19,12 @@
 
 package fr.quatrevieux.araknemu._test;
 
+import fr.quatrevieux.araknemu.core.event.Dispatcher;
+import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
+import fr.quatrevieux.araknemu.core.event.Listener;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.core.network.exception.WritePacket;
+import fr.quatrevieux.araknemu.game.listener.player.inventory.SendInventoryUpdate;
 import org.junit.jupiter.api.function.Executable;
 
 import java.lang.reflect.Field;
@@ -115,5 +120,22 @@ public class TestCase {
         field.setAccessible(true);
 
         return (T) field.get(object);
+    }
+
+    public void assertDispatcherContainsListener(Class<? extends Listener> listenerClass, ListenerAggregate dispatcher) {
+        assertTrue(dispatcher.has(listenerClass), "Failing expecting that dispatcher contains listener " + listenerClass.getSimpleName());
+    }
+
+    public void assertDispatcherContainsListeners(ListenerAggregate dispatcher, Class<? extends Listener>... listenerClasses) {
+        for (Class<? extends Listener> listenerClass : listenerClasses) {
+            assertTrue(dispatcher.has(listenerClass), "Failing expecting that dispatcher contains listener " + listenerClass.getSimpleName());
+        }
+    }
+
+    public void assertSubscriberRegistered(EventsSubscriber subscriber, ListenerAggregate dispatcher) {
+        for (Listener listener : subscriber.listeners()) {
+            assertTrue(dispatcher.has(listener.getClass()), "Failing expecting that subscriber " + subscriber.getClass().getSimpleName() + " is registered into the dispatcher");
+            return;
+        }
     }
 }

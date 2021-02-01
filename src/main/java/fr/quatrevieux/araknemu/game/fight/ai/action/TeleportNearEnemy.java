@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.util.SpellCaster;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -63,8 +64,10 @@ final public class TeleportNearEnemy implements ActionGenerator {
 
         /**
          * Push the teleport parameters and check if there are better than the previous
+         *
+         * @return true if the new cell is adjacent to the target
          */
-        public void push(Spell spell, FightCell cell) {
+        public boolean push(Spell spell, FightCell cell) {
             final int currentDistance = new CoordinateCell<>(cell).distance(enemyCell);
 
             if (currentDistance < distance) {
@@ -72,6 +75,8 @@ final public class TeleportNearEnemy implements ActionGenerator {
                 this.cell = cell;
                 this.distance = currentDistance;
             }
+
+            return adjacent();
         }
 
         /**
@@ -126,26 +131,39 @@ final public class TeleportNearEnemy implements ActionGenerator {
             return Optional.empty();
         }
 
+        // Spells are ordered by AP cost : the first spell which can reach an accessible adjacent is necessarily the best spell
         for (Spell spell : teleportSpells) {
             if (spell.apCost() > actionPoints) {
-                continue;
+                break; // Following spells have an higher cost
             }
 
-            for (FightCell cell : ai.map()) {
-                // Target or launch is not valid
-                if (!cell.walkable() || !caster.validate(spell, cell)) {
-                    continue;
-                }
-
-                selector.push(spell, cell);
-
-                // Adjacent cell found : no need to continue
-                if (selector.adjacent()) {
-                    return selector.action();
-                }
+            if (selectBestTeleportTargetForSpell(selector, ai.map(), spell)) {
+                return selector.action();
             }
         }
 
         return selector.action();
+    }
+
+    /**
+     * Select the best possible target for the given spell
+     * The result will be push()'ed into selector
+     *
+     * @return true if the spell can reach an adjacent cell
+     */
+    private boolean selectBestTeleportTargetForSpell(Selector selector, BattlefieldMap map, Spell spell) {
+        for (FightCell cell : map) {
+            // Target or launch is not valid
+            if (!cell.walkable() || !caster.validate(spell, cell)) {
+                continue;
+            }
+
+            // Adjacent cell found : no need to continue
+            if (selector.push(spell, cell)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

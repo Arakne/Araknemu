@@ -117,7 +117,7 @@ final public class InventorySlots {
             try {
                 get(entry.position()).uncheckedSet(entry);
             } catch (InventoryException e) {
-                entry.entity().setPosition(ItemEntry.DEFAULT_POSITION);
+                entry.setToDefaultPosition();
             }
         }
     }

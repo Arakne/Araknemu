@@ -25,6 +25,8 @@ import java.util.NoSuchElementException;
 
 /**
  * Enum of all items effects
+ *
+ * @todo Should be refactored
  */
 public enum Effect {
     NONE(0, Type.SPECIAL),

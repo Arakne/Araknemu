@@ -1,5 +1,3 @@
-
-
 <!--
   ~ This file is part of Araknemu.
   ~
@@ -60,7 +58,6 @@
         <module name="DefaultComesLast" />
         <module name="EmptyStatement" />
         <module name="EqualsAvoidNull" />
-        <!-- TODO -->
         <module name="FinalLocalVariable" />
         <module name="IllegalType" />
         <!-- Should be uncommented -->
@@ -90,10 +87,10 @@
         <module name="UnusedImports" />
 
         <module name="BooleanExpressionComplexity" />
-        <!-- TODO -->
-<!--        <module name="CyclomaticComplexity" />-->
+        <module name="CyclomaticComplexity" />
         <module name="JavaNCSS">
             <property name="severity" value="warning"/>
+            <property name="classMaximum" value="150" />
         </module>
 
         <module name="ArrayTypeStyle" />
@@ -157,7 +154,7 @@
             <property name="format" value="^([A-Z][a-zA-Z]*|Argon2(Hash|Password)?)$" />
         </module>
 
-<!--        <module name="AnonInnerLength" />--> <!-- TODO -->
+        <module name="AnonInnerLength" />
 <!--        <module name="LambdaBodyLength" />--> <!-- TODO after refactoring modules -->
         <module name="MethodCount">
             <property name="maxTotal" value="30" />
@@ -231,7 +228,7 @@
 
     <module name="NewlineAtEndOfFile" />
     <module name="FileLength">
-        <property name="max" value="1000" /> <!-- Should be lowered to 500 -->
+        <property name="max" value="1000" /> <!-- TODO: Should be lowered to 500 -->
     </module>
     <module name="FileTabCharacter" />
     <module name="RegexpHeader">

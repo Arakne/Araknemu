@@ -50,6 +50,7 @@ final public class EffectToCharacteristicMapping implements EffectMapper<Charact
     final private RandomUtil random = new RandomUtil();
 
     public EffectToCharacteristicMapping() {
+        // @todo refactor
         set(Effect.ADD_COUNTER_DAMAGE,   +1, Characteristic.COUNTER_DAMAGE);
         set(Effect.ADD_ACTION_POINTS,    +1, Characteristic.ACTION_POINT);
         set(Effect.ADD_DAMAGE,           +1, Characteristic.FIXED_DAMAGE);
