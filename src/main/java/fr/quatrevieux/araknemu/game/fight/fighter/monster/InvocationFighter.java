@@ -22,9 +22,11 @@ package fr.quatrevieux.araknemu.game.fight.fighter.monster;
 import java.util.Optional;
 
 import fr.arakne.utils.maps.constant.Direction;
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
+import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
@@ -40,10 +42,29 @@ import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 final public class InvocationFighter implements Fighter {
     final private Fighter fighter;
     final private PassiveFighter invoker;
+    final private FighterLife life;
 
     public InvocationFighter(Fighter fighter, PassiveFighter invoker) {
         this.fighter = fighter;
         this.invoker = invoker;
+
+        float rate = 1 + ((Fighter)invoker).level() / 100 ;
+        int vitality = Math.round(fighter.life().max() * rate);
+
+        this.life = new BaseFighterLife(fighter, vitality, vitality);
+        this.scaleCharacteristicsBasedOnInvokerLevel(rate);
+    }
+
+    private void scaleCharacteristicsBasedOnInvokerLevel(float rate) {
+        int strength = fighter.characteristics().get(Characteristic.STRENGTH);
+        int wisdom = fighter.characteristics().get(Characteristic.WISDOM);
+        int luck = fighter.characteristics().get(Characteristic.LUCK);
+        int agility = fighter.characteristics().get(Characteristic.AGILITY);
+
+        fighter.characteristics().alter(Characteristic.STRENGTH, Math.round(strength * rate));
+        fighter.characteristics().alter(Characteristic.WISDOM, Math.round(wisdom * rate));
+        fighter.characteristics().alter(Characteristic.LUCK, Math.round(luck * rate));
+        fighter.characteristics().alter(Characteristic.AGILITY, Math.round(agility * rate));
     }
 
     @Override
@@ -95,7 +116,7 @@ final public class InvocationFighter implements Fighter {
 
     @Override
     public FighterLife life() {
-        return fighter.life();
+        return life;
     }
 
     @Override

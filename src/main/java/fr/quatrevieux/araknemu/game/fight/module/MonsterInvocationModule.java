@@ -41,8 +41,6 @@ public class MonsterInvocationModule implements FightModule {
     public void effects(EffectsHandler handler) {
         // moving creatures
         handler.register(181, new MonsterInvocationHandler(monsterService, fight));
-        // static creatures
-        handler.register(185, new MonsterInvocationHandler(monsterService, fight));
     }
 
     @Override
