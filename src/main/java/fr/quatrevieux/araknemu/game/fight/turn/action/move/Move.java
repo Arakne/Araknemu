@@ -19,15 +19,25 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Path;
+import fr.arakne.utils.maps.path.PathStep;
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.status.MoveFailed;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.status.MoveSuccess;
 
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Move the fighter
@@ -37,7 +47,7 @@ final public class Move implements Action {
     final private Fighter fighter;
     final private Path<FightCell> path;
 
-    private MoveSuccess result;
+    private MoveStatus result;
 
     public Move(FightTurn turn, Fighter fighter, Path<FightCell> path) {
         this.turn = turn;
@@ -54,9 +64,55 @@ final public class Move implements Action {
         ;
     }
 
+    private MoveStatus handleTackle() {
+        int currentStep = 0;
+        Iterator<PathStep<FightCell>> iterator = path.iterator();
+        BattlefieldMap map = fighter.cell().map();
+
+        while (iterator.hasNext()) {
+            currentStep++;
+            PathStep<FightCell> step = iterator.next();
+
+            List<FightCell> cells = Arrays.asList(
+                new FightCell[]{
+                    map.get(Direction.NORTH_EAST.nextCellIncrement(map.dimensions().width()) + step.cell().id()),
+                    map.get(Direction.NORTH_WEST.nextCellIncrement(map.dimensions().width()) + step.cell().id()),
+                    map.get(Direction.SOUTH_EAST.nextCellIncrement(map.dimensions().width()) + step.cell().id()),
+                    map.get(Direction.SOUTH_WEST.nextCellIncrement(map.dimensions().width()) + step.cell().id())
+                }
+            );
+
+            for (FightCell fightCell : cells) {
+                if (currentStep == path.size()) {
+                    continue; // don't check the final step
+                }
+
+                if(!fightCell.fighter().isPresent()) {
+                    continue;
+                }
+
+                if(fightCell.fighter().isPresent() && fightCell.fighter().get().team().equals(fighter.team())) {
+                    continue;
+                }
+
+                int esquive = getTackle(fighter, fightCell.fighter().get());
+                int random = (int) (Math.random() * 101);
+
+                if( random > esquive) {
+                    int lostPa = (int)(turn.points().actionPoints() * (esquive / 100d));                   
+                    iterator.forEachRemaining(action -> iterator.remove());
+
+                    return new MoveFailed(fighter, path, lostPa);
+                }
+            }
+        }
+
+        return new MoveSuccess(fighter, path);
+    }
+
     @Override
     public ActionResult start() {
-        result = new MoveSuccess(fighter, path);
+        result = handleTackle();
 
         return result;
     }
@@ -70,8 +126,14 @@ final public class Move implements Action {
 
     @Override
     public void failed() {
-        // @todo Handle tackle
-        throw new UnsupportedOperationException("Tackle not implemented");
+
+        turn.points().useActionPoints(result.lostPa());
+        turn.points().useMovementPoints(turn.points().movementPoints());
+
+        fighter.fight().send("GA"+result.action()+";104;"+fighter.id());
+
+        fighter.move(result.target());
+        fighter.setOrientation(result.orientation());
     }
 
     @Override
@@ -88,5 +150,25 @@ final public class Move implements Action {
     public Duration duration() {
         // @todo handle walk and run
         return Duration.ofMillis(300L * path.size());
+    }
+
+    private int getTackle(Fighter fighter, PassiveFighter toTackle) {
+        int fighterAgility = fighter.characteristics().get(Characteristic.AGILITY);
+        int toTackleAgility = toTackle.characteristics().get(Characteristic.AGILITY);
+
+        int a = fighterAgility + 25;
+        int b = toTackleAgility + fighterAgility + 50;
+
+        if (b <= 0) {
+            b = 1;
+        }
+
+        int chan = (int) ((long) (300 * a / b) - 100);
+		if (chan < 10)
+			chan = 10;
+		if (chan > 90)
+            chan = 90;
+
+		return chan;
     }
 }

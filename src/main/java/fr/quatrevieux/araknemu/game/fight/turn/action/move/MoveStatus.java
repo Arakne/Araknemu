@@ -24,24 +24,24 @@ import fr.arakne.utils.maps.path.Path;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
-import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 
 /**
  * Successful move result
  */
-final class MoveSuccess implements ActionResult {
+abstract public class MoveStatus implements ActionResult {
     final private Fighter performer;
     final private Path<FightCell> path;
 
-    public MoveSuccess(Fighter performer, Path<FightCell> path) {
+    public MoveStatus(Fighter performer, Path<FightCell> path) {
         this.performer = performer;
         this.path = path;
     }
 
-    @Override
-    public int action() {
-        return ActionType.MOVE.id();
-    }
+    abstract public int action();
+
+    abstract public int lostPa();
+
+    abstract public boolean success();
 
     @Override
     public Fighter performer() {
@@ -51,11 +51,6 @@ final class MoveSuccess implements ActionResult {
     @Override
     public Object[] arguments() {
         return new Object[] { path.encodeWithStartCell() };
-    }
-
-    @Override
-    public boolean success() {
-        return true;
     }
 
     public FightCell target() {
