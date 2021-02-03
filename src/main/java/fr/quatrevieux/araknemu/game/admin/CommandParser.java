@@ -28,6 +28,11 @@ import java.util.List;
  * Parser for console command line
  */
 public interface CommandParser {
+    /**
+     * Parse a command line
+     */
+    public Arguments parse(String line) throws AdminException;
+
     public static final class Arguments {
         private final String line;
         private final String contextPath;
@@ -79,9 +84,4 @@ public interface CommandParser {
             return context;
         }
     }
-
-    /**
-     * Parse a command line
-     */
-    public Arguments parse(String line) throws AdminException;
 }

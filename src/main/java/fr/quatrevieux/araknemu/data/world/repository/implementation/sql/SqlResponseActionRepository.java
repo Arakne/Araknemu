@@ -40,22 +40,6 @@ import java.util.stream.Collectors;
  * @see ResponseAction
  */
 final class SqlResponseActionRepository implements ResponseActionRepository {
-    private class Loader implements RepositoryUtils.Loader<ResponseAction> {
-        @Override
-        public ResponseAction create(ResultSet rs) throws SQLException {
-            return new ResponseAction(
-                rs.getInt("RESPONSE_ID"),
-                rs.getString("ACTION"),
-                rs.getString("ARGUMENTS")
-            );
-        }
-
-        @Override
-        public ResponseAction fillKeys(ResponseAction entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
     private final QueryExecutor executor;
     private final RepositoryUtils<ResponseAction> utils;
 
@@ -148,6 +132,22 @@ final class SqlResponseActionRepository implements ResponseActionRepository {
                     .stream()
                     .collect(Collectors.groupingBy(ResponseAction::responseId))
                 ;
+        }
+    }
+
+    private class Loader implements RepositoryUtils.Loader<ResponseAction> {
+        @Override
+        public ResponseAction create(ResultSet rs) throws SQLException {
+            return new ResponseAction(
+                rs.getInt("RESPONSE_ID"),
+                rs.getString("ACTION"),
+                rs.getString("ARGUMENTS")
+            );
+        }
+
+        @Override
+        public ResponseAction fillKeys(ResponseAction entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
         }
     }
 }

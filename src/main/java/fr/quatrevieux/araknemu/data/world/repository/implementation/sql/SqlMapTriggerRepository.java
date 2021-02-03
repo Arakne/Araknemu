@@ -33,24 +33,6 @@ import java.util.Collection;
  * SQL implementation for map triggers
  */
 final class SqlMapTriggerRepository implements MapTriggerRepository {
-    private static class Loader implements RepositoryUtils.Loader<MapTrigger> {
-        @Override
-        public MapTrigger create(ResultSet rs) throws SQLException {
-            return new MapTrigger(
-                rs.getInt("MAP_ID"),
-                rs.getInt("CELL_ID"),
-                rs.getInt("ACTION"),
-                rs.getString("ARGUMENTS"),
-                rs.getString("CONDITIONS")
-            );
-        }
-
-        @Override
-        public MapTrigger fillKeys(MapTrigger entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
     private final QueryExecutor executor;
     private final RepositoryUtils<MapTrigger> utils;
 
@@ -121,5 +103,23 @@ final class SqlMapTriggerRepository implements MapTriggerRepository {
     @Override
     public Collection<MapTrigger> all() {
         return utils.findAll("SELECT * FROM MAP_TRIGGER");
+    }
+
+    private static class Loader implements RepositoryUtils.Loader<MapTrigger> {
+        @Override
+        public MapTrigger create(ResultSet rs) throws SQLException {
+            return new MapTrigger(
+                rs.getInt("MAP_ID"),
+                rs.getInt("CELL_ID"),
+                rs.getInt("ACTION"),
+                rs.getString("ARGUMENTS"),
+                rs.getString("CONDITIONS")
+            );
+        }
+
+        @Override
+        public MapTrigger fillKeys(MapTrigger entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

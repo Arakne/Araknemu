@@ -37,34 +37,6 @@ import java.util.Collection;
  * SQL implementation for spell template repository
  */
 final class SqlSpellTemplateRepository implements SpellTemplateRepository {
-    private class Loader implements RepositoryUtils.Loader<SpellTemplate> {
-        @Override
-        public SpellTemplate create(ResultSet rs) throws SQLException {
-            return new SpellTemplate(
-                rs.getInt("SPELL_ID"),
-                rs.getString("SPELL_NAME"),
-                rs.getInt("SPELL_SPRITE"),
-                rs.getString("SPELL_SPRITE_ARG"),
-                new SpellTemplate.Level[]{
-                    levelTransformer.unserialize(rs.getString("SPELL_LVL_1")),
-                    levelTransformer.unserialize(rs.getString("SPELL_LVL_2")),
-                    levelTransformer.unserialize(rs.getString("SPELL_LVL_3")),
-                    levelTransformer.unserialize(rs.getString("SPELL_LVL_4")),
-                    levelTransformer.unserialize(rs.getString("SPELL_LVL_5")),
-                    levelTransformer.unserialize(rs.getString("SPELL_LVL_6")),
-                },
-                Arrays.stream(StringUtils.split(rs.getString("SPELL_TARGET"), ";"))
-                    .mapToInt(Integer::parseInt)
-                    .toArray()
-            );
-        }
-
-        @Override
-        public SpellTemplate fillKeys(SpellTemplate entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
     private final QueryExecutor executor;
     private final RepositoryUtils<SpellTemplate> utils;
 
@@ -136,5 +108,33 @@ final class SqlSpellTemplateRepository implements SpellTemplateRepository {
     @Override
     public Collection<SpellTemplate> load() {
         return utils.findAll("SELECT * FROM SPELL");
+    }
+
+    private class Loader implements RepositoryUtils.Loader<SpellTemplate> {
+        @Override
+        public SpellTemplate create(ResultSet rs) throws SQLException {
+            return new SpellTemplate(
+                rs.getInt("SPELL_ID"),
+                rs.getString("SPELL_NAME"),
+                rs.getInt("SPELL_SPRITE"),
+                rs.getString("SPELL_SPRITE_ARG"),
+                new SpellTemplate.Level[]{
+                    levelTransformer.unserialize(rs.getString("SPELL_LVL_1")),
+                    levelTransformer.unserialize(rs.getString("SPELL_LVL_2")),
+                    levelTransformer.unserialize(rs.getString("SPELL_LVL_3")),
+                    levelTransformer.unserialize(rs.getString("SPELL_LVL_4")),
+                    levelTransformer.unserialize(rs.getString("SPELL_LVL_5")),
+                    levelTransformer.unserialize(rs.getString("SPELL_LVL_6")),
+                },
+                Arrays.stream(StringUtils.split(rs.getString("SPELL_TARGET"), ";"))
+                    .mapToInt(Integer::parseInt)
+                    .toArray()
+            );
+        }
+
+        @Override
+        public SpellTemplate fillKeys(SpellTemplate entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

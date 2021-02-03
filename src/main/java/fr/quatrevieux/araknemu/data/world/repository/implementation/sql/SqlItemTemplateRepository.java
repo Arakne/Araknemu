@@ -36,29 +36,6 @@ import java.util.List;
  * SQL implementation for item template repository
  */
 final class SqlItemTemplateRepository implements ItemTemplateRepository {
-    private class Loader implements RepositoryUtils.Loader<ItemTemplate> {
-        @Override
-        public ItemTemplate create(ResultSet rs) throws SQLException {
-            return new ItemTemplate(
-                rs.getInt("ITEM_TEMPLATE_ID"),
-                rs.getInt("ITEM_TYPE"),
-                rs.getString("ITEM_NAME"),
-                rs.getInt("ITEM_LEVEL"),
-                effectsTransformer.unserialize(rs.getString("ITEM_EFFECTS")),
-                rs.getInt("WEIGHT"),
-                rs.getString("CONDITIONS"),
-                rs.getInt("ITEM_SET_ID"),
-                rs.getString("WEAPON_INFO"),
-                rs.getInt("PRICE")
-            );
-        }
-
-        @Override
-        public ItemTemplate fillKeys(ItemTemplate entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
     private final QueryExecutor executor;
     private final RepositoryUtils<ItemTemplate> utils;
 
@@ -125,5 +102,28 @@ final class SqlItemTemplateRepository implements ItemTemplateRepository {
     @Override
     public Collection<ItemTemplate> load() {
         return utils.findAll("SELECT * FROM ITEM_TEMPLATE");
+    }
+
+    private class Loader implements RepositoryUtils.Loader<ItemTemplate> {
+        @Override
+        public ItemTemplate create(ResultSet rs) throws SQLException {
+            return new ItemTemplate(
+                rs.getInt("ITEM_TEMPLATE_ID"),
+                rs.getInt("ITEM_TYPE"),
+                rs.getString("ITEM_NAME"),
+                rs.getInt("ITEM_LEVEL"),
+                effectsTransformer.unserialize(rs.getString("ITEM_EFFECTS")),
+                rs.getInt("WEIGHT"),
+                rs.getString("CONDITIONS"),
+                rs.getInt("ITEM_SET_ID"),
+                rs.getString("WEAPON_INFO"),
+                rs.getInt("PRICE")
+            );
+        }
+
+        @Override
+        public ItemTemplate fillKeys(ItemTemplate entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

@@ -38,25 +38,6 @@ import java.util.List;
  * SQL implementation for {@link BankItem} repository
  */
 final class SqlBankItemRepository implements BankItemRepository {
-    private class Loader implements RepositoryUtils.Loader<BankItem> {
-        @Override
-        public BankItem create(ResultSet rs) throws SQLException {
-            return new BankItem(
-                rs.getInt("ACCOUNT_ID"),
-                rs.getInt("SERVER_ID"),
-                rs.getInt("ITEM_ENTRY_ID"),
-                rs.getInt("ITEM_TEMPLATE_ID"),
-                effectsTransformer.unserialize(rs.getString("ITEM_EFFECTS")),
-                rs.getInt("QUANTITY")
-            );
-        }
-
-        @Override
-        public BankItem fillKeys(BankItem entity, ResultSet keys) {
-            throw new UnsupportedOperationException();
-        }
-    }
-
     private final QueryExecutor executor;
     private final RepositoryUtils<BankItem> utils;
     private final Transformer<List<ItemTemplateEffectEntry>> effectsTransformer;
@@ -189,5 +170,24 @@ final class SqlBankItemRepository implements BankItemRepository {
                 stmt.setInt(2, bank.serverId());
             }
         );
+    }
+
+    private class Loader implements RepositoryUtils.Loader<BankItem> {
+        @Override
+        public BankItem create(ResultSet rs) throws SQLException {
+            return new BankItem(
+                rs.getInt("ACCOUNT_ID"),
+                rs.getInt("SERVER_ID"),
+                rs.getInt("ITEM_ENTRY_ID"),
+                rs.getInt("ITEM_TEMPLATE_ID"),
+                effectsTransformer.unserialize(rs.getString("ITEM_EFFECTS")),
+                rs.getInt("QUANTITY")
+            );
+        }
+
+        @Override
+        public BankItem fillKeys(BankItem entity, ResultSet keys) {
+            throw new UnsupportedOperationException();
+        }
     }
 }

@@ -30,24 +30,6 @@ import org.apache.commons.lang3.StringUtils;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Items.as#L19
  */
 public final class ObjectMoveRequest implements Packet {
-    public static final class Parser implements SinglePacketParser<ObjectMoveRequest> {
-        @Override
-        public ObjectMoveRequest parse(String input) throws ParsePacketException {
-            final String[] parts = StringUtils.split(input, "|", 3);
-
-            return new ObjectMoveRequest(
-                Integer.parseInt(parts[0]),
-                Integer.parseInt(parts[1]),
-                parts.length == 3 ? Integer.parseUnsignedInt(parts[2]) : 1
-            );
-        }
-
-        @Override
-        public String code() {
-            return "OM";
-        }
-    }
-
     private final int id;
     private final int position;
     private final int quantity;
@@ -68,5 +50,23 @@ public final class ObjectMoveRequest implements Packet {
 
     public int quantity() {
         return quantity;
+    }
+
+    public static final class Parser implements SinglePacketParser<ObjectMoveRequest> {
+        @Override
+        public ObjectMoveRequest parse(String input) throws ParsePacketException {
+            final String[] parts = StringUtils.split(input, "|", 3);
+
+            return new ObjectMoveRequest(
+                Integer.parseInt(parts[0]),
+                Integer.parseInt(parts[1]),
+                parts.length == 3 ? Integer.parseUnsignedInt(parts[2]) : 1
+            );
+        }
+
+        @Override
+        public String code() {
+            return "OM";
+        }
     }
 }

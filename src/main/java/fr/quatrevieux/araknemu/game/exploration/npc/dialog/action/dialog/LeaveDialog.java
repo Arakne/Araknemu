@@ -29,6 +29,16 @@ import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.ActionFactory;
  * Leave current NPC dialog
  */
 public final class LeaveDialog implements Action {
+    @Override
+    public boolean check(ExplorationPlayer player) {
+        return true;
+    }
+
+    @Override
+    public void apply(ExplorationPlayer player) {
+        player.interactions().get(NpcDialog.class).stop();
+    }
+
     public static final class Factory implements ActionFactory {
         private static final LeaveDialog INSTANCE = new LeaveDialog();
 
@@ -41,15 +51,5 @@ public final class LeaveDialog implements Action {
         public Action create(ResponseAction entity) {
             return INSTANCE;
         }
-    }
-
-    @Override
-    public boolean check(ExplorationPlayer player) {
-        return true;
-    }
-
-    @Override
-    public void apply(ExplorationPlayer player) {
-        player.interactions().get(NpcDialog.class).stop();
     }
 }

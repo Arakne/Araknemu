@@ -30,46 +30,6 @@ import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
  * Base formula for compute the Pvm experience
  */
 public final class PvmXpProvider implements DropRewardProvider {
-    private static class Scope implements DropRewardProvider.Scope {
-        private final long totalXp;
-        private final double teamsLevelsRate;
-        private final double teamLevelDeviationBonus;
-        private final double winnersLevel;
-
-        public Scope(long totalXp, double teamsLevelsRate, double teamLevelDeviationBonus, double winnersLevel) {
-            this.totalXp = totalXp;
-            this.teamsLevelsRate = teamsLevelsRate;
-            this.teamLevelDeviationBonus = teamLevelDeviationBonus;
-            this.winnersLevel = winnersLevel;
-        }
-
-        @Override
-        public void provide(DropReward reward) {
-            final long winXp = (long) (
-                totalXp
-                * teamsLevelsRate
-                * teamLevelDeviationBonus
-                * (1 + ((double) reward.fighter().level() / winnersLevel))
-                * (1 + (double) reward.fighter().characteristics().get(Characteristic.WISDOM) / 100)
-            );
-
-            reward.setXp(winXp);
-        }
-    }
-
-    private static class ExtractXp implements FighterOperation {
-        private long xp;
-
-        @Override
-        public void onMonster(MonsterFighter fighter) {
-            xp += fighter.reward().experience();
-        }
-
-        public long get() {
-            return xp;
-        }
-    }
-
     @Override
     public DropRewardProvider.Scope initialize(EndFightResults results) {
         return new Scope(
@@ -130,5 +90,45 @@ public final class PvmXpProvider implements DropRewardProvider {
             1.3,
             1 + loosersLevel / winnersLevel
         );
+    }
+
+    private static class Scope implements DropRewardProvider.Scope {
+        private final long totalXp;
+        private final double teamsLevelsRate;
+        private final double teamLevelDeviationBonus;
+        private final double winnersLevel;
+
+        public Scope(long totalXp, double teamsLevelsRate, double teamLevelDeviationBonus, double winnersLevel) {
+            this.totalXp = totalXp;
+            this.teamsLevelsRate = teamsLevelsRate;
+            this.teamLevelDeviationBonus = teamLevelDeviationBonus;
+            this.winnersLevel = winnersLevel;
+        }
+
+        @Override
+        public void provide(DropReward reward) {
+            final long winXp = (long) (
+                totalXp
+                    * teamsLevelsRate
+                    * teamLevelDeviationBonus
+                    * (1 + ((double) reward.fighter().level() / winnersLevel))
+                    * (1 + (double) reward.fighter().characteristics().get(Characteristic.WISDOM) / 100)
+            );
+
+            reward.setXp(winXp);
+        }
+    }
+
+    private static class ExtractXp implements FighterOperation {
+        private long xp;
+
+        @Override
+        public void onMonster(MonsterFighter fighter) {
+            xp += fighter.reward().experience();
+        }
+
+        public long get() {
+            return xp;
+        }
     }
 }

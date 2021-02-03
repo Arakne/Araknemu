@@ -31,6 +31,37 @@ import org.apache.commons.lang3.StringUtils;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Chat.as#L19
  */
 public final class Message implements Packet {
+    private final ChannelType channel;
+    private final String target;
+    private final String message;
+    private final String items;
+
+    public Message(ChannelType channel, String target, String message, String items) {
+        this.channel = channel;
+        this.target = target;
+        this.message = message;
+        this.items = items;
+    }
+
+    public ChannelType channel() {
+        return channel;
+    }
+
+    /**
+     * The target is null when send to a global chat
+     */
+    public String target() {
+        return target;
+    }
+
+    public String message() {
+        return message;
+    }
+
+    public String items() {
+        return items;
+    }
+
     public static final class Parser implements SinglePacketParser<Message> {
         @Override
         public Message parse(String input) throws ParsePacketException {
@@ -63,36 +94,5 @@ public final class Message implements Packet {
         public String code() {
             return "BM";
         }
-    }
-
-    private final ChannelType channel;
-    private final String target;
-    private final String message;
-    private final String items;
-
-    public Message(ChannelType channel, String target, String message, String items) {
-        this.channel = channel;
-        this.target = target;
-        this.message = message;
-        this.items = items;
-    }
-
-    public ChannelType channel() {
-        return channel;
-    }
-
-    /**
-     * The target is null when send to a global chat
-     */
-    public String target() {
-        return target;
-    }
-
-    public String message() {
-        return message;
-    }
-
-    public String items() {
-        return items;
     }
 }

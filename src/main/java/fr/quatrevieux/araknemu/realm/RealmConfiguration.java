@@ -32,37 +32,6 @@ import java.time.Duration;
  * Configuration for realm
  */
 public final class RealmConfiguration implements ConfigurationModule {
-    public final class Argon2 {
-        /**
-         * Get the number of iterations. Default: 4
-         */
-        public int iterations() {
-            return pool.integer("password.argon2.iterations", 4);
-        }
-
-        /**
-         * Get the memory, in kilobits. Default: 65536 (64Mo)
-         */
-        public int memory() {
-            return pool.integer("password.argon2.memory", 64 * 1024);
-        }
-
-        /**
-         * Get the parallelism parameter. Default: 8
-         */
-        public int parallelism() {
-            return pool.integer("password.argon2.parallelism", 8);
-        }
-
-        /**
-         * Get the argon2 algorithm type. Default: "argon2id"
-         * Available types : "argon2i", "argon2d", "argon2id"
-         */
-        public Argon2Factory.Argon2Types type() {
-            return Argon2Hash.typeByName(pool.string("password.argon2.type", "argon2id").toUpperCase());
-        }
-    }
-
     private PoolUtils pool;
 
     @Override
@@ -134,5 +103,36 @@ public final class RealmConfiguration implements ConfigurationModule {
      */
     public Argon2 argon2() {
         return new Argon2();
+    }
+
+    public final class Argon2 {
+        /**
+         * Get the number of iterations. Default: 4
+         */
+        public int iterations() {
+            return pool.integer("password.argon2.iterations", 4);
+        }
+
+        /**
+         * Get the memory, in kilobits. Default: 65536 (64Mo)
+         */
+        public int memory() {
+            return pool.integer("password.argon2.memory", 64 * 1024);
+        }
+
+        /**
+         * Get the parallelism parameter. Default: 8
+         */
+        public int parallelism() {
+            return pool.integer("password.argon2.parallelism", 8);
+        }
+
+        /**
+         * Get the argon2 algorithm type. Default: "argon2id"
+         * Available types : "argon2i", "argon2d", "argon2id"
+         */
+        public Argon2Factory.Argon2Types type() {
+            return Argon2Hash.typeByName(pool.string("password.argon2.type", "argon2id").toUpperCase());
+        }
     }
 }

@@ -31,54 +31,6 @@ import java.util.function.Predicate;
  * Simple session implementation with configurable handlers for each methods
  */
 public final class ConfigurableSession implements Session {
-    /**
-     * Handle exceptions thrown during a session
-     *
-     * @param <E> The exception type
-     */
-    public interface ExceptionHandler<E extends Throwable> {
-        /**
-         * The supported exception type
-         */
-        public Class<E> type();
-
-        /**
-         * Handle the exception
-         *
-         * @return true for call next handlers, or false to stop exception handling
-         */
-        public boolean handleException(E cause);
-    }
-
-    /**
-     * Middleware for handle received packets
-     */
-    @FunctionalInterface
-    public interface ReceivePacketMiddleware {
-        /**
-         * Handle a packet
-         *
-         * @param packet Packet to handle
-         * @param next The next middleware to call
-         */
-        public void handlePacket(Object packet, Consumer<Object> next) throws Exception;
-    }
-
-    /**
-     * Transform packets before sending
-     */
-    @FunctionalInterface
-    public interface SendPacketTransformer {
-        /**
-         * Transform the packet
-         *
-         * @param packet Original packet
-         *
-         * @return The transformed packet, or null to cancel sending
-         */
-        public Object transformPacket(Object packet);
-    }
-
     private final Channel channel;
 
     private final List<SendPacketTransformer> sendTransformers = new ArrayList<>();
@@ -218,5 +170,53 @@ public final class ConfigurableSession implements Session {
                 return handle.test((E) cause);
             }
         });
+    }
+
+    /**
+     * Handle exceptions thrown during a session
+     *
+     * @param <E> The exception type
+     */
+    public interface ExceptionHandler<E extends Throwable> {
+        /**
+         * The supported exception type
+         */
+        public Class<E> type();
+
+        /**
+         * Handle the exception
+         *
+         * @return true for call next handlers, or false to stop exception handling
+         */
+        public boolean handleException(E cause);
+    }
+
+    /**
+     * Middleware for handle received packets
+     */
+    @FunctionalInterface
+    public interface ReceivePacketMiddleware {
+        /**
+         * Handle a packet
+         *
+         * @param packet Packet to handle
+         * @param next The next middleware to call
+         */
+        public void handlePacket(Object packet, Consumer<Object> next) throws Exception;
+    }
+
+    /**
+     * Transform packets before sending
+     */
+    @FunctionalInterface
+    public interface SendPacketTransformer {
+        /**
+         * Transform the packet
+         *
+         * @param packet Original packet
+         *
+         * @return The transformed packet, or null to cancel sending
+         */
+        public Object transformPacket(Object packet);
     }
 }

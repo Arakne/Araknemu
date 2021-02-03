@@ -42,24 +42,6 @@ import java.util.stream.Collectors;
  *              If set to 0, the response is always displayed
  */
 public final class RemoveObject implements Action {
-    public static final class Factory implements ActionFactory {
-        @Override
-        public String type() {
-            return "REM_OBJECT";
-        }
-
-        @Override
-        public Action create(ResponseAction entity) {
-            final String[] arguments = StringUtils.split(entity.arguments(), ",", 3);
-
-            return new RemoveObject(
-                Integer.parseInt(arguments[0]),
-                arguments.length > 1 ? Integer.parseInt(arguments[1]) : 1,
-                arguments.length < 3 || "1".equals(arguments[2])
-            );
-        }
-    }
-
     private final int itemId;
     private final int quantity;
     private final boolean required;
@@ -110,6 +92,24 @@ public final class RemoveObject implements Action {
             if (currentQuantity <= 0) {
                 break;
             }
+        }
+    }
+
+    public static final class Factory implements ActionFactory {
+        @Override
+        public String type() {
+            return "REM_OBJECT";
+        }
+
+        @Override
+        public Action create(ResponseAction entity) {
+            final String[] arguments = StringUtils.split(entity.arguments(), ",", 3);
+
+            return new RemoveObject(
+                Integer.parseInt(arguments[0]),
+                arguments.length > 1 ? Integer.parseInt(arguments[1]) : 1,
+                arguments.length < 3 || "1".equals(arguments[2])
+            );
         }
     }
 }

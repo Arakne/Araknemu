@@ -29,6 +29,46 @@ import java.util.List;
  * Template for a spell
  */
 public final class SpellTemplate {
+    private final int id;
+    private final String name;
+    private final int sprite;
+    private final String spriteArgs;
+    private final Level[] levels;
+    private final int[] targets;
+
+    public SpellTemplate(int id, String name, int sprite, String spriteArgs, Level[] levels, int[] targets) {
+        this.id = id;
+        this.name = name;
+        this.sprite = sprite;
+        this.spriteArgs = spriteArgs;
+        this.levels = levels;
+        this.targets = targets;
+    }
+
+    public int id() {
+        return id;
+    }
+
+    public String name() {
+        return name;
+    }
+
+    public int sprite() {
+        return sprite;
+    }
+
+    public String spriteArgs() {
+        return spriteArgs;
+    }
+
+    public Level[] levels() {
+        return levels;
+    }
+
+    public int[] targets() {
+        return targets;
+    }
+
     public static final class Level {
         private final List<SpellTemplateEffect> effects;
         private final List<SpellTemplateEffect> criticalEffects;
@@ -212,45 +252,5 @@ public final class SpellTemplate {
         public boolean endsTurnOnFailure() {
             return endsTurnOnFailure;
         }
-    }
-
-    private final int id;
-    private final String name;
-    private final int sprite;
-    private final String spriteArgs;
-    private final Level[] levels;
-    private final int[] targets;
-
-    public SpellTemplate(int id, String name, int sprite, String spriteArgs, Level[] levels, int[] targets) {
-        this.id = id;
-        this.name = name;
-        this.sprite = sprite;
-        this.spriteArgs = spriteArgs;
-        this.levels = levels;
-        this.targets = targets;
-    }
-
-    public int id() {
-        return id;
-    }
-
-    public String name() {
-        return name;
-    }
-
-    public int sprite() {
-        return sprite;
-    }
-
-    public String spriteArgs() {
-        return spriteArgs;
-    }
-
-    public Level[] levels() {
-        return levels;
-    }
-
-    public int[] targets() {
-        return targets;
     }
 }

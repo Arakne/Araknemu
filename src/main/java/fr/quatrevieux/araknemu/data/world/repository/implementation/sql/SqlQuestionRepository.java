@@ -42,25 +42,6 @@ import java.util.Map;
  * @see Question
  */
 final class SqlQuestionRepository implements QuestionRepository {
-    private class Loader implements RepositoryUtils.Loader<Question> {
-        @Override
-        public Question create(ResultSet rs) throws SQLException {
-            return new Question(
-                rs.getInt("QUESTION_ID"),
-                Arrays.stream(StringUtils.split(rs.getString("RESPONSE_IDS"), ';'))
-                    .mapToInt(Integer::parseInt)
-                    .toArray(),
-                StringUtils.split(rs.getString("PARAMETERS"), ';'),
-                rs.getString("CONDITIONS")
-            );
-        }
-
-        @Override
-        public Question fillKeys(Question entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
     private final QueryExecutor executor;
     private final RepositoryUtils<Question> utils;
 
@@ -168,5 +149,24 @@ final class SqlQuestionRepository implements QuestionRepository {
         }
 
         return sorted;
+    }
+
+    private class Loader implements RepositoryUtils.Loader<Question> {
+        @Override
+        public Question create(ResultSet rs) throws SQLException {
+            return new Question(
+                rs.getInt("QUESTION_ID"),
+                Arrays.stream(StringUtils.split(rs.getString("RESPONSE_IDS"), ';'))
+                    .mapToInt(Integer::parseInt)
+                    .toArray(),
+                StringUtils.split(rs.getString("PARAMETERS"), ';'),
+                rs.getString("CONDITIONS")
+            );
+        }
+
+        @Override
+        public Question fillKeys(Question entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

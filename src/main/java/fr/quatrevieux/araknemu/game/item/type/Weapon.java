@@ -36,48 +36,6 @@ import java.util.List;
  * Class for weapons
  */
 public final class Weapon extends AbstractEquipment {
-    public static final class WeaponInfo {
-        private final int apCost;
-        private final Interval range;
-        private final int criticalRate;
-        private final int failureRate;
-        private final int criticalBonus;
-        private final boolean isTwoHanded;
-
-        public WeaponInfo(int apCost, Interval range, int criticalRate, int failureRate, int criticalBonus, boolean isTwoHanded) {
-            this.apCost = apCost;
-            this.range = range;
-            this.criticalRate = criticalRate;
-            this.failureRate = failureRate;
-            this.criticalBonus = criticalBonus;
-            this.isTwoHanded = isTwoHanded;
-        }
-
-        public int apCost() {
-            return apCost;
-        }
-
-        public Interval range() {
-            return range;
-        }
-
-        public int criticalRate() {
-            return criticalRate;
-        }
-
-        public int failureRate() {
-            return failureRate;
-        }
-
-        public int criticalBonus() {
-            return criticalBonus;
-        }
-
-        public boolean isTwoHanded() {
-            return isTwoHanded;
-        }
-    }
-
     private final List<WeaponEffect> weaponEffects;
     private final WeaponInfo info;
     private final SpellEffectArea area;
@@ -135,5 +93,47 @@ public final class Weapon extends AbstractEquipment {
         result = 31 * result + weaponEffects.hashCode();
 
         return result;
+    }
+
+    public static final class WeaponInfo {
+        private final int apCost;
+        private final Interval range;
+        private final int criticalRate;
+        private final int failureRate;
+        private final int criticalBonus;
+        private final boolean isTwoHanded;
+
+        public WeaponInfo(int apCost, Interval range, int criticalRate, int failureRate, int criticalBonus, boolean isTwoHanded) {
+            this.apCost = apCost;
+            this.range = range;
+            this.criticalRate = criticalRate;
+            this.failureRate = failureRate;
+            this.criticalBonus = criticalBonus;
+            this.isTwoHanded = isTwoHanded;
+        }
+
+        public int apCost() {
+            return apCost;
+        }
+
+        public Interval range() {
+            return range;
+        }
+
+        public int criticalRate() {
+            return criticalRate;
+        }
+
+        public int failureRate() {
+            return failureRate;
+        }
+
+        public int criticalBonus() {
+            return criticalBonus;
+        }
+
+        public boolean isTwoHanded() {
+            return isTwoHanded;
+        }
     }
 }

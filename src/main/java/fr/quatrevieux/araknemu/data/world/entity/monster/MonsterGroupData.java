@@ -29,50 +29,6 @@ import java.util.List;
  * Store information for generate monster groups
  */
 public final class MonsterGroupData {
-    public static final class Monster {
-        private final int id;
-        private final Interval level;
-        private final int rate;
-
-        public Monster(int id, Interval level, int rate) {
-            this.id = id;
-            this.level = level;
-            this.rate = rate;
-        }
-
-        /**
-         * Get the monster id
-         *
-         * @see MonsterTemplate#id()
-         */
-        public int id() {
-            return id;
-        }
-
-        /**
-         * Get the level interval
-         */
-        public Interval level() {
-            return level;
-        }
-
-        /**
-         * Get the spawn chance of the monster
-         *
-         * This rate is relative to all monsters of the group
-         * Higher the rate is, higher the spawn chance is
-         * A monster with a rate of 10 has a probability of two times more than a rate of 5
-         *
-         * The rate of all monsters of the group are added for compute the probability
-         * By default the rate is 1
-         *
-         * @see MonsterGroupData#totalRate()
-         */
-        public int rate() {
-            return rate;
-        }
-    }
-
     private final int id;
     private final Duration respawnTime;
     private final int maxSize;
@@ -182,5 +138,49 @@ public final class MonsterGroupData {
      */
     public boolean fixedTeamNumber() {
         return fixedTeamNumber;
+    }
+
+    public static final class Monster {
+        private final int id;
+        private final Interval level;
+        private final int rate;
+
+        public Monster(int id, Interval level, int rate) {
+            this.id = id;
+            this.level = level;
+            this.rate = rate;
+        }
+
+        /**
+         * Get the monster id
+         *
+         * @see MonsterTemplate#id()
+         */
+        public int id() {
+            return id;
+        }
+
+        /**
+         * Get the level interval
+         */
+        public Interval level() {
+            return level;
+        }
+
+        /**
+         * Get the spawn chance of the monster
+         *
+         * This rate is relative to all monsters of the group
+         * Higher the rate is, higher the spawn chance is
+         * A monster with a rate of 10 has a probability of two times more than a rate of 5
+         *
+         * The rate of all monsters of the group are added for compute the probability
+         * By default the rate is 1
+         *
+         * @see MonsterGroupData#totalRate()
+         */
+        public int rate() {
+            return rate;
+        }
     }
 }

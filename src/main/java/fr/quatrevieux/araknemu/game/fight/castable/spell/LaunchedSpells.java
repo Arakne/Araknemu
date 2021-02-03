@@ -30,18 +30,6 @@ import java.util.Map;
  * Handle launch spells history for check constraints
  */
 public final class LaunchedSpells {
-    private class Entry {
-        private int cooldown;
-        private int count = 1;
-        private final Map<PassiveFighter, Integer> countPerTarget = new HashMap<>();
-
-        Entry(Spell spell, FightCell cell) {
-            cooldown = spell.constraints().launchDelay();
-
-            cell.fighter().ifPresent(fighter -> countPerTarget.put(fighter, 1));
-        }
-    }
-
     private final Map<Integer, Entry> spells = new HashMap<>();
 
     /**
@@ -107,5 +95,17 @@ public final class LaunchedSpells {
         }
 
         return true;
+    }
+
+    private static class Entry {
+        private int cooldown;
+        private int count = 1;
+        private final Map<PassiveFighter, Integer> countPerTarget = new HashMap<>();
+
+        Entry(Spell spell, FightCell cell) {
+            cooldown = spell.constraints().launchDelay();
+
+            cell.fighter().ifPresent(fighter -> countPerTarget.put(fighter, 1));
+        }
     }
 }

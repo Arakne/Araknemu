@@ -40,7 +40,7 @@
         </module>
         <module name="FinalClass" />
         <module name="HideUtilityClassConstructor" />
-        <!-- <module name="InnerTypeLast"/> --> <!-- Uncomment -->
+        <module name="InnerTypeLast" />
         <module name="InterfaceIsType" />
         <module name="MutableException" />
         <module name="OneTopLevelClass" />

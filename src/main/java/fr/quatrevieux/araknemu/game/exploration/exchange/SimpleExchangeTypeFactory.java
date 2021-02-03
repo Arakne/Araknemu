@@ -29,11 +29,6 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeInt
  * @param <C> The creature type target
  */
 public final class SimpleExchangeTypeFactory<C extends ExplorationCreature> implements ExchangeTypeFactory<C> {
-    @FunctionalInterface
-    public interface Factory<C extends ExplorationCreature> {
-        public ExchangeInteraction create(ExplorationPlayer initiator, C target);
-    }
-
     private final ExchangeType type;
     private final Factory<C> factory;
 
@@ -50,5 +45,10 @@ public final class SimpleExchangeTypeFactory<C extends ExplorationCreature> impl
     @Override
     public ExchangeInteraction create(ExplorationPlayer initiator, C target) {
         return factory.create(initiator, target);
+    }
+
+    @FunctionalInterface
+    public interface Factory<C extends ExplorationCreature> {
+        public ExchangeInteraction create(ExplorationPlayer initiator, C target);
     }
 }

@@ -28,19 +28,6 @@ import java.sql.SQLException;
  */
 public interface ConnectionPool extends AutoCloseable {
     /**
-     * Task for a connection
-     * @param <T> Type of the result
-     */
-    public static interface Task<T> {
-        /**
-         * Perform a request into the pool
-         * @param connection The acquired connection
-         * @return The result of the task
-         */
-        public T perform(Connection connection) throws SQLException;
-    }
-
-    /**
      * Initialize the pool
      * Create connection and save into the pool
      */
@@ -90,5 +77,18 @@ public interface ConnectionPool extends AutoCloseable {
         } finally {
             release(connection);
         }
+    }
+
+    /**
+     * Task for a connection
+     * @param <T> Type of the result
+     */
+    public static interface Task<T> {
+        /**
+         * Perform a request into the pool
+         * @param connection The acquired connection
+         * @return The result of the task
+         */
+        public T perform(Connection connection) throws SQLException;
     }
 }

@@ -35,13 +35,6 @@ import java.util.Map;
  * Simple implementation for {@link ItemStorage}
  */
 public final class SimpleItemStorage<E extends ItemEntry> implements ItemStorage<E> {
-    public interface EntryFactory<E> {
-        /**
-         * Create the inventory entry for the current item storage
-         */
-        public E create(int id, Item item, int quantity, int position);
-    }
-
     private final Dispatcher dispatcher;
     private final EntryFactory<E> factory;
 
@@ -105,5 +98,12 @@ public final class SimpleItemStorage<E extends ItemEntry> implements ItemStorage
 
     private void push(E entry) {
         items.put(entry.id(), entry);
+    }
+
+    public interface EntryFactory<E> {
+        /**
+         * Create the inventory entry for the current item storage
+         */
+        public E create(int id, Item item, int quantity, int position);
     }
 }

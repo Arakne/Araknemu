@@ -47,24 +47,6 @@ import java.util.stream.Collectors;
  * Service for handle player inventory
  */
 public final class InventoryService implements EventsSubscriber {
-    static class LoadedItem {
-        private final PlayerItem entity;
-        private final Item item;
-
-        public LoadedItem(PlayerItem entity, Item item) {
-            this.entity = entity;
-            this.item = item;
-        }
-
-        public PlayerItem entity() {
-            return entity;
-        }
-
-        public Item item() {
-            return item;
-        }
-    }
-
     private final PlayerItemRepository repository;
     private final ItemService service;
 
@@ -173,5 +155,23 @@ public final class InventoryService implements EventsSubscriber {
 
         // Compute and send weight after stats updated
         dispatcher.register(new SendWeight(player));
+    }
+
+    static class LoadedItem {
+        private final PlayerItem entity;
+        private final Item item;
+
+        public LoadedItem(PlayerItem entity, Item item) {
+            this.entity = entity;
+            this.item = item;
+        }
+
+        public PlayerItem entity() {
+            return entity;
+        }
+
+        public Item item() {
+            return item;
+        }
     }
 }

@@ -40,43 +40,6 @@ public final class Online extends AbstractCommand {
     private final ExplorationMapService mapService;
     private final GameService gameService;
 
-    /**
-     * Store the command options
-     */
-    static class Options {
-        private int limit = 20;
-        private int skip = 0;
-        private String search = null;
-
-        public Options(List<String> arguments) {
-            for (int i = 1; i < arguments.size(); ++i) {
-                switch (arguments.get(i)) {
-                    case "--limit":
-                        limit = Integer.parseInt(arguments.get(++i));
-                        break;
-
-                    case "--skip":
-                        skip = Integer.parseInt(arguments.get(++i));
-                        break;
-
-                    default:
-                        search = arguments.get(i).toLowerCase();
-                }
-            }
-        }
-
-        /**
-         * Apply the options on the stream
-         */
-        public Stream<GamePlayer> apply(Stream<GamePlayer> stream) {
-            if (search != null) {
-                stream = stream.filter(player -> player.name().toLowerCase().contains(search));
-            }
-
-            return stream.skip(skip).limit(limit);
-        }
-    }
-
     public Online(PlayerService service, ExplorationMapService mapService, GameService gameService) {
         this.service = service;
         this.mapService = mapService;
@@ -183,6 +146,43 @@ public final class Online extends AbstractCommand {
                 "------------------------------------------------\n" +
                 "\t<b>" + new Link().execute("${server} online --limit " + options.limit + " --skip " + (options.skip + options.limit)).text("next") + "</b>"
             );
+        }
+    }
+
+    /**
+     * Store the command options
+     */
+    static class Options {
+        private int limit = 20;
+        private int skip = 0;
+        private String search = null;
+
+        public Options(List<String> arguments) {
+            for (int i = 1; i < arguments.size(); ++i) {
+                switch (arguments.get(i)) {
+                    case "--limit":
+                        limit = Integer.parseInt(arguments.get(++i));
+                        break;
+
+                    case "--skip":
+                        skip = Integer.parseInt(arguments.get(++i));
+                        break;
+
+                    default:
+                        search = arguments.get(i).toLowerCase();
+                }
+            }
+        }
+
+        /**
+         * Apply the options on the stream
+         */
+        public Stream<GamePlayer> apply(Stream<GamePlayer> stream) {
+            if (search != null) {
+                stream = stream.filter(player -> player.name().toLowerCase().contains(search));
+            }
+
+            return stream.skip(skip).limit(limit);
         }
     }
 }

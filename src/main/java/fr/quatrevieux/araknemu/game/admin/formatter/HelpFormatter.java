@@ -31,34 +31,6 @@ import java.util.List;
  * Format the help page of a command
  */
 public final class HelpFormatter {
-    private static class LinkItem {
-        private final String command;
-        private final String description;
-        private final Link.Type linkType;
-
-        public LinkItem(String command, String description, Link.Type linkType) {
-            this.command = command;
-            this.description = description;
-            this.linkType = linkType;
-        }
-
-        public int leftLength() {
-            return command.length();
-        }
-
-        public void build(OutputBuilder builder, int leftLength) {
-            builder.indent(linkType.create(command));
-
-            if (description != null) {
-                if (leftLength < 32) {
-                    builder.append(StringUtils.repeat(' ', leftLength - command.length()));
-                }
-
-                builder.append(" - ").append(description);
-            }
-        }
-    }
-
     private final Command command;
     private String synopsis;
     private final List<Pair<String, String>> options = new ArrayList<>();
@@ -222,5 +194,33 @@ public final class HelpFormatter {
      */
     private void buildPermissions(OutputBuilder builder) {
         builder.title("PERMISSIONS").indent(command.permissions());
+    }
+
+    private static class LinkItem {
+        private final String command;
+        private final String description;
+        private final Link.Type linkType;
+
+        public LinkItem(String command, String description, Link.Type linkType) {
+            this.command = command;
+            this.description = description;
+            this.linkType = linkType;
+        }
+
+        public int leftLength() {
+            return command.length();
+        }
+
+        public void build(OutputBuilder builder, int leftLength) {
+            builder.indent(linkType.create(command));
+
+            if (description != null) {
+                if (leftLength < 32) {
+                    builder.append(StringUtils.repeat(' ', leftLength - command.length()));
+                }
+
+                builder.append(" - ").append(description);
+            }
+        }
     }
 }

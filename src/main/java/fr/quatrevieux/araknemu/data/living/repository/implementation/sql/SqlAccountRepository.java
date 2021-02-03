@@ -35,34 +35,6 @@ import java.util.Collections;
 import java.util.Optional;
 
 final class SqlAccountRepository implements AccountRepository {
-    private static class Loader implements RepositoryUtils.Loader<Account> {
-        private final PermissionsTransformer permissionsTransformer;
-
-        public Loader(PermissionsTransformer permissionsTransformer) {
-            this.permissionsTransformer = permissionsTransformer;
-        }
-
-        @Override
-        public Account create(ResultSet rs) throws SQLException {
-            return new Account(
-                rs.getInt("ACCOUNT_ID"),
-                rs.getString("USERNAME"),
-                rs.getString("PASSWORD"),
-                rs.getString("PSEUDO"),
-                permissionsTransformer.unserialize(rs.getInt("PERMISSIONS")),
-                rs.getString("QUESTION"),
-                rs.getString("ANSWER")
-            );
-        }
-
-        @Override
-        public Account fillKeys(Account entity, ResultSet keys) throws SQLException {
-            return entity.withId(
-                keys.getInt(1)
-            );
-        }
-    }
-
     private final QueryExecutor executor;
     private final RepositoryUtils<Account> utils;
     private final PermissionsTransformer permissionsTransformer;
@@ -193,5 +165,33 @@ final class SqlAccountRepository implements AccountRepository {
                 }
             }
         );
+    }
+
+    private static class Loader implements RepositoryUtils.Loader<Account> {
+        private final PermissionsTransformer permissionsTransformer;
+
+        public Loader(PermissionsTransformer permissionsTransformer) {
+            this.permissionsTransformer = permissionsTransformer;
+        }
+
+        @Override
+        public Account create(ResultSet rs) throws SQLException {
+            return new Account(
+                rs.getInt("ACCOUNT_ID"),
+                rs.getString("USERNAME"),
+                rs.getString("PASSWORD"),
+                rs.getString("PSEUDO"),
+                permissionsTransformer.unserialize(rs.getInt("PERMISSIONS")),
+                rs.getString("QUESTION"),
+                rs.getString("ANSWER")
+            );
+        }
+
+        @Override
+        public Account fillKeys(Account entity, ResultSet keys) throws SQLException {
+            return entity.withId(
+                keys.getInt(1)
+            );
+        }
     }
 }

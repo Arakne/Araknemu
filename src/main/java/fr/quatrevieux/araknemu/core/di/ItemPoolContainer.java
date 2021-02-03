@@ -31,6 +31,41 @@ import java.util.Map;
  * Container implementation using {@link fr.quatrevieux.araknemu.core.di.item.ContainerItem}
  */
 public final class ItemPoolContainer implements Container {
+    private final Map<Class, ContainerItem> items = new HashMap<>();
+
+    @Override
+    public <T> T get(Class<T> type) throws ContainerException {
+        if (!items.containsKey(type)) {
+            throw new ItemNotFoundException(type);
+        }
+
+        return (T) items.get(type).value(this);
+    }
+
+    @Override
+    public boolean has(Class type) {
+        return items.containsKey(type);
+    }
+
+    @Override
+    public void register(ContainerModule module) {
+        module.configure(new Configurator());
+    }
+
+    /**
+     * Get pool configurator
+     */
+    public Configurator configurator() {
+        return new Configurator();
+    }
+
+    /**
+     * Set a new item to the container
+     */
+    private void set(ContainerItem item) {
+        items.put(item.type(), item);
+    }
+
     /**
      * Configuration class for {@link ItemPoolContainer}
      */
@@ -77,40 +112,5 @@ public final class ItemPoolContainer implements Container {
 
             return this;
         }
-    }
-
-    private final Map<Class, ContainerItem> items = new HashMap<>();
-
-    @Override
-    public <T> T get(Class<T> type) throws ContainerException {
-        if (!items.containsKey(type)) {
-            throw new ItemNotFoundException(type);
-        }
-
-        return (T) items.get(type).value(this);
-    }
-
-    @Override
-    public boolean has(Class type) {
-        return items.containsKey(type);
-    }
-
-    @Override
-    public void register(ContainerModule module) {
-        module.configure(new Configurator());
-    }
-
-    /**
-     * Get pool configurator
-     */
-    public Configurator configurator() {
-        return new Configurator();
-    }
-
-    /**
-     * Set a new item to the container
-     */
-    private void set(ContainerItem item) {
-        items.put(item.type(), item);
     }
 }

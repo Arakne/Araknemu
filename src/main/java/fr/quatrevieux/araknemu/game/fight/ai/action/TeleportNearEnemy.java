@@ -41,57 +41,6 @@ public final class TeleportNearEnemy implements ActionGenerator {
     private SpellCaster caster;
     private List<Spell> teleportSpells;
 
-    /**
-     * Select the best spell and cell couple for teleport
-     */
-    private class Selector {
-        private final CoordinateCell<FightCell> enemyCell;
-        private int distance;
-        private FightCell cell;
-        private Spell spell;
-
-        public Selector(FightCell enemyCell, FightCell currentCell) {
-            this.enemyCell = new CoordinateCell<>(enemyCell);
-            this.distance = this.enemyCell.distance(new CoordinateCell<>(currentCell));
-        }
-
-        /**
-         * Check if the current cell is adjacent to the enemy cell
-         */
-        public boolean adjacent() {
-            return distance == 1;
-        }
-
-        /**
-         * Push the teleport parameters and check if there are better than the previous
-         *
-         * @return true if the new cell is adjacent to the target
-         */
-        public boolean push(Spell spell, FightCell cell) {
-            final int currentDistance = new CoordinateCell<>(cell).distance(enemyCell);
-
-            if (currentDistance < distance) {
-                this.spell = spell;
-                this.cell = cell;
-                this.distance = currentDistance;
-            }
-
-            return adjacent();
-        }
-
-        /**
-         * Get the best cast action
-         * May return an empty optional if no teleport spell can be found, or if the fighter is already on the best cell
-         */
-        public Optional<Action> action() {
-            if (spell == null) {
-                return Optional.empty();
-            }
-
-            return Optional.of(caster.create(spell, cell));
-        }
-    }
-
     @Override
     public void initialize(AI ai) {
         caster = new SpellCaster(ai);
@@ -165,5 +114,56 @@ public final class TeleportNearEnemy implements ActionGenerator {
         }
 
         return false;
+    }
+
+    /**
+     * Select the best spell and cell couple for teleport
+     */
+    private class Selector {
+        private final CoordinateCell<FightCell> enemyCell;
+        private int distance;
+        private FightCell cell;
+        private Spell spell;
+
+        public Selector(FightCell enemyCell, FightCell currentCell) {
+            this.enemyCell = new CoordinateCell<>(enemyCell);
+            this.distance = this.enemyCell.distance(new CoordinateCell<>(currentCell));
+        }
+
+        /**
+         * Check if the current cell is adjacent to the enemy cell
+         */
+        public boolean adjacent() {
+            return distance == 1;
+        }
+
+        /**
+         * Push the teleport parameters and check if there are better than the previous
+         *
+         * @return true if the new cell is adjacent to the target
+         */
+        public boolean push(Spell spell, FightCell cell) {
+            final int currentDistance = new CoordinateCell<>(cell).distance(enemyCell);
+
+            if (currentDistance < distance) {
+                this.spell = spell;
+                this.cell = cell;
+                this.distance = currentDistance;
+            }
+
+            return adjacent();
+        }
+
+        /**
+         * Get the best cast action
+         * May return an empty optional if no teleport spell can be found, or if the fighter is already on the best cell
+         */
+        public Optional<Action> action() {
+            if (spell == null) {
+                return Optional.empty();
+            }
+
+            return Optional.of(caster.create(spell, cell));
+        }
     }
 }

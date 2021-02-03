@@ -27,18 +27,6 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  * Response for RPing request
  */
 public final class PingResponse implements Packet {
-    public static class Parser implements SinglePacketParser<PingResponse> {
-        @Override
-        public PingResponse parse(String input) throws ParsePacketException {
-            return new PingResponse(input);
-        }
-
-        @Override
-        public String code() {
-            return "rpong";
-        }
-    }
-
     private final String payload;
 
     public PingResponse(String payload) {
@@ -50,5 +38,17 @@ public final class PingResponse implements Packet {
      */
     public String payload() {
         return payload;
+    }
+
+    public static class Parser implements SinglePacketParser<PingResponse> {
+        @Override
+        public PingResponse parse(String input) throws ParsePacketException {
+            return new PingResponse(input);
+        }
+
+        @Override
+        public String code() {
+            return "rpong";
+        }
     }
 }

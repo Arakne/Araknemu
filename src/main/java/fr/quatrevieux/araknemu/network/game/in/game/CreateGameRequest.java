@@ -35,6 +35,16 @@ public final class CreateGameRequest implements Packet {
         FIGHT
     }
 
+    private final Type type;
+
+    public CreateGameRequest(Type type) {
+        this.type = type;
+    }
+
+    public Type type() {
+        return type;
+    }
+
     public static final class Parser implements SinglePacketParser<CreateGameRequest> {
         @Override
         public CreateGameRequest parse(String input) throws ParsePacketException {
@@ -47,15 +57,5 @@ public final class CreateGameRequest implements Packet {
         public String code() {
             return "GC";
         }
-    }
-
-    private final Type type;
-
-    public CreateGameRequest(Type type) {
-        this.type = type;
-    }
-
-    public Type type() {
-        return type;
     }
 }

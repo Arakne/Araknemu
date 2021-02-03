@@ -33,44 +33,6 @@ import java.util.function.Consumer;
  * Base command class
  */
 public abstract class AbstractCommand implements Command {
-    protected final class Builder {
-        /**
-         * Set a command description
-         */
-        public Builder description(String description) {
-            AbstractCommand.this.description = description;
-
-            return this;
-        }
-
-        /**
-         * Configure the help page
-         *
-         * <code>
-         *     builder.help(
-         *         formatter -> formatter
-         *             .synopsis("my_command [option]")
-         *             .options("--opt", "opt description")
-         *             .example("my_command --opt", "example description")
-         *     );
-         * </code>
-         */
-        public Builder help(Consumer<HelpFormatter> configurator) {
-            configurator.accept(help);
-
-            return this;
-        }
-
-        /**
-         * Add required permissions
-         */
-        public Builder requires(Permission... permissions) {
-            AbstractCommand.this.permissions.addAll(Arrays.asList(permissions));
-
-            return this;
-        }
-    }
-
     private final HelpFormatter help = new HelpFormatter(this);
     private final EnumSet<Permission> permissions = EnumSet.of(Permission.ACCESS);
     private String description = "No description";
@@ -118,6 +80,44 @@ public abstract class AbstractCommand implements Command {
         if (!initialized) {
             build(new Builder());
             initialized = true;
+        }
+    }
+
+    protected final class Builder {
+        /**
+         * Set a command description
+         */
+        public Builder description(String description) {
+            AbstractCommand.this.description = description;
+
+            return this;
+        }
+
+        /**
+         * Configure the help page
+         *
+         * <code>
+         *     builder.help(
+         *         formatter -> formatter
+         *             .synopsis("my_command [option]")
+         *             .options("--opt", "opt description")
+         *             .example("my_command --opt", "example description")
+         *     );
+         * </code>
+         */
+        public Builder help(Consumer<HelpFormatter> configurator) {
+            configurator.accept(help);
+
+            return this;
+        }
+
+        /**
+         * Add required permissions
+         */
+        public Builder requires(Permission... permissions) {
+            AbstractCommand.this.permissions.addAll(Arrays.asList(permissions));
+
+            return this;
         }
     }
 }

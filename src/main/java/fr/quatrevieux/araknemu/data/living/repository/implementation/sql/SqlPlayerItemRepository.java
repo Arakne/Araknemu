@@ -41,25 +41,6 @@ import java.util.stream.Collectors;
  * SQL implementation for {@link PlayerItem} repository
  */
 final class SqlPlayerItemRepository implements PlayerItemRepository {
-    private class Loader implements RepositoryUtils.Loader<PlayerItem> {
-        @Override
-        public PlayerItem create(ResultSet rs) throws SQLException {
-            return new PlayerItem(
-                rs.getInt("PLAYER_ID"),
-                rs.getInt("ITEM_ENTRY_ID"),
-                rs.getInt("ITEM_TEMPLATE_ID"),
-                effectsTransformer.unserialize(rs.getString("ITEM_EFFECTS")),
-                rs.getInt("QUANTITY"),
-                rs.getInt("POSITION")
-            );
-        }
-
-        @Override
-        public PlayerItem fillKeys(PlayerItem entity, ResultSet keys) throws SQLException {
-            throw new UnsupportedOperationException();
-        }
-    }
-
     private final QueryExecutor executor;
     private final RepositoryUtils<PlayerItem> utils;
     private final Transformer<List<ItemTemplateEffectEntry>> effectsTransformer;
@@ -198,5 +179,24 @@ final class SqlPlayerItemRepository implements PlayerItemRepository {
             .stream()
             .collect(Collectors.groupingBy(PlayerItem::playerId))
         ;
+    }
+
+    private class Loader implements RepositoryUtils.Loader<PlayerItem> {
+        @Override
+        public PlayerItem create(ResultSet rs) throws SQLException {
+            return new PlayerItem(
+                rs.getInt("PLAYER_ID"),
+                rs.getInt("ITEM_ENTRY_ID"),
+                rs.getInt("ITEM_TEMPLATE_ID"),
+                effectsTransformer.unserialize(rs.getString("ITEM_EFFECTS")),
+                rs.getInt("QUANTITY"),
+                rs.getInt("POSITION")
+            );
+        }
+
+        @Override
+        public PlayerItem fillKeys(PlayerItem entity, ResultSet keys) throws SQLException {
+            throw new UnsupportedOperationException();
+        }
     }
 }

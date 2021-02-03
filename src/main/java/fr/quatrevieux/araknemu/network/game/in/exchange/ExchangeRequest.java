@@ -33,34 +33,6 @@ import java.util.Optional;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L23
  */
 public final class ExchangeRequest implements Packet {
-    public static final class Parser implements SinglePacketParser<ExchangeRequest> {
-        @Override
-        public ExchangeRequest parse(String input) throws ParsePacketException {
-            final String[] parts = StringUtils.splitPreserveAllTokens(input, "|", 3);
-
-            if (parts.length < 2) {
-                throw new ParsePacketException(code() + input, "Exchange request must have at least two parts");
-            }
-
-            final int typeId = Integer.parseInt(parts[0]);
-
-            if (typeId < 0 || typeId >= ExchangeType.values().length) {
-                throw new ParsePacketException(code() + input, "Invalid exchange type");
-            }
-
-            return new ExchangeRequest(
-                ExchangeType.values()[typeId],
-                !parts[1].isEmpty() ? Integer.parseInt(parts[1]) : null,
-                parts.length == 3 && !parts[2].isEmpty() ? Integer.parseInt(parts[2]) : null
-            );
-        }
-
-        @Override
-        public String code() {
-            return "ER";
-        }
-    }
-
     private final ExchangeType type;
     private final Integer id;
     private final Integer cell;
@@ -92,5 +64,33 @@ public final class ExchangeRequest implements Packet {
      */
     public Optional<Integer> cell() {
         return Optional.ofNullable(cell);
+    }
+
+    public static final class Parser implements SinglePacketParser<ExchangeRequest> {
+        @Override
+        public ExchangeRequest parse(String input) throws ParsePacketException {
+            final String[] parts = StringUtils.splitPreserveAllTokens(input, "|", 3);
+
+            if (parts.length < 2) {
+                throw new ParsePacketException(code() + input, "Exchange request must have at least two parts");
+            }
+
+            final int typeId = Integer.parseInt(parts[0]);
+
+            if (typeId < 0 || typeId >= ExchangeType.values().length) {
+                throw new ParsePacketException(code() + input, "Invalid exchange type");
+            }
+
+            return new ExchangeRequest(
+                ExchangeType.values()[typeId],
+                !parts[1].isEmpty() ? Integer.parseInt(parts[1]) : null,
+                parts.length == 3 && !parts[2].isEmpty() ? Integer.parseInt(parts[2]) : null
+            );
+        }
+
+        @Override
+        public String code() {
+            return "ER";
+        }
     }
 }

@@ -36,25 +36,6 @@ import java.util.Collection;
  * SQL Implementation for {@link BanIpRepository}
  */
 final class SqlBanIpRepository implements BanIpRepository {
-    private class Loader implements RepositoryUtils.Loader<BanIp> {
-        @Override
-        public BanIp create(ResultSet rs) throws SQLException {
-            return new BanIp(
-                rs.getInt("BANIP_ID"),
-                ipAddressTransformer.unserialize(rs.getString("IP_ADDRESS")),
-                instantTransformer.unserialize(rs.getString("UPDATED_AT")),
-                instantTransformer.unserialize(rs.getString("EXPIRES_AT")),
-                rs.getString("CAUSE"),
-                rs.getInt("BANISHER_ID")
-            );
-        }
-
-        @Override
-        public BanIp fillKeys(BanIp entity, ResultSet keys) throws SQLException {
-            return entity.withId(keys.getInt(1));
-        }
-    }
-
     private final QueryExecutor executor;
     private final RepositoryUtils<BanIp> utils;
     private final Transformer<Instant> instantTransformer;
@@ -160,5 +141,24 @@ final class SqlBanIpRepository implements BanIpRepository {
                 stmt.setString(4, now);
             }
         );
+    }
+
+    private class Loader implements RepositoryUtils.Loader<BanIp> {
+        @Override
+        public BanIp create(ResultSet rs) throws SQLException {
+            return new BanIp(
+                rs.getInt("BANIP_ID"),
+                ipAddressTransformer.unserialize(rs.getString("IP_ADDRESS")),
+                instantTransformer.unserialize(rs.getString("UPDATED_AT")),
+                instantTransformer.unserialize(rs.getString("EXPIRES_AT")),
+                rs.getString("CAUSE"),
+                rs.getInt("BANISHER_ID")
+            );
+        }
+
+        @Override
+        public BanIp fillKeys(BanIp entity, ResultSet keys) throws SQLException {
+            return entity.withId(keys.getInt(1));
+        }
     }
 }

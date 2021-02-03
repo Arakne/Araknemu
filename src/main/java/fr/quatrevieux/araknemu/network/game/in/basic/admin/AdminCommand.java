@@ -29,6 +29,16 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Basics.as#L21
  */
 public final class AdminCommand implements Packet {
+    private final String command;
+
+    public AdminCommand(String command) {
+        this.command = command;
+    }
+
+    public String command() {
+        return command;
+    }
+
     public static final class Parser implements SinglePacketParser<AdminCommand> {
         @Override
         public AdminCommand parse(String input) throws ParsePacketException {
@@ -39,15 +49,5 @@ public final class AdminCommand implements Packet {
         public String code() {
             return "BA";
         }
-    }
-
-    private final String command;
-
-    public AdminCommand(String command) {
-        this.command = command;
-    }
-
-    public String command() {
-        return command;
     }
 }

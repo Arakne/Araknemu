@@ -41,16 +41,6 @@ import java.util.List;
  * Base builder for fight
  */
 public final class BaseBuilder implements FightBuilder {
-    public interface TeamFactory {
-        /**
-         * Creates the fight team
-         *
-         * @param number The team number
-         * @param startPlaces The available start places
-         */
-        public FightTeam create(int number, List<Integer> startPlaces);
-    }
-
     private final FightService service;
     private final RandomUtil random;
     private final FightType type;
@@ -101,5 +91,15 @@ public final class BaseBuilder implements FightBuilder {
             new ActiveState(),
             new FinishState()
         );
+    }
+
+    public interface TeamFactory {
+        /**
+         * Creates the fight team
+         *
+         * @param number The team number
+         * @param startPlaces The available start places
+         */
+        public FightTeam create(int number, List<Integer> startPlaces);
     }
 }

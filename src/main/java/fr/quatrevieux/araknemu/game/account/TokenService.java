@@ -31,16 +31,6 @@ import java.util.concurrent.ConcurrentMap;
  * Handle login tokens
  */
 public final class TokenService {
-    private static class ExpirableAccount {
-        private final Account account;
-        private final long expiration;
-
-        public ExpirableAccount(Account account, long expiration) {
-            this.account = account;
-            this.expiration = expiration;
-        }
-    }
-
     private final ConcurrentMap<String, ExpirableAccount> accounts = new ConcurrentHashMap<>();
     private final RandomStringUtil randomStringUtil = new RandomStringUtil(
         new SecureRandom(),
@@ -94,5 +84,15 @@ public final class TokenService {
         } while (accounts.containsKey(token));
 
         return token;
+    }
+
+    private static class ExpirableAccount {
+        private final Account account;
+        private final long expiration;
+
+        public ExpirableAccount(Account account, long expiration) {
+            this.account = account;
+            this.expiration = expiration;
+        }
     }
 }

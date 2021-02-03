@@ -55,89 +55,6 @@ import java.util.function.Predicate;
 public final class AdminUserCommandParser implements CommandParser {
     private final AdminUser user;
 
-    private static class State {
-        private final String line;
-        private int cursor = 0;
-
-        public State(String line) {
-            this.line = line;
-        }
-
-        /**
-         * Get the character at the cursor position
-         */
-        public char current() {
-            return line.charAt(cursor);
-        }
-
-        /**
-         * Move to the next character
-         */
-        public State next() {
-            ++cursor;
-
-            return this;
-        }
-
-        /**
-         * Check if there is more characters on the line
-         */
-        public boolean hasNext() {
-            return cursor < line.length();
-        }
-
-        /**
-         * Move to the next word (i.e. when a non letter or digit character is encountered) and return the current word
-         *
-         * @return The extracted word
-         */
-        public String nextWord() {
-            return moveWhile(Character::isLetterOrDigit);
-        }
-
-        /**
-         * Move the cursor while the predicate is valid for the current character
-         *
-         * @param predicate The character tester
-         *
-         * @return The "move" part, starting at the current cursor position (included), and ending with the last valid position (excluded)
-         */
-        public String moveWhile(Predicate<Character> predicate) {
-            final int position = cursor;
-
-            while (hasNext() && predicate.test(current())) {
-                next();
-            }
-
-            return line.substring(position, cursor);
-        }
-
-        /**
-         * Skip white space characters
-         */
-        public State skipBlank() {
-            while (hasNext() && Character.isSpaceChar(current())) {
-                next();
-            }
-
-            return this;
-        }
-
-        /**
-         * Get the line part after the cursor (included)
-         */
-        public String after() {
-            return line.substring(cursor);
-        }
-
-        /**
-         * Get the line part before the cursor (excluded)
-         */
-        public String before() {
-            return line.substring(0, cursor);
-        }
-    }
-
     public AdminUserCommandParser(AdminUser user) {
         this.user = user;
     }
@@ -266,5 +183,88 @@ public final class AdminUserCommandParser implements CommandParser {
             arguments[0],
             arguments.length == 1 ? "" : arguments[1]
         );
+    }
+
+    private static class State {
+        private final String line;
+        private int cursor = 0;
+
+        public State(String line) {
+            this.line = line;
+        }
+
+        /**
+         * Get the character at the cursor position
+         */
+        public char current() {
+            return line.charAt(cursor);
+        }
+
+        /**
+         * Move to the next character
+         */
+        public State next() {
+            ++cursor;
+
+            return this;
+        }
+
+        /**
+         * Check if there is more characters on the line
+         */
+        public boolean hasNext() {
+            return cursor < line.length();
+        }
+
+        /**
+         * Move to the next word (i.e. when a non letter or digit character is encountered) and return the current word
+         *
+         * @return The extracted word
+         */
+        public String nextWord() {
+            return moveWhile(Character::isLetterOrDigit);
+        }
+
+        /**
+         * Move the cursor while the predicate is valid for the current character
+         *
+         * @param predicate The character tester
+         *
+         * @return The "move" part, starting at the current cursor position (included), and ending with the last valid position (excluded)
+         */
+        public String moveWhile(Predicate<Character> predicate) {
+            final int position = cursor;
+
+            while (hasNext() && predicate.test(current())) {
+                next();
+            }
+
+            return line.substring(position, cursor);
+        }
+
+        /**
+         * Skip white space characters
+         */
+        public State skipBlank() {
+            while (hasNext() && Character.isSpaceChar(current())) {
+                next();
+            }
+
+            return this;
+        }
+
+        /**
+         * Get the line part after the cursor (included)
+         */
+        public String after() {
+            return line.substring(cursor);
+        }
+
+        /**
+         * Get the line part before the cursor (excluded)
+         */
+        public String before() {
+            return line.substring(0, cursor);
+        }
     }
 }

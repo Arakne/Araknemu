@@ -33,21 +33,6 @@ import java.util.Optional;
  * Try to cast the best spell
  */
 public final class CastSpell implements ActionGenerator {
-    public interface SimulationSelector {
-        /**
-         * Check if the simulation is valid
-         */
-        public boolean valid(CastSimulation simulation);
-
-        /**
-         * Compare the two simulation
-         * Return true if a is better than b
-         *
-         * Note: The simulations may be null
-         */
-        public boolean compare(CastSimulation a, CastSimulation b);
-    }
-
     private final Simulator simulator;
     private final SimulationSelector selector;
 
@@ -109,5 +94,20 @@ public final class CastSpell implements ActionGenerator {
         }
 
         return bestSimulation;
+    }
+
+    public interface SimulationSelector {
+        /**
+         * Check if the simulation is valid
+         */
+        public boolean valid(CastSimulation simulation);
+
+        /**
+         * Compare the two simulation
+         * Return true if a is better than b
+         *
+         * Note: The simulations may be null
+         */
+        public boolean compare(CastSimulation a, CastSimulation b);
     }
 }

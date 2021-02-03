@@ -36,23 +36,6 @@ import java.util.Collection;
  * SQL implementation for {@link ItemType} repository
  */
 final class SqlItemTypeRepository implements ItemTypeRepository {
-    private class Loader implements RepositoryUtils.Loader<ItemType> {
-        @Override
-        public ItemType create(ResultSet rs) throws SQLException {
-            return new ItemType(
-                rs.getInt("TYPE_ID"),
-                rs.getString("TYPE_NAME"),
-                SuperType.values()[rs.getInt("SUPER_TYPE")],
-                areaTransformer.unserialize(rs.getString("EFFECT_AREA"))
-            );
-        }
-
-        @Override
-        public ItemType fillKeys(ItemType entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
     private final QueryExecutor executor;
     private final RepositoryUtils<ItemType> utils;
 
@@ -113,5 +96,22 @@ final class SqlItemTypeRepository implements ItemTypeRepository {
     @Override
     public Collection<ItemType> load() {
         return utils.findAll("SELECT * FROM ITEM_TYPE");
+    }
+
+    private class Loader implements RepositoryUtils.Loader<ItemType> {
+        @Override
+        public ItemType create(ResultSet rs) throws SQLException {
+            return new ItemType(
+                rs.getInt("TYPE_ID"),
+                rs.getString("TYPE_NAME"),
+                SuperType.values()[rs.getInt("SUPER_TYPE")],
+                areaTransformer.unserialize(rs.getString("EFFECT_AREA"))
+            );
+        }
+
+        @Override
+        public ItemType fillKeys(ItemType entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

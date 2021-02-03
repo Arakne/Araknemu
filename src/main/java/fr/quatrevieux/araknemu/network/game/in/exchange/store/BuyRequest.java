@@ -30,27 +30,6 @@ import org.apache.commons.lang3.StringUtils;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L74
  */
 public final class BuyRequest implements Packet {
-    public static final class Parser implements SinglePacketParser<BuyRequest> {
-        @Override
-        public BuyRequest parse(String input) throws ParsePacketException {
-            final String[] parts = StringUtils.split(input, "|", 2);
-
-            if (parts.length != 2) {
-                throw new ParsePacketException(code() + input, "Invalid parts");
-            }
-
-            return new BuyRequest(
-                Integer.parseInt(parts[0]),
-                Integer.parseInt(parts[1])
-            );
-        }
-
-        @Override
-        public String code() {
-            return "EB";
-        }
-    }
-
     private final int itemId;
     private final int quantity;
 
@@ -73,5 +52,26 @@ public final class BuyRequest implements Packet {
      */
     public int quantity() {
         return quantity;
+    }
+
+    public static final class Parser implements SinglePacketParser<BuyRequest> {
+        @Override
+        public BuyRequest parse(String input) throws ParsePacketException {
+            final String[] parts = StringUtils.split(input, "|", 2);
+
+            if (parts.length != 2) {
+                throw new ParsePacketException(code() + input, "Invalid parts");
+            }
+
+            return new BuyRequest(
+                Integer.parseInt(parts[0]),
+                Integer.parseInt(parts[1])
+            );
+        }
+
+        @Override
+        public String code() {
+            return "EB";
+        }
     }
 }

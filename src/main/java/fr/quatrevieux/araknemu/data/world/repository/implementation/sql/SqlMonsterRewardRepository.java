@@ -38,27 +38,6 @@ import java.util.Optional;
  * SQL implementation for monster reward repository
  */
 final class SqlMonsterRewardRepository implements MonsterRewardRepository {
-    private class Loader implements RepositoryUtils.Loader<MonsterRewardData> {
-        @Override
-        public MonsterRewardData create(ResultSet rs) throws SQLException {
-            return new MonsterRewardData(
-                rs.getInt("MONSTER_ID"),
-                new Interval(
-                    rs.getInt("MIN_KAMAS"),
-                    rs.getInt("MAX_KAMAS")
-                ),
-                Arrays.stream(StringUtils.split(rs.getString("EXPERIENCES"), "|"))
-                    .mapToLong(Long::parseLong)
-                    .toArray()
-            );
-        }
-
-        @Override
-        public MonsterRewardData fillKeys(MonsterRewardData entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
     private final QueryExecutor executor;
     private final RepositoryUtils<MonsterRewardData> utils;
 
@@ -121,5 +100,26 @@ final class SqlMonsterRewardRepository implements MonsterRewardRepository {
     @Override
     public List<MonsterRewardData> all() {
         return utils.findAll("SELECT * FROM MONSTER_REWARD");
+    }
+
+    private class Loader implements RepositoryUtils.Loader<MonsterRewardData> {
+        @Override
+        public MonsterRewardData create(ResultSet rs) throws SQLException {
+            return new MonsterRewardData(
+                rs.getInt("MONSTER_ID"),
+                new Interval(
+                    rs.getInt("MIN_KAMAS"),
+                    rs.getInt("MAX_KAMAS")
+                ),
+                Arrays.stream(StringUtils.split(rs.getString("EXPERIENCES"), "|"))
+                    .mapToLong(Long::parseLong)
+                    .toArray()
+            );
+        }
+
+        @Override
+        public MonsterRewardData fillKeys(MonsterRewardData entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

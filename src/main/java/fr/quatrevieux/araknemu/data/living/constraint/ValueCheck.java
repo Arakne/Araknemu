@@ -27,10 +27,6 @@ package fr.quatrevieux.araknemu.data.living.constraint;
  * @param <V> The value type
  */
 public final class ValueCheck<T, E, V> extends AbstractValueConstraint<T, E, V> {
-    public interface Checker<V> {
-        public boolean check(V value);
-    }
-
     private final Checker<V> checker;
 
     public ValueCheck(E error, Getter<T, V> getter, Checker<V> checker) {
@@ -41,5 +37,10 @@ public final class ValueCheck<T, E, V> extends AbstractValueConstraint<T, E, V> 
     @Override
     protected boolean checkValue(V value) {
         return checker.check(value);
+    }
+
+    @FunctionalInterface
+    public interface Checker<V> {
+        public boolean check(V value);
     }
 }

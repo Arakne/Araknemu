@@ -28,17 +28,6 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
  * @param <T> Item type
  */
 public final class FactoryItem<T> implements ContainerItem<T> {
-    public interface Factory<T> {
-        /**
-         * Instantiate the value
-         *
-         * @param container The DI container instance
-         *
-         * @return The new instance
-         */
-        public T make(Container container) throws ContainerException;
-    }
-
     private final Class<T> type;
     private final Factory<T> factory;
 
@@ -55,5 +44,16 @@ public final class FactoryItem<T> implements ContainerItem<T> {
     @Override
     public T value(Container container) throws ContainerException {
         return factory.make(container);
+    }
+
+    public interface Factory<T> {
+        /**
+         * Instantiate the value
+         *
+         * @param container The DI container instance
+         *
+         * @return The new instance
+         */
+        public T make(Container container) throws ContainerException;
     }
 }

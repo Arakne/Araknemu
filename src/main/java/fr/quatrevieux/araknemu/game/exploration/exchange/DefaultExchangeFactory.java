@@ -39,6 +39,15 @@ public final class DefaultExchangeFactory implements ExchangeFactory<Exploration
         this.npcFactory = npcFactory;
     }
 
+    @Override
+    public ExchangeInteraction create(ExchangeType type, ExplorationPlayer initiator, ExplorationCreature target) {
+        final CreateExchange operation = new CreateExchange(type, initiator);
+
+        target.apply(operation);
+
+        return operation.exchange().orElseThrow(() -> new IllegalArgumentException("Bad target"));
+    }
+
     /**
      * Visitor operation for create the exchange on the valid target
      */
@@ -66,14 +75,5 @@ public final class DefaultExchangeFactory implements ExchangeFactory<Exploration
         public Optional<ExchangeInteraction> exchange() {
             return Optional.ofNullable(exchange);
         }
-    }
-
-    @Override
-    public ExchangeInteraction create(ExchangeType type, ExplorationPlayer initiator, ExplorationCreature target) {
-        final CreateExchange operation = new CreateExchange(type, initiator);
-
-        target.apply(operation);
-
-        return operation.exchange().orElseThrow(() -> new IllegalArgumentException("Bad target"));
     }
 }

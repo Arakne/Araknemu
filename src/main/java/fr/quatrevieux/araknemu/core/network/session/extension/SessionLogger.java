@@ -36,23 +36,6 @@ import java.util.function.Consumer;
  * Add loggers to a session
  */
 public final class SessionLogger implements ConfigurableSession.ExceptionHandler<Throwable>, ConfigurableSession.ReceivePacketMiddleware, ConfigurableSession.SendPacketTransformer {
-    public static class Configurator<S extends Session> implements SessionConfigurator.Configurator<S> {
-        private final Logger logger;
-
-        public Configurator(Logger logger) {
-            this.logger = logger;
-        }
-
-        @Override
-        public void configure(ConfigurableSession inner, Session session) {
-            final SessionLogger sessionLogger = new SessionLogger(session, logger);
-
-            inner.addExceptionHandler(sessionLogger);
-            inner.addSendTransformer(sessionLogger);
-            inner.addReceiveMiddleware(sessionLogger);
-        }
-    }
-
     private static final Marker RECEIVED_MARKER = MarkerManager.getMarker("RECEIVED");
     private static final Marker SENT_MARKER = MarkerManager.getMarker("SENT");
     private static final Marker SESSION_MARKER = MarkerManager.getMarker("SESSION");
@@ -110,5 +93,22 @@ public final class SessionLogger implements ConfigurableSession.ExceptionHandler
         logger.debug(SENT_MARKER, "[{}] Send >> {}", session, packet);
 
         return packet;
+    }
+
+    public static class Configurator<S extends Session> implements SessionConfigurator.Configurator<S> {
+        private final Logger logger;
+
+        public Configurator(Logger logger) {
+            this.logger = logger;
+        }
+
+        @Override
+        public void configure(ConfigurableSession inner, Session session) {
+            final SessionLogger sessionLogger = new SessionLogger(session, logger);
+
+            inner.addExceptionHandler(sessionLogger);
+            inner.addSendTransformer(sessionLogger);
+            inner.addReceiveMiddleware(sessionLogger);
+        }
     }
 }

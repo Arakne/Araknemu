@@ -29,6 +29,16 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Dialog.as#L23
  */
 public final class CreateDialogRequest implements Packet {
+    private final int npcId;
+
+    public CreateDialogRequest(int npcId) {
+        this.npcId = npcId;
+    }
+
+    public int npcId() {
+        return npcId;
+    }
+
     public static final class Parser implements SinglePacketParser<CreateDialogRequest> {
         @Override
         public CreateDialogRequest parse(String input) throws ParsePacketException {
@@ -39,15 +49,5 @@ public final class CreateDialogRequest implements Packet {
         public String code() {
             return "DC";
         }
-    }
-
-    private final int npcId;
-
-    public CreateDialogRequest(int npcId) {
-        this.npcId = npcId;
-    }
-
-    public int npcId() {
-        return npcId;
     }
 }

@@ -30,6 +30,22 @@ import org.apache.commons.lang3.StringUtils;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L94
  */
 public final class DeleteCharacterRequest implements Packet {
+    private final int id;
+    private final String answer;
+
+    public DeleteCharacterRequest(int id, String answer) {
+        this.id = id;
+        this.answer = answer;
+    }
+
+    public int id() {
+        return id;
+    }
+
+    public String answer() {
+        return answer;
+    }
+
     public static final class Parser implements SinglePacketParser<DeleteCharacterRequest> {
         @Override
         public DeleteCharacterRequest parse(String input) throws ParsePacketException {
@@ -45,21 +61,5 @@ public final class DeleteCharacterRequest implements Packet {
         public String code() {
             return "AD";
         }
-    }
-
-    private final int id;
-    private final String answer;
-
-    public DeleteCharacterRequest(int id, String answer) {
-        this.id = id;
-        this.answer = answer;
-    }
-
-    public int id() {
-        return id;
-    }
-
-    public String answer() {
-        return answer;
     }
 }

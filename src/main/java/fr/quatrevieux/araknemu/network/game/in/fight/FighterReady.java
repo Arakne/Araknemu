@@ -29,6 +29,16 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L213
  */
 public final class FighterReady implements Packet {
+    private boolean flag;
+
+    public FighterReady(boolean flag) {
+        this.flag = flag;
+    }
+
+    public boolean ready() {
+        return flag;
+    }
+
     public static final class Parser implements SinglePacketParser<FighterReady> {
         @Override
         public FighterReady parse(String input) throws ParsePacketException {
@@ -39,15 +49,5 @@ public final class FighterReady implements Packet {
         public String code() {
             return "GR";
         }
-    }
-
-    private boolean flag;
-
-    public FighterReady(boolean flag) {
-        this.flag = flag;
-    }
-
-    public boolean ready() {
-        return flag;
     }
 }

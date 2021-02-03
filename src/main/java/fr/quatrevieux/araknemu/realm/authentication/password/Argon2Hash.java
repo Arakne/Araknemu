@@ -30,36 +30,6 @@ import java.util.NoSuchElementException;
  * Argon2 hash algorithm implementation for password
  */
 public final class Argon2Hash implements HashAlgorithm {
-    class Argon2Password implements Password {
-        private final String hash;
-        private final Argon2Factory.Argon2Types hashType;
-
-        public Argon2Password(String hash) {
-            this.hash = hash;
-            this.hashType = typeOf(hash);
-        }
-
-        @Override
-        public boolean check(String input) {
-            return argon2(hashType).verify(hash, input.getBytes());
-        }
-
-        @Override
-        public boolean needRehash() {
-            return argon2(hashType).needsRehash(hash, iterations, memory, parallelism) || hashType != type;
-        }
-
-        @Override
-        public HashAlgorithm algorithm() {
-            return Argon2Hash.this;
-        }
-
-        @Override
-        public String toString() {
-            return hash;
-        }
-    }
-
     private final Map<Argon2Factory.Argon2Types, Argon2> algorithms = new EnumMap<>(Argon2Factory.Argon2Types.class);
 
     private int iterations = 4;
@@ -153,6 +123,36 @@ public final class Argon2Hash implements HashAlgorithm {
                 return Argon2Factory.Argon2Types.ARGON2id;
             default:
                 throw new NoSuchElementException("Invalid argon2 type " + typeName);
+        }
+    }
+
+    class Argon2Password implements Password {
+        private final String hash;
+        private final Argon2Factory.Argon2Types hashType;
+
+        public Argon2Password(String hash) {
+            this.hash = hash;
+            this.hashType = typeOf(hash);
+        }
+
+        @Override
+        public boolean check(String input) {
+            return argon2(hashType).verify(hash, input.getBytes());
+        }
+
+        @Override
+        public boolean needRehash() {
+            return argon2(hashType).needsRehash(hash, iterations, memory, parallelism) || hashType != type;
+        }
+
+        @Override
+        public HashAlgorithm algorithm() {
+            return Argon2Hash.this;
+        }
+
+        @Override
+        public String toString() {
+            return hash;
         }
     }
 }

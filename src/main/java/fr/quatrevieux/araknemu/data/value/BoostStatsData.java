@@ -29,45 +29,6 @@ import java.util.NoSuchElementException;
  * Data for boost stats per class
  */
 public final class BoostStatsData {
-    public static final class Interval {
-        private final int start;
-        private final int cost;
-        private final int boost;
-
-        public Interval(int start, int cost, int boost) {
-            this.start = start;
-            this.cost = cost;
-            this.boost = boost;
-        }
-
-        /**
-         * The start characteristics points interval for the current boost rule
-         * This value is inclusive
-         */
-        public int start() {
-            return start;
-        }
-
-        /**
-         * The cost for boot the characteristic
-         */
-        public int cost() {
-            return cost;
-        }
-
-        /**
-         * The boost value : how many characteristics points are added on boost
-         */
-        public int boost() {
-            return boost;
-        }
-
-        @Override
-        public String toString() {
-            return "[" + start + ", " + cost + ", " + boost + "]";
-        }
-    }
-
     private final Map<Characteristic, List<Interval>> characteristics;
 
     /**
@@ -108,5 +69,44 @@ public final class BoostStatsData {
         }
 
         throw new RuntimeException("Invalid boost interval for " + characteristic);
+    }
+
+    public static final class Interval {
+        private final int start;
+        private final int cost;
+        private final int boost;
+
+        public Interval(int start, int cost, int boost) {
+            this.start = start;
+            this.cost = cost;
+            this.boost = boost;
+        }
+
+        /**
+         * The start characteristics points interval for the current boost rule
+         * This value is inclusive
+         */
+        public int start() {
+            return start;
+        }
+
+        /**
+         * The cost for boot the characteristic
+         */
+        public int cost() {
+            return cost;
+        }
+
+        /**
+         * The boost value : how many characteristics points are added on boost
+         */
+        public int boost() {
+            return boost;
+        }
+
+        @Override
+        public String toString() {
+            return "[" + start + ", " + cost + ", " + boost + "]";
+        }
     }
 }

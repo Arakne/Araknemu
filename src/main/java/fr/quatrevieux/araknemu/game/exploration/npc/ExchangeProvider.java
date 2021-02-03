@@ -31,6 +31,13 @@ import java.util.Optional;
  */
 public interface ExchangeProvider {
     /**
+     * Load the exchange factory, if available
+     *
+     * @param template The npc template
+     */
+    public Optional<? extends Factory> load(NpcTemplate template);
+
+    /**
      * Factory for creates an Npc exchange
      */
     public static interface Factory {
@@ -49,11 +56,4 @@ public interface ExchangeProvider {
          */
         public ExchangeType type();
     }
-
-    /**
-     * Load the exchange factory, if available
-     *
-     * @param template The npc template
-     */
-    public Optional<? extends Factory> load(NpcTemplate template);
 }

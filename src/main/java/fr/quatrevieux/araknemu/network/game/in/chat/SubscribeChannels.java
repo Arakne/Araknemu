@@ -33,6 +33,22 @@ import java.util.EnumSet;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Chat.as#L92
  */
 public final class SubscribeChannels implements Packet {
+    private final boolean subscribe;
+    private final Collection<ChannelType> channels;
+
+    public SubscribeChannels(boolean subscribe, Collection<ChannelType> channels) {
+        this.subscribe = subscribe;
+        this.channels = channels;
+    }
+
+    public boolean isSubscribe() {
+        return subscribe;
+    }
+
+    public Collection<ChannelType> channels() {
+        return channels;
+    }
+
     public static final class Parser implements SinglePacketParser<SubscribeChannels> {
         @Override
         public SubscribeChannels parse(String input) throws ParsePacketException {
@@ -54,21 +70,5 @@ public final class SubscribeChannels implements Packet {
         public String code() {
             return "cC";
         }
-    }
-
-    private final boolean subscribe;
-    private final Collection<ChannelType> channels;
-
-    public SubscribeChannels(boolean subscribe, Collection<ChannelType> channels) {
-        this.subscribe = subscribe;
-        this.channels = channels;
-    }
-
-    public boolean isSubscribe() {
-        return subscribe;
-    }
-
-    public Collection<ChannelType> channels() {
-        return channels;
     }
 }

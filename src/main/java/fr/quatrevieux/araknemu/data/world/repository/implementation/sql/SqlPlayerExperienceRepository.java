@@ -33,21 +33,6 @@ import java.util.List;
  * SQL implementation of the repository
  */
 final class SqlPlayerExperienceRepository implements PlayerExperienceRepository {
-    private class Loader implements RepositoryUtils.Loader<PlayerExperience> {
-        @Override
-        public PlayerExperience create(ResultSet rs) throws SQLException {
-            return new PlayerExperience(
-                rs.getInt("PLAYER_LEVEL"),
-                rs.getLong("EXPERIENCE")
-            );
-        }
-
-        @Override
-        public PlayerExperience fillKeys(PlayerExperience entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
     private final QueryExecutor executor;
     private final RepositoryUtils<PlayerExperience> utils;
 
@@ -98,5 +83,20 @@ final class SqlPlayerExperienceRepository implements PlayerExperienceRepository 
     @Override
     public List<PlayerExperience> all() {
         return utils.findAll("SELECT * FROM PLAYER_XP ORDER BY PLAYER_LEVEL ASC");
+    }
+
+    private class Loader implements RepositoryUtils.Loader<PlayerExperience> {
+        @Override
+        public PlayerExperience create(ResultSet rs) throws SQLException {
+            return new PlayerExperience(
+                rs.getInt("PLAYER_LEVEL"),
+                rs.getLong("EXPERIENCE")
+            );
+        }
+
+        @Override
+        public PlayerExperience fillKeys(PlayerExperience entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

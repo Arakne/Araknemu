@@ -36,22 +36,6 @@ import java.util.List;
  * SQL implementation for {@link ItemSet} repository
  */
 final class SqlItemSetRepository implements ItemSetRepository {
-    private class Loader implements RepositoryUtils.Loader<ItemSet> {
-        @Override
-        public ItemSet create(ResultSet rs) throws SQLException {
-            return new ItemSet(
-                rs.getInt("ITEM_SET_ID"),
-                rs.getString("ITEM_SET_NAME"),
-                bonusTransformer.unserialize(rs.getString("ITEM_SET_BONUS"))
-            );
-        }
-
-        @Override
-        public ItemSet fillKeys(ItemSet entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
     private final QueryExecutor executor;
     private final RepositoryUtils<ItemSet> utils;
 
@@ -111,5 +95,21 @@ final class SqlItemSetRepository implements ItemSetRepository {
     @Override
     public Collection<ItemSet> load() {
         return utils.findAll("SELECT * FROM ITEM_SET");
+    }
+
+    private class Loader implements RepositoryUtils.Loader<ItemSet> {
+        @Override
+        public ItemSet create(ResultSet rs) throws SQLException {
+            return new ItemSet(
+                rs.getInt("ITEM_SET_ID"),
+                rs.getString("ITEM_SET_NAME"),
+                bonusTransformer.unserialize(rs.getString("ITEM_SET_BONUS"))
+            );
+        }
+
+        @Override
+        public ItemSet fillKeys(ItemSet entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

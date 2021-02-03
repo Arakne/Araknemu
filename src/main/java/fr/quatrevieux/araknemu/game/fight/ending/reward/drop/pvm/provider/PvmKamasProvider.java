@@ -31,6 +31,15 @@ import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 public final class PvmKamasProvider implements DropRewardProvider {
     private final RandomUtil random = new RandomUtil();
 
+    @Override
+    public Scope initialize(EndFightResults results) {
+        return reward -> reward.setKamas(
+            random.rand(
+                results.applyToLoosers(new ExtractKamas()).get()
+            )
+        );
+    }
+
     private static class ExtractKamas implements FighterOperation {
         private int minKamas = 0;
         private int maxKamas = 0;
@@ -44,14 +53,5 @@ public final class PvmKamasProvider implements DropRewardProvider {
         public Interval get() {
             return new Interval(minKamas, maxKamas);
         }
-    }
-
-    @Override
-    public Scope initialize(EndFightResults results) {
-        return reward -> reward.setKamas(
-            random.rand(
-                results.applyToLoosers(new ExtractKamas()).get()
-            )
-        );
     }
 }

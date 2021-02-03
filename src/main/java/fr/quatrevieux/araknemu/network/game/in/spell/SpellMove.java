@@ -30,6 +30,22 @@ import org.apache.commons.lang3.StringUtils;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Spells.as#L19
  */
 public final class SpellMove implements Packet {
+    private final int spellId;
+    private final int position;
+
+    public SpellMove(int spellId, int position) {
+        this.spellId = spellId;
+        this.position = position;
+    }
+
+    public int spellId() {
+        return spellId;
+    }
+
+    public int position() {
+        return position;
+    }
+
     public static final class Parser implements SinglePacketParser<SpellMove> {
         @Override
         public SpellMove parse(String input) throws ParsePacketException {
@@ -45,21 +61,5 @@ public final class SpellMove implements Packet {
         public String code() {
             return "SM";
         }
-    }
-
-    private final int spellId;
-    private final int position;
-
-    public SpellMove(int spellId, int position) {
-        this.spellId = spellId;
-        this.position = position;
-    }
-
-    public int spellId() {
-        return spellId;
-    }
-
-    public int position() {
-        return position;
     }
 }

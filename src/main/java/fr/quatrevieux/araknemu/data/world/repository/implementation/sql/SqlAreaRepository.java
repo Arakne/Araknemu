@@ -33,22 +33,6 @@ import java.util.Collection;
  * SQL implementation for area repository
  */
 final class SqlAreaRepository implements AreaRepository {
-    private static class Loader implements RepositoryUtils.Loader<Area> {
-        @Override
-        public Area create(ResultSet rs) throws SQLException {
-            return new Area(
-                rs.getInt("AREA_ID"),
-                rs.getString("AREA_NAME"),
-                rs.getInt("SUPERAREA_ID")
-            );
-        }
-
-        @Override
-        public Area fillKeys(Area entity, ResultSet keys) {
-            throw new UnsupportedOperationException();
-        }
-    }
-
     private final QueryExecutor executor;
     private final RepositoryUtils<Area> utils;
 
@@ -105,5 +89,21 @@ final class SqlAreaRepository implements AreaRepository {
     @Override
     public Collection<Area> all() {
         return utils.findAll("SELECT * FROM AREA");
+    }
+
+    private static class Loader implements RepositoryUtils.Loader<Area> {
+        @Override
+        public Area create(ResultSet rs) throws SQLException {
+            return new Area(
+                rs.getInt("AREA_ID"),
+                rs.getString("AREA_NAME"),
+                rs.getInt("SUPERAREA_ID")
+            );
+        }
+
+        @Override
+        public Area fillKeys(Area entity, ResultSet keys) {
+            throw new UnsupportedOperationException();
+        }
     }
 }

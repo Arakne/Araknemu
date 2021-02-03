@@ -27,6 +27,19 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  * Choose a game server
  */
 public final class ChooseServer implements Packet {
+    private final int id;
+
+    public ChooseServer(int id) {
+        this.id = id;
+    }
+
+    /**
+     * The server race
+     */
+    public int id() {
+        return id;
+    }
+
     public static final class Parser implements SinglePacketParser<ChooseServer> {
         @Override
         public ChooseServer parse(String input) throws ParsePacketException {
@@ -41,18 +54,5 @@ public final class ChooseServer implements Packet {
         public String code() {
             return "AX";
         }
-    }
-
-    private final int id;
-
-    public ChooseServer(int id) {
-        this.id = id;
-    }
-
-    /**
-     * The server race
-     */
-    public int id() {
-        return id;
     }
 }

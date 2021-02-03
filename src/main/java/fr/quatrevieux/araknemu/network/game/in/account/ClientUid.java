@@ -31,6 +31,16 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L177
  */
 public final class ClientUid implements Packet {
+    private final String uid;
+
+    public ClientUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String uid() {
+        return uid;
+    }
+
     public static final class Parser implements SinglePacketParser<ClientUid> {
         @Override
         public ClientUid parse(String input) throws ParsePacketException {
@@ -41,15 +51,5 @@ public final class ClientUid implements Packet {
         public String code() {
             return "Ai";
         }
-    }
-
-    private final String uid;
-
-    public ClientUid(String uid) {
-        this.uid = uid;
-    }
-
-    public String uid() {
-        return uid;
     }
 }

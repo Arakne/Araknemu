@@ -44,6 +44,24 @@ import java.util.List;
  * Note: each winners can only have one occurrence of an item, per monster
  */
 public final class PvmItemDropProvider implements DropRewardProvider {
+    private final RandomUtil random = new RandomUtil();
+
+    @Override
+    public DropRewardProvider.Scope initialize(EndFightResults results) {
+        final ExtractDrops operation = new ExtractDrops(
+            results.winners().stream()
+                .mapToInt(fighter -> fighter.characteristics().discernment())
+                .sum()
+        );
+
+        results.applyToLoosers(operation);
+
+        return new Scope(
+            random.shuffle(operation.dropsAndQuantity),
+            (int) Math.ceil((double) operation.dropsAndQuantity.size() / (double) results.winners().size())
+        );
+    }
+
     private class Scope implements DropRewardProvider.Scope {
         private final List<Pair<MonsterRewardItem, Integer>> dropsAndQuantity;
         private final int maxPerFighter;
@@ -121,23 +139,5 @@ public final class PvmItemDropProvider implements DropRewardProvider {
                 }
             }
         }
-    }
-
-    private final RandomUtil random = new RandomUtil();
-
-    @Override
-    public DropRewardProvider.Scope initialize(EndFightResults results) {
-        final ExtractDrops operation = new ExtractDrops(
-            results.winners().stream()
-                .mapToInt(fighter -> fighter.characteristics().discernment())
-                .sum()
-        );
-
-        results.applyToLoosers(operation);
-
-        return new Scope(
-            random.shuffle(operation.dropsAndQuantity),
-            (int) Math.ceil((double) operation.dropsAndQuantity.size() / (double) results.winners().size())
-        );
     }
 }

@@ -35,16 +35,6 @@ import java.util.stream.Collectors;
  * Map item effect to characteristic
  */
 public final class EffectToCharacteristicMapping implements EffectMapper<CharacteristicEffect> {
-    private static class MappedCharacteristic {
-        private final int multiplier;
-        private final Characteristic characteristic;
-
-        public MappedCharacteristic(int multiplier, Characteristic characteristic) {
-            this.multiplier = multiplier;
-            this.characteristic = characteristic;
-        }
-    }
-
     private final Map<Effect, MappedCharacteristic> map = new EnumMap<>(Effect.class);
 
     private final RandomUtil random = new RandomUtil();
@@ -209,5 +199,15 @@ public final class EffectToCharacteristicMapping implements EffectMapper<Charact
         }
 
         return map.get(effect);
+    }
+
+    private static class MappedCharacteristic {
+        private final int multiplier;
+        private final Characteristic characteristic;
+
+        public MappedCharacteristic(int multiplier, Characteristic characteristic) {
+            this.multiplier = multiplier;
+            this.characteristic = characteristic;
+        }
     }
 }

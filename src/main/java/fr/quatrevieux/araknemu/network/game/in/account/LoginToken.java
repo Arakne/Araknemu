@@ -27,18 +27,6 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  * Packet for log into Game server
  */
 public final class LoginToken implements Packet {
-    public static final class Parser implements SinglePacketParser<LoginToken> {
-        @Override
-        public LoginToken parse(String input) throws ParsePacketException {
-            return new LoginToken(input);
-        }
-
-        @Override
-        public String code() {
-            return "AT";
-        }
-    }
-
     private final String token;
 
     public LoginToken(String token) {
@@ -50,5 +38,17 @@ public final class LoginToken implements Packet {
      */
     public String token() {
         return token;
+    }
+
+    public static final class Parser implements SinglePacketParser<LoginToken> {
+        @Override
+        public LoginToken parse(String input) throws ParsePacketException {
+            return new LoginToken(input);
+        }
+
+        @Override
+        public String code() {
+            return "AT";
+        }
     }
 }

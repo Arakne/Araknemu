@@ -34,6 +34,15 @@ import java.util.Optional;
 public final class MonsterAiFactory implements AiFactory {
     private final Map<String, AiFactory> factories = new HashMap<>();
 
+    public void register(String type, AiFactory factory) {
+        factories.put(type, factory);
+    }
+
+    @Override
+    public Optional<AI> create(Fighter fighter) {
+        return fighter.apply(new ResolveAi()).get();
+    }
+
     class ResolveAi implements FighterOperation {
         private AI ai;
 
@@ -48,14 +57,5 @@ public final class MonsterAiFactory implements AiFactory {
         public Optional<AI> get() {
             return Optional.ofNullable(ai);
         }
-    }
-
-    public void register(String type, AiFactory factory) {
-        factories.put(type, factory);
-    }
-
-    @Override
-    public Optional<AI> create(Fighter fighter) {
-        return fighter.apply(new ResolveAi()).get();
     }
 }

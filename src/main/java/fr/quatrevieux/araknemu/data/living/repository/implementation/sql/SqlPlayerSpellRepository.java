@@ -35,24 +35,6 @@ import java.util.Collection;
  * SQL implementation for {@link PlayerSpell} repository
  */
 final class SqlPlayerSpellRepository implements PlayerSpellRepository {
-    private class Loader implements RepositoryUtils.Loader<PlayerSpell> {
-        @Override
-        public PlayerSpell create(ResultSet rs) throws SQLException {
-            return new PlayerSpell(
-                rs.getInt("PLAYER_ID"),
-                rs.getInt("SPELL_ID"),
-                rs.getBoolean("CLASS_SPELL"),
-                rs.getInt("SPELL_LEVEL"),
-                rs.getInt("SPELL_POSITION")
-            );
-        }
-
-        @Override
-        public PlayerSpell fillKeys(PlayerSpell entity, ResultSet keys) throws SQLException {
-            throw new UnsupportedOperationException();
-        }
-    }
-
     private final QueryExecutor executor;
     private final RepositoryUtils<PlayerSpell> utils;
 
@@ -147,5 +129,23 @@ final class SqlPlayerSpellRepository implements PlayerSpellRepository {
                 stmt.setInt(2, entity.spellId());
             }
         ) > 0;
+    }
+
+    private class Loader implements RepositoryUtils.Loader<PlayerSpell> {
+        @Override
+        public PlayerSpell create(ResultSet rs) throws SQLException {
+            return new PlayerSpell(
+                rs.getInt("PLAYER_ID"),
+                rs.getInt("SPELL_ID"),
+                rs.getBoolean("CLASS_SPELL"),
+                rs.getInt("SPELL_LEVEL"),
+                rs.getInt("SPELL_POSITION")
+            );
+        }
+
+        @Override
+        public PlayerSpell fillKeys(PlayerSpell entity, ResultSet keys) throws SQLException {
+            throw new UnsupportedOperationException();
+        }
     }
 }

@@ -35,24 +35,6 @@ import java.util.stream.Collectors;
  * SQL implementation for monster reward item repository
  */
 final class SqlMonsterRewardItemRepository implements MonsterRewardItemRepository {
-    private class Loader implements RepositoryUtils.Loader<MonsterRewardItem> {
-        @Override
-        public MonsterRewardItem create(ResultSet rs) throws SQLException {
-            return new MonsterRewardItem(
-                rs.getInt("MONSTER_ID"),
-                rs.getInt("ITEM_TEMPLATE_ID"),
-                rs.getInt("QUANTITY"),
-                rs.getInt("DISCERNMENT"),
-                rs.getFloat("RATE")
-            );
-        }
-
-        @Override
-        public MonsterRewardItem fillKeys(MonsterRewardItem entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
     private final QueryExecutor executor;
     private final RepositoryUtils<MonsterRewardItem> utils;
 
@@ -113,5 +95,23 @@ final class SqlMonsterRewardItemRepository implements MonsterRewardItemRepositor
             .stream()
             .collect(Collectors.groupingBy(MonsterRewardItem::monsterId))
         ;
+    }
+
+    private class Loader implements RepositoryUtils.Loader<MonsterRewardItem> {
+        @Override
+        public MonsterRewardItem create(ResultSet rs) throws SQLException {
+            return new MonsterRewardItem(
+                rs.getInt("MONSTER_ID"),
+                rs.getInt("ITEM_TEMPLATE_ID"),
+                rs.getInt("QUANTITY"),
+                rs.getInt("DISCERNMENT"),
+                rs.getFloat("RATE")
+            );
+        }
+
+        @Override
+        public MonsterRewardItem fillKeys(MonsterRewardItem entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

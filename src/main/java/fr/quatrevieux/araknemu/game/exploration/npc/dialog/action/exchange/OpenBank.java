@@ -32,24 +32,6 @@ import fr.quatrevieux.araknemu.network.out.ServerMessage;
  * Action for open the bank
  */
 public final class OpenBank implements Action {
-    public static final class Factory implements ActionFactory {
-        private final BankService service;
-
-        public Factory(BankService service) {
-            this.service = service;
-        }
-
-        @Override
-        public String type() {
-            return "BANK";
-        }
-
-        @Override
-        public Action create(ResponseAction entity) {
-            return new OpenBank(service);
-        }
-    }
-
     private final BankService service;
 
     public OpenBank(BankService service) {
@@ -116,5 +98,23 @@ public final class OpenBank implements Action {
         player.send(Information.bankTaxPayed(payedByPlayer));
 
         return true;
+    }
+
+    public static final class Factory implements ActionFactory {
+        private final BankService service;
+
+        public Factory(BankService service) {
+            this.service = service;
+        }
+
+        @Override
+        public String type() {
+            return "BANK";
+        }
+
+        @Override
+        public Action create(ResponseAction entity) {
+            return new OpenBank(service);
+        }
     }
 }

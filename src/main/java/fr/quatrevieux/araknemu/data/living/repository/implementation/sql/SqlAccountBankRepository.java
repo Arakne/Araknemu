@@ -33,22 +33,6 @@ import java.sql.SQLException;
  * SQL implementation of {@link AccountBankRepository}
  */
 final class SqlAccountBankRepository implements AccountBankRepository {
-    private static class Loader implements RepositoryUtils.Loader<AccountBank> {
-        @Override
-        public AccountBank create(ResultSet rs) throws SQLException {
-            return new AccountBank(
-                rs.getInt("ACCOUNT_ID"),
-                rs.getInt("SERVER_ID"),
-                rs.getLong("BANK_KAMAS")
-            );
-        }
-
-        @Override
-        public AccountBank fillKeys(AccountBank entity, ResultSet keys) {
-            throw new UnsupportedOperationException();
-        }
-    }
-
     private final QueryExecutor executor;
     private final RepositoryUtils<AccountBank> utils;
 
@@ -124,5 +108,21 @@ final class SqlAccountBankRepository implements AccountBankRepository {
             rs.setInt(1, entity.accountId());
             rs.setInt(2, entity.serverId());
         }) > 0;
+    }
+
+    private static class Loader implements RepositoryUtils.Loader<AccountBank> {
+        @Override
+        public AccountBank create(ResultSet rs) throws SQLException {
+            return new AccountBank(
+                rs.getInt("ACCOUNT_ID"),
+                rs.getInt("SERVER_ID"),
+                rs.getLong("BANK_KAMAS")
+            );
+        }
+
+        @Override
+        public AccountBank fillKeys(AccountBank entity, ResultSet keys) {
+            throw new UnsupportedOperationException();
+        }
     }
 }

@@ -36,40 +36,6 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
  * Use an object
  */
 public final class UseObject implements PacketHandler<GameSession, ObjectUseRequest> {
-    private static class ApplyItemOperation implements Operation {
-        private final UsableItem item;
-        private final ExplorationPlayer caster;
-        private final int targetCell;
-
-        private boolean success = false;
-
-        public ApplyItemOperation(UsableItem item, ExplorationPlayer caster, int targetCell) {
-            this.item = item;
-            this.caster = caster;
-            this.targetCell = targetCell;
-        }
-
-        @Override
-        public void onExplorationPlayer(ExplorationPlayer target) {
-            if (!item.checkTarget(caster, target, targetCell)) {
-                success = false;
-                return;
-            }
-
-            item.applyToTarget(caster, target, targetCell);
-            success = true;
-        }
-
-        @Override
-        public void onNpc(GameNpc npc) {
-            onExplorationPlayer(null);
-        }
-
-        public void onNull() {
-            onExplorationPlayer(null);
-        }
-    }
-
     @Override
     public void handle(GameSession session, ObjectUseRequest packet) throws Exception {
         if (!session.player().restrictions().canUseObject()) {
@@ -120,5 +86,39 @@ public final class UseObject implements PacketHandler<GameSession, ObjectUseRequ
         }
 
         return operation.success;
+    }
+
+    private static class ApplyItemOperation implements Operation {
+        private final UsableItem item;
+        private final ExplorationPlayer caster;
+        private final int targetCell;
+
+        private boolean success = false;
+
+        public ApplyItemOperation(UsableItem item, ExplorationPlayer caster, int targetCell) {
+            this.item = item;
+            this.caster = caster;
+            this.targetCell = targetCell;
+        }
+
+        @Override
+        public void onExplorationPlayer(ExplorationPlayer target) {
+            if (!item.checkTarget(caster, target, targetCell)) {
+                success = false;
+                return;
+            }
+
+            item.applyToTarget(caster, target, targetCell);
+            success = true;
+        }
+
+        @Override
+        public void onNpc(GameNpc npc) {
+            onExplorationPlayer(null);
+        }
+
+        public void onNull() {
+            onExplorationPlayer(null);
+        }
     }
 }

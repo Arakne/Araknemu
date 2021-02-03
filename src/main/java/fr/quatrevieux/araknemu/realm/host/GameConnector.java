@@ -25,13 +25,6 @@ import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
  * GameConnector for communicate between game and realm server
  */
 public interface GameConnector {
-    public static interface HostResponse<T> {
-        /**
-         * Response of the game host
-         */
-        public void response(T response);
-    }
-
     /**
      * Check login state of the given account
      *
@@ -47,4 +40,11 @@ public interface GameConnector {
      * @param response The response listener, will received the token
      */
     public void token(AuthenticationAccount account, HostResponse<String> response);
+
+    public static interface HostResponse<T> {
+        /**
+         * Response of the game host
+         */
+        public void response(T response);
+    }
 }

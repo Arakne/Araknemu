@@ -33,6 +33,19 @@ import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
  * Actually only teleport action is available
  */
 public final class PvmEndFightActionProvider implements DropRewardProvider {
+    @Override
+    public DropRewardProvider.Scope initialize(EndFightResults results) {
+        return results.loosers().stream()
+            .map(Fighter::team)
+            .filter(team -> team instanceof MonsterGroupTeam)
+            .map(team -> ((MonsterGroupTeam) team).group().winFightTeleportPosition())
+            .findFirst()
+            .filter(position -> !position.isNull())
+            .<DropRewardProvider.Scope>map(Scope::new)
+            .orElse(DropRewardProvider.Scope.NOOP)
+        ;
+    }
+
     private static class Scope implements DropRewardProvider.Scope {
         private final Position position;
 
@@ -49,18 +62,5 @@ public final class PvmEndFightActionProvider implements DropRewardProvider {
                 }
             }));
         }
-    }
-
-    @Override
-    public DropRewardProvider.Scope initialize(EndFightResults results) {
-        return results.loosers().stream()
-            .map(Fighter::team)
-            .filter(team -> team instanceof MonsterGroupTeam)
-            .map(team -> ((MonsterGroupTeam) team).group().winFightTeleportPosition())
-            .findFirst()
-            .filter(position -> !position.isNull())
-            .<DropRewardProvider.Scope>map(Scope::new)
-            .orElse(DropRewardProvider.Scope.NOOP)
-        ;
     }
 }

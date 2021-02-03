@@ -29,18 +29,6 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L62
  */
 public final class KamasMovement implements Packet {
-    public static final class Parser implements SinglePacketParser<KamasMovement> {
-        @Override
-        public KamasMovement parse(String input) throws ParsePacketException {
-            return new KamasMovement(Long.parseLong(input));
-        }
-
-        @Override
-        public String code() {
-            return "EMG";
-        }
-    }
-
     private final long quantity;
 
     public KamasMovement(long quantity) {
@@ -53,5 +41,17 @@ public final class KamasMovement implements Packet {
      */
     public long quantity() {
         return quantity;
+    }
+
+    public static final class Parser implements SinglePacketParser<KamasMovement> {
+        @Override
+        public KamasMovement parse(String input) throws ParsePacketException {
+            return new KamasMovement(Long.parseLong(input));
+        }
+
+        @Override
+        public String code() {
+            return "EMG";
+        }
     }
 }

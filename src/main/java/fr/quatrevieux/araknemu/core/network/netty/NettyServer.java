@@ -49,14 +49,6 @@ import java.util.concurrent.TimeUnit;
  * Server adapter for Netty
  */
 public final class NettyServer<S extends Session> implements Server<S> {
-    @ChannelHandler.Sharable
-    public static final class MessageEndEncoder extends MessageToMessageEncoder<Object> {
-        @Override
-        protected void encode(ChannelHandlerContext ctx, Object msg, List<Object> out) {
-            out.add(msg + "\000");
-        }
-    }
-
     private final SessionFactory<S> factory;
     private final int port;
     private final Duration readTimeout;
@@ -120,5 +112,13 @@ public final class NettyServer<S extends Session> implements Server<S> {
     @Override
     public Collection<S> sessions() {
         return handlerAdapter.sessions();
+    }
+
+    @ChannelHandler.Sharable
+    public static final class MessageEndEncoder extends MessageToMessageEncoder<Object> {
+        @Override
+        protected void encode(ChannelHandlerContext ctx, Object msg, List<Object> out) {
+            out.add(msg + "\000");
+        }
     }
 }

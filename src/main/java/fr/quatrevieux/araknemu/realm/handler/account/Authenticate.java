@@ -38,6 +38,26 @@ import fr.quatrevieux.araknemu.realm.host.HostService;
  * Authenticate the client
  */
 public final class Authenticate implements PacketHandler<RealmSession, Credentials> {
+    private final AuthenticationService service;
+    private final HostService hosts;
+    private final SessionLogService logService;
+
+    public Authenticate(AuthenticationService service, HostService hosts, SessionLogService logService) {
+        this.service = service;
+        this.hosts = hosts;
+        this.logService = logService;
+    }
+
+    @Override
+    public void handle(RealmSession session, Credentials packet) {
+        service.authenticate(new Request(session, packet));
+    }
+
+    @Override
+    public Class<Credentials> packet() {
+        return Credentials.class;
+    }
+
     private class Request implements AuthenticationRequest {
         private final RealmSession session;
         private final Credentials credentials;
@@ -92,25 +112,5 @@ public final class Authenticate implements PacketHandler<RealmSession, Credentia
             session.send(new LoginError(LoginError.BANNED));
             session.close();
         }
-    }
-
-    private final AuthenticationService service;
-    private final HostService hosts;
-    private final SessionLogService logService;
-
-    public Authenticate(AuthenticationService service, HostService hosts, SessionLogService logService) {
-        this.service = service;
-        this.hosts = hosts;
-        this.logService = logService;
-    }
-
-    @Override
-    public void handle(RealmSession session, Credentials packet) {
-        service.authenticate(new Request(session, packet));
-    }
-
-    @Override
-    public Class<Credentials> packet() {
-        return Credentials.class;
     }
 }

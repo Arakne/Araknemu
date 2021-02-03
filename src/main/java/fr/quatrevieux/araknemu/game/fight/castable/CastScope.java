@@ -41,34 +41,6 @@ import java.util.stream.Collectors;
  * Wrap casting arguments
  */
 public final class CastScope {
-    public final class EffectScope {
-        private final SpellEffect effect;
-        private final Collection<PassiveFighter> targets;
-
-        public EffectScope(SpellEffect effect, Collection<PassiveFighter> targets) {
-            this.effect = effect;
-            this.targets = targets;
-        }
-
-        /**
-         * The related effect
-         */
-        public SpellEffect effect() {
-            return effect;
-        }
-
-        /**
-         * Get all targeted fighters for the current effect
-         */
-        public Collection<PassiveFighter> targets() {
-            return targets.stream()
-                .map(targetMapping::get)
-                .filter(fighter -> !fighter.dead())
-                .collect(Collectors.toList())
-            ;
-        }
-    }
-
     /**
      * Cast scope is a temporary object, and the random is rarely used (only for "probable effects")
      */
@@ -222,5 +194,33 @@ public final class CastScope {
             .filter(fighter -> effect.target().test(caster, fighter))
             .collect(Collectors.toList())
         ;
+    }
+
+    public final class EffectScope {
+        private final SpellEffect effect;
+        private final Collection<PassiveFighter> targets;
+
+        public EffectScope(SpellEffect effect, Collection<PassiveFighter> targets) {
+            this.effect = effect;
+            this.targets = targets;
+        }
+
+        /**
+         * The related effect
+         */
+        public SpellEffect effect() {
+            return effect;
+        }
+
+        /**
+         * Get all targeted fighters for the current effect
+         */
+        public Collection<PassiveFighter> targets() {
+            return targets.stream()
+                .map(targetMapping::get)
+                .filter(fighter -> !fighter.dead())
+                .collect(Collectors.toList())
+            ;
+        }
     }
 }

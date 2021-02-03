@@ -31,6 +31,105 @@ import java.util.Arrays;
  * Configuration class for game server
  */
 public final class GameConfiguration implements ConfigurationModule {
+    private PoolUtils pool;
+
+    @Override
+    public void setPool(Pool pool) {
+        this.pool = new PoolUtils(pool);
+    }
+
+    @Override
+    public String name() {
+        return "game";
+    }
+
+    /**
+     * Get the server ID. By default 1
+     */
+    public int id() {
+        return pool.integer("id", 1);
+    }
+
+    /**
+     * Get the server port
+     */
+    public int port() {
+        return pool.integer("server.port", 5555);
+    }
+
+    /**
+     * Get the server IP address
+     */
+    public String ip() {
+        return pool.string("server.ip", "127.0.0.1");
+    }
+
+    /**
+     * The maximum inactivity time, as duration
+     * By default, 15min ("PT15M" or "15m")
+     */
+    public Duration inactivityTime() {
+        return pool.duration("inactivityTime", Duration.ofMinutes(15));
+    }
+
+    /**
+     * Maximum number of received packets per seconds per clients
+     * When the limit is reached, the client session is closed
+     */
+    public int packetRateLimit() {
+        return pool.integer("packetRateLimit", 100);
+    }
+
+    /**
+     * Get the shutdown reminder delays, in minutes
+     * The values are integer separated by a comma ","
+     * Default value : "1,10,30,60,120"
+     */
+    public long[] shutdownReminderMinutes() {
+        return Arrays.stream(StringUtils.split(pool.string("shutdownReminderMinutes", "1,10,30,60,120"), ","))
+            .map(String::trim)
+            .mapToLong(Long::parseLong)
+            .sorted()
+            .toArray()
+        ;
+    }
+
+    /**
+     * Get the refresh interval for the ban ip table
+     * Default: 10 minutes (10m)
+     */
+    public Duration banIpRefresh() {
+        return pool.duration("banip.refresh", Duration.ofMinutes(10));
+    }
+
+    /**
+     * Get player configuration
+     */
+    public PlayerConfiguration player() {
+        return new PlayerConfiguration();
+    }
+
+    /**
+     * Get the chat configuration
+     */
+    public ChatConfiguration chat() {
+        return new ChatConfiguration();
+    }
+
+    /**
+     * Get the configuration for the game activity
+     */
+    public ActivityConfiguration activity() {
+        return new ActivityConfiguration();
+    }
+
+    /**
+     * Get the configuration for the Dofus economy
+     */
+    public EconomyConfiguration economy() {
+        return new EconomyConfiguration();
+    }
+
     public final class PlayerConfiguration {
         /**
          * The player name regex
@@ -172,104 +271,5 @@ public final class GameConfiguration implements ConfigurationModule {
         public double bankCostPerEntry() {
             return pool.decimal("economy.bank.costPerEntry", 1);
         }
-    }
-
-    private PoolUtils pool;
-
-    @Override
-    public void setPool(Pool pool) {
-        this.pool = new PoolUtils(pool);
-    }
-
-    @Override
-    public String name() {
-        return "game";
-    }
-
-    /**
-     * Get the server ID. By default 1
-     */
-    public int id() {
-        return pool.integer("id", 1);
-    }
-
-    /**
-     * Get the server port
-     */
-    public int port() {
-        return pool.integer("server.port", 5555);
-    }
-
-    /**
-     * Get the server IP address
-     */
-    public String ip() {
-        return pool.string("server.ip", "127.0.0.1");
-    }
-
-    /**
-     * The maximum inactivity time, as duration
-     * By default, 15min ("PT15M" or "15m")
-     */
-    public Duration inactivityTime() {
-        return pool.duration("inactivityTime", Duration.ofMinutes(15));
-    }
-
-    /**
-     * Maximum number of received packets per seconds per clients
-     * When the limit is reached, the client session is closed
-     */
-    public int packetRateLimit() {
-        return pool.integer("packetRateLimit", 100);
-    }
-
-    /**
-     * Get the shutdown reminder delays, in minutes
-     * The values are integer separated by a comma ","
-     * Default value : "1,10,30,60,120"
-     */
-    public long[] shutdownReminderMinutes() {
-        return Arrays.stream(StringUtils.split(pool.string("shutdownReminderMinutes", "1,10,30,60,120"), ","))
-            .map(String::trim)
-            .mapToLong(Long::parseLong)
-            .sorted()
-            .toArray()
-        ;
-    }
-
-    /**
-     * Get the refresh interval for the ban ip table
-     * Default: 10 minutes (10m)
-     */
-    public Duration banIpRefresh() {
-        return pool.duration("banip.refresh", Duration.ofMinutes(10));
-    }
-
-    /**
-     * Get player configuration
-     */
-    public PlayerConfiguration player() {
-        return new PlayerConfiguration();
-    }
-
-    /**
-     * Get the chat configuration
-     */
-    public ChatConfiguration chat() {
-        return new ChatConfiguration();
-    }
-
-    /**
-     * Get the configuration for the game activity
-     */
-    public ActivityConfiguration activity() {
-        return new ActivityConfiguration();
-    }
-
-    /**
-     * Get the configuration for the Dofus economy
-     */
-    public EconomyConfiguration economy() {
-        return new EconomyConfiguration();
     }
 }

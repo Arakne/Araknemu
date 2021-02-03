@@ -26,10 +26,6 @@ package fr.quatrevieux.araknemu.data.living.constraint;
  * @param <E> Error type
  */
 public final class EntityCheck<T, E> implements EntityConstraint<T, E> {
-    public interface Checker<T> {
-        public boolean check(T entity);
-    }
-
     private final E error;
     private final Checker<T> checker;
 
@@ -46,5 +42,9 @@ public final class EntityCheck<T, E> implements EntityConstraint<T, E> {
     @Override
     public E error() {
         return error;
+    }
+
+    public interface Checker<T> {
+        public boolean check(T entity);
     }
 }

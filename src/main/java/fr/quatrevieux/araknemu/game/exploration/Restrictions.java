@@ -45,20 +45,6 @@ public final class Restrictions {
         IS_TOMB,
     }
 
-    private static final class LocalToExplorationMapping {
-        interface Checker {
-            public boolean check(fr.quatrevieux.araknemu.game.player.Restrictions restrictions);
-        }
-
-        private final Checker checker;
-        private final Restriction restriction;
-
-        public LocalToExplorationMapping(Checker checker, Restriction restriction) {
-            this.checker = checker;
-            this.restriction = restriction;
-        }
-    }
-
     private static final LocalToExplorationMapping[] LOCAL_TO_EXPLORATION_MAPPING = new LocalToExplorationMapping[] {
         new LocalToExplorationMapping(fr.quatrevieux.araknemu.game.player.Restrictions::canAssault,   Restriction.DENY_ASSAULT),
         new LocalToExplorationMapping(fr.quatrevieux.araknemu.game.player.Restrictions::canChallenge, Restriction.DENY_CHALLENGE),
@@ -148,6 +134,20 @@ public final class Restrictions {
 
         if (hasChanged && player.map() != null) {
             player.map().dispatch(new RestrictionsChanged(player, this));
+        }
+    }
+
+    private static final class LocalToExplorationMapping {
+        private final Checker checker;
+        private final Restriction restriction;
+
+        public LocalToExplorationMapping(Checker checker, Restriction restriction) {
+            this.checker = checker;
+            this.restriction = restriction;
+        }
+
+        interface Checker {
+            public boolean check(fr.quatrevieux.araknemu.game.player.Restrictions restrictions);
         }
     }
 }

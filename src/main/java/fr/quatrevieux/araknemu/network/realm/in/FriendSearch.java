@@ -28,18 +28,6 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L80
  */
 public final class FriendSearch implements Packet {
-    public static final class Parser implements SinglePacketParser<FriendSearch> {
-        @Override
-        public FriendSearch parse(String input) {
-            return new FriendSearch(input);
-        }
-
-        @Override
-        public String code() {
-            return "AF";
-        }
-    }
-
     private final String pseudo;
 
     public FriendSearch(String pseudo) {
@@ -51,5 +39,17 @@ public final class FriendSearch implements Packet {
      */
     public String pseudo() {
         return pseudo;
+    }
+
+    public static final class Parser implements SinglePacketParser<FriendSearch> {
+        @Override
+        public FriendSearch parse(String input) {
+            return new FriendSearch(input);
+        }
+
+        @Override
+        public String code() {
+            return "AF";
+        }
     }
 }

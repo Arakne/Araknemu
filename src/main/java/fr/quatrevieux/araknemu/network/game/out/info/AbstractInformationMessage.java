@@ -34,6 +34,19 @@ public abstract class AbstractInformationMessage {
         PVP
     }
 
+    private final Type type;
+    private final Entry[] entries;
+
+    AbstractInformationMessage(Type type, Entry... entries) {
+        this.type = type;
+        this.entries = entries;
+    }
+
+    @Override
+    public String toString() {
+        return "Im" + type.ordinal() + StringUtils.join(entries, "|");
+    }
+
     static final class Entry {
         private static final Object[] EMPTY = new Object[0];
 
@@ -53,18 +66,5 @@ public abstract class AbstractInformationMessage {
         public String toString() {
             return id + ";" + StringUtils.join(arguments, "~");
         }
-    }
-
-    private final Type type;
-    private final Entry[] entries;
-
-    AbstractInformationMessage(Type type, Entry... entries) {
-        this.type = type;
-        this.entries = entries;
-    }
-
-    @Override
-    public String toString() {
-        return "Im" + type.ordinal() + StringUtils.join(entries, "|");
     }
 }

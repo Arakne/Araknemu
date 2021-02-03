@@ -31,6 +31,39 @@ import java.util.Comparator;
  * Handle map geolocation
  */
 public final class GeolocationService {
+    private final ExplorationMapService mapService;
+    private final AreaService areaService;
+    private final MapTemplateRepository repository;
+
+    public GeolocationService(ExplorationMapService mapService, AreaService areaService, MapTemplateRepository repository) {
+        this.mapService = mapService;
+        this.areaService = areaService;
+        this.repository = repository;
+    }
+
+    /**
+     * Find a map at a given geolocation
+     *
+     * Use a context for a more accurate result :
+     * - Filter by the super area
+     * - Search maps on the same sub area
+     * - Search maps with same "indoor" flag
+     * - Then, return the bigger map
+     *
+     * @param geolocation The map geolocation
+     * @param context The search context
+     *
+     * @throws EntityNotFoundException When the map cannot be found at the given geolocation
+     */
+    public ExplorationMap find(Geolocation geolocation, GeolocationContext context) {
+        return repository.byGeolocation(geolocation).stream()
+            .filter(map -> areaService.get(map.subAreaId()).area().superarea() == context.superArea)
+            .min(context.buildComparator())
+            .map(mapService::load)
+            .orElseThrow(() -> new EntityNotFoundException("map at position " + geolocation + "is not found"))
+        ;
+    }
+
     public static final class GeolocationContext {
         /** The first map is more pertinent */
         private static final int FIRST = -1;
@@ -79,7 +112,7 @@ public final class GeolocationService {
             return comparator
                 .thenComparing(this::compareIndoor)
                 .thenComparing(this::compareSize)
-            ;
+                ;
         }
 
         /**
@@ -143,38 +176,5 @@ public final class GeolocationService {
                 .indoor(map.indoor())
             ;
         }
-    }
-
-    private final ExplorationMapService mapService;
-    private final AreaService areaService;
-    private final MapTemplateRepository repository;
-
-    public GeolocationService(ExplorationMapService mapService, AreaService areaService, MapTemplateRepository repository) {
-        this.mapService = mapService;
-        this.areaService = areaService;
-        this.repository = repository;
-    }
-
-    /**
-     * Find a map at a given geolocation
-     *
-     * Use a context for a more accurate result :
-     * - Filter by the super area
-     * - Search maps on the same sub area
-     * - Search maps with same "indoor" flag
-     * - Then, return the bigger map
-     *
-     * @param geolocation The map geolocation
-     * @param context The search context
-     *
-     * @throws EntityNotFoundException When the map cannot be found at the given geolocation
-     */
-    public ExplorationMap find(Geolocation geolocation, GeolocationContext context) {
-        return repository.byGeolocation(geolocation).stream()
-            .filter(map -> areaService.get(map.subAreaId()).area().superarea() == context.superArea)
-            .min(context.buildComparator())
-            .map(mapService::load)
-            .orElseThrow(() -> new EntityNotFoundException("map at position " + geolocation + "is not found"))
-        ;
     }
 }

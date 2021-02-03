@@ -29,6 +29,16 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L128
  */
 public final class AskGift implements Packet {
+    private final String language;
+
+    public AskGift(String language) {
+        this.language = language;
+    }
+
+    public String language() {
+        return language;
+    }
+
     public static final class Parser implements SinglePacketParser<AskGift> {
         @Override
         public AskGift parse(String input) throws ParsePacketException {
@@ -39,15 +49,5 @@ public final class AskGift implements Packet {
         public String code() {
             return "Ag";
         }
-    }
-
-    private final String language;
-
-    public AskGift(String language) {
-        this.language = language;
-    }
-
-    public String language() {
-        return language;
     }
 }

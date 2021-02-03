@@ -41,50 +41,6 @@ import java.util.Collection;
 import java.util.Set;
 
 final class SqlPlayerRepository implements PlayerRepository {
-    private class Loader implements RepositoryUtils.Loader<Player> {
-        @Override
-        public Player create(ResultSet rs) throws SQLException {
-            return new Player(
-                rs.getInt("PLAYER_ID"),
-                rs.getInt("ACCOUNT_ID"),
-                rs.getInt("SERVER_ID"),
-                rs.getString("PLAYER_NAME"),
-                Race.byId(rs.getInt("RACE")),
-                Gender.values()[rs.getInt("SEX")],
-                new Colors(
-                    rs.getInt("COLOR1"),
-                    rs.getInt("COLOR2"),
-                    rs.getInt("COLOR3")
-                ),
-                rs.getInt("PLAYER_LEVEL"),
-                characteristicsTransformer.unserialize(
-                    rs.getString("PLAYER_STATS")
-                ),
-                new Position(
-                    rs.getInt("MAP_ID"),
-                    rs.getInt("CELL_ID")
-                ),
-                channelsTransformer.unserialize(rs.getString("CHANNELS")),
-                rs.getInt("BOOST_POINTS"),
-                rs.getInt("SPELL_POINTS"),
-                rs.getInt("LIFE_POINTS"),
-                rs.getLong("PLAYER_EXPERIENCE"),
-                new Position(
-                    rs.getInt("SAVED_MAP_ID"),
-                    rs.getInt("SAVED_CELL_ID")
-                ),
-                rs.getLong("PLAYER_KAMAS")
-            );
-        }
-
-        @Override
-        public Player fillKeys(Player entity, ResultSet keys) throws SQLException {
-            return entity.withId(
-                keys.getInt(1)
-            );
-        }
-    }
-
     private final QueryExecutor executor;
     private final Transformer<MutableCharacteristics> characteristicsTransformer;
     private final Transformer<Set<ChannelType>> channelsTransformer;
@@ -321,6 +277,48 @@ final class SqlPlayerRepository implements PlayerRepository {
 
         if (rows != 1) {
             throw new EntityNotFoundException();
+        }
+    }
+
+    private class Loader implements RepositoryUtils.Loader<Player> {
+        @Override
+        public Player create(ResultSet rs) throws SQLException {
+            return new Player(
+                rs.getInt("PLAYER_ID"),
+                rs.getInt("ACCOUNT_ID"),
+                rs.getInt("SERVER_ID"),
+                rs.getString("PLAYER_NAME"),
+                Race.byId(rs.getInt("RACE")),
+                Gender.values()[rs.getInt("SEX")],
+                new Colors(
+                    rs.getInt("COLOR1"),
+                    rs.getInt("COLOR2"),
+                    rs.getInt("COLOR3")
+                ),
+                rs.getInt("PLAYER_LEVEL"),
+                characteristicsTransformer.unserialize(
+                    rs.getString("PLAYER_STATS")
+                ),
+                new Position(
+                    rs.getInt("MAP_ID"),
+                    rs.getInt("CELL_ID")
+                ),
+                channelsTransformer.unserialize(rs.getString("CHANNELS")),
+                rs.getInt("BOOST_POINTS"),
+                rs.getInt("SPELL_POINTS"),
+                rs.getInt("LIFE_POINTS"),
+                rs.getLong("PLAYER_EXPERIENCE"),
+                new Position(
+                    rs.getInt("SAVED_MAP_ID"),
+                    rs.getInt("SAVED_CELL_ID")
+                ),
+                rs.getLong("PLAYER_KAMAS")
+            );
+        }
+
+        @Override
+        public Player fillKeys(Player entity, ResultSet keys) throws SQLException {
+            return entity.withId(keys.getInt(1));
         }
     }
 }
