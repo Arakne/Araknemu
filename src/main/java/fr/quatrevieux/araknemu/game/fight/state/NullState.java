@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 /**
  * Fight state before initialisation
  */
-final public class NullState implements FightState {
+public final class NullState implements FightState {
     @Override
     public void start(Fight fight) {}
 

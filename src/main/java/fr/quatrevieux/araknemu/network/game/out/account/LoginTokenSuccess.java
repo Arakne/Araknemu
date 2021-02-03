@@ -31,9 +31,9 @@ package fr.quatrevieux.araknemu.network.game.out.account;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L735
  */
-final public class LoginTokenSuccess {
-    final private int keyId;
-    final private String key;
+public final class LoginTokenSuccess {
+    private final int keyId;
+    private final String key;
 
     public LoginTokenSuccess(int keyId, String key) {
         this.keyId = keyId;

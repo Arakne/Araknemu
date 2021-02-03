@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
  *
  * @todo refactor with other teleportation actions
  */
-final public class Target {
+public final class Target {
     private ExplorationMap map;
     private int cell;
 

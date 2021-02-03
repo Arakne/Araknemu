@@ -35,28 +35,9 @@ import java.util.List;
  * SQL Implementation for {@link BanishmentRepository}
  */
 final class SqlBanishmentRepository implements BanishmentRepository {
-    private class Loader implements RepositoryUtils.Loader<Banishment> {
-        @Override
-        public Banishment create(ResultSet rs) throws SQLException {
-            return new Banishment(
-                rs.getInt("BANISHMENT_ID"),
-                rs.getInt("ACCOUNT_ID"),
-                instantTransformer.unserialize(rs.getString("START_DATE")),
-                instantTransformer.unserialize(rs.getString("END_DATE")),
-                rs.getString("CAUSE"),
-                rs.getInt("BANISHER_ID")
-            );
-        }
-
-        @Override
-        public Banishment fillKeys(Banishment entity, ResultSet keys) throws SQLException {
-            return entity.withId(keys.getInt(1));
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<Banishment> utils;
-    final private Transformer<Instant> instantTransformer;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<Banishment> utils;
+    private final Transformer<Instant> instantTransformer;
 
     public SqlBanishmentRepository(QueryExecutor executor, Transformer<Instant> instantTransformer) {
         this.executor = executor;
@@ -162,5 +143,24 @@ final class SqlBanishmentRepository implements BanishmentRepository {
                 stmt.setString(3, date);
             }
         );
+    }
+
+    private class Loader implements RepositoryUtils.Loader<Banishment> {
+        @Override
+        public Banishment create(ResultSet rs) throws SQLException {
+            return new Banishment(
+                rs.getInt("BANISHMENT_ID"),
+                rs.getInt("ACCOUNT_ID"),
+                instantTransformer.unserialize(rs.getString("START_DATE")),
+                instantTransformer.unserialize(rs.getString("END_DATE")),
+                rs.getString("CAUSE"),
+                rs.getInt("BANISHER_ID")
+            );
+        }
+
+        @Override
+        public Banishment fillKeys(Banishment entity, ResultSet keys) throws SQLException {
+            return entity.withId(keys.getInt(1));
+        }
     }
 }

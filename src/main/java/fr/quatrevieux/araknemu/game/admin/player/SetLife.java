@@ -30,8 +30,8 @@ import java.util.List;
 /**
  * Change the player life
  */
-final public class SetLife extends AbstractCommand {
-    final private GamePlayer player;
+public final class SetLife extends AbstractCommand {
+    private final GamePlayer player;
 
     public SetLife(GamePlayer player) {
         this.player = player;

@@ -24,11 +24,11 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 /**
  * Send private message to client
  */
-final public class PrivateMessage extends AbstractChatMessage {
-    final static public char TYPE_FROM = 'F';
-    final static public char TYPE_TO   = 'T';
+public final class PrivateMessage extends AbstractChatMessage {
+    public static final char TYPE_FROM = 'F';
+    public static final char TYPE_TO   = 'T';
 
-    final private char type;
+    private final char type;
 
     public PrivateMessage(char type, GamePlayer target, String message, String extra) {
         super(target, message, extra, false);

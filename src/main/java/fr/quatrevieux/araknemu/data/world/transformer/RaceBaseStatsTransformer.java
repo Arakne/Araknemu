@@ -30,8 +30,8 @@ import java.util.TreeMap;
 /**
  *
  */
-final public class RaceBaseStatsTransformer implements Transformer<SortedMap<Integer, Characteristics>> {
-    final private Transformer<Characteristics> characteristicsTransformer;
+public final class RaceBaseStatsTransformer implements Transformer<SortedMap<Integer, Characteristics>> {
+    private final Transformer<Characteristics> characteristicsTransformer;
 
     public RaceBaseStatsTransformer(Transformer<Characteristics> characteristicsTransformer) {
         this.characteristicsTransformer = characteristicsTransformer;
@@ -44,10 +44,10 @@ final public class RaceBaseStatsTransformer implements Transformer<SortedMap<Int
 
     @Override
     public SortedMap<Integer, Characteristics> unserialize(String serialize) {
-        SortedMap<Integer, Characteristics> stats = new TreeMap<>(Collections.reverseOrder());
+        final SortedMap<Integer, Characteristics> stats = new TreeMap<>(Collections.reverseOrder());
 
         for (String levelStats : StringUtils.split(serialize, "|")) {
-            String[] parts = StringUtils.split(levelStats, "@", 2);
+            final String[] parts = StringUtils.split(levelStats, "@", 2);
 
             stats.put(
                 Integer.parseUnsignedInt(parts[1]),

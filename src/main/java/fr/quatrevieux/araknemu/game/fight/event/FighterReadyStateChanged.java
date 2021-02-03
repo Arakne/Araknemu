@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 /**
  * Ready state of the fighter is changed
  */
-final public class FighterReadyStateChanged {
-    final private Fighter fighter;
+public final class FighterReadyStateChanged {
+    private final Fighter fighter;
 
     public FighterReadyStateChanged(Fighter fighter) {
         this.fighter = fighter;

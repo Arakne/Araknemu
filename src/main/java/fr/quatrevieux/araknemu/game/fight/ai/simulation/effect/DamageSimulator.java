@@ -33,8 +33,8 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
  *
  * @see fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler
  */
-final public class DamageSimulator implements EffectSimulator {
-    final private Element element;
+public final class DamageSimulator implements EffectSimulator {
+    private final Element element;
 
     public DamageSimulator(Element element) {
         this.element = element;
@@ -42,7 +42,7 @@ final public class DamageSimulator implements EffectSimulator {
 
     @Override
     public void simulate(CastSimulation simulation, CastScope.EffectScope effect) {
-        int value = new EffectValue(effect.effect())
+        final int value = new EffectValue(effect.effect())
             .percent(simulation.caster().characteristics().get(element.boost()))
             .percent(simulation.caster().characteristics().get(Characteristic.PERCENT_DAMAGE))
             .fixed(simulation.caster().characteristics().get(Characteristic.FIXED_DAMAGE))
@@ -51,7 +51,7 @@ final public class DamageSimulator implements EffectSimulator {
         ;
 
         for (PassiveFighter target : effect.targets()) {
-            Damage damage = new Damage(value, element)
+            final Damage damage = new Damage(value, element)
                 .percent(target.characteristics().get(element.percentResistance()))
                 .fixed(target.characteristics().get(element.fixedResistance()))
             ;

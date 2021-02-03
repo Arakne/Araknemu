@@ -33,10 +33,10 @@ import java.util.Optional;
 /**
  * Simple resource item
  */
-final public class Resource implements Item {
-    final private ItemTemplate template;
-    final private ItemType type;
-    final private List<SpecialEffect> specials;
+public final class Resource implements Item {
+    private final ItemTemplate template;
+    private final ItemType type;
+    private final List<SpecialEffect> specials;
 
     public Resource(ItemTemplate template, ItemType type, List<SpecialEffect> specials) {
         this.template = template;
@@ -75,7 +75,7 @@ final public class Resource implements Item {
             return false;
         }
 
-        Resource item = (Resource) obj;
+        final Resource item = (Resource) obj;
 
         return template.equals(item.template)
             && specials.equals(item.specials)

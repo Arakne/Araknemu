@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 /**
  * Send stats when characteristics are changed
  */
-final public class SendStats implements Listener<CharacteristicsChanged> {
-    final private GamePlayer player;
+public final class SendStats implements Listener<CharacteristicsChanged> {
+    private final GamePlayer player;
 
     public SendStats(GamePlayer player) {
         this.player = player;

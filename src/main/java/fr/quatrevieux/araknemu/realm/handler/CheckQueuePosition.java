@@ -19,8 +19,8 @@
 
 package fr.quatrevieux.araknemu.realm.handler;
 
-import fr.quatrevieux.araknemu.network.in.AskQueuePosition;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.network.in.AskQueuePosition;
 import fr.quatrevieux.araknemu.network.out.QueuePosition;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 
@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.network.realm.RealmSession;
  *
  * Empty class to not fail for not found handler
  */
-final public class CheckQueuePosition implements PacketHandler<RealmSession, AskQueuePosition> {
+public final class CheckQueuePosition implements PacketHandler<RealmSession, AskQueuePosition> {
     @Override
     public void handle(RealmSession session, AskQueuePosition packet) {
         session.send(new QueuePosition(1));

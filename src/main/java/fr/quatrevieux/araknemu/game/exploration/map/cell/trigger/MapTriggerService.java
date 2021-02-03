@@ -32,17 +32,21 @@ import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
 import fr.quatrevieux.araknemu.game.listener.map.PerformCellActions;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * Handle exploration map triggers
  */
-final public class MapTriggerService implements PreloadableService, EventsSubscriber {
-    final private MapTriggerRepository repository;
-    final private CellActionFactory actionFactory;
+public final class MapTriggerService implements PreloadableService, EventsSubscriber {
+    private final MapTriggerRepository repository;
+    private final CellActionFactory actionFactory;
 
-    final private Map<Integer, Collection<MapTrigger>> triggers = new HashMap<>();
+    private final Map<Integer, Collection<MapTrigger>> triggers = new HashMap<>();
     private boolean preloading = false;
 
     public MapTriggerService(MapTriggerRepository repository, CellActionFactory actionFactory) {
@@ -54,7 +58,7 @@ final public class MapTriggerService implements PreloadableService, EventsSubscr
     public void preload(Logger logger) {
         logger.info("Loading map cells triggers...");
 
-        Collection<MapTrigger> mapTriggers = repository.all();
+        final Collection<MapTrigger> mapTriggers = repository.all();
 
         for (MapTrigger trigger : mapTriggers) {
             if (!triggers.containsKey(trigger.map())) {

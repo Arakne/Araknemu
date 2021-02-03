@@ -29,11 +29,27 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/GameActions.as#L28
  */
-final public class GameActionCancel implements Packet {
-    final static public class Parser implements SinglePacketParser<GameActionCancel> {
+public final class GameActionCancel implements Packet {
+    private final int actionId;
+    private final String argument;
+
+    public GameActionCancel(int actionId, String argument) {
+        this.actionId = actionId;
+        this.argument = argument;
+    }
+
+    public int actionId() {
+        return actionId;
+    }
+
+    public String argument() {
+        return argument;
+    }
+
+    public static final class Parser implements SinglePacketParser<GameActionCancel> {
         @Override
         public GameActionCancel parse(String input) throws ParsePacketException {
-            String[] parts = StringUtils.split(input, "|", 2);
+            final String[] parts = StringUtils.split(input, "|", 2);
 
             if (parts.length != 2) {
                 throw new ParsePacketException("GKE" + input, "The packet should have 2 parts separated by a pipe");
@@ -49,21 +65,5 @@ final public class GameActionCancel implements Packet {
         public String code() {
             return "GKE";
         }
-    }
-
-    final private int actionId;
-    final private String argument;
-
-    public GameActionCancel(int actionId, String argument) {
-        this.actionId = actionId;
-        this.argument = argument;
-    }
-
-    public int actionId() {
-        return actionId;
-    }
-
-    public String argument() {
-        return argument;
     }
 }

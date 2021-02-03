@@ -38,42 +38,9 @@ import java.util.Optional;
  * SQL implementation of {@link ConnectionLogRepository}
  */
 final class SqlConnectionLogRepository implements ConnectionLogRepository {
-    private class Loader implements RepositoryUtils.Loader<ConnectionLog> {
-        @Override
-        public ConnectionLog create(ResultSet rs) throws SQLException {
-            ConnectionLog log = new ConnectionLog(
-                rs.getInt("ACCOUNT_ID"),
-                instantTransformer.unserialize(rs.getString("START_DATE")),
-                rs.getString("IP_ADDRESS")
-            );
-
-            log.setEndDate(instantTransformer.unserialize(rs.getString("END_DATE")));
-            log.setClientUid(rs.getString("CLIENT_UID"));
-
-            int serverId = rs.getInt("SERVER_ID");
-
-            if (!rs.wasNull()) {
-                log.setServerId(serverId);
-            }
-
-            int playerId = rs.getInt("PLAYER_ID");
-
-            if (!rs.wasNull()) {
-                log.setPlayerId(playerId);
-            }
-
-            return log;
-        }
-
-        @Override
-        public ConnectionLog fillKeys(ConnectionLog entity, ResultSet keys) {
-            throw new UnsupportedOperationException();
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<ConnectionLog> utils;
-    final private Transformer<Instant> instantTransformer;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<ConnectionLog> utils;
+    private final Transformer<Instant> instantTransformer;
 
     public SqlConnectionLogRepository(QueryExecutor executor, Transformer<Instant> instantTransformer) {
         this.executor = executor;
@@ -199,5 +166,38 @@ final class SqlConnectionLogRepository implements ConnectionLogRepository {
             "SELECT COUNT(*) FROM CONNECTION_LOG WHERE PLAYER_ID = ? AND END_DATE IS NOT NULL",
             stmt -> stmt.setInt(1, player.id())
         ) > 0;
+    }
+
+    private class Loader implements RepositoryUtils.Loader<ConnectionLog> {
+        @Override
+        public ConnectionLog create(ResultSet rs) throws SQLException {
+            final ConnectionLog log = new ConnectionLog(
+                rs.getInt("ACCOUNT_ID"),
+                instantTransformer.unserialize(rs.getString("START_DATE")),
+                rs.getString("IP_ADDRESS")
+            );
+
+            log.setEndDate(instantTransformer.unserialize(rs.getString("END_DATE")));
+            log.setClientUid(rs.getString("CLIENT_UID"));
+
+            final int serverId = rs.getInt("SERVER_ID");
+
+            if (!rs.wasNull()) {
+                log.setServerId(serverId);
+            }
+
+            final int playerId = rs.getInt("PLAYER_ID");
+
+            if (!rs.wasNull()) {
+                log.setPlayerId(playerId);
+            }
+
+            return log;
+        }
+
+        @Override
+        public ConnectionLog fillKeys(ConnectionLog entity, ResultSet keys) {
+            throw new UnsupportedOperationException();
+        }
     }
 }

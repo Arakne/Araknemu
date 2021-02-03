@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 /**
  * Add kamas to fighter
  */
-final public class AddKamas implements DropRewardAction {
+public final class AddKamas implements DropRewardAction {
     @Override
     public void apply(DropReward reward, Fighter fighter) {
         if (reward.kamas() == 0) {

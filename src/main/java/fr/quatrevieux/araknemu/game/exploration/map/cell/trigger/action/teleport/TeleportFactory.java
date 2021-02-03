@@ -29,8 +29,8 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Create the teleport action
  */
-final public class TeleportFactory implements CellActionFactory {
-    final private ExplorationMapService service;
+public final class TeleportFactory implements CellActionFactory {
+    private final ExplorationMapService service;
 
     public TeleportFactory(ExplorationMapService service) {
         this.service = service;
@@ -38,7 +38,7 @@ final public class TeleportFactory implements CellActionFactory {
 
     @Override
     public CellAction create(MapTrigger trigger) {
-        String[] position = StringUtils.split(trigger.arguments(), ",", 2);
+        final String[] position = StringUtils.split(trigger.arguments(), ",", 2);
 
         return new Teleport(
             service,

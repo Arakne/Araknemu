@@ -28,9 +28,9 @@ import fr.quatrevieux.araknemu.network.game.out.area.SubAreaList;
 /**
  * Initialize map areas on join game
  */
-final public class InitializeAreas implements Listener<GameJoined> {
-    final private GamePlayer player;
-    final private AreaService service;
+public final class InitializeAreas implements Listener<GameJoined> {
+    private final GamePlayer player;
+    private final AreaService service;
 
     public InitializeAreas(GamePlayer player, AreaService service) {
         this.player = player;

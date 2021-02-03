@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.core.config;
 /**
  * NullObject for Pool
  */
-final public class EmptyPool implements Pool {
+public final class EmptyPool implements Pool {
     @Override
     public boolean has(String key) {
         return false;

@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Question;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.ResponseAction;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.ResponseActionRepository;
@@ -40,24 +40,8 @@ import java.util.stream.Collectors;
  * @see ResponseAction
  */
 final class SqlResponseActionRepository implements ResponseActionRepository {
-    private class Loader implements RepositoryUtils.Loader<ResponseAction> {
-        @Override
-        public ResponseAction create(ResultSet rs) throws SQLException {
-            return new ResponseAction(
-                rs.getInt("RESPONSE_ID"),
-                rs.getString("ACTION"),
-                rs.getString("ARGUMENTS")
-            );
-        }
-
-        @Override
-        public ResponseAction fillKeys(ResponseAction entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<ResponseAction> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<ResponseAction> utils;
 
     public SqlResponseActionRepository(QueryExecutor executor) {
         this.executor = executor;
@@ -148,6 +132,22 @@ final class SqlResponseActionRepository implements ResponseActionRepository {
                     .stream()
                     .collect(Collectors.groupingBy(ResponseAction::responseId))
                 ;
+        }
+    }
+
+    private class Loader implements RepositoryUtils.Loader<ResponseAction> {
+        @Override
+        public ResponseAction create(ResultSet rs) throws SQLException {
+            return new ResponseAction(
+                rs.getInt("RESPONSE_ID"),
+                rs.getString("ACTION"),
+                rs.getString("ARGUMENTS")
+            );
+        }
+
+        @Override
+        public ResponseAction fillKeys(ResponseAction entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
         }
     }
 }

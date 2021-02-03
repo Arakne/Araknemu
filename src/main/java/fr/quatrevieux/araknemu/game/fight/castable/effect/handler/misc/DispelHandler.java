@@ -32,8 +32,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
  *
  * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#removeAll()
  */
-final public class DispelHandler implements EffectHandler {
-    final private Fight fight;
+public final class DispelHandler implements EffectHandler {
+    private final Fight fight;
 
     public DispelHandler(Fight fight) {
         this.fight = fight;

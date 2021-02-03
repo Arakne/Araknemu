@@ -20,17 +20,17 @@
 package fr.quatrevieux.araknemu.game.handler.emote;
 
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.emote.SetOrientationRequest;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Change the exploration player orientation for role player
  *
  * @see SetOrientationRequest
  */
-final public class ChangeOrientation implements PacketHandler<GameSession, SetOrientationRequest> {
+public final class ChangeOrientation implements PacketHandler<GameSession, SetOrientationRequest> {
     @Override
     public void handle(GameSession session, SetOrientationRequest packet) throws Exception {
         if (!session.player().restrictions().canMoveAllDirections() && !packet.orientation().restricted()) {

@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.item.inventory.AbstractItemEntry;
  * Entry for a bank item
  * Because a bank doesn't have item slots, the entries are always on default position (-1)
  */
-final public class BankEntry extends AbstractItemEntry {
-    final private BankItem entity;
+public final class BankEntry extends AbstractItemEntry {
+    private final BankItem entity;
 
     public BankEntry(Bank bank, BankItem entity, Item item) {
         super(bank, entity, item, bank);

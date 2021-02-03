@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.network.game.out.object.SpriteAccessories;
 /**
  * Send accessories when an equipment is changed
  */
-final public class SendAccessories implements Listener<EquipmentChanged> {
-    final private ExplorationPlayer player;
+public final class SendAccessories implements Listener<EquipmentChanged> {
+    private final ExplorationPlayer player;
 
     public SendAccessories(ExplorationPlayer player) {
         this.player = player;

@@ -22,16 +22,25 @@ package fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider;
 import fr.arakne.utils.value.Interval;
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
-import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 
 /**
  * Provide win kamas on Pvm fight
  */
-final public class PvmKamasProvider implements DropRewardProvider {
-    final private RandomUtil random = new RandomUtil();
+public final class PvmKamasProvider implements DropRewardProvider {
+    private final RandomUtil random = new RandomUtil();
 
-    static private class ExtractKamas implements FighterOperation {
+    @Override
+    public Scope initialize(EndFightResults results) {
+        return reward -> reward.setKamas(
+            random.rand(
+                results.applyToLoosers(new ExtractKamas()).get()
+            )
+        );
+    }
+
+    private static class ExtractKamas implements FighterOperation {
         private int minKamas = 0;
         private int maxKamas = 0;
 
@@ -44,14 +53,5 @@ final public class PvmKamasProvider implements DropRewardProvider {
         public Interval get() {
             return new Interval(minKamas, maxKamas);
         }
-    }
-
-    @Override
-    public Scope initialize(EndFightResults results) {
-        return reward -> reward.setKamas(
-            random.rand(
-                results.applyToLoosers(new ExtractKamas()).get()
-            )
-        );
     }
 }

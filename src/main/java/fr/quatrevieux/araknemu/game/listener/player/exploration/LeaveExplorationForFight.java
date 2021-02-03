@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
 /**
  * Stop exploration when join fight
  */
-final public class LeaveExplorationForFight implements Listener<FightJoined> {
-    final private ExplorationPlayer player;
+public final class LeaveExplorationForFight implements Listener<FightJoined> {
+    private final ExplorationPlayer player;
 
     public LeaveExplorationForFight(ExplorationPlayer player) {
         this.player = player;

@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.realm.host.HostService;
 /**
  * List servers and characters count per server
  */
-final public class ListServers implements PacketHandler<RealmSession, AskServerList> {
-    final private HostService service;
+public final class ListServers implements PacketHandler<RealmSession, AskServerList> {
+    private final HostService service;
 
     public ListServers(HostService service) {
         this.service = service;

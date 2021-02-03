@@ -19,10 +19,10 @@
 
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.living.entity.account.AccountBank;
 import fr.quatrevieux.araknemu.data.living.entity.account.BankItem;
 import fr.quatrevieux.araknemu.data.living.repository.account.BankItemRepository;
@@ -38,28 +38,9 @@ import java.util.List;
  * SQL implementation for {@link BankItem} repository
  */
 final class SqlBankItemRepository implements BankItemRepository {
-    private class Loader implements RepositoryUtils.Loader<BankItem> {
-        @Override
-        public BankItem create(ResultSet rs) throws SQLException {
-            return new BankItem(
-                rs.getInt("ACCOUNT_ID"),
-                rs.getInt("SERVER_ID"),
-                rs.getInt("ITEM_ENTRY_ID"),
-                rs.getInt("ITEM_TEMPLATE_ID"),
-                effectsTransformer.unserialize(rs.getString("ITEM_EFFECTS")),
-                rs.getInt("QUANTITY")
-            );
-        }
-
-        @Override
-        public BankItem fillKeys(BankItem entity, ResultSet keys) {
-            throw new UnsupportedOperationException();
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<BankItem> utils;
-    final private Transformer<List<ItemTemplateEffectEntry>> effectsTransformer;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<BankItem> utils;
+    private final Transformer<List<ItemTemplateEffectEntry>> effectsTransformer;
 
     public SqlBankItemRepository(QueryExecutor executor, Transformer<List<ItemTemplateEffectEntry>> effectsTransformer) {
         this.executor = executor;
@@ -97,7 +78,7 @@ final class SqlBankItemRepository implements BankItemRepository {
 
     @Override
     public void update(BankItem item) {
-        int count = utils.update(
+        final int count = utils.update(
             "UPDATE BANK_ITEM SET QUANTITY = ? WHERE ACCOUNT_ID = ? AND SERVER_ID = ? AND ITEM_ENTRY_ID = ?",
             stmt -> {
                 stmt.setInt(1, item.quantity());
@@ -114,7 +95,7 @@ final class SqlBankItemRepository implements BankItemRepository {
 
     @Override
     public void delete(BankItem item) {
-        int count = utils.update(
+        final int count = utils.update(
             "DELETE FROM BANK_ITEM WHERE ACCOUNT_ID = ? AND SERVER_ID = ? AND ITEM_ENTRY_ID = ?",
             stmt -> {
                 stmt.setInt(1, item.accountId());
@@ -189,5 +170,24 @@ final class SqlBankItemRepository implements BankItemRepository {
                 stmt.setInt(2, bank.serverId());
             }
         );
+    }
+
+    private class Loader implements RepositoryUtils.Loader<BankItem> {
+        @Override
+        public BankItem create(ResultSet rs) throws SQLException {
+            return new BankItem(
+                rs.getInt("ACCOUNT_ID"),
+                rs.getInt("SERVER_ID"),
+                rs.getInt("ITEM_ENTRY_ID"),
+                rs.getInt("ITEM_TEMPLATE_ID"),
+                effectsTransformer.unserialize(rs.getString("ITEM_EFFECTS")),
+                rs.getInt("QUANTITY")
+            );
+        }
+
+        @Override
+        public BankItem fillKeys(BankItem entity, ResultSet keys) {
+            throw new UnsupportedOperationException();
+        }
     }
 }

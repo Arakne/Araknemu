@@ -19,17 +19,17 @@
 
 package fr.quatrevieux.araknemu.game.handler.fight;
 
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.fight.AskFightDetails;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightDetails;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Show details on the fight
  */
-final public class ShowFightDetails implements PacketHandler<GameSession, AskFightDetails> {
-    final private FightService service;
+public final class ShowFightDetails implements PacketHandler<GameSession, AskFightDetails> {
+    private final FightService service;
 
     public ShowFightDetails(FightService service) {
         this.service = service;

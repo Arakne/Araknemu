@@ -31,8 +31,30 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L62
  */
-final public class ItemsMovement implements Packet {
-    final static public class Parser implements SinglePacketParser<ItemsMovement> {
+public final class ItemsMovement implements Packet {
+    private final int id;
+    private final int quantity;
+    private final int price;
+
+    public ItemsMovement(int id, int quantity, int price) {
+        this.id = id;
+        this.quantity = quantity;
+        this.price = price;
+    }
+
+    public int id() {
+        return id;
+    }
+
+    public int quantity() {
+        return quantity;
+    }
+
+    public int price() {
+        return price;
+    }
+
+    public static final class Parser implements SinglePacketParser<ItemsMovement> {
         @Override
         public ItemsMovement parse(String input) throws ParsePacketException {
             final int sign = input.charAt(0) == '-' ? -1 : +1;
@@ -53,27 +75,5 @@ final public class ItemsMovement implements Packet {
         public String code() {
             return "EMO";
         }
-    }
-
-    final private int id;
-    final private int quantity;
-    final private int price;
-
-    public ItemsMovement(int id, int quantity, int price) {
-        this.id = id;
-        this.quantity = quantity;
-        this.price = price;
-    }
-
-    public int id() {
-        return id;
-    }
-
-    public int quantity() {
-        return quantity;
-    }
-
-    public int price() {
-        return price;
     }
 }

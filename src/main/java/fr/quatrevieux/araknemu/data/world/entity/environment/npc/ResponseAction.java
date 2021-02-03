@@ -22,10 +22,10 @@ package fr.quatrevieux.araknemu.data.world.entity.environment.npc;
 /**
  * Action to perform for a response
  */
-final public class ResponseAction {
-    final private int responseId;
-    final private String action;
-    final private String arguments;
+public final class ResponseAction {
+    private final int responseId;
+    private final String action;
+    private final String arguments;
 
     public ResponseAction(int responseId, String action, String arguments) {
         this.responseId = responseId;

@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.admin.server;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.GameService;
-import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.global.GlobalContext;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
@@ -41,7 +41,7 @@ class ServerContextTest extends GameBaseCase {
 
         context = new ServerContext(
             container.get(GlobalContext.class),
-            Collections.singletonList(new ContextConfigurator<ServerContext>() {
+            Collections.singletonList(new AbstractContextConfigurator<ServerContext>() {
                 @Override
                 public void configure(ServerContext context) {
                     add(new Online(

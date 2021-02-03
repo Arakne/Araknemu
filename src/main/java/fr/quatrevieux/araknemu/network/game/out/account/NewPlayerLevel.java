@@ -24,8 +24,8 @@ package fr.quatrevieux.araknemu.network.game.out.account;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L1101
  */
-final public class NewPlayerLevel {
-    final private int level;
+public final class NewPlayerLevel {
+    private final int level;
 
     public NewPlayerLevel(int level) {
         this.level = level;

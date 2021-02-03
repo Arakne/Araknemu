@@ -24,18 +24,18 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 /**
  *
  */
-abstract public class AbstractInitiatorRequestDialog extends AbstractRequestDialog {
+public abstract class AbstractInitiatorRequestDialog extends AbstractRequestDialog {
     public AbstractInitiatorRequestDialog(Invitation invitation) {
         super(invitation);
     }
 
     @Override
-    final public ExplorationPlayer self() {
+    public final ExplorationPlayer self() {
         return invitation.initiator();
     }
 
     @Override
-    final public ExplorationPlayer interlocutor() {
+    public final ExplorationPlayer interlocutor() {
         return invitation.target();
     }
 }

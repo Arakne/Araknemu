@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 /**
  * Slot for mantle
  */
-final public class MantleSlot extends AbstractWearableSlot {
-    final static public int SLOT_ID = 7;
+public final class MantleSlot extends AbstractWearableSlot {
+    public static final int SLOT_ID = 7;
 
     public MantleSlot(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage, GamePlayer owner) {
         super(dispatcher, storage, owner, SLOT_ID, SuperType.MANTLE);

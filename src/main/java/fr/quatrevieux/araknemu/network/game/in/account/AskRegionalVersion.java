@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 /**
  * Ask for regional version
  */
-final public class AskRegionalVersion implements Packet {
-    final static public class Parser implements SinglePacketParser<AskRegionalVersion> {
+public final class AskRegionalVersion implements Packet {
+    public static final class Parser implements SinglePacketParser<AskRegionalVersion> {
         @Override
         public AskRegionalVersion parse(String input) throws ParsePacketException {
             return new AskRegionalVersion();

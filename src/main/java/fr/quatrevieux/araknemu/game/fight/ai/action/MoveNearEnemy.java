@@ -32,7 +32,7 @@ import java.util.Optional;
 /**
  * Try to move near the selected enemy
  */
-final public class MoveNearEnemy implements ActionGenerator {
+public final class MoveNearEnemy implements ActionGenerator {
     private Decoder<FightCell> decoder;
     private Pathfinder<FightCell> pathfinder;
     private ActiveFighter fighter;

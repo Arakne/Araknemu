@@ -22,12 +22,12 @@ package fr.quatrevieux.araknemu.data.world.entity.monster;
 /**
  * Store Pvm item drop by a monster
  */
-final public class MonsterRewardItem {
-    final private int monsterId;
-    final private int itemTemplateId;
-    final private int quantity;
-    final private int discernment;
-    final private double rate;
+public final class MonsterRewardItem {
+    private final int monsterId;
+    private final int itemTemplateId;
+    private final int quantity;
+    private final int discernment;
+    private final double rate;
 
     public MonsterRewardItem(int monsterId, int itemTemplateId, int quantity, int discernment, double rate) {
         this.monsterId = monsterId;

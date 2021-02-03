@@ -28,12 +28,12 @@ import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 /**
  * Launch a firework to the map
  */
-final public class LaunchFirework implements BlockingAction {
-    final private ExplorationPlayer player;
+public final class LaunchFirework implements BlockingAction {
+    private final ExplorationPlayer player;
 
-    final private int cell;
-    final private int animation;
-    final private int size;
+    private final int cell;
+    private final int animation;
+    private final int size;
 
     private int id;
 
@@ -84,8 +84,6 @@ final public class LaunchFirework implements BlockingAction {
 
     @Override
     public Object[] arguments() {
-        return new Object[] {
-            cell + "," + animation + ",11,8," + size
-        };
+        return new Object[] {cell + "," + animation + ",11,8," + size};
     }
 }

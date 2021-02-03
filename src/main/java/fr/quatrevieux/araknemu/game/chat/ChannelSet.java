@@ -23,14 +23,18 @@ import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.chat.event.ChannelSubscriptionAdded;
 import fr.quatrevieux.araknemu.game.chat.event.ChannelSubscriptionRemoved;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Set of subscribed channels with a dispatcher for synchronise operations
  */
-final public class ChannelSet implements Set<ChannelType> {
-    final private Set<ChannelType> set;
-    final private Dispatcher dispatcher;
+public final class ChannelSet implements Set<ChannelType> {
+    private final Set<ChannelType> set;
+    private final Dispatcher dispatcher;
 
     public ChannelSet(Set<ChannelType> set, Dispatcher dispatcher) {
         this.set = set;

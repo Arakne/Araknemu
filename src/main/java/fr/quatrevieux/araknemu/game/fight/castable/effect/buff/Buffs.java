@@ -32,12 +32,12 @@ public interface Buffs {
     public void add(Buff buff);
 
     /**
-     * @see BuffHook#onCastTarget(Buff, CastScope);
+     * @see BuffHook#onCastTarget(Buff, CastScope)
      */
     public void onCastTarget(CastScope cast);
 
     /**
-     * @see BuffHook#onDamage(Buff, Damage);
+     * @see BuffHook#onDamage(Buff, Damage)
      */
     public void onDamage(Damage value);
 

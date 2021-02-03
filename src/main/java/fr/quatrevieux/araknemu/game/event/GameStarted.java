@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.GameService;
 /**
  * The game service is started
  */
-final public class GameStarted {
-    final private GameService service;
+public final class GameStarted {
+    private final GameService service;
 
     public GameStarted(GameService service) {
         this.service = service;

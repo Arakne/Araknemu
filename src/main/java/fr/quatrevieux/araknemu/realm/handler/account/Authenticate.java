@@ -23,7 +23,12 @@ import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.network.realm.in.Credentials;
-import fr.quatrevieux.araknemu.network.realm.out.*;
+import fr.quatrevieux.araknemu.network.realm.out.Community;
+import fr.quatrevieux.araknemu.network.realm.out.GMLevel;
+import fr.quatrevieux.araknemu.network.realm.out.HostList;
+import fr.quatrevieux.araknemu.network.realm.out.LoginError;
+import fr.quatrevieux.araknemu.network.realm.out.Pseudo;
+import fr.quatrevieux.araknemu.network.realm.out.Question;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationRequest;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
@@ -32,10 +37,30 @@ import fr.quatrevieux.araknemu.realm.host.HostService;
 /**
  * Authenticate the client
  */
-final public class Authenticate implements PacketHandler<RealmSession, Credentials> {
+public final class Authenticate implements PacketHandler<RealmSession, Credentials> {
+    private final AuthenticationService service;
+    private final HostService hosts;
+    private final SessionLogService logService;
+
+    public Authenticate(AuthenticationService service, HostService hosts, SessionLogService logService) {
+        this.service = service;
+        this.hosts = hosts;
+        this.logService = logService;
+    }
+
+    @Override
+    public void handle(RealmSession session, Credentials packet) {
+        service.authenticate(new Request(session, packet));
+    }
+
+    @Override
+    public Class<Credentials> packet() {
+        return Credentials.class;
+    }
+
     private class Request implements AuthenticationRequest {
-        final private RealmSession session;
-        final private Credentials credentials;
+        private final RealmSession session;
+        private final Credentials credentials;
 
         public Request(RealmSession session, Credentials credentials) {
             this.session = session;
@@ -87,25 +112,5 @@ final public class Authenticate implements PacketHandler<RealmSession, Credentia
             session.send(new LoginError(LoginError.BANNED));
             session.close();
         }
-    }
-
-    final private AuthenticationService service;
-    final private HostService hosts;
-    final private SessionLogService logService;
-
-    public Authenticate(AuthenticationService service, HostService hosts, SessionLogService logService) {
-        this.service = service;
-        this.hosts = hosts;
-        this.logService = logService;
-    }
-
-    @Override
-    public void handle(RealmSession session, Credentials packet) {
-        service.authenticate(new Request(session, packet));
-    }
-
-    @Override
-    public Class<Credentials> packet() {
-        return Credentials.class;
     }
 }

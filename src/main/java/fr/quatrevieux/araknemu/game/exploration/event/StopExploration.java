@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 /**
  * Event for stop exploration
  */
-final public class StopExploration {
-    final private GameSession session;
+public final class StopExploration {
+    private final GameSession session;
 
     public StopExploration(GameSession session) {
         this.session = session;

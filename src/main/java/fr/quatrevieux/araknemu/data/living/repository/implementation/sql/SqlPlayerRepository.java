@@ -22,10 +22,10 @@ package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 import fr.arakne.utils.value.Colors;
 import fr.arakne.utils.value.constant.Gender;
 import fr.arakne.utils.value.constant.Race;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
@@ -33,7 +33,6 @@ import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.value.ServerCharacters;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
-import org.apache.commons.lang3.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -42,55 +41,11 @@ import java.util.Collection;
 import java.util.Set;
 
 final class SqlPlayerRepository implements PlayerRepository {
-    private class Loader implements RepositoryUtils.Loader<Player> {
-        @Override
-        public Player create(ResultSet rs) throws SQLException {
-            return new Player(
-                rs.getInt("PLAYER_ID"),
-                rs.getInt("ACCOUNT_ID"),
-                rs.getInt("SERVER_ID"),
-                rs.getString("PLAYER_NAME"),
-                Race.byId(rs.getInt("RACE")),
-                Gender.values()[rs.getInt("SEX")],
-                new Colors(
-                    rs.getInt("COLOR1"),
-                    rs.getInt("COLOR2"),
-                    rs.getInt("COLOR3")
-                ),
-                rs.getInt("PLAYER_LEVEL"),
-                characteristicsTransformer.unserialize(
-                    rs.getString("PLAYER_STATS")
-                ),
-                new Position(
-                    rs.getInt("MAP_ID"),
-                    rs.getInt("CELL_ID")
-                ),
-                channelsTransformer.unserialize(rs.getString("CHANNELS")),
-                rs.getInt("BOOST_POINTS"),
-                rs.getInt("SPELL_POINTS"),
-                rs.getInt("LIFE_POINTS"),
-                rs.getLong("PLAYER_EXPERIENCE"),
-                new Position(
-                    rs.getInt("SAVED_MAP_ID"),
-                    rs.getInt("SAVED_CELL_ID")
-                ),
-                rs.getLong("PLAYER_KAMAS")
-            );
-        }
+    private final QueryExecutor executor;
+    private final Transformer<MutableCharacteristics> characteristicsTransformer;
+    private final Transformer<Set<ChannelType>> channelsTransformer;
 
-        @Override
-        public Player fillKeys(Player entity, ResultSet keys) throws SQLException {
-            return entity.withId(
-                keys.getInt(1)
-            );
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private Transformer<MutableCharacteristics> characteristicsTransformer;
-    final private Transformer<Set<ChannelType>> channelsTransformer;
-
-    final private RepositoryUtils<Player> utils;
+    private final RepositoryUtils<Player> utils;
 
     public SqlPlayerRepository(QueryExecutor executor, Transformer<MutableCharacteristics> characteristicsTransformer, Transformer<Set<ChannelType>> channelsTransformer) {
         this.executor = executor;
@@ -241,7 +196,7 @@ final class SqlPlayerRepository implements PlayerRepository {
                     stmt.setInt(1, accountId);
 
                     try (ResultSet rs = stmt.executeQuery()) {
-                        Collection<ServerCharacters> list = new ArrayList<>();
+                        final Collection<ServerCharacters> list = new ArrayList<>();
 
                         while (rs.next()) {
                             list.add(
@@ -270,7 +225,7 @@ final class SqlPlayerRepository implements PlayerRepository {
                     stmt.setString(1, accountPseudo);
 
                     try (ResultSet rs = stmt.executeQuery()) {
-                        Collection<ServerCharacters> list = new ArrayList<>();
+                        final Collection<ServerCharacters> list = new ArrayList<>();
 
                         while (rs.next()) {
                             list.add(new ServerCharacters(rs.getInt("SERVER_ID"), rs.getInt("COUNT(*)")));
@@ -299,7 +254,7 @@ final class SqlPlayerRepository implements PlayerRepository {
 
     @Override
     public void save(Player player) {
-        int rows = utils.update(
+        final int rows = utils.update(
             "UPDATE PLAYER SET " +
                 "PLAYER_LEVEL = ?, PLAYER_STATS = ?, MAP_ID = ?, CELL_ID = ?, CHANNELS = ?, BOOST_POINTS = ?, SPELL_POINTS = ?, LIFE_POINTS = ?, PLAYER_EXPERIENCE = ?, SAVED_MAP_ID = ?, SAVED_CELL_ID = ?, PLAYER_KAMAS = ? " +
                 "WHERE PLAYER_ID = ?",
@@ -322,6 +277,48 @@ final class SqlPlayerRepository implements PlayerRepository {
 
         if (rows != 1) {
             throw new EntityNotFoundException();
+        }
+    }
+
+    private class Loader implements RepositoryUtils.Loader<Player> {
+        @Override
+        public Player create(ResultSet rs) throws SQLException {
+            return new Player(
+                rs.getInt("PLAYER_ID"),
+                rs.getInt("ACCOUNT_ID"),
+                rs.getInt("SERVER_ID"),
+                rs.getString("PLAYER_NAME"),
+                Race.byId(rs.getInt("RACE")),
+                Gender.values()[rs.getInt("SEX")],
+                new Colors(
+                    rs.getInt("COLOR1"),
+                    rs.getInt("COLOR2"),
+                    rs.getInt("COLOR3")
+                ),
+                rs.getInt("PLAYER_LEVEL"),
+                characteristicsTransformer.unserialize(
+                    rs.getString("PLAYER_STATS")
+                ),
+                new Position(
+                    rs.getInt("MAP_ID"),
+                    rs.getInt("CELL_ID")
+                ),
+                channelsTransformer.unserialize(rs.getString("CHANNELS")),
+                rs.getInt("BOOST_POINTS"),
+                rs.getInt("SPELL_POINTS"),
+                rs.getInt("LIFE_POINTS"),
+                rs.getLong("PLAYER_EXPERIENCE"),
+                new Position(
+                    rs.getInt("SAVED_MAP_ID"),
+                    rs.getInt("SAVED_CELL_ID")
+                ),
+                rs.getLong("PLAYER_KAMAS")
+            );
+        }
+
+        @Override
+        public Player fillKeys(Player entity, ResultSet keys) throws SQLException {
+            return entity.withId(keys.getInt(1));
         }
     }
 }

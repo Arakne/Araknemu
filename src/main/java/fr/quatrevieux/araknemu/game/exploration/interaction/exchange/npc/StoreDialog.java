@@ -34,8 +34,8 @@ import fr.quatrevieux.araknemu.network.game.out.exchange.store.ItemSold;
  *
  * @todo refactor with player store
  */
-final public class StoreDialog implements ExchangeInteraction {
-    final private NpcStoreExchange exchange;
+public final class StoreDialog implements ExchangeInteraction {
+    private final NpcStoreExchange exchange;
 
     public StoreDialog(NpcStoreExchange exchange) {
         this.exchange = exchange;

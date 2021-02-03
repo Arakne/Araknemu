@@ -22,10 +22,10 @@ package fr.quatrevieux.araknemu.network.realm.out;
 /**
  * Send server selection request and token
  */
-final public class SelectServerPlain {
-    final private String ip;
-    final private int port;
-    final private String token;
+public final class SelectServerPlain {
+    private final String ip;
+    private final int port;
+    private final String token;
 
     public SelectServerPlain(String ip, int port, String token) {
         this.ip = ip;

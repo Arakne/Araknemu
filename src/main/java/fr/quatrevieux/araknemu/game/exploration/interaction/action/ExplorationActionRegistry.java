@@ -26,15 +26,8 @@ import java.util.EnumMap;
 /**
  * Registry for all exploration game actions
  */
-final public class ExplorationActionRegistry implements ActionFactory {
-    public interface SelfRegisterable {
-        /**
-         * Auto-register the action factory into the action registry
-         */
-        public void register(ExplorationActionRegistry factory);
-    }
-
-    final private EnumMap<ActionType, ActionFactory> factories = new EnumMap<>(ActionType.class);
+public final class ExplorationActionRegistry implements ActionFactory {
+    private final EnumMap<ActionType, ActionFactory> factories = new EnumMap<>(ActionType.class);
 
     public ExplorationActionRegistry(SelfRegisterable... actions) {
         for (SelfRegisterable action : actions) {
@@ -59,5 +52,12 @@ final public class ExplorationActionRegistry implements ActionFactory {
      */
     public void register(ActionType type, ActionFactory factory) {
         factories.put(type, factory);
+    }
+
+    public interface SelfRegisterable {
+        /**
+         * Auto-register the action factory into the action registry
+         */
+        public void register(ExplorationActionRegistry factory);
     }
 }

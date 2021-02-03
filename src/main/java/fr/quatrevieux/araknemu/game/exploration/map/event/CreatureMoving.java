@@ -26,9 +26,9 @@ import fr.quatrevieux.araknemu.game.world.creature.Creature;
 /**
  * A creature is moving on the map
  */
-final public class CreatureMoving {
-    final private Creature<ExplorationMapCell> creature;
-    final private Path<ExplorationMapCell> path;
+public final class CreatureMoving {
+    private final Creature<ExplorationMapCell> creature;
+    private final Path<ExplorationMapCell> path;
 
     public CreatureMoving(Creature<ExplorationMapCell> creature, Path<ExplorationMapCell> path) {
         this.creature = creature;

@@ -28,20 +28,21 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Transform characteristics string
  */
-final public class CharacteristicsTransformer {
-    final static private int SERIALIZED_BASE    = 32;
-    final static private String VALUE_SEPARATOR = ":";
-    final static private String STATS_SEPARATOR = ";";
+public final class CharacteristicsTransformer implements Transformer<Characteristics> {
+    private static final int SERIALIZED_BASE    = 32;
+    private static final String VALUE_SEPARATOR = ":";
+    private static final String STATS_SEPARATOR = ";";
 
+    @Override
     public String serialize(Characteristics characteristics) {
         if (characteristics == null) {
             return null;
         }
 
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
 
         for (Characteristic characteristic : Characteristic.values()) {
-            int value = characteristics.get(characteristic);
+            final int value = characteristics.get(characteristic);
 
             if (value == 0) {
                 continue;
@@ -58,19 +59,20 @@ final public class CharacteristicsTransformer {
         return sb.toString();
     }
 
+    @Override
     public MutableCharacteristics unserialize(String serialized) {
         if (serialized == null) {
             return null;
         }
 
-        MutableCharacteristics characteristics = new DefaultCharacteristics();
+        final MutableCharacteristics characteristics = new DefaultCharacteristics();
 
         for (String stats : StringUtils.split(serialized, STATS_SEPARATOR)) {
             if (stats.isEmpty()) {
                 continue;
             }
 
-            String[] data = StringUtils.split(stats, VALUE_SEPARATOR, 2);
+            final String[] data = StringUtils.split(stats, VALUE_SEPARATOR, 2);
 
             characteristics.set(
                 Characteristic.fromId(Integer.parseInt(data[0], SERIALIZED_BASE)),

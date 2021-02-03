@@ -29,10 +29,10 @@ import java.util.stream.Collectors;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Items.as#L230
  */
-final public class UpdateItemSet {
-    final static private ItemEffectsTransformer EFFECTS_TRANSFORMER = new ItemEffectsTransformer();
+public final class UpdateItemSet {
+    private static final ItemEffectsTransformer EFFECTS_TRANSFORMER = new ItemEffectsTransformer();
 
-    final private PlayerItemSet itemSet;
+    private final PlayerItemSet itemSet;
 
     public UpdateItemSet(PlayerItemSet itemSet) {
         this.itemSet = itemSet;

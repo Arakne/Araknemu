@@ -25,8 +25,8 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 /**
  * Resolve the target map using the map id
  */
-final public class MapResolver implements LocationResolver {
-    final private ExplorationMapService service;
+public final class MapResolver implements LocationResolver {
+    private final ExplorationMapService service;
 
     public MapResolver(ExplorationMapService service) {
         this.service = service;

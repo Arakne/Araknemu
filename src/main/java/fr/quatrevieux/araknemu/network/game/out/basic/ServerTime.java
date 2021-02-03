@@ -26,8 +26,8 @@ import java.util.Calendar;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Basics.as#L153
  */
-final public class ServerTime {
-    final private Calendar calendar;
+public final class ServerTime {
+    private final Calendar calendar;
 
     public ServerTime(Calendar calendar) {
         this.calendar = calendar;

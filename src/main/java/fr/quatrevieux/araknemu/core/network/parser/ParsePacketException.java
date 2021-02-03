@@ -23,7 +23,7 @@ package fr.quatrevieux.araknemu.core.network.parser;
  * Exception raised when cannot parse a packet
  */
 public class ParsePacketException extends RuntimeException {
-    final private String packet;
+    private final String packet;
 
     public ParsePacketException(String packet, String message, Throwable cause) {
         super(message, cause);

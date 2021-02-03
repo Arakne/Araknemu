@@ -42,14 +42,14 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Service for handle items
  */
-final public class ItemService implements PreloadableService {
-    final private ItemTemplateRepository repository;
-    final private ItemFactory factory;
-    final private ItemSetRepository itemSetRepository;
-    final private ItemTypeRepository itemTypeRepository;
-    final private EffectMappers mappers;
+public final class ItemService implements PreloadableService {
+    private final ItemTemplateRepository repository;
+    private final ItemFactory factory;
+    private final ItemSetRepository itemSetRepository;
+    private final ItemTypeRepository itemTypeRepository;
+    private final EffectMappers mappers;
 
-    final private ConcurrentMap<Integer, GameItemSet> itemSetsById = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, GameItemSet> itemSetsById = new ConcurrentHashMap<>();
 
     public ItemService(ItemTemplateRepository repository, ItemFactory factory, ItemSetRepository itemSetRepository, ItemTypeRepository itemTypeRepository, EffectMappers mappers) {
         this.repository = repository;
@@ -97,8 +97,7 @@ final public class ItemService implements PreloadableService {
             itemTypeRepository.get(template.type()),
             template.itemSet() == 0
                 ? null
-                : itemSet(template.itemSet())
-            ,
+                : itemSet(template.itemSet()),
             maximize
         );
     }
@@ -121,10 +120,10 @@ final public class ItemService implements PreloadableService {
      * @return Map of item associated with the quantity
      */
     public Map<Item, Integer> createBulk(ItemTemplate template, int quantity) {
-        Map<Item, Integer> items = new HashMap<>();
+        final Map<Item, Integer> items = new HashMap<>();
 
         for (; quantity > 0; --quantity) {
-            Item generated = create(template);
+            final Item generated = create(template);
 
             items.put(generated, items.getOrDefault(generated, 0) + 1);
         }
@@ -139,15 +138,14 @@ final public class ItemService implements PreloadableService {
      * @param effects The item effects
      */
     public Item retrieve(int id, List<ItemTemplateEffectEntry> effects) {
-        ItemTemplate template = repository.get(id);
+        final ItemTemplate template = repository.get(id);
 
         return factory.retrieve(
             template,
             itemTypeRepository.get(template.type()),
             template.itemSet() == 0
                 ? null
-                : itemSet(template.itemSet())
-            ,
+                : itemSet(template.itemSet()),
             effects
         );
     }
@@ -168,7 +166,7 @@ final public class ItemService implements PreloadableService {
     }
 
     private GameItemSet createItemSet(ItemSet entity) {
-        List<GameItemSet.Bonus> bonuses = new ArrayList<>();
+        final List<GameItemSet.Bonus> bonuses = new ArrayList<>();
 
         for (List<ItemTemplateEffectEntry> effects : entity.bonus()) {
             bonuses.add(
@@ -183,15 +181,15 @@ final public class ItemService implements PreloadableService {
         return new GameItemSet(entity, bonuses);
     }
 
-    public void loadItems(Logger logger) {
+    private void loadItems(Logger logger) {
         logger.info("Loading items...");
 
-        int loaded = repository.load().size();
+        final int loaded = repository.load().size();
 
         logger.info("Successfully load {} items", loaded);
     }
 
-    public void loadItemSets(Logger logger) {
+    private void loadItemSets(Logger logger) {
         logger.info("Loading item sets...");
 
         for (ItemSet entity : itemSetRepository.load()) {
@@ -201,7 +199,7 @@ final public class ItemService implements PreloadableService {
         logger.info("Successfully load {} item sets", itemSetsById.size());
     }
 
-    public void loadItemTypes(Logger logger) {
+    private void loadItemTypes(Logger logger) {
         logger.info("Loading item types...");
         logger.info("Successfully load {} item sets", itemTypeRepository.load().size());
     }

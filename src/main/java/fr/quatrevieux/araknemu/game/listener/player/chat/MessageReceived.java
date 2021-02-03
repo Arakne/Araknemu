@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.chat.MessageSent;
 /**
  * Listen broadcasted messages
  */
-final public class MessageReceived implements Listener<BroadcastedMessage> {
-    final private GamePlayer player;
+public final class MessageReceived implements Listener<BroadcastedMessage> {
+    private final GamePlayer player;
 
     public MessageReceived(GamePlayer player) {
         this.player = player;

@@ -28,8 +28,8 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ChannelSubscriptionChangedTest {
-    class Impl extends ChannelSubscriptionChanged {
+class AbstractChannelSubscriptionChangedTest {
+    class Impl extends AbstractChannelSubscriptionChanged {
         public Impl(char sign, Collection<ChannelType> channels) {
             super(sign, channels);
         }

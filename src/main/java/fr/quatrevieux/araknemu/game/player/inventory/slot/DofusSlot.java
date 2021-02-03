@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 /**
  * Slot for dofus
  */
-final public class DofusSlot extends AbstractWearableSlot {
-    final static public int[] SLOT_IDS = new int[] {9, 10, 11, 12, 13, 14};
+public final class DofusSlot extends AbstractWearableSlot {
+    public static final int[] SLOT_IDS = new int[] {9, 10, 11, 12, 13, 14};
 
     public DofusSlot(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage, GamePlayer owner, int id) {
         super(dispatcher, storage, owner, id, SuperType.DOFUS);

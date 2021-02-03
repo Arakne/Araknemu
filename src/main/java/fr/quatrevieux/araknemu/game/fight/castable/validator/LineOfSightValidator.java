@@ -28,14 +28,14 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 /**
  * Validate the line of sight
  */
-final public class LineOfSightValidator implements CastConstraintValidator {
+public final class LineOfSightValidator implements CastConstraintValidator {
     @Override
     public Error validate(Turn turn, Castable castable, FightCell target) {
         if (!castable.constraints().lineOfSight()) {
             return null;
         }
 
-        LineOfSight<FightCell> lineOfSight = new LineOfSight<>(target.map());
+        final LineOfSight<FightCell> lineOfSight = new LineOfSight<>(target.map());
 
         if (lineOfSight.between(turn.fighter().cell(), target)) {
             return null;

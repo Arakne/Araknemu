@@ -27,13 +27,13 @@ import java.util.Optional;
 /**
  * A banned IP address with mask
  */
-final public class BanIp {
-    final private int id;
-    final private IPAddressString ipAddress;
-    final private Instant updatedAt;
-    final private Instant expiresAt;
-    final private String cause;
-    final private int banisherId;
+public final class BanIp {
+    private final int id;
+    private final IPAddressString ipAddress;
+    private final Instant updatedAt;
+    private final Instant expiresAt;
+    private final String cause;
+    private final int banisherId;
 
     public BanIp(IPAddressString ipAddress, Instant updatedAt, Instant expiresAt, String cause, int banisherId) {
         this(-1, ipAddress, updatedAt, expiresAt, cause, banisherId);

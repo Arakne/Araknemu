@@ -32,8 +32,58 @@ import java.util.function.Consumer;
 /**
  * Base command class
  */
-abstract public class AbstractCommand implements Command {
-    final protected class Builder {
+public abstract class AbstractCommand implements Command {
+    private final HelpFormatter help = new HelpFormatter(this);
+    private final EnumSet<Permission> permissions = EnumSet.of(Permission.ACCESS);
+    private String description = "No description";
+    private boolean initialized = false;
+
+    /**
+     * Build the command
+     */
+    protected abstract void build(Builder builder);
+
+    @Override
+    public final String description() {
+        initialize();
+
+        return description;
+    }
+
+    @Override
+    public final String help() {
+        initialize();
+
+        return help.toString();
+    }
+
+    @Override
+    public final Set<Permission> permissions() {
+        initialize();
+
+        return permissions;
+    }
+
+    @Override
+    public void execute(AdminPerformer performer, CommandParser.Arguments arguments) throws AdminException {
+        execute(performer, arguments.arguments());
+    }
+
+    /**
+     * Adapt the new Command interface to the legacy one
+     */
+    public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
+        throw new AdminException("Not implemented");
+    }
+
+    private void initialize() {
+        if (!initialized) {
+            build(new Builder());
+            initialized = true;
+        }
+    }
+
+    protected final class Builder {
         /**
          * Set a command description
          */
@@ -68,56 +118,6 @@ abstract public class AbstractCommand implements Command {
             AbstractCommand.this.permissions.addAll(Arrays.asList(permissions));
 
             return this;
-        }
-    }
-
-    final private HelpFormatter help = new HelpFormatter(this);
-    final private EnumSet<Permission> permissions = EnumSet.of(Permission.ACCESS);
-    private String description = "No description";
-    private boolean initialized = false;
-
-    /**
-     * Build the command
-     */
-    abstract protected void build(Builder builder);
-
-    @Override
-    final public String description() {
-        initialize();
-
-        return description;
-    }
-
-    @Override
-    final public String help() {
-        initialize();
-
-        return help.toString();
-    }
-
-    @Override
-    final public Set<Permission> permissions() {
-        initialize();
-
-        return permissions;
-    }
-
-    @Override
-    public void execute(AdminPerformer performer, CommandParser.Arguments arguments) throws AdminException {
-        execute(performer, arguments.arguments());
-    }
-
-    /**
-     * Adapt the new Command interface to the legacy one
-     */
-    public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
-        throw new AdminException("Not implemented");
-    }
-
-    private void initialize() {
-        if (!initialized) {
-            build(new Builder());
-            initialized = true;
         }
     }
 }

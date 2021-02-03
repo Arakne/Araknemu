@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 /**
  * Send to all connected players the scheduled shutdown
  */
-final public class SendShutdownScheduled implements Listener<ShutdownScheduled> {
-    final private PlayerService service;
+public final class SendShutdownScheduled implements Listener<ShutdownScheduled> {
+    private final PlayerService service;
 
     public SendShutdownScheduled(PlayerService service) {
         this.service = service;

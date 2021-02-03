@@ -76,7 +76,7 @@ public enum Characteristic {
     /**
      * Get characteristic by its race
      */
-    static public Characteristic fromId(int id) {
+    public static Characteristic fromId(int id) {
         return values()[id - 8];
     }
 }

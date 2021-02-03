@@ -19,15 +19,15 @@
 
 package fr.quatrevieux.araknemu.game.handler;
 
+import fr.quatrevieux.araknemu.core.network.SessionCreated;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.out.HelloGame;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
-import fr.quatrevieux.araknemu.core.network.SessionCreated;
 
 /**
  * Handle session creation
  */
-final public class StartSession implements PacketHandler<GameSession, SessionCreated> {
+public final class StartSession implements PacketHandler<GameSession, SessionCreated> {
     @Override
     public void handle(GameSession session, SessionCreated packet) {
         session.send(

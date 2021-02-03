@@ -27,8 +27,8 @@ import java.util.Set;
 /**
  * Resolve ring area (circle border)
  */
-final public class RingArea implements SpellEffectArea {
-    final private CircularArea area;
+public final class RingArea implements SpellEffectArea {
+    private final CircularArea area;
 
     public RingArea(EffectArea area) {
         this.area = new CircularArea(area, distance -> distance == area.size());

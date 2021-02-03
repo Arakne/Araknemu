@@ -32,9 +32,9 @@ import org.apache.logging.log4j.Logger;
 /**
  * Builder for challenge fight
  */
-final public class ChallengeBuilder implements FightBuilder {
-    final private BaseBuilder builder;
-    final private FighterFactory fighterFactory;
+public final class ChallengeBuilder implements FightBuilder {
+    private final BaseBuilder builder;
+    private final FighterFactory fighterFactory;
 
     public ChallengeBuilder(FightService service, FighterFactory fighterFactory, RandomUtil random, Logger logger) {
         this.builder = new BaseBuilder(service, random, new ChallengeType(), logger);

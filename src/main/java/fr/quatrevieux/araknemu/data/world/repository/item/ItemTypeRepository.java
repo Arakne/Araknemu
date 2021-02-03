@@ -31,7 +31,7 @@ public interface ItemTypeRepository extends Repository<ItemType> {
     /**
      * Get the item type by its id
      *
-     * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException
+     * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException The the item do not exists
      */
     public ItemType get(int id);
 

@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.chat.ChannelSubscribed;
 /**
  * Initialize the chat on join game
  */
-final public class InitializeChat implements Listener<GameJoined> {
-    final private GamePlayer player;
+public final class InitializeChat implements Listener<GameJoined> {
+    private final GamePlayer player;
 
     public InitializeChat(GamePlayer player) {
         this.player = player;

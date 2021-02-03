@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.chat.ChannelSubscribed;
 /**
  * Send to client the subscribed channels
  */
-final public class SubscriptionAddedAcknowledge implements Listener<ChannelSubscriptionAdded> {
-    final private GamePlayer player;
+public final class SubscriptionAddedAcknowledge implements Listener<ChannelSubscriptionAdded> {
+    private final GamePlayer player;
 
     public SubscriptionAddedAcknowledge(GamePlayer player) {
         this.player = player;

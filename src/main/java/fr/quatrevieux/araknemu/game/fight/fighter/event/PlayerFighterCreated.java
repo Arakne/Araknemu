@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 /**
  * A new player fighter is created
  */
-final public class PlayerFighterCreated {
-    final private PlayerFighter fighter;
+public final class PlayerFighterCreated {
+    private final PlayerFighter fighter;
 
     public PlayerFighterCreated(PlayerFighter fighter) {
         this.fighter = fighter;

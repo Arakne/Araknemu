@@ -30,9 +30,9 @@ import fr.quatrevieux.araknemu.game.spell.SpellLevels;
 /**
  * Set the default positions for start spells
  */
-final public class SetDefaultPositionSpellBook implements Listener<CharacterCreated> {
-    final private PlayerRaceService service;
-    final private PlayerSpellRepository repository;
+public final class SetDefaultPositionSpellBook implements Listener<CharacterCreated> {
+    private final PlayerRaceService service;
+    private final PlayerSpellRepository repository;
 
     public SetDefaultPositionSpellBook(PlayerRaceService service, PlayerSpellRepository repository) {
         this.service = service;
@@ -41,7 +41,7 @@ final public class SetDefaultPositionSpellBook implements Listener<CharacterCrea
 
     @Override
     public void on(CharacterCreated event) {
-        Player player = event.character().character();
+        final Player player = event.character().character();
 
         char position = 1;
 

@@ -32,8 +32,8 @@ import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SlotConstra
 /**
  * Slot for weapons
  */
-final public class WeaponSlot extends AbstractEquipmentSlot {
-    final static public int SLOT_ID = 1;
+public final class WeaponSlot extends AbstractEquipmentSlot {
+    public static final int SLOT_ID = 1;
 
     public WeaponSlot(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage, GamePlayer owner) {
         super(
@@ -43,7 +43,7 @@ final public class WeaponSlot extends AbstractEquipmentSlot {
                 new SlotConstraint[] {
                     new SingleItemConstraint(),
                     new ItemClassConstraint(Weapon.class),
-                    new EquipmentLevelConstraint(owner)
+                    new EquipmentLevelConstraint(owner),
                 },
                 storage
             )

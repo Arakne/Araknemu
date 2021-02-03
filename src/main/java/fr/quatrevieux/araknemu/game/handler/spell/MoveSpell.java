@@ -19,14 +19,14 @@
 
 package fr.quatrevieux.araknemu.game.handler.spell;
 
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellMove;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Move the spell from spell book
  */
-final public class MoveSpell implements PacketHandler<GameSession, SpellMove> {
+public final class MoveSpell implements PacketHandler<GameSession, SpellMove> {
     @Override
     public void handle(GameSession session, SpellMove packet) throws Exception {
         session.player().properties().spells()

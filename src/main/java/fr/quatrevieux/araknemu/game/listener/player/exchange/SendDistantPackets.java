@@ -32,8 +32,8 @@ import fr.quatrevieux.araknemu.network.game.out.exchange.movement.distant.Distan
 /**
  * Send packets for the distant exchange party
  */
-final public class SendDistantPackets implements EventsSubscriber {
-    final private Sender output;
+public final class SendDistantPackets implements EventsSubscriber {
+    private final Sender output;
 
     public SendDistantPackets(Sender output) {
         this.output = output;

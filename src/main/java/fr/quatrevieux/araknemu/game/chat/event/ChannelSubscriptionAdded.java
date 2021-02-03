@@ -26,8 +26,8 @@ import java.util.Collection;
 /**
  * Trigger when channels subscription changed
  */
-final public class ChannelSubscriptionAdded {
-    final private Collection<ChannelType> channels;
+public final class ChannelSubscriptionAdded {
+    private final Collection<ChannelType> channels;
 
     public ChannelSubscriptionAdded(Collection<ChannelType> channels) {
         this.channels = channels;

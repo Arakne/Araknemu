@@ -34,11 +34,11 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 /**
  * Alter a characteristic with buff effect
  */
-abstract public class AlterCharacteristicHandler implements EffectHandler, BuffHook {
-    final private Fight fight;
-    final private Characteristic characteristic;
+public abstract class AbstractAlterCharacteristicHandler implements EffectHandler, BuffHook {
+    private final Fight fight;
+    private final Characteristic characteristic;
 
-    public AlterCharacteristicHandler(Fight fight, Characteristic characteristic) {
+    public AbstractAlterCharacteristicHandler(Fight fight, Characteristic characteristic) {
         this.fight = fight;
         this.characteristic = characteristic;
     }
@@ -50,7 +50,7 @@ abstract public class AlterCharacteristicHandler implements EffectHandler, BuffH
 
     @Override
     public void buff(CastScope cast, CastScope.EffectScope effect) {
-        SpellEffect buffEffect = computeBuffEffect(cast, effect.effect());
+        final SpellEffect buffEffect = computeBuffEffect(cast, effect.effect());
 
         for (PassiveFighter target : effect.targets()) {
             target.buffs().add(new Buff(buffEffect, cast.action(), cast.caster(), target, this));
@@ -63,7 +63,7 @@ abstract public class AlterCharacteristicHandler implements EffectHandler, BuffH
      * @fixme One dice for all targets, or one dice per target ?
      */
     private SpellEffect computeBuffEffect(CastScope cast, SpellEffect effect) {
-        EffectValue value = new EffectValue(effect);
+        final EffectValue value = new EffectValue(effect);
 
         return new BuffEffect(effect, value.value());
     }
@@ -82,5 +82,5 @@ abstract public class AlterCharacteristicHandler implements EffectHandler, BuffH
     /**
      * Get the buff effect value
      */
-    abstract protected int value(Buff buff);
+    protected abstract int value(Buff buff);
 }

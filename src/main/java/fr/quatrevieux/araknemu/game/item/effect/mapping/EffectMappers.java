@@ -27,8 +27,8 @@ import java.util.Map;
 /**
  * Registry for effect mappers
  */
-final public class EffectMappers {
-    final private Map<Class<? extends ItemEffect>, EffectMapper> mappers = new HashMap<>();
+public final class EffectMappers {
+    private final Map<Class<? extends ItemEffect>, EffectMapper> mappers = new HashMap<>();
 
     public EffectMappers(EffectMapper... mappers) {
         for (EffectMapper mapper : mappers) {

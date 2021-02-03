@@ -22,17 +22,17 @@ package fr.quatrevieux.araknemu.realm.host;
 /**
  * Host for game server
  */
-final public class GameHost {
+public final class GameHost {
     public enum State {
         OFFLINE,
         ONLINE,
         SAVING
     }
 
-    final private GameConnector connector;
-    final private int id;
-    final private int port;
-    final private String ip;
+    private final GameConnector connector;
+    private final int id;
+    private final int port;
+    private final String ip;
 
     // @todo Quelle valeur ?
     private int completion = 110;
@@ -112,10 +112,15 @@ final public class GameHost {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
 
-        GameHost host = (GameHost) o;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final GameHost host = (GameHost) o;
 
         return id == host.id;
     }

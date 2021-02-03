@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.player.spell.SpellBookEntry;
 /**
  * Event trigger when a new spell is learned
  */
-final public class SpellLearned {
-    final private SpellBookEntry entry;
+public final class SpellLearned {
+    private final SpellBookEntry entry;
 
     public SpellLearned(SpellBookEntry entry) {
         this.entry = entry;

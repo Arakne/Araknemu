@@ -31,9 +31,9 @@ import java.util.Optional;
  *
  * @param <A> The banisher account type
  */
-final public class BanIpRule<A extends LivingAccount> {
-    final private BanIp banIp;
-    final private A banisher;
+public final class BanIpRule<A extends LivingAccount> {
+    private final BanIp banIp;
+    private final A banisher;
 
     public BanIpRule(BanIp banIp, A banisher) {
         this.banIp = banIp;

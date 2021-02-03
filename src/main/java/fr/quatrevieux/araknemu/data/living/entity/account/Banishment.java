@@ -27,13 +27,13 @@ import java.time.Instant;
  *
  * This entity is immutable
  */
-final public class Banishment {
-    final private int id;
-    final private int accountId;
-    final private Instant startDate;
-    final private Instant endDate;
-    final private String cause;
-    final private int banisherId;
+public final class Banishment {
+    private final int id;
+    private final int accountId;
+    private final Instant startDate;
+    private final Instant endDate;
+    private final String cause;
+    private final int banisherId;
 
     public Banishment(int id, int accountId, Instant startDate, Instant endDate, String cause, int banisherId) {
         this.id = id;

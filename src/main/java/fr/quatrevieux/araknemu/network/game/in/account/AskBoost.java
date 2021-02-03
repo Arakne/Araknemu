@@ -19,18 +19,28 @@
 
 package fr.quatrevieux.araknemu.network.game.in.account;
 
-import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 
 /**
  * Boost one characteristic
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L111
  */
-final public class AskBoost implements Packet {
-    final static public class Parser implements SinglePacketParser<AskBoost> {
+public final class AskBoost implements Packet {
+    private final Characteristic characteristic;
+
+    public AskBoost(Characteristic characteristic) {
+        this.characteristic = characteristic;
+    }
+
+    public Characteristic characteristic() {
+        return characteristic;
+    }
+
+    public static final class Parser implements SinglePacketParser<AskBoost> {
         @Override
         public AskBoost parse(String input) throws ParsePacketException {
             return new AskBoost(
@@ -44,15 +54,5 @@ final public class AskBoost implements Packet {
         public String code() {
             return "AB";
         }
-    }
-
-    final private Characteristic characteristic;
-
-    public AskBoost(Characteristic characteristic) {
-        this.characteristic = characteristic;
-    }
-
-    public Characteristic characteristic() {
-        return characteristic;
     }
 }

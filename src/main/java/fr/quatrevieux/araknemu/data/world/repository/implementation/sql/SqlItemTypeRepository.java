@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
@@ -36,27 +36,10 @@ import java.util.Collection;
  * SQL implementation for {@link ItemType} repository
  */
 final class SqlItemTypeRepository implements ItemTypeRepository {
-    private class Loader implements RepositoryUtils.Loader<ItemType> {
-        @Override
-        public ItemType create(ResultSet rs) throws SQLException {
-            return new ItemType(
-                rs.getInt("TYPE_ID"),
-                rs.getString("TYPE_NAME"),
-                SuperType.values()[rs.getInt("SUPER_TYPE")],
-                areaTransformer.unserialize(rs.getString("EFFECT_AREA"))
-            );
-        }
+    private final QueryExecutor executor;
+    private final RepositoryUtils<ItemType> utils;
 
-        @Override
-        public ItemType fillKeys(ItemType entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<ItemType> utils;
-
-    final private Transformer<EffectArea> areaTransformer;
+    private final Transformer<EffectArea> areaTransformer;
 
     public SqlItemTypeRepository(QueryExecutor executor, Transformer<EffectArea> areaTransformer) {
         this.executor = executor;
@@ -113,5 +96,22 @@ final class SqlItemTypeRepository implements ItemTypeRepository {
     @Override
     public Collection<ItemType> load() {
         return utils.findAll("SELECT * FROM ITEM_TYPE");
+    }
+
+    private class Loader implements RepositoryUtils.Loader<ItemType> {
+        @Override
+        public ItemType create(ResultSet rs) throws SQLException {
+            return new ItemType(
+                rs.getInt("TYPE_ID"),
+                rs.getString("TYPE_NAME"),
+                SuperType.values()[rs.getInt("SUPER_TYPE")],
+                areaTransformer.unserialize(rs.getString("EFFECT_AREA"))
+            );
+        }
+
+        @Override
+        public ItemType fillKeys(ItemType entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 /**
  * Effect for learn a new spell
  */
-final public class LearnSpellEffect implements UseEffectHandler {
-    final private SpellService service;
+public final class LearnSpellEffect implements UseEffectHandler {
+    private final SpellService service;
 
     public LearnSpellEffect(SpellService service) {
         this.service = service;
@@ -43,7 +43,7 @@ final public class LearnSpellEffect implements UseEffectHandler {
 
     @Override
     public boolean check(UseEffect effect, ExplorationPlayer caster) {
-        int spellId = effect.arguments()[2];
+        final int spellId = effect.arguments()[2];
 
         if (!caster.properties().spells().canLearn(service.get(spellId))) {
             caster.send(Error.cantLearnSpell(spellId));

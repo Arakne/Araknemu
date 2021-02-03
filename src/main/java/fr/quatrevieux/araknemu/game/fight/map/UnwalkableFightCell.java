@@ -28,10 +28,10 @@ import java.util.Optional;
 /**
  * Non walkable fight cell
  */
-final public class UnwalkableFightCell implements FightCell {
-    final private FightMap map;
-    final private CellData template;
-    final private int id;
+public final class UnwalkableFightCell implements FightCell {
+    private final FightMap map;
+    private final CellData template;
+    private final int id;
 
     public UnwalkableFightCell(FightMap map, CellData template, int id) {
         this.map = map;
@@ -94,7 +94,7 @@ final public class UnwalkableFightCell implements FightCell {
             return false;
         }
 
-        UnwalkableFightCell that = (UnwalkableFightCell) o;
+        final UnwalkableFightCell that = (UnwalkableFightCell) o;
 
         return id == that.id && map == that.map;
     }

@@ -22,9 +22,9 @@ package fr.quatrevieux.araknemu.data.value;
 /**
  * Value object for get characters count per server
  */
-final public class ServerCharacters {
-    final private int serverId;
-    final private int charactersCount;
+public final class ServerCharacters {
+    private final int serverId;
+    private final int charactersCount;
 
     public ServerCharacters(int serverId, int charactersCount) {
         this.serverId = serverId;

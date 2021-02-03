@@ -30,10 +30,10 @@ import java.util.Optional;
 /**
  * Base slot class
  */
-final public class SimpleSlot implements InventorySlot {
-    final private int id;
-    final private SlotConstraint[] constraints;
-    final private ItemStorage<InventoryEntry> storage;
+public final class SimpleSlot implements InventorySlot {
+    private final int id;
+    private final SlotConstraint[] constraints;
+    private final ItemStorage<InventoryEntry> storage;
 
     private InventoryEntry entry;
 

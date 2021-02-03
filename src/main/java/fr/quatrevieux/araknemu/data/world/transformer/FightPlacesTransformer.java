@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Transform map fight places
  */
-final public class FightPlacesTransformer implements Transformer<List<Integer>[]> {
+public final class FightPlacesTransformer implements Transformer<List<Integer>[]> {
     @Override
     public String serialize(List<Integer>[] value) {
         throw new UnsupportedOperationException();
@@ -50,7 +50,7 @@ final public class FightPlacesTransformer implements Transformer<List<Integer>[]
     }
 
     private List<Integer> parseTeamPlaces(String places) {
-        List<Integer> cells = new ArrayList<>(places.length() / 2);
+        final List<Integer> cells = new ArrayList<>(places.length() / 2);
 
         for (int i = 0; i < places.length(); i += 2) {
             cells.add(Base64.decode(places.substring(i, i + 2)));

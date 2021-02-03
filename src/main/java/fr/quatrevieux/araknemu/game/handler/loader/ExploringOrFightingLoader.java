@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionFactory;
 import fr.quatrevieux.araknemu.game.handler.EnsureFighting;
 import fr.quatrevieux.araknemu.game.handler.EnsureInactiveFight;
@@ -32,12 +33,11 @@ import fr.quatrevieux.araknemu.game.handler.game.EndGameAction;
 import fr.quatrevieux.araknemu.game.handler.game.ValidateGameAction;
 import fr.quatrevieux.araknemu.game.handler.object.UseObject;
 import fr.quatrevieux.araknemu.network.game.GameSession;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Loader for exploring or fighter switch packet handlers
  */
-final public class ExploringOrFightingLoader implements Loader {
+public final class ExploringOrFightingLoader implements Loader {
     @Override
     @SuppressWarnings("unchecked")
     public PacketHandler<GameSession, ?>[] load(Container container) throws ContainerException {

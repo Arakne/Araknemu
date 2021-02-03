@@ -26,9 +26,9 @@ import fr.quatrevieux.araknemu.core.di.Container;
  *
  * @param <T> The value type
  */
-final public class ValueItem<T> implements ContainerItem<T> {
-    final private Class<T> type;
-    final private T value;
+public final class ValueItem<T> implements ContainerItem<T> {
+    private final Class<T> type;
+    private final T value;
 
     public ValueItem(Class<T> type, T value) {
         this.type = type;

@@ -29,8 +29,8 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
  *
  * @param <P> Packet to handler
  */
-final public class EnsureFighting<P extends Packet> implements PacketHandler<GameSession, P> {
-    final private PacketHandler<GameSession, P> handler;
+public final class EnsureFighting<P extends Packet> implements PacketHandler<GameSession, P> {
+    private final PacketHandler<GameSession, P> handler;
 
     public EnsureFighting(PacketHandler<GameSession, P> handler) {
         this.handler = handler;

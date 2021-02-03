@@ -70,7 +70,7 @@ public interface PassiveFighter {
     /**
      * Check if the player is dead
      */
-    default public boolean dead() {
+    public default boolean dead() {
         return life().dead();
     }
 }

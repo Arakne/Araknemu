@@ -31,9 +31,9 @@ import fr.quatrevieux.araknemu.game.world.creature.Sprite;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L764
  */
-final public class PlayerFighterSprite implements Sprite {
-    final private PlayerFighter fighter;
-    final private SpriteInfo spriteInfo;
+public final class PlayerFighterSprite implements Sprite {
+    private final PlayerFighter fighter;
+    private final SpriteInfo spriteInfo;
 
     public PlayerFighterSprite(PlayerFighter fighter, SpriteInfo spriteInfo) {
         this.fighter = fighter;

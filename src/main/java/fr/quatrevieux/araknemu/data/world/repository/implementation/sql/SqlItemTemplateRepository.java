@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
@@ -36,33 +36,10 @@ import java.util.List;
  * SQL implementation for item template repository
  */
 final class SqlItemTemplateRepository implements ItemTemplateRepository {
-    private class Loader implements RepositoryUtils.Loader<ItemTemplate> {
-        @Override
-        public ItemTemplate create(ResultSet rs) throws SQLException {
-            return new ItemTemplate(
-                rs.getInt("ITEM_TEMPLATE_ID"),
-                rs.getInt("ITEM_TYPE"),
-                rs.getString("ITEM_NAME"),
-                rs.getInt("ITEM_LEVEL"),
-                effectsTransformer.unserialize(rs.getString("ITEM_EFFECTS")),
-                rs.getInt("WEIGHT"),
-                rs.getString("CONDITIONS"),
-                rs.getInt("ITEM_SET_ID"),
-                rs.getString("WEAPON_INFO"),
-                rs.getInt("PRICE")
-            );
-        }
+    private final QueryExecutor executor;
+    private final RepositoryUtils<ItemTemplate> utils;
 
-        @Override
-        public ItemTemplate fillKeys(ItemTemplate entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<ItemTemplate> utils;
-
-    final private Transformer<List<ItemTemplateEffectEntry>> effectsTransformer;
+    private final Transformer<List<ItemTemplateEffectEntry>> effectsTransformer;
 
     public SqlItemTemplateRepository(QueryExecutor executor, Transformer<List<ItemTemplateEffectEntry>> effectsTransformer) {
         this.executor = executor;
@@ -125,5 +102,28 @@ final class SqlItemTemplateRepository implements ItemTemplateRepository {
     @Override
     public Collection<ItemTemplate> load() {
         return utils.findAll("SELECT * FROM ITEM_TEMPLATE");
+    }
+
+    private class Loader implements RepositoryUtils.Loader<ItemTemplate> {
+        @Override
+        public ItemTemplate create(ResultSet rs) throws SQLException {
+            return new ItemTemplate(
+                rs.getInt("ITEM_TEMPLATE_ID"),
+                rs.getInt("ITEM_TYPE"),
+                rs.getString("ITEM_NAME"),
+                rs.getInt("ITEM_LEVEL"),
+                effectsTransformer.unserialize(rs.getString("ITEM_EFFECTS")),
+                rs.getInt("WEIGHT"),
+                rs.getString("CONDITIONS"),
+                rs.getInt("ITEM_SET_ID"),
+                rs.getString("WEAPON_INFO"),
+                rs.getInt("PRICE")
+            );
+        }
+
+        @Override
+        public ItemTemplate fillKeys(ItemTemplate entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

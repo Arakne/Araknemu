@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.event.FighterRemoved;
 /**
  * Clear the fighter when removed from fight
  */
-final public class ClearFighter implements Listener<FighterRemoved> {
+public final class ClearFighter implements Listener<FighterRemoved> {
     @Override
     public void on(FighterRemoved event) {
         event.fighter().cell().removeFighter();

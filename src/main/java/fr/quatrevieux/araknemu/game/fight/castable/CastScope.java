@@ -26,43 +26,29 @@ import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  * Wrap casting arguments
  */
-final public class CastScope {
-    public class EffectScope {
-        final private SpellEffect effect;
-        final private Collection<PassiveFighter> targets;
-
-        public EffectScope(SpellEffect effect, Collection<PassiveFighter> targets) {
-            this.effect = effect;
-            this.targets = targets;
-        }
-
-        public SpellEffect effect() {
-            return effect;
-        }
-
-        public Collection<PassiveFighter> targets() {
-            return targets.stream()
-                .map(targetMapping::get)
-                .filter(fighter -> !fighter.dead())
-                .collect(Collectors.toList())
-            ;
-        }
-    }
-
+public final class CastScope {
     /**
      * Cast scope is a temporary object, and the random is rarely used (only for "probable effects")
      */
-    final static private RandomUtil RANDOM = RandomUtil.createShared();
+    private static final RandomUtil RANDOM = RandomUtil.createShared();
 
-    final private Castable action;
-    final private ActiveFighter caster;
-    final private FightCell target;
+    private final Castable action;
+    private final ActiveFighter caster;
+    private final FightCell target;
 
     private List<EffectScope> effects;
     private Map<PassiveFighter, PassiveFighter> targetMapping;
@@ -157,8 +143,8 @@ final public class CastScope {
      * @param effects Effects to resolve and add
      */
     public CastScope withRandomEffects(List<SpellEffect> effects) {
-        List<SpellEffect> selectedEffects = new ArrayList<>(effects.size());
-        List<SpellEffect> probableEffects = new ArrayList<>();
+        final List<SpellEffect> selectedEffects = new ArrayList<>(effects.size());
+        final List<SpellEffect> probableEffects = new ArrayList<>();
 
         for (SpellEffect effect : effects) {
             if (effect.probability() == 0) {
@@ -208,5 +194,33 @@ final public class CastScope {
             .filter(fighter -> effect.target().test(caster, fighter))
             .collect(Collectors.toList())
         ;
+    }
+
+    public final class EffectScope {
+        private final SpellEffect effect;
+        private final Collection<PassiveFighter> targets;
+
+        public EffectScope(SpellEffect effect, Collection<PassiveFighter> targets) {
+            this.effect = effect;
+            this.targets = targets;
+        }
+
+        /**
+         * The related effect
+         */
+        public SpellEffect effect() {
+            return effect;
+        }
+
+        /**
+         * Get all targeted fighters for the current effect
+         */
+        public Collection<PassiveFighter> targets() {
+            return targets.stream()
+                .map(targetMapping::get)
+                .filter(fighter -> !fighter.dead())
+                .collect(Collectors.toList())
+            ;
+        }
     }
 }

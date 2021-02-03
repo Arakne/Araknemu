@@ -26,10 +26,31 @@ import fr.quatrevieux.araknemu.core.config.PoolUtils;
 /**
  * Configuration module for database system
  */
-final public class DatabaseConfiguration implements ConfigurationModule {
-    final static public class Connection {
-        final private String name;
-        final private PoolUtils pool;
+public final class DatabaseConfiguration implements ConfigurationModule {
+    private PoolUtils pool;
+
+    @Override
+    public void setPool(Pool pool) {
+        this.pool = new PoolUtils(pool);
+    }
+
+    @Override
+    public String name() {
+        return "database";
+    }
+
+    /**
+     * Get a connection configuration
+     *
+     * @param name The connection name
+     */
+    public Connection connection(String name) {
+        return new Connection(name, pool);
+    }
+
+    public static final class Connection {
+        private final String name;
+        private final PoolUtils pool;
 
         public Connection(String name, PoolUtils pool) {
             this.name = name;
@@ -122,26 +143,5 @@ final public class DatabaseConfiguration implements ConfigurationModule {
         public int refreshPoolInterval() {
             return pool.integer(name + ".refreshPoolInterval", 3600);
         }
-    }
-
-    private PoolUtils pool;
-
-    @Override
-    public void setPool(Pool pool) {
-        this.pool = new PoolUtils(pool);
-    }
-
-    @Override
-    public String name() {
-        return "database";
-    }
-
-    /**
-     * Get a connection configuration
-     * @param name The connection name
-     * @return
-     */
-    public Connection connection(String name) {
-        return new Connection(name, pool);
     }
 }

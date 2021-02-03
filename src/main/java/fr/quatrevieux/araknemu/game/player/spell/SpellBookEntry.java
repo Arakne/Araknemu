@@ -28,9 +28,9 @@ import fr.quatrevieux.araknemu.game.spell.SpellLevels;
 /**
  * Entry for the spell book
  */
-final public class SpellBookEntry {
-    final private PlayerSpell entity;
-    final private SpellLevels spell;
+public final class SpellBookEntry {
+    private final PlayerSpell entity;
+    private final SpellLevels spell;
 
     private SpellBook spellBook;
 
@@ -85,8 +85,8 @@ final public class SpellBookEntry {
             throw new IllegalStateException("Maximum spell level reached");
         }
 
-        int nextLevel = entity.level() + 1;
-        Spell nextSpell = spell.level(nextLevel);
+        final int nextLevel = entity.level() + 1;
+        final Spell nextSpell = spell.level(nextLevel);
 
         if (!spellBook.canUpgrade(nextSpell)) {
             throw new IllegalStateException("Cannot upgrade spell");

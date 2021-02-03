@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemSet;
@@ -36,26 +36,10 @@ import java.util.List;
  * SQL implementation for {@link ItemSet} repository
  */
 final class SqlItemSetRepository implements ItemSetRepository {
-    private class Loader implements RepositoryUtils.Loader<ItemSet> {
-        @Override
-        public ItemSet create(ResultSet rs) throws SQLException {
-            return new ItemSet(
-                rs.getInt("ITEM_SET_ID"),
-                rs.getString("ITEM_SET_NAME"),
-                bonusTransformer.unserialize(rs.getString("ITEM_SET_BONUS"))
-            );
-        }
+    private final QueryExecutor executor;
+    private final RepositoryUtils<ItemSet> utils;
 
-        @Override
-        public ItemSet fillKeys(ItemSet entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<ItemSet> utils;
-
-    final private Transformer<List<List<ItemTemplateEffectEntry>>> bonusTransformer;
+    private final Transformer<List<List<ItemTemplateEffectEntry>>> bonusTransformer;
 
     public SqlItemSetRepository(QueryExecutor executor, Transformer<List<List<ItemTemplateEffectEntry>>> bonusTransformer) {
         this.executor = executor;
@@ -111,5 +95,21 @@ final class SqlItemSetRepository implements ItemSetRepository {
     @Override
     public Collection<ItemSet> load() {
         return utils.findAll("SELECT * FROM ITEM_SET");
+    }
+
+    private class Loader implements RepositoryUtils.Loader<ItemSet> {
+        @Override
+        public ItemSet create(ResultSet rs) throws SQLException {
+            return new ItemSet(
+                rs.getInt("ITEM_SET_ID"),
+                rs.getString("ITEM_SET_NAME"),
+                bonusTransformer.unserialize(rs.getString("ITEM_SET_BONUS"))
+            );
+        }
+
+        @Override
+        public ItemSet fillKeys(ItemSet entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

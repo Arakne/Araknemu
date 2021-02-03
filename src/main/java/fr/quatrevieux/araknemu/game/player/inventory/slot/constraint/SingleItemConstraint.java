@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 /**
  * Check that only one item is set to the entry
  */
-final public class SingleItemConstraint implements SlotConstraint {
+public final class SingleItemConstraint implements SlotConstraint {
     @Override
     public void check(Item item, int quantity) throws InventoryException {
         if (quantity != 1) {

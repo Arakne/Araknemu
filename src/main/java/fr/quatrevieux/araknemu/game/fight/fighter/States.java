@@ -39,7 +39,7 @@ public interface States {
      *
      * @param state The state to push
      */
-    default public void push(int state) {
+    public default void push(int state) {
         push(state, -1);
     }
 

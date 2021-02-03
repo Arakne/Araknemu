@@ -37,28 +37,9 @@ import java.util.Map;
  * Npc exchange repository implementation for SQL database
  */
 final class SqlNpcExchangeRepository implements NpcExchangeRepository {
-    private class Loader implements RepositoryUtils.Loader<NpcExchange> {
-        @Override
-        public NpcExchange create(ResultSet rs) throws SQLException {
-            return new NpcExchange(
-                rs.getInt("NPC_EXCHANGE_ID"),
-                rs.getInt("NPC_TEMPLATE_ID"),
-                rs.getLong("REQUIRED_KAMAS"),
-                itemsTransformer.unserialize(rs.getString("REQUIRED_ITEMS")),
-                rs.getLong("EXCHANGED_KAMAS"),
-                itemsTransformer.unserialize(rs.getString("EXCHANGED_ITEMS"))
-            );
-        }
-
-        @Override
-        public NpcExchange fillKeys(NpcExchange entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<NpcExchange> utils;
-    final private Transformer<Map<Integer, Integer>> itemsTransformer;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<NpcExchange> utils;
+    private final Transformer<Map<Integer, Integer>> itemsTransformer;
 
     public SqlNpcExchangeRepository(QueryExecutor executor, Transformer<Map<Integer, Integer>> itemsTransformer) {
         this.executor = executor;
@@ -120,5 +101,24 @@ final class SqlNpcExchangeRepository implements NpcExchangeRepository {
     @Override
     public List<NpcExchange> byNpcTemplate(NpcTemplate template) {
         return utils.findAll("SELECT * FROM NPC_EXCHANGE WHERE NPC_TEMPLATE_ID = ?", stmt -> stmt.setInt(1, template.id()));
+    }
+
+    private class Loader implements RepositoryUtils.Loader<NpcExchange> {
+        @Override
+        public NpcExchange create(ResultSet rs) throws SQLException {
+            return new NpcExchange(
+                rs.getInt("NPC_EXCHANGE_ID"),
+                rs.getInt("NPC_TEMPLATE_ID"),
+                rs.getLong("REQUIRED_KAMAS"),
+                itemsTransformer.unserialize(rs.getString("REQUIRED_ITEMS")),
+                rs.getLong("EXCHANGED_KAMAS"),
+                itemsTransformer.unserialize(rs.getString("EXCHANGED_ITEMS"))
+            );
+        }
+
+        @Override
+        public NpcExchange fillKeys(NpcExchange entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

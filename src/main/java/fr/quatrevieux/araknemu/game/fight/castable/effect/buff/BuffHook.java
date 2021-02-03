@@ -31,32 +31,32 @@ public interface BuffHook {
      *
      * @return False the the fighter cannot start the turn
      */
-    default boolean onStartTurn(Buff buff) {
+    public default boolean onStartTurn(Buff buff) {
         return true;
     }
 
     /**
      * Apply effect on turn ending
      */
-    default public void onEndTurn(Buff buff) {}
+    public default void onEndTurn(Buff buff) {}
 
     /**
      * Start the buff
      */
-    default public void onBuffStarted(Buff buff) {}
+    public default void onBuffStarted(Buff buff) {}
 
     /**
      * The buff is terminated (buff expired, debuff...)
      */
-    default public void onBuffTerminated(Buff buff) {}
+    public default void onBuffTerminated(Buff buff) {}
 
     /**
      * The fighter is a target of a cast
      */
-    default public void onCastTarget(Buff buff, CastScope cast) {}
+    public default void onCastTarget(Buff buff, CastScope cast) {}
 
     /**
      * The fighter will take damages
      */
-    default public void onDamage(Buff buff, Damage value) {}
+    public default void onDamage(Buff buff, Damage value) {}
 }

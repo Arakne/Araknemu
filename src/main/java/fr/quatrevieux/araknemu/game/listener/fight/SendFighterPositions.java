@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
 /**
  * Send fighters positions on changed
  */
-final public class SendFighterPositions implements Listener<FighterPlaceChanged> {
-    final private Fight fight;
+public final class SendFighterPositions implements Listener<FighterPlaceChanged> {
+    private final Fight fight;
 
     public SendFighterPositions(Fight fight) {
         this.fight = fight;

@@ -40,15 +40,15 @@ import java.util.stream.Collectors;
 /**
  * The player spell book
  */
-final public class SpellBook implements SpellList, Dispatcher {
-    final static public int MAX_POSITION = 24;
+public final class SpellBook implements SpellList, Dispatcher {
+    public static final int MAX_POSITION = 24;
 
-    final private Dispatcher dispatcher;
-    final private Player player;
+    private final Dispatcher dispatcher;
+    private final Player player;
 
-    final private Map<Integer, SpellBookEntry> entries;
-    final private SpellBookEntry[] entriesByPosition = new SpellBookEntry[MAX_POSITION];
-    final private SpellsBoosts boosts;
+    private final Map<Integer, SpellBookEntry> entries;
+    private final SpellBookEntry[] entriesByPosition = new SpellBookEntry[MAX_POSITION];
+    private final SpellsBoosts boosts;
 
     public SpellBook(Dispatcher dispatcher, Player player, Collection<SpellBookEntry> entries) {
         this.dispatcher = dispatcher;
@@ -135,7 +135,7 @@ final public class SpellBook implements SpellList, Dispatcher {
             throw new IllegalArgumentException("Cannot learn the spell " + spell.name() + " (" + spell.id() + ")");
         }
 
-        SpellBookEntry entry = new SpellBookEntry(
+        final SpellBookEntry entry = new SpellBookEntry(
             new PlayerSpell(player.id(), spell.id(), false),
             spell
         );

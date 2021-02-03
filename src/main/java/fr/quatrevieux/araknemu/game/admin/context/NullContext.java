@@ -29,7 +29,7 @@ import java.util.Collections;
 /**
  * Null object for context
  */
-final public class NullContext implements Context {
+public final class NullContext implements Context {
     @Override
     public Command command(String name) throws CommandNotFoundException {
         throw new CommandNotFoundException(name);

@@ -26,9 +26,9 @@ import fr.quatrevieux.araknemu.game.world.creature.Creature;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L277
  */
-final public class ExchangeAccepted {
-    final private boolean accepted;
-    final private Creature who;
+public final class ExchangeAccepted {
+    private final boolean accepted;
+    private final Creature who;
 
     public ExchangeAccepted(boolean accepted, Creature who) {
         this.accepted = accepted;

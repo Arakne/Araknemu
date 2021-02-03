@@ -21,27 +21,24 @@ package fr.quatrevieux.araknemu.game.item.inventory;
 
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.item.Item;
-import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
 import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectAdded;
 import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectDeleted;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Simple implementation for {@link ItemStorage}
  */
-final public class SimpleItemStorage<E extends ItemEntry> implements ItemStorage<E> {
-    public interface EntryFactory<E> {
-        /**
-         * Create the inventory entry for the current item storage
-         */
-        public E create(int id, Item item, int quantity, int position);
-    }
+public final class SimpleItemStorage<E extends ItemEntry> implements ItemStorage<E> {
+    private final Dispatcher dispatcher;
+    private final EntryFactory<E> factory;
 
-    final private Dispatcher dispatcher;
-    final private EntryFactory<E> factory;
-
-    final private Map<Integer, E> items = new HashMap<>();
+    private final Map<Integer, E> items = new HashMap<>();
 
     private int lastId = 0;
 
@@ -73,7 +70,7 @@ final public class SimpleItemStorage<E extends ItemEntry> implements ItemStorage
 
     @Override
     public E add(Item item, int quantity, int position) {
-        E entry = factory.create(++lastId, item, quantity, position);
+        final E entry = factory.create(++lastId, item, quantity, position);
 
         push(entry);
         dispatcher.dispatch(new ObjectAdded(entry));
@@ -87,7 +84,7 @@ final public class SimpleItemStorage<E extends ItemEntry> implements ItemStorage
             throw new ItemNotFoundException(id);
         }
 
-        E entry = items.remove(id);
+        final E entry = items.remove(id);
 
         dispatcher.dispatch(new ObjectDeleted(entry));
 
@@ -101,5 +98,12 @@ final public class SimpleItemStorage<E extends ItemEntry> implements ItemStorage
 
     private void push(E entry) {
         items.put(entry.id(), entry);
+    }
+
+    public interface EntryFactory<E> {
+        /**
+         * Create the inventory entry for the current item storage
+         */
+        public E create(int id, Item item, int quantity, int position);
     }
 }

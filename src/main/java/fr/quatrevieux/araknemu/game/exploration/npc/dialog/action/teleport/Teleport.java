@@ -35,9 +35,30 @@ import org.apache.commons.lang3.StringUtils;
  *
  * Cinematic is not required (if not set, or set to 0, no cinematic will be displayed)
  */
-final public class Teleport implements Action {
-    final static public class Factory implements ActionFactory {
-        final private ExplorationMapService service;
+public final class Teleport implements Action {
+    private final ExplorationMapService service;
+    private final Position position;
+    private final int cinematic;
+
+    public Teleport(ExplorationMapService service, Position position, int cinematic) {
+        this.service = service;
+        this.position = position;
+        this.cinematic = cinematic;
+    }
+
+    @Override
+    public boolean check(ExplorationPlayer player) {
+        // @todo check if map exists ?
+        return true;
+    }
+
+    @Override
+    public void apply(ExplorationPlayer player) {
+        player.interactions().push(new ChangeMap(player, service.load(position.map()), position.cell(), cinematic));
+    }
+
+    public static final class Factory implements ActionFactory {
+        private final ExplorationMapService service;
 
         public Factory(ExplorationMapService service) {
             this.service = service;
@@ -61,26 +82,5 @@ final public class Teleport implements Action {
                 position.length == 3 ? Integer.parseInt(position[2]) : 0
             );
         }
-    }
-
-    final private ExplorationMapService service;
-    final private Position position;
-    final private int cinematic;
-
-    public Teleport(ExplorationMapService service, Position position, int cinematic) {
-        this.service = service;
-        this.position = position;
-        this.cinematic = cinematic;
-    }
-
-    @Override
-    public boolean check(ExplorationPlayer player) {
-        // @todo check if map exists ?
-        return true;
-    }
-
-    @Override
-    public void apply(ExplorationPlayer player) {
-        player.interactions().push(new ChangeMap(player, service.load(position.map()), position.cell(), cinematic));
     }
 }

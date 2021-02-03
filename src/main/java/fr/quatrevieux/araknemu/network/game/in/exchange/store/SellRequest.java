@@ -29,30 +29,9 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L70
  */
-final public class SellRequest implements Packet {
-    final static public class Parser implements SinglePacketParser<SellRequest> {
-        @Override
-        public SellRequest parse(String input) throws ParsePacketException {
-            final String[] parts = StringUtils.split(input, "|", 2);
-
-            if (parts.length != 2) {
-                throw new ParsePacketException(code() + input, "Invalid parts number");
-            }
-
-            return new SellRequest(
-                Integer.parseInt(parts[0]),
-                Integer.parseUnsignedInt(parts[1])
-            );
-        }
-
-        @Override
-        public String code() {
-            return "ES";
-        }
-    }
-
-    final private int itemId;
-    final private int quantity;
+public final class SellRequest implements Packet {
+    private final int itemId;
+    private final int quantity;
 
     public SellRequest(int itemId, int quantity) {
         this.itemId = itemId;
@@ -71,5 +50,26 @@ final public class SellRequest implements Packet {
      */
     public int quantity() {
         return quantity;
+    }
+
+    public static final class Parser implements SinglePacketParser<SellRequest> {
+        @Override
+        public SellRequest parse(String input) throws ParsePacketException {
+            final String[] parts = StringUtils.split(input, "|", 2);
+
+            if (parts.length != 2) {
+                throw new ParsePacketException(code() + input, "Invalid parts number");
+            }
+
+            return new SellRequest(
+                Integer.parseInt(parts[0]),
+                Integer.parseUnsignedInt(parts[1])
+            );
+        }
+
+        @Override
+        public String code() {
+            return "ES";
+        }
     }
 }

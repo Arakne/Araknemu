@@ -27,12 +27,12 @@ import java.util.List;
 /**
  * Item entry of a account bank
  */
-final public class BankItem implements Item {
-    final private int accountId;
-    final private int serverId;
-    final private int entryId;
-    final private int itemTemplateId;
-    final private List<ItemTemplateEffectEntry> effects;
+public final class BankItem implements Item {
+    private final int accountId;
+    private final int serverId;
+    private final int entryId;
+    private final int itemTemplateId;
+    private final List<ItemTemplateEffectEntry> effects;
     private int quantity;
 
     public BankItem(int accountId, int serverId, int entryId, int itemTemplateId, List<ItemTemplateEffectEntry> effects, int quantity) {

@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.TriggerCell;
 /**
  * Perform cell actions for player move
  */
-final public class PerformCellActions implements Listener<PlayerMoveFinished> {
+public final class PerformCellActions implements Listener<PlayerMoveFinished> {
     @Override
     public void on(PlayerMoveFinished event) {
         if (event.cell() instanceof TriggerCell) {

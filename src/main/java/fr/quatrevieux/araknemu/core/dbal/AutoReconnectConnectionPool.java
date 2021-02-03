@@ -28,9 +28,9 @@ import java.sql.SQLRecoverableException;
 /**
  * Add auto-reconnect on connection pool
  */
-final public class AutoReconnectConnectionPool implements ConnectionPool {
-    final private ConnectionPool pool;
-    final private Logger logger;
+public final class AutoReconnectConnectionPool implements ConnectionPool {
+    private final ConnectionPool pool;
+    private final Logger logger;
 
     public AutoReconnectConnectionPool(ConnectionPool pool, Logger logger) {
         this.pool = pool;

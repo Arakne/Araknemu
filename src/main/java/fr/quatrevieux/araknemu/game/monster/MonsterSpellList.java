@@ -31,8 +31,8 @@ import java.util.Map;
  * This list is immutable, and spells cannot be upgraded nor boosted.
  * Because of its properties, this list can be shared between monster instances without conflicts.
  */
-final public class MonsterSpellList implements SpellList {
-    final private Map<Integer, Spell> spells;
+public final class MonsterSpellList implements SpellList {
+    private final Map<Integer, Spell> spells;
 
     public MonsterSpellList(Map<Integer, Spell> spells) {
         this.spells = spells;

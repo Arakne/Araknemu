@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.common.account.banishment.BanIpRule;
  *
  * @param <A> The account type
  */
-final public class IpBanned<A extends LivingAccount> {
-    final private BanIpRule<A> rule;
+public final class IpBanned<A extends LivingAccount> {
+    private final BanIpRule<A> rule;
 
     public IpBanned(BanIpRule<A> rule) {
         this.rule = rule;

@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 /**
  * Validate fighter states
  */
-final public class StatesValidator implements CastConstraintValidator {
+public final class StatesValidator implements CastConstraintValidator {
     @Override
     public Error validate(Turn turn, Castable castable, FightCell target) {
         if (

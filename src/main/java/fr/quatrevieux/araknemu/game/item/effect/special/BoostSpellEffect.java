@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
 /**
  * Apply spell boost
  */
-final public class BoostSpellEffect implements SpecialEffectHandler {
-    final private SpellsBoosts.Modifier modifier;
+public final class BoostSpellEffect implements SpecialEffectHandler {
+    private final SpellsBoosts.Modifier modifier;
 
     public BoostSpellEffect(SpellsBoosts.Modifier modifier) {
         this.modifier = modifier;

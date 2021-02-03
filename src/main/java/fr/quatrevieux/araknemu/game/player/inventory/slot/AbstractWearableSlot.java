@@ -25,12 +25,16 @@ import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
 import fr.quatrevieux.araknemu.game.item.type.Wearable;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
-import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.*;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.EquipmentLevelConstraint;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.ItemClassConstraint;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.ItemTypeConstraint;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SingleItemConstraint;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SlotConstraint;
 
 /**
  * Base slot class for wearable
  */
-abstract public class AbstractWearableSlot extends AbstractEquipmentSlot {
+public abstract class AbstractWearableSlot extends AbstractEquipmentSlot {
     public AbstractWearableSlot(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage, GamePlayer owner, int id, SuperType type) {
         super(
             dispatcher,
@@ -40,7 +44,7 @@ abstract public class AbstractWearableSlot extends AbstractEquipmentSlot {
                     new SingleItemConstraint(),
                     new ItemClassConstraint(Wearable.class),
                     new ItemTypeConstraint(type),
-                    new EquipmentLevelConstraint(owner)
+                    new EquipmentLevelConstraint(owner),
                 },
                 storage
             )

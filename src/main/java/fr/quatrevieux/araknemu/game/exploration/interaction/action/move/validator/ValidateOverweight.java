@@ -28,7 +28,7 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 /**
  * Deny movement if the player is overweight
  */
-final public class ValidateOverweight implements PathValidator {
+public final class ValidateOverweight implements PathValidator {
     @Override
     public Path<ExplorationMapCell> validate(Move move, Path<ExplorationMapCell> path) throws PathValidationException {
         final ExplorationPlayer player = move.performer();

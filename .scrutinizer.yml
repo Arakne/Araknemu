@@ -17,3 +17,7 @@ build:
                       coverage:
                         file: 'target/site/jacoco/jacoco.xml'
                         format: 'jacoco'
+                    - command: 'mvn checkstyle:checkstyle'
+                      analysis:
+                        file: 'target/checkstyle-result.xml'
+                        format: 'general-checkstyle'

@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 /**
  * Synchronize exploration player life points with the fighter
  */
-final public class SynchronizeLife implements DropRewardAction, FighterOperation {
+public final class SynchronizeLife implements DropRewardAction, FighterOperation {
     @Override
     public void apply(DropReward reward, Fighter fighter) {
         fighter.apply(this);

@@ -19,17 +19,17 @@
 
 package fr.quatrevieux.araknemu.game.handler.account;
 
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.account.AskCharacterList;
 import fr.quatrevieux.araknemu.network.game.out.account.CharactersList;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Handle {@link AskCharacterList}
  */
-final public class ListCharacters implements PacketHandler<GameSession, AskCharacterList> {
-    final private CharactersService service;
+public final class ListCharacters implements PacketHandler<GameSession, AskCharacterList> {
+    private final CharactersService service;
 
     public ListCharacters(CharactersService service) {
         this.service = service;

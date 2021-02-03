@@ -28,61 +28,17 @@ import java.util.List;
 /**
  * Store information for generate monster groups
  */
-final public class MonsterGroupData {
-    final static public class Monster {
-        final private int id;
-        final private Interval level;
-        final private int rate;
+public final class MonsterGroupData {
+    private final int id;
+    private final Duration respawnTime;
+    private final int maxSize;
+    private final int maxCount;
+    private final List<Monster> monsters;
+    private final String comment;
+    private final Position winFightTeleport;
+    private final boolean fixedTeamNumber;
 
-        public Monster(int id, Interval level, int rate) {
-            this.id = id;
-            this.level = level;
-            this.rate = rate;
-        }
-
-        /**
-         * Get the monster id
-         *
-         * @see MonsterTemplate#id()
-         */
-        public int id() {
-            return id;
-        }
-
-        /**
-         * Get the level interval
-         */
-        public Interval level() {
-            return level;
-        }
-
-        /**
-         * Get the spawn chance of the monster
-         *
-         * This rate is relative to all monsters of the group
-         * Higher the rate is, higher the spawn chance is
-         * A monster with a rate of 10 has a probability of two times more than a rate of 5
-         *
-         * The rate of all monsters of the group are added for compute the probability
-         * By default the rate is 1
-         *
-         * @see MonsterGroupData#totalRate()
-         */
-        public int rate() {
-            return rate;
-        }
-    }
-
-    final private int id;
-    final private Duration respawnTime;
-    final private int maxSize;
-    final private int maxCount;
-    final private List<Monster> monsters;
-    final private String comment;
-    final private Position winFightTeleport;
-    final private boolean fixedTeamNumber;
-
-    final private int totalRate;
+    private final int totalRate;
 
     public MonsterGroupData(int id, Duration respawnTime, int maxSize, int maxCount, List<Monster> monsters, String comment, Position winFightTeleport, boolean fixedTeamNumber) {
         this.id = id;
@@ -182,5 +138,49 @@ final public class MonsterGroupData {
      */
     public boolean fixedTeamNumber() {
         return fixedTeamNumber;
+    }
+
+    public static final class Monster {
+        private final int id;
+        private final Interval level;
+        private final int rate;
+
+        public Monster(int id, Interval level, int rate) {
+            this.id = id;
+            this.level = level;
+            this.rate = rate;
+        }
+
+        /**
+         * Get the monster id
+         *
+         * @see MonsterTemplate#id()
+         */
+        public int id() {
+            return id;
+        }
+
+        /**
+         * Get the level interval
+         */
+        public Interval level() {
+            return level;
+        }
+
+        /**
+         * Get the spawn chance of the monster
+         *
+         * This rate is relative to all monsters of the group
+         * Higher the rate is, higher the spawn chance is
+         * A monster with a rate of 10 has a probability of two times more than a rate of 5
+         *
+         * The rate of all monsters of the group are added for compute the probability
+         * By default the rate is 1
+         *
+         * @see MonsterGroupData#totalRate()
+         */
+        public int rate() {
+            return rate;
+        }
     }
 }

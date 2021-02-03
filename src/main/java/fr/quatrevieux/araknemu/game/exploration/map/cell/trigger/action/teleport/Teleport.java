@@ -29,12 +29,12 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.CellActi
 /**
  * Teleport action
  */
-final public class Teleport implements CellAction {
-    final static public int ACTION_ID = 0;
+public final class Teleport implements CellAction {
+    public static final int ACTION_ID = 0;
 
-    final private ExplorationMapService service;
-    final private int cell;
-    final private Position target;
+    private final ExplorationMapService service;
+    private final int cell;
+    private final Position target;
 
     public Teleport(ExplorationMapService service, int cell, Position target) {
         this.service = service;
@@ -44,7 +44,7 @@ final public class Teleport implements CellAction {
 
     @Override
     public void perform(ExplorationPlayer player) {
-        ExplorationMap map = service.load(target.map());
+        final ExplorationMap map = service.load(target.map());
 
         // teleport on same map
         if (map.equals(player.map())) {

@@ -37,12 +37,12 @@ import org.apache.logging.log4j.Logger;
  * @see PvmBuilder
  * @see PvmType
  */
-final public class PvmBuilder implements FightBuilder {
-    final private FightService service;
-    final private FighterFactory fighterFactory;
-    final private RandomUtil random;
-    final private PvmType type;
-    final private Logger logger;
+public final class PvmBuilder implements FightBuilder {
+    private final FightService service;
+    private final FighterFactory fighterFactory;
+    private final RandomUtil random;
+    private final PvmType type;
+    private final Logger logger;
 
     private ExplorationMap map;
     private GamePlayer initiator;
@@ -59,7 +59,7 @@ final public class PvmBuilder implements FightBuilder {
 
     @Override
     public Fight build(int fightId) {
-        BaseBuilder builder = new BaseBuilder(service, randomize ? random : null, type, logger);
+        final BaseBuilder builder = new BaseBuilder(service, randomize ? random : null, type, logger);
 
         builder.map(map);
         builder.addTeam((number, startPlaces) -> new SimpleTeam(

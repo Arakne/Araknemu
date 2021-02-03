@@ -25,8 +25,8 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 /**
  * Send message to client
  */
-final public class MessageSent extends AbstractChatMessage {
-    final private ChannelType channel;
+public final class MessageSent extends AbstractChatMessage {
+    private final ChannelType channel;
 
     public MessageSent(GamePlayer sender, ChannelType channel, String message, String extra) {
         this(sender, channel, message, extra, false);

@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.util.SpellCaster;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -36,56 +37,9 @@ import java.util.Optional;
 /**
  * Try to teleport near enemy
  */
-final public class TeleportNearEnemy implements ActionGenerator {
+public final class TeleportNearEnemy implements ActionGenerator {
     private SpellCaster caster;
     private List<Spell> teleportSpells;
-
-    /**
-     * Select the best spell and cell couple for teleport
-     */
-    private class Selector {
-        final private CoordinateCell<FightCell> enemyCell;
-        private int distance;
-        private FightCell cell;
-        private Spell spell;
-
-        public Selector(FightCell enemyCell, FightCell currentCell) {
-            this.enemyCell = new CoordinateCell<>(enemyCell);
-            this.distance = this.enemyCell.distance(new CoordinateCell<>(currentCell));
-        }
-
-        /**
-         * Check if the current cell is adjacent to the enemy cell
-         */
-        public boolean adjacent() {
-            return distance == 1;
-        }
-
-        /**
-         * Push the teleport parameters and check if there are better than the previous
-         */
-        public void push(Spell spell, FightCell cell) {
-            int currentDistance = new CoordinateCell<>(cell).distance(enemyCell);
-
-            if (currentDistance < distance) {
-                this.spell = spell;
-                this.cell = cell;
-                this.distance = currentDistance;
-            }
-        }
-
-        /**
-         * Get the best cast action
-         * May return an empty optional if no teleport spell can be found, or if the fighter is already on the best cell
-         */
-        public Optional<Action> action() {
-            if (spell == null) {
-                return Optional.empty();
-            }
-
-            return Optional.of(caster.create(spell, cell));
-        }
-    }
 
     @Override
     public void initialize(AI ai) {
@@ -113,7 +67,7 @@ final public class TeleportNearEnemy implements ActionGenerator {
             return Optional.empty();
         }
 
-        Optional<? extends PassiveFighter> enemy = ai.enemy();
+        final Optional<? extends PassiveFighter> enemy = ai.enemy();
 
         if (!enemy.isPresent()) {
             return Optional.empty();
@@ -126,26 +80,90 @@ final public class TeleportNearEnemy implements ActionGenerator {
             return Optional.empty();
         }
 
+        // Spells are ordered by AP cost : the first spell which can reach an accessible adjacent is necessarily the best spell
         for (Spell spell : teleportSpells) {
             if (spell.apCost() > actionPoints) {
-                continue;
+                break; // Following spells have an higher cost
             }
 
-            for (FightCell cell : ai.map()) {
-                // Target or launch is not valid
-                if (!cell.walkable() || !caster.validate(spell, cell)) {
-                    continue;
-                }
-
-                selector.push(spell, cell);
-
-                // Adjacent cell found : no need to continue
-                if (selector.adjacent()) {
-                    return selector.action();
-                }
+            if (selectBestTeleportTargetForSpell(selector, ai.map(), spell)) {
+                return selector.action();
             }
         }
 
         return selector.action();
+    }
+
+    /**
+     * Select the best possible target for the given spell
+     * The result will be push()'ed into selector
+     *
+     * @return true if the spell can reach an adjacent cell
+     */
+    private boolean selectBestTeleportTargetForSpell(Selector selector, BattlefieldMap map, Spell spell) {
+        for (FightCell cell : map) {
+            // Target or launch is not valid
+            if (!cell.walkable() || !caster.validate(spell, cell)) {
+                continue;
+            }
+
+            // Adjacent cell found : no need to continue
+            if (selector.push(spell, cell)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Select the best spell and cell couple for teleport
+     */
+    private class Selector {
+        private final CoordinateCell<FightCell> enemyCell;
+        private int distance;
+        private FightCell cell;
+        private Spell spell;
+
+        public Selector(FightCell enemyCell, FightCell currentCell) {
+            this.enemyCell = new CoordinateCell<>(enemyCell);
+            this.distance = this.enemyCell.distance(new CoordinateCell<>(currentCell));
+        }
+
+        /**
+         * Check if the current cell is adjacent to the enemy cell
+         */
+        public boolean adjacent() {
+            return distance == 1;
+        }
+
+        /**
+         * Push the teleport parameters and check if there are better than the previous
+         *
+         * @return true if the new cell is adjacent to the target
+         */
+        public boolean push(Spell spell, FightCell cell) {
+            final int currentDistance = new CoordinateCell<>(cell).distance(enemyCell);
+
+            if (currentDistance < distance) {
+                this.spell = spell;
+                this.cell = cell;
+                this.distance = currentDistance;
+            }
+
+            return adjacent();
+        }
+
+        /**
+         * Get the best cast action
+         * May return an empty optional if no teleport spell can be found, or if the fighter is already on the best cell
+         */
+        public Optional<Action> action() {
+            if (spell == null) {
+                return Optional.empty();
+            }
+
+            return Optional.of(caster.create(spell, cell));
+        }
     }
 }

@@ -67,7 +67,7 @@ public interface Fighter extends Creature<FightCell>, Dispatcher, ActiveFighter 
      *
      * @see Fighter#attachment(Class) For get the attachment
      */
-    default public void attach(Object value) {
+    public default void attach(Object value) {
         attach(value.getClass(), value);
     }
 
@@ -129,7 +129,7 @@ public interface Fighter extends Creature<FightCell>, Dispatcher, ActiveFighter 
     /**
      * Check if the fighter is the team leader
      */
-    default public boolean isTeamLeader() {
+    public default boolean isTeamLeader() {
         return equals(team().leader());
     }
 }

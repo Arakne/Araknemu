@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.player.event.RestrictionsChanged;
 /**
  * Refresh the exploration restrictions when locale restrictions changed
  */
-final public class RefreshExplorationRestrictions implements Listener<RestrictionsChanged> {
-    final private ExplorationPlayer exploration;
+public final class RefreshExplorationRestrictions implements Listener<RestrictionsChanged> {
+    private final ExplorationPlayer exploration;
 
     public RefreshExplorationRestrictions(ExplorationPlayer exploration) {
         this.exploration = exploration;

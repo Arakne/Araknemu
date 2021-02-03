@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.player.inventory.itemset;
 
 import fr.quatrevieux.araknemu.game.item.GameItemSet;
 import fr.quatrevieux.araknemu.game.item.Item;
-import fr.quatrevieux.araknemu.game.item.type.Equipment;
+import fr.quatrevieux.araknemu.game.item.type.AbstractEquipment;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
@@ -34,8 +34,8 @@ import java.util.stream.Collectors;
 /**
  * All available item sets for a player
  */
-final public class ItemSets {
-    final private PlayerInventory inventory;
+public final class ItemSets {
+    private final PlayerInventory inventory;
 
     public ItemSets(PlayerInventory inventory) {
         this.inventory = inventory;
@@ -62,9 +62,9 @@ final public class ItemSets {
      * Get all player item sets
      */
     public Collection<PlayerItemSet> all() {
-        Map<Integer, PlayerItemSet> sets = new HashMap<>();
+        final Map<Integer, PlayerItemSet> sets = new HashMap<>();
 
-        for (Equipment equipment : inventory.equipments()) {
+        for (AbstractEquipment equipment : inventory.equipments()) {
             equipment.set().ifPresent(set -> {
                 if (!sets.containsKey(set.id())) {
                     sets.put(set.id(), new PlayerItemSet(set));

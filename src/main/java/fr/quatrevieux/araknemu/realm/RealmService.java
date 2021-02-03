@@ -34,13 +34,13 @@ import java.util.Collection;
 /**
  * Service for handling server authentication
  */
-final public class RealmService implements Service {
-    final private RealmConfiguration configuration;
-    final private Server<RealmSession> server;
-    final private Logger logger;
-    final private Collection<PreloadableService> preloadables;
-    final private ListenerAggregate dispatcher;
-    final private Collection<EventsSubscriber> subscribers;
+public final class RealmService implements Service {
+    private final RealmConfiguration configuration;
+    private final Server<RealmSession> server;
+    private final Logger logger;
+    private final Collection<PreloadableService> preloadables;
+    private final ListenerAggregate dispatcher;
+    private final Collection<EventsSubscriber> subscribers;
 
     public RealmService(RealmConfiguration configuration, Server<RealmSession> server, Logger logger, ListenerAggregate dispatcher, Collection<PreloadableService> preloadables, Collection<EventsSubscriber> subscribers) {
         this.configuration = configuration;

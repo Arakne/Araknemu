@@ -26,9 +26,9 @@ import fr.quatrevieux.araknemu.game.world.creature.accessory.Accessories;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Items.as#L51
  */
-final public class SpriteAccessories {
-    final private int spriteId;
-    final private Accessories accessories;
+public final class SpriteAccessories {
+    private final int spriteId;
+    private final Accessories accessories;
 
     public SpriteAccessories(int spriteId, Accessories accessories) {
         this.spriteId = spriteId;

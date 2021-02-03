@@ -26,7 +26,13 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
 import fr.quatrevieux.araknemu.game.account.generator.NameGenerator;
-import fr.quatrevieux.araknemu.game.handler.*;
+import fr.quatrevieux.araknemu.game.handler.CheckQueuePosition;
+import fr.quatrevieux.araknemu.game.handler.CloseInactiveSession;
+import fr.quatrevieux.araknemu.game.handler.PongResponse;
+import fr.quatrevieux.araknemu.game.handler.SendPong;
+import fr.quatrevieux.araknemu.game.handler.SendQuickPong;
+import fr.quatrevieux.araknemu.game.handler.StartSession;
+import fr.quatrevieux.araknemu.game.handler.StopSession;
 import fr.quatrevieux.araknemu.game.handler.account.GenerateName;
 import fr.quatrevieux.araknemu.game.handler.account.Login;
 import fr.quatrevieux.araknemu.game.handler.account.SendRegionalVersion;
@@ -36,7 +42,7 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 /**
  * Loader for common packets
  */
-final public class CommonLoader implements Loader {
+public final class CommonLoader implements Loader {
     @Override
     @SuppressWarnings("unchecked")
     public PacketHandler<GameSession, ?>[] load(Container container) throws ContainerException {
@@ -55,7 +61,7 @@ final public class CommonLoader implements Loader {
             new SendDateAndTime(),
             new SendPong(),
             new GenerateName(container.get(NameGenerator.class)),
-            new SendQuickPong()
+            new SendQuickPong(),
         };
     }
 }

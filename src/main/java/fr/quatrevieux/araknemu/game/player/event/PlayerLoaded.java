@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 /**
  * The player is loaded, ready to join the game
  */
-final public class PlayerLoaded {
-    final private GamePlayer player;
+public final class PlayerLoaded {
+    private final GamePlayer player;
 
     public PlayerLoaded(GamePlayer player) {
         this.player = player;

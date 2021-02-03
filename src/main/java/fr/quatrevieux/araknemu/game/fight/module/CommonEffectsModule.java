@@ -27,7 +27,12 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.HealOrMultiplyDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.ReduceDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.SpellReturnHandler;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.*;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddActionPointsHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddCharacteristicHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddMovementPointsHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.RemoveActionPointsHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.RemoveCharacteristicHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.RemoveMovementPointsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.StealLifeHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.DispelHandler;
@@ -39,8 +44,8 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.Telep
 /**
  * Module for register common fight effects
  */
-final public class CommonEffectsModule implements FightModule {
-    final private Fight fight;
+public final class CommonEffectsModule implements FightModule {
+    private final Fight fight;
 
     public CommonEffectsModule(Fight fight) {
         this.fight = fight;

@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 /**
  * Simulator for simple alter characteristic effect
  */
-final public class AlterCharacteristicSimulator implements EffectSimulator {
-    final private int multiplier;
+public final class AlterCharacteristicSimulator implements EffectSimulator {
+    private final int multiplier;
 
     /**
      * Creates without multiplier
@@ -48,7 +48,7 @@ final public class AlterCharacteristicSimulator implements EffectSimulator {
 
     @Override
     public void simulate(CastSimulation simulation, CastScope.EffectScope effect) {
-        int value = new EffectValue(effect.effect()).mean().value()
+        final int value = new EffectValue(effect.effect()).mean().value()
             * multiplier
             * Math.max(effect.effect().duration(), 1)
         ;

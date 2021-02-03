@@ -49,25 +49,24 @@ import java.util.stream.Stream;
 /**
  * Handle environment interactions with monsters
  */
-final public class MonsterEnvironmentService implements EventsSubscriber, PreloadableService {
-    final private ActivityService activityService;
-    final private FightService fightService;
-    final private MonsterGroupFactory factory;
-    final private MonsterGroupPositionRepository positionRepository;
-    final private MonsterGroupDataRepository dataRepository;
-    final private GameConfiguration.ActivityConfiguration configuration;
+public final class MonsterEnvironmentService implements EventsSubscriber, PreloadableService {
+    private final ActivityService activityService;
+    private final FightService fightService;
+    private final MonsterGroupFactory factory;
+    private final MonsterGroupPositionRepository positionRepository;
+    private final MonsterGroupDataRepository dataRepository;
+    private final GameConfiguration.ActivityConfiguration configuration;
 
     /**
      * Groups indexed by map id
      */
-    final private ConcurrentMap<Integer, Collection<LivingMonsterGroupPosition>> groupsByMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, Collection<LivingMonsterGroupPosition>> groupsByMap = new ConcurrentHashMap<>();
 
     /**
      * Groups are preloaded ?
      * If true, consider that all data are loaded, so loading maps without loaded groups do not execute a query
      */
     private boolean preloaded = false;
-
 
     public MonsterEnvironmentService(ActivityService activityService, FightService fightService, MonsterGroupFactory factory, MonsterGroupPositionRepository positionRepository, MonsterGroupDataRepository dataRepository, GameConfiguration.ActivityConfiguration configuration) {
         this.activityService = activityService;
@@ -130,7 +129,7 @@ final public class MonsterEnvironmentService implements EventsSubscriber, Preloa
                 public Class<MapLoaded> event() {
                     return MapLoaded.class;
                 }
-            }
+            },
         };
     }
 
@@ -148,7 +147,7 @@ final public class MonsterEnvironmentService implements EventsSubscriber, Preloa
             return Collections.emptyList();
         }
 
-        Collection<LivingMonsterGroupPosition> groups = new ArrayList<>();
+        final Collection<LivingMonsterGroupPosition> groups = new ArrayList<>();
 
         for (MonsterGroupPosition position : positionRepository.byMap(mapId)) {
             groups.add(new LivingMonsterGroupPosition(

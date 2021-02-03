@@ -47,7 +47,7 @@ public interface ActiveFighter extends PassiveFighter {
      *
      * @see Fighter#attach(Object) Fir set the attachment
      */
-    default public <T> T attachment(Class<T> type) {
+    public default <T> T attachment(Class<T> type) {
         return type.cast(attachment((Object) type));
     }
 }

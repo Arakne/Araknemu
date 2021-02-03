@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Basics.as#L51
  */
-final public class AskDate implements Packet {
-    final static public class Parser implements SinglePacketParser<AskDate> {
+public final class AskDate implements Packet {
+    public static final class Parser implements SinglePacketParser<AskDate> {
         @Override
         public AskDate parse(String input) throws ParsePacketException {
             return new AskDate();

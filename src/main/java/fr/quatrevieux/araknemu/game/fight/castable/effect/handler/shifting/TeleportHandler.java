@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 /**
  * Handle teleport effect
  */
-final public class TeleportHandler implements EffectHandler {
-    final private Fight fight;
+public final class TeleportHandler implements EffectHandler {
+    private final Fight fight;
 
     public TeleportHandler(Fight fight) {
         this.fight = fight;

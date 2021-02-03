@@ -31,10 +31,10 @@ import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 /**
  * Ask for challenge
  */
-final public class AskChallenge implements Action {
-    final private ExplorationPlayer player;
-    final private int target;
-    final private FightService fightService;
+public final class AskChallenge implements Action {
+    private final ExplorationPlayer player;
+    private final int target;
+    private final FightService fightService;
 
     public AskChallenge(ExplorationPlayer player, int target, FightService fightService) {
         this.player = player;

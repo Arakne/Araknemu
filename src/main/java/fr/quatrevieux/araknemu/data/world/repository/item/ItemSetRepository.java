@@ -31,7 +31,7 @@ public interface ItemSetRepository extends Repository<ItemSet> {
     /**
      * Get the item set by its id
      *
-     * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException
+     * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException When the item do not exists
      */
     public ItemSet get(int id);
 

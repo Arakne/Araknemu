@@ -31,8 +31,8 @@ import java.util.Optional;
 /**
  * Handle connections logs
  */
-final public class SessionLogService {
-    final private ConnectionLogRepository repository;
+public final class SessionLogService {
+    private final ConnectionLogRepository repository;
 
     public SessionLogService(ConnectionLogRepository repository) {
         this.repository = repository;

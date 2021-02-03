@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.game.player.experience.event.PlayerLevelUp;
  *
  * Issue #55 : https://github.com/vincent4vx/Araknemu/issues/55
  */
-final public class RebuildLifePointsOnLevelUp implements Listener<PlayerLevelUp> {
-    final private GamePlayer player;
+public final class RebuildLifePointsOnLevelUp implements Listener<PlayerLevelUp> {
+    private final GamePlayer player;
 
     public RebuildLifePointsOnLevelUp(GamePlayer player) {
         this.player = player;

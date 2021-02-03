@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.player.Restrictions;
 /**
  * The restrictions has changed
  */
-final public class RestrictionsChanged {
-    final private Restrictions restrictions;
+public final class RestrictionsChanged {
+    private final Restrictions restrictions;
 
     public RestrictionsChanged(Restrictions restrictions) {
         this.restrictions = restrictions;

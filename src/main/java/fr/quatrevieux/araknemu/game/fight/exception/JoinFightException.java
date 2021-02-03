@@ -25,13 +25,13 @@ import fr.quatrevieux.araknemu.game.fight.JoinFightError;
  * Cannot join the fight
  */
 public class JoinFightException extends RuntimeException {
-    final private JoinFightError error;
+    private final JoinFightError error;
 
     public JoinFightException(JoinFightError error) {
         this.error = error;
     }
 
-    public JoinFightError error() {
+    public final JoinFightError error() {
         return error;
     }
 }
