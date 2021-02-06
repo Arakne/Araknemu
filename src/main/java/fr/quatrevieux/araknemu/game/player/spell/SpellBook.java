@@ -140,6 +140,8 @@ public final class SpellBook implements SpellList, Dispatcher {
             spell
         );
 
+        entry.attach(this);
+
         entries.put(spell.id(), entry);
         dispatch(new SpellLearned(entry));
     }
