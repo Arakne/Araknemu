@@ -100,7 +100,7 @@ class DamageSimulatorTest extends FightBaseCase {
         CastScope scope = makeCastScope(fighter, spell, effect, fighter.cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
-        assertEquals(-22, simulation.selfLife());
+        assertEquals(-22.5, simulation.selfLife());
     }
 
     @Test
@@ -126,7 +126,7 @@ class DamageSimulatorTest extends FightBaseCase {
         assertEquals(-15, simulation.enemiesLife());
     }
 
-    private int simulate() {
+    private double simulate() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);

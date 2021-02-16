@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.ai.action;
@@ -68,14 +68,19 @@ public final class Attack implements ActionGenerator, CastSpell.SimulationSelect
      *
      * @todo Handle the boost value
      */
-    private int score(CastSimulation simulation) {
-        int score =
+    private double score(CastSimulation simulation) {
+        double score =
             - simulation.enemiesLife()
             + simulation.alliesLife()
             + simulation.selfLife() * 2
         ;
 
-        final int killRatio = simulation.killedEnemies() - 2 * simulation.killedAllies();
+        final double killRatio =
+            simulation.killedEnemies()
+            - 1.5 * simulation.killedAllies()
+            - 2 * simulation.suicideProbability()
+        ;
+
         score += 100 * killRatio; // @todo better algo ?
 
         return score / simulation.spell().apCost();

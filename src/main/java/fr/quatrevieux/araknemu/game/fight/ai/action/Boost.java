@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.ai.action;
@@ -66,8 +66,8 @@ public final class Boost implements ActionGenerator, CastSpell.SimulationSelecto
      *
      * @return The score of the simulation
      */
-    private int score(CastSimulation simulation) {
-        final int score =
+    private double score(CastSimulation simulation) {
+        final double score =
             + simulation.alliesBoost()
             + simulation.selfBoost() * 2
             - simulation.enemiesBoost()
