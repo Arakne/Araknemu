@@ -34,14 +34,23 @@ import java.util.Optional;
  */
 public final class Attack implements ActionGenerator, CastSpell.SimulationSelector {
     private final CastSpell generator;
+    private final double suicidePenaltyFactor;
+
+    private double averageEnemyLifePoints = 0;
 
     public Attack(Simulator simulator) {
+        this(simulator, 2);
+    }
+
+    public Attack(Simulator simulator, double suicidePenaltyFactor) {
         this.generator = new CastSpell(simulator, this);
+        this.suicidePenaltyFactor = suicidePenaltyFactor;
     }
 
     @Override
     public void initialize(AI ai) {
         generator.initialize(ai);
+        averageEnemyLifePoints = ai.enemies().mapToInt(fighter -> fighter.life().max()).average().orElse(0);
     }
 
     @Override
@@ -78,10 +87,10 @@ public final class Attack implements ActionGenerator, CastSpell.SimulationSelect
         final double killRatio =
             simulation.killedEnemies()
             - 1.5 * simulation.killedAllies()
-            - 2 * simulation.suicideProbability()
+            - suicidePenaltyFactor * simulation.suicideProbability()
         ;
 
-        score += 100 * killRatio; // @todo better algo ?
+        score += averageEnemyLifePoints * killRatio;
 
         return score / simulation.spell().apCost();
     }
