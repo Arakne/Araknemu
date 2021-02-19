@@ -19,27 +19,18 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 
-import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Path;
-import fr.arakne.utils.maps.path.PathStep;
-import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.PathValidationException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
-import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
-import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFailed;
-import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveSuccess;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.PathValidatorFight;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.TackleValidator;
 
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.commons.lang3.RandomUtils;
 
 /**
  * Move the fighter
@@ -47,14 +38,16 @@ import org.apache.commons.lang3.RandomUtils;
 final public class Move implements Action {
     final private FightTurn turn;
     final private Fighter fighter;
-    final private Path<FightCell> path;
+    final private PathValidatorFight[] validators;
 
+    private Path<FightCell> path;
     private MoveStatus result;
 
     public Move(FightTurn turn, Fighter fighter, Path<FightCell> path) {
         this.turn = turn;
         this.fighter = fighter;
         this.path = path;
+        this.validators = new PathValidatorFight[]{new TackleValidator()};
     }
 
     @Override
@@ -66,57 +59,21 @@ final public class Move implements Action {
         ;
     }
 
-    private MoveStatus handleTackle() {
-        int currentStep = 0;
-        Iterator<PathStep<FightCell>> iterator = path.iterator();
-        BattlefieldMap map = fighter.cell().map();
-
-        while (iterator.hasNext()) {
-            currentStep++;
-            PathStep<FightCell> step = iterator.next();
-
-            List<FightCell> cells = Arrays.asList(
-                new FightCell[]{
-                    map.get(Direction.NORTH_EAST.nextCellIncrement(map.dimensions().width()) + step.cell().id()),
-                    map.get(Direction.NORTH_WEST.nextCellIncrement(map.dimensions().width()) + step.cell().id()),
-                    map.get(Direction.SOUTH_EAST.nextCellIncrement(map.dimensions().width()) + step.cell().id()),
-                    map.get(Direction.SOUTH_WEST.nextCellIncrement(map.dimensions().width()) + step.cell().id())
-                }
-            );
-
-            for (FightCell fightCell : cells) {
-                if (currentStep == path.size()) {
-                    continue; // don't check the final step
-                }
-
-                if(!fightCell.fighter().isPresent()) {
-                    continue;
-                }
-
-                if(fightCell.fighter().isPresent() && fightCell.fighter().get().team().equals(fighter.team())) {
-                    continue;
-                }
-
-                int esquive = getTackle(fighter, fightCell.fighter().get());
-                int random = RandomUtils.nextInt(0, 101);
-
-                if( random > esquive) {
-                    int lostPa = (int)(turn.points().actionPoints() * (esquive / 100d));                   
-                    iterator.forEachRemaining(action -> iterator.remove());
-
-                    return new MoveFailed(fighter, path, lostPa);
-                }
+    @Override
+    public ActionResult start() {
+        try {
+            for (PathValidatorFight validator : validators) {
+                path = validator.validate(this, path);
             }
+        } catch (PathValidationException e) {
+            
+            if(e.errorPacket().isPresent()) {
+                return (ActionResult) e.errorPacket().get();
+            }
+
         }
 
         return new MoveSuccess(fighter, path);
-    }
-
-    @Override
-    public ActionResult start() {
-        result = handleTackle();
-
-        return result;
     }
 
     @Override
@@ -150,23 +107,4 @@ final public class Move implements Action {
         return Duration.ofMillis(300L * path.size());
     }
 
-    private int getTackle(Fighter fighter, PassiveFighter toTackle) {
-        int fighterAgility = fighter.characteristics().get(Characteristic.AGILITY);
-        int toTackleAgility = toTackle.characteristics().get(Characteristic.AGILITY);
-
-        int a = fighterAgility + 25;
-        int b = toTackleAgility + fighterAgility + 50;
-
-        if (b <= 0) {
-            b = 1;
-        }
-
-        int chan = (int) ((long) (300 * a / b) - 100);
-		if (chan < 10)
-			chan = 10;
-		if (chan > 90)
-            chan = 90;
-
-		return chan;
-    }
 }
