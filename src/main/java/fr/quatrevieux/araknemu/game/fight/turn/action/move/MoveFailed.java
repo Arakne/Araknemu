@@ -17,7 +17,7 @@
  * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.turn.action.move.status;
+package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 
 import fr.arakne.utils.maps.path.Path;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -29,16 +29,16 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveStatus;
  * Successful move result
  */
 final public class MoveFailed extends MoveStatus {
-    final private int lostPa;
+    final private int lostActionPoints;
 
-    public MoveFailed(Fighter performer, Path<FightCell> path, int lostPa) {
+    public MoveFailed(Fighter performer, Path<FightCell> path, int lostActionPoints) {
         super(performer, path);
-        this.lostPa = lostPa;
+        this.lostActionPoints = lostActionPoints;
     }
 
     @Override
     public int action() {
-        return ActionType.MOVE.id();
+        return ActionType.CANT_MOVEOUT.id();
     }
 
     @Override
@@ -47,7 +47,7 @@ final public class MoveFailed extends MoveStatus {
     }
 
     @Override
-    public int lostPa() {
-        return lostPa;
+    public int lostActionPoints() {
+        return lostActionPoints;
     }
 }

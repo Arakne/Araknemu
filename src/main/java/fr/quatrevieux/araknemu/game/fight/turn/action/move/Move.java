@@ -31,13 +31,15 @@ import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
-import fr.quatrevieux.araknemu.game.fight.turn.action.move.status.MoveFailed;
-import fr.quatrevieux.araknemu.game.fight.turn.action.move.status.MoveSuccess;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFailed;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveSuccess;
 
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+
+import org.apache.commons.lang3.RandomUtils;
 
 /**
  * Move the fighter
@@ -96,7 +98,7 @@ final public class Move implements Action {
                 }
 
                 int esquive = getTackle(fighter, fightCell.fighter().get());
-                int random = (int) (Math.random() * 101);
+                int random = RandomUtils.nextInt(0, 101);
 
                 if( random > esquive) {
                     int lostPa = (int)(turn.points().actionPoints() * (esquive / 100d));                   
@@ -127,13 +129,9 @@ final public class Move implements Action {
     @Override
     public void failed() {
 
-        turn.points().useActionPoints(result.lostPa());
+        turn.points().useActionPoints(result.lostActionPoints());
         turn.points().useMovementPoints(turn.points().movementPoints());
 
-        fighter.fight().send("GA"+result.action()+";104;"+fighter.id());
-
-        fighter.move(result.target());
-        fighter.setOrientation(result.orientation());
     }
 
     @Override

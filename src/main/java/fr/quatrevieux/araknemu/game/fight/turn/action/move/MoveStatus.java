@@ -39,7 +39,7 @@ abstract public class MoveStatus implements ActionResult {
 
     abstract public int action();
 
-    abstract public int lostPa();
+    abstract public int lostActionPoints();
 
     abstract public boolean success();
 
