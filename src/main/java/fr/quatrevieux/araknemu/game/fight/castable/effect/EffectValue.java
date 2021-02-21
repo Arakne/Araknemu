@@ -14,11 +14,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect;
 
+import fr.arakne.utils.value.Interval;
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
@@ -33,7 +34,6 @@ public final class EffectValue {
         MINIMIZED,
         RANDOMIZED,
         MAXIMIZED,
-        MEAN
     }
 
     /**
@@ -76,15 +76,6 @@ public final class EffectValue {
      */
     public EffectValue randomize() {
         state = State.RANDOMIZED;
-
-        return this;
-    }
-
-    /**
-     * Compute the mean value (i.e. (min + max) / 2)
-     */
-    public EffectValue mean() {
-        state = State.MEAN;
 
         return this;
     }
@@ -142,9 +133,24 @@ public final class EffectValue {
      * Get the dice value
      */
     public int value() {
-        final int value = ((boost + jet()) * percent / 100 + fixed + effect.boost()) * multiply;
+        return applyBoost(jet());
+    }
 
-        return Math.max(value, 0);
+    /**
+     * Get the effect value interval
+     */
+    public Interval interval() {
+        switch (state) {
+            case MINIMIZED:
+                return Interval.of(applyBoost(effect.min()));
+
+            case MAXIMIZED:
+                return Interval.of(applyBoost(Math.max(effect.max(), effect.min())));
+
+            case RANDOMIZED:
+            default:
+                return new Interval(effect.min(), Math.max(effect.max(), effect.min())).map(this::applyBoost);
+        }
     }
 
     private int jet() {
@@ -153,17 +159,18 @@ public final class EffectValue {
                 return effect.min();
 
             case MAXIMIZED:
-                return effect.max() < effect.min() ? effect.min() : effect.max();
-
-            case MEAN:
-                return effect.max() < effect.min()
-                    ? effect.min()
-                    : (effect.min() + effect.max()) / 2
-                ;
+                return Math.max(effect.max(), effect.min());
 
             case RANDOMIZED:
             default:
                 return RANDOM.rand(effect.min(), effect.max());
         }
+    }
+
+    private int applyBoost(int value) {
+        return Math.max(
+            ((boost + value) * percent / 100 + fixed + effect.boost()) * multiply,
+            0
+        );
     }
 }

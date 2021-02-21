@@ -97,7 +97,7 @@ class StealLifeSimulatorTest extends FightBaseCase {
         CastScope scope = makeCastScope(fighter, spell, effect, target.cell());
         simulator.simulate(simulation, scope.effects().get(0));
 
-        assertEquals(-22, simulation.enemiesLife());
+        assertEquals(-22.5, simulation.enemiesLife());
     }
 
     @Test
