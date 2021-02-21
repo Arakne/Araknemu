@@ -140,25 +140,16 @@ public final class EffectValue {
      * Get the effect value interval
      */
     public Interval interval() {
-        final int value;
-
         switch (state) {
             case MINIMIZED:
-                value = applyBoost(effect.min());
-
-                return new Interval(value, value);
+                return Interval.of(applyBoost(effect.min()));
 
             case MAXIMIZED:
-                value = applyBoost(Math.max(effect.max(), effect.min()));
-
-                return new Interval(value, value);
+                return Interval.of(applyBoost(Math.max(effect.max(), effect.min())));
 
             case RANDOMIZED:
             default:
-                return new Interval(
-                    applyBoost(effect.min()),
-                    applyBoost(Math.max(effect.max(), effect.min()))
-                );
+                return new Interval(effect.min(), Math.max(effect.max(), effect.min())).map(this::applyBoost);
         }
     }
 

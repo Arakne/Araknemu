@@ -51,10 +51,7 @@ public final class DamageSimulator implements EffectSimulator {
         ;
 
         for (PassiveFighter target : effect.targets()) {
-            final Interval damage = new Interval(
-                computeDamage(value.min(), target),
-                computeDamage(value.max(), target)
-            );
+            final Interval damage = value.map(base -> computeDamage(base, target));
 
             if (effect.effect().duration() < 1) {
                 simulation.addDamage(damage, target);
@@ -70,6 +67,6 @@ public final class DamageSimulator implements EffectSimulator {
             .fixed(target.characteristics().get(element.fixedResistance()))
         ;
 
-        return Math.max(damage.value(), 1);
+        return damage.value();
     }
 }

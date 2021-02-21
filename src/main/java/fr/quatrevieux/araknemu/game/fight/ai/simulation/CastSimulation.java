@@ -152,10 +152,7 @@ public final class CastSimulation {
             @Override
             public double lifeChange() {
                 return -computeCappedEffect(
-                    new Interval(
-                        value.min() * duration,
-                        value.max() * duration
-                    ),
+                    value.map(v -> v * duration),
                     target.life().current()
                 ) * POISON_RATE;
             }
@@ -288,10 +285,7 @@ public final class CastSimulation {
             return 0;
         }
 
-        final double damageOverflow = value.max() - maxValue;
-        final double damageAmplitude = value.max() - value.min();
-
-        return damageOverflow / damageAmplitude;
+        return (value.max() - maxValue) / value.amplitude();
     }
 
     /**
@@ -319,7 +313,7 @@ public final class CastSimulation {
         }
 
         if (maxProbability == 0) {
-            return ((double) value.min() + (double) value.max()) / 2d;
+            return value.average();
         }
 
         final double cappedAvgValue = ((double) value.min() + maxValue) / 2d;

@@ -162,10 +162,6 @@ public class SpellTemplateLevelTransformer implements Transformer<SpellTemplate.
             throw new IllegalArgumentException("Bad areas size");
         }
 
-        if (level.range().max() < level.range().min()) {
-            throw new IllegalArgumentException("Bad range");
-        }
-
         return level;
     }
 }

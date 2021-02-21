@@ -46,7 +46,7 @@ public final class StealLifeSimulator implements EffectSimulator {
         final double totalDamage = (-simulation.alliesLife() - simulation.enemiesLife()) - lastDamage;
 
         if (totalDamage > 0) {
-            simulation.addHeal(new Interval((int) totalDamage / 2, (int) totalDamage / 2), simulation.caster());
+            simulation.addHeal(Interval.of((int) totalDamage / 2), simulation.caster());
         }
     }
 }
