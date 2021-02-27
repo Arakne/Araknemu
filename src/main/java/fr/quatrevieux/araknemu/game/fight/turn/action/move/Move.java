@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 
 import fr.arakne.utils.maps.path.Path;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.PathValidationException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
@@ -28,7 +27,6 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.PathValidatorFight;
-import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.TackleValidator;
 
 import java.time.Duration;
 
@@ -41,13 +39,16 @@ final public class Move implements Action {
     final private PathValidatorFight[] validators;
 
     private Path<FightCell> path;
-    private MoveStatus result;
+    private MoveResult result;
 
     public Move(FightTurn turn, Fighter fighter, Path<FightCell> path) {
+        this(turn, fighter, path, null);
+    }
+    public Move(FightTurn turn, Fighter fighter, Path<FightCell> path, PathValidatorFight[] validators) {
         this.turn = turn;
         this.fighter = fighter;
         this.path = path;
-        this.validators = new PathValidatorFight[]{new TackleValidator()};
+        this.validators = validators;
     }
 
     @Override
@@ -61,19 +62,17 @@ final public class Move implements Action {
 
     @Override
     public ActionResult start() {
-        try {
-            for (PathValidatorFight validator : validators) {
-                path = validator.validate(this, path);
-            }
-        } catch (PathValidationException e) {
-            
-            if(e.errorPacket().isPresent()) {
-                return (ActionResult) e.errorPacket().get();
-            }
-
+        result = new MoveSuccess(fighter, path);
+        
+        for (PathValidatorFight validator : validators) {
+                result = validator.validate(this, result);
+                
+                if (!result.success()) {
+                    break;
+                }
         }
-
-        return new MoveSuccess(fighter, path);
+        
+        return result;
     }
 
     @Override
@@ -85,10 +84,8 @@ final public class Move implements Action {
 
     @Override
     public void failed() {
-
         turn.points().useActionPoints(result.lostActionPoints());
         turn.points().useMovementPoints(turn.points().movementPoints());
-
     }
 
     @Override

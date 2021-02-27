@@ -29,8 +29,7 @@ public enum ActionType {
     NONE(0, 0),
     MOVE(1, 2),
     CAST(300, 0),
-    CLOSE_COMBAT(303, 0),
-    CANT_MOVEOUT(104, 0);
+    CLOSE_COMBAT(303, 0);
 
     final private int id;
     final private int end;

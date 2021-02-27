@@ -19,19 +19,15 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 
-import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Path;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
-import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveStatus;
 
 /**
  * Successful move result
  */
-final public class MoveSuccess extends MoveStatus {
-    final private int lostActionPoints = 0;
+final public class MoveSuccess extends MoveResult {
 
     public MoveSuccess(Fighter performer, Path<FightCell> path) {
         super(performer, path);
@@ -48,6 +44,6 @@ final public class MoveSuccess extends MoveStatus {
     }
 
     public int lostActionPoints() {
-        return lostActionPoints;
+        return 0;
     }
 }

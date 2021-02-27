@@ -28,11 +28,11 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 /**
  * Successful move result
  */
-abstract public class MoveStatus implements ActionResult {
+abstract public class MoveResult implements ActionResult {
     final private Fighter performer;
     final private Path<FightCell> path;
 
-    public MoveStatus(Fighter performer, Path<FightCell> path) {
+    public MoveResult(Fighter performer, Path<FightCell> path) {
         this.performer = performer;
         this.path = path;
     }
@@ -42,6 +42,10 @@ abstract public class MoveStatus implements ActionResult {
     abstract public int lostActionPoints();
 
     abstract public boolean success();
+
+    public Path<FightCell> path(){
+        return path;
+    }
 
     @Override
     public Fighter performer() {

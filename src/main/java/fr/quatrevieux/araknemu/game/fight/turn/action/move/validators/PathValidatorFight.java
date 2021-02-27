@@ -1,10 +1,7 @@
 package fr.quatrevieux.araknemu.game.fight.turn.action.move.validators;
 
-import fr.arakne.utils.maps.path.Path;
-
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.PathValidationException;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveResult;
 
 /**
  * Validate a move path
@@ -18,5 +15,5 @@ public interface PathValidatorFight {
      *
      * @return The filtered path
      */
-    public Path<FightCell> validate(Move move, Path<FightCell> path) throws PathValidationException;
+    public MoveResult validate(Move move, MoveResult result);
 }
