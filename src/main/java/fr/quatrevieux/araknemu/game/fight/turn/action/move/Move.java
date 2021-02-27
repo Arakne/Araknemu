@@ -104,5 +104,4 @@ final public class Move implements Action {
         // @todo handle walk and run
         return Duration.ofMillis(300L * path.size());
     }
-
 }
