@@ -36,14 +36,15 @@ import java.time.Duration;
 final public class Move implements Action {
     final private FightTurn turn;
     final private Fighter fighter;
+    final private Path<FightCell> path;
     final private PathValidatorFight[] validators;
 
-    private Path<FightCell> path;
     private MoveResult result;
 
     public Move(FightTurn turn, Fighter fighter, Path<FightCell> path) {
         this(turn, fighter, path, null);
     }
+
     public Move(FightTurn turn, Fighter fighter, Path<FightCell> path, PathValidatorFight[] validators) {
         this.turn = turn;
         this.fighter = fighter;
