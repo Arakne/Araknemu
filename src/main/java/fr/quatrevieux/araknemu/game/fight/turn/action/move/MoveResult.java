@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
  */
 abstract public class MoveResult implements ActionResult {
     final private Fighter performer;
-    final private Path<FightCell> path;
+    private Path<FightCell> path;
 
     public MoveResult(Fighter performer, Path<FightCell> path) {
         this.performer = performer;
@@ -45,6 +45,10 @@ abstract public class MoveResult implements ActionResult {
 
     public Path<FightCell> path(){
         return path;
+    }
+
+    public void setPath(Path<FightCell> path) {
+        this.path = path;
     }
 
     @Override
