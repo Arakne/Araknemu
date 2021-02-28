@@ -19,16 +19,19 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 
+import fr.arakne.utils.maps.constant.Direction;
+import fr.arakne.utils.maps.path.Path;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 
 /**
  * Failed move result
  */
-final public class MoveFailed extends MoveResult {
+final public class MoveFailed implements MoveResult {
     final private int lostActionPoints;
-
+    final private Fighter performer;
     public MoveFailed(Fighter performer, int lostActionPoints) {
-        super(performer, null);
+        this.performer = performer;
         this.lostActionPoints = lostActionPoints;
     }
 
@@ -48,7 +51,32 @@ final public class MoveFailed extends MoveResult {
     }
 
     @Override
+    public Path<FightCell> path() {
+        return null;
+    }
+
+    @Override
+    public Fighter performer() {
+        return performer;
+    }
+
+    @Override
+    public Direction orientation() {
+        return performer.orientation();
+    }
+
+    @Override
+    public int steps() {
+        return 0;
+    }
+
+    @Override
+    public FightCell target() {
+        return null;
+    }
+
+    @Override
     public Object[] arguments() {
-        return new Object[] {};
+        return null;
     }
 }

@@ -6,6 +6,7 @@ import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveResult;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveSuccess;
 
 final public class StopOnEnemyValidator implements PathValidatorFight {
 
@@ -28,8 +29,7 @@ final public class StopOnEnemyValidator implements PathValidatorFight {
 
             for (FightCell fightCell : cells) {
                 if(fightCell.fighter().isPresent() && !fightCell.fighter().get().team().equals(move.performer().team())) {
-                    result.setPath(result.path().truncate(i));
-                    return result;
+                    return new MoveSuccess(move.performer(), result.path().truncate(i));
                 }
             }
         }

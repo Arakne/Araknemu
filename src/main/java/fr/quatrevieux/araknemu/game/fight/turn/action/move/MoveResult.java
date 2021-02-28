@@ -21,55 +21,22 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 
 import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Path;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 
 /**
  * Successful move result
  */
-abstract public class MoveResult implements ActionResult {
-    final private Fighter performer;
-    private Path<FightCell> path;
-
-    public MoveResult(Fighter performer, Path<FightCell> path) {
-        this.performer = performer;
-        this.path = path;
-    }
-
+public interface MoveResult extends ActionResult {
     abstract public int action();
 
     abstract public int lostActionPoints();
 
-    abstract public boolean success();
+    abstract public Path<FightCell> path();
 
-    public Path<FightCell> path(){
-        return path;
-    }
+    abstract public int steps();
 
-    public void setPath(Path<FightCell> path) {
-        this.path = path;
-    }
+    abstract public FightCell target();
 
-    @Override
-    public Fighter performer() {
-        return performer;
-    }
-
-    @Override
-    public Object[] arguments() {
-        return new Object[] { path.encodeWithStartCell() };
-    }
-
-    public FightCell target() {
-        return path.target();
-    }
-
-    public Direction orientation() {
-        return path.last().direction();
-    }
-
-    public int steps() {
-        return path.size() - 1; // The path contains the current fighter's cell
-    }
+    abstract public Direction orientation();
 }
