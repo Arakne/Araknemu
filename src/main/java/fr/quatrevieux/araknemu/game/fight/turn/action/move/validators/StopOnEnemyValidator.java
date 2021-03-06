@@ -1,5 +1,7 @@
 package fr.quatrevieux.araknemu.game.fight.turn.action.move.validators;
 
+import java.util.List;
+
 import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.PathStep;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
@@ -20,14 +22,9 @@ final public class StopOnEnemyValidator implements PathValidatorFight {
             if (step.equals(result.path().first()))
                 continue;
 
-            FightCell[] cells = new FightCell[]{
-                map.get(Direction.NORTH_EAST.nextCellIncrement(map.dimensions().width()) + step.cell().id()),
-                map.get(Direction.NORTH_WEST.nextCellIncrement(map.dimensions().width()) + step.cell().id()),
-                map.get(Direction.SOUTH_EAST.nextCellIncrement(map.dimensions().width()) + step.cell().id()),
-                map.get(Direction.SOUTH_WEST.nextCellIncrement(map.dimensions().width()) + step.cell().id())
-            };
+            for (Direction direction : Direction.restrictedDirections()) {
+                FightCell fightCell = map.get(direction.nextCellIncrement(map.dimensions().width()) + step.cell().id());
 
-            for (FightCell fightCell : cells) {
                 if(fightCell.fighter().isPresent() && !fightCell.fighter().get().team().equals(move.performer().team())) {
                     return new MoveSuccess(move.performer(), result.path().truncate(i));
                 }

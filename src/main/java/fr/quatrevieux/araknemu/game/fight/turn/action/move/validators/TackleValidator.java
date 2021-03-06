@@ -20,14 +20,8 @@ final public class TackleValidator implements PathValidatorFight {
         BattlefieldMap map = move.performer().cell().map();
         PathStep<FightCell> step = result.path().first();
 
-        FightCell[] cells = new FightCell[]{
-            map.get(Direction.NORTH_EAST.nextCellIncrement(map.dimensions().width()) + step.cell().id()),
-            map.get(Direction.NORTH_WEST.nextCellIncrement(map.dimensions().width()) + step.cell().id()),
-            map.get(Direction.SOUTH_EAST.nextCellIncrement(map.dimensions().width()) + step.cell().id()),
-            map.get(Direction.SOUTH_WEST.nextCellIncrement(map.dimensions().width()) + step.cell().id())
-        };
-
-        for (FightCell fightCell : cells) {
+        for (Direction direction : Direction.restrictedDirections()) {
+            FightCell fightCell = map.get(direction.nextCellIncrement(map.dimensions().width()) + step.cell().id());
 
             if(!fightCell.fighter().isPresent()) {
                 continue;
