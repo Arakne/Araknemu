@@ -34,7 +34,7 @@ public interface MoveResult extends ActionResult {
 
     abstract public Path<FightCell> path();
 
-    abstract public int steps();
+    abstract public int movementPointCost();
 
     abstract public FightCell target();
 

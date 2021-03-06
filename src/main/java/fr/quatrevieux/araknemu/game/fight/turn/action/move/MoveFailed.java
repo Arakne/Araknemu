@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 final public class MoveFailed implements MoveResult {
     final private int lostActionPoints;
     final private Fighter performer;
+
     public MoveFailed(Fighter performer, int lostActionPoints) {
         this.performer = performer;
         this.lostActionPoints = lostActionPoints;
@@ -66,7 +67,7 @@ final public class MoveFailed implements MoveResult {
     }
 
     @Override
-    public int steps() {
+    public int movementPointCost() {
         return 0;
     }
 
@@ -77,6 +78,6 @@ final public class MoveFailed implements MoveResult {
 
     @Override
     public Object[] arguments() {
-        return null;
+        return new Object[0];
     }
 }

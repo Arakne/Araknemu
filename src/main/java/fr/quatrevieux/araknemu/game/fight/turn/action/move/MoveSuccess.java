@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
  */
 final public class MoveSuccess implements MoveResult {
     final private Fighter performer;
-    private Path<FightCell> path;
+    final private Path<FightCell> path;
 
     public MoveSuccess(Fighter performer, Path<FightCell> path) {
         this.performer = performer;
@@ -69,7 +69,7 @@ final public class MoveSuccess implements MoveResult {
         return path.last().direction();
     }
 
-    public int steps() {
+    public int movementPointCost() {
         return path.size() - 1; // The path contains the current fighter's cell
     }
 

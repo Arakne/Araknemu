@@ -13,6 +13,8 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFailed;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveResult;
 
 final public class TackleValidator implements PathValidatorFight {
+    final static private RandomUtil randomUtil = new RandomUtil();
+
     @Override
     public MoveResult validate(Move move, MoveResult result) {
         BattlefieldMap map = move.performer().cell().map();
@@ -36,9 +38,8 @@ final public class TackleValidator implements PathValidatorFight {
             }
 
             int chance = getTackle(move.performer(), fightCell.fighter().get());
-            int random = RandomUtil.createShared().rand(0, 100);
 
-            if( random > chance) {
+            if(randomUtil.bool(chance)) {
                 int lostPa = (int)(move.performer().fight().turnList().current().get().points().actionPoints() * (chance / 100d));                   
                 return new MoveFailed(move.performer(), lostPa);
             }
