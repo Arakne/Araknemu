@@ -78,7 +78,7 @@ final public class Move implements Action {
 
     @Override
     public void end() {
-        turn.points().useMovementPoints(result.steps());
+        turn.points().useMovementPoints(result.movementPointCost());
         fighter.move(result.target());
         fighter.setOrientation(result.orientation());
     }
@@ -86,7 +86,7 @@ final public class Move implements Action {
     @Override
     public void failed() {
         turn.points().useActionPoints(result.lostActionPoints());
-        turn.points().useMovementPoints(turn.points().movementPoints());
+        turn.points().useMovementPoints(result.movementPointCost());
     }
 
     @Override

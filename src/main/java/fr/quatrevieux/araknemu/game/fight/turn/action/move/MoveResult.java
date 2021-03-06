@@ -25,18 +25,17 @@ import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 
 /**
- * Successful move result
+ * Define a Move result
  */
 public interface MoveResult extends ActionResult {
-    abstract public int action();
 
-    abstract public int lostActionPoints();
+    public int lostActionPoints();
 
-    abstract public Path<FightCell> path();
+    public Path<FightCell> path();
 
-    abstract public int movementPointCost();
+    public int movementPointCost();
 
-    abstract public FightCell target();
+    public FightCell target();
 
-    abstract public Direction orientation();
+    public Direction orientation();
 }

@@ -68,7 +68,7 @@ final public class MoveFailed implements MoveResult {
 
     @Override
     public int movementPointCost() {
-        return 0;
+        return performer.fight().turnList().current().get().points().movementPoints();
     }
 
     @Override
