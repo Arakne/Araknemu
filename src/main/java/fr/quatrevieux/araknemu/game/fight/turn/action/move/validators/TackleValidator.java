@@ -12,29 +12,29 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFailed;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveResult;
 
-final public class TackleValidator implements PathValidatorFight {
-    final static private RandomUtil randomUtil = new RandomUtil();
+public final class TackleValidator implements PathValidatorFight {
+    private static final RandomUtil randomUtil = new RandomUtil();
 
     @Override
     public MoveResult validate(Move move, MoveResult result) {
-        BattlefieldMap map = move.performer().cell().map();
-        PathStep<FightCell> step = result.path().first();
+        final BattlefieldMap map = move.performer().cell().map();
+        final PathStep<FightCell> step = result.path().first();
 
         for (Direction direction : Direction.restrictedDirections()) {
-            FightCell fightCell = map.get(direction.nextCellIncrement(map.dimensions().width()) + step.cell().id());
+            final FightCell fightCell = map.get(direction.nextCellIncrement(map.dimensions().width()) + step.cell().id());
 
-            if(!fightCell.fighter().isPresent()) {
+            if (!fightCell.fighter().isPresent()) {
                 continue;
             }
 
-            if(fightCell.fighter().isPresent() && fightCell.fighter().get().team().equals(move.performer().team())) {
+            if (fightCell.fighter().isPresent() && fightCell.fighter().get().team().equals(move.performer().team())) {
                 continue;
             }
 
             int chance = getTackle(move.performer(), fightCell.fighter().get());
 
-            if(randomUtil.bool(chance)) {
-                int lostPa = (int)(move.performer().fight().turnList().current().get().points().actionPoints() * (chance / 100d));                   
+            if (randomUtil.bool(chance)) {
+                final int lostPa = (int)(move.performer().fight().turnList().current().get().points().actionPoints() * (chance / 100d));                   
                 return new MoveFailed(move.performer(), lostPa);
             }
         }
@@ -43,10 +43,10 @@ final public class TackleValidator implements PathValidatorFight {
     }
 
     private int getTackle(Fighter fighter, PassiveFighter toTackle) {
-        int fighterAgility = fighter.characteristics().get(Characteristic.AGILITY);
-        int toTackleAgility = toTackle.characteristics().get(Characteristic.AGILITY);
+        final int fighterAgility = fighter.characteristics().get(Characteristic.AGILITY);
+        final int toTackleAgility = toTackle.characteristics().get(Characteristic.AGILITY);
 
-        int a = fighterAgility + 25;
+        final int a = fighterAgility + 25;
         int b = toTackleAgility + fighterAgility + 50;
 
         if (b <= 0) {
@@ -54,10 +54,11 @@ final public class TackleValidator implements PathValidatorFight {
         }
 
         int chance = (int) ((300 * a / b) - 100);
-		if (chance < 10)
-			chance = 10;
-		if (chance > 90)
+		if (chance < 10) {
+            chance = 10;
+        } else if (chance > 90){
             chance = 90;
+        }
 
 		return chance;
     }

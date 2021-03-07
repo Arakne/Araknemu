@@ -27,9 +27,9 @@ import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 /**
  * Failed move result
  */
-final public class MoveFailed implements MoveResult {
-    final private int lostActionPoints;
-    final private Fighter performer;
+public final class MoveFailed implements MoveResult {
+    private final int lostActionPoints;
+    private final Fighter performer;
 
     public MoveFailed(Fighter performer, int lostActionPoints) {
         this.performer = performer;
