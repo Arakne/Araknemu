@@ -28,9 +28,9 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 /**
  * Successful move result
  */
-final public class MoveSuccess implements MoveResult {
-    final private Fighter performer;
-    final private Path<FightCell> path;
+public final class MoveSuccess implements MoveResult {
+    private final Fighter performer;
+    private final Path<FightCell> path;
 
 
     public MoveSuccess(Fighter performer, Path<FightCell> path) {
