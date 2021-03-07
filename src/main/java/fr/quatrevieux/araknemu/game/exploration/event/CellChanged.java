@@ -25,9 +25,9 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
  * Trigger when player change cell.
  * Dispatch to map
  */
-final public class CellChanged {
-    final private ExplorationPlayer player;
-    final private int cell;
+public final class CellChanged {
+    private final ExplorationPlayer player;
+    private final int cell;
 
     public CellChanged(ExplorationPlayer player, int cell) {
         this.player = player;

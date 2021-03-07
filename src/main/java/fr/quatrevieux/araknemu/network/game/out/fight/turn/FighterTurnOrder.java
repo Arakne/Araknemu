@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L320
  */
-final public class FighterTurnOrder {
-    final private FightTurnList list;
+public final class FighterTurnOrder {
+    private final FightTurnList list;
 
     public FighterTurnOrder(FightTurnList list) {
         this.list = list;

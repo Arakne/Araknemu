@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 /**
  * Validate move path : stop the player when a non-walkable cell is found
  */
-final public class ValidateWalkable implements PathValidator {
+public final class ValidateWalkable implements PathValidator {
     @Override
     public Path<ExplorationMapCell> validate(Move move, Path<ExplorationMapCell> path) {
         return path.keepWhile(step -> step.cell().walkable());

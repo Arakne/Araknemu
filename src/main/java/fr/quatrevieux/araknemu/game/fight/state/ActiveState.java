@@ -34,7 +34,12 @@ import fr.quatrevieux.araknemu.game.listener.fight.fighter.RefreshBuffs;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.RemoveDeadFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterDie;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterLifeChanged;
-import fr.quatrevieux.araknemu.game.listener.fight.turn.*;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.SendFightTurnStarted;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.SendFightTurnStopped;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.SendFightersInformation;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.SendTurnList;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.SendUsedActionPoints;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.SendUsedMovementPoints;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightAction;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightActionTerminated;
 
@@ -44,8 +49,8 @@ import java.util.Collections;
 /**
  * State for active fight
  */
-final public class ActiveState implements LeavableState, EventsSubscriber {
-    final private FighterOrderStrategy orderStrategy;
+public final class ActiveState implements LeavableState, EventsSubscriber {
+    private final FighterOrderStrategy orderStrategy;
 
     private Fight fight;
     private Listener[] listeners;
@@ -110,7 +115,7 @@ final public class ActiveState implements LeavableState, EventsSubscriber {
         fighter.team().kick(fighter);
         fight.turnList().remove(fighter);
 
-        FightRewardsSheet rewardsSheet = fight.type().rewards().generate(
+        final FightRewardsSheet rewardsSheet = fight.type().rewards().generate(
             new EndFightResults(
                 fight,
                 Collections.emptyList(),

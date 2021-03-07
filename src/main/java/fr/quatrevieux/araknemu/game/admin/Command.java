@@ -22,7 +22,6 @@ package fr.quatrevieux.araknemu.game.admin;
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 
-import java.util.List;
 import java.util.Set;
 
 /**

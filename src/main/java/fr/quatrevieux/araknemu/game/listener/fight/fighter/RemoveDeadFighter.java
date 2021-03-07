@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 /**
  * Remove the dead fighter from fight
  */
-final public class RemoveDeadFighter implements Listener<FighterDie> {
-    final private Fight fight;
+public final class RemoveDeadFighter implements Listener<FighterDie> {
+    private final Fight fight;
 
     public RemoveDeadFighter(Fight fight) {
         this.fight = fight;

@@ -25,7 +25,11 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.FightRewardsSheet;
-import fr.quatrevieux.araknemu.game.fight.event.*;
+import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
+import fr.quatrevieux.araknemu.game.fight.event.FightLeaved;
+import fr.quatrevieux.araknemu.game.fight.event.FighterAdded;
+import fr.quatrevieux.araknemu.game.fight.event.FighterPlaceChanged;
+import fr.quatrevieux.araknemu.game.fight.event.FighterRemoved;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.exception.FightMapException;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
@@ -50,13 +54,13 @@ import java.util.Map;
 /**
  * Placement before start fight
  */
-final public class PlacementState implements LeavableState, EventsSubscriber {
+public final class PlacementState implements LeavableState, EventsSubscriber {
     private long startTime;
     private Fight fight;
     private Listener[] listeners;
     private Map<FightTeam, PlacementCellsGenerator> cellsGenerators;
 
-    final private boolean randomize;
+    private final boolean randomize;
 
     public PlacementState() {
         this(true);
@@ -123,7 +127,7 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
      * @param fighter Fighter to move
      * @param cell The target cell
      */
-    synchronized public void changePlace(Fighter fighter, FightCell cell) {
+    public synchronized void changePlace(Fighter fighter, FightCell cell) {
         if (fighter.ready()) {
             throw new FightException("The fighter is ready");
         }
@@ -148,7 +152,7 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
      *
      * @throws JoinFightException When cannot join the team
      */
-    synchronized public void joinTeam(Fighter fighter, FightTeam team) throws JoinFightException {
+    public synchronized void joinTeam(Fighter fighter, FightTeam team) throws JoinFightException {
         if (fight.state() != this) {
             throw new JoinFightException(JoinFightError.CANT_DO_TOO_LATE);
         }
@@ -158,7 +162,7 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
     }
 
     @Override
-    synchronized public void leave(Fighter fighter) {
+    public synchronized void leave(Fighter fighter) {
         if (fight.state() != this) {
             throw new InvalidFightStateException(getClass());
         }
@@ -175,7 +179,7 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
     /**
      * Start the fight
      */
-    synchronized public void startFight() {
+    public synchronized void startFight() {
         if (fight.state() != this) {
             return;
         }
@@ -207,7 +211,7 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
      * Punish the deserter fighter
      */
     private void punishDeserter(Fighter fighter) {
-        FightRewardsSheet rewardsSheet = fight.type().rewards().generate(
+        final FightRewardsSheet rewardsSheet = fight.type().rewards().generate(
             new EndFightResults(
                 fight,
                 Collections.emptyList(),

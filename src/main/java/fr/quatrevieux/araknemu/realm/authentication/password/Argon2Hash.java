@@ -29,41 +29,11 @@ import java.util.NoSuchElementException;
 /**
  * Argon2 hash algorithm implementation for password
  */
-final public class Argon2Hash implements HashAlgorithm {
-    class Argon2Password implements Password {
-        final private String hash;
-        final private Argon2Factory.Argon2Types hashType;
-
-        public Argon2Password(String hash) {
-            this.hash = hash;
-            this.hashType = typeOf(hash);
-        }
-
-        @Override
-        public boolean check(String input) {
-            return argon2(hashType).verify(hash, input.getBytes());
-        }
-
-        @Override
-        public boolean needRehash() {
-            return argon2(hashType).needsRehash(hash, iterations, memory, parallelism) || hashType != type;
-        }
-
-        @Override
-        public HashAlgorithm algorithm() {
-            return Argon2Hash.this;
-        }
-
-        @Override
-        public String toString() {
-            return hash;
-        }
-    }
-
-    final private Map<Argon2Factory.Argon2Types, Argon2> algorithms = new EnumMap<>(Argon2Factory.Argon2Types.class);
+public final class Argon2Hash implements HashAlgorithm {
+    private final Map<Argon2Factory.Argon2Types, Argon2> algorithms = new EnumMap<>(Argon2Factory.Argon2Types.class);
 
     private int iterations = 4;
-    private int memory = 64*1024;
+    private int memory = 64 * 1024;
     private int parallelism = 8;
     private Argon2Factory.Argon2Types type = Argon2Factory.Argon2Types.ARGON2id;
 
@@ -143,7 +113,7 @@ final public class Argon2Hash implements HashAlgorithm {
      * @param typeName The type name, in case insensitive
      * @throws NoSuchElementException When the given name is invalid
      */
-    static public Argon2Factory.Argon2Types typeByName(String typeName) {
+    public static Argon2Factory.Argon2Types typeByName(String typeName) {
         switch (typeName.toLowerCase()) {
             case "argon2i":
                 return Argon2Factory.Argon2Types.ARGON2i;
@@ -153,6 +123,36 @@ final public class Argon2Hash implements HashAlgorithm {
                 return Argon2Factory.Argon2Types.ARGON2id;
             default:
                 throw new NoSuchElementException("Invalid argon2 type " + typeName);
+        }
+    }
+
+    class Argon2Password implements Password {
+        private final String hash;
+        private final Argon2Factory.Argon2Types hashType;
+
+        public Argon2Password(String hash) {
+            this.hash = hash;
+            this.hashType = typeOf(hash);
+        }
+
+        @Override
+        public boolean check(String input) {
+            return argon2(hashType).verify(hash, input.getBytes());
+        }
+
+        @Override
+        public boolean needRehash() {
+            return argon2(hashType).needsRehash(hash, iterations, memory, parallelism) || hashType != type;
+        }
+
+        @Override
+        public HashAlgorithm algorithm() {
+            return Argon2Hash.this;
+        }
+
+        @Override
+        public String toString() {
+            return hash;
         }
     }
 }

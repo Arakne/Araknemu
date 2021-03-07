@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 /**
  * Cast constraints for a weapon
  */
-final public class WeaponConstraints implements SpellConstraints {
-    final private Weapon weapon;
+public final class WeaponConstraints implements SpellConstraints {
+    private final Weapon weapon;
 
     public WeaponConstraints(Weapon weapon) {
         this.weapon = weapon;

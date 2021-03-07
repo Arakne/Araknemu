@@ -24,40 +24,40 @@ import fr.quatrevieux.araknemu.core.network.Channel;
 /**
  * Delegates all session methods to an inner session
  */
-abstract public class AbstractDelegatedSession implements Session {
-    final private Session session;
+public abstract class AbstractDelegatedSession implements Session {
+    private final Session session;
 
     public AbstractDelegatedSession(Session session) {
         this.session = session;
     }
 
     @Override
-    final public Channel channel() {
+    public final Channel channel() {
         return session.channel();
     }
 
     @Override
-    final public void send(Object packet) {
+    public final void send(Object packet) {
         session.send(packet);
     }
 
     @Override
-    final public void receive(Object packet) {
+    public final void receive(Object packet) {
         session.receive(packet);
     }
 
     @Override
-    final public void exception(Throwable cause) {
+    public final void exception(Throwable cause) {
         session.exception(cause);
     }
 
     @Override
-    final public void close() {
+    public final void close() {
         session.close();
     }
 
     @Override
-    final public boolean isAlive() {
+    public final boolean isAlive() {
         return session.isAlive();
     }
 }

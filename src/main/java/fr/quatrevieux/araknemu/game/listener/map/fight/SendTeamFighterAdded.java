@@ -29,8 +29,8 @@ import java.util.Collections;
 /**
  * Add the fighter to displayed fight team
  */
-final public class SendTeamFighterAdded implements Listener<FighterAdded> {
-    final private ExplorationMap map;
+public final class SendTeamFighterAdded implements Listener<FighterAdded> {
+    private final ExplorationMap map;
 
     public SendTeamFighterAdded(ExplorationMap map) {
         this.map = map;

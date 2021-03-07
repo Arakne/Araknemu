@@ -33,11 +33,11 @@ import fr.quatrevieux.araknemu.game.spell.Spell;
 /**
  * Factory for cast action
  */
-final public class CastFactory implements CastActionFactory {
-    final private FightTurn turn;
-    final private Fighter fighter;
-    final private CastConstraintValidator<Spell> validator;
-    final private CriticalityStrategy criticalityStrategy;
+public final class CastFactory implements CastActionFactory {
+    private final FightTurn turn;
+    private final Fighter fighter;
+    private final CastConstraintValidator<Spell> validator;
+    private final CriticalityStrategy criticalityStrategy;
 
     public CastFactory(FightTurn turn) {
         this(turn, new SpellConstraintsValidator(), new BaseCriticalityStrategy(turn.fighter()));

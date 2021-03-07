@@ -25,11 +25,11 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 /**
  * Event trigger on broadcasted message sent
  */
-final public class BroadcastedMessage {
-    final private ChannelType channel;
-    final private GamePlayer sender;
-    final private String message;
-    final private String extra;
+public final class BroadcastedMessage {
+    private final ChannelType channel;
+    private final GamePlayer sender;
+    private final String message;
+    private final String extra;
 
     public BroadcastedMessage(ChannelType channel, GamePlayer sender, String message, String extra) {
         this.channel = channel;

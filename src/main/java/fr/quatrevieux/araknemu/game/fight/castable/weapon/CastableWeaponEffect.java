@@ -28,10 +28,10 @@ import fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget;
 /**
  * Effect for a weapon
  */
-final public class CastableWeaponEffect implements SpellEffect {
-    final private WeaponEffect effect;
-    final private Weapon weapon;
-    final private boolean critical;
+public final class CastableWeaponEffect implements SpellEffect {
+    private final WeaponEffect effect;
+    private final Weapon weapon;
+    private final boolean critical;
 
     public CastableWeaponEffect(WeaponEffect effect, Weapon weapon) {
         this(effect, weapon, false);

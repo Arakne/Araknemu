@@ -14,34 +14,24 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux Jean-Alexandre Valentin
  */
 
-package fr.quatrevieux.araknemu.game.listener.player.inventory;
+package fr.quatrevieux.araknemu.network.game.out.info;
 
-import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.item.inventory.event.KamasChanged;
-import fr.quatrevieux.araknemu.network.game.out.account.Stats;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
+import static org.junit.jupiter.api.Assertions.*;
 
-class SendKamasTest extends GameBaseCase {
-    private SendKamas listener;
+class StopLifeTimerTest {
 
-    @Override
-    @BeforeEach
-    public void setUp() throws Exception {
-        super.setUp();
-
-        listener = new SendKamas(gamePlayer());
+    @Test
+    void stop() {
+        assertEquals("ILF0", new StopLifeTimer().toString());
     }
 
     @Test
-    void onKamasChanged() throws SQLException {
-        listener.on(new KamasChanged(0, 15225));
-
-        requestStack.assertLast(new Stats(gamePlayer().properties()));
+    void stopWithNumberOfLifeRegenerated() {
+        assertEquals("ILF53", new StopLifeTimer(53).toString());
     }
 }

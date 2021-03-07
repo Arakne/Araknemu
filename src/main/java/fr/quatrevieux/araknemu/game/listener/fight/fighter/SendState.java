@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 /**
  * Send the fighter state to clients
  */
-final public class SendState implements Listener<FighterStateChanged> {
-    final private Fight fight;
+public final class SendState implements Listener<FighterStateChanged> {
+    private final Fight fight;
 
     public SendState(Fight fight) {
         this.fight = fight;

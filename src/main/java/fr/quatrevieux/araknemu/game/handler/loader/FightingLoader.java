@@ -20,18 +20,18 @@
 package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.Container;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.handler.EnsureFighting;
 import fr.quatrevieux.araknemu.game.handler.fight.ChangeFighterReadyState;
 import fr.quatrevieux.araknemu.game.handler.fight.ChangeFighterStartPlace;
 import fr.quatrevieux.araknemu.game.handler.fight.EndFighterTurn;
 import fr.quatrevieux.araknemu.game.handler.fight.LeaveFight;
 import fr.quatrevieux.araknemu.network.game.GameSession;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Loader for fight packets
  */
-final public class FightingLoader extends AbstractLoader {
+public final class FightingLoader extends AbstractLoader {
     public FightingLoader() {
         super(EnsureFighting::new);
     }
@@ -43,7 +43,7 @@ final public class FightingLoader extends AbstractLoader {
             new ChangeFighterStartPlace(),
             new ChangeFighterReadyState(),
             new EndFighterTurn(),
-            new LeaveFight()
+            new LeaveFight(),
         };
     }
 }

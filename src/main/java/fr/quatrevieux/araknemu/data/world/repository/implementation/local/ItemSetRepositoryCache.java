@@ -30,10 +30,10 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Cache repository for {@link ItemSet}
  */
-final public class ItemSetRepositoryCache implements ItemSetRepository {
-    final private ItemSetRepository repository;
+public final class ItemSetRepositoryCache implements ItemSetRepository {
+    private final ItemSetRepository repository;
 
-    final private ConcurrentMap<Integer, ItemSet> cacheById = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, ItemSet> cacheById = new ConcurrentHashMap<>();
 
     public ItemSetRepositoryCache(ItemSetRepository repository) {
         this.repository = repository;
@@ -50,7 +50,7 @@ final public class ItemSetRepositoryCache implements ItemSetRepository {
 
     @Override
     public Collection<ItemSet> load() {
-        Collection<ItemSet> loaded = repository.load();
+        final Collection<ItemSet> loaded = repository.load();
 
         for (ItemSet template : loaded) {
             cacheById.put(template.id(), template);

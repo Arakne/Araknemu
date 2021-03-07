@@ -40,11 +40,11 @@ import java.util.stream.Collectors;
 /**
  * Service for handle areas
  */
-final public class AreaService implements PreloadableService, EventsSubscriber {
-    final private AreaRepository areaRepository;
-    final private SubAreaRepository subAreaRepository;
+public final class AreaService implements PreloadableService, EventsSubscriber {
+    private final AreaRepository areaRepository;
+    private final SubAreaRepository subAreaRepository;
 
-    final private Map<Integer, ExplorationSubArea> subAreas = new HashMap<>();
+    private final Map<Integer, ExplorationSubArea> subAreas = new HashMap<>();
 
     public AreaService(AreaRepository areaRepository, SubAreaRepository subAreaRepository) {
         this.areaRepository = areaRepository;
@@ -68,8 +68,8 @@ final public class AreaService implements PreloadableService, EventsSubscriber {
 
         final SubArea subArea = subAreaRepository.get(id);
         final Area area = areaRepository.get(subArea.area());
+        final ExplorationSubArea explorationSubArea = new ExplorationSubArea(subArea, area);
 
-        ExplorationSubArea explorationSubArea = new ExplorationSubArea(subArea, area);
         subAreas.put(explorationSubArea.id(), explorationSubArea);
 
         return explorationSubArea;
@@ -79,7 +79,7 @@ final public class AreaService implements PreloadableService, EventsSubscriber {
     public void preload(Logger logger) {
         logger.info("Loading areas...");
 
-        Map<Integer, Area> areas = areaRepository.all().stream().collect(Collectors.toMap(Area::id, Function.identity()));
+        final Map<Integer, Area> areas = areaRepository.all().stream().collect(Collectors.toMap(Area::id, Function.identity()));
 
         for (SubArea subArea : subAreaRepository.all()) {
             if (!areas.containsKey(subArea.area())) {
@@ -105,7 +105,7 @@ final public class AreaService implements PreloadableService, EventsSubscriber {
                 public Class<PlayerLoaded> event() {
                     return PlayerLoaded.class;
                 }
-            }
+            },
         };
     }
 }

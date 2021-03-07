@@ -33,23 +33,29 @@ import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersR
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
  * Manage dialogs, questions, responses and actions
  */
-final public class DialogService implements PreloadableService {
-    final private QuestionRepository questionRepository;
-    final private ResponseActionRepository responseActionRepository;
-    final private ParametersResolver parametersResolver;
-    final private Logger logger;
+public final class DialogService implements PreloadableService {
+    private final QuestionRepository questionRepository;
+    private final ResponseActionRepository responseActionRepository;
+    private final ParametersResolver parametersResolver;
+    private final Logger logger;
 
-    final private Map<String, ActionFactory> actionFactories = new HashMap<>();
-    final private Map<Integer, NpcQuestion> questions = new ConcurrentHashMap<>();
-    final private Map<Integer, Response> responses = new ConcurrentHashMap<>();
-
+    private final Map<String, ActionFactory> actionFactories = new HashMap<>();
+    private final Map<Integer, NpcQuestion> questions = new ConcurrentHashMap<>();
+    private final Map<Integer, Response> responses = new ConcurrentHashMap<>();
 
     public DialogService(QuestionRepository questionRepository, ResponseActionRepository responseActionRepository, ActionFactory[] actionFactories, ParametersResolver parametersResolver, Logger logger) {
         this.questionRepository = questionRepository;
@@ -111,7 +117,7 @@ final public class DialogService implements PreloadableService {
      * If at least one question is not into the cache, will returns nothing (and let loading from database)
      */
     private Optional<Collection<NpcQuestion>> loadQuestionFromCache(int[] ids) {
-        Collection<NpcQuestion> questions = new ArrayList<>(ids.length);
+        final Collection<NpcQuestion> questions = new ArrayList<>(ids.length);
 
         for (int id : ids) {
             if (!this.questions.containsKey(id)) {
@@ -128,7 +134,7 @@ final public class DialogService implements PreloadableService {
      * Load all questions from database
      */
     private Collection<NpcQuestion> loadQuestionFromDatabase(int[] ids) {
-        Collection<NpcQuestion> questions = questionRepository.byIds(ids)
+        final Collection<NpcQuestion> questions = questionRepository.byIds(ids)
             .stream()
             .map(question -> createQuestion(question, true))
             .collect(Collectors.toList())
@@ -180,7 +186,7 @@ final public class DialogService implements PreloadableService {
      * @param responsesActions Actions, grouping by the response id
      */
     private Collection<Response> createResponses(Map<Integer, List<ResponseAction>> responsesActions) {
-        Collection<Response> responses = new ArrayList<>();
+        final Collection<Response> responses = new ArrayList<>();
 
         for (Map.Entry<Integer, List<ResponseAction>> entry : responsesActions.entrySet()) {
             responses.add(

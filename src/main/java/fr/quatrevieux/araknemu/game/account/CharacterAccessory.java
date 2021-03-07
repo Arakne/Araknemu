@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.world.creature.accessory.AccessoryType;
 /**
  * Adapt simple character item to accessory
  */
-final public class CharacterAccessory implements Accessory {
-    final private PlayerItem item;
+public final class CharacterAccessory implements Accessory {
+    private final PlayerItem item;
 
     public CharacterAccessory(PlayerItem item) {
         this.item = item;

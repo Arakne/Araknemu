@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.network.game.out.account;
 /**
  * Send the regional version
  */
-final public class RegionalVersion {
+public final class RegionalVersion {
     private int region;
 
     public RegionalVersion(int region) {

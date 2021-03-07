@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.event.TurnTerminated;
 /**
  * Fight module for handle launch spell validation (cooldown, launch per turn, per target)
  */
-final public class LaunchedSpellsModule implements FightModule {
+public final class LaunchedSpellsModule implements FightModule {
     /**
      * @param fight For compatibility with {@link fr.quatrevieux.araknemu.game.fight.module.FightModule.Factory}
      */
@@ -38,7 +38,7 @@ final public class LaunchedSpellsModule implements FightModule {
     @Override
     public Listener[] listeners() {
         return new Listener[] {
-            new Listener<FighterInitialized> () {
+            new Listener<FighterInitialized>() {
                 @Override
                 public void on(FighterInitialized event) {
                     event.fighter().attach(new LaunchedSpells());
@@ -49,7 +49,7 @@ final public class LaunchedSpellsModule implements FightModule {
                     return FighterInitialized.class;
                 }
             },
-            new Listener<SpellCasted> () {
+            new Listener<SpellCasted>() {
                 @Override
                 public void on(SpellCasted event) {
                     event.caster().attachment(LaunchedSpells.class).push(
@@ -63,7 +63,7 @@ final public class LaunchedSpellsModule implements FightModule {
                     return SpellCasted.class;
                 }
             },
-            new Listener<TurnTerminated> () {
+            new Listener<TurnTerminated>() {
                 @Override
                 public void on(TurnTerminated event) {
                     event.turn().fighter().attachment(LaunchedSpells.class).refresh();

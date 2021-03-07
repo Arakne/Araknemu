@@ -39,9 +39,9 @@ import java.util.List;
 /**
  * Factory for weapons
  */
-final public class WeaponFactory implements ItemFactory {
-    final private EffectMappers mappers;
-    final private SpellEffectService effectService;
+public final class WeaponFactory implements ItemFactory {
+    private final EffectMappers mappers;
+    private final SpellEffectService effectService;
 
     public WeaponFactory(EffectMappers mappers, SpellEffectService effectService) {
         this.mappers = mappers;
@@ -77,7 +77,7 @@ final public class WeaponFactory implements ItemFactory {
     }
 
     private Weapon.WeaponInfo parseInfo(String info) {
-        String[] parts = StringUtils.split(info, ";");
+        final String[] parts = StringUtils.split(info, ";");
 
         return new Weapon.WeaponInfo(
             Integer.parseInt(parts[0]),

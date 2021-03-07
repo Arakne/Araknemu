@@ -29,8 +29,8 @@ import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 /**
  * Add the dropped items to the fighter
  */
-final public class AddItems implements DropRewardAction {
-    final private ItemService service;
+public final class AddItems implements DropRewardAction {
+    private final ItemService service;
 
     public AddItems(ItemService service) {
         this.service = service;

@@ -28,9 +28,9 @@ import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 /**
  * Slot for rings
  */
-final public class RingSlot extends AbstractWearableSlot {
-    final static public int RING1 = 2;
-    final static public int RING2 = 4;
+public final class RingSlot extends AbstractWearableSlot {
+    public static final int RING1 = 2;
+    public static final int RING2 = 4;
 
     public RingSlot(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage, GamePlayer owner, int id) {
         super(dispatcher, storage, owner, id, SuperType.RING);

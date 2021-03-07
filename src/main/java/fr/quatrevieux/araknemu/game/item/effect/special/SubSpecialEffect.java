@@ -28,10 +28,10 @@ import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
 /**
  * Sub special effect to player {@link SpecialEffects}
  */
-final public class SubSpecialEffect implements SpecialEffectHandler {
-    final private SpecialEffects.Type type;
+public final class SubSpecialEffect implements SpecialEffectHandler {
+    private final SpecialEffects.Type type;
 
-    final private RandomUtil random = new RandomUtil();
+    private final RandomUtil random = new RandomUtil();
 
     public SubSpecialEffect(SpecialEffects.Type type) {
         this.type = type;
@@ -49,7 +49,7 @@ final public class SubSpecialEffect implements SpecialEffectHandler {
 
     @Override
     public SpecialEffect create(ItemTemplateEffectEntry entry, boolean maximize) {
-        int value = maximize ? entry.min() : random.rand(entry.min(), entry.max());
+        final int value = maximize ? entry.min() : random.rand(entry.min(), entry.max());
 
         return new SpecialEffect(this, entry.effect(), new int[] {value, 0, entry.special()}, "0d0+" + value);
     }

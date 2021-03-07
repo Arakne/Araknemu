@@ -19,68 +19,34 @@
 
 package fr.quatrevieux.araknemu.game.handler.object;
 
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.item.type.UsableItem;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
-import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
-import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectUseRequest;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Use an object
  */
-final public class UseObject implements PacketHandler<GameSession, ObjectUseRequest> {
-    static private class ApplyItemOperation implements Operation {
-        final private UsableItem item;
-        final private ExplorationPlayer caster;
-        final private int targetCell;
-
-        private boolean success = false;
-
-        public ApplyItemOperation(UsableItem item, ExplorationPlayer caster, int targetCell) {
-            this.item = item;
-            this.caster = caster;
-            this.targetCell = targetCell;
-        }
-
-        @Override
-        public void onExplorationPlayer(ExplorationPlayer target) {
-            if (!item.checkTarget(caster, target, targetCell)) {
-                success = false;
-                return;
-            }
-
-            item.applyToTarget(caster, target, targetCell);
-            success = true;
-        }
-
-        @Override
-        public void onNpc(GameNpc npc) {
-            onExplorationPlayer(null);
-        }
-
-        public void onNull() {
-            onExplorationPlayer(null);
-        }
-    }
-
+public final class UseObject implements PacketHandler<GameSession, ObjectUseRequest> {
     @Override
     public void handle(GameSession session, ObjectUseRequest packet) throws Exception {
         if (!session.player().restrictions().canUseObject()) {
             throw new ErrorPacket(Error.cantDoOnCurrentState());
         }
 
-        InventoryEntry entry = session.player().inventory().get(packet.objectId());
-
-        UsableItem item = UsableItem.class.cast(entry.item());
+        final InventoryEntry entry = session.player().inventory().get(packet.objectId());
+        final UsableItem item = UsableItem.class.cast(entry.item());
 
         boolean result = true;
+
         try {
             result = packet.isTarget()
                 ? handleForTarget(session, item, packet)
@@ -120,5 +86,39 @@ final public class UseObject implements PacketHandler<GameSession, ObjectUseRequ
         }
 
         return operation.success;
+    }
+
+    private static class ApplyItemOperation implements Operation {
+        private final UsableItem item;
+        private final ExplorationPlayer caster;
+        private final int targetCell;
+
+        private boolean success = false;
+
+        public ApplyItemOperation(UsableItem item, ExplorationPlayer caster, int targetCell) {
+            this.item = item;
+            this.caster = caster;
+            this.targetCell = targetCell;
+        }
+
+        @Override
+        public void onExplorationPlayer(ExplorationPlayer target) {
+            if (!item.checkTarget(caster, target, targetCell)) {
+                success = false;
+                return;
+            }
+
+            item.applyToTarget(caster, target, targetCell);
+            success = true;
+        }
+
+        @Override
+        public void onNpc(GameNpc npc) {
+            onExplorationPlayer(null);
+        }
+
+        public void onNull() {
+            onExplorationPlayer(null);
+        }
     }
 }

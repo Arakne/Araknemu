@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
 /**
  * Null object for {@link UseEffectHandler}
  */
-final public class NullEffectHandler implements UseEffectHandler {
-    final static public UseEffectHandler INSTANCE = new NullEffectHandler();
+public final class NullEffectHandler implements UseEffectHandler {
+    public static final UseEffectHandler INSTANCE = new NullEffectHandler();
 
     @Override
     public void apply(UseEffect effect, ExplorationPlayer caster) {

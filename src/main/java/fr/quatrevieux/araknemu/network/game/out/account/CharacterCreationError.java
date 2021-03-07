@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L571
  */
-final public class CharacterCreationError {
-    final private PlayerConstraints.Error error;
+public final class CharacterCreationError {
+    private final PlayerConstraints.Error error;
 
     public CharacterCreationError(PlayerConstraints.Error error) {
         this.error = error;

@@ -19,7 +19,15 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.spell;
 
-import fr.quatrevieux.araknemu.game.fight.castable.validator.*;
+import fr.quatrevieux.araknemu.game.fight.castable.validator.ApCostValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.validator.ConstraintsAggregateValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.validator.LineLaunchValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.validator.LineOfSightValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.validator.RangeValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.validator.SpellLaunchValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.validator.StatesValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.validator.TargetCellValidator;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -28,8 +36,8 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 /**
  * Validate spell constraints
  */
-final public class SpellConstraintsValidator implements CastConstraintValidator<Spell> {
-    final private CastConstraintValidator<Spell> validator;
+public final class SpellConstraintsValidator implements CastConstraintValidator<Spell> {
+    private final CastConstraintValidator<Spell> validator;
 
     @SuppressWarnings("unchecked")
     public SpellConstraintsValidator() {

@@ -24,8 +24,8 @@ package fr.quatrevieux.araknemu.network.game.out.exchange.store;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L1148
  */
-final public class ItemBought {
-    final private boolean success;
+public final class ItemBought {
+    private final boolean success;
 
     public ItemBought(boolean success) {
         this.success = success;
@@ -39,14 +39,14 @@ final public class ItemBought {
     /**
      * The item has been successfully bought
      */
-    static public ItemBought success() {
+    public static ItemBought success() {
         return new ItemBought(true);
     }
 
     /**
      * Cannot bought the item
      */
-    static public ItemBought failed() {
+    public static ItemBought failed() {
         return new ItemBought(false);
     }
 }

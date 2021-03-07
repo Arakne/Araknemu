@@ -28,14 +28,14 @@ import fr.quatrevieux.araknemu.data.value.Geolocation;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.game.exploration.area.ExplorationSubArea;
 import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
+import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
+import fr.quatrevieux.araknemu.game.exploration.creature.operation.SendPacket;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.BasicCell;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.exploration.map.event.NewSpriteOnMap;
 import fr.quatrevieux.araknemu.game.exploration.map.event.SpriteRemoveFromMap;
-import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
-import fr.quatrevieux.araknemu.game.exploration.creature.operation.SendPacket;
 
 import java.util.Collection;
 import java.util.Map;
@@ -48,14 +48,14 @@ import java.util.stream.Collectors;
 /**
  * Map object for exploration
  */
-final public class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispatcher {
-    final private MapTemplate template;
-    final private ExplorationSubArea subArea;
+public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispatcher {
+    private final MapTemplate template;
+    private final ExplorationSubArea subArea;
 
-    final private Map<Integer, ExplorationMapCell> cells;
-    final private ConcurrentMap<Integer, ExplorationCreature> creatures = new ConcurrentHashMap<>();
+    private final Map<Integer, ExplorationMapCell> cells;
+    private final ConcurrentMap<Integer, ExplorationCreature> creatures = new ConcurrentHashMap<>();
 
-    final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
+    private final ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
     public ExplorationMap(MapTemplate template, CellLoader loader, ExplorationSubArea subArea) {
         this.template = template;

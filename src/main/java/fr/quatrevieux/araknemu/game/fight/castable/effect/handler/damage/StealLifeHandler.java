@@ -31,8 +31,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 /**
  * Handle steal life
  */
-final public class StealLifeHandler implements EffectHandler, BuffHook {
-    final private DamageApplier applier;
+public final class StealLifeHandler implements EffectHandler, BuffHook {
+    private final DamageApplier applier;
 
     public StealLifeHandler(Element element, Fight fight) {
         this.applier = new DamageApplier(element, fight);

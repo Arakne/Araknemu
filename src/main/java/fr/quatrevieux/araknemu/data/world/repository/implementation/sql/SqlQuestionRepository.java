@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Question;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.QuestionRepository;
@@ -29,7 +29,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Question repository implementation for SQL database
@@ -37,27 +42,8 @@ import java.util.*;
  * @see Question
  */
 final class SqlQuestionRepository implements QuestionRepository {
-    private class Loader implements RepositoryUtils.Loader<Question> {
-        @Override
-        public Question create(ResultSet rs) throws SQLException {
-            return new Question(
-                rs.getInt("QUESTION_ID"),
-                Arrays.stream(StringUtils.split(rs.getString("RESPONSE_IDS"), ';'))
-                    .mapToInt(Integer::parseInt)
-                    .toArray(),
-                StringUtils.split(rs.getString("PARAMETERS"), ';'),
-                rs.getString("CONDITIONS")
-            );
-        }
-
-        @Override
-        public Question fillKeys(Question entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<Question> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<Question> utils;
 
     public SqlQuestionRepository(QueryExecutor executor) {
         this.executor = executor;
@@ -149,14 +135,13 @@ final class SqlQuestionRepository implements QuestionRepository {
      * @param ids The sorted ids
      */
     private Collection<Question> sortByIds(Collection<Question> data, int[] ids) {
-        Collection<Question> sorted = new ArrayList<>(data.size());
-
-        Map<Integer, Question> questions = new HashMap<>();
+        final Collection<Question> sorted = new ArrayList<>(data.size());
+        final Map<Integer, Question> questions = new HashMap<>();
 
         data.forEach(question -> questions.put(question.id(), question));
 
         for (int id : ids) {
-            Question question = questions.get(id);
+            final Question question = questions.get(id);
 
             if (question != null) {
                 sorted.add(question);
@@ -164,5 +149,24 @@ final class SqlQuestionRepository implements QuestionRepository {
         }
 
         return sorted;
+    }
+
+    private class Loader implements RepositoryUtils.Loader<Question> {
+        @Override
+        public Question create(ResultSet rs) throws SQLException {
+            return new Question(
+                rs.getInt("QUESTION_ID"),
+                Arrays.stream(StringUtils.split(rs.getString("RESPONSE_IDS"), ';'))
+                    .mapToInt(Integer::parseInt)
+                    .toArray(),
+                StringUtils.split(rs.getString("PARAMETERS"), ';'),
+                rs.getString("CONDITIONS")
+            );
+        }
+
+        @Override
+        public Question fillKeys(Question entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

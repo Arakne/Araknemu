@@ -19,10 +19,10 @@
 
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
@@ -35,26 +35,8 @@ import java.util.Collection;
  * SQL implementation for {@link PlayerSpell} repository
  */
 final class SqlPlayerSpellRepository implements PlayerSpellRepository {
-    private class Loader implements RepositoryUtils.Loader<PlayerSpell> {
-        @Override
-        public PlayerSpell create(ResultSet rs) throws SQLException {
-            return new PlayerSpell(
-                rs.getInt("PLAYER_ID"),
-                rs.getInt("SPELL_ID"),
-                rs.getBoolean("CLASS_SPELL"),
-                rs.getInt("SPELL_LEVEL"),
-                rs.getInt("SPELL_POSITION")
-            );
-        }
-
-        @Override
-        public PlayerSpell fillKeys(PlayerSpell entity, ResultSet keys) throws SQLException {
-            throw new UnsupportedOperationException();
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<PlayerSpell> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<PlayerSpell> utils;
 
     public SqlPlayerSpellRepository(QueryExecutor executor) {
         this.executor = executor;
@@ -98,7 +80,7 @@ final class SqlPlayerSpellRepository implements PlayerSpellRepository {
 
     @Override
     public void delete(PlayerSpell item) {
-        int count = utils.update(
+        final int count = utils.update(
             "DELETE FROM PLAYER_SPELL WHERE PLAYER_ID = ? AND SPELL_ID = ?",
             stmt -> {
                 stmt.setInt(1, item.playerId());
@@ -147,5 +129,23 @@ final class SqlPlayerSpellRepository implements PlayerSpellRepository {
                 stmt.setInt(2, entity.spellId());
             }
         ) > 0;
+    }
+
+    private class Loader implements RepositoryUtils.Loader<PlayerSpell> {
+        @Override
+        public PlayerSpell create(ResultSet rs) throws SQLException {
+            return new PlayerSpell(
+                rs.getInt("PLAYER_ID"),
+                rs.getInt("SPELL_ID"),
+                rs.getBoolean("CLASS_SPELL"),
+                rs.getInt("SPELL_LEVEL"),
+                rs.getInt("SPELL_POSITION")
+            );
+        }
+
+        @Override
+        public PlayerSpell fillKeys(PlayerSpell entity, ResultSet keys) throws SQLException {
+            throw new UnsupportedOperationException();
+        }
     }
 }

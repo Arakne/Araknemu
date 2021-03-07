@@ -32,8 +32,8 @@ import java.util.List;
 /**
  * Get stats on map cells
  */
-final public class MapStats extends AbstractCommand {
-    final private MapTemplateRepository repository;
+public final class MapStats extends AbstractCommand {
+    private final MapTemplateRepository repository;
 
     public MapStats(MapTemplateRepository repository) {
         this.repository = repository;
@@ -56,7 +56,7 @@ final public class MapStats extends AbstractCommand {
     public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
         performer.info("Loading map stats...");
 
-        int[] movements = new int[10];
+        final int[] movements = new int[10];
 
         int count = 0;
         int withFightPos = 0;

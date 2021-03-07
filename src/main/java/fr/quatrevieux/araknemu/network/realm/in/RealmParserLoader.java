@@ -28,7 +28,7 @@ import java.util.Collection;
 /**
  * Load realm input packet parsers
  */
-final public class RealmParserLoader implements ParserLoader {
+public final class RealmParserLoader implements ParserLoader {
     @Override
     public Collection<SinglePacketParser> load() {
         return Arrays.asList(

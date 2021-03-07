@@ -27,9 +27,9 @@ import fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget;
 /**
  * Apply spell modifiers on effect
  */
-final public class BoostedSpellEffect implements SpellEffect {
-    final private SpellEffect effect;
-    final private SpellModifiers modifiers;
+public final class BoostedSpellEffect implements SpellEffect {
+    private final SpellEffect effect;
+    private final SpellModifiers modifiers;
 
     public BoostedSpellEffect(SpellEffect effect, SpellModifiers modifiers) {
         this.effect = effect;

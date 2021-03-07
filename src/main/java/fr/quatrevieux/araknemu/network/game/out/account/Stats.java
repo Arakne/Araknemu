@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.player.CharacterProperties;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L797
  */
-final public class Stats {
-    final private CharacterProperties player;
+public final class Stats {
+    private final CharacterProperties player;
 
     public Stats(CharacterProperties player) {
         this.player = player;
@@ -36,7 +36,7 @@ final public class Stats {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("As");
+        final StringBuilder sb = new StringBuilder("As");
 
         sb
             .append(player.experience().current()).append(',').append(player.experience().min()).append(',').append(player.experience().max()).append('|')

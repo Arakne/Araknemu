@@ -28,9 +28,9 @@ import java.util.Collection;
 /**
  * SpellsBoosts with dispatcher
  */
-final public class DispatcherSpellsBoosts implements SpellsBoosts {
-    final private SpellsBoosts boosts;
-    final private Dispatcher dispatcher;
+public final class DispatcherSpellsBoosts implements SpellsBoosts {
+    private final SpellsBoosts boosts;
+    private final Dispatcher dispatcher;
 
     public DispatcherSpellsBoosts(SpellsBoosts boosts, Dispatcher dispatcher) {
         this.boosts = boosts;
@@ -39,7 +39,8 @@ final public class DispatcherSpellsBoosts implements SpellsBoosts {
 
     @Override
     public int boost(int spellId, Modifier modifier, int value) {
-        int newValue = boosts.boost(spellId, modifier, value);
+        final int newValue = boosts.boost(spellId, modifier, value);
+
         dispatcher.dispatch(new SpellBoostChanged(spellId, modifier, newValue));
 
         return newValue;

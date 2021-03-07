@@ -33,10 +33,10 @@ import java.util.List;
 /**
  * The fight is terminated
  */
-final public class FinishState implements FightState {
+public final class FinishState implements FightState {
     @Override
     public void start(Fight fight) {
-        FightRewardsSheet rewardsSheet = fight.type().rewards().generate(results(fight));
+        final FightRewardsSheet rewardsSheet = fight.type().rewards().generate(results(fight));
 
         rewardsSheet.rewards().forEach(reward -> reward.fighter().dispatch(new FightFinished(reward)));
 
@@ -54,8 +54,8 @@ final public class FinishState implements FightState {
      * Compute the end fight results
      */
     private EndFightResults results(Fight fight) {
-        List<Fighter> winners = new ArrayList<>();
-        List<Fighter> loosers = new ArrayList<>();
+        final List<Fighter> winners = new ArrayList<>();
+        final List<Fighter> loosers = new ArrayList<>();
 
         for (FightTeam team : fight.teams()) {
             if (team.alive()) {

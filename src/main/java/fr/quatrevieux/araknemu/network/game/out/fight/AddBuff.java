@@ -25,8 +25,8 @@ import fr.quatrevieux.araknemu.game.spell.Spell;
 /**
  * Add buff to fighter
  */
-final public class AddBuff {
-    final private Buff buff;
+public final class AddBuff {
+    private final Buff buff;
 
     public AddBuff(Buff buff) {
         this.buff = buff;

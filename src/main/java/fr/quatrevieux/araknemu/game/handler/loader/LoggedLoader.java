@@ -21,18 +21,22 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.handler.EnsureLogged;
-import fr.quatrevieux.araknemu.game.handler.account.*;
+import fr.quatrevieux.araknemu.game.handler.account.CreateCharacter;
+import fr.quatrevieux.araknemu.game.handler.account.DeleteCharacter;
+import fr.quatrevieux.araknemu.game.handler.account.ListCharacters;
+import fr.quatrevieux.araknemu.game.handler.account.SaveClientUid;
+import fr.quatrevieux.araknemu.game.handler.account.SelectCharacter;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.game.GameSession;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Loader for logged packets
  */
-final public class LoggedLoader extends AbstractLoader {
+public final class LoggedLoader extends AbstractLoader {
     public LoggedLoader() {
         super(EnsureLogged::new);
     }

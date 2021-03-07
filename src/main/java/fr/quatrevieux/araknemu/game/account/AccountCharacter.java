@@ -28,10 +28,10 @@ import fr.quatrevieux.araknemu.network.game.in.account.AddCharacterRequest;
 /**
  * Character for game account
  */
-final public class AccountCharacter {
-    final private GameAccount account;
-    final private Player entity;
-    final private Accessories accessories;
+public final class AccountCharacter {
+    private final GameAccount account;
+    private final Player entity;
+    private final Accessories accessories;
 
     public AccountCharacter(GameAccount account, Player entity, Accessories accessories) {
         this.account = account;
@@ -91,7 +91,7 @@ final public class AccountCharacter {
      * @param account The creator account
      * @param request The request
      */
-    static public AccountCharacter fromRequest(GameAccount account, AddCharacterRequest request) {
+    public static AccountCharacter fromRequest(GameAccount account, AddCharacterRequest request) {
         return new AccountCharacter(
             account,
             Player.forCreation(

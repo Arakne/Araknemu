@@ -26,9 +26,9 @@ import fr.quatrevieux.araknemu.game.account.TokenService;
 /**
  * Service for handle realm connector requests
  */
-final public class ConnectorService {
-    final private TokenService tokens;
-    final private AccountService accounts;
+public final class ConnectorService {
+    private final TokenService tokens;
+    private final AccountService accounts;
 
     public ConnectorService(TokenService tokens, AccountService accounts) {
         this.tokens   = tokens;

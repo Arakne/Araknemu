@@ -36,32 +36,9 @@ import java.util.Collection;
  *
  * The check will failed if cannot found an available question (condition check)
  */
-final public class NextQuestion implements Action {
-    final static public class Factory implements ActionFactory {
-        final private DialogService service;
-
-        public Factory(DialogService service) {
-            this.service = service;
-        }
-
-        @Override
-        public String type() {
-            return "NEXT";
-        }
-
-        @Override
-        public Action create(ResponseAction entity) {
-            return new NextQuestion(
-                service,
-                Arrays.stream(StringUtils.split(entity.arguments(), ";"))
-                    .mapToInt(Integer::parseInt)
-                    .toArray()
-            );
-        }
-    }
-
-    final private DialogService service;
-    final private int[] questionIds;
+public final class NextQuestion implements Action {
+    private final DialogService service;
+    private final int[] questionIds;
 
     // Lazy loading of questions : prevent from stack overflow
     private Collection<NpcQuestion> questions;
@@ -93,5 +70,28 @@ final public class NextQuestion implements Action {
         }
 
         return questions = service.byIds(questionIds);
+    }
+
+    public static final class Factory implements ActionFactory {
+        private final DialogService service;
+
+        public Factory(DialogService service) {
+            this.service = service;
+        }
+
+        @Override
+        public String type() {
+            return "NEXT";
+        }
+
+        @Override
+        public Action create(ResponseAction entity) {
+            return new NextQuestion(
+                service,
+                Arrays.stream(StringUtils.split(entity.arguments(), ";"))
+                    .mapToInt(Integer::parseInt)
+                    .toArray()
+            );
+        }
     }
 }

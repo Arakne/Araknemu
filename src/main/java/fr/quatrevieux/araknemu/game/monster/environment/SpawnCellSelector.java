@@ -46,7 +46,7 @@ public interface SpawnCellSelector {
      *
      * @param position The monster group position
      */
-    static public SpawnCellSelector forPosition(Position position) {
+    public static SpawnCellSelector forPosition(Position position) {
         if (position.cell() == -1) {
             return new RandomCellSelector();
         }

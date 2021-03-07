@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.CancelFight;
 /**
  * Send to the fighter that he has leave the fight
  */
-final public class SendFightLeaved implements Listener<FightLeaved> {
-    final private PlayerFighter fighter;
+public final class SendFightLeaved implements Listener<FightLeaved> {
+    private final PlayerFighter fighter;
 
     public SendFightLeaved(PlayerFighter fighter) {
         this.fighter = fighter;

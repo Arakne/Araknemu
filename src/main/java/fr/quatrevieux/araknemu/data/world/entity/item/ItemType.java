@@ -25,11 +25,11 @@ import fr.quatrevieux.araknemu.game.item.SuperType;
 /**
  * Type for items
  */
-final public class ItemType {
-    final private int id;
-    final private String name;
-    final private SuperType superType;
-    final private EffectArea effectArea;
+public final class ItemType {
+    private final int id;
+    private final String name;
+    private final SuperType superType;
+    private final EffectArea effectArea;
 
     public ItemType(int id, String name, SuperType superType, EffectArea effectArea) {
         this.id = id;

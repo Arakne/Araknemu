@@ -30,11 +30,11 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharac
 /**
  * Monster fighter characteristics
  */
-final public class MonsterFighterCharacteristics implements FighterCharacteristics {
-    final private Monster monster;
-    final private Fighter fighter;
+public final class MonsterFighterCharacteristics implements FighterCharacteristics {
+    private final Monster monster;
+    private final Fighter fighter;
 
-    final private MutableCharacteristics buffs = new DefaultCharacteristics();
+    private final MutableCharacteristics buffs = new DefaultCharacteristics();
 
     public MonsterFighterCharacteristics(Monster monster, Fighter fighter) {
         this.monster = monster;

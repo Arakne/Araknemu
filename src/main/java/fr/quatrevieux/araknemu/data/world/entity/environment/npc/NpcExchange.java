@@ -26,13 +26,13 @@ import java.util.Map;
  *
  * Note: The exchange is related to a npc template, not a npc
  */
-final public class NpcExchange {
-    final private int id;
-    final private int npcTemplateId;
-    final private long requiredKamas;
-    final private Map<Integer, Integer> requiredItems;
-    final private long exchangedKamas;
-    final private Map<Integer, Integer> exchangedItems;
+public final class NpcExchange {
+    private final int id;
+    private final int npcTemplateId;
+    private final long requiredKamas;
+    private final Map<Integer, Integer> requiredItems;
+    private final long exchangedKamas;
+    private final Map<Integer, Integer> exchangedItems;
 
     public NpcExchange(int id, int npcTemplateId, long requiredKamas, Map<Integer, Integer> requiredItems, long exchangedKamas, Map<Integer, Integer> exchangedItems) {
         this.id = id;

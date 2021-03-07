@@ -28,9 +28,9 @@ import java.util.NoSuchElementException;
 /**
  * Use the player's current map as target map
  */
-final public class PlayerResolver implements LocationResolver {
-    final private PlayerService playerService;
-    final private ExplorationMapService mapService;
+public final class PlayerResolver implements LocationResolver {
+    private final PlayerService playerService;
+    private final ExplorationMapService mapService;
 
     public PlayerResolver(PlayerService playerService, ExplorationMapService mapService) {
         this.playerService = playerService;

@@ -33,19 +33,19 @@ public interface FighterOperation {
     /**
      * Apply the operation to a PlayerFighter
      */
-    default public void onPlayer(PlayerFighter fighter) {
+    public default void onPlayer(PlayerFighter fighter) {
         onGenericFighter(fighter);
     }
 
     /**
      * Apply the operation to a MonsterFighter
      */
-    default public void onMonster(MonsterFighter fighter) {
+    public default void onMonster(MonsterFighter fighter) {
         onGenericFighter(fighter);
     }
 
     /**
      * Apply the operation to a generic fighter type
      */
-    default public void onGenericFighter(Fighter fighter) {}
+    public default void onGenericFighter(Fighter fighter) {}
 }

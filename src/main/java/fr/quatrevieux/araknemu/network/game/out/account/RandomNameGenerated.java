@@ -24,8 +24,8 @@ package fr.quatrevieux.araknemu.network.game.out.account;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L1190
  */
-final public class RandomNameGenerated {
-    final private String name;
+public final class RandomNameGenerated {
+    private final String name;
 
     public RandomNameGenerated(String name) {
         this.name = name;

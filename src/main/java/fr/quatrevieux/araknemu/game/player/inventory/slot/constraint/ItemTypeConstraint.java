@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 /**
  * Check the item type
  */
-final public class ItemTypeConstraint implements SlotConstraint {
-    final private SuperType type;
+public final class ItemTypeConstraint implements SlotConstraint {
+    private final SuperType type;
 
     public ItemTypeConstraint(SuperType type) {
         this.type = type;

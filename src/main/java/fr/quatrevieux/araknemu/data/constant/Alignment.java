@@ -39,7 +39,7 @@ public enum Alignment {
     /**
      * Get an alignment by its id
      */
-    static public Alignment byId(int id) {
+    public static Alignment byId(int id) {
         return values()[id + 1];
     }
 }

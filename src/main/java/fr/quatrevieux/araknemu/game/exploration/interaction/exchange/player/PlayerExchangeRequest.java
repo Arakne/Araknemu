@@ -37,8 +37,8 @@ import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeRequested;
  *
  * The request store the two parties
  */
-final public class PlayerExchangeRequest implements ExchangeInteraction, InvitationHandler {
-    final private Invitation invitation;
+public final class PlayerExchangeRequest implements ExchangeInteraction, InvitationHandler {
+    private final Invitation invitation;
 
     public PlayerExchangeRequest(ExplorationPlayer initiator, ExplorationPlayer target) {
         invitation = invitation(initiator, target);
@@ -71,7 +71,7 @@ final public class PlayerExchangeRequest implements ExchangeInteraction, Invitat
 
     @Override
     public void accept(Invitation invitation, TargetRequestDialog dialog) {
-        for(PlayerExchangeParty party : PlayerExchangeParty.make(invitation.initiator(), invitation.target())) {
+        for (PlayerExchangeParty party : PlayerExchangeParty.make(invitation.initiator(), invitation.target())) {
             party.start();
         }
     }

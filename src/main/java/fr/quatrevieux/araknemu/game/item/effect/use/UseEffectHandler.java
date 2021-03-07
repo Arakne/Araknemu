@@ -43,7 +43,7 @@ public interface UseEffectHandler {
      * @param target The effect target (can be null)
      * @param cell The target cell
      */
-    default public void applyToTarget(UseEffect effect, ExplorationPlayer caster, ExplorationPlayer target, int cell) {}
+    public default void applyToTarget(UseEffect effect, ExplorationPlayer caster, ExplorationPlayer target, int cell) {}
 
     /**
      * Check if the effect can be used
@@ -75,7 +75,7 @@ public interface UseEffectHandler {
      *
      * @return True if the effect can be applied or false
      */
-    default public boolean checkFighter(UseEffect effect, PlayerFighter fighter) {
+    public default boolean checkFighter(UseEffect effect, PlayerFighter fighter) {
         return false;
     }
 
@@ -85,5 +85,5 @@ public interface UseEffectHandler {
      * @param effect The effect to apply
      * @param fighter The fighter
      */
-    default public void applyToFighter(UseEffect effect, PlayerFighter fighter) {}
+    public default void applyToFighter(UseEffect effect, PlayerFighter fighter) {}
 }

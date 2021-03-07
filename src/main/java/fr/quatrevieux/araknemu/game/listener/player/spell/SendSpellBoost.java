@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.spell.SpellBoost;
 /**
  * Send spell boost modifier to client
  */
-final public class SendSpellBoost implements Listener<SpellBoostChanged> {
-    final private GamePlayer player;
+public final class SendSpellBoost implements Listener<SpellBoostChanged> {
+    private final GamePlayer player;
 
     public SendSpellBoost(GamePlayer player) {
         this.player = player;

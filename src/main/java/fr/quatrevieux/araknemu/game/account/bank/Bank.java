@@ -29,7 +29,12 @@ import fr.quatrevieux.araknemu.game.exploration.exchange.BankExchangeParty;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeParty;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
-import fr.quatrevieux.araknemu.game.item.inventory.*;
+import fr.quatrevieux.araknemu.game.item.inventory.Inventory;
+import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
+import fr.quatrevieux.araknemu.game.item.inventory.SimpleItemStorage;
+import fr.quatrevieux.araknemu.game.item.inventory.SimpleWallet;
+import fr.quatrevieux.araknemu.game.item.inventory.StackableItemStorage;
+import fr.quatrevieux.araknemu.game.item.inventory.Wallet;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
 
@@ -39,11 +44,11 @@ import java.util.stream.Collectors;
 /**
  * The bank storage
  */
-final public class Bank implements Inventory<BankEntry>, Dispatcher {
-    final private BankService service;
-    final private AccountBank entity;
-    final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
-    final private Wallet wallet;
+public final class Bank implements Inventory<BankEntry>, Dispatcher {
+    private final BankService service;
+    private final AccountBank entity;
+    private final ListenerAggregate dispatcher = new DefaultListenerAggregate();
+    private final Wallet wallet;
 
     private ItemStorage<BankEntry> storage;
 

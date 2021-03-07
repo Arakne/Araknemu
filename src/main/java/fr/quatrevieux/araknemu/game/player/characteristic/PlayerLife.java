@@ -28,15 +28,21 @@ import fr.quatrevieux.araknemu.game.world.creature.Life;
 /**
  * Handle player life
  */
-final public class PlayerLife implements Life {
-    final private GamePlayer player;
-    final private Player entity;
+public final class PlayerLife implements Life {
+    private final GamePlayer player;
+    private final Player entity;
 
     private int max;
+    /**
+     * Time in microseconds. The value should be set to 0 to disable the regeneration
+     */
+    private long lifeRegenerationStart;
+    private int lifeRegenerationSpeed;
 
     public PlayerLife(GamePlayer player, Player entity) {
         this.player = player;
         this.entity = entity;
+        this.lifeRegenerationStart = 0;
     }
 
     @Override
@@ -46,7 +52,48 @@ final public class PlayerLife implements Life {
 
     @Override
     public int current() {
-        return entity.life();
+        return entity.life() + calculateLifeRegeneration();
+    }
+
+    private int calculateLifeRegeneration() {
+        if (lifeRegenerationStart == 0) {
+            return 0;
+        }
+
+        final long currentTime = System.currentTimeMillis();
+        final int currentLife = entity.life();
+
+        int lifeToAdd = (int) (currentTime - lifeRegenerationStart) / lifeRegenerationSpeed;
+
+        if (this.max <= (lifeToAdd + currentLife)) {
+            lifeToAdd = this.max - currentLife;
+        }
+
+        return lifeToAdd;
+    }
+
+    /**
+     * calculate the life regeneration and set the lifeRegenerationStart timestamp to zero
+     */
+    public void stopLifeRegeneration() {
+        setLifeWithCurrentRegeneration();
+        lifeRegenerationStart = 0;
+    }
+
+    /**
+     * set the life to: entity.life() + calculateLifeRegeneration()
+     */
+    public void setLifeWithCurrentRegeneration() {
+        entity.setLife(current());
+    }
+
+    /**
+     * Set the lifeRegenerationStart timestamps to System.currentTimeMillis()
+     * @param lifeRegenerationSpeed The required delay in milliseconds to regenerate 1 life point
+     */
+    public void startLifeRegeneration(int lifeRegenerationSpeed) {
+        this.lifeRegenerationSpeed = lifeRegenerationSpeed;
+        lifeRegenerationStart = System.currentTimeMillis();
     }
 
     /**
@@ -71,13 +118,13 @@ final public class PlayerLife implements Life {
      * @param value The new life value
      */
     public void set(int value) {
+        final int last = current();
+
         if (value < 0) {
             value = 0;
         } else if (value > max) {
             value = max;
         }
-
-        int last = current();
 
         entity.setLife(value);
         player.dispatch(new LifeChanged(last, value));
@@ -87,7 +134,7 @@ final public class PlayerLife implements Life {
      * Rebuild the life points
      */
     public void rebuild() {
-        int percent = percent();
+        final int percent = percent();
 
         max = computeMaxLife();
         entity.setLife(max * percent / 100);
@@ -97,6 +144,10 @@ final public class PlayerLife implements Life {
         return player.race().life(entity.level()) + player.properties().characteristics().get(Characteristic.VITALITY);
     }
 
+    /**
+     * Initialize player life
+     * This method will compute max life points
+     */
     public void init() {
         max = computeMaxLife();
 

@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.GameService;
 /**
  * The game server is stopped
  */
-final public class GameStopped {
-    final private GameService service;
+public final class GameStopped {
+    private final GameService service;
 
     public GameStopped(GameService service) {
         this.service = service;

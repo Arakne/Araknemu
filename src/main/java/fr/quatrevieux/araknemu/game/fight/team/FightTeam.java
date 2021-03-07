@@ -82,7 +82,7 @@ public interface FightTeam extends Sender, Team<Fighter> {
      *
      * @param fighter Fighter to add
      *
-     * @throws JoinFightException
+     * @throws JoinFightException When the fighter can't join the fight
      */
     public void join(Fighter fighter) throws JoinFightException;
 

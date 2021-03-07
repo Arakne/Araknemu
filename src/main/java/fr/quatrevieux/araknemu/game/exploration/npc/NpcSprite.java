@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.world.creature.Sprite;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L630
  */
-final public class NpcSprite implements Sprite {
-    final private GameNpc npc;
+public final class NpcSprite implements Sprite {
+    private final GameNpc npc;
 
     public NpcSprite(GameNpc npc) {
         this.npc = npc;

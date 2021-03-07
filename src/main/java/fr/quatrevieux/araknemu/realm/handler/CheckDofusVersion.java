@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.realm.RealmConfiguration;
 /**
  * Check the client version
  */
-final public class CheckDofusVersion implements PacketHandler<RealmSession, DofusVersion> {
-    final private RealmConfiguration configuration;
+public final class CheckDofusVersion implements PacketHandler<RealmSession, DofusVersion> {
+    private final RealmConfiguration configuration;
 
     public CheckDofusVersion(RealmConfiguration configuration) {
         this.configuration = configuration;

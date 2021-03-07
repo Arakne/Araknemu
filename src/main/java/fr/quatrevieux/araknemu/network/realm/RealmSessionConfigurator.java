@@ -31,11 +31,11 @@ import org.apache.logging.log4j.MarkerManager;
 /**
  * Configure session for realm
  */
-final public class RealmSessionConfigurator implements SessionConfigurator.Configurator<RealmSession> {
-    final private Dispatcher<RealmSession> dispatcher;
-    final private PacketParser[] loginPackets;
-    final private PacketParser baseParser;
-    final private Logger logger;
+public final class RealmSessionConfigurator implements SessionConfigurator.Configurator<RealmSession> {
+    private final Dispatcher<RealmSession> dispatcher;
+    private final PacketParser[] loginPackets;
+    private final PacketParser baseParser;
+    private final Logger logger;
 
     public RealmSessionConfigurator(Dispatcher<RealmSession> dispatcher, PacketParser[] loginPackets, PacketParser baseParser, Logger logger) {
         this.dispatcher = dispatcher;

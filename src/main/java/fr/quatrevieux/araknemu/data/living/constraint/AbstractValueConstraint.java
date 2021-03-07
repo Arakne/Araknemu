@@ -17,32 +17,40 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.listener.player.inventory;
-
-import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectQuantityChanged;
-import fr.quatrevieux.araknemu.network.game.out.object.ItemQuantity;
+package fr.quatrevieux.araknemu.data.living.constraint;
 
 /**
- * Send the new item quantity
+ * Constraint on value extracted from entity
+ *
+ * @param <T> The entity type
+ * @param <E> The error type
+ * @param <V> The value type
  */
-final public class SendItemQuantity implements Listener<ObjectQuantityChanged> {
-    final private GamePlayer player;
+public abstract class AbstractValueConstraint<T, E, V> implements EntityConstraint<T, E> {
+    private final E error;
+    private final Getter<T, V> getter;
 
-    public SendItemQuantity(GamePlayer player) {
-        this.player = player;
+    public AbstractValueConstraint(E error, Getter<T, V> getter) {
+        this.error = error;
+        this.getter = getter;
     }
 
     @Override
-    public void on(ObjectQuantityChanged event) {
-        player.send(
-            new ItemQuantity(event.entry())
-        );
+    public boolean check(T entity) {
+        return checkValue(getter.get(entity));
     }
 
     @Override
-    public Class<ObjectQuantityChanged> event() {
-        return ObjectQuantityChanged.class;
+    public E error() {
+        return error;
+    }
+
+    protected abstract boolean checkValue(V value);
+
+    public interface Getter<T, V> {
+        /**
+         * Get the value from the entity
+         */
+        public V get(T entity);
     }
 }

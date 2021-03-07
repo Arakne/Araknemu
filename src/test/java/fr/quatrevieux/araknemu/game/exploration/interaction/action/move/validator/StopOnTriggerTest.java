@@ -63,7 +63,7 @@ class StopOnTriggerTest extends GameBaseCase {
 
         Move move = new Move(
             player,
-            new Path<>(
+            new Path<ExplorationMapCell>(
                 new Decoder<>(player.map()),
                 Arrays.asList(
                     new PathStep(map.get(23), Direction.WEST),
@@ -102,7 +102,7 @@ class StopOnTriggerTest extends GameBaseCase {
 
         Move move = new Move(
             player,
-            new Path<>(
+            new Path<ExplorationMapCell>(
                 new Decoder<>(player.map()),
                 Arrays.asList(
                     new PathStep(map.get(21), Direction.WEST),

@@ -28,9 +28,9 @@ import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightsCount;
 /**
  * Update the fights count when fight is stopped
  */
-final public class SendFightsCount implements Listener<FightStopped> {
-    final private ExplorationMap map;
-    final private FightService fightService;
+public final class SendFightsCount implements Listener<FightStopped> {
+    private final ExplorationMap map;
+    private final FightService fightService;
 
     public SendFightsCount(ExplorationMap map, FightService fightService) {
         this.map = map;

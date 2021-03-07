@@ -42,19 +42,19 @@ import java.util.Set;
  * GamePlayer object
  * A player is a logged character, with associated game session
  */
-final public class GamePlayer implements PlayerSessionScope {
-    final private GameAccount account;
-    final private Player entity;
-    final private PlayerService service;
-    final private GameSession session;
-    final private GamePlayerRace race;
-    final private Set<ChannelType> channels;
-    final private PlayerInventory inventory;
-    final private SpriteInfo spriteInfo;
-    final private PlayerData data;
-    final private Restrictions restrictions;
+public final class GamePlayer implements PlayerSessionScope {
+    private final GameAccount account;
+    private final Player entity;
+    private final PlayerService service;
+    private final GameSession session;
+    private final GamePlayerRace race;
+    private final Set<ChannelType> channels;
+    private final PlayerInventory inventory;
+    private final SpriteInfo spriteInfo;
+    private final PlayerData data;
+    private final Restrictions restrictions;
 
-    final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
+    private final ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
     private PlayerSessionScope scope = this;
 
@@ -236,6 +236,7 @@ final public class GamePlayer implements PlayerSessionScope {
      * Save the player
      */
     public void save() {
+        properties().life().setLifeWithCurrentRegeneration();
         service.save(this);
     }
 

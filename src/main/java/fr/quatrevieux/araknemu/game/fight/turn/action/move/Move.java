@@ -32,10 +32,10 @@ import java.time.Duration;
 /**
  * Move the fighter
  */
-final public class Move implements Action {
-    final private FightTurn turn;
-    final private Fighter fighter;
-    final private Path<FightCell> path;
+public final class Move implements Action {
+    private final FightTurn turn;
+    private final Fighter fighter;
+    private final Path<FightCell> path;
 
     private MoveSuccess result;
 

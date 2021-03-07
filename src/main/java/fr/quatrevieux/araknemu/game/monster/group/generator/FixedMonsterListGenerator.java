@@ -31,8 +31,8 @@ import java.util.stream.Collectors;
  * The only randomization is the monster level
  * All monsters of the data will be generated
  */
-final public class FixedMonsterListGenerator implements MonsterListGenerator {
-    final private MonsterService service;
+public final class FixedMonsterListGenerator implements MonsterListGenerator {
+    private final MonsterService service;
 
     public FixedMonsterListGenerator(MonsterService service) {
         this.service = service;

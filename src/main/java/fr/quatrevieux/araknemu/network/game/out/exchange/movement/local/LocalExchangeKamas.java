@@ -24,8 +24,8 @@ package fr.quatrevieux.araknemu.network.game.out.exchange.movement.local;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L757
  */
-final public class LocalExchangeKamas {
-    final private long quantity;
+public final class LocalExchangeKamas {
+    private final long quantity;
 
     public LocalExchangeKamas(long quantity) {
         this.quantity = quantity;

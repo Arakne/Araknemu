@@ -43,15 +43,15 @@ import java.util.List;
  * @param <E> The error type
  */
 public class ConstraintBuilder<T, E> {
-    final private List<EntityConstraint<T, E>> constraints = new ArrayList<>();
+    private final List<EntityConstraint<T, E>> constraints = new ArrayList<>();
 
-    private ValueConstraint.Getter<T, ?> getter;
+    private AbstractValueConstraint.Getter<T, ?> getter;
     private E error;
 
     /**
      * Set the current value getter
      */
-    public ConstraintBuilder<T, E> value(ValueConstraint.Getter<T, ?> getter) {
+    public ConstraintBuilder<T, E> value(AbstractValueConstraint.Getter<T, ?> getter) {
         this.getter = getter;
 
         return this;
@@ -70,7 +70,7 @@ public class ConstraintBuilder<T, E> {
      * Ensure not empty
      */
     public ConstraintBuilder<T, E> notEmpty() {
-        constraints.add(new NotEmpty<>(error, (ValueConstraint.Getter<T, String>) getter));
+        constraints.add(new NotEmpty<>(error, (AbstractValueConstraint.Getter<T, String>) getter));
 
         return this;
     }
@@ -79,7 +79,7 @@ public class ConstraintBuilder<T, E> {
      * Check value by regex
      */
     public ConstraintBuilder<T, E> regex(String regex) {
-        constraints.add(new Regex<>(error, (ValueConstraint.Getter<T, String>) getter, regex));
+        constraints.add(new Regex<>(error, (AbstractValueConstraint.Getter<T, String>) getter, regex));
 
         return this;
     }
@@ -97,7 +97,7 @@ public class ConstraintBuilder<T, E> {
      * Maximum allowed value
      */
     public <V extends Comparable> ConstraintBuilder<T, E> max(V value) {
-        constraints.add(new Max<>(error, (ValueConstraint.Getter<T, V>) getter, value));
+        constraints.add(new Max<>(error, (AbstractValueConstraint.Getter<T, V>) getter, value));
 
         return this;
     }
@@ -106,7 +106,7 @@ public class ConstraintBuilder<T, E> {
      * Minimum string length
      */
     public ConstraintBuilder<T, E> minLength(int length) {
-        constraints.add(new MinLength<>(error, (ValueConstraint.Getter<T, String>) getter, length));
+        constraints.add(new MinLength<>(error, (AbstractValueConstraint.Getter<T, String>) getter, length));
 
         return this;
     }
@@ -115,7 +115,7 @@ public class ConstraintBuilder<T, E> {
      * Maximum string length
      */
     public ConstraintBuilder<T, E> maxLength(int length) {
-        constraints.add(new MaxLength<>(error, (ValueConstraint.Getter<T, String>) getter, length));
+        constraints.add(new MaxLength<>(error, (AbstractValueConstraint.Getter<T, String>) getter, length));
 
         return this;
     }
@@ -138,7 +138,7 @@ public class ConstraintBuilder<T, E> {
      * );
      */
     public ConstraintBuilder<T, E> not(BuilderFactory<T, E> factory) {
-        ConstraintBuilder<T, E> builder = new ConstraintBuilder<>();
+        final ConstraintBuilder<T, E> builder = new ConstraintBuilder<>();
 
         builder.error  = error;
         builder.getter = getter;

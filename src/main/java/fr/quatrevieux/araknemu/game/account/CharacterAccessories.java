@@ -32,8 +32,8 @@ import java.util.Map;
 /**
  * List of character accessories
  */
-final public class CharacterAccessories extends AbstractAccessories {
-    final private Map<AccessoryType, Accessory> accessories = new EnumMap<>(AccessoryType.class);
+public final class CharacterAccessories extends AbstractAccessories {
+    private final Map<AccessoryType, Accessory> accessories = new EnumMap<>(AccessoryType.class);
 
     public CharacterAccessories(Collection<PlayerItem> items) {
         items

@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L1039
  */
-final public class StorageList {
-    final private Inventory<? extends ItemEntry> inventory;
+public final class StorageList {
+    private final Inventory<? extends ItemEntry> inventory;
 
     public StorageList(Inventory<? extends ItemEntry> inventory) {
         this.inventory = inventory;

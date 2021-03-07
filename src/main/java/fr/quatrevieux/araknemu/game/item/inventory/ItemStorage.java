@@ -44,7 +44,7 @@ public interface ItemStorage<E extends ItemEntry> extends Iterable<E> {
      *
      * @return The related entry
      */
-    default public E add(Item item) throws InventoryException {
+    public default E add(Item item) throws InventoryException {
         return add(item, 1, ItemEntry.DEFAULT_POSITION);
     }
 
@@ -56,7 +56,7 @@ public interface ItemStorage<E extends ItemEntry> extends Iterable<E> {
      *
      * @return The related entry
      */
-    default public E add(Item item, int quantity) throws InventoryException {
+    public default E add(Item item, int quantity) throws InventoryException {
         return add(item, quantity, ItemEntry.DEFAULT_POSITION);
     }
 
@@ -80,7 +80,7 @@ public interface ItemStorage<E extends ItemEntry> extends Iterable<E> {
      *
      * @throws ItemNotFoundException If the entry cannot be found on the storage
      */
-    default public E delete(E entry) throws InventoryException {
+    public default E delete(E entry) throws InventoryException {
         return delete(entry.id());
     }
 
@@ -98,7 +98,7 @@ public interface ItemStorage<E extends ItemEntry> extends Iterable<E> {
     /**
      * Get a stream from the storage
      */
-    default public Stream<E> stream() {
+    public default Stream<E> stream() {
         return StreamSupport.stream(spliterator(), false);
     }
 }

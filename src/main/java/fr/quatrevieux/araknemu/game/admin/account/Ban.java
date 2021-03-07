@@ -37,9 +37,9 @@ import java.util.stream.Collectors;
 /**
  * Handle banishment for an account
  */
-final public class Ban extends AbstractCommand {
-    final private GameAccount account;
-    final private BanishmentService<GameAccount> service;
+public final class Ban extends AbstractCommand {
+    private final GameAccount account;
+    private final BanishmentService<GameAccount> service;
 
     public Ban(GameAccount account, BanishmentService<GameAccount> service) {
         this.account = account;
@@ -140,8 +140,7 @@ final public class Ban extends AbstractCommand {
         }
 
         final Duration duration = parseDuration(arguments.get(2));
-
-        BanEntry<GameAccount> entry = performer.account().isPresent()
+        final BanEntry<GameAccount> entry = performer.account().isPresent()
             ? service.ban(account, duration, cause(arguments), performer.account().get())
             : service.ban(account, duration, cause(arguments))
         ;

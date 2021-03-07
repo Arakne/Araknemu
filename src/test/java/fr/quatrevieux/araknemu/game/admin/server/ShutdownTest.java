@@ -32,6 +32,8 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -98,7 +100,7 @@ class ShutdownTest extends CommandTestCase {
 
         assertEquals(0, time.getHour());
         assertBetween(0, 1, time.getMinute());
-        assertEquals(LocalDateTime.now().getDayOfMonth() + 1, time.getDayOfMonth());
+        assertEquals(LocalDateTime.now().plus(1, ChronoUnit.DAYS).getDayOfMonth(), time.getDayOfMonth());
         performer.logs.get(0).message.startsWith("Shutdown scheduled at");
     }
 

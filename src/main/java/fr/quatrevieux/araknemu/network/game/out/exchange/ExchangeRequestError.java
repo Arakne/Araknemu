@@ -24,8 +24,8 @@ package fr.quatrevieux.araknemu.network.game.out.exchange;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L236
  */
-final public class ExchangeRequestError {
-    static public enum Error {
+public final class ExchangeRequestError {
+    public static enum Error {
         ALREADY_EXCHANGE('O'),
         NOT_NEAR_CRAFT_TABLE('T'),
         TOOL_NOT_EQUIPPED('J'),
@@ -34,14 +34,14 @@ final public class ExchangeRequestError {
         CANT_EXCHANGE('I'),
         ;
 
-        final private char c;
+        private final char c;
 
         Error(char c) {
             this.c = c;
         }
     }
 
-    final private Error error;
+    private final Error error;
 
     public ExchangeRequestError(Error error) {
         this.error = error;

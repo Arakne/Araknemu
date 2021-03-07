@@ -32,12 +32,12 @@ public interface Buffs {
     public void add(Buff buff);
 
     /**
-     * @see BuffHook#onCastTarget(Buff, CastScope);
+     * @see BuffHook#onCastTarget(Buff, CastScope)
      */
     public void onCastTarget(CastScope cast);
 
     /**
-     * @see BuffHook#onDamage(Buff, Damage);
+     * @see BuffHook#onDamage(Buff, Damage)
      */
     public void onDamage(Damage value);
 
@@ -55,4 +55,9 @@ public interface Buffs {
      * Refresh the buff list after turn end
      */
     public void refresh();
+
+    /**
+     * Remove all buffs than can be removed, and fire {@link BuffHook#onBuffTerminated(Buff)}
+     */
+    public void removeAll();
 }

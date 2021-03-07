@@ -24,9 +24,9 @@ import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeStorage;
 /**
  * The acceptation state has changed
  */
-final public class AcceptChanged implements ExchangeEvent {
-    final private boolean accepted;
-    final private ExchangeStorage storage;
+public final class AcceptChanged implements ExchangeEvent {
+    private final boolean accepted;
+    private final ExchangeStorage storage;
 
     public AcceptChanged(boolean accepted, ExchangeStorage storage) {
         this.accepted = accepted;

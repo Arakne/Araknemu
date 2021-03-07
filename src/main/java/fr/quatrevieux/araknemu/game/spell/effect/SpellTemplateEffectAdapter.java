@@ -26,10 +26,10 @@ import fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget;
 /**
  * Adapt {@link SpellTemplateEffect}
  */
-final public class SpellTemplateEffectAdapter implements SpellEffect {
-    final private SpellTemplateEffect effect;
-    final private SpellEffectArea area;
-    final private EffectTarget target;
+public final class SpellTemplateEffectAdapter implements SpellEffect {
+    private final SpellTemplateEffect effect;
+    private final SpellEffectArea area;
+    private final EffectTarget target;
 
     public SpellTemplateEffectAdapter(SpellTemplateEffect effect, SpellEffectArea area, EffectTarget target) {
         this.effect = effect;

@@ -14,38 +14,28 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux, Jean-Alexandre Valentin
  */
 
-package fr.quatrevieux.araknemu.network.game.out.chat;
-
-import fr.quatrevieux.araknemu.game.chat.ChannelType;
-
-import java.util.Collection;
+package fr.quatrevieux.araknemu.network.game.out.info;
 
 /**
- * Abstract class packet for subscription changed
+ * This packet tells the client to start the regeneration animation
+ *
+ * https://github.com/Emudofus/Dofus/blob/1b54a30e02f637c912bf14afdf6ea8b7df45ea73/dofus/aks/Infos.as#L326
  */
-abstract public class ChannelSubscriptionChanged {
-    final private char sign;
-    final private Collection<ChannelType> channels;
+public final class StartLifeTimer {
+    /**
+     * The speed of the animation in milliseconds
+     */
+    private final int time;
 
-
-    public ChannelSubscriptionChanged(char sign, Collection<ChannelType> channels) {
-        this.sign = sign;
-        this.channels = channels;
+    public StartLifeTimer(int time) {
+        this.time = time;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("cC");
-
-        sb.append(sign);
-
-        for (ChannelType type : channels) {
-            sb.append(type.identifier());
-        }
-
-        return sb.toString();
+        return "ILS" + time;
     }
 }

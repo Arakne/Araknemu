@@ -30,14 +30,14 @@ import java.util.List;
 /**
  * Transform item effects
  */
-final public class ItemEffectsTransformer implements Transformer<List<ItemTemplateEffectEntry>> {
+public final class ItemEffectsTransformer implements Transformer<List<ItemTemplateEffectEntry>> {
     @Override
     public String serialize(List<ItemTemplateEffectEntry> value) {
         if (value == null || value.isEmpty()) {
             return "";
         }
 
-        StringBuilder sb = new StringBuilder(value.size() * 8);
+        final StringBuilder sb = new StringBuilder(value.size() * 8);
 
         for (ItemTemplateEffectEntry entry : value) {
             if (sb.length() > 0) {
@@ -62,10 +62,10 @@ final public class ItemEffectsTransformer implements Transformer<List<ItemTempla
             return new ArrayList<>();
         }
 
-        List<ItemTemplateEffectEntry> effects = new ArrayList<>();
+        final List<ItemTemplateEffectEntry> effects = new ArrayList<>();
 
         for (String part : StringUtils.split(serialize, ",")) {
-            String[] args = StringUtils.split(part, "#", 5);
+            final String[] args = StringUtils.split(part, "#", 5);
 
             if (args.length < 4) {
                 throw new IllegalArgumentException("Cannot unserialize effect " + serialize);

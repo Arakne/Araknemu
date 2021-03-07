@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 /**
  * Aggregates of constraints
  */
-final public class ConstraintsAggregateValidator<T extends Castable> implements CastConstraintValidator<T> {
-    final private CastConstraintValidator<? super T>[] validators;
+public final class ConstraintsAggregateValidator<T extends Castable> implements CastConstraintValidator<T> {
+    private final CastConstraintValidator<? super T>[] validators;
 
     public ConstraintsAggregateValidator(CastConstraintValidator<? super T>[] validators) {
         this.validators = validators;
@@ -37,7 +37,7 @@ final public class ConstraintsAggregateValidator<T extends Castable> implements 
     @Override
     public Error validate(Turn turn, T action, FightCell target) {
         for (CastConstraintValidator<? super T> validator : validators) {
-            Error error = validator.validate(turn, action, target);
+            final Error error = validator.validate(turn, action, target);
 
             if (error != null) {
                 return error;

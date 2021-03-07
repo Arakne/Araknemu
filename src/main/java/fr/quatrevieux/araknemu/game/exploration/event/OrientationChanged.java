@@ -26,9 +26,9 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
  * Trigger when player change its orientation.
  * Dispatch to map
  */
-final public class OrientationChanged {
-    final private ExplorationPlayer player;
-    final private Direction orientation;
+public final class OrientationChanged {
+    private final ExplorationPlayer player;
+    private final Direction orientation;
 
     public OrientationChanged(ExplorationPlayer player, Direction orientation) {
         this.player = player;

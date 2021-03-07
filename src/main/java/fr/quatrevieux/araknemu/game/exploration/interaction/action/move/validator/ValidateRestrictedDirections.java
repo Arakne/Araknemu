@@ -28,7 +28,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 /**
  * Validate restricted directions if the player is not allowed
  */
-final public class ValidateRestrictedDirections implements PathValidator {
+public final class ValidateRestrictedDirections implements PathValidator {
     @Override
     public Path<ExplorationMapCell> validate(Move move, Path<ExplorationMapCell> path) {
         if (move.performer().player().restrictions().canMoveAllDirections()) {

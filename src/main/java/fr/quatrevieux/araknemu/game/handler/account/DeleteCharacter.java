@@ -19,22 +19,22 @@
 
 package fr.quatrevieux.araknemu.game.handler.account;
 
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.account.AccountCharacter;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
-import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.account.DeleteCharacterRequest;
 import fr.quatrevieux.araknemu.network.game.out.account.CharacterDeleted;
 import fr.quatrevieux.araknemu.network.game.out.account.CharactersList;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Delete the character
  */
-final public class DeleteCharacter implements PacketHandler<GameSession, DeleteCharacterRequest> {
-    final private CharactersService service;
-    final private GameConfiguration.PlayerConfiguration configuration;
+public final class DeleteCharacter implements PacketHandler<GameSession, DeleteCharacterRequest> {
+    private final CharactersService service;
+    private final GameConfiguration.PlayerConfiguration configuration;
 
     public DeleteCharacter(CharactersService service, GameConfiguration.PlayerConfiguration configuration) {
         this.service = service;
@@ -44,7 +44,7 @@ final public class DeleteCharacter implements PacketHandler<GameSession, DeleteC
     @Override
     public void handle(GameSession session, DeleteCharacterRequest packet) throws Exception {
         try {
-            AccountCharacter character = service.get(
+            final AccountCharacter character = service.get(
                 session.account(),
                 packet.id()
             );

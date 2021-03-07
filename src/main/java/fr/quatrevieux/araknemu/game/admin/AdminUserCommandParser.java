@@ -52,11 +52,141 @@ import java.util.function.Predicate;
  * Child anonymous context :
  * ${player:Robert} > account gift 45 3
  */
-final public class AdminUserCommandParser implements CommandParser {
-    final private AdminUser user;
+public final class AdminUserCommandParser implements CommandParser {
+    private final AdminUser user;
 
-    static private class State {
-        final private String line;
+    public AdminUserCommandParser(AdminUser user) {
+        this.user = user;
+    }
+
+    @Override
+    public Arguments parse(String line) throws AdminException {
+        final State state = new State(line.trim());
+
+        if (state.line.isEmpty()) {
+            throw new CommandException("Empty command");
+        }
+
+        final Context context = parseContext(state);
+        final String contextPath = state.before().trim();
+        final String command = parseCommand(state);
+        final List<String> arguments = parseArguments(state);
+
+        return new Arguments(
+            state.line,
+            contextPath,
+            command,
+            arguments,
+            context
+        );
+    }
+
+    /**
+     * Parse command arguments
+     *
+     * The first argument is the command name, and arguments are separated with white space
+     */
+    private List<String> parseArguments(State state) {
+        return Arrays.asList(
+            StringUtils.split(state.after(), " ")
+        );
+    }
+
+    /**
+     * Parse the command name
+     *
+     * The command name is the first argument of the command line
+     */
+    private String parseCommand(State state) {
+        return StringUtils.substringBefore(state.after(), " ");
+    }
+
+    /**
+     * Parse the command context
+     *
+     * If the line starts with !, the context is the current admin user
+     * If the line stats with $, the context is dynamic
+     *
+     * After resolve the root context, resolve the child contexts separated by >
+     */
+    private Context parseContext(State state) throws AdminException {
+        final Context context;
+
+        switch (state.current()) {
+            case '!':
+                state.next();
+                context = user.context().self();
+                break;
+
+            case '$':
+                state.next();
+                context = resolveDynamicContext(state);
+                break;
+
+            default:
+                context = user.context().current();
+        }
+
+        return resolveChildContext(state, context);
+    }
+
+    /**
+     * Resolve the child context
+     * This method will be called recursively until no more child context is detected
+     *
+     * Child contexts are separated by >
+     */
+    private Context resolveChildContext(State state, Context context) throws ContextNotFoundException {
+        state.skipBlank();
+
+        if (state.current() != '>') {
+            return context;
+        }
+
+        final String name = state.next().skipBlank().nextWord();
+
+        return resolveChildContext(state, context.child(name));
+    }
+
+    /**
+     * Resolve a dynamic context (start with $)
+     *
+     * If the line starts with {, try to resolve an anonymous context
+     * Else, get an already registered context
+     */
+    private Context resolveDynamicContext(State state) throws AdminException {
+        if (state.current() == '{') {
+            return resolveAnonymousContext(state.next());
+        }
+
+        return user.context().get(state.nextWord());
+    }
+
+    /**
+     * Resolve the anonymous context between accolades
+     *
+     * The anonymous context is in form : ${type:argument}
+     */
+    private Context resolveAnonymousContext(State state) throws AdminException {
+        final String[] arguments = StringUtils.split(state.moveWhile(c -> c != '}'), ":", 2);
+
+        if (!state.hasNext()) {
+            throw new CommandException("Syntax error : missing closing accolade");
+        }
+
+        state
+            .next()
+            .skipBlank()
+        ;
+
+        return user.context().resolve(
+            arguments[0],
+            arguments.length == 1 ? "" : arguments[1]
+        );
+    }
+
+    private static class State {
+        private final String line;
         private int cursor = 0;
 
         public State(String line) {
@@ -103,7 +233,7 @@ final public class AdminUserCommandParser implements CommandParser {
          * @return The "move" part, starting at the current cursor position (included), and ending with the last valid position (excluded)
          */
         public String moveWhile(Predicate<Character> predicate) {
-            int position = cursor;
+            final int position = cursor;
 
             while (hasNext() && predicate.test(current())) {
                 next();
@@ -136,135 +266,5 @@ final public class AdminUserCommandParser implements CommandParser {
         public String before() {
             return line.substring(0, cursor);
         }
-    }
-
-    public AdminUserCommandParser(AdminUser user) {
-        this.user = user;
-    }
-
-    @Override
-    public Arguments parse(String line) throws AdminException {
-        State state = new State(line.trim());
-
-        if (state.line.isEmpty()) {
-            throw new CommandException("Empty command");
-        }
-
-        Context context = parseContext(state);
-        String contextPath = state.before().trim();
-        String command = parseCommand(state);
-        List<String> arguments = parseArguments(state);
-
-        return new Arguments(
-            state.line,
-            contextPath,
-            command,
-            arguments,
-            context
-        );
-    }
-
-    /**
-     * Parse command arguments
-     *
-     * The first argument is the command name, and arguments are separated with white space
-     */
-    private List<String> parseArguments(State state) {
-        return Arrays.asList(
-            StringUtils.split(state.after(), " ")
-        );
-    }
-
-    /**
-     * Parse the command name
-     *
-     * The command name is the first argument of the command line
-     */
-    private String parseCommand(State state) {
-        return StringUtils.substringBefore(state.after(), " ");
-    }
-
-    /**
-     * Parse the command context
-     *
-     * If the line starts with !, the context is the current admin user
-     * If the line stats with $, the context is dynamic
-     *
-     * After resolve the root context, resolve the child contexts separated by >
-     */
-    private Context parseContext(State state) throws AdminException {
-        Context context;
-
-        switch (state.current()) {
-            case '!':
-                state.next();
-                context = user.context().self();
-                break;
-
-            case '$':
-                state.next();
-                context = resolveDynamicContext(state);
-                break;
-
-            default:
-                context = user.context().current();
-        }
-
-        return resolveChildContext(state, context);
-    }
-
-    /**
-     * Resolve the child context
-     * This method will be called recursively until no more child context is detected
-     *
-     * Child contexts are separated by >
-     */
-    private Context resolveChildContext(State state, Context context) throws ContextNotFoundException {
-        state.skipBlank();
-
-        if (state.current() != '>') {
-            return context;
-        }
-
-        String name = state.next().skipBlank().nextWord();
-
-        return resolveChildContext(state, context.child(name));
-    }
-
-    /**
-     * Resolve a dynamic context (start with $)
-     *
-     * If the line starts with {, try to resolve an anonymous context
-     * Else, get an already registered context
-     */
-    private Context resolveDynamicContext(State state) throws AdminException {
-        if (state.current() == '{') {
-            return resolveAnonymousContext(state.next());
-        }
-
-        return user.context().get(state.nextWord());
-    }
-
-    /**
-     * Resolve the anonymous context between accolades
-     *
-     * The anonymous context is in form : ${type:argument}
-     */
-    private Context resolveAnonymousContext(State state) throws AdminException {
-        String[] arguments = StringUtils.split(state.moveWhile(c -> c != '}'), ":", 2);
-
-        if (!state.hasNext()) {
-            throw new CommandException("Syntax error : missing closing accolade");
-        }
-
-        state
-            .next()
-            .skipBlank()
-        ;
-
-        return user.context().resolve(
-            arguments[0],
-            arguments.length == 1 ? "" : arguments[1]
-        );
     }
 }

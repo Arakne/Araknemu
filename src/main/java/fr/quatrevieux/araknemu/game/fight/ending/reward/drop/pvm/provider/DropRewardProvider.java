@@ -27,22 +27,22 @@ import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
  */
 public interface DropRewardProvider {
     /**
+     * Initialize the provider for the given fight results
+     */
+    public Scope initialize(EndFightResults results);
+
+    /**
      * Scoped provider for end fight results
      */
-    public interface Scope {
+    public static interface Scope {
         /**
          * No-operation scope instance
          */
-        final static public Scope NOOP = reward -> {};
+        public static final Scope NOOP = reward -> {};
 
         /**
          * Provide the reward data
          */
         public void provide(DropReward reward);
     }
-
-    /**
-     * Initialize the provider for the given fight results
-     */
-    public Scope initialize(EndFightResults results);
 }

@@ -33,7 +33,7 @@ import java.util.function.Function;
  *
  * @param <E> The collection element type
  */
-final public class CopyOnFirstWriteCollection<E> implements Collection<E> {
+public final class CopyOnFirstWriteCollection<E> implements Collection<E> {
     private Collection<E> inner;
     private Function<Collection<E>, Collection<E>> copyFactory;
 
@@ -69,7 +69,7 @@ final public class CopyOnFirstWriteCollection<E> implements Collection<E> {
 
         // Overrides iterator to disallow remove()
         return new Iterator<E>() {
-            final private Iterator<E> inner = CopyOnFirstWriteCollection.this.inner.iterator();
+            private final Iterator<E> inner = CopyOnFirstWriteCollection.this.inner.iterator();
 
             @Override
             public boolean hasNext() {

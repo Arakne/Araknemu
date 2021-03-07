@@ -30,35 +30,9 @@ import java.util.List;
 /**
  * ItemSet for game
  */
-final public class GameItemSet {
-    final static public class Bonus {
-        final static private Bonus EMPTY = new Bonus(Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
-
-        final private List<ItemTemplateEffectEntry> effects;
-        final private List<CharacteristicEffect> characteristics;
-        final private List<SpecialEffect> specials;
-
-        public Bonus(List<ItemTemplateEffectEntry> effects, List<CharacteristicEffect> characteristics, List<SpecialEffect> specials) {
-            this.effects = effects;
-            this.characteristics = characteristics;
-            this.specials = specials;
-        }
-
-        public List<ItemTemplateEffectEntry> effects() {
-            return effects;
-        }
-
-        public List<CharacteristicEffect> characteristics() {
-            return characteristics;
-        }
-
-        public List<SpecialEffect> specials() {
-            return specials;
-        }
-    }
-
-    final private ItemSet entity;
-    final private List<Bonus> bonus;
+public final class GameItemSet {
+    private final ItemSet entity;
+    private final List<Bonus> bonus;
 
     public GameItemSet(ItemSet entity, List<Bonus> bonus) {
         this.entity = entity;
@@ -90,5 +64,31 @@ final public class GameItemSet {
         }
 
         return bonus.get(nbOfItems - 2);
+    }
+
+    public static final class Bonus {
+        private static final Bonus EMPTY = new Bonus(Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
+
+        private final List<ItemTemplateEffectEntry> effects;
+        private final List<CharacteristicEffect> characteristics;
+        private final List<SpecialEffect> specials;
+
+        public Bonus(List<ItemTemplateEffectEntry> effects, List<CharacteristicEffect> characteristics, List<SpecialEffect> specials) {
+            this.effects = effects;
+            this.characteristics = characteristics;
+            this.specials = specials;
+        }
+
+        public List<ItemTemplateEffectEntry> effects() {
+            return effects;
+        }
+
+        public List<CharacteristicEffect> characteristics() {
+            return characteristics;
+        }
+
+        public List<SpecialEffect> specials() {
+            return specials;
+        }
     }
 }

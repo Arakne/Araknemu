@@ -22,13 +22,14 @@ package fr.quatrevieux.araknemu.data.living.entity.account;
 import fr.quatrevieux.araknemu.common.account.Permission;
 
 import java.util.EnumSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
  * AuthenticationAccount data
  */
-final public class Account {
-    final private int id;
+public final class Account {
+    private final int id;
 
     private String name;
     private String password;
@@ -90,6 +91,14 @@ final public class Account {
         this.password = password;
     }
 
+    /**
+     * Define the entity id
+     * This method will create a new instance of the account entity
+     *
+     * @param id The id to set
+     *
+     * @return The new entity instance
+     */
     public Account withId(int id) {
         return new Account(
             id,
@@ -104,15 +113,22 @@ final public class Account {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
 
-        Account account = (Account) o;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-        if (id != account.id) return false;
-        if (name != null ? !name.equals(account.name) : account.name != null) return false;
-        if (password != null ? !password.equals(account.password) : account.password != null) return false;
-        return pseudo != null ? pseudo.equals(account.pseudo) : account.pseudo == null;
+        final Account account = (Account) o;
+
+        return
+            id == account.id
+            && Objects.equals(name, account.name)
+            && Objects.equals(pseudo, account.pseudo)
+            && Objects.equals(password, account.password)
+        ;
     }
 
     @Override

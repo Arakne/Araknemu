@@ -36,7 +36,7 @@ public interface Life {
     /**
      * Check if the creature is full life
      */
-    default public boolean isFull() {
+    public default boolean isFull() {
         return max() == current();
     }
 }

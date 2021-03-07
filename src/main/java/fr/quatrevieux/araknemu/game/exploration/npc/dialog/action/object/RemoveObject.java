@@ -41,28 +41,10 @@ import java.util.stream.Collectors;
  *              If set to 1 (or not given) the quantity of the item is checked before display the response
  *              If set to 0, the response is always displayed
  */
-final public class RemoveObject implements Action {
-    final static public class Factory implements ActionFactory {
-        @Override
-        public String type() {
-            return "REM_OBJECT";
-        }
-
-        @Override
-        public Action create(ResponseAction entity) {
-            final String[] arguments = StringUtils.split(entity.arguments(), ",", 3);
-
-            return new RemoveObject(
-                Integer.parseInt(arguments[0]),
-                arguments.length > 1 ? Integer.parseInt(arguments[1]) : 1,
-                arguments.length < 3 || "1".equals(arguments[2])
-            );
-        }
-    }
-
-    final private int itemId;
-    final private int quantity;
-    final private boolean required;
+public final class RemoveObject implements Action {
+    private final int itemId;
+    private final int quantity;
+    private final boolean required;
 
     public RemoveObject(int itemId, int quantity, boolean required) {
         this.itemId = itemId;
@@ -102,7 +84,7 @@ final public class RemoveObject implements Action {
         int currentQuantity = quantity;
 
         for (InventoryEntry entry : entries) {
-            int toRemove = Math.min(entry.quantity(), currentQuantity);
+            final int toRemove = Math.min(entry.quantity(), currentQuantity);
 
             entry.remove(toRemove);
             currentQuantity -= toRemove;
@@ -110,6 +92,24 @@ final public class RemoveObject implements Action {
             if (currentQuantity <= 0) {
                 break;
             }
+        }
+    }
+
+    public static final class Factory implements ActionFactory {
+        @Override
+        public String type() {
+            return "REM_OBJECT";
+        }
+
+        @Override
+        public Action create(ResponseAction entity) {
+            final String[] arguments = StringUtils.split(entity.arguments(), ",", 3);
+
+            return new RemoveObject(
+                Integer.parseInt(arguments[0]),
+                arguments.length > 1 ? Integer.parseInt(arguments[1]) : 1,
+                arguments.length < 3 || "1".equals(arguments[2])
+            );
         }
     }
 }

@@ -32,7 +32,7 @@ import fr.quatrevieux.araknemu.game.world.creature.Creature;
  *
  * The party is linked to the distant party (other)
  */
-final public class PlayerExchangeParty extends AbstractPlayerExchangeParty {
+public final class PlayerExchangeParty extends AbstractPlayerExchangeParty {
     private PlayerExchangeParty(ExplorationPlayer player, ExchangeProcessor processor, PlayerExchangeStorage storage) {
         super(player, processor, storage);
     }
@@ -58,24 +58,24 @@ final public class PlayerExchangeParty extends AbstractPlayerExchangeParty {
     /**
      * Make exchange parties between two players
      */
-    static public PlayerExchangeParty[] make(ExplorationPlayer player1, ExplorationPlayer player2) {
-        final PlayerExchangeStorage storage1 = new PlayerExchangeStorage(player1);
-        final PlayerExchangeStorage storage2 = new PlayerExchangeStorage(player2);
+    public static PlayerExchangeParty[] make(ExplorationPlayer initiator, ExplorationPlayer target) {
+        final PlayerExchangeStorage initiatorStorage = new PlayerExchangeStorage(initiator);
+        final PlayerExchangeStorage targetStorage = new PlayerExchangeStorage(target);
 
-        final ExchangePartyProcessor partyProcessor1 = new PlayerExchangePartyProcessor(player1, storage1);
-        final ExchangePartyProcessor partyProcessor2 = new PlayerExchangePartyProcessor(player2, storage2);
+        final ExchangePartyProcessor initiatorPartyProcessor = new PlayerExchangePartyProcessor(initiator, initiatorStorage);
+        final ExchangePartyProcessor targetPartyProcessor = new PlayerExchangePartyProcessor(target, targetStorage);
 
-        final ExchangeProcessor processor = new ExchangeProcessor(partyProcessor1, partyProcessor2);
+        final ExchangeProcessor processor = new ExchangeProcessor(initiatorPartyProcessor, targetPartyProcessor);
 
-        final PlayerExchangeParty party1 = new PlayerExchangeParty(player1, processor, storage1);
-        final PlayerExchangeParty party2 = new PlayerExchangeParty(player2, processor, storage2);
+        final PlayerExchangeParty initiatorParty = new PlayerExchangeParty(initiator, processor, initiatorStorage);
+        final PlayerExchangeParty targetParty = new PlayerExchangeParty(target, processor, targetStorage);
 
-        storage1.dispatcher().register(new SendLocalPackets(party1));
-        storage1.dispatcher().register(new SendDistantPackets(player2));
+        initiatorStorage.dispatcher().register(new SendLocalPackets(initiatorParty));
+        initiatorStorage.dispatcher().register(new SendDistantPackets(target));
 
-        storage2.dispatcher().register(new SendLocalPackets(party2));
-        storage2.dispatcher().register(new SendDistantPackets(player1));
+        targetStorage.dispatcher().register(new SendLocalPackets(targetParty));
+        targetStorage.dispatcher().register(new SendDistantPackets(initiator));
 
-        return new PlayerExchangeParty[] {party1, party2};
+        return new PlayerExchangeParty[] {initiatorParty, targetParty};
     }
 }

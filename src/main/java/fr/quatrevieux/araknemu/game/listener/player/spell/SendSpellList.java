@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.spell.SpellList;
 /**
  * Send spell list on join game
  */
-final public class SendSpellList implements Listener<GameJoined> {
-    final private GamePlayer player;
+public final class SendSpellList implements Listener<GameJoined> {
+    private final GamePlayer player;
 
     public SendSpellList(GamePlayer player) {
         this.player = player;

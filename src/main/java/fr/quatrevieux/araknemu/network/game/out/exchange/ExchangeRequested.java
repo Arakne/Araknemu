@@ -27,10 +27,10 @@ import fr.quatrevieux.araknemu.game.world.creature.Creature;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L160
  */
-final public class ExchangeRequested {
-    final private Creature initiator;
-    final private Creature target;
-    final private ExchangeType type;
+public final class ExchangeRequested {
+    private final Creature initiator;
+    private final Creature target;
+    private final ExchangeType type;
 
     public ExchangeRequested(Creature initiator, Creature target, ExchangeType type) {
         this.initiator = initiator;

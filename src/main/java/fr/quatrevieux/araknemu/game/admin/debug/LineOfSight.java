@@ -14,12 +14,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.admin.debug;
 
 import fr.arakne.utils.maps.CoordinateCell;
+import fr.arakne.utils.maps.MapCell;
+import fr.arakne.utils.maps.sight.CellSight;
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
@@ -31,13 +33,15 @@ import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Display accessible cells by line of sight
  */
-final public class LineOfSight extends AbstractCommand {
-    final private MapTemplateRepository repository;
+public final class LineOfSight extends AbstractCommand {
+    private final MapTemplateRepository repository;
 
     public LineOfSight(MapTemplateRepository repository) {
         this.repository = repository;
@@ -49,7 +53,8 @@ final public class LineOfSight extends AbstractCommand {
             .description("Highlight accessible cells by line of sight")
             .help(
                 formatter -> formatter
-                    .synopsis("lineofsight")
+                    .synopsis("lineofsight [target cell id]")
+                    .options("target cell id", "Optional. The target cell id for dump the line of sight to this cell")
                     .seeAlso("${debug} fightpos hide", "For hide the cells", Link.Type.EXECUTE)
             )
             .requires(Permission.DEBUG)
@@ -63,29 +68,38 @@ final public class LineOfSight extends AbstractCommand {
 
     @Override
     public void execute(AdminPerformer performer, List<String> arguments) {
-        AdminUser user = AdminUser.class.cast(performer);
+        final AdminUser user = AdminUser.class.cast(performer);
+        final FightMap map = new FightMap(repository.get(user.player().position().map()));
 
-        FightMap map = new FightMap(repository.get(user.player().position().map()));
+        final CoordinateCell<FightCell> current = new CoordinateCell<>(map.get(user.player().position().cell()));
+        final CellSight<FightCell> sight = new CellSight<>(current);
 
-        List<Integer> accessible = new ArrayList<>();
-        List<Integer> blocked = new ArrayList<>();
+        final List<Integer> accessible;
+        final List<Integer> blocked;
 
-        CoordinateCell<FightCell> current = new CoordinateCell<>(map.get(user.player().position().cell()));
-        fr.arakne.utils.maps.LineOfSight<FightCell> lineOfSight = new fr.arakne.utils.maps.LineOfSight<>(map);
+        if (arguments.size() < 2) {
+            accessible = sight.accessible().stream().map(MapCell::id).collect(Collectors.toList());
+            blocked = sight.blocked().stream().map(MapCell::id).collect(Collectors.toList());
+        } else {
+            final Iterator<FightCell> los = sight.to(map.get(Integer.parseInt(arguments.get(1))));
 
-        for (int i = 0; i < map.size(); ++i) {
-            if (lineOfSight.between(current, new CoordinateCell<>(map.get(i)))) {
-                accessible.add(i);
-            } else {
-                blocked.add(i);
+            accessible = new ArrayList<>();
+            blocked = new ArrayList<>();
+
+            boolean isFree = true;
+
+            while (los.hasNext()) {
+                final FightCell cell = los.next();
+
+                if (isFree) {
+                    accessible.add(cell.id());
+                    isFree = !cell.sightBlocking();
+                } else {
+                    blocked.add(cell.id());
+                }
             }
         }
 
-        user.send(
-            new FightStartPositions(
-                new List[] {blocked, accessible},
-                0
-            )
-        );
+        user.send(new FightStartPositions(new List[] {blocked, accessible}, 0));
     }
 }

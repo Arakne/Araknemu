@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 /**
  * A new turn is started
  */
-final public class TurnStarted {
-    final private FightTurn turn;
+public final class TurnStarted {
+    private final FightTurn turn;
 
     public TurnStarted(FightTurn turn) {
         this.turn = turn;

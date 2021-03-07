@@ -27,15 +27,16 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
 import fr.quatrevieux.araknemu.game.listener.map.SendSpriteRestrictions;
 import fr.quatrevieux.araknemu.game.listener.player.InitializeGame;
+import fr.quatrevieux.araknemu.game.listener.player.LifeRegeneration;
 import fr.quatrevieux.araknemu.game.listener.player.exploration.RefreshExplorationRestrictions;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 
 /**
  * Base service for handle game exploration
  */
-final public class ExplorationService implements EventsSubscriber {
-    final private ExplorationMapService mapService;
-    final private Dispatcher dispatcher;
+public final class ExplorationService implements EventsSubscriber {
+    private final ExplorationMapService mapService;
+    private final Dispatcher dispatcher;
 
     public ExplorationService(ExplorationMapService mapService, Dispatcher dispatcher) {
         this.mapService = mapService;
@@ -46,10 +47,11 @@ final public class ExplorationService implements EventsSubscriber {
      * Start exploration for a player
      */
     public ExplorationPlayer create(GamePlayer player) {
-        ExplorationPlayer exploration = new ExplorationPlayer(player);
+        final ExplorationPlayer exploration = new ExplorationPlayer(player);
 
         exploration.dispatcher().add(new InitializeGame(exploration, mapService));
         exploration.dispatcher().add(new RefreshExplorationRestrictions(exploration));
+        exploration.dispatcher().register(new LifeRegeneration());
 
         dispatcher.dispatch(new ExplorationPlayerCreated(exploration));
 
@@ -69,7 +71,7 @@ final public class ExplorationService implements EventsSubscriber {
                 public Class<MapLoaded> event() {
                     return MapLoaded.class;
                 }
-            }
+            },
         };
     }
 }

@@ -38,13 +38,13 @@ import java.util.List;
  * Group of monsters
  * The group is the only creature which can be found on exploration for interacting with {@link Monster}
  */
-final public class MonsterGroup implements ExplorationCreature {
-    final private LivingMonsterGroupPosition handler;
-    final private int id;
-    final private List<Monster> monsters;
-    final private Position winFightTeleportPosition;
+public final class MonsterGroup implements ExplorationCreature {
+    private final LivingMonsterGroupPosition handler;
+    private final int id;
+    private final List<Monster> monsters;
+    private final Position winFightTeleportPosition;
 
-    final private MonsterGroupSprite sprite;
+    private final MonsterGroupSprite sprite;
 
     private Direction orientation;
     private ExplorationMapCell cell;

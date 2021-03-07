@@ -34,11 +34,11 @@ import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 /**
  * Try to join a fight
  */
-final public class JoinFight implements Action {
-    final private ExplorationPlayer player;
-    final private Fight fight;
-    final private FightTeam team;
-    final private FighterFactory fighterFactory;
+public final class JoinFight implements Action {
+    private final ExplorationPlayer player;
+    private final Fight fight;
+    private final FightTeam team;
+    private final FighterFactory fighterFactory;
 
     public JoinFight(ExplorationPlayer player, Fight fight, FightTeam team, FighterFactory fighterFactory) {
         this.player = player;

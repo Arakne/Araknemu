@@ -36,13 +36,13 @@ import java.util.function.Supplier;
 /**
  * Base implementation for synchronize the banip table with database and between servers
  */
-abstract public class AbstractBanIpSynchronizer {
-    final private BanIpService<? extends LivingAccount> service;
-    final private Supplier<Collection<? extends Session>> sessionsSupplier;
-    final private Logger logger;
-    final private Duration refreshDelay;
+public abstract class AbstractBanIpSynchronizer {
+    private final BanIpService<? extends LivingAccount> service;
+    private final Supplier<Collection<? extends Session>> sessionsSupplier;
+    private final Logger logger;
+    private final Duration refreshDelay;
 
-    final private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     public AbstractBanIpSynchronizer(BanIpService<? extends LivingAccount> service, Supplier<Collection<? extends Session>> sessionsSupplier, Logger logger, Duration refreshDelay) {
         this.service = service;
@@ -54,7 +54,7 @@ abstract public class AbstractBanIpSynchronizer {
     /**
      * Start the refresh pull thread
      */
-    final protected void startPulling() {
+    protected final void startPulling() {
         logger.info("Loading ban ip table");
         service.load();
 
@@ -72,14 +72,14 @@ abstract public class AbstractBanIpSynchronizer {
     /**
      * Stop the refresh pull thread
      */
-    final protected void stopPulling() {
+    protected final void stopPulling() {
         executor.shutdownNow();
     }
 
     /**
      * Get the kick banned ip listener
      */
-    final protected Listener<IpBanned> ipBannedListener() {
+    protected final Listener<IpBanned> ipBannedListener() {
         return new KickBannedIpSession(sessionsSupplier);
     }
 }

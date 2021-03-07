@@ -24,9 +24,9 @@ import java.util.Random;
 /**
  * Random generation for strings
  */
-final public class RandomStringUtil {
-    final private Random random;
-    final private CharSequence charset;
+public final class RandomStringUtil {
+    private final Random random;
+    private final CharSequence charset;
 
     /**
      * Create instance
@@ -40,11 +40,11 @@ final public class RandomStringUtil {
 
     /**
      * Generate the random string
+     *
      * @param length The required string length
-     * @return
      */
     public String generate(int length) {
-        char[] buffer = new char[length];
+        final char[] buffer = new char[length];
 
         for (int i = 0; i < length; ++i) {
             buffer[i] = charset.charAt(random.nextInt(charset.length()));

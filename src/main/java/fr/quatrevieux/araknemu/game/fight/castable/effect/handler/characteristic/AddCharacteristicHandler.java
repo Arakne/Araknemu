@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 /**
  * Buff effect for adding characteristic points
  */
-public class AddCharacteristicHandler extends AlterCharacteristicHandler {
+public class AddCharacteristicHandler extends AbstractAlterCharacteristicHandler {
     public AddCharacteristicHandler(Fight fight, Characteristic characteristic) {
         super(fight, characteristic);
     }

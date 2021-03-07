@@ -37,10 +37,10 @@ import java.util.Map;
 /**
  * Teleport the player to the desired location
  */
-final public class Goto extends AbstractCommand {
-    final private GamePlayer player;
-    final private ExplorationMapService mapService;
-    final private Map<String, LocationResolver> resolvers = new LinkedHashMap<>();
+public final class Goto extends AbstractCommand {
+    private final GamePlayer player;
+    private final ExplorationMapService mapService;
+    private final Map<String, LocationResolver> resolvers = new LinkedHashMap<>();
 
     /**
      * @param player The teleported player
@@ -101,7 +101,7 @@ final public class Goto extends AbstractCommand {
             throw new AdminException("The player is busy, and cannot be teleported. Use --force to force the teleportation.");
         }
 
-        Target target = parseTarget(locationArguments);
+        final Target target = parseTarget(locationArguments);
 
         teleportToTarget(performer, target);
         performer.success("Teleport {} to {}", player.name(), target);
@@ -111,7 +111,7 @@ final public class Goto extends AbstractCommand {
      * Parse the target from the command arguments
      */
     private Target parseTarget(List<String> arguments) throws AdminException {
-        Target target = new Target(
+        final Target target = new Target(
             player.isExploring() ? player.exploration().map() : mapService.load(player.position().map()),
             player.position().cell()
         );

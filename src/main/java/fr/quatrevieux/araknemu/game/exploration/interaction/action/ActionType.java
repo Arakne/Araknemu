@@ -35,9 +35,9 @@ public enum ActionType {
     REFUSE_CHALLENGE(902),
     JOIN_FIGHT(903);
 
-    final private int id;
+    private static final Map<Integer, ActionType> actionsById = new HashMap<>();
 
-    final static private Map<Integer, ActionType> actionsById = new HashMap<>();
+    private final int id;
 
     static {
         for (ActionType actionType : values()) {
@@ -56,7 +56,7 @@ public enum ActionType {
     /**
      * Get an action by id
      */
-    static public ActionType byId(int id) {
+    public static ActionType byId(int id) {
         return actionsById.get(id);
     }
 }

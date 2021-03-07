@@ -28,9 +28,9 @@ import java.util.List;
 /**
  * Compute special effects diff
  */
-final public class EffectsDiff {
-    final private List<SpecialEffect> from;
-    final private List<SpecialEffect> to;
+public final class EffectsDiff {
+    private final List<SpecialEffect> from;
+    private final List<SpecialEffect> to;
 
     public EffectsDiff(List<SpecialEffect> from, List<SpecialEffect> to) {
         this.from = from;
@@ -49,7 +49,7 @@ final public class EffectsDiff {
             return Collections.emptyList();
         }
 
-        List<SpecialEffect> effects = new ArrayList<>();
+        final List<SpecialEffect> effects = new ArrayList<>();
 
         for (SpecialEffect effect : to) {
             if (!from.contains(effect)) {
@@ -72,7 +72,7 @@ final public class EffectsDiff {
             return from;
         }
 
-        List<SpecialEffect> effects = new ArrayList<>();
+        final List<SpecialEffect> effects = new ArrayList<>();
 
         for (SpecialEffect effect : from) {
             if (!to.contains(effect)) {

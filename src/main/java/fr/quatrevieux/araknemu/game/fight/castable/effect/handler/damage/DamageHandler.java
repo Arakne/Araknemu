@@ -30,8 +30,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 /**
  * Handle simple damage effect
  */
-final public class DamageHandler implements EffectHandler, BuffHook {
-    final private DamageApplier applier;
+public final class DamageHandler implements EffectHandler, BuffHook {
+    private final DamageApplier applier;
 
     public DamageHandler(Element element, Fight fight) {
         this.applier = new DamageApplier(element, fight);

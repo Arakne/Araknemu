@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 /**
  * Send the new turn list
  */
-final public class SendTurnList implements Listener<TurnListChanged> {
-    final private Fight fight;
+public final class SendTurnList implements Listener<TurnListChanged> {
+    private final Fight fight;
 
     public SendTurnList(Fight fight) {
         this.fight = fight;

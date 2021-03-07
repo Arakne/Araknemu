@@ -25,7 +25,7 @@ import java.time.Duration;
  * A shutdown has been scheduled
  * This event will be dispatched multiple times, according to the reminder configuration
  */
-final public class ShutdownScheduled {
+public final class ShutdownScheduled {
     private Duration delay;
 
     public ShutdownScheduled(Duration delay) {

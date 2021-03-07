@@ -27,14 +27,19 @@ import java.util.Set;
  * Required permissions is not granted for execute the command
  */
 public class CommandPermissionsException extends CommandException {
-    final private Set<Permission> permissions;
+    private final Set<Permission> permissions;
 
     public CommandPermissionsException(String command, Set<Permission> permissions) {
         super(command);
         this.permissions = permissions;
     }
 
-    public Set<Permission> permissions() {
+    /**
+     * Get the required permissions to execute the command
+     *
+     * @see fr.quatrevieux.araknemu.game.admin.Command#permissions()
+     */
+    public final Set<Permission> permissions() {
         return permissions;
     }
 }

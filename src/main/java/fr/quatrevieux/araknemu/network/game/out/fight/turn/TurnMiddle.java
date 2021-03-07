@@ -29,8 +29,8 @@ import java.util.Collection;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L326
  */
-final public class TurnMiddle {
-    final private Collection<Fighter> fighters;
+public final class TurnMiddle {
+    private final Collection<Fighter> fighters;
 
     public TurnMiddle(Collection<Fighter> fighters) {
         this.fighters = fighters;
@@ -38,12 +38,12 @@ final public class TurnMiddle {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("GTM");
+        final StringBuilder sb = new StringBuilder("GTM");
 
-        for(Fighter fighter : fighters){
+        for (Fighter fighter : fighters) {
             sb.append('|').append(fighter.id()).append(';');
 
-            if(fighter.dead()){
+            if (fighter.dead()) {
                 sb.append(1);
                 continue;
             }

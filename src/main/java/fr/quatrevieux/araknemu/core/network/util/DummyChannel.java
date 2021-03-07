@@ -27,7 +27,7 @@ import java.util.Stack;
 /**
  * Dummy implementation of channel
  */
-final public class DummyChannel implements Channel {
+public final class DummyChannel implements Channel {
     private long id = 1;
     private boolean isAlive = true;
     private Stack<Object> messages = new Stack<>();

@@ -14,33 +14,33 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux, Jean-Alexandre Valentin
  */
 
-package fr.quatrevieux.araknemu.game.listener.player.inventory;
-
-import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.game.item.inventory.event.KamasChanged;
-import fr.quatrevieux.araknemu.network.game.out.account.Stats;
+package fr.quatrevieux.araknemu.network.game.out.info;
 
 /**
- * Send inventory kamas when changed
+ * This packet tells the client to stop the life regneration animation
+ *
+ * https://github.com/Emudofus/Dofus/blob/1b54a30e02f637c912bf14afdf6ea8b7df45ea73/dofus/aks/Infos.as#L336
  */
-final public class SendKamas implements Listener<KamasChanged> {
-    final private GamePlayer player;
+public final class StopLifeTimer {
+    /**
+     * Can be the amount of life regenerated
+     * It is usually used after the sit animation
+     */
+    private final int life;
 
-    public SendKamas(GamePlayer player) {
-        this.player = player;
+    public StopLifeTimer(int life) {
+        this.life = life;
+    }
+
+    public StopLifeTimer() {
+        this(0);
     }
 
     @Override
-    public void on(KamasChanged event) {
-        player.send(new Stats(player.properties()));
-    }
-
-    @Override
-    public Class<KamasChanged> event() {
-        return KamasChanged.class;
+    public String toString() {
+        return "ILF" + this.life;
     }
 }

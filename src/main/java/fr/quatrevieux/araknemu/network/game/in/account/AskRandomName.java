@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L141
  */
-final public class AskRandomName implements Packet {
-    final static public class Parser implements SinglePacketParser<AskRandomName> {
+public final class AskRandomName implements Packet {
+    public static final class Parser implements SinglePacketParser<AskRandomName> {
         @Override
         public AskRandomName parse(String input) throws ParsePacketException {
             return new AskRandomName();

@@ -25,9 +25,9 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 /**
  * A fighter is dead
  */
-final public class FighterDie {
-    final private PassiveFighter fighter;
-    final private ActiveFighter caster;
+public final class FighterDie {
+    private final PassiveFighter fighter;
+    private final ActiveFighter caster;
 
     public FighterDie(PassiveFighter fighter, ActiveFighter caster) {
         this.fighter = fighter;

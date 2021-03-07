@@ -25,9 +25,9 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 /**
  * A fight action is started
  */
-final public class FightActionStarted {
-    final private Action action;
-    final private ActionResult result;
+public final class FightActionStarted {
+    private final Action action;
+    private final ActionResult result;
 
     public FightActionStarted(Action action, ActionResult result) {
         this.action = action;

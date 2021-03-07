@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.network.game.out.tutorial;
 /**
  * Launch the character creation cinematic
  */
-final public class GameBegin {
+public final class GameBegin {
     @Override
     public String toString() {
         return "TB";

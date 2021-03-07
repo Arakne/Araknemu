@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterRewardItem;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterRewardItemRepository;
 
@@ -35,26 +35,8 @@ import java.util.stream.Collectors;
  * SQL implementation for monster reward item repository
  */
 final class SqlMonsterRewardItemRepository implements MonsterRewardItemRepository {
-    private class Loader implements RepositoryUtils.Loader<MonsterRewardItem> {
-        @Override
-        public MonsterRewardItem create(ResultSet rs) throws SQLException {
-            return new MonsterRewardItem(
-                rs.getInt("MONSTER_ID"),
-                rs.getInt("ITEM_TEMPLATE_ID"),
-                rs.getInt("QUANTITY"),
-                rs.getInt("DISCERNMENT"),
-                rs.getFloat("RATE")
-            );
-        }
-
-        @Override
-        public MonsterRewardItem fillKeys(MonsterRewardItem entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<MonsterRewardItem> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<MonsterRewardItem> utils;
 
     public SqlMonsterRewardItemRepository(QueryExecutor executor) {
         this.executor = executor;
@@ -113,5 +95,23 @@ final class SqlMonsterRewardItemRepository implements MonsterRewardItemRepositor
             .stream()
             .collect(Collectors.groupingBy(MonsterRewardItem::monsterId))
         ;
+    }
+
+    private class Loader implements RepositoryUtils.Loader<MonsterRewardItem> {
+        @Override
+        public MonsterRewardItem create(ResultSet rs) throws SQLException {
+            return new MonsterRewardItem(
+                rs.getInt("MONSTER_ID"),
+                rs.getInt("ITEM_TEMPLATE_ID"),
+                rs.getInt("QUANTITY"),
+                rs.getInt("DISCERNMENT"),
+                rs.getFloat("RATE")
+            );
+        }
+
+        @Override
+        public MonsterRewardItem fillKeys(MonsterRewardItem entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

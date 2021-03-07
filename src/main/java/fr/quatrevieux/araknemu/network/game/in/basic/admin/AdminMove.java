@@ -31,11 +31,24 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Basics.as#L23
  */
-final public class AdminMove implements Packet {
-    final static public class Parser implements SinglePacketParser<AdminMove> {
+public final class AdminMove implements Packet {
+    private final Geolocation geolocation;
+
+    public AdminMove(Geolocation geolocation) {
+        this.geolocation = geolocation;
+    }
+
+    /**
+     * Get the target geolocation
+     */
+    public Geolocation geolocation() {
+        return geolocation;
+    }
+
+    public static final class Parser implements SinglePacketParser<AdminMove> {
         @Override
         public AdminMove parse(String input) throws ParsePacketException {
-            String[] parts = StringUtils.split(input, ",", 2);
+            final String[] parts = StringUtils.split(input, ",", 2);
 
             if (parts.length != 2) {
                 throw new ParsePacketException(code() + input, "Missing coordinates");
@@ -53,18 +66,5 @@ final public class AdminMove implements Packet {
         public String code() {
             return "BaM";
         }
-    }
-
-    final private Geolocation geolocation;
-
-    public AdminMove(Geolocation geolocation) {
-        this.geolocation = geolocation;
-    }
-
-    /**
-     * Get the target geolocation
-     */
-    public Geolocation geolocation() {
-        return geolocation;
     }
 }

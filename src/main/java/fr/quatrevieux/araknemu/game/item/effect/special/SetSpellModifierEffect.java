@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
 /**
  * Set fixed value for spell modifier
  */
-final public class SetSpellModifierEffect implements SpecialEffectHandler {
-    final private SpellsBoosts.Modifier modifier;
+public final class SetSpellModifierEffect implements SpecialEffectHandler {
+    private final SpellsBoosts.Modifier modifier;
 
     public SetSpellModifierEffect(SpellsBoosts.Modifier modifier) {
         this.modifier = modifier;
@@ -38,8 +38,8 @@ final public class SetSpellModifierEffect implements SpecialEffectHandler {
     public void apply(SpecialEffect effect, GamePlayer player) {
         final SpellsBoosts boosts = player.properties().spells().boosts();
 
-        int spell = effect.arguments()[0];
-        int value = effect.arguments()[2];
+        final int spell = effect.arguments()[0];
+        final int value = effect.arguments()[2];
 
         if (!boosts.modifiers(spell).has(modifier) || boosts.modifiers(spell).value(modifier) > value) {
             boosts.set(spell, modifier, value);
@@ -50,8 +50,8 @@ final public class SetSpellModifierEffect implements SpecialEffectHandler {
     public void relieve(SpecialEffect effect, GamePlayer player) {
         final SpellsBoosts boosts = player.properties().spells().boosts();
 
-        int spell = effect.arguments()[0];
-        int value = effect.arguments()[2];
+        final int spell = effect.arguments()[0];
+        final int value = effect.arguments()[2];
 
         if (boosts.modifiers(spell).value(modifier) == value) {
             boosts.unset(spell, modifier);

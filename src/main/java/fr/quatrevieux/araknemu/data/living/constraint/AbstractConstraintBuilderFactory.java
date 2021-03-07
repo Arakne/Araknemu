@@ -17,32 +17,37 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.listener.player.inventory;
-
-import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectAdded;
-import fr.quatrevieux.araknemu.network.game.out.object.AddItem;
+package fr.quatrevieux.araknemu.data.living.constraint;
 
 /**
- * Send item data for added object
+ * Base entity constraint class for build constraints
+ *
+ * @param <T> The entity type
+ * @param <E> The error type
  */
-final public class SendItemData implements Listener<ObjectAdded> {
-    final private GamePlayer player;
+public abstract class AbstractConstraintBuilderFactory<T, E> implements EntityConstraint<T, E>, BuilderFactory<T, E> {
+    private E error;
+    private EntityConstraint<T, E> constraint;
 
-    public SendItemData(GamePlayer player) {
-        this.player = player;
+    @Override
+    public boolean check(T entity) {
+        return constraint().check(entity);
     }
 
     @Override
-    public void on(ObjectAdded event) {
-        player.send(
-            new AddItem(event.entry())
-        );
+    public E error() {
+        return constraint().error();
     }
 
-    @Override
-    public Class<ObjectAdded> event() {
-        return ObjectAdded.class;
+    private EntityConstraint<T, E> constraint() {
+        if (constraint != null) {
+            return constraint;
+        }
+
+        final ConstraintBuilder<T, E> builder = new ConstraintBuilder<>();
+
+        build(builder);
+
+        return constraint = builder.build();
     }
 }

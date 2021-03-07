@@ -20,14 +20,14 @@
 package fr.quatrevieux.araknemu.game.exploration.creature.operation;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
+import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 
 /**
  * Dispatch event to the creature if supports
  */
-final public class DispatchEvent implements Operation {
-    final private Object event;
+public final class DispatchEvent implements Operation {
+    private final Object event;
 
     public DispatchEvent(Object event) {
         this.event = event;

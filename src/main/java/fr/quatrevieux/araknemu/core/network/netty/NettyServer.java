@@ -25,7 +25,11 @@ import fr.quatrevieux.araknemu.core.network.session.Session;
 import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
@@ -44,18 +48,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * Server adapter for Netty
  */
-final public class NettyServer<S extends Session> implements Server<S> {
-    @ChannelHandler.Sharable
-    final static public class MessageEndEncoder extends MessageToMessageEncoder<Object> {
-        @Override
-        protected void encode(ChannelHandlerContext ctx, Object msg, List<Object> out) {
-            out.add(msg + "\000");
-        }
-    }
-
-    final private SessionFactory<S> factory;
-    final private int port;
-    final private Duration readTimeout;
+public final class NettyServer<S extends Session> implements Server<S> {
+    private final SessionFactory<S> factory;
+    private final int port;
+    private final Duration readTimeout;
 
     private Channel serverChannel;
     private EventLoopGroup loopGroup;
@@ -69,12 +65,13 @@ final public class NettyServer<S extends Session> implements Server<S> {
 
     @Override
     public void start() {
-        ServerBootstrap bootstrap = new ServerBootstrap();
+        final ServerBootstrap bootstrap = new ServerBootstrap();
 
         handlerAdapter = new SessionHandlerAdapter<>(factory);
-        StringDecoder decoder = new StringDecoder(CharsetUtil.UTF_8);
-        StringEncoder encoder = new StringEncoder(CharsetUtil.UTF_8);
-        MessageToMessageEncoder<Object> messageEncoder = new MessageEndEncoder();
+
+        final StringDecoder decoder = new StringDecoder(CharsetUtil.UTF_8);
+        final StringEncoder encoder = new StringEncoder(CharsetUtil.UTF_8);
+        final MessageToMessageEncoder<Object> messageEncoder = new MessageEndEncoder();
 
         bootstrap
             .group(loopGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors()))
@@ -115,5 +112,13 @@ final public class NettyServer<S extends Session> implements Server<S> {
     @Override
     public Collection<S> sessions() {
         return handlerAdapter.sessions();
+    }
+
+    @ChannelHandler.Sharable
+    public static final class MessageEndEncoder extends MessageToMessageEncoder<Object> {
+        @Override
+        protected void encode(ChannelHandlerContext ctx, Object msg, List<Object> out) {
+            out.add(msg + "\000");
+        }
     }
 }

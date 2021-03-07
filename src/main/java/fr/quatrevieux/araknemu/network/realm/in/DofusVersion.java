@@ -25,8 +25,8 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketParser;
 /**
  * The dofus client version
  */
-final public class DofusVersion implements Packet {
-    final private String version;
+public final class DofusVersion implements Packet {
+    private final String version;
 
     public DofusVersion(String version) {
         this.version = version;
@@ -36,7 +36,7 @@ final public class DofusVersion implements Packet {
         return version;
     }
 
-    static public PacketParser parser() {
+    public static PacketParser parser() {
         return DofusVersion::new;
     }
 }

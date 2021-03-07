@@ -30,7 +30,7 @@ public enum RewardType {
     COLLECTOR(5),
     FIGHT_DROP(6); // Contains only kamas and items
 
-    final private int id;
+    private final int id;
 
     RewardType(int id) {
         this.id = id;

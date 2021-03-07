@@ -60,8 +60,11 @@ class AbstractBanIpSynchronizerTest extends GameBaseCase {
     @Override
     @AfterEach
     public void tearDown() throws fr.quatrevieux.araknemu.core.di.ContainerException {
-        super.tearDown();
         synchronizer.stopPulling();
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {}
+        super.tearDown();
     }
 
     @Test

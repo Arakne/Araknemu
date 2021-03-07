@@ -37,11 +37,11 @@ import java.util.concurrent.ConcurrentMap;
  * Adapt Netty ChannelInboundHandler to SessionHandler
  */
 @ChannelHandler.Sharable
-final public class SessionHandlerAdapter<S extends Session> extends ChannelInboundHandlerAdapter {
-    final private AttributeKey<S> sessionAttribute = AttributeKey.valueOf("session");
+public final class SessionHandlerAdapter<S extends Session> extends ChannelInboundHandlerAdapter {
+    private final AttributeKey<S> sessionAttribute = AttributeKey.valueOf("session");
 
-    final private SessionFactory<S> factory;
-    final private ConcurrentMap<ChannelId, S> sessions = new ConcurrentHashMap<>();
+    private final SessionFactory<S> factory;
+    private final ConcurrentMap<ChannelId, S> sessions = new ConcurrentHashMap<>();
 
     public SessionHandlerAdapter(SessionFactory<S> factory) {
         this.factory = factory;
@@ -49,7 +49,7 @@ final public class SessionHandlerAdapter<S extends Session> extends ChannelInbou
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        S session = factory.create(new ChannelAdapter(ctx));
+        final S session = factory.create(new ChannelAdapter(ctx));
 
         ctx
             .channel()

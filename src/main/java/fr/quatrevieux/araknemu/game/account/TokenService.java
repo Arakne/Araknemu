@@ -30,19 +30,9 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Handle login tokens
  */
-final public class TokenService {
-    static private class ExpirableAccount {
-        final private Account account;
-        final private long expiration;
-
-        public ExpirableAccount(Account account, long expiration) {
-            this.account = account;
-            this.expiration = expiration;
-        }
-    }
-
-    final private ConcurrentMap<String, ExpirableAccount> accounts = new ConcurrentHashMap<>();
-    final private RandomStringUtil randomStringUtil = new RandomStringUtil(
+public final class TokenService {
+    private final ConcurrentMap<String, ExpirableAccount> accounts = new ConcurrentHashMap<>();
+    private final RandomStringUtil randomStringUtil = new RandomStringUtil(
         new SecureRandom(),
         "abcdefghijklmnopqrstuvwxyz"
     );
@@ -52,7 +42,7 @@ final public class TokenService {
      * @param account Account to register
      */
     public String generate(Account account) {
-        String token = generateToken();
+        final String token = generateToken();
 
         accounts.put(
             token,
@@ -74,7 +64,7 @@ final public class TokenService {
             throw new NoSuchElementException();
         }
 
-        ExpirableAccount account = accounts.remove(token);
+        final ExpirableAccount account = accounts.remove(token);
 
         if (System.currentTimeMillis() > account.expiration) {
             throw new NoSuchElementException();
@@ -94,5 +84,15 @@ final public class TokenService {
         } while (accounts.containsKey(token));
 
         return token;
+    }
+
+    private static class ExpirableAccount {
+        private final Account account;
+        private final long expiration;
+
+        public ExpirableAccount(Account account, long expiration) {
+            this.account = account;
+            this.expiration = expiration;
+        }
     }
 }

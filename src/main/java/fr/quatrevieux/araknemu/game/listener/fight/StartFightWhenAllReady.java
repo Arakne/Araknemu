@@ -28,9 +28,9 @@ import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 /**
  * Start the fight when all fighters are ready
  */
-final public class StartFightWhenAllReady implements Listener<FighterReadyStateChanged> {
-    final private Fight fight;
-    final private PlacementState state;
+public final class StartFightWhenAllReady implements Listener<FighterReadyStateChanged> {
+    private final Fight fight;
+    private final PlacementState state;
 
     public StartFightWhenAllReady(Fight fight, PlacementState state) {
         this.fight = fight;

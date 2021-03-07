@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 /**
  * A fight action is terminated
  */
-final public class FightActionTerminated {
-    final private Action action;
+public final class FightActionTerminated {
+    private final Action action;
 
     public FightActionTerminated(Action action) {
         this.action = action;

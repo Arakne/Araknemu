@@ -67,7 +67,7 @@
         <dependency>
             <groupId>fr.arakne</groupId>
             <artifactId>arakne-map</artifactId>
-            <version>0.1-alpha</version>
+            <version>0.5-alpha</version>
         </dependency>
         <dependency>
             <groupId>de.mkammerer</groupId>
@@ -171,6 +171,22 @@
                         <phase>test</phase>
                         <goals>
                             <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>

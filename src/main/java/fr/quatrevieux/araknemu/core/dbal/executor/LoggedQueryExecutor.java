@@ -26,9 +26,9 @@ import java.sql.SQLException;
 /**
  * Logging executed queries
  */
-final public class LoggedQueryExecutor implements QueryExecutor {
-    final private QueryExecutor executor;
-    final private Logger logger;
+public final class LoggedQueryExecutor implements QueryExecutor {
+    private final QueryExecutor executor;
+    private final Logger logger;
 
     public LoggedQueryExecutor(QueryExecutor executor, Logger logger) {
         this.executor = executor;

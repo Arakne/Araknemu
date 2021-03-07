@@ -25,7 +25,7 @@ import java.util.Optional;
  * Error during validating a path
  */
 public class PathValidationException extends Exception {
-    final private Object errorPacket;
+    private final Object errorPacket;
 
     public PathValidationException(Object errorPacket) {
         super();

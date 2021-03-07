@@ -26,10 +26,10 @@ import java.util.List;
 /**
  * Entity for item sets
  */
-final public class ItemSet {
-    final private int id;
-    final private String name;
-    final private List<List<ItemTemplateEffectEntry>> bonus;
+public final class ItemSet {
+    private final int id;
+    private final String name;
+    private final List<List<ItemTemplateEffectEntry>> bonus;
 
     public ItemSet(int id, String name, List<List<ItemTemplateEffectEntry>> bonus) {
         this.id = id;

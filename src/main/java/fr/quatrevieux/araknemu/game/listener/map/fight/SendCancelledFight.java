@@ -29,9 +29,9 @@ import fr.quatrevieux.araknemu.network.game.out.fight.exploration.HideFight;
 /**
  * Send to the map the cancelled fight
  */
-final public class SendCancelledFight implements Listener<FightCancelled> {
-    final private ExplorationMap map;
-    final private FightService fightService;
+public final class SendCancelledFight implements Listener<FightCancelled> {
+    private final ExplorationMap map;
+    private final FightService fightService;
 
     public SendCancelledFight(ExplorationMap map, FightService fightService) {
         this.map = map;

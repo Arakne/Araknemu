@@ -25,8 +25,8 @@ import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 /**
  * Check for the item class
  */
-final public class ItemClassConstraint implements SlotConstraint {
-    final private Class<? extends Item> type;
+public final class ItemClassConstraint implements SlotConstraint {
+    private final Class<? extends Item> type;
 
     public ItemClassConstraint(Class<? extends Item> type) {
         this.type = type;
