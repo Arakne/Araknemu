@@ -31,9 +31,9 @@ import java.util.List;
 /**
  * Info command for account
  */
-final public class Info extends AbstractCommand {
-    final private GameAccount account;
-    final private AccountRepository repository;
+public final class Info extends AbstractCommand {
+    private final GameAccount account;
+    private final AccountRepository repository;
 
     public Info(GameAccount account, AccountRepository repository) {
         this.account = account;
@@ -64,7 +64,7 @@ final public class Info extends AbstractCommand {
 
     @Override
     public void execute(AdminPerformer performer, List<String> arguments) {
-        Account entity = repository.get(new Account(account.id()));
+        final Account entity = repository.get(new Account(account.id()));
 
         performer.success("Account info : {}", entity.name());
         performer.success("=================================");

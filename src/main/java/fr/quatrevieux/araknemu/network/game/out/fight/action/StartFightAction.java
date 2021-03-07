@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/GameActions.as#L83
  */
-final public class StartFightAction {
-    final private Action action;
+public final class StartFightAction {
+    private final Action action;
 
     public StartFightAction(Action action) {
         this.action = action;

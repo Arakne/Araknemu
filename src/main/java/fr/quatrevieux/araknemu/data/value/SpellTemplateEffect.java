@@ -22,14 +22,14 @@ package fr.quatrevieux.araknemu.data.value;
 /**
  * Effect for {@link fr.quatrevieux.araknemu.data.world.entity.SpellTemplate}
  */
-final public class SpellTemplateEffect {
-    final private int effect;
-    final private int min;
-    final private int max;
-    final private int special;
-    final private int duration;
-    final private int probability;
-    final private String text;
+public final class SpellTemplateEffect {
+    private final int effect;
+    private final int min;
+    private final int max;
+    private final int special;
+    private final int duration;
+    private final int probability;
+    private final String text;
 
     public SpellTemplateEffect(int effect, int min, int max, int special, int duration, int probability, String text) {
         this.effect = effect;

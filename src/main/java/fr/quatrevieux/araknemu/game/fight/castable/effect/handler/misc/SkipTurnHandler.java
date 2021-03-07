@@ -30,8 +30,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 /**
  * Skip the fighter turn until buff is expired
  */
-final public class SkipTurnHandler implements EffectHandler, BuffHook {
-    final private Fight fight;
+public final class SkipTurnHandler implements EffectHandler, BuffHook {
+    private final Fight fight;
 
     public SkipTurnHandler(Fight fight) {
         this.fight = fight;

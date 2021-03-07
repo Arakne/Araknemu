@@ -34,11 +34,11 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Manage all monster rewards
  */
-final public class MonsterRewardService implements PreloadableService {
-    final private MonsterRewardRepository repository;
-    final private MonsterRewardItemRepository itemRepository;
+public final class MonsterRewardService implements PreloadableService {
+    private final MonsterRewardRepository repository;
+    private final MonsterRewardItemRepository itemRepository;
 
-    final private Map<Integer, MonsterGradesReward> rewards = new ConcurrentHashMap<>();
+    private final Map<Integer, MonsterGradesReward> rewards = new ConcurrentHashMap<>();
     private boolean preloading = false;
 
     public MonsterRewardService(MonsterRewardRepository repository, MonsterRewardItemRepository itemRepository) {
@@ -50,7 +50,7 @@ final public class MonsterRewardService implements PreloadableService {
     public void preload(Logger logger) {
         logger.info("Loading monsters rewards...");
 
-        Map<Integer, List<MonsterRewardItem>> itemDrops = itemRepository.all();
+        final Map<Integer, List<MonsterRewardItem>> itemDrops = itemRepository.all();
 
         for (MonsterRewardData data : repository.all()) {
             rewards.put(

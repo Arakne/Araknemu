@@ -24,8 +24,8 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Build and format the console output
  */
-final public class OutputBuilder {
-    final private StringBuilder builder;
+public final class OutputBuilder {
+    private final StringBuilder builder;
 
     public OutputBuilder() {
         this.builder = new StringBuilder();

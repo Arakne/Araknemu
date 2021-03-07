@@ -28,8 +28,8 @@ import java.util.Optional;
 /**
  * Null object for slot
  */
-final public class NullSlot implements InventorySlot {
-    final private int id;
+public final class NullSlot implements InventorySlot {
+    private final int id;
 
     public NullSlot(int id) {
         this.id = id;

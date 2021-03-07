@@ -25,12 +25,12 @@ import fr.quatrevieux.araknemu.data.value.Position;
 /**
  * Store the NPC data
  */
-final public class Npc {
-    final private int id;
-    final private int templateId;
-    final private Position position;
-    final private Direction orientation;
-    final private int[] questions;
+public final class Npc {
+    private final int id;
+    private final int templateId;
+    private final Position position;
+    private final Direction orientation;
+    private final int[] questions;
 
     public Npc(int id, int templateId, Position position, Direction orientation, int[] questions) {
         this.id = id;

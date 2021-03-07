@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  *
  * @todo Implements queue position
  */
-final public class AskQueuePosition implements Packet {
-    final static public class Parser implements SinglePacketParser<AskQueuePosition> {
+public final class AskQueuePosition implements Packet {
+    public static final class Parser implements SinglePacketParser<AskQueuePosition> {
         @Override
         public AskQueuePosition parse(String input) throws ParsePacketException {
             return new AskQueuePosition();

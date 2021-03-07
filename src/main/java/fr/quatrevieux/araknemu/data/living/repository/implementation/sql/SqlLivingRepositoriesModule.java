@@ -26,7 +26,11 @@ import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.repository.BanIpRepository;
-import fr.quatrevieux.araknemu.data.living.repository.account.*;
+import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
+import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
+import fr.quatrevieux.araknemu.data.living.repository.account.BanishmentRepository;
+import fr.quatrevieux.araknemu.data.living.repository.account.BankItemRepository;
+import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
@@ -41,8 +45,8 @@ import org.apache.logging.log4j.LogManager;
 /**
  * DI module for living repositories
  */
-final public class SqlLivingRepositoriesModule implements ContainerModule {
-    final private QueryExecutor executor;
+public final class SqlLivingRepositoriesModule implements ContainerModule {
+    private final QueryExecutor executor;
 
     public SqlLivingRepositoriesModule(ConnectionPool connection) {
         this.executor = new LoggedQueryExecutor(

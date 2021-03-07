@@ -37,9 +37,9 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
  * When no effect, zero will be returned
  * When damage is transformed to heal, will return a positive value (50 => The target win 50 LP)
  */
-final public class DamageApplier {
-    final private Element element;
-    final private Fight fight;
+public final class DamageApplier {
+    private final Element element;
+    private final Fight fight;
 
     public DamageApplier(Element element, Fight fight) {
         this.element = element;
@@ -56,13 +56,13 @@ final public class DamageApplier {
      * @return The real damage value
      */
     public int apply(ActiveFighter caster, SpellEffect effect, PassiveFighter target) {
-        EffectValue value = new EffectValue(effect)
+        final EffectValue value = new EffectValue(effect)
             .percent(caster.characteristics().get(element.boost()))
             .percent(caster.characteristics().get(Characteristic.PERCENT_DAMAGE))
             .fixed(caster.characteristics().get(Characteristic.FIXED_DAMAGE))
         ;
 
-        Damage damage = new Damage(value.value(), element)
+        final Damage damage = new Damage(value.value(), element)
             .percent(target.characteristics().get(element.percentResistance()))
             .fixed(target.characteristics().get(element.fixedResistance()))
         ;

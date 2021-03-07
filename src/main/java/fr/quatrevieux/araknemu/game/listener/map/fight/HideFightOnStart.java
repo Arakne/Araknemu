@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.exploration.HideFight;
 /**
  * Hide the fight from exploration map when it starts
  */
-final public class HideFightOnStart implements Listener<FightStarted> {
-    final private ExplorationMap map;
+public final class HideFightOnStart implements Listener<FightStarted> {
+    private final ExplorationMap map;
 
     public HideFightOnStart(ExplorationMap map) {
         this.map = map;

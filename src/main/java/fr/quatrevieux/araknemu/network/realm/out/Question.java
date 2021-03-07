@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.util.Escape;
 /**
  * Send secret answer to client
  */
-final public class Question {
-    final private String answer;
+public final class Question {
+    private final String answer;
 
     public Question(String answer) {
         this.answer = answer;

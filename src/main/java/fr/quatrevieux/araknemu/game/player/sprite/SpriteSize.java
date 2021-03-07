@@ -22,9 +22,9 @@ package fr.quatrevieux.araknemu.game.player.sprite;
 /**
  * Store size of the sprite
  */
-final public class SpriteSize {
-    final private int x;
-    final private int y;
+public final class SpriteSize {
+    private final int x;
+    private final int y;
 
     public SpriteSize(int x, int y) {
         this.x = x;

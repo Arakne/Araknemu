@@ -20,9 +20,9 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.arakne.utils.value.constant.Race;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.BoostStatsData;
 import fr.quatrevieux.araknemu.data.value.Position;
@@ -41,42 +41,10 @@ import java.util.SortedMap;
  * SQL implementation of the repository
  */
 final class SqlPlayerRaceRepository implements PlayerRaceRepository {
-    private class Loader implements RepositoryUtils.Loader<PlayerRace> {
-        @Override
-        public PlayerRace create(ResultSet rs) throws SQLException {
-            return new PlayerRace(
-                Race.byId(rs.getInt("RACE_ID")),
-                rs.getString("RACE_NAME"),
-                characteristicsTransformer.unserialize(rs.getString("RACE_STATS")),
-                rs.getInt("START_DISCERNMENT"),
-                rs.getInt("START_PODS"),
-                rs.getInt("START_LIFE"),
-                rs.getInt("PER_LEVEL_LIFE"),
-                boostStatsDataTransformer.unserialize(rs.getString("STATS_BOOST")),
-                new Position(
-                    rs.getInt("MAP_ID"),
-                    rs.getInt("CELL_ID")
-                ),
-                new Position(
-                    rs.getInt("ASTRUB_MAP_ID"),
-                    rs.getInt("ASTRUB_CELL_ID")
-                ),
-                Arrays.stream(StringUtils.split(rs.getString("RACE_SPELLS"), "|"))
-                    .mapToInt(Integer::parseInt)
-                    .toArray()
-            );
-        }
-
-        @Override
-        public PlayerRace fillKeys(PlayerRace entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<PlayerRace> utils;
-    final private Transformer<SortedMap<Integer, Characteristics>> characteristicsTransformer;
-    final private Transformer<BoostStatsData> boostStatsDataTransformer;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<PlayerRace> utils;
+    private final Transformer<SortedMap<Integer, Characteristics>> characteristicsTransformer;
+    private final Transformer<BoostStatsData> boostStatsDataTransformer;
 
     public SqlPlayerRaceRepository(QueryExecutor executor, Transformer<SortedMap<Integer, Characteristics>> characteristicsTransformer, Transformer<BoostStatsData> boostStatsDataTransformer) {
         this.characteristicsTransformer = characteristicsTransformer;
@@ -144,5 +112,37 @@ final class SqlPlayerRaceRepository implements PlayerRaceRepository {
     @Override
     public Collection<PlayerRace> load() {
         return utils.findAll("SELECT * FROM PLAYER_RACE");
+    }
+
+    private class Loader implements RepositoryUtils.Loader<PlayerRace> {
+        @Override
+        public PlayerRace create(ResultSet rs) throws SQLException {
+            return new PlayerRace(
+                Race.byId(rs.getInt("RACE_ID")),
+                rs.getString("RACE_NAME"),
+                characteristicsTransformer.unserialize(rs.getString("RACE_STATS")),
+                rs.getInt("START_DISCERNMENT"),
+                rs.getInt("START_PODS"),
+                rs.getInt("START_LIFE"),
+                rs.getInt("PER_LEVEL_LIFE"),
+                boostStatsDataTransformer.unserialize(rs.getString("STATS_BOOST")),
+                new Position(
+                    rs.getInt("MAP_ID"),
+                    rs.getInt("CELL_ID")
+                ),
+                new Position(
+                    rs.getInt("ASTRUB_MAP_ID"),
+                    rs.getInt("ASTRUB_CELL_ID")
+                ),
+                Arrays.stream(StringUtils.split(rs.getString("RACE_SPELLS"), "|"))
+                    .mapToInt(Integer::parseInt)
+                    .toArray()
+            );
+        }
+
+        @Override
+        public PlayerRace fillKeys(PlayerRace entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

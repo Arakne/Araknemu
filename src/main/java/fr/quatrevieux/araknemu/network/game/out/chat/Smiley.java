@@ -14,38 +14,29 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.network.game.out.chat;
 
-import fr.quatrevieux.araknemu.game.chat.ChannelType;
-
-import java.util.Collection;
+import fr.quatrevieux.araknemu.game.world.creature.Creature;
 
 /**
- * Abstract class packet for subscription changed
+ * Display a smiley over a creature
+ *
+ * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Chat.as#L439
  */
-abstract public class ChannelSubscriptionChanged {
-    final private char sign;
-    final private Collection<ChannelType> channels;
+public final class Smiley {
+    private final Creature<?> creature;
+    private final int smiley;
 
-
-    public ChannelSubscriptionChanged(char sign, Collection<ChannelType> channels) {
-        this.sign = sign;
-        this.channels = channels;
+    public Smiley(Creature<?> creature, int smiley) {
+        this.creature = creature;
+        this.smiley = smiley;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("cC");
-
-        sb.append(sign);
-
-        for (ChannelType type : channels) {
-            sb.append(type.identifier());
-        }
-
-        return sb.toString();
+        return "cS" + creature.id() + "|" + smiley;
     }
 }

@@ -29,8 +29,8 @@ import java.util.Collections;
 /**
  * Send the new added fighter
  */
-final public class SendNewFighter implements Listener<FighterAdded> {
-    final private Fight fight;
+public final class SendNewFighter implements Listener<FighterAdded> {
+    private final Fight fight;
 
     public SendNewFighter(Fight fight) {
         this.fight = fight;

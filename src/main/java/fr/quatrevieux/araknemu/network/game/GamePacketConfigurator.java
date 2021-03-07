@@ -28,9 +28,9 @@ import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
 /**
  * Configure packets handling for game session
  */
-final public class GamePacketConfigurator implements SessionConfigurator.Configurator<GameSession> {
-    final private Dispatcher<GameSession> dispatcher;
-    final private PacketParser parser;
+public final class GamePacketConfigurator implements SessionConfigurator.Configurator<GameSession> {
+    private final Dispatcher<GameSession> dispatcher;
+    private final PacketParser parser;
 
     public GamePacketConfigurator(Dispatcher<GameSession> dispatcher, PacketParser parser) {
         this.dispatcher = dispatcher;

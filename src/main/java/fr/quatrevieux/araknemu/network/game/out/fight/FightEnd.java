@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L1240
  */
-final public class FightEnd {
-    final private FightRewardsSheet rewardsSheet;
+public final class FightEnd {
+    private final FightRewardsSheet rewardsSheet;
 
     public FightEnd(FightRewardsSheet rewardsSheet) {
         this.rewardsSheet = rewardsSheet;

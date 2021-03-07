@@ -25,7 +25,7 @@ package fr.quatrevieux.araknemu.network.game.out.account;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L764
  */
-final public class CharacterSelectionError {
+public final class CharacterSelectionError {
     @Override
     public String toString() {
         return "ASE";

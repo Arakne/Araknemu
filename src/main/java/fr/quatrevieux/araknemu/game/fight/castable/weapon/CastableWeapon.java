@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 /**
  * Adapt weapon item to castable
  */
-final public class CastableWeapon implements Castable {
-    final private Weapon weapon;
+public final class CastableWeapon implements Castable {
+    private final Weapon weapon;
 
     private List<SpellEffect> effects;
     private List<SpellEffect> criticalEffects;

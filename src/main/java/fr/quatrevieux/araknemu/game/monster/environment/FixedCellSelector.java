@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 /**
  * Cell selector for fixed monster group
  */
-final public class FixedCellSelector implements SpawnCellSelector {
-    final private Position position;
+public final class FixedCellSelector implements SpawnCellSelector {
+    private final Position position;
     private ExplorationMap map;
 
     public FixedCellSelector(Position position) {

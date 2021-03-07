@@ -30,9 +30,9 @@ import java.util.stream.Collectors;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L145
  */
-final public class FightStartPositions {
-    final private List<Integer>[] places;
-    final private int team;
+public final class FightStartPositions {
+    private final List<Integer>[] places;
+    private final int team;
 
     public FightStartPositions(List<Integer>[] places, int team) {
         this.places = places;

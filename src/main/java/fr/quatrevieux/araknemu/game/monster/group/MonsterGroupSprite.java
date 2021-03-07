@@ -35,8 +35,8 @@ import java.util.stream.Collectors;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L561
  */
-final public class MonsterGroupSprite implements Sprite {
-    final private MonsterGroup group;
+public final class MonsterGroupSprite implements Sprite {
+    private final MonsterGroup group;
 
     public MonsterGroupSprite(MonsterGroup group) {
         this.group = group;

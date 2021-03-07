@@ -27,7 +27,7 @@ import inet.ipaddr.IPAddressString;
  * Parse IP address string
  * Handle IPv4, IPv6 and net mask
  */
-final public class IpAddressTransformer implements Transformer<IPAddressString> {
+public final class IpAddressTransformer implements Transformer<IPAddressString> {
     @Override
     public String serialize(IPAddressString value) {
         return value.toNormalizedString();

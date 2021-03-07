@@ -20,10 +20,10 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.arakne.utils.value.Interval;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterRewardData;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterRewardRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -38,29 +38,8 @@ import java.util.Optional;
  * SQL implementation for monster reward repository
  */
 final class SqlMonsterRewardRepository implements MonsterRewardRepository {
-    private class Loader implements RepositoryUtils.Loader<MonsterRewardData> {
-        @Override
-        public MonsterRewardData create(ResultSet rs) throws SQLException {
-            return new MonsterRewardData(
-                rs.getInt("MONSTER_ID"),
-                new Interval(
-                    rs.getInt("MIN_KAMAS"),
-                    rs.getInt("MAX_KAMAS")
-                ),
-                Arrays.stream(StringUtils.split(rs.getString("EXPERIENCES"), "|"))
-                    .mapToLong(Long::parseLong)
-                    .toArray()
-            );
-        }
-
-        @Override
-        public MonsterRewardData fillKeys(MonsterRewardData entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<MonsterRewardData> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<MonsterRewardData> utils;
 
     public SqlMonsterRewardRepository(QueryExecutor executor) {
         this.executor = executor;
@@ -121,5 +100,26 @@ final class SqlMonsterRewardRepository implements MonsterRewardRepository {
     @Override
     public List<MonsterRewardData> all() {
         return utils.findAll("SELECT * FROM MONSTER_REWARD");
+    }
+
+    private class Loader implements RepositoryUtils.Loader<MonsterRewardData> {
+        @Override
+        public MonsterRewardData create(ResultSet rs) throws SQLException {
+            return new MonsterRewardData(
+                rs.getInt("MONSTER_ID"),
+                new Interval(
+                    rs.getInt("MIN_KAMAS"),
+                    rs.getInt("MAX_KAMAS")
+                ),
+                Arrays.stream(StringUtils.split(rs.getString("EXPERIENCES"), "|"))
+                    .mapToLong(Long::parseLong)
+                    .toArray()
+            );
+        }
+
+        @Override
+        public MonsterRewardData fillKeys(MonsterRewardData entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

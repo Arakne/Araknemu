@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * Simple "echo" command
  */
-final public class Echo extends AbstractCommand {
+public final class Echo extends AbstractCommand {
     @Override
     protected void build(Builder builder) {
         builder

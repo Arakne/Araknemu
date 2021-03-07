@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
  *
  * @todo Send for sprite or creature instead of player
  */
-final public class PlayerOrientation {
-    final private ExplorationPlayer player;
+public final class PlayerOrientation {
+    private final ExplorationPlayer player;
 
     public PlayerOrientation(ExplorationPlayer player) {
         this.player = player;

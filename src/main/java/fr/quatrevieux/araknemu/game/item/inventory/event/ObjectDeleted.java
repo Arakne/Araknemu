@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.item.inventory.event;
@@ -26,13 +26,14 @@ import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
  *
  * @see fr.quatrevieux.araknemu.game.item.inventory.ItemStorage#delete(int)
  */
-final public class ObjectDeleted {
-    final private ItemEntry entry;
+public final class ObjectDeleted implements ItemChanged {
+    private final ItemEntry entry;
 
     public ObjectDeleted(ItemEntry entry) {
         this.entry = entry;
     }
 
+    @Override
     public ItemEntry entry() {
         return entry;
     }

@@ -28,13 +28,13 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingActio
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/GameActions.as#L127
  */
-final public class GameActionResponse {
+public final class GameActionResponse {
     /** Nul / cancel game action */
-    final static public GameActionResponse NOOP = new GameActionResponse("", ActionType.NONE);
+    public static final GameActionResponse NOOP = new GameActionResponse("", ActionType.NONE);
 
-    final private String id;
-    final private ActionType type;
-    final private Object[] arguments;
+    private final String id;
+    private final ActionType type;
+    private final Object[] arguments;
 
     public GameActionResponse(String id, ActionType type, Object... arguments) {
         this.id = id;
@@ -52,7 +52,7 @@ final public class GameActionResponse {
 
     @Override
     public String toString() {
-        StringBuilder packet = new StringBuilder("GA" + id + ";" + type.id());
+        final StringBuilder packet = new StringBuilder("GA" + id + ";" + type.id());
 
         for (Object argument : arguments) {
             packet.append(';').append(argument.toString());
@@ -61,21 +61,20 @@ final public class GameActionResponse {
         return packet.toString();
     }
 
-    static private Object[] makeArguments(int spriteId, Object[] arguments) {
+    private static Object[] makeArguments(int spriteId, Object[] arguments) {
         switch (arguments.length) {
             case 0:
                 return new Object[] {spriteId};
 
             case 1:
                 return new Object[] {spriteId, arguments[0]};
-
-            default:
-                Object[] newArguments = new Object[arguments.length + 1];
-
-                newArguments[0] = spriteId;
-                System.arraycopy(arguments, 0, newArguments, 1, arguments.length);
-
-                return newArguments;
         }
+
+        final Object[] newArguments = new Object[arguments.length + 1];
+
+        newArguments[0] = spriteId;
+        System.arraycopy(arguments, 0, newArguments, 1, arguments.length);
+
+        return newArguments;
     }
 }

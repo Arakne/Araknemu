@@ -24,11 +24,11 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 /**
  * Event trigger when private message is sent
  */
-final public class ConcealedMessage {
-    final private GamePlayer sender;
-    final private GamePlayer receiver;
-    final private String message;
-    final private String extra;
+public final class ConcealedMessage {
+    private final GamePlayer sender;
+    private final GamePlayer receiver;
+    private final String message;
+    private final String extra;
 
     public ConcealedMessage(GamePlayer sender, GamePlayer receiver, String message, String extra) {
         this.sender = sender;

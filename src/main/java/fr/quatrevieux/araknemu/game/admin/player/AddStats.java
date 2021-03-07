@@ -32,8 +32,8 @@ import java.util.List;
 /**
  * Add stats to player base stats
  */
-final public class AddStats extends AbstractCommand {
-    final private GamePlayer player;
+public final class AddStats extends AbstractCommand {
+    private final GamePlayer player;
 
     public AddStats(GamePlayer player) {
         this.player = player;
@@ -69,7 +69,7 @@ final public class AddStats extends AbstractCommand {
 
     @Override
     public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
-        Characteristic characteristic = Characteristic.valueOf(arguments.get(1).toUpperCase());
+        final Characteristic characteristic = Characteristic.valueOf(arguments.get(1).toUpperCase());
 
         player.properties().characteristics().base().add(
             characteristic,

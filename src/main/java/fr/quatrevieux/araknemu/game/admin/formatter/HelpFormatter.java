@@ -30,41 +30,13 @@ import java.util.List;
 /**
  * Format the help page of a command
  */
-final public class HelpFormatter {
-    private static class LinkItem {
-        final private String command;
-        final private String description;
-        final private Link.Type linkType;
-
-        public LinkItem(String command, String description, Link.Type linkType) {
-            this.command = command;
-            this.description = description;
-            this.linkType = linkType;
-        }
-
-        public int leftLength() {
-            return command.length();
-        }
-
-        public void build(OutputBuilder builder, int leftLength) {
-            builder.indent(linkType.create(command));
-
-            if (description != null) {
-                if (leftLength < 32) {
-                    builder.append(StringUtils.repeat(' ', leftLength - command.length()));
-                }
-
-                builder.append(" - ").append(description);
-            }
-        }
-    }
-
-    final private Command command;
+public final class HelpFormatter {
+    private final Command command;
     private String synopsis;
-    final private List<Pair<String, String>> options = new ArrayList<>();
-    final private List<LinkItem> examples = new ArrayList<>();
-    final private List<LinkItem> seeAlso = new ArrayList<>();
-    final private List<String> custom = new ArrayList<>();
+    private final List<Pair<String, String>> options = new ArrayList<>();
+    private final List<LinkItem> examples = new ArrayList<>();
+    private final List<LinkItem> seeAlso = new ArrayList<>();
+    private final List<String> custom = new ArrayList<>();
 
     public HelpFormatter(Command command) {
         this.command = command;
@@ -144,7 +116,7 @@ final public class HelpFormatter {
      */
     @Override
     public String toString() {
-        OutputBuilder builder = new OutputBuilder();
+        final OutputBuilder builder = new OutputBuilder();
 
         buildHeader(builder);
         buildSynopsis(builder);
@@ -222,5 +194,33 @@ final public class HelpFormatter {
      */
     private void buildPermissions(OutputBuilder builder) {
         builder.title("PERMISSIONS").indent(command.permissions());
+    }
+
+    private static class LinkItem {
+        private final String command;
+        private final String description;
+        private final Link.Type linkType;
+
+        public LinkItem(String command, String description, Link.Type linkType) {
+            this.command = command;
+            this.description = description;
+            this.linkType = linkType;
+        }
+
+        public int leftLength() {
+            return command.length();
+        }
+
+        public void build(OutputBuilder builder, int leftLength) {
+            builder.indent(linkType.create(command));
+
+            if (description != null) {
+                if (leftLength < 32) {
+                    builder.append(StringUtils.repeat(' ', leftLength - command.length()));
+                }
+
+                builder.append(" - ").append(description);
+            }
+        }
     }
 }

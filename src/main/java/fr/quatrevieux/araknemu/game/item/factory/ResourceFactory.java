@@ -35,8 +35,8 @@ import java.util.List;
  * Factory for resources.
  * Will be used as default factory
  */
-final public class ResourceFactory implements ItemFactory {
-    final private EffectMappers mappers;
+public final class ResourceFactory implements ItemFactory {
+    private final EffectMappers mappers;
 
     public ResourceFactory(EffectMappers mappers) {
         this.mappers = mappers;

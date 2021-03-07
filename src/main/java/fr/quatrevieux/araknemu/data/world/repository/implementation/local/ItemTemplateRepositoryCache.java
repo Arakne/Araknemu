@@ -30,10 +30,10 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Cache repository for {@link fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate}
  */
-final public class ItemTemplateRepositoryCache implements ItemTemplateRepository {
-    final private ItemTemplateRepository repository;
+public final class ItemTemplateRepositoryCache implements ItemTemplateRepository {
+    private final ItemTemplateRepository repository;
 
-    final private ConcurrentMap<Integer, ItemTemplate> cacheById = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, ItemTemplate> cacheById = new ConcurrentHashMap<>();
 
     public ItemTemplateRepositoryCache(ItemTemplateRepository repository) {
         this.repository = repository;
@@ -50,7 +50,7 @@ final public class ItemTemplateRepositoryCache implements ItemTemplateRepository
 
     @Override
     public Collection<ItemTemplate> load() {
-        Collection<ItemTemplate> loaded = repository.load();
+        final Collection<ItemTemplate> loaded = repository.load();
 
         for (ItemTemplate template : loaded) {
             cacheById.put(template.id(), template);

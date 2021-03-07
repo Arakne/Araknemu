@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.simulation;
 
+import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -28,7 +29,14 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -62,29 +70,40 @@ class CastSimulationTest extends FightBaseCase {
         allie.life().alter(fighter, -10);
         ennemy.life().alter(fighter, -10);
 
-        simulation.alterLife(5, fighter);
-        simulation.alterLife(4, allie);
-        simulation.alterLife(3, ennemy);
+        simulation.addHeal(new Interval(5, 5), fighter);
+        simulation.addHeal(new Interval(4, 4), allie);
+        simulation.addHeal(new Interval(3, 3), ennemy);
 
         assertEquals(5, simulation.selfLife());
         assertEquals(4, simulation.alliesLife());
         assertEquals(3, simulation.enemiesLife());
     }
 
-    @Test
-    void healLimitByLostLife() {
+    @ParameterizedTest
+    @MethodSource("provideHeal")
+    void healLimitByLostLife(Interval value, double expectedValue) {
         fighter.life().alter(fighter, -10);
 
-        simulation.alterLife(100, fighter);
+        simulation.addHeal(value, fighter);
 
-        assertEquals(10, simulation.selfLife());
+        assertEquals(expectedValue, simulation.selfLife(), 0.1);
+    }
+
+    public static Stream<Arguments> provideHeal() {
+        return Stream.of(
+            Arguments.of(new Interval(100, 100), 10.0),
+            Arguments.of(new Interval(1, 10), 5.5),
+            Arguments.of(new Interval(5, 20), 9.17),
+            Arguments.of(new Interval(5, 15), 8.75),
+            Arguments.of(new Interval(1, 5), 3)
+        );
     }
 
     @Test
     void addDamage() {
-        simulation.addDamage(5, fighter);
-        simulation.addDamage(4, allie);
-        simulation.addDamage(3, ennemy);
+        simulation.addDamage(new Interval(5, 5), fighter);
+        simulation.addDamage(new Interval(4, 4), allie);
+        simulation.addDamage(new Interval(3, 3), ennemy);
 
         assertEquals(-5, simulation.selfLife());
         assertEquals(-4, simulation.alliesLife());
@@ -93,9 +112,30 @@ class CastSimulationTest extends FightBaseCase {
 
     @Test
     void addDamageLimitByLife() {
-        simulation.addDamage(100, ennemy);
+        simulation.addDamage(new Interval(100, 100), ennemy);
 
         assertEquals(-50, simulation.enemiesLife());
+    }
+
+    @ParameterizedTest
+    @MethodSource("providePoison")
+    void addPoison(Interval damage, int duration, double expectedDamage) {
+        // life = 50
+        simulation.addPoison(damage, duration, allie);
+
+        assertEquals(0.0, simulation.killedAllies());
+        assertEquals(-expectedDamage, simulation.alliesLife(), 0.1);
+        assertEquals(0, simulation.killedEnemies());
+    }
+
+    private static Stream<Arguments> providePoison() {
+        return Stream.of(
+            Arguments.of(new Interval(1, 10), 3, 12.38),
+            Arguments.of(new Interval(1, 10), 5, 20.6),
+            Arguments.of(new Interval(1, 100), 2, 33.14),
+            Arguments.of(new Interval(100, 200), 2, 37.5),
+            Arguments.of(new Interval(1, 2), 5, 5.6)
+        );
     }
 
     @Test
@@ -111,25 +151,58 @@ class CastSimulationTest extends FightBaseCase {
 
     @Test
     void killDamage() {
-        simulation.addDamage(1000, allie);
+        simulation.addDamage(new Interval(1000, 1000), allie);
 
         assertEquals(1, simulation.killedAllies());
         assertEquals(0, simulation.killedEnemies());
 
-        simulation.addDamage(1000, ennemy);
+        simulation.addDamage(new Interval(1000, 1000), ennemy);
 
         assertEquals(1, simulation.killedAllies());
         assertEquals(1, simulation.killedEnemies());
     }
 
+    @ParameterizedTest
+    @MethodSource("provideKillChanceDamage")
+    void killChance(Interval damage, double chance, double expectedDamage) {
+        // life = 50
+        simulation.addDamage(damage, allie);
+
+        assertEquals(chance, simulation.killedAllies(), 0.1);
+        assertEquals(-expectedDamage, simulation.alliesLife(), 0.1);
+        assertEquals(0, simulation.killedEnemies());
+    }
+
+    private static Stream<Arguments> provideKillChanceDamage() {
+        return Stream.of(
+            Arguments.of(new Interval(1, 100), 0.5, 37.8), // 50% * 25 + 50% * 50
+            Arguments.of(new Interval(1, 200), 0.75, 43.9), // 25% * 25 + 75% * 50
+            Arguments.of(new Interval(1, 75), 0.33, 33.7), // 66% * 25 + 33% * 50
+            Arguments.of(new Interval(25, 100), 0.66, 45.8), // 33% * 37.5 + 66% * 50
+            Arguments.of(new Interval(1, 51), 0.02, 26),
+            Arguments.of(new Interval(1, 49), 0.0, 25.0),
+            Arguments.of(new Interval(50, 60), 1.0, 50.0),
+            Arguments.of(new Interval(1000, 2000), 1.0, 50.0)
+        );
+    }
+
+    @Test
+    void suicide() {
+        simulation.addDamage(new Interval(1000, 1000), fighter);
+
+        assertEquals(0, simulation.killedAllies());
+        assertEquals(1, simulation.suicideProbability());
+        assertEquals(0, simulation.killedEnemies());
+    }
+
     @Test
     void merge() {
-        simulation.addDamage(15, ennemy);
+        simulation.addDamage(new Interval(15, 15), ennemy);
         simulation.addBoost(15, ennemy);
 
         CastSimulation other = new CastSimulation(Mockito.mock(Spell.class), fighter, fight.map().get(123));
 
-        other.addDamage(25, ennemy);
+        other.addDamage(new Interval(25, 25), ennemy);
         other.addBoost(-10, ennemy);
 
         simulation.merge(other, 20);
@@ -140,14 +213,14 @@ class CastSimulationTest extends FightBaseCase {
 
     @Test
     void mergeKill() {
-        simulation.addDamage(15, ennemy);
+        simulation.addDamage(new Interval(15, 15), ennemy);
 
         CastSimulation other = new CastSimulation(Mockito.mock(Spell.class), fighter, fight.map().get(123));
 
-        other.addDamage(500, ennemy);
+        other.addDamage(new Interval(500, 500), ennemy);
 
         simulation.merge(other, 20);
 
-        assertEquals(1, simulation.killedEnemies());
+        assertEquals(.2, simulation.killedEnemies());
     }
 }

@@ -19,15 +19,15 @@
 
 package fr.quatrevieux.araknemu.game.fight.type;
 
-import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.ChallengeRewardsGenerator;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardsGenerator;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.ChallengeRewardsGenerator;
 
 import java.time.Duration;
 
 /**
  * Fight type for challenge
  */
-final public class ChallengeType implements FightType {
+public final class ChallengeType implements FightType {
     @Override
     public int id() {
         return 0;

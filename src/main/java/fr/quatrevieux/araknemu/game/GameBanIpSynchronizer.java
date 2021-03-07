@@ -35,7 +35,7 @@ import java.util.function.Supplier;
 /**
  * Synchronize ban ip table for game service
  */
-final public class GameBanIpSynchronizer extends AbstractBanIpSynchronizer implements EventsSubscriber, PreloadableService {
+public final class GameBanIpSynchronizer extends AbstractBanIpSynchronizer implements EventsSubscriber, PreloadableService {
     public GameBanIpSynchronizer(BanIpService<GameAccount> service, Supplier<Collection<? extends Session>> sessionsSupplier, Logger logger, Duration refreshDelay) {
         super(service, sessionsSupplier, logger, refreshDelay);
     }

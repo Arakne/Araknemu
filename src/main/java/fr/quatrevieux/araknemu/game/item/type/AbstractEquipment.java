@@ -36,14 +36,14 @@ import java.util.Optional;
 /**
  * Base class for equipment items
  */
-abstract public class Equipment implements Item {
-    final private ItemTemplate template;
-    final private ItemType type;
-    final private GameItemSet set;
-    final private List<CharacteristicEffect> characteristics;
-    final private List<SpecialEffect> specials;
+public abstract class AbstractEquipment implements Item {
+    private final ItemTemplate template;
+    private final ItemType type;
+    private final GameItemSet set;
+    private final List<CharacteristicEffect> characteristics;
+    private final List<SpecialEffect> specials;
 
-    public Equipment(ItemTemplate template, ItemType type, GameItemSet set, List<CharacteristicEffect> characteristics, List<SpecialEffect> specials) {
+    public AbstractEquipment(ItemTemplate template, ItemType type, GameItemSet set, List<CharacteristicEffect> characteristics, List<SpecialEffect> specials) {
         this.template = template;
         this.type = type;
         this.set = set;
@@ -53,7 +53,7 @@ abstract public class Equipment implements Item {
 
     @Override
     public List<? extends ItemEffect> effects() {
-        List<ItemEffect> effects = new ArrayList<>(characteristics);
+        final List<ItemEffect> effects = new ArrayList<>(characteristics);
 
         effects.addAll(specials);
 
@@ -79,6 +79,7 @@ abstract public class Equipment implements Item {
     public ItemType type() {
         return type;
     }
+
     /**
      * Get item characteristics
      */
@@ -101,7 +102,7 @@ abstract public class Equipment implements Item {
             return false;
         }
 
-        Equipment equipment = (Equipment) obj;
+        final AbstractEquipment equipment = (AbstractEquipment) obj;
 
         return
             template.equals(equipment.template)

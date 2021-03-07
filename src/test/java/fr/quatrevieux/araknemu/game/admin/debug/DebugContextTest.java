@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.admin.debug;
 
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.context.NullContext;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.item.ItemService;
@@ -42,7 +42,7 @@ class DebugContextTest extends GameBaseCase {
         context = new DebugContext(
             new NullContext(),
             Collections.singletonList(
-                new ContextConfigurator<DebugContext>() {
+                new AbstractContextConfigurator<DebugContext>() {
                     @Override
                     public void configure(DebugContext context) {
                         add(new GenItem(container.get(ItemService.class)));

@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.network.game.out.spell.SpellList;
 /**
  * Send spell new learned spell
  */
-final public class SendLearnedSpell implements Listener<SpellLearned> {
-    final private GamePlayer player;
+public final class SendLearnedSpell implements Listener<SpellLearned> {
+    private final GamePlayer player;
 
     public SendLearnedSpell(GamePlayer player) {
         this.player = player;

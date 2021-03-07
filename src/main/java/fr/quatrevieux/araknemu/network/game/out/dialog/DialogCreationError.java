@@ -24,7 +24,7 @@ package fr.quatrevieux.araknemu.network.game.out.dialog;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Dialog.as#L48
  */
-final public class DialogCreationError {
+public final class DialogCreationError {
     @Override
     public String toString() {
         return "DCE";

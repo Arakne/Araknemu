@@ -48,8 +48,8 @@ import java.util.Queue;
  * - {@link BlockingAction#end()}  When an action is successfully ended
  * - {@link BlockingAction#cancel(String)} When an error occurs during the action, and should be stopped prematurely
  */
-final public class ActionQueue {
-    final private Queue<Action> actions = new ArrayDeque<>();
+public final class ActionQueue {
+    private final Queue<Action> actions = new ArrayDeque<>();
 
     private BlockingAction current;
     private byte lastActionId = 0;
@@ -151,7 +151,7 @@ final public class ActionQueue {
         RuntimeException error = null;
 
         while (this.current == null && !actions.isEmpty()) {
-            Action action = actions.remove();
+            final Action action = actions.remove();
 
             try {
                 action.start(this);

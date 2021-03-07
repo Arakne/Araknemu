@@ -20,17 +20,17 @@
 package fr.quatrevieux.araknemu.game.handler;
 
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
-import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.network.game.GameSession;
 
 /**
  * Wrap packet handler for ensure that as admin access
  *
  * @param <P> The packet to handle
  */
-final public class EnsureAdmin<P extends Packet> implements PacketHandler<GameSession, P> {
-    final private PacketHandler<GameSession, P> inner;
+public final class EnsureAdmin<P extends Packet> implements PacketHandler<GameSession, P> {
+    private final PacketHandler<GameSession, P> inner;
 
     public EnsureAdmin(PacketHandler<GameSession, P> inner) {
         this.inner = inner;

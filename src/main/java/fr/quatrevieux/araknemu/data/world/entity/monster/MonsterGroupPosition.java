@@ -24,9 +24,9 @@ import fr.quatrevieux.araknemu.data.value.Position;
 /**
  * Spawn position for the monster group on map
  */
-final public class MonsterGroupPosition {
-    final private Position position;
-    final private int groupId;
+public final class MonsterGroupPosition {
+    private final Position position;
+    private final int groupId;
 
     public MonsterGroupPosition(Position position, int groupId) {
         this.position = position;

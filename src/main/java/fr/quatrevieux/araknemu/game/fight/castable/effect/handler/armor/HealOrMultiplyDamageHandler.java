@@ -30,8 +30,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 /**
  * Suffered damage will be healed, or multiplied
  */
-final public class HealOrMultiplyDamageHandler implements EffectHandler, BuffHook {
-    final private RandomUtil random = new RandomUtil();
+public final class HealOrMultiplyDamageHandler implements EffectHandler, BuffHook {
+    private final RandomUtil random = new RandomUtil();
 
     @Override
     public void handle(CastScope cast, CastScope.EffectScope effect) {
@@ -47,7 +47,7 @@ final public class HealOrMultiplyDamageHandler implements EffectHandler, BuffHoo
 
     @Override
     public void onDamage(Buff buff, Damage value) {
-        boolean heal = random.bool(buff.effect().special());
+        final boolean heal = random.bool(buff.effect().special());
 
         if (heal) {
             value.multiply(-buff.effect().max());

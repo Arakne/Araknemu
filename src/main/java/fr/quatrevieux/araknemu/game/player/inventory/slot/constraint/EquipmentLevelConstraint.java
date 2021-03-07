@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 /**
  * Check the player level for equip the item
  */
-final public class EquipmentLevelConstraint implements SlotConstraint {
-    final private GamePlayer player;
+public final class EquipmentLevelConstraint implements SlotConstraint {
+    private final GamePlayer player;
 
     public EquipmentLevelConstraint(GamePlayer player) {
         this.player = player;

@@ -28,9 +28,9 @@ import java.util.List;
 /**
  * Base implementation for grade set rewards
  */
-final public class DefaultMonsterGradesReward implements MonsterGradesReward {
-    final private MonsterRewardData data;
-    final private List<MonsterRewardItem> items;
+public final class DefaultMonsterGradesReward implements MonsterGradesReward {
+    private final MonsterRewardData data;
+    private final List<MonsterRewardItem> items;
 
     public DefaultMonsterGradesReward(MonsterRewardData data, List<MonsterRewardItem> items) {
         this.data = data;

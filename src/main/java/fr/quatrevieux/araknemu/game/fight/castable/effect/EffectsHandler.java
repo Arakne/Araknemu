@@ -29,8 +29,8 @@ import java.util.Map;
 /**
  * Handle fight effects
  */
-final public class EffectsHandler {
-    final private Map<Integer, EffectHandler> handlers = new HashMap<>();
+public final class EffectsHandler {
+    private final Map<Integer, EffectHandler> handlers = new HashMap<>();
 
     public void register(int effectId, EffectHandler applier) {
         handlers.put(effectId, applier);
@@ -47,7 +47,7 @@ final public class EffectsHandler {
         for (CastScope.EffectScope effect : cast.effects()) {
             // @todo Warning if handler is not found
             if (handlers.containsKey(effect.effect().effect())) {
-                EffectHandler handler = handlers.get(effect.effect().effect());
+                final EffectHandler handler = handlers.get(effect.effect().effect());
 
                 if (effect.effect().duration() == 0) {
                     handler.handle(cast, effect);

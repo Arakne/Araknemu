@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.game.MapData;
 /**
  * Send the map data to the player when map is loaded
  */
-final public class SendMapData implements Listener<MapJoined> {
-    final private ExplorationPlayer player;
+public final class SendMapData implements Listener<MapJoined> {
+    private final ExplorationPlayer player;
 
     public SendMapData(ExplorationPlayer player) {
         this.player = player;

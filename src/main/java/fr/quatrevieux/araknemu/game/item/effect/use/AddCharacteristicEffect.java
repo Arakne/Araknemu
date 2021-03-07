@@ -28,10 +28,10 @@ import fr.quatrevieux.araknemu.network.game.out.info.Information;
 /**
  * Effect handler for add characteristic
  */
-final public class AddCharacteristicEffect implements UseEffectHandler {
-    final private Characteristic characteristic;
+public final class AddCharacteristicEffect implements UseEffectHandler {
+    private final Characteristic characteristic;
 
-    final private RandomUtil random = new RandomUtil();
+    private final RandomUtil random = new RandomUtil();
 
     public AddCharacteristicEffect(Characteristic characteristic) {
         this.characteristic = characteristic;
@@ -39,14 +39,13 @@ final public class AddCharacteristicEffect implements UseEffectHandler {
 
     @Override
     public void apply(UseEffect effect, ExplorationPlayer caster) {
-        int value = random.rand(effect.arguments());
+        final int value = random.rand(effect.arguments());
+        final Information info = Information.characteristicBoosted(characteristic, value);
 
         caster.player().properties().characteristics().base().add(characteristic, value);
 
-        Information info = Information.characteristicBoosted(characteristic, value);
-
         if (info != null) {
-            caster.send(Information.characteristicBoosted(characteristic, value));
+            caster.send(info);
         }
     }
 

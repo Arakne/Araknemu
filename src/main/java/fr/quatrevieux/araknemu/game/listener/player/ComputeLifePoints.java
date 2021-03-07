@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsC
 /**
  * Rebuild the life points when characteristics changed
  */
-final public class ComputeLifePoints implements Listener<CharacteristicsChanged> {
-    final private GamePlayer player;
+public final class ComputeLifePoints implements Listener<CharacteristicsChanged> {
+    private final GamePlayer player;
 
     public ComputeLifePoints(GamePlayer player) {
         this.player = player;

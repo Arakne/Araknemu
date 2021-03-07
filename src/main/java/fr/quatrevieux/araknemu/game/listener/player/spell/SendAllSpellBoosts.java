@@ -29,8 +29,8 @@ import fr.quatrevieux.araknemu.network.game.out.spell.SpellBoost;
 /**
  * Send all spells boosts on join game
  */
-final public class SendAllSpellBoosts implements Listener<GameJoined> {
-    final private GamePlayer player;
+public final class SendAllSpellBoosts implements Listener<GameJoined> {
+    private final GamePlayer player;
 
     public SendAllSpellBoosts(GamePlayer player) {
         this.player = player;

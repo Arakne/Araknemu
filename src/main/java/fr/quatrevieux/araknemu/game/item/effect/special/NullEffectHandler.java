@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 /**
  * Null object for effect handler
  */
-final public class NullEffectHandler implements SpecialEffectHandler {
-    final static public SpecialEffectHandler INSTANCE = new NullEffectHandler();
+public final class NullEffectHandler implements SpecialEffectHandler {
+    public static final SpecialEffectHandler INSTANCE = new NullEffectHandler();
 
     @Override
     public void apply(SpecialEffect effect, GamePlayer player) {

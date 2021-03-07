@@ -40,8 +40,8 @@ import java.util.stream.Collectors;
 /**
  * Bandle banned IP addresses
  */
-final public class Banip extends AbstractCommand {
-    final private BanIpService<GameAccount> service;
+public final class Banip extends AbstractCommand {
+    private final BanIpService<GameAccount> service;
 
     public Banip(BanIpService<GameAccount> service) {
         this.service = service;
@@ -130,7 +130,7 @@ final public class Banip extends AbstractCommand {
             throw new CommandException(name(), "Invalid IP address given");
         }
 
-        Optional<BanIpRule<GameAccount>> rule = service.matching(ipAddress);
+        final Optional<BanIpRule<GameAccount>> rule = service.matching(ipAddress);
 
         if (!rule.isPresent()) {
             performer.error(
@@ -185,13 +185,13 @@ final public class Banip extends AbstractCommand {
             throw new CommandException(name(), "Cannot ban your own IP address");
         }
 
-        BanIpService<GameAccount>.RuleBuilder builder = service.newRule(ipAddress);
+        final BanIpService<GameAccount>.RuleBuilder builder = service.newRule(ipAddress);
 
         if (arguments.size() < 4) {
             throw new CommandException(name(), "Missing the duration");
         }
 
-        int causeOffset;
+        final int causeOffset;
 
         switch (arguments.get(3)) {
             case "for":
@@ -229,6 +229,7 @@ final public class Banip extends AbstractCommand {
             Link.Type.EXECUTE.create("${server} banip remove " + rule.ipAddress().toNormalizedString()).text("remove")
         ;
     }
+
     /**
      * Extract the ban cause
      */

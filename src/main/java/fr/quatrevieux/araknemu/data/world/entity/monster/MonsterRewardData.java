@@ -26,10 +26,10 @@ import fr.arakne.utils.value.Interval;
  *
  * Note: a monster can have no rewards
  */
-final public class MonsterRewardData {
-    final private int id;
-    final private Interval kamas;
-    final private long[] experiences;
+public final class MonsterRewardData {
+    private final int id;
+    private final Interval kamas;
+    private final long[] experiences;
 
     public MonsterRewardData(int id, Interval kamas, long[] experiences) {
         this.id = id;

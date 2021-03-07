@@ -21,9 +21,9 @@ package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.arakne.utils.value.Colors;
 import fr.arakne.utils.value.constant.Gender;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcTemplateRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -37,41 +37,8 @@ import java.util.Collection;
  * Map repository implementation for SQL database
  */
 final class SqlNpcTemplateRepository implements NpcTemplateRepository {
-    private class Loader implements RepositoryUtils.Loader<NpcTemplate> {
-        @Override
-        public NpcTemplate create(ResultSet rs) throws SQLException {
-            final String store = rs.getString("STORE_ITEMS");
-
-            return new NpcTemplate(
-                rs.getInt("NPC_TEMPLATE_ID"),
-                rs.getInt("GFXID"),
-                rs.getInt("SCALE_X"),
-                rs.getInt("SCALE_Y"),
-                Gender.values()[rs.getInt("SEX")],
-                new Colors(
-                    rs.getInt("COLOR1"),
-                    rs.getInt("COLOR2"),
-                    rs.getInt("COLOR3")
-                ),
-                rs.getString("ACCESSORIES"),
-                rs.getInt("EXTRA_CLIP"),
-                rs.getInt("CUSTOM_ARTWORK"),
-                store == null
-                    ? null
-                    : Arrays.stream(StringUtils.split(store, ","))
-                        .mapToInt(Integer::parseInt)
-                        .toArray()
-            );
-        }
-
-        @Override
-        public NpcTemplate fillKeys(NpcTemplate entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<NpcTemplate> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<NpcTemplate> utils;
 
     public SqlNpcTemplateRepository(QueryExecutor executor) {
         this.executor = executor;
@@ -136,5 +103,38 @@ final class SqlNpcTemplateRepository implements NpcTemplateRepository {
     @Override
     public Collection<NpcTemplate> all() throws RepositoryException {
         return utils.findAll("SELECT * FROM NPC_TEMPLATE");
+    }
+
+    private class Loader implements RepositoryUtils.Loader<NpcTemplate> {
+        @Override
+        public NpcTemplate create(ResultSet rs) throws SQLException {
+            final String store = rs.getString("STORE_ITEMS");
+
+            return new NpcTemplate(
+                rs.getInt("NPC_TEMPLATE_ID"),
+                rs.getInt("GFXID"),
+                rs.getInt("SCALE_X"),
+                rs.getInt("SCALE_Y"),
+                Gender.values()[rs.getInt("SEX")],
+                new Colors(
+                    rs.getInt("COLOR1"),
+                    rs.getInt("COLOR2"),
+                    rs.getInt("COLOR3")
+                ),
+                rs.getString("ACCESSORIES"),
+                rs.getInt("EXTRA_CLIP"),
+                rs.getInt("CUSTOM_ARTWORK"),
+                store == null
+                    ? null
+                    : Arrays.stream(StringUtils.split(store, ","))
+                    .mapToInt(Integer::parseInt)
+                    .toArray()
+            );
+        }
+
+        @Override
+        public NpcTemplate fillKeys(NpcTemplate entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

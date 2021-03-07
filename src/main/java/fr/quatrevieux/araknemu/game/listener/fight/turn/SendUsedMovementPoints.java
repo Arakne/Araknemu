@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 /**
  * Send to clients the used movement points
  */
-final public class SendUsedMovementPoints implements Listener<MovementPointsUsed> {
-    final private Fight fight;
+public final class SendUsedMovementPoints implements Listener<MovementPointsUsed> {
+    private final Fight fight;
 
     public SendUsedMovementPoints(Fight fight) {
         this.fight = fight;

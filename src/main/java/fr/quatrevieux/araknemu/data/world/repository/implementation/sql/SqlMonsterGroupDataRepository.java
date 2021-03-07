@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
@@ -36,33 +36,9 @@ import java.util.List;
  * SQL implementation for monster group repository
  */
 final class SqlMonsterGroupDataRepository implements MonsterGroupDataRepository {
-    private class Loader implements RepositoryUtils.Loader<MonsterGroupData> {
-        @Override
-        public MonsterGroupData create(ResultSet rs) throws SQLException {
-            return new MonsterGroupData(
-                rs.getInt("MONSTER_GROUP_ID"),
-                Duration.ofMillis(rs.getLong("RESPAWN_TIME")),
-                rs.getInt("MAX_SIZE"),
-                rs.getInt("MAX_COUNT"),
-                monstersTransformer.unserialize(rs.getString("MONSTERS")),
-                rs.getString("COMMENT"),
-                new Position(
-                    rs.getInt("WIN_FIGHT_TELEPORT_MAP_ID"),
-                    rs.getInt("WIN_FIGHT_TELEPORT_CELL_ID")
-                ),
-                rs.getBoolean("FIXED_TEAM_NUMBER")
-            );
-        }
-
-        @Override
-        public MonsterGroupData fillKeys(MonsterGroupData entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<MonsterGroupData> utils;
-    final private Transformer<List<MonsterGroupData.Monster>> monstersTransformer;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<MonsterGroupData> utils;
+    private final Transformer<List<MonsterGroupData.Monster>> monstersTransformer;
 
     public SqlMonsterGroupDataRepository(QueryExecutor executor, Transformer<List<MonsterGroupData.Monster>> monstersTransformer) {
         this.executor = executor;
@@ -125,5 +101,29 @@ final class SqlMonsterGroupDataRepository implements MonsterGroupDataRepository 
     @Override
     public List<MonsterGroupData> all() {
         return utils.findAll("SELECT * FROM MONSTER_GROUP");
+    }
+
+    private class Loader implements RepositoryUtils.Loader<MonsterGroupData> {
+        @Override
+        public MonsterGroupData create(ResultSet rs) throws SQLException {
+            return new MonsterGroupData(
+                rs.getInt("MONSTER_GROUP_ID"),
+                Duration.ofMillis(rs.getLong("RESPAWN_TIME")),
+                rs.getInt("MAX_SIZE"),
+                rs.getInt("MAX_COUNT"),
+                monstersTransformer.unserialize(rs.getString("MONSTERS")),
+                rs.getString("COMMENT"),
+                new Position(
+                    rs.getInt("WIN_FIGHT_TELEPORT_MAP_ID"),
+                    rs.getInt("WIN_FIGHT_TELEPORT_CELL_ID")
+                ),
+                rs.getBoolean("FIXED_TEAM_NUMBER")
+            );
+        }
+
+        @Override
+        public MonsterGroupData fillKeys(MonsterGroupData entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

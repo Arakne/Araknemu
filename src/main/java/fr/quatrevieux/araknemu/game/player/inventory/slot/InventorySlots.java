@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
-import fr.quatrevieux.araknemu.game.item.type.Equipment;
+import fr.quatrevieux.araknemu.game.item.type.AbstractEquipment;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 
@@ -33,12 +33,12 @@ import java.util.Collection;
 /**
  * All inventory slots
  */
-final public class InventorySlots {
-    final private Dispatcher dispatcher;
-    final private ItemStorage<InventoryEntry> storage;
+public final class InventorySlots {
+    private final Dispatcher dispatcher;
+    private final ItemStorage<InventoryEntry> storage;
 
-    final private InventorySlot defaultSlot;
-    final private InventorySlot[] slots = new InventorySlot[58];
+    private final InventorySlot defaultSlot;
+    private final InventorySlot[] slots = new InventorySlot[58];
 
     public InventorySlots(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage) {
         this.dispatcher  = dispatcher;
@@ -74,8 +74,8 @@ final public class InventorySlots {
     /**
      * Get current equipments
      */
-    public Collection<Equipment> equipments() {
-        Collection<Equipment> equipments = new ArrayList<>();
+    public Collection<AbstractEquipment> equipments() {
+        final Collection<AbstractEquipment> equipments = new ArrayList<>();
 
         for (InventorySlot slot : slots) {
             slot.equipment().ifPresent(equipments::add);
@@ -117,7 +117,7 @@ final public class InventorySlots {
             try {
                 get(entry.position()).uncheckedSet(entry);
             } catch (InventoryException e) {
-                entry.entity().setPosition(ItemEntry.DEFAULT_POSITION);
+                entry.setToDefaultPosition();
             }
         }
     }

@@ -14,34 +14,31 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.listener.player.inventory;
+package fr.quatrevieux.araknemu.game.handler.chat;
 
+import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.item.inventory.event.KamasChanged;
-import fr.quatrevieux.araknemu.network.game.out.account.Stats;
-import org.junit.jupiter.api.BeforeEach;
+import fr.quatrevieux.araknemu.network.game.in.chat.UseSmiley;
+import fr.quatrevieux.araknemu.network.game.out.chat.Smiley;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class SendKamasTest extends GameBaseCase {
-    private SendKamas listener;
-
-    @Override
-    @BeforeEach
-    public void setUp() throws Exception {
-        super.setUp();
-
-        listener = new SendKamas(gamePlayer());
+class SendSmileyToExplorationMapTest extends GameBaseCase {
+    @Test
+    void notExploring()  {
+        assertThrows(CloseImmediately.class, () -> handlePacket(new UseSmiley(3)));
     }
 
     @Test
-    void onKamasChanged() throws SQLException {
-        listener.on(new KamasChanged(0, 15225));
+    void inExploration() throws Exception {
+        explorationPlayer();
 
-        requestStack.assertLast(new Stats(gamePlayer().properties()));
+        handlePacket(new UseSmiley(3));
+
+        requestStack.assertLast(new Smiley(explorationPlayer(), 3));
     }
 }

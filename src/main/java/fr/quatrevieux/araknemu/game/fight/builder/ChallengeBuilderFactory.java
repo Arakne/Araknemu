@@ -27,10 +27,10 @@ import org.apache.logging.log4j.Logger;
 /**
  * Create the challenge builder
  */
-final public class ChallengeBuilderFactory implements FightBuilderFactory<ChallengeBuilder> {
-    final private FighterFactory fighterFactory;
-    final private Logger logger;
-    final private RandomUtil random = new RandomUtil();
+public final class ChallengeBuilderFactory implements FightBuilderFactory<ChallengeBuilder> {
+    private final FighterFactory fighterFactory;
+    private final Logger logger;
+    private final RandomUtil random = new RandomUtil();
 
     public ChallengeBuilderFactory(FighterFactory fighterFactory, Logger logger) {
         this.fighterFactory = fighterFactory;

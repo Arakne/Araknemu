@@ -33,9 +33,9 @@ import java.util.stream.StreamSupport;
 /**
  * Handle buff list for a fighter
  */
-final public class BuffList implements Iterable<Buff>, Buffs {
-    final private Fighter fighter;
-    final private Collection<Buff> buffs = new LinkedList<>();
+public final class BuffList implements Iterable<Buff>, Buffs {
+    private final Fighter fighter;
+    private final Collection<Buff> buffs = new LinkedList<>();
 
     public BuffList(Fighter fighter) {
         this.fighter = fighter;
@@ -104,13 +104,28 @@ final public class BuffList implements Iterable<Buff>, Buffs {
 
     @Override
     public void refresh() {
-        Iterator<Buff> iterator = buffs.iterator();
+        final Iterator<Buff> iterator = buffs.iterator();
 
         while (iterator.hasNext()) {
-            Buff buff = iterator.next();
+            final Buff buff = iterator.next();
+
             buff.decrementRemainingTurns();
 
             if (!buff.valid()) {
+                iterator.remove();
+                buff.hook().onBuffTerminated(buff);
+            }
+        }
+    }
+
+    @Override
+    public void removeAll() {
+        final Iterator<Buff> iterator = buffs.iterator();
+
+        while (iterator.hasNext()) {
+            final Buff buff = iterator.next();
+
+            if (buff.canBeDispelled()) {
                 iterator.remove();
                 buff.hook().onBuffTerminated(buff);
             }

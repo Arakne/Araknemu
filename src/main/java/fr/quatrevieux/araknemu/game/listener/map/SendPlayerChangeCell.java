@@ -29,8 +29,8 @@ import java.util.Collections;
 /**
  * Send to all map that a player has changed map
  */
-final public class SendPlayerChangeCell implements Listener<CellChanged> {
-    final private ExplorationMap map;
+public final class SendPlayerChangeCell implements Listener<CellChanged> {
+    private final ExplorationMap map;
 
     public SendPlayerChangeCell(ExplorationMap map) {
         this.map = map;

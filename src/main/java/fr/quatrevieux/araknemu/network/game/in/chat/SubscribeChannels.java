@@ -19,10 +19,10 @@
 
 package fr.quatrevieux.araknemu.network.game.in.chat;
 
-import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import fr.quatrevieux.araknemu.game.chat.ChannelType;
 
 import java.util.Collection;
 import java.util.EnumSet;
@@ -32,11 +32,27 @@ import java.util.EnumSet;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Chat.as#L92
  */
-final public class SubscribeChannels implements Packet {
-    final static public class Parser implements SinglePacketParser<SubscribeChannels> {
+public final class SubscribeChannels implements Packet {
+    private final boolean subscribe;
+    private final Collection<ChannelType> channels;
+
+    public SubscribeChannels(boolean subscribe, Collection<ChannelType> channels) {
+        this.subscribe = subscribe;
+        this.channels = channels;
+    }
+
+    public boolean isSubscribe() {
+        return subscribe;
+    }
+
+    public Collection<ChannelType> channels() {
+        return channels;
+    }
+
+    public static final class Parser implements SinglePacketParser<SubscribeChannels> {
         @Override
         public SubscribeChannels parse(String input) throws ParsePacketException {
-            Collection<ChannelType> channels = EnumSet.noneOf(ChannelType.class);
+            final Collection<ChannelType> channels = EnumSet.noneOf(ChannelType.class);
 
             for (int i = 1; i < input.length(); ++i) {
                 channels.add(
@@ -54,21 +70,5 @@ final public class SubscribeChannels implements Packet {
         public String code() {
             return "cC";
         }
-    }
-
-    final private boolean subscribe;
-    final private Collection<ChannelType> channels;
-
-    public SubscribeChannels(boolean subscribe, Collection<ChannelType> channels) {
-        this.subscribe = subscribe;
-        this.channels = channels;
-    }
-
-    public boolean isSubscribe() {
-        return subscribe;
-    }
-
-    public Collection<ChannelType> channels() {
-        return channels;
     }
 }

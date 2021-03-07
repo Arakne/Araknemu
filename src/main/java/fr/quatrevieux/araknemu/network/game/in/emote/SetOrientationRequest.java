@@ -29,11 +29,21 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Emotes.as#L32
  */
-final public class SetOrientationRequest implements Packet {
-    final static public class Parser implements SinglePacketParser<SetOrientationRequest> {
+public final class SetOrientationRequest implements Packet {
+    private final Direction orientation;
+
+    public SetOrientationRequest(Direction orientation) {
+        this.orientation = orientation;
+    }
+
+    public Direction orientation() {
+        return orientation;
+    }
+
+    public static final class Parser implements SinglePacketParser<SetOrientationRequest> {
         @Override
         public SetOrientationRequest parse(String input) throws ParsePacketException {
-            int number = input.charAt(0) - '0';
+            final int number = input.charAt(0) - '0';
 
             if (number >= Direction.values().length) {
                 throw new ParsePacketException(code() + input, "Invalid direction");
@@ -46,15 +56,5 @@ final public class SetOrientationRequest implements Packet {
         public String code() {
             return "eD";
         }
-    }
-
-    final private Direction orientation;
-
-    public SetOrientationRequest(Direction orientation) {
-        this.orientation = orientation;
-    }
-
-    public Direction orientation() {
-        return orientation;
     }
 }

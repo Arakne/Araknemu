@@ -22,9 +22,9 @@ package fr.quatrevieux.araknemu.game.item.inventory.event;
 /**
  * The kamas quantity has changed
  */
-final public class KamasChanged {
-    final private long lastQuantity;
-    final private long newQuantity;
+public final class KamasChanged {
+    private final long lastQuantity;
+    private final long newQuantity;
 
     public KamasChanged(long lastQuantity, long newQuantity) {
         this.lastQuantity = lastQuantity;

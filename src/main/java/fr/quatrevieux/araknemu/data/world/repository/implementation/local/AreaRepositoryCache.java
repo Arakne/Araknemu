@@ -30,10 +30,10 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Cache repository for {@link Area}
  */
-final public class AreaRepositoryCache implements AreaRepository {
-    final private AreaRepository repository;
+public final class AreaRepositoryCache implements AreaRepository {
+    private final AreaRepository repository;
 
-    final private ConcurrentMap<Integer, Area> cacheById = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, Area> cacheById = new ConcurrentHashMap<>();
 
     public AreaRepositoryCache(AreaRepository repository) {
         this.repository = repository;
@@ -50,7 +50,7 @@ final public class AreaRepositoryCache implements AreaRepository {
 
     @Override
     public Collection<Area> all() {
-        Collection<Area> loaded = repository.all();
+        final Collection<Area> loaded = repository.all();
 
         for (Area template : loaded) {
             cacheById.put(template.id(), template);

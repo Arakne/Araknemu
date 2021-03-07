@@ -24,7 +24,7 @@ package fr.quatrevieux.araknemu.network.game.out.spell;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Spells.as#L38
  */
-final public class SpellUpgradeError {
+public final class SpellUpgradeError {
     @Override
     public String toString() {
         return "SUE";

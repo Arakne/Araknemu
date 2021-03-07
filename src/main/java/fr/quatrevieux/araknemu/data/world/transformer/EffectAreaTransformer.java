@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 /**
  * Transform spell / weapon effect area string
  */
-final public class EffectAreaTransformer implements Transformer<EffectArea> {
+public final class EffectAreaTransformer implements Transformer<EffectArea> {
     @Override
     public String serialize(EffectArea value) {
         if (value == null) {

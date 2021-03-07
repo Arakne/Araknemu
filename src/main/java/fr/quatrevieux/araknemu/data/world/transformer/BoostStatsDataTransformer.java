@@ -24,12 +24,16 @@ import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.BoostStatsData;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Transformer for {@link BoostStatsData}
  */
-final public class BoostStatsDataTransformer implements Transformer<BoostStatsData> {
+public final class BoostStatsDataTransformer implements Transformer<BoostStatsData> {
     @Override
     public String serialize(BoostStatsData value) {
         return null;
@@ -37,16 +41,16 @@ final public class BoostStatsDataTransformer implements Transformer<BoostStatsDa
 
     @Override
     public BoostStatsData unserialize(String serialize) {
-        Map<Characteristic, List<BoostStatsData.Interval>> data = new EnumMap<>(Characteristic.class);
+        final Map<Characteristic, List<BoostStatsData.Interval>> data = new EnumMap<>(Characteristic.class);
 
         for (String characteristicData : StringUtils.split(serialize, ";")) {
-            String[] entry = StringUtils.split(characteristicData, ":", 2);
+            final String[] entry = StringUtils.split(characteristicData, ":", 2);
 
-            Characteristic characteristic = Characteristic.fromId(Integer.parseInt(entry[0]));
-            List<BoostStatsData.Interval> intervals = new ArrayList<>();
+            final Characteristic characteristic = Characteristic.fromId(Integer.parseInt(entry[0]));
+            final List<BoostStatsData.Interval> intervals = new ArrayList<>();
 
             for (String intervalData : StringUtils.split(entry[1], ",")) {
-                String[] parts = StringUtils.split(intervalData, "@", 3);
+                final String[] parts = StringUtils.split(intervalData, "@", 3);
 
                 intervals.add(
                     new BoostStatsData.Interval(
@@ -58,7 +62,6 @@ final public class BoostStatsDataTransformer implements Transformer<BoostStatsDa
             }
 
             intervals.sort(Comparator.comparingInt(BoostStatsData.Interval::start));
-
 
             data.put(characteristic, intervals);
         }

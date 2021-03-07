@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.game.player.spell.SpellBookEntry;
 /**
  * The spell is moved
  */
-final public class SpellMoved {
+public final class SpellMoved {
     private SpellBookEntry entry;
 
     public SpellMoved(SpellBookEntry entry) {

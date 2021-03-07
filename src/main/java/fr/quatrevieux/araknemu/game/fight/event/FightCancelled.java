@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 /**
  * The fight is cancelled
  */
-final public class FightCancelled {
-    final private Fight fight;
+public final class FightCancelled {
+    private final Fight fight;
 
     public FightCancelled(Fight fight) {
         this.fight = fight;

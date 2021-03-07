@@ -20,16 +20,15 @@
 package fr.quatrevieux.araknemu.game.handler;
 
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
-import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.network.game.GameSession;
 
 /**
  * Decorate packet handler to ensure that session is logged
  */
-final public class EnsureLogged<P extends Packet> implements PacketHandler<GameSession, P> {
-    final private PacketHandler<GameSession, P> handler;
-
+public final class EnsureLogged<P extends Packet> implements PacketHandler<GameSession, P> {
+    private final PacketHandler<GameSession, P> handler;
 
     public EnsureLogged(PacketHandler<GameSession, P> handler) {
         this.handler = handler;

@@ -33,8 +33,8 @@ import java.util.Map;
 /**
  * Exchange data for an Npc
  */
-final public class GameNpcExchange implements ExchangeProvider.Factory {
-    final private List<NpcExchangeEntry> entries;
+public final class GameNpcExchange implements ExchangeProvider.Factory {
+    private final List<NpcExchangeEntry> entries;
 
     public GameNpcExchange(List<NpcExchangeEntry> entries) {
         this.entries = entries;

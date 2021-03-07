@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.player.inventory.event.EquipmentChanged;
 /**
  * Rebuild the stuff stats
  */
-final public class UpdateStuffStats implements Listener<EquipmentChanged> {
-    final private GamePlayer player;
+public final class UpdateStuffStats implements Listener<EquipmentChanged> {
+    private final GamePlayer player;
 
     public UpdateStuffStats(GamePlayer player) {
         this.player = player;

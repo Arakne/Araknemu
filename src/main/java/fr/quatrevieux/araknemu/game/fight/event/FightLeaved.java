@@ -26,8 +26,8 @@ import java.util.Optional;
 /**
  * The fighter has leave the fight
  */
-final public class FightLeaved {
-    final private FightReward reward;
+public final class FightLeaved {
+    private final FightReward reward;
 
     public FightLeaved() {
         this(null);

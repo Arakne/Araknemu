@@ -25,8 +25,8 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 /**
  * Resolve the bank cost
  */
-final public class BankCostResolver implements VariableResolver {
-    final private BankService service;
+public final class BankCostResolver implements VariableResolver {
+    private final BankService service;
 
     public BankCostResolver(BankService service) {
         this.service = service;

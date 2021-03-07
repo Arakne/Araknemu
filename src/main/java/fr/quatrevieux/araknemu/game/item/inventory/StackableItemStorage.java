@@ -31,11 +31,11 @@ import java.util.Optional;
 /**
  * Add stack capabilities to an item storage
  */
-final public class StackableItemStorage<E extends ItemEntry> implements ItemStorage<E> {
-    final private ItemStorage<E> storage;
-    final private int stackPosition;
+public final class StackableItemStorage<E extends ItemEntry> implements ItemStorage<E> {
+    private final ItemStorage<E> storage;
+    private final int stackPosition;
 
-    final private Map<Item, E> stackMap = new HashMap<>();
+    private final Map<Item, E> stackMap = new HashMap<>();
 
     public StackableItemStorage(ItemStorage<E> storage) {
         this(storage, ItemEntry.DEFAULT_POSITION);
@@ -60,7 +60,7 @@ final public class StackableItemStorage<E extends ItemEntry> implements ItemStor
     @Override
     public E add(Item item, int quantity, int position) throws InventoryException {
         if (position == stackPosition) {
-            E entry = stackMap.get(item);
+            final E entry = stackMap.get(item);
 
             if (checkStackedEntry(entry)) {
                 entry.add(quantity);
@@ -69,7 +69,7 @@ final public class StackableItemStorage<E extends ItemEntry> implements ItemStor
             }
         }
 
-        E entry = storage.add(item, quantity, position);
+        final E entry = storage.add(item, quantity, position);
 
         if (position == stackPosition) {
             stackMap.put(entry.item(), entry);
@@ -80,7 +80,7 @@ final public class StackableItemStorage<E extends ItemEntry> implements ItemStor
 
     @Override
     public E delete(int id) throws InventoryException {
-        E entry = storage.delete(id);
+        final E entry = storage.delete(id);
 
         if (entry.position() == stackPosition) {
             stackMap.remove(entry.item());
@@ -102,7 +102,7 @@ final public class StackableItemStorage<E extends ItemEntry> implements ItemStor
      * @return The entry, or null if there is not corresponding entry
      */
     public Optional<E> find(Item item) {
-        E entry = stackMap.get(item);
+        final E entry = stackMap.get(item);
 
         if (!checkStackedEntry(entry)) {
             return Optional.empty();

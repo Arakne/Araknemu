@@ -26,8 +26,8 @@ import java.time.Duration;
 /**
  * Fight type for PvM
  */
-final public class PvmType implements FightType {
-    final private RewardsGenerator rewardsGenerator;
+public final class PvmType implements FightType {
+    private final RewardsGenerator rewardsGenerator;
 
     public PvmType(RewardsGenerator rewardsGenerator) {
         this.rewardsGenerator = rewardsGenerator;

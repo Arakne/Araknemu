@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.turn.FinishTurn;
 /**
  * Send that a fighter turn is terminated
  */
-final public class SendFightTurnStopped implements Listener<TurnStopped> {
-    final private Fight fight;
+public final class SendFightTurnStopped implements Listener<TurnStopped> {
+    private final Fight fight;
 
     public SendFightTurnStopped(Fight fight) {
         this.fight = fight;

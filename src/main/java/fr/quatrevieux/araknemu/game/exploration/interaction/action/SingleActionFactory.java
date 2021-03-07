@@ -29,7 +29,7 @@ public interface SingleActionFactory extends ActionFactory, ExplorationActionReg
     public ActionType type();
 
     @Override
-    default public void register(ExplorationActionRegistry factory) {
+    public default void register(ExplorationActionRegistry factory) {
         factory.register(type(), this);
     }
 }

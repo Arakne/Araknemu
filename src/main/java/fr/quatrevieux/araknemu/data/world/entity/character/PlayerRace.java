@@ -29,18 +29,18 @@ import java.util.SortedMap;
 /**
  * Entity for player race
  */
-final public class PlayerRace {
-    final private Race race;
-    final private String name;
-    final private SortedMap<Integer, Characteristics> baseStats;
-    final private int startDiscernment;
-    final private int startPods;
-    final private int startLife;
-    final private int perLevelLife;
-    final private BoostStatsData boostStats;
-    final private Position startPosition;
-    final private Position astrubPosition;
-    final private int[] spells;
+public final class PlayerRace {
+    private final Race race;
+    private final String name;
+    private final SortedMap<Integer, Characteristics> baseStats;
+    private final int startDiscernment;
+    private final int startPods;
+    private final int startLife;
+    private final int perLevelLife;
+    private final BoostStatsData boostStats;
+    private final Position startPosition;
+    private final Position astrubPosition;
+    private final int[] spells;
 
     public PlayerRace(Race race, String name, SortedMap<Integer, Characteristics> baseStats, int startDiscernment, int startPods, int startLife, int perLevelLife, BoostStatsData boostStats, Position startPosition, Position astrubPosition, int[] spells) {
         this.race = race;

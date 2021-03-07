@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.player.inventory.slot;
 
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
-import fr.quatrevieux.araknemu.game.item.type.Equipment;
+import fr.quatrevieux.araknemu.game.item.type.AbstractEquipment;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 
 import java.util.Optional;
@@ -70,14 +70,14 @@ public interface InventorySlot {
     /**
      * Remove the current entry
      */
-    default public void unset() {
+    public default void unset() {
         uncheckedSet(null);
     }
 
     /**
      * Get the current equipment
      */
-    default public Optional<Equipment> equipment() {
+    public default Optional<AbstractEquipment> equipment() {
         return Optional.empty();
     }
 }

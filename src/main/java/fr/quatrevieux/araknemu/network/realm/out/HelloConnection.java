@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.realm.ConnectionKey;
 /**
  * Welcome message for realm server
  */
-final public class HelloConnection {
-    final private ConnectionKey key;
+public final class HelloConnection {
+    private final ConnectionKey key;
 
     public HelloConnection(ConnectionKey key) {
         this.key = key;

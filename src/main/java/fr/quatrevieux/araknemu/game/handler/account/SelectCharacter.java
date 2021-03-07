@@ -34,8 +34,8 @@ import fr.quatrevieux.araknemu.network.game.out.info.Information;
 /**
  * Handle character select for entering game
  */
-final public class SelectCharacter implements PacketHandler<GameSession, ChoosePlayingCharacter> {
-    final private PlayerService service;
+public final class SelectCharacter implements PacketHandler<GameSession, ChoosePlayingCharacter> {
+    private final PlayerService service;
 
     public SelectCharacter(PlayerService service) {
         this.service = service;

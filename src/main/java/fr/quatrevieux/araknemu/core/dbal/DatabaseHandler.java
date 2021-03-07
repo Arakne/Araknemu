@@ -27,8 +27,6 @@ import java.sql.SQLException;
 public interface DatabaseHandler {
     /**
      * Get a connection pool by its name
-     * @param name
-     * @return
      */
     public ConnectionPool get(String name) throws SQLException;
 

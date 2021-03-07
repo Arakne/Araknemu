@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 /**
  * Handle end of session
  */
-final public class StopSession implements PacketHandler<GameSession, SessionClosed> {
+public final class StopSession implements PacketHandler<GameSession, SessionClosed> {
     @Override
     public void handle(GameSession session, SessionClosed packet) {
         // Issue #85 : all session scopes forward "Disconnected" event to GamePlayer

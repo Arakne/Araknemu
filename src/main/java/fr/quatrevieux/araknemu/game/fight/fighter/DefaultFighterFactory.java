@@ -23,14 +23,19 @@ import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.PlayerFighterCreated;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightJoined;
-import fr.quatrevieux.araknemu.game.listener.fight.fighter.*;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.ApplyEndFightReward;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.ApplyLeaveReward;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.LeaveOnDisconnect;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFightLeaved;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendStats;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.StopFightSession;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 
 /**
  * Default implementation of the fighter factory
  */
-final public class DefaultFighterFactory implements FighterFactory {
-    final private Dispatcher dispatcher;
+public final class DefaultFighterFactory implements FighterFactory {
+    private final Dispatcher dispatcher;
 
     public DefaultFighterFactory(Dispatcher dispatcher) {
         this.dispatcher = dispatcher;
@@ -38,7 +43,7 @@ final public class DefaultFighterFactory implements FighterFactory {
 
     @Override
     public PlayerFighter create(GamePlayer player) {
-        PlayerFighter fighter = new PlayerFighter(player);
+        final PlayerFighter fighter = new PlayerFighter(player);
 
         fighter.dispatcher().add(new SendFightJoined(fighter));
         fighter.dispatcher().add(new ApplyEndFightReward(fighter));

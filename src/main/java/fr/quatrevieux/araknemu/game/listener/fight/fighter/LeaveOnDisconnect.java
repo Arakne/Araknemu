@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 /**
  * Leave the fight when disconnect
  */
-final public class LeaveOnDisconnect implements Listener<Disconnected> {
-    final private PlayerFighter fighter;
+public final class LeaveOnDisconnect implements Listener<Disconnected> {
+    private final PlayerFighter fighter;
 
     public LeaveOnDisconnect(PlayerFighter fighter) {
         this.fighter = fighter;

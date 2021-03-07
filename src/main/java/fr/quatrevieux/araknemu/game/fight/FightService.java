@@ -47,14 +47,14 @@ import java.util.stream.Collectors;
 /**
  * Service for create fights
  */
-final public class FightService implements EventsSubscriber {
-    final private MapTemplateRepository mapRepository;
-    final private Dispatcher dispatcher;
-    final private Map<Class, FightBuilderFactory> builderFactories;
-    final private Collection<FightModule.Factory> moduleFactories;
+public final class FightService implements EventsSubscriber {
+    private final MapTemplateRepository mapRepository;
+    private final Dispatcher dispatcher;
+    private final Map<Class, FightBuilderFactory> builderFactories;
+    private final Collection<FightModule.Factory> moduleFactories;
 
-    final private Map<Integer, Map<Integer, Fight>> fightsByMapId = new ConcurrentHashMap<>();
-    final private AtomicInteger lastFightId = new AtomicInteger();
+    private final Map<Integer, Map<Integer, Fight>> fightsByMapId = new ConcurrentHashMap<>();
+    private final AtomicInteger lastFightId = new AtomicInteger();
 
     public FightService(MapTemplateRepository mapRepository, Dispatcher dispatcher, Collection<? extends FightBuilderFactory> factories, Collection<FightModule.Factory> moduleFactories) {
         this.mapRepository = mapRepository;
@@ -83,7 +83,7 @@ final public class FightService implements EventsSubscriber {
                     return PlayerLoaded.class;
                 }
             },
-            new Listener<ExplorationPlayerCreated> () {
+            new Listener<ExplorationPlayerCreated>() {
                 @Override
                 public void on(ExplorationPlayerCreated event) {
                     event.player().dispatcher().add(new LeaveExplorationForFight(event.player()));
@@ -109,7 +109,7 @@ final public class FightService implements EventsSubscriber {
                 public Class<GameStopped> event() {
                     return GameStopped.class;
                 }
-            }
+            },
         };
     }
 
@@ -159,7 +159,7 @@ final public class FightService implements EventsSubscriber {
             throw new NoSuchElementException("Fight not found");
         }
 
-        Map<Integer, Fight> fights = fightsByMapId.get(mapId);
+        final Map<Integer, Fight> fights = fightsByMapId.get(mapId);
 
         if (!fights.containsKey(fightId)) {
             throw new NoSuchElementException("Fight not found");
@@ -182,7 +182,7 @@ final public class FightService implements EventsSubscriber {
         if (fightsByMapId.containsKey(fight.map().id())) {
             fightsByMapId.get(fight.map().id()).put(fight.id(), fight);
         } else {
-            Map<Integer, Fight> fights = new ConcurrentHashMap<>();
+            final Map<Integer, Fight> fights = new ConcurrentHashMap<>();
 
             fights.put(fight.id(), fight);
 

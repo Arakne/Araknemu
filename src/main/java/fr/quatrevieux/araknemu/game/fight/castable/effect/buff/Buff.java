@@ -30,21 +30,27 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
  * The duration will be taken from the effect.
  * For overload the buff effect value (or duration), you must create a new effect instance
  */
-final public class Buff {
-    final private SpellEffect effect;
-    final private Castable action;
-    final private ActiveFighter caster;
-    final private PassiveFighter target;
-    final private BuffHook hook;
+public final class Buff {
+    private final SpellEffect effect;
+    private final Castable action;
+    private final ActiveFighter caster;
+    private final PassiveFighter target;
+    private final BuffHook hook;
+    private final boolean canBeDispelled;
 
     private int remainingTurns;
 
     public Buff(SpellEffect effect, Castable action, ActiveFighter caster, PassiveFighter target, BuffHook hook) {
+        this(effect, action, caster, target, hook, true);
+    }
+
+    public Buff(SpellEffect effect, Castable action, ActiveFighter caster, PassiveFighter target, BuffHook hook, boolean canBeDispelled) {
         this.effect = effect;
         this.action = action;
         this.caster = caster;
         this.target = target;
         this.hook = hook;
+        this.canBeDispelled = canBeDispelled;
 
         this.remainingTurns = effect.duration();
     }
@@ -115,5 +121,12 @@ final public class Buff {
      */
     public boolean valid() {
         return remainingTurns > 0;
+    }
+
+    /**
+     * Check if the buff can be removed
+     */
+    public boolean canBeDispelled() {
+        return canBeDispelled;
     }
 }

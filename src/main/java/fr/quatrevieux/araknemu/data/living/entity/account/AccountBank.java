@@ -24,9 +24,9 @@ import fr.quatrevieux.araknemu.data.living.entity.WalletEntity;
 /**
  * Store the bank information for a server account
  */
-final public class AccountBank implements WalletEntity {
-    final private int accountId;
-    final private int serverId;
+public final class AccountBank implements WalletEntity {
+    private final int accountId;
+    private final int serverId;
     private long kamas;
 
     public AccountBank(int accountId, int serverId, long kamas) {

@@ -24,9 +24,9 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 /**
  * Action points are used for perform an action
  */
-final public class ActionPointsUsed {
-    final private Fighter fighter;
-    final private int quantity;
+public final class ActionPointsUsed {
+    private final Fighter fighter;
+    private final int quantity;
 
     public ActionPointsUsed(Fighter fighter, int quantity) {
         this.fighter = fighter;

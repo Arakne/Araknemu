@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.constant.Alignment;
 import fr.quatrevieux.araknemu.data.world.entity.environment.area.SubArea;
 import fr.quatrevieux.araknemu.data.world.repository.environment.area.SubAreaRepository;
@@ -34,26 +34,8 @@ import java.util.Collection;
  * SQL implementation for subarea repository
  */
 final class SqlSubAreaRepository implements SubAreaRepository {
-    private static class Loader implements RepositoryUtils.Loader<SubArea> {
-        @Override
-        public SubArea create(ResultSet rs) throws SQLException {
-            return new SubArea(
-                rs.getInt("SUBAREA_ID"),
-                rs.getInt("AREA_ID"),
-                rs.getString("SUBAREA_NAME"),
-                rs.getBoolean("CONQUESTABLE"),
-                Alignment.byId(rs.getInt("ALIGNMENT"))
-            );
-        }
-
-        @Override
-        public SubArea fillKeys(SubArea entity, ResultSet keys) throws SQLException {
-            throw new UnsupportedOperationException();
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<SubArea> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<SubArea> utils;
 
     public SqlSubAreaRepository(QueryExecutor executor) {
         this.executor = executor;
@@ -110,5 +92,23 @@ final class SqlSubAreaRepository implements SubAreaRepository {
     @Override
     public Collection<SubArea> all() {
         return utils.findAll("SELECT * FROM SUBAREA");
+    }
+
+    private static class Loader implements RepositoryUtils.Loader<SubArea> {
+        @Override
+        public SubArea create(ResultSet rs) throws SQLException {
+            return new SubArea(
+                rs.getInt("SUBAREA_ID"),
+                rs.getInt("AREA_ID"),
+                rs.getString("SUBAREA_NAME"),
+                rs.getBoolean("CONQUESTABLE"),
+                Alignment.byId(rs.getInt("ALIGNMENT"))
+            );
+        }
+
+        @Override
+        public SubArea fillKeys(SubArea entity, ResultSet keys) throws SQLException {
+            throw new UnsupportedOperationException();
+        }
     }
 }

@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.player.spell.event.SpellLearned;
 /**
  * Save the new learned spell
  */
-final public class SaveLearnedSpell implements Listener<SpellLearned> {
-    final private PlayerSpellRepository repository;
+public final class SaveLearnedSpell implements Listener<SpellLearned> {
+    private final PlayerSpellRepository repository;
 
     public SaveLearnedSpell(PlayerSpellRepository repository) {
         this.repository = repository;

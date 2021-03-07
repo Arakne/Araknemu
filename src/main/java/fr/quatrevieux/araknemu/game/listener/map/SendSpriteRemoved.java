@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.game.RemoveSprite;
 /**
  * Send packet for removed sprites
  */
-final public class SendSpriteRemoved implements Listener<SpriteRemoveFromMap> {
-    final private ExplorationMap map;
+public final class SendSpriteRemoved implements Listener<SpriteRemoveFromMap> {
+    private final ExplorationMap map;
 
     public SendSpriteRemoved(ExplorationMap map) {
         this.map = map;

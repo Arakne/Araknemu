@@ -27,8 +27,8 @@ import java.util.regex.Pattern;
  * @param <T> The entity type
  * @param <E> The error type
  */
-final public class Regex<T, E> extends ValueConstraint<T, E, String> {
-    final private Pattern regex;
+public final class Regex<T, E> extends AbstractValueConstraint<T, E, String> {
+    private final Pattern regex;
 
     public Regex(E error, Getter<T, String> getter, Pattern regex) {
         super(error, getter);

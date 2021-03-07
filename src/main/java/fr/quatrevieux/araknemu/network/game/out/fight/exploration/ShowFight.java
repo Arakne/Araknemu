@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L1117
  */
-final public class ShowFight {
-    final private Fight fight;
+public final class ShowFight {
+    private final Fight fight;
 
     public ShowFight(Fight fight) {
         this.fight = fight;

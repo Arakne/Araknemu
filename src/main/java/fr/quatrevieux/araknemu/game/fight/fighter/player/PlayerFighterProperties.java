@@ -26,12 +26,12 @@ import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
 /**
  * Wrap player fighter properties
  */
-final public class PlayerFighterProperties implements CharacterProperties {
-    final private PlayerFighter fighter;
-    final private CharacterProperties baseProperties;
+public final class PlayerFighterProperties implements CharacterProperties {
+    private final PlayerFighter fighter;
+    private final CharacterProperties baseProperties;
 
-    final private PlayerFighterCharacteristics characteristics;
-    final private PlayerFighterLife life;
+    private final PlayerFighterCharacteristics characteristics;
+    private final PlayerFighterLife life;
 
     public PlayerFighterProperties(PlayerFighter fighter, CharacterProperties baseProperties) {
         this.fighter = fighter;

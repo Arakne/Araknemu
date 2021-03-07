@@ -47,79 +47,10 @@ import java.util.Map;
  * - When a matching exchange is found, notify the new exchange entry
  * - When the player accept the exchange, generates items and process the exchange
  */
-final public class NpcExchangePartyProcessor implements ExchangePartyProcessor, EventsSubscriber {
-    /**
-     * Store the current Npc exchange state
-     * The storage is immutable to permit check changes
-     */
-    private class Storage implements ExchangeStorage {
-        final private NpcExchangeEntry entry;
-        final private Map<ItemEntry, Integer> items;
-
-        public Storage(NpcExchangeEntry entry) {
-            this.entry = entry;
-            this.items = buildItems(entry);
-        }
-
-        @Override
-        public Map<ItemEntry, Integer> items() {
-            return items;
-        }
-
-        @Override
-        public long kamas() {
-            return entry.kamas();
-        }
-
-        @Override
-        public boolean accepted() {
-            return entry.valid();
-        }
-
-        @Override
-        public ListenerAggregate dispatcher() {
-            return dispatcher;
-        }
-
-        @Override
-        public ExplorationCreature owner() {
-            return npc;
-        }
-
-        /**
-         * Notify all changes on the exchange
-         *
-         * @param old The old exchange storage state
-         */
-        private void notifyChanges(Storage old) {
-            if (kamas() != old.kamas()) {
-                dispatcher.dispatch(new KamasChanged(kamas(), this));
-            }
-
-            if (!items().equals(old.items())) {
-                old.items().keySet().forEach((entry) -> dispatcher.dispatch(new ItemMoved(entry, 0, this)));
-                items().forEach((entry, quantity) -> dispatcher.dispatch(new ItemMoved(entry, quantity, this)));
-            }
-
-            if (accepted() != old.accepted()) {
-                dispatcher.dispatch(new AcceptChanged(accepted(), this));
-            }
-        }
-
-        private Map<ItemEntry, Integer> buildItems(NpcExchangeEntry entry) {
-            final Map<ItemEntry, Integer> items = new HashMap<>();
-
-            for (Map.Entry<ItemTemplate, Integer> item : entry.items()) {
-                items.put(new NpcExchangeItemEntry(item.getKey()), item.getValue());
-            }
-
-            return items;
-        }
-    }
-
-    final private GameNpc npc;
-    final private GameNpcExchange exchange;
-    final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
+public final class NpcExchangePartyProcessor implements ExchangePartyProcessor, EventsSubscriber {
+    private final GameNpc npc;
+    private final GameNpcExchange exchange;
+    private final ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
     private Storage storage;
 
@@ -212,5 +143,74 @@ final public class NpcExchangePartyProcessor implements ExchangePartyProcessor, 
         // Find matching exchange and update the exchange
         storage = new Storage(exchange.find(event.storage().items(), event.storage().kamas()));
         storage.notifyChanges(last);
+    }
+
+    /**
+     * Store the current Npc exchange state
+     * The storage is immutable to permit check changes
+     */
+    private class Storage implements ExchangeStorage {
+        private final NpcExchangeEntry entry;
+        private final Map<ItemEntry, Integer> items;
+
+        public Storage(NpcExchangeEntry entry) {
+            this.entry = entry;
+            this.items = buildItems(entry);
+        }
+
+        @Override
+        public Map<ItemEntry, Integer> items() {
+            return items;
+        }
+
+        @Override
+        public long kamas() {
+            return entry.kamas();
+        }
+
+        @Override
+        public boolean accepted() {
+            return entry.valid();
+        }
+
+        @Override
+        public ListenerAggregate dispatcher() {
+            return dispatcher;
+        }
+
+        @Override
+        public ExplorationCreature owner() {
+            return npc;
+        }
+
+        /**
+         * Notify all changes on the exchange
+         *
+         * @param old The old exchange storage state
+         */
+        private void notifyChanges(Storage old) {
+            if (kamas() != old.kamas()) {
+                dispatcher.dispatch(new KamasChanged(kamas(), this));
+            }
+
+            if (!items().equals(old.items())) {
+                old.items().keySet().forEach((entry) -> dispatcher.dispatch(new ItemMoved(entry, 0, this)));
+                items().forEach((entry, quantity) -> dispatcher.dispatch(new ItemMoved(entry, quantity, this)));
+            }
+
+            if (accepted() != old.accepted()) {
+                dispatcher.dispatch(new AcceptChanged(accepted(), this));
+            }
+        }
+
+        private Map<ItemEntry, Integer> buildItems(NpcExchangeEntry entry) {
+            final Map<ItemEntry, Integer> items = new HashMap<>();
+
+            for (Map.Entry<ItemTemplate, Integer> item : entry.items()) {
+                items.put(new NpcExchangeItemEntry(item.getKey()), item.getValue());
+            }
+
+            return items;
+        }
     }
 }

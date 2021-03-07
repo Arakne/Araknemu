@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.handler.account;
 
+import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.core.network.exception.CloseWithPacket;
@@ -26,7 +27,6 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.account.TokenService;
-import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.account.LoginToken;
 import fr.quatrevieux.araknemu.network.game.out.account.LoginTokenError;
@@ -37,10 +37,10 @@ import java.util.NoSuchElementException;
 /**
  * Handle login token to start client session
  */
-final public class Login implements PacketHandler<GameSession, LoginToken> {
-    final private TokenService tokens;
-    final private AccountService service;
-    final private SessionLogService logService;
+public final class Login implements PacketHandler<GameSession, LoginToken> {
+    private final TokenService tokens;
+    private final AccountService service;
+    private final SessionLogService logService;
 
     public Login(TokenService tokens, AccountService service, SessionLogService logService) {
         this.tokens = tokens;
@@ -54,11 +54,11 @@ final public class Login implements PacketHandler<GameSession, LoginToken> {
             throw new CloseImmediately("Account already attached");
         }
 
-        GameAccount account;
+        final GameAccount account;
 
         try {
             account = service.load(tokens.get(packet.token()));
-        } catch(NoSuchElementException | EntityNotFoundException e) {
+        } catch (NoSuchElementException | EntityNotFoundException e) {
             throw new CloseWithPacket(new LoginTokenError());
         }
 

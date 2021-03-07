@@ -32,8 +32,8 @@ import fr.quatrevieux.araknemu.network.game.out.exchange.movement.storage.Storag
 /**
  * Send packets for storage's change
  */
-final public class SendStoragePackets implements EventsSubscriber {
-    final private Sender output;
+public final class SendStoragePackets implements EventsSubscriber {
+    private final Sender output;
 
     public SendStoragePackets(Sender output) {
         this.output = output;

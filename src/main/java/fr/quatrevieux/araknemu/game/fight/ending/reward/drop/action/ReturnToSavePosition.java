@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 /**
  * Return the the save position when loose fight
  */
-final public class ReturnToSavePosition implements DropRewardAction, FighterOperation {
+public final class ReturnToSavePosition implements DropRewardAction, FighterOperation {
     @Override
     public void apply(DropReward reward, Fighter fighter) {
         fighter.apply(this);

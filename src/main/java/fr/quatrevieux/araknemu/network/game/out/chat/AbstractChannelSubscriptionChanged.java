@@ -17,32 +17,34 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.listener.player.inventory;
+package fr.quatrevieux.araknemu.network.game.out.chat;
 
-import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectDeleted;
-import fr.quatrevieux.araknemu.network.game.out.object.DestroyItem;
+import fr.quatrevieux.araknemu.game.chat.ChannelType;
+
+import java.util.Collection;
 
 /**
- * Send packet for delete item
+ * Abstract class packet for subscription changed
  */
-final public class SendItemDeleted implements Listener<ObjectDeleted> {
-    final private GamePlayer player;
+public abstract class AbstractChannelSubscriptionChanged {
+    private final char sign;
+    private final Collection<ChannelType> channels;
 
-    public SendItemDeleted(GamePlayer player) {
-        this.player = player;
+    public AbstractChannelSubscriptionChanged(char sign, Collection<ChannelType> channels) {
+        this.sign = sign;
+        this.channels = channels;
     }
 
     @Override
-    public void on(ObjectDeleted event) {
-        player.send(
-            new DestroyItem(event.entry())
-        );
-    }
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("cC");
 
-    @Override
-    public Class<ObjectDeleted> event() {
-        return ObjectDeleted.class;
+        sb.append(sign);
+
+        for (ChannelType type : channels) {
+            sb.append(type.identifier());
+        }
+
+        return sb.toString();
     }
 }

@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.fight.FightService;
 /**
  * Register challenge actions
  */
-final public class ChallengeActionsFactories implements ExplorationActionRegistry.SelfRegisterable {
-    final private FightService fightService;
+public final class ChallengeActionsFactories implements ExplorationActionRegistry.SelfRegisterable {
+    private final FightService fightService;
 
     public ChallengeActionsFactories(FightService fightService) {
         this.fightService = fightService;

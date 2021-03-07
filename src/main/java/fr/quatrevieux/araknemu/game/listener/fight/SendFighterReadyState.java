@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.FighterReadyState;
 /**
  * Send the ready state of the fighter
  */
-final public class SendFighterReadyState implements Listener<FighterReadyStateChanged> {
-    final private Fight fight;
+public final class SendFighterReadyState implements Listener<FighterReadyStateChanged> {
+    private final Fight fight;
 
     public SendFighterReadyState(Fight fight) {
         this.fight = fight;

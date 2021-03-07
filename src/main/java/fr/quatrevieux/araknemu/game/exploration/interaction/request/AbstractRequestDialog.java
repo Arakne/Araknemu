@@ -24,20 +24,20 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
 /**
  * Base dialog for request invitation
  */
-abstract public class AbstractRequestDialog implements RequestDialog {
-    final protected Invitation invitation;
+public abstract class AbstractRequestDialog implements RequestDialog {
+    protected final Invitation invitation;
 
     public AbstractRequestDialog(Invitation invitation) {
         this.invitation = invitation;
     }
 
     @Override
-    final public Interaction start() {
+    public final Interaction start() {
         return this;
     }
 
     @Override
-    final public void stop() {
+    public final void stop() {
         decline();
     }
 
@@ -45,7 +45,7 @@ abstract public class AbstractRequestDialog implements RequestDialog {
      * Decline the invitation
      */
     @Override
-    final public void decline() {
+    public final void decline() {
         invitation.cancel(this);
     }
 }

@@ -37,9 +37,9 @@ import java.util.stream.Collectors;
 /**
  * Player race data
  */
-final public class GamePlayerRace {
-    final private PlayerRace entity;
-    final private Map<Integer, SpellLevels> spells;
+public final class GamePlayerRace {
+    private final PlayerRace entity;
+    private final Map<Integer, SpellLevels> spells;
 
     public GamePlayerRace(PlayerRace entity, List<SpellLevels> spells) {
         this.entity = entity;
@@ -48,7 +48,9 @@ final public class GamePlayerRace {
                 Collectors.toMap(
                     SpellLevels::id,
                     Function.identity(),
-                    (o, o2) -> { throw new IllegalArgumentException("Duplicate"); },
+                    (o, o2) -> {
+                        throw new IllegalArgumentException("Duplicate");
+                    },
                     LinkedHashMap::new
                 )
             )

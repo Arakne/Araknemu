@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.object.UpdateItemSet;
 /**
  * Send all item set data on join game
  */
-final public class InitializeItemSets implements Listener<GameJoined> {
-    final private GamePlayer player;
+public final class InitializeItemSets implements Listener<GameJoined> {
+    private final GamePlayer player;
 
     public InitializeItemSets(GamePlayer player) {
         this.player = player;

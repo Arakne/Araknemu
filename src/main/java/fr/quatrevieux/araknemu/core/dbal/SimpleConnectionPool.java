@@ -31,10 +31,10 @@ import java.util.concurrent.BlockingQueue;
 /**
  * Simple implementation of connection pool
  */
-final public class SimpleConnectionPool implements ConnectionPool {
-    final private Driver driver;
-    final private BlockingQueue<Connection> connections;
-    final private Logger logger;
+public final class SimpleConnectionPool implements ConnectionPool {
+    private final Driver driver;
+    private final BlockingQueue<Connection> connections;
+    private final Logger logger;
 
     public SimpleConnectionPool(Driver driver, int size, Logger logger) {
         this.driver = driver;
@@ -73,13 +73,17 @@ final public class SimpleConnectionPool implements ConnectionPool {
             if (connection.isClosed()) {
                 return;
             }
-        } catch (SQLException e) { }
+        } catch (SQLException e) {
+            // Ignore exception
+        }
 
         // Cannot post the connection, close the connection
         if (!connections.offer(connection)) {
             try {
                 connection.close();
-            } catch (SQLException e) { }
+            } catch (SQLException e) {
+                // Ignore: the failed connection is not kept here
+            }
         }
     }
 
@@ -92,13 +96,16 @@ final public class SimpleConnectionPool implements ConnectionPool {
     public void close() {
         logger.info("Closing database connections...");
 
-        Collection<Connection> toClose = new ArrayList<>(connections);
+        final Collection<Connection> toClose = new ArrayList<>(connections);
+
         connections.clear();
 
         for (Connection connection : toClose) {
             try {
                 connection.close();
-            } catch (SQLException e) { }
+            } catch (SQLException e) {
+                // Ignore: the failed connection is not kept here
+            }
         }
     }
 }

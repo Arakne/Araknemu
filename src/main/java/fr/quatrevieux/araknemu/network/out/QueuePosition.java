@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.network.in.AskQueuePosition;
 /**
  * Response for {@link AskQueuePosition}
  */
-final public class QueuePosition {
-    final private int position;
+public final class QueuePosition {
+    private final int position;
 
     public QueuePosition(int position) {
         this.position = position;

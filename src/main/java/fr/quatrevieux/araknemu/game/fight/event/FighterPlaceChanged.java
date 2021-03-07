@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 /**
  * Trigger when an fighter place is changed
  */
-final public class FighterPlaceChanged {
-    final private Fighter fighter;
+public final class FighterPlaceChanged {
+    private final Fighter fighter;
 
     public FighterPlaceChanged(Fighter fighter) {
         this.fighter = fighter;

@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 /**
  * Ask for characters count per severs
  */
-final public class AskServerList implements Packet {
-    static public class Parser implements SinglePacketParser<AskServerList> {
+public final class AskServerList implements Packet {
+    public static class Parser implements SinglePacketParser<AskServerList> {
         @Override
         public AskServerList parse(String input) throws ParsePacketException {
             return new AskServerList();

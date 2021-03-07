@@ -24,7 +24,7 @@ package fr.quatrevieux.araknemu.network.game.out.fight;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L208
  */
-final public class ChangeFighterPlaceError {
+public final class ChangeFighterPlaceError {
     @Override
     public String toString() {
         return "GICe";

@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.world.creature.Creature;
 /**
  * Simple cell type
  */
-final public class BasicCell extends AbstractCellDataAdapter<ExplorationMap> implements ExplorationMapCell {
+public final class BasicCell extends AbstractCellDataAdapter<ExplorationMap> implements ExplorationMapCell {
     public BasicCell(int id, CellData template, ExplorationMap map) {
         super(map, template, id);
     }

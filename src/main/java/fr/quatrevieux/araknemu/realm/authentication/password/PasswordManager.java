@@ -27,9 +27,9 @@ import java.util.function.Consumer;
 /**
  * Handle password hash algorithms
  */
-final public class PasswordManager {
-    final private List<String> availableAlgorithms;
-    final private Map<String, HashAlgorithm> algorithms = new HashMap<>();
+public final class PasswordManager {
+    private final List<String> availableAlgorithms;
+    private final Map<String, HashAlgorithm> algorithms = new HashMap<>();
 
     public PasswordManager(List<String> availableAlgorithms, HashAlgorithm... algorithms) {
         this.availableAlgorithms = availableAlgorithms;

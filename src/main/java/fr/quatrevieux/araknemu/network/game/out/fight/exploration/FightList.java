@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Fights.as#L55
  */
-final public class FightList {
-    final private Collection<Fight> fights;
+public final class FightList {
+    private final Collection<Fight> fights;
 
     public FightList(Collection<Fight> fights) {
         this.fights = fights;

@@ -24,8 +24,8 @@ package fr.quatrevieux.araknemu.network.game.out.fight.exploration;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Fights.as#L43
  */
-final public class FightsCount {
-    final private int count;
+public final class FightsCount {
+    private final int count;
 
     public FightsCount(int count) {
         this.count = count;

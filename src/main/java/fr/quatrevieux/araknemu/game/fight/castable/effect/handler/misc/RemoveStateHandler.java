@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 /**
  * Handle remove state from the fighter
  */
-final public class RemoveStateHandler implements EffectHandler {
+public final class RemoveStateHandler implements EffectHandler {
     @Override
     public void handle(CastScope cast, CastScope.EffectScope effect) {
         for (PassiveFighter target : effect.targets()) {

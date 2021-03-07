@@ -30,10 +30,10 @@ import java.util.stream.Collectors;
 /**
  * Question of GameNpc
  */
-final public class NpcQuestion {
-    final private Question entity;
-    final private Collection<Response> responses;
-    final private ParametersResolver parametersResolver;
+public final class NpcQuestion {
+    private final Question entity;
+    private final Collection<Response> responses;
+    private final ParametersResolver parametersResolver;
 
     public NpcQuestion(Question entity, Collection<Response> responses, ParametersResolver parametersResolver) {
         this.entity = entity;

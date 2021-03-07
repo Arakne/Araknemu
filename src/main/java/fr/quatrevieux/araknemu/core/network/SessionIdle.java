@@ -26,8 +26,8 @@ import java.time.Duration;
  *
  * Note: Only read idle is considered
  */
-final public class SessionIdle implements InternalPacket {
-    final private Duration duration;
+public final class SessionIdle implements InternalPacket {
+    private final Duration duration;
 
     public SessionIdle(Duration duration) {
         this.duration = duration;

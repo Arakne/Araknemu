@@ -28,8 +28,8 @@ import java.util.NoSuchElementException;
 /**
  * Registry for all actions factories
  */
-final public class ActionFactoryRegistry implements CellActionFactory {
-    final private Map<Integer, CellActionFactory> factories = new HashMap<>();
+public final class ActionFactoryRegistry implements CellActionFactory {
+    private final Map<Integer, CellActionFactory> factories = new HashMap<>();
 
     @Override
     public CellAction create(MapTrigger trigger) {

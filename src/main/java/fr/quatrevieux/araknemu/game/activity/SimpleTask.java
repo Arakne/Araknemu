@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.activity;
 
-
 import org.apache.logging.log4j.Logger;
 
 import java.time.Duration;
@@ -30,8 +29,8 @@ import java.util.function.Consumer;
  *
  * The task can be configured using builder methods
  */
-final public class SimpleTask implements Task {
-    final private Consumer<Logger> action;
+public final class SimpleTask implements Task {
+    private final Consumer<Logger> action;
 
     private int maxTries = 0;
     private int retryCount = 0;

@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.network.out.ServerMessage;
 /**
  * Kick all sessions on server stop
  */
-final public class KickAllOnShutdown implements Listener<GameStopped> {
+public final class KickAllOnShutdown implements Listener<GameStopped> {
     @Override
     public void on(GameStopped event) {
         event.service().sessions().forEach(session -> {

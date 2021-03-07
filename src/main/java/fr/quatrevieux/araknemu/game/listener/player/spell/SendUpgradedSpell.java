@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.network.game.out.spell.UpdateSpell;
 /**
  * Send upgraded spell success
  */
-final public class SendUpgradedSpell implements Listener<SpellUpgraded> {
-    final private GamePlayer player;
+public final class SendUpgradedSpell implements Listener<SpellUpgraded> {
+    private final GamePlayer player;
 
     public SendUpgradedSpell(GamePlayer player) {
         this.player = player;

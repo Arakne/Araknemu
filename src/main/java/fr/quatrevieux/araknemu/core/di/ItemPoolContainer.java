@@ -30,11 +30,46 @@ import java.util.Map;
 /**
  * Container implementation using {@link fr.quatrevieux.araknemu.core.di.item.ContainerItem}
  */
-final public class ItemPoolContainer implements Container {
+public final class ItemPoolContainer implements Container {
+    private final Map<Class, ContainerItem> items = new HashMap<>();
+
+    @Override
+    public <T> T get(Class<T> type) throws ContainerException {
+        if (!items.containsKey(type)) {
+            throw new ItemNotFoundException(type);
+        }
+
+        return (T) items.get(type).value(this);
+    }
+
+    @Override
+    public boolean has(Class type) {
+        return items.containsKey(type);
+    }
+
+    @Override
+    public void register(ContainerModule module) {
+        module.configure(new Configurator());
+    }
+
+    /**
+     * Get pool configurator
+     */
+    public Configurator configurator() {
+        return new Configurator();
+    }
+
+    /**
+     * Set a new item to the container
+     */
+    private void set(ContainerItem item) {
+        items.put(item.type(), item);
+    }
+
     /**
      * Configuration class for {@link ItemPoolContainer}
      */
-    final public class Configurator implements ContainerConfigurator {
+    public final class Configurator implements ContainerConfigurator {
         @Override
         public Configurator set(Object object) {
             ItemPoolContainer.this.set(new ValueItem<>(object));
@@ -77,40 +112,5 @@ final public class ItemPoolContainer implements Container {
 
             return this;
         }
-    }
-
-    final private Map<Class, ContainerItem> items = new HashMap<>();
-
-    @Override
-    public <T> T get(Class<T> type) throws ContainerException {
-        if (!items.containsKey(type)) {
-            throw new ItemNotFoundException(type);
-        }
-
-        return (T) items.get(type).value(this);
-    }
-
-    @Override
-    public boolean has(Class type) {
-        return items.containsKey(type);
-    }
-
-    @Override
-    public void register(ContainerModule module) {
-        module.configure(new Configurator());
-    }
-
-    /**
-     * Get pool configurator
-     */
-    public Configurator configurator() {
-        return new Configurator();
-    }
-
-    /**
-     * Set a new item to the container
-     */
-    private void set(ContainerItem item) {
-        items.put(item.type(), item);
     }
 }

@@ -28,10 +28,10 @@ import java.util.List;
 /**
  * Result for fight end
  */
-final public class EndFightResults {
-    final private Fight fight;
-    final private List<Fighter> winners;
-    final private List<Fighter> loosers;
+public final class EndFightResults {
+    private final Fight fight;
+    private final List<Fighter> winners;
+    private final List<Fighter> loosers;
 
     public EndFightResults(Fight fight, List<Fighter> winners, List<Fighter> loosers) {
         this.fight = fight;

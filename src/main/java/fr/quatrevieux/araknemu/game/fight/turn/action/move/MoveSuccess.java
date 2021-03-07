@@ -32,6 +32,7 @@ final public class MoveSuccess implements MoveResult {
     final private Fighter performer;
     final private Path<FightCell> path;
 
+
     public MoveSuccess(Fighter performer, Path<FightCell> path) {
         this.performer = performer;
         this.path = path;

@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.player.spell.event.SpellMoved;
 /**
  * Save the spell position after moved
  */
-final public class SaveSpellPosition implements Listener<SpellMoved> {
-    final private PlayerSpellRepository repository;
+public final class SaveSpellPosition implements Listener<SpellMoved> {
+    private final PlayerSpellRepository repository;
 
     public SaveSpellPosition(PlayerSpellRepository repository) {
         this.repository = repository;

@@ -41,7 +41,7 @@ public enum ChannelType {
     ADMIN('@'),
     MEETIC('¤');
 
-    final static private Map<Character, ChannelType> channels = new HashMap<>();
+    private static final Map<Character, ChannelType> channels = new HashMap<>();
 
     static {
         for (ChannelType type : values()) {
@@ -49,7 +49,7 @@ public enum ChannelType {
         }
     }
 
-    final private char identifier;
+    private final char identifier;
 
     ChannelType(char identifier) {
         this.identifier = identifier;
@@ -65,7 +65,7 @@ public enum ChannelType {
     /**
      * Get a channel by its character
      */
-    static public ChannelType byChar(char c) {
+    public static ChannelType byChar(char c) {
         return channels.get(c);
     }
 }

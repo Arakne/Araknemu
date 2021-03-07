@@ -32,11 +32,11 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Decorate channel for adding flood guard
  */
-final public class FloodGuardChannel implements Channel {
-    final private Channel channel;
-    final private GameConfiguration.ChatConfiguration configuration;
+public final class FloodGuardChannel implements Channel {
+    private final Channel channel;
+    private final GameConfiguration.ChatConfiguration configuration;
 
-    final private ConcurrentMap<Integer, Long> lastSentTime = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, Long> lastSentTime = new ConcurrentHashMap<>();
 
     public FloodGuardChannel(Channel channel, GameConfiguration.ChatConfiguration configuration) {
         this.channel = channel;
@@ -74,7 +74,7 @@ final public class FloodGuardChannel implements Channel {
             return true;
         }
 
-        int remainingTime = (int) ((lastSentTime.get(sender.id()) + configuration.floodTime() * 1000 - System.currentTimeMillis()) / 1000);
+        final int remainingTime = (int) ((lastSentTime.get(sender.id()) + configuration.floodTime() * 1000 - System.currentTimeMillis()) / 1000);
 
         if (remainingTime <= 0) {
             return true;

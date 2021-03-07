@@ -23,9 +23,9 @@ package fr.quatrevieux.araknemu.game.exploration.exchange;
  * Processor for exchange between two parties
  * The processor instance must be shared between parties for synchronization purpose
  */
-final public class ExchangeProcessor {
-    final private ExchangePartyProcessor first;
-    final private ExchangePartyProcessor second;
+public final class ExchangeProcessor {
+    private final ExchangePartyProcessor first;
+    private final ExchangePartyProcessor second;
 
     public ExchangeProcessor(ExchangePartyProcessor first, ExchangePartyProcessor second) {
         this.first = first;
@@ -35,7 +35,7 @@ final public class ExchangeProcessor {
     /**
      * Process the exchange for the two parties
      */
-    synchronized public void process() {
+    public synchronized void process() {
         // Exchange is not valid : clean the exchange and reset the accept
         // Use boolean operator | instead of logical one ||
         // to ensure that validate is called on both parties
@@ -54,7 +54,7 @@ final public class ExchangeProcessor {
     /**
      * Leave and terminate the exchange
      */
-    synchronized public void cancel() {
+    public synchronized void cancel() {
         first.terminate(false);
         second.terminate(false);
     }
@@ -69,7 +69,7 @@ final public class ExchangeProcessor {
     /**
      * Reset parties acceptations on change
      */
-    synchronized public void resetAccept() {
+    public synchronized void resetAccept() {
         first.resetAccept();
         second.resetAccept();
     }

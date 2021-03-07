@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L1144
  */
-final public class HideFight {
-    final private Fight fight;
+public final class HideFight {
+    private final Fight fight;
 
     public HideFight(Fight fight) {
         this.fight = fight;

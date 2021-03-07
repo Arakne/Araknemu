@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.event.TurnTerminated;
 /**
  * Refresh the states list on turn terminated
  */
-final public class RefreshStates implements Listener<TurnTerminated> {
+public final class RefreshStates implements Listener<TurnTerminated> {
     @Override
     public void on(TurnTerminated event) {
         event.turn().fighter().states().refresh();

@@ -19,10 +19,10 @@
 
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.living.entity.account.AccountBank;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
 
@@ -33,24 +33,8 @@ import java.sql.SQLException;
  * SQL implementation of {@link AccountBankRepository}
  */
 final class SqlAccountBankRepository implements AccountBankRepository {
-    private static class Loader implements RepositoryUtils.Loader<AccountBank> {
-        @Override
-        public AccountBank create(ResultSet rs) throws SQLException {
-            return new AccountBank(
-                rs.getInt("ACCOUNT_ID"),
-                rs.getInt("SERVER_ID"),
-                rs.getLong("BANK_KAMAS")
-            );
-        }
-
-        @Override
-        public AccountBank fillKeys(AccountBank entity, ResultSet keys) {
-            throw new UnsupportedOperationException();
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<AccountBank> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<AccountBank> utils;
 
     public SqlAccountBankRepository(QueryExecutor executor) {
         this.executor = executor;
@@ -124,5 +108,21 @@ final class SqlAccountBankRepository implements AccountBankRepository {
             rs.setInt(1, entity.accountId());
             rs.setInt(2, entity.serverId());
         }) > 0;
+    }
+
+    private static class Loader implements RepositoryUtils.Loader<AccountBank> {
+        @Override
+        public AccountBank create(ResultSet rs) throws SQLException {
+            return new AccountBank(
+                rs.getInt("ACCOUNT_ID"),
+                rs.getInt("SERVER_ID"),
+                rs.getLong("BANK_KAMAS")
+            );
+        }
+
+        @Override
+        public AccountBank fillKeys(AccountBank entity, ResultSet keys) {
+            throw new UnsupportedOperationException();
+        }
     }
 }

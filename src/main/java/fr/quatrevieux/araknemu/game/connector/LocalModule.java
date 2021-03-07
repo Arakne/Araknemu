@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.realm.host.HostService;
 /**
  * DI module for configure local connector
  */
-final public class LocalModule implements ContainerModule {
-    final private Container realmContainer;
+public final class LocalModule implements ContainerModule {
+    private final Container realmContainer;
 
     public LocalModule(Container realmContainer) {
         this.realmContainer = realmContainer;

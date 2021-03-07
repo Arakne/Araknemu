@@ -30,7 +30,13 @@ import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.core.network.Server;
 import fr.quatrevieux.araknemu.core.network.netty.NettyServer;
-import fr.quatrevieux.araknemu.core.network.parser.*;
+import fr.quatrevieux.araknemu.core.network.parser.AggregatePacketParser;
+import fr.quatrevieux.araknemu.core.network.parser.AggregateParserLoader;
+import fr.quatrevieux.araknemu.core.network.parser.DefaultDispatcher;
+import fr.quatrevieux.araknemu.core.network.parser.Dispatcher;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.core.network.parser.PacketParser;
+import fr.quatrevieux.araknemu.core.network.parser.ParserLoader;
 import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
 import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import fr.quatrevieux.araknemu.core.network.session.extension.RateLimiter;
@@ -50,7 +56,12 @@ import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
 import fr.quatrevieux.araknemu.realm.authentication.password.Argon2Hash;
 import fr.quatrevieux.araknemu.realm.authentication.password.PasswordManager;
 import fr.quatrevieux.araknemu.realm.authentication.password.PlainTextHash;
-import fr.quatrevieux.araknemu.realm.handler.*;
+import fr.quatrevieux.araknemu.realm.handler.CheckDofusVersion;
+import fr.quatrevieux.araknemu.realm.handler.CheckQueuePosition;
+import fr.quatrevieux.araknemu.realm.handler.CloseInactiveSession;
+import fr.quatrevieux.araknemu.realm.handler.PongResponse;
+import fr.quatrevieux.araknemu.realm.handler.StartSession;
+import fr.quatrevieux.araknemu.realm.handler.StopSession;
 import fr.quatrevieux.araknemu.realm.handler.account.Authenticate;
 import fr.quatrevieux.araknemu.realm.handler.account.ConnectGame;
 import fr.quatrevieux.araknemu.realm.handler.account.ListServers;
@@ -64,8 +75,8 @@ import java.util.Arrays;
 /**
  * DI module for RealmService
  */
-final public class RealmModule implements ContainerModule {
-    final private Araknemu app;
+public final class RealmModule implements ContainerModule {
+    private final Araknemu app;
 
     public RealmModule(Araknemu app) {
         this.app = app;
@@ -157,7 +168,7 @@ final public class RealmModule implements ContainerModule {
                 new AggregateParserLoader(
                     new ParserLoader[]{
                         new CommonParserLoader(),
-                        new RealmParserLoader()
+                        new RealmParserLoader(),
                     }
                 ).load()
             )
@@ -216,7 +227,7 @@ final public class RealmModule implements ContainerModule {
         configurator.factory(
             Argon2Hash.class,
             container -> {
-                RealmConfiguration.Argon2 config = container.get(RealmConfiguration.class).argon2();
+                final RealmConfiguration.Argon2 config = container.get(RealmConfiguration.class).argon2();
 
                 return new Argon2Hash()
                     .setIterations(config.iterations())

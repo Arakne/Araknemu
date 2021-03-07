@@ -22,8 +22,8 @@ package fr.quatrevieux.araknemu.game.world.creature.accessory;
 /**
  * Null object for accessory
  */
-final public class NullAccessory implements Accessory {
-    final private AccessoryType type;
+public final class NullAccessory implements Accessory {
+    private final AccessoryType type;
 
     public NullAccessory(AccessoryType type) {
         this.type = type;

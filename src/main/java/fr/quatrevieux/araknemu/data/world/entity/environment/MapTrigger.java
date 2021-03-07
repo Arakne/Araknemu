@@ -23,12 +23,12 @@ package fr.quatrevieux.araknemu.data.world.entity.environment;
  * Map cell triggers
  * Perform an action when player arrive on the cell
  */
-final public class MapTrigger {
-    final private int map;
-    final private int cell;
-    final private int action;
-    final private String arguments;
-    final private String conditions;
+public final class MapTrigger {
+    private final int map;
+    private final int cell;
+    private final int action;
+    private final String arguments;
+    private final String conditions;
 
     public MapTrigger(int map, int cell, int action, String arguments, String conditions) {
         this.map = map;

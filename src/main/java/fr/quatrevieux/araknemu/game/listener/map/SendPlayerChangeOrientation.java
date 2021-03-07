@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.emote.PlayerOrientation;
 /**
  * Send to map that a player has changed its orientation
  */
-final public class SendPlayerChangeOrientation implements Listener<OrientationChanged> {
-    final private ExplorationMap map;
+public final class SendPlayerChangeOrientation implements Listener<OrientationChanged> {
+    private final ExplorationMap map;
 
     public SendPlayerChangeOrientation(ExplorationMap map) {
         this.map = map;

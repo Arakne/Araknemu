@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 /**
  * Loader for admin packets
  */
-final public class AdminLoader extends AbstractLoader {
+public final class AdminLoader extends AbstractLoader {
     public AdminLoader() {
         super(EnsureAdmin::new);
     }

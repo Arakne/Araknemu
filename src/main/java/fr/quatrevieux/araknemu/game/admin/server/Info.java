@@ -34,10 +34,10 @@ import java.util.List;
 /**
  * Display information about the server
  */
-final public class Info extends AbstractCommand {
-    final private Araknemu app;
-    final private PlayerService playerService;
-    final private GameService gameService;
+public final class Info extends AbstractCommand {
+    private final Araknemu app;
+    private final PlayerService playerService;
+    private final GameService gameService;
 
     public Info(Araknemu app, PlayerService playerService, GameService gameService) {
         this.app = app;
@@ -80,7 +80,7 @@ final public class Info extends AbstractCommand {
     }
 
     private String formatDuration(Duration duration) {
-        StringBuilder formatted = new StringBuilder();
+        final StringBuilder formatted = new StringBuilder();
 
         if (duration.toDays() > 0) {
             formatted.append(duration.toDays()).append(" days ");
@@ -95,14 +95,17 @@ final public class Info extends AbstractCommand {
         return formatted.toString();
     }
 
-    public static String formatBytes(long bytes) {
-        long absB = bytes == Long.MIN_VALUE ? Long.MAX_VALUE : Math.abs(bytes);
+    private static String formatBytes(long bytes) {
+        final long absB = bytes == Long.MIN_VALUE ? Long.MAX_VALUE : Math.abs(bytes);
+
         if (absB < 1024) {
             return bytes + " B";
         }
+
         long value = absB;
 
-        char[] units = new char[] {'K', 'M', 'G'};
+        final char[] units = new char[] {'K', 'M', 'G'};
+
         int currentUnit = 0;
 
         for (int i = 40; i >= 0 && absB > 0xfffccccccccccccL >> i; i -= 10) {
@@ -116,7 +119,7 @@ final public class Info extends AbstractCommand {
     }
 
     private int cpuUsage() {
-        OperatingSystemMXBean os = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
+        final OperatingSystemMXBean os = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
 
         return (int) (100 * os.getProcessCpuLoad());
     }

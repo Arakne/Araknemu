@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.FinishFightAction;
 /**
  * Send to clients a terminated fight action
  */
-final public class SendFightActionTerminated implements Listener<FightActionTerminated> {
+public final class SendFightActionTerminated implements Listener<FightActionTerminated> {
     @Override
     public void on(FightActionTerminated event) {
         if (!event.action().performer().dead() && event.action().performer() instanceof Sender) {

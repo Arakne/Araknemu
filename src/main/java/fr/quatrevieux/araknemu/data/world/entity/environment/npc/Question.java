@@ -22,11 +22,11 @@ package fr.quatrevieux.araknemu.data.world.entity.environment.npc;
 /**
  * Store NPC questions data
  */
-final public class Question {
-    final private int id;
-    final private int[] responseIds;
-    final private String[] parameters;
-    final private String condition;
+public final class Question {
+    private final int id;
+    private final int[] responseIds;
+    private final String[] parameters;
+    private final String condition;
 
     public Question(int id, int[] responseIds, String[] parameters, String condition) {
         this.id = id;

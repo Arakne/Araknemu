@@ -28,8 +28,21 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L84
  */
-final public class ChoosePlayingCharacter implements Packet {
-    final static public class Parser implements SinglePacketParser<ChoosePlayingCharacter> {
+public final class ChoosePlayingCharacter implements Packet {
+    private final int id;
+
+    public ChoosePlayingCharacter(int id) {
+        this.id = id;
+    }
+
+    /**
+     * Get the character ID
+     */
+    public int id() {
+        return id;
+    }
+
+    public static final class Parser implements SinglePacketParser<ChoosePlayingCharacter> {
         @Override
         public ChoosePlayingCharacter parse(String input) throws ParsePacketException {
             return new ChoosePlayingCharacter(
@@ -41,18 +54,5 @@ final public class ChoosePlayingCharacter implements Packet {
         public String code() {
             return "AS";
         }
-    }
-
-    final private int id;
-
-    public ChoosePlayingCharacter(int id) {
-        this.id = id;
-    }
-
-    /**
-     * Get the character ID
-     */
-    public int id() {
-        return id;
     }
 }

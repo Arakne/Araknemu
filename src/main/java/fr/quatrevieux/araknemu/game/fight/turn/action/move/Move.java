@@ -33,11 +33,12 @@ import java.time.Duration;
 /**
  * Move the fighter
  */
-public final class Move implements Action {
+final public class Move implements Action {
     final private FightTurn turn;
     final private Fighter fighter;
     final private Path<FightCell> path;
     final private PathValidatorFight[] validators;
+
 
     private MoveResult result;
 

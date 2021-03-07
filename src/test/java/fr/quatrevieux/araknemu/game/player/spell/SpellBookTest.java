@@ -34,6 +34,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -120,7 +121,7 @@ class SpellBookTest extends GameBaseCase {
     }
 
     @Test
-    void learnSuccess() {
+    void learnSuccess() throws NoSuchFieldException, IllegalAccessException {
         ListenerAggregate dispatcher = new DefaultListenerAggregate();
         SpellBook book = new SpellBook(dispatcher, player, new ArrayList<>());
 
@@ -139,6 +140,12 @@ class SpellBookTest extends GameBaseCase {
         assertEquals(1, book.entry(3).entity().level());
 
         assertSame(book.entry(3), ref.get().entry());
+
+        // Issue : https://github.com/Arakne/Araknemu/issues/151
+        Field field = SpellBookEntry.class.getDeclaredField("spellBook");
+        field.setAccessible(true);
+
+        assertSame(book, field.get(book.entry(3)));
     }
 
     @Test

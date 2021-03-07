@@ -32,7 +32,7 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristi
 /**
  * Handle reducing damages
  */
-final public class ReduceDamageHandler implements EffectHandler, BuffHook {
+public final class ReduceDamageHandler implements EffectHandler, BuffHook {
     @Override
     public void handle(CastScope cast, CastScope.EffectScope effect) {
         throw new UnsupportedOperationException("ReduceDamageHandler can only be used as buff");
@@ -53,8 +53,8 @@ final public class ReduceDamageHandler implements EffectHandler, BuffHook {
 
         final Characteristics characteristics = buff.target().characteristics();
 
-        int boost = 200 + characteristics.get(Characteristic.INTELLIGENCE) + characteristics.get(value.element().boost());
-        int reduce = buff.effect().min() * boost / 200;
+        final int boost = 200 + characteristics.get(Characteristic.INTELLIGENCE) + characteristics.get(value.element().boost());
+        final int reduce = buff.effect().min() * boost / 200;
 
         if (reduce < 0) {
             return;

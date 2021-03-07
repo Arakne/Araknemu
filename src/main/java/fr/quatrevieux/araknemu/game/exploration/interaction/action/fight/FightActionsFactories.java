@@ -30,9 +30,9 @@ import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 /**
  * Register fight actions
  */
-final public class FightActionsFactories implements ExplorationActionRegistry.SelfRegisterable {
-    final private FightService fightService;
-    final private FighterFactory fighterFactory;
+public final class FightActionsFactories implements ExplorationActionRegistry.SelfRegisterable {
+    private final FightService fightService;
+    private final FighterFactory fighterFactory;
 
     public FightActionsFactories(FightService fightService, FighterFactory fighterFactory) {
         this.fightService = fightService;
@@ -45,7 +45,7 @@ final public class FightActionsFactories implements ExplorationActionRegistry.Se
     }
 
     private JoinFight join(ExplorationPlayer player, ActionType action, String[] arguments) {
-        Fight fight = fightService.getFromMap(player.map().id(), Integer.parseInt(arguments[0]));
+        final Fight fight = fightService.getFromMap(player.map().id(), Integer.parseInt(arguments[0]));
 
         return new JoinFight(
             player,

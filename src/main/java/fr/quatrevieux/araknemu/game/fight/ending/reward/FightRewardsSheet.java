@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * Contains all end fight rewards
  */
-final public class FightRewardsSheet {
+public final class FightRewardsSheet {
     public enum Type {
         /** For drop, pvm, challenge...) */
         NORMAL,
@@ -35,9 +35,9 @@ final public class FightRewardsSheet {
         HONOUR
     }
 
-    final private EndFightResults results;
-    final private Type type;
-    final private List<DropReward> rewards;
+    private final EndFightResults results;
+    private final Type type;
+    private final List<DropReward> rewards;
 
     public FightRewardsSheet(EndFightResults results, Type type, List<DropReward> rewards) {
         this.results = results;

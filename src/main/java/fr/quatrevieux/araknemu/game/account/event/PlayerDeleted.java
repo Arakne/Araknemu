@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.account.AccountCharacter;
 /**
  * Event trigger when a character is deleted
  */
-final public class PlayerDeleted {
-    final private AccountCharacter character;
+public final class PlayerDeleted {
+    private final AccountCharacter character;
 
     public PlayerDeleted(AccountCharacter character) {
         this.character = character;

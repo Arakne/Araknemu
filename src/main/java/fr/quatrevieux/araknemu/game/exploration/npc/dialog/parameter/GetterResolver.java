@@ -30,9 +30,9 @@ import java.util.function.Function;
  *     VariableResolver getter = new GetterResolver("id", ExplorationPlayer::id);
  * </code>
  */
-final public class GetterResolver implements VariableResolver {
-    final private String name;
-    final private Function<ExplorationPlayer, Object> getter;
+public final class GetterResolver implements VariableResolver {
+    private final String name;
+    private final Function<ExplorationPlayer, Object> getter;
 
     public GetterResolver(String name, Function<ExplorationPlayer, Object> getter) {
         this.name = name;

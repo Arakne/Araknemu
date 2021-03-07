@@ -21,8 +21,8 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
-import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.network.game.GameSession;
 
 import java.util.Arrays;
 import java.util.function.Function;
@@ -30,14 +30,14 @@ import java.util.function.Function;
 /**
  * Base loader class
  */
-abstract public class AbstractLoader implements Loader {
-    final private Function<PacketHandler, PacketHandler> wrapper;
+public abstract class AbstractLoader implements Loader {
+    private final Function<PacketHandler, PacketHandler> wrapper;
 
     public AbstractLoader(Function<PacketHandler, PacketHandler> wrapper) {
         this.wrapper = wrapper;
     }
 
-    abstract protected PacketHandler<GameSession, ?>[] handlers(Container container) throws ContainerException;
+    protected abstract PacketHandler<GameSession, ?>[] handlers(Container container) throws ContainerException;
 
     @Override
     @SuppressWarnings("unchecked")

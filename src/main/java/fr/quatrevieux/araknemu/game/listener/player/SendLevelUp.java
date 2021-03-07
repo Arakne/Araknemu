@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 /**
  * Send packets after player level up
  */
-final public class SendLevelUp implements Listener<PlayerLevelUp> {
-    final private GamePlayer player;
+public final class SendLevelUp implements Listener<PlayerLevelUp> {
+    private final GamePlayer player;
 
     public SendLevelUp(GamePlayer player) {
         this.player = player;

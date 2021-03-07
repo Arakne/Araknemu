@@ -38,9 +38,9 @@ import java.util.stream.Collectors;
 /**
  * Display effect area
  */
-final public class Area extends AbstractCommand {
-    final private SpellEffectService service;
-    final private EffectAreaTransformer areaTransformer;
+public final class Area extends AbstractCommand {
+    private final SpellEffectService service;
+    private final EffectAreaTransformer areaTransformer;
 
     public Area(SpellEffectService service) {
         this.service = service;
@@ -76,13 +76,11 @@ final public class Area extends AbstractCommand {
 
     @Override
     public void execute(AdminPerformer performer, List<String> arguments) {
-        AdminUser user = AdminUser.class.cast(performer);
+        final AdminUser user = AdminUser.class.cast(performer);
+        final EffectArea area = areaTransformer.unserialize(arguments.get(1));
+        final ExplorationMap map = user.player().exploration().map();
 
-        EffectArea area = areaTransformer.unserialize(arguments.get(1));
-
-        ExplorationMap map = user.player().exploration().map();
-
-        List<Integer> cells = service.area(area)
+        final List<Integer> cells = service.area(area)
             .resolve(
                 map.get(user.player().position().cell()),
                 map.get(user.player().position().cell())
@@ -96,7 +94,7 @@ final public class Area extends AbstractCommand {
             new FightStartPositions(
                 new List[] {
                     cells,
-                    new ArrayList()
+                    new ArrayList(),
                 },
                 0
             )
