@@ -149,7 +149,7 @@ class MoveTest extends FightBaseCase {
         ActionResult result = move.start();
 
         assertInstanceOf(MoveSuccess.class, result);
-        assertEquals(3, MoveSuccess.class.cast(result).steps());
+        assertEquals(3, MoveSuccess.class.cast(result).movementPointCost());
         assertEquals(198, MoveSuccess.class.cast(result).target().id());
 
         assertTrue(result.success());
