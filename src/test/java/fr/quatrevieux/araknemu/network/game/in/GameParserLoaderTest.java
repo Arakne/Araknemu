@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminCommand;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminMove;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import fr.quatrevieux.araknemu.network.game.in.chat.SubscribeChannels;
+import fr.quatrevieux.araknemu.network.game.in.chat.UseSmiley;
 import fr.quatrevieux.araknemu.network.game.in.dialog.ChosenResponse;
 import fr.quatrevieux.araknemu.network.game.in.dialog.CreateDialogRequest;
 import fr.quatrevieux.araknemu.network.game.in.dialog.LeaveDialogRequest;
@@ -104,6 +105,7 @@ class GameParserLoaderTest {
         assertContainsInstance(BuyRequest.Parser.class, parsers);
         assertContainsInstance(SellRequest.Parser.class, parsers);
         assertContainsInstance(AdminMove.Parser.class, parsers);
+        assertContainsInstance(UseSmiley.Parser.class, parsers);
     }
 
     public void assertContainsInstance(Class type, Collection collection) {

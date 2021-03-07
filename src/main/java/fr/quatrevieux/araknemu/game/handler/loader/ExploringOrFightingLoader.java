@@ -26,6 +26,8 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionFactory
 import fr.quatrevieux.araknemu.game.handler.EnsureFighting;
 import fr.quatrevieux.araknemu.game.handler.EnsureInactiveFight;
 import fr.quatrevieux.araknemu.game.handler.ExploringOrFightingSwitcher;
+import fr.quatrevieux.araknemu.game.handler.chat.SendSmileyToExplorationMap;
+import fr.quatrevieux.araknemu.game.handler.chat.SendSmileyToFight;
 import fr.quatrevieux.araknemu.game.handler.fight.PerformTurnAction;
 import fr.quatrevieux.araknemu.game.handler.fight.TerminateTurnAction;
 import fr.quatrevieux.araknemu.game.handler.fight.UseObjectBeforeStart;
@@ -42,17 +44,21 @@ public final class ExploringOrFightingLoader implements Loader {
     @SuppressWarnings("unchecked")
     public PacketHandler<GameSession, ?>[] load(Container container) throws ContainerException {
         return new PacketHandler[] {
-            new ExploringOrFightingSwitcher(
+            new ExploringOrFightingSwitcher<>(
                 new ValidateGameAction(container.get(ActionFactory.class)),
-                new EnsureFighting(new PerformTurnAction())
+                new EnsureFighting<>(new PerformTurnAction())
             ),
-            new ExploringOrFightingSwitcher(
+            new ExploringOrFightingSwitcher<>(
                 new EndGameAction(),
-                new EnsureFighting(new TerminateTurnAction())
+                new EnsureFighting<>(new TerminateTurnAction())
             ),
-            new ExploringOrFightingSwitcher(
+            new ExploringOrFightingSwitcher<>(
                 new UseObject(),
-                new EnsureInactiveFight(new UseObjectBeforeStart())
+                new EnsureInactiveFight<>(new UseObjectBeforeStart())
+            ),
+            new ExploringOrFightingSwitcher<>(
+                new SendSmileyToExplorationMap(),
+                new SendSmileyToFight()
             ),
         };
     }
