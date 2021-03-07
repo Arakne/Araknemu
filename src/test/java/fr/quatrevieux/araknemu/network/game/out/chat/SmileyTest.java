@@ -14,30 +14,21 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.player.event;
+package fr.quatrevieux.araknemu.network.game.out.chat;
 
-import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.GameBaseCase;
+import org.junit.jupiter.api.Test;
 
-/**
- * The player is loaded, ready to join the game
- */
-final public class PlayerEmoteSent {
-    final private GamePlayer player;
-    final private String emote;
+import java.sql.SQLException;
 
-    public PlayerEmoteSent(GamePlayer player, String emote) {
-        this.player = player;
-        this.emote = emote;
-    }
+import static org.junit.jupiter.api.Assertions.*;
 
-    public GamePlayer player() {
-        return player;
-    }
-
-    public String emote() {
-        return emote;
+class SmileyTest extends GameBaseCase {
+    @Test
+    void string() throws SQLException {
+        assertEquals("cS1|3", new Smiley(explorationPlayer(), 3).toString());
     }
 }

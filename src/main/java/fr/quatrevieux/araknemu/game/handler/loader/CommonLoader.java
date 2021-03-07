@@ -37,7 +37,6 @@ import fr.quatrevieux.araknemu.game.handler.account.GenerateName;
 import fr.quatrevieux.araknemu.game.handler.account.Login;
 import fr.quatrevieux.araknemu.game.handler.account.SendRegionalVersion;
 import fr.quatrevieux.araknemu.game.handler.basic.SendDateAndTime;
-import fr.quatrevieux.araknemu.game.handler.basic.ChangeEmote;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 /**

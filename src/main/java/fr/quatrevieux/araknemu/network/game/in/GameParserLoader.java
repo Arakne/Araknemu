@@ -32,7 +32,7 @@ import fr.quatrevieux.araknemu.network.game.in.account.ClientUid;
 import fr.quatrevieux.araknemu.network.game.in.account.DeleteCharacterRequest;
 import fr.quatrevieux.araknemu.network.game.in.account.LoginToken;
 import fr.quatrevieux.araknemu.network.game.in.basic.AskDate;
-import fr.quatrevieux.araknemu.network.game.in.basic.SetEmoteRequest;
+import fr.quatrevieux.araknemu.network.game.in.chat.UseSmiley;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminCommand;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminMove;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
@@ -91,7 +91,7 @@ public final class GameParserLoader implements ParserLoader {
             new GameActionAcknowledge.Parser(),
             new GameActionCancel.Parser(),
             new AskDate.Parser(),
-            new SetEmoteRequest.Parser(),
+            new UseSmiley.Parser(),
             new Ping.Parser(),
             new Message.Parser(),
             new DeleteCharacterRequest.Parser(),
