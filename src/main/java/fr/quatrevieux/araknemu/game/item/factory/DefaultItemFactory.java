@@ -34,8 +34,8 @@ import java.util.NoSuchElementException;
 /**
  * Default item factory implementation
  */
-final public class DefaultItemFactory implements ItemFactory {
-    final private Map<SuperType, ItemFactory> factories = new EnumMap<>(SuperType.class);
+public final class DefaultItemFactory implements ItemFactory {
+    private final Map<SuperType, ItemFactory> factories = new EnumMap<>(SuperType.class);
 
     public DefaultItemFactory(ItemFactory... factories) {
         for (ItemFactory factory : factories) {

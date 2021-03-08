@@ -14,12 +14,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.castable.validator;
 
-import fr.arakne.utils.maps.LineOfSight;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
@@ -28,16 +27,14 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 /**
  * Validate the line of sight
  */
-final public class LineOfSightValidator implements CastConstraintValidator {
+public final class LineOfSightValidator implements CastConstraintValidator {
     @Override
     public Error validate(Turn turn, Castable castable, FightCell target) {
         if (!castable.constraints().lineOfSight()) {
             return null;
         }
 
-        LineOfSight<FightCell> lineOfSight = new LineOfSight<>(target.map());
-
-        if (lineOfSight.between(turn.fighter().cell(), target)) {
+        if (turn.fighter().cell().sight().isFree(target)) {
             return null;
         }
 

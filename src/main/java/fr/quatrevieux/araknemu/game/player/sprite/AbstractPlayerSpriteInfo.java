@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 /**
  * Sprite info for using Player entity
  */
-abstract public class AbstractPlayerSpriteInfo implements SpriteInfo {
-    final private Player entity;
+public abstract class AbstractPlayerSpriteInfo implements SpriteInfo {
+    private final Player entity;
 
     public AbstractPlayerSpriteInfo(Player entity) {
         this.entity = entity;

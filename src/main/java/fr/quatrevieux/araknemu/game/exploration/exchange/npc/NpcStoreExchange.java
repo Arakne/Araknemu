@@ -33,10 +33,10 @@ import fr.quatrevieux.araknemu.network.game.out.exchange.store.NpcStoreList;
  *
  * @todo refactor with player store (use interface)
  */
-final public class NpcStoreExchange implements Exchange, Sender {
-    final private ExplorationPlayer player;
-    final private GameNpc seller;
-    final private NpcStore store;
+public final class NpcStoreExchange implements Exchange, Sender {
+    private final ExplorationPlayer player;
+    private final GameNpc seller;
+    private final NpcStore store;
 
     public NpcStoreExchange(ExplorationPlayer player, GameNpc seller, NpcStore store) {
         this.player = player;

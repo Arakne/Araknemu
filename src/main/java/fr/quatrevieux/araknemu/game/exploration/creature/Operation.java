@@ -30,15 +30,15 @@ public interface Operation {
     /**
      * Apply the operation a an exploration player
      */
-    default public void onExplorationPlayer(ExplorationPlayer player) {}
+    public default void onExplorationPlayer(ExplorationPlayer player) {}
 
     /**
      * Apply the operation on a NPC
      */
-    default public void onNpc(GameNpc npc) {}
+    public default void onNpc(GameNpc npc) {}
 
     /**
      * Apply the operation on a monster group
      */
-    default public void onMonsterGroup(MonsterGroup monsterGroup) {}
+    public default void onMonsterGroup(MonsterGroup monsterGroup) {}
 }

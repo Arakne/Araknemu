@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 /**
  * Send the item quantity
  */
-final public class ItemQuantity {
-    final private ItemEntry entry;
+public final class ItemQuantity {
+    private final ItemEntry entry;
 
     public ItemQuantity(ItemEntry entry) {
         this.entry = entry;

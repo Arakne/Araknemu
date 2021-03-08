@@ -28,11 +28,11 @@ import org.apache.logging.log4j.Logger;
 /**
  * Create the pvm builder
  */
-final public class PvmBuilderFactory implements FightBuilderFactory<PvmBuilder> {
-    final private FighterFactory fighterFactory;
-    final private RandomUtil random;
-    final private PvmType type;
-    final private Logger logger;
+public final class PvmBuilderFactory implements FightBuilderFactory<PvmBuilder> {
+    private final FighterFactory fighterFactory;
+    private final RandomUtil random;
+    private final PvmType type;
+    private final Logger logger;
 
     public PvmBuilderFactory(FighterFactory fighterFactory, PvmType type, Logger logger) {
         this.fighterFactory = fighterFactory;

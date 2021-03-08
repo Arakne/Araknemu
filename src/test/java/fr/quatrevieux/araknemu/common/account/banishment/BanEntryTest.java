@@ -36,8 +36,8 @@ class BanEntryTest extends GameBaseCase {
 
         assertTrue(new BanEntry<>(session.account(), new Banishment(1, Instant.now().minus(1, ChronoUnit.HOURS), Instant.now().plus(1, ChronoUnit.HOURS), "", -1)).active());
         assertTrue(new BanEntry<>(session.account(), new Banishment(1, Instant.now(), Instant.now().plus(1, ChronoUnit.HOURS), "", -1)).active());
-        assertTrue(new BanEntry<>(session.account(), new Banishment(1, Instant.now().minus(1, ChronoUnit.HOURS), Instant.now(), "", -1)).active());
-        assertFalse(new BanEntry<>(session.account(), new Banishment(1, Instant.now().plus(1, ChronoUnit.MICROS), Instant.now().plus(1, ChronoUnit.HOURS), "", -1)).active());
-        assertFalse(new BanEntry<>(session.account(), new Banishment(1, Instant.now().minus(1, ChronoUnit.HOURS), Instant.now().minus(1, ChronoUnit.MICROS), "", -1)).active());
+        assertTrue(new BanEntry<>(session.account(), new Banishment(1, Instant.now().minus(1, ChronoUnit.HOURS), Instant.now().plus(1, ChronoUnit.SECONDS), "", -1)).active());
+        assertFalse(new BanEntry<>(session.account(), new Banishment(1, Instant.now().plus(1, ChronoUnit.SECONDS), Instant.now().plus(1, ChronoUnit.HOURS), "", -1)).active());
+        assertFalse(new BanEntry<>(session.account(), new Banishment(1, Instant.now().minus(1, ChronoUnit.HOURS), Instant.now().minus(1, ChronoUnit.SECONDS), "", -1)).active());
     }
 }

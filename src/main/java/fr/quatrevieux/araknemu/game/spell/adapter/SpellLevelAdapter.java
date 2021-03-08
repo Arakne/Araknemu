@@ -29,13 +29,13 @@ import java.util.List;
 /**
  * Adapt {@link fr.quatrevieux.araknemu.data.world.entity.SpellTemplate.Level} to {@link Spell}
  */
-final public class SpellLevelAdapter implements Spell {
-    final private int level;
-    final private SpellTemplate template;
-    final private SpellTemplate.Level data;
-    final private List<SpellEffect> effects;
-    final private List<SpellEffect> criticalEffects;
-    final private SpellLevelConstraintAdapter constraints;
+public final class SpellLevelAdapter implements Spell {
+    private final int level;
+    private final SpellTemplate template;
+    private final SpellTemplate.Level data;
+    private final List<SpellEffect> effects;
+    private final List<SpellEffect> criticalEffects;
+    private final SpellLevelConstraintAdapter constraints;
 
     public SpellLevelAdapter(int level, SpellTemplate template, SpellTemplate.Level data, List<SpellEffect> effects, List<SpellEffect> criticalEffects) {
         this.level = level;

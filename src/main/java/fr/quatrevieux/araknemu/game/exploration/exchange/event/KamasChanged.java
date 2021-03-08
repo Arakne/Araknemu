@@ -24,9 +24,9 @@ import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeStorage;
 /**
  * The quantity of kamas in the exchange has changed
  */
-final public class KamasChanged implements ExchangeEvent {
-    final private long quantity;
-    final private ExchangeStorage storage;
+public final class KamasChanged implements ExchangeEvent {
+    private final long quantity;
+    private final ExchangeStorage storage;
 
     public KamasChanged(long quantity, ExchangeStorage storage) {
         this.quantity = quantity;

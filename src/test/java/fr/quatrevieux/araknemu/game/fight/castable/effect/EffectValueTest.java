@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect;
 
+import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu._test.TestCase;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import org.junit.jupiter.api.Test;
@@ -37,6 +38,7 @@ class EffectValueTest extends TestCase {
         EffectValue value = new EffectValue(effect);
 
         assertBetween(5, 10, value.value());
+        assertEquals(new Interval(5, 10), value.interval());
     }
 
     @Test
@@ -51,34 +53,7 @@ class EffectValueTest extends TestCase {
         value.randomize();
 
         assertBetween(5, 10, value.value());
-    }
-
-    @Test
-    void mean() {
-        SpellEffect effect = Mockito.mock(SpellEffect.class);
-
-        Mockito.when(effect.min()).thenReturn(5);
-        Mockito.when(effect.max()).thenReturn(10);
-
-        EffectValue value = new EffectValue(effect);
-
-        value.mean();
-
-        assertEquals(7, value.value());
-    }
-
-    @Test
-    void meanWithFixedEffect() {
-        SpellEffect effect = Mockito.mock(SpellEffect.class);
-
-        Mockito.when(effect.min()).thenReturn(5);
-        Mockito.when(effect.max()).thenReturn(0);
-
-        EffectValue value = new EffectValue(effect);
-
-        value.mean();
-
-        assertEquals(5, value.value());
+        assertEquals(new Interval(5, 10), value.interval());
     }
 
     @Test
@@ -91,6 +66,7 @@ class EffectValueTest extends TestCase {
         EffectValue value = new EffectValue(effect);
 
         assertEquals(5, value.value());
+        assertEquals(new Interval(5, 5), value.interval());
     }
 
     @Test
@@ -104,6 +80,7 @@ class EffectValueTest extends TestCase {
         value.minimize();
 
         assertEquals(5, value.value());
+        assertEquals(new Interval(5, 5), value.interval());
     }
 
     @Test
@@ -117,6 +94,7 @@ class EffectValueTest extends TestCase {
         value.maximize();
 
         assertEquals(10, value.value());
+        assertEquals(new Interval(10, 10), value.interval());
     }
 
     @Test
@@ -130,6 +108,7 @@ class EffectValueTest extends TestCase {
         value.minimize();
 
         assertEquals(5, value.value());
+        assertEquals(new Interval(5, 5), value.interval());
     }
 
     @Test
@@ -143,6 +122,7 @@ class EffectValueTest extends TestCase {
         value.maximize();
 
         assertEquals(5, value.value());
+        assertEquals(new Interval(5, 5), value.interval());
     }
 
     @Test
@@ -156,6 +136,7 @@ class EffectValueTest extends TestCase {
         value.fixed(5);
 
         assertEquals(10, value.value());
+        assertEquals(new Interval(10, 10), value.interval());
     }
 
     @Test
@@ -169,6 +150,7 @@ class EffectValueTest extends TestCase {
         value.percent(20);
 
         assertEquals(6, value.value());
+        assertEquals(new Interval(6, 6), value.interval());
     }
 
     @Test
@@ -185,6 +167,7 @@ class EffectValueTest extends TestCase {
         ;
 
         assertEquals(12, value.value());
+        assertEquals(new Interval(12, 12), value.interval());
     }
 
     @Test
@@ -201,6 +184,7 @@ class EffectValueTest extends TestCase {
         ;
 
         assertEquals(11, value.value());
+        assertEquals(new Interval(11, 11), value.interval());
     }
 
     @Test
@@ -218,6 +202,7 @@ class EffectValueTest extends TestCase {
         ;
 
         assertEquals(22, value.value());
+        assertEquals(new Interval(22, 22), value.interval());
     }
 
     @Test
@@ -237,5 +222,6 @@ class EffectValueTest extends TestCase {
         ;
 
         assertEquals(36, value.value());
+        assertEquals(new Interval(36, 36), value.interval());
     }
 }

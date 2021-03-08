@@ -32,8 +32,17 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.event.FightCreated;
-import fr.quatrevieux.araknemu.game.listener.map.*;
-import fr.quatrevieux.araknemu.game.listener.map.fight.*;
+import fr.quatrevieux.araknemu.game.listener.map.SendCreatureMove;
+import fr.quatrevieux.araknemu.game.listener.map.SendNewSprite;
+import fr.quatrevieux.araknemu.game.listener.map.SendPlayerChangeCell;
+import fr.quatrevieux.araknemu.game.listener.map.SendPlayerChangeOrientation;
+import fr.quatrevieux.araknemu.game.listener.map.SendSpriteRemoved;
+import fr.quatrevieux.araknemu.game.listener.map.fight.HideFightOnStart;
+import fr.quatrevieux.araknemu.game.listener.map.fight.SendCancelledFight;
+import fr.quatrevieux.araknemu.game.listener.map.fight.SendCreatedFight;
+import fr.quatrevieux.araknemu.game.listener.map.fight.SendFightsCount;
+import fr.quatrevieux.araknemu.game.listener.map.fight.SendTeamFighterAdded;
+import fr.quatrevieux.araknemu.game.listener.map.fight.SendTeamFighterRemoved;
 import fr.quatrevieux.araknemu.game.listener.player.SendMapData;
 import org.apache.logging.log4j.Logger;
 
@@ -43,14 +52,14 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Service for handle exploration maps
  */
-final public class ExplorationMapService implements PreloadableService, EventsSubscriber {
-    final private MapTemplateRepository repository;
-    final private FightService fightService;
-    final private AreaService areaService;
-    final private Dispatcher dispatcher;
-    final private CellLoader loader;
+public final class ExplorationMapService implements PreloadableService, EventsSubscriber {
+    private final MapTemplateRepository repository;
+    private final FightService fightService;
+    private final AreaService areaService;
+    private final Dispatcher dispatcher;
+    private final CellLoader loader;
 
-    final private ConcurrentMap<Integer, ExplorationMap> maps = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, ExplorationMap> maps = new ConcurrentHashMap<>();
 
     public ExplorationMapService(MapTemplateRepository repository, FightService fightService, AreaService areaService, Dispatcher dispatcher, CellLoader loader) {
         this.repository = repository;
@@ -75,11 +84,11 @@ final public class ExplorationMapService implements PreloadableService, EventsSu
     public void preload(Logger logger) {
         logger.info("Loading maps...");
 
-        long start = System.currentTimeMillis();
+        final long start = System.currentTimeMillis();
 
         repository.all().forEach(this::createMap);
 
-        long time = System.currentTimeMillis() - start;
+        final long time = System.currentTimeMillis() - start;
 
         logger.info("{} maps successfully loaded in {}ms", maps.size(), time);
     }
@@ -103,7 +112,7 @@ final public class ExplorationMapService implements PreloadableService, EventsSu
             new Listener<FightCreated>() {
                 @Override
                 public void on(FightCreated event) {
-                    ExplorationMap map = load(event.fight().map().id());
+                    final ExplorationMap map = load(event.fight().map().id());
 
                     event.fight().dispatcher().add(new HideFightOnStart(map));
                     event.fight().dispatcher().add(new SendFightsCount(map, fightService));
@@ -132,7 +141,8 @@ final public class ExplorationMapService implements PreloadableService, EventsSu
     }
 
     private ExplorationMap createMap(MapTemplate template) {
-        ExplorationMap map = new ExplorationMap(template, loader, areaService.get(template.subAreaId()));
+        final ExplorationMap map = new ExplorationMap(template, loader, areaService.get(template.subAreaId()));
+
         maps.put(map.id(), map);
 
         map.dispatcher().add(new SendNewSprite(map));

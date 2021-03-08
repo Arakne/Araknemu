@@ -35,8 +35,8 @@ import java.util.List;
 /**
  * Display cells by their movement value
  */
-final public class Movement extends AbstractCommand {
-    final private MapTemplateRepository repository;
+public final class Movement extends AbstractCommand {
+    private final MapTemplateRepository repository;
 
     public Movement(MapTemplateRepository repository) {
         this.repository = repository;
@@ -62,13 +62,11 @@ final public class Movement extends AbstractCommand {
 
     @Override
     public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
-        AdminUser user = AdminUser.class.cast(performer);
+        final AdminUser user = AdminUser.class.cast(performer);
+        final int mov = Integer.parseInt(arguments.get(1));
+        final MapTemplate map = repository.get(user.player().position().map());
 
-        int mov = Integer.parseInt(arguments.get(1));
-
-        MapTemplate map = repository.get(user.player().position().map());
-
-        List<Integer> cells = new ArrayList<>();
+        final List<Integer> cells = new ArrayList<>();
 
         for (int i = 0; i < map.cells().length; ++i) {
             if (map.cells()[i].movement().ordinal() == mov) {
@@ -80,7 +78,7 @@ final public class Movement extends AbstractCommand {
             new FightStartPositions(
                 new List[] {
                     cells,
-                    new ArrayList()
+                    new ArrayList(),
                 },
                 0
             )

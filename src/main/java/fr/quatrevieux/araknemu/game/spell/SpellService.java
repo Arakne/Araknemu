@@ -34,11 +34,11 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Service for handle spells
  */
-final public class SpellService implements PreloadableService {
-    final private SpellTemplateRepository repository;
-    final private SpellEffectService effectService;
+public final class SpellService implements PreloadableService {
+    private final SpellTemplateRepository repository;
+    private final SpellEffectService effectService;
 
-    final private ConcurrentMap<Integer, SpellLevels> spells = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, SpellLevels> spells = new ConcurrentHashMap<>();
 
     public SpellService(SpellTemplateRepository repository, SpellEffectService effectService) {
         this.repository = repository;
@@ -75,10 +75,10 @@ final public class SpellService implements PreloadableService {
      * @param template The spell template
      */
     private SpellLevels load(SpellTemplate template) {
-        List<Spell> levels = new ArrayList<>(template.levels().length);
+        final List<Spell> levels = new ArrayList<>(template.levels().length);
 
         for (int i = 0; i < template.levels().length; ++i) {
-            SpellTemplate.Level level = template.levels()[i];
+            final SpellTemplate.Level level = template.levels()[i];
 
             if (level == null) {
                 break;

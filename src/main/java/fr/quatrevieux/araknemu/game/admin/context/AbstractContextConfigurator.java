@@ -25,20 +25,22 @@ import fr.quatrevieux.araknemu.game.admin.Command;
  * Configure a context by adding commands and sub-contexts
  * This class must be extended on a module
  */
-abstract public class ContextConfigurator<C extends Context> implements Cloneable {
+public abstract class AbstractContextConfigurator<C extends Context> implements Cloneable {
     private SimpleContext context;
 
     /**
      * Define the context to be configured
      */
     @SuppressWarnings("unchecked")
-    final public ContextConfigurator<C> with(SimpleContext context) {
-        ContextConfigurator<C> withContext =  null;
+    public final AbstractContextConfigurator<C> with(SimpleContext context) {
+        AbstractContextConfigurator<C> withContext =  null;
 
         try {
-            withContext = (ContextConfigurator<C>) clone();
+            withContext = (AbstractContextConfigurator<C>) clone();
             withContext.context = context;
-        } catch (CloneNotSupportedException e) {}
+        } catch (CloneNotSupportedException e) {
+            // Ignore: ContextConfigurator is Cloneable
+        }
 
         return withContext;
     }
@@ -46,12 +48,12 @@ abstract public class ContextConfigurator<C extends Context> implements Cloneabl
     /**
      * Configure the context
      */
-    abstract public void configure(C context);
+    public abstract void configure(C context);
 
     /**
      * Add a new command to the context
      */
-    final public void add(Command command) {
+    public final void add(Command command) {
         context.add(command);
     }
 
@@ -61,7 +63,7 @@ abstract public class ContextConfigurator<C extends Context> implements Cloneabl
      * @param name The child name
      * @param child The child
      */
-    final public void add(String name, Context child) {
+    public final void add(String name, Context child) {
         context.add(name, child);
     }
 }

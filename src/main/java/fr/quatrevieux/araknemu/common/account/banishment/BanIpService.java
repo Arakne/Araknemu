@@ -28,7 +28,11 @@ import inet.ipaddr.IPAddressString;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -36,67 +40,10 @@ import java.util.stream.Collectors;
 /**
  * Handle ban ip table
  */
-final public class BanIpService<A extends LivingAccount> {
-    final public class RuleBuilder {
-        final private IPAddressString ipAddress;
-        private String cause = "";
-        private Duration duration = null;
-        private A banisher = null;
-
-        private RuleBuilder(IPAddressString ipAddress) {
-            this.ipAddress = ipAddress;
-        }
-
-        /**
-         * Define the ban cause
-         */
-        public RuleBuilder cause(String cause) {
-            this.cause = cause;
-            return this;
-        }
-
-        /**
-         * Define the ban duration
-         */
-        public RuleBuilder duration(Duration duration) {
-            this.duration = duration;
-            return this;
-        }
-
-        /**
-         * Define the rule creator
-         */
-        public RuleBuilder banisher(A banisher) {
-            this.banisher = banisher;
-            return this;
-        }
-
-        /**
-         * Save and apply the ban ip rule
-         *
-         * @return The created rule
-         */
-        public BanIpRule<A> apply() {
-            BanIp entity = repository.add(new BanIp(
-                ipAddress,
-                Instant.now(),
-                duration == null ? null : Instant.now().plus(duration),
-                cause,
-                banisher == null ? -1 : banisher.id()
-            ));
-
-            banIps.add(entity);
-            BanIpRule<A> rule = new BanIpRule<>(entity, banisher);
-
-            dispatcher.dispatch(new IpBanned<>(rule));
-
-            return rule;
-        }
-    }
-
-    final private BanIpRepository repository;
-    final private Dispatcher dispatcher;
-    final private Function<int[], Map<Integer, A>> loadAccountsByIds;
+public final class BanIpService<A extends LivingAccount> {
+    private final BanIpRepository repository;
+    private final Dispatcher dispatcher;
+    private final Function<int[], Map<Integer, A>> loadAccountsByIds;
 
     private Collection<BanIp> banIps = new CopyOnWriteArrayList<>();
     private Instant lastUpdate = Instant.EPOCH;
@@ -230,5 +177,61 @@ final public class BanIpService<A extends LivingAccount> {
             .map(banIp -> new BanIpRule<>(banIp, accounts.get(banIp.banisherId())))
             .collect(Collectors.toList())
         ;
+    }
+
+    public final class RuleBuilder {
+        private final IPAddressString ipAddress;
+        private String cause = "";
+        private Duration duration = null;
+        private A banisher = null;
+
+        private RuleBuilder(IPAddressString ipAddress) {
+            this.ipAddress = ipAddress;
+        }
+
+        /**
+         * Define the ban cause
+         */
+        public RuleBuilder cause(String cause) {
+            this.cause = cause;
+            return this;
+        }
+
+        /**
+         * Define the ban duration
+         */
+        public RuleBuilder duration(Duration duration) {
+            this.duration = duration;
+            return this;
+        }
+
+        /**
+         * Define the rule creator
+         */
+        public RuleBuilder banisher(A banisher) {
+            this.banisher = banisher;
+            return this;
+        }
+
+        /**
+         * Save and apply the ban ip rule
+         *
+         * @return The created rule
+         */
+        public BanIpRule<A> apply() {
+            final BanIp entity = repository.add(new BanIp(
+                ipAddress,
+                Instant.now(),
+                duration == null ? null : Instant.now().plus(duration),
+                cause,
+                banisher == null ? -1 : banisher.id()
+            ));
+            final BanIpRule<A> rule = new BanIpRule<>(entity, banisher);
+
+            banIps.add(entity);
+            dispatcher.dispatch(new IpBanned<>(rule));
+
+            return rule;
+        }
     }
 }

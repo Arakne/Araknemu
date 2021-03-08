@@ -24,9 +24,8 @@ package fr.quatrevieux.araknemu.util;
  *
  * @param <E> The set items
  */
-final public class BitSet<E extends Enum> {
+public final class BitSet<E extends Enum> {
     private int value;
-
 
     /**
      * Set the item to the bit set
@@ -34,7 +33,7 @@ final public class BitSet<E extends Enum> {
      * @return true if the set has changed
      */
     public boolean set(E item) {
-        int oldValue = value;
+        final int oldValue = value;
 
         value |= 1 << item.ordinal();
 
@@ -47,7 +46,7 @@ final public class BitSet<E extends Enum> {
      * @return true if the set has changed
      */
     public boolean unset(E item) {
-        int oldValue = value;
+        final int oldValue = value;
 
         value &= ~(1 << item.ordinal());
 

@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 /**
  * Adapter {@link SpellConstraints} from {@link fr.quatrevieux.araknemu.data.world.entity.SpellTemplate.Level}
  */
-final public class SpellLevelConstraintAdapter implements SpellConstraints {
-    final private SpellTemplate.Level level;
+public final class SpellLevelConstraintAdapter implements SpellConstraints {
+    private final SpellTemplate.Level level;
 
     public SpellLevelConstraintAdapter(SpellTemplate.Level level) {
         this.level = level;

@@ -32,21 +32,8 @@ import java.util.function.Consumer;
  *
  * When the limit is reached, the packet is ignored, and a {@link RateLimitException} is raised
  */
-final public class RateLimiter implements ConfigurableSession.ReceivePacketMiddleware {
-    final static public class Configurator<S extends Session> implements SessionConfigurator.Configurator<S> {
-        final private int maxPackets;
-
-        public Configurator(int maxPackets) {
-            this.maxPackets = maxPackets;
-        }
-
-        @Override
-        public void configure(ConfigurableSession inner, S session) {
-            inner.addReceiveMiddleware(new RateLimiter(maxPackets));
-        }
-    }
-
-    final private int maxPackets;
+public final class RateLimiter implements ConfigurableSession.ReceivePacketMiddleware {
+    private final int maxPackets;
 
     private long lastTime;
     private int packetsCount;
@@ -78,5 +65,18 @@ final public class RateLimiter implements ConfigurableSession.ReceivePacketMiddl
         }
 
         next.accept(packet);
+    }
+
+    public static final class Configurator<S extends Session> implements SessionConfigurator.Configurator<S> {
+        private final int maxPackets;
+
+        public Configurator(int maxPackets) {
+            this.maxPackets = maxPackets;
+        }
+
+        @Override
+        public void configure(ConfigurableSession inner, S session) {
+            inner.addReceiveMiddleware(new RateLimiter(maxPackets));
+        }
     }
 }

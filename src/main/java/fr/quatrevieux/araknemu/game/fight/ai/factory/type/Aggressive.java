@@ -21,7 +21,11 @@ package fr.quatrevieux.araknemu.game.fight.ai.factory.type;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
-import fr.quatrevieux.araknemu.game.fight.ai.action.*;
+import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
+import fr.quatrevieux.araknemu.game.fight.ai.action.Attack;
+import fr.quatrevieux.araknemu.game.fight.ai.action.Boost;
+import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearEnemy;
+import fr.quatrevieux.araknemu.game.fight.ai.action.TeleportNearEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -32,8 +36,8 @@ import java.util.Optional;
  * Creates the aggressive AI
  * This is the default AI
  */
-final public class Aggressive implements AiFactory {
-    final private Simulator simulator;
+public final class Aggressive implements AiFactory {
+    private final Simulator simulator;
 
     public Aggressive(Simulator simulator) {
         this.simulator = simulator;
@@ -46,7 +50,7 @@ final public class Aggressive implements AiFactory {
                 new Attack(simulator),
                 new MoveNearEnemy(),
                 new TeleportNearEnemy(),
-                new Boost(simulator)
+                new Boost(simulator),
             })
         );
     }

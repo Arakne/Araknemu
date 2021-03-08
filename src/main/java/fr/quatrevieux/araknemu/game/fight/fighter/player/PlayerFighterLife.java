@@ -20,9 +20,9 @@
 package fr.quatrevieux.araknemu.game.fight.fighter.player;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
-import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
 import fr.quatrevieux.araknemu.game.world.creature.Life;
 
 /**
@@ -30,9 +30,9 @@ import fr.quatrevieux.araknemu.game.world.creature.Life;
  *
  * The life points will be saved when fight started
  */
-final public class PlayerFighterLife implements FighterLife {
-    final private Life baseLife;
-    final private Fighter fighter;
+public final class PlayerFighterLife implements FighterLife {
+    private final Life baseLife;
+    private final Fighter fighter;
 
     private BaseFighterLife delegate;
 

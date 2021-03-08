@@ -24,7 +24,7 @@ package fr.quatrevieux.araknemu.network.game.out.fight;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L1225
  */
-final public class CancelFight {
+public final class CancelFight {
     @Override
     public String toString() {
         return "GV";

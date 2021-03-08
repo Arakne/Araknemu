@@ -28,7 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Incoming login credentials
  */
-final public class Credentials implements Packet {
+public final class Credentials implements Packet {
     public enum Method {
         /** Method not used */
         NONE,
@@ -39,16 +39,16 @@ final public class Credentials implements Packet {
         ;
 
         /**
-         * Get method from method race char
+         * Get method from method char
+         *
          * @param id The race char. Should be a number
-         * @return
          */
-        static public Method get(char id) {
+        public static Method get(char id) {
             if (id > '9' || id < '0') {
                 throw new NumberFormatException();
             }
 
-            int index = id - '0';
+            final int index = id - '0';
 
             if (values().length <= index) {
                 throw new IndexOutOfBoundsException();
@@ -58,9 +58,9 @@ final public class Credentials implements Packet {
         }
     }
 
-    final private String username;
-    final private String password;
-    final private Method method;
+    private final String username;
+    private final String password;
+    private final Method method;
 
     public Credentials(String username, String password, Method method) {
         this.username = username;
@@ -91,16 +91,16 @@ final public class Credentials implements Packet {
     /**
      * Get the packet parser instance
      */
-    static public PacketParser parser() {
+    public static PacketParser parser() {
         return input -> {
-            String[] parts = StringUtils.split(input, "\n", 2);
+            final String[] parts = StringUtils.split(input, "\n", 2);
 
             if (parts.length != 2) {
                 throw new ParsePacketException(input, "Missing password");
             }
 
-            String username = parts[0].trim();
-            String hash     = parts[1].trim();
+            final String username = parts[0].trim();
+            final String hash     = parts[1].trim();
 
             if (hash.charAt(0) != '#') {
                 throw new ParsePacketException(input, "Invalid hash format");

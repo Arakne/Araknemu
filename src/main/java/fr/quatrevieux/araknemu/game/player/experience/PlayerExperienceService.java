@@ -39,11 +39,11 @@ import java.util.List;
 /**
  * Handle player experience and levels
  */
-final public class PlayerExperienceService implements PreloadableService, EventsSubscriber {
-    final private PlayerExperienceRepository repository;
-    final private GameConfiguration.PlayerConfiguration configuration;
+public final class PlayerExperienceService implements PreloadableService, EventsSubscriber {
+    private final PlayerExperienceRepository repository;
+    private final GameConfiguration.PlayerConfiguration configuration;
 
-    final private List<PlayerExperience> levels = new ArrayList<>();
+    private final List<PlayerExperience> levels = new ArrayList<>();
 
     public PlayerExperienceService(PlayerExperienceRepository repository, GameConfiguration.PlayerConfiguration configuration) {
         this.repository = repository;
@@ -75,7 +75,7 @@ final public class PlayerExperienceService implements PreloadableService, Events
                 public Class<PlayerLoaded> event() {
                     return PlayerLoaded.class;
                 }
-            }
+            },
         };
     }
 
@@ -116,7 +116,7 @@ final public class PlayerExperienceService implements PreloadableService, Events
      * @param newLevel The reached level
      */
     void applyLevelUpBonus(Player entity, int newLevel) {
-        int diff = newLevel - entity.level();
+        final int diff = newLevel - entity.level();
 
         entity.setSpellPoints(entity.spellPoints() + configuration.spellBoostPointsOnLevelUp() * diff);
         entity.setBoostPoints(entity.boostPoints() + configuration.characteristicPointsOnLevelUp() * diff);

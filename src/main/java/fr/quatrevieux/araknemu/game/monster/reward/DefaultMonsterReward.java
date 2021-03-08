@@ -27,9 +27,9 @@ import java.util.List;
 /**
  * Base implementation for single monster grade reward
  */
-final public class DefaultMonsterReward implements MonsterReward {
-    final private MonsterGradesReward reward;
-    final private int grade;
+public final class DefaultMonsterReward implements MonsterReward {
+    private final MonsterGradesReward reward;
+    private final int grade;
 
     public DefaultMonsterReward(MonsterGradesReward reward, int grade) {
         this.reward = reward;

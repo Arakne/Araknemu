@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerExperience;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceRepository;
 
@@ -33,23 +33,8 @@ import java.util.List;
  * SQL implementation of the repository
  */
 final class SqlPlayerExperienceRepository implements PlayerExperienceRepository {
-    private class Loader implements RepositoryUtils.Loader<PlayerExperience> {
-        @Override
-        public PlayerExperience create(ResultSet rs) throws SQLException {
-            return new PlayerExperience(
-                rs.getInt("PLAYER_LEVEL"),
-                rs.getLong("EXPERIENCE")
-            );
-        }
-
-        @Override
-        public PlayerExperience fillKeys(PlayerExperience entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<PlayerExperience> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<PlayerExperience> utils;
 
     public SqlPlayerExperienceRepository(QueryExecutor executor) {
         this.executor = executor;
@@ -98,5 +83,20 @@ final class SqlPlayerExperienceRepository implements PlayerExperienceRepository 
     @Override
     public List<PlayerExperience> all() {
         return utils.findAll("SELECT * FROM PLAYER_XP ORDER BY PLAYER_LEVEL ASC");
+    }
+
+    private class Loader implements RepositoryUtils.Loader<PlayerExperience> {
+        @Override
+        public PlayerExperience create(ResultSet rs) throws SQLException {
+            return new PlayerExperience(
+                rs.getInt("PLAYER_LEVEL"),
+                rs.getLong("EXPERIENCE")
+            );
+        }
+
+        @Override
+        public PlayerExperience fillKeys(PlayerExperience entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

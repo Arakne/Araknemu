@@ -32,7 +32,7 @@ import java.util.Objects;
  * Adapt an item template to inventory entry for the exchange events
  */
 final class NpcExchangeItemEntry implements ItemEntry {
-    final private ItemTemplate template;
+    private final ItemTemplate template;
 
     NpcExchangeItemEntry(ItemTemplate template) {
         this.template = template;

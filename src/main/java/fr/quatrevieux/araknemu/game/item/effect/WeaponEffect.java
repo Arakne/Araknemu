@@ -25,11 +25,11 @@ import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 /**
  * Effect for weapon items
  */
-final public class WeaponEffect implements ItemEffect {
-    final private Effect effect;
-    final private int min;
-    final private int max;
-    final private int extra;
+public final class WeaponEffect implements ItemEffect {
+    private final Effect effect;
+    private final int min;
+    private final int max;
+    private final int extra;
 
     public WeaponEffect(Effect effect, int min, int max, int extra) {
         this.effect = effect;
@@ -70,7 +70,7 @@ final public class WeaponEffect implements ItemEffect {
             return false;
         }
 
-        WeaponEffect that = (WeaponEffect) o;
+        final WeaponEffect that = (WeaponEffect) o;
 
         return min == that.min
             && max == that.max

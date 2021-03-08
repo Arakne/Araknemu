@@ -22,7 +22,10 @@ package fr.quatrevieux.araknemu.game.fight.fighter.player;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.event.FighterReadyStateChanged;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
-import fr.quatrevieux.araknemu.game.fight.fighter.*;
+import fr.quatrevieux.araknemu.game.fight.fighter.AbstractFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
@@ -36,10 +39,10 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 /**
  * Fighter for a player
  */
-final public class PlayerFighter extends AbstractFighter implements Fighter, PlayerSessionScope {
-    final private GamePlayer player;
-    final private PlayerFighterProperties properties;
-    final private PlayerFighterSprite sprite;
+public final class PlayerFighter extends AbstractFighter implements Fighter, PlayerSessionScope {
+    private final GamePlayer player;
+    private final PlayerFighterProperties properties;
+    private final PlayerFighterSprite sprite;
 
     private boolean ready = false;
     private CastableWeapon weapon;

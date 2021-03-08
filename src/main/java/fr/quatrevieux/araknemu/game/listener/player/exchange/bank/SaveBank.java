@@ -30,8 +30,8 @@ import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectQuantityChanged;
 /**
  * Save the bank on changes
  */
-final public class SaveBank implements EventsSubscriber {
-    final private BankItemRepository repository;
+public final class SaveBank implements EventsSubscriber {
+    private final BankItemRepository repository;
 
     public SaveBank(BankItemRepository repository) {
         this.repository = repository;
@@ -47,7 +47,7 @@ final public class SaveBank implements EventsSubscriber {
                         return;
                     }
 
-                    BankEntry entry = (BankEntry) event.entry();
+                    final BankEntry entry = (BankEntry) event.entry();
 
                     repository.add(entry.entity());
                 }
@@ -65,7 +65,7 @@ final public class SaveBank implements EventsSubscriber {
                         return;
                     }
 
-                    BankEntry entry = (BankEntry) event.entry();
+                    final BankEntry entry = (BankEntry) event.entry();
 
                     repository.delete(entry.entity());
                 }
@@ -83,7 +83,7 @@ final public class SaveBank implements EventsSubscriber {
                         return;
                     }
 
-                    BankEntry entry = (BankEntry) event.entry();
+                    final BankEntry entry = (BankEntry) event.entry();
 
                     repository.update(entry.entity());
                 }

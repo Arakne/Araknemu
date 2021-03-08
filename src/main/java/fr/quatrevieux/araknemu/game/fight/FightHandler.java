@@ -30,9 +30,9 @@ import java.util.function.Consumer;
 /**
  * Handle fight creation
  */
-final public class FightHandler<B extends FightBuilder> implements EventsSubscriber {
-    final private FightService service;
-    final private B builder;
+public final class FightHandler<B extends FightBuilder> implements EventsSubscriber {
+    private final FightService service;
+    private final B builder;
 
     public FightHandler(FightService service, B builder) {
         this.service = service;
@@ -47,7 +47,7 @@ final public class FightHandler<B extends FightBuilder> implements EventsSubscri
     public Fight start(Consumer<B> configuration) {
         configuration.accept(builder);
 
-        Fight fight = builder.build(service.newFightId());
+        final Fight fight = builder.build(service.newFightId());
 
         service.modules(fight).forEach(fight::register);
         fight.nextState();
@@ -83,7 +83,7 @@ final public class FightHandler<B extends FightBuilder> implements EventsSubscri
                 public Class<FightCancelled> event() {
                     return FightCancelled.class;
                 }
-            }
+            },
         };
     }
 }

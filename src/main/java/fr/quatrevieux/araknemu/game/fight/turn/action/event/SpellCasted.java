@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.spell.Spell;
 /**
  * Spell is successfully cast to the fight
  */
-final public class SpellCasted {
-    final private Cast action;
+public final class SpellCasted {
+    private final Cast action;
 
     public SpellCasted(Cast action) {
         this.action = action;

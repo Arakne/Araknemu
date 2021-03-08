@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L407
  */
-final public class MapData {
-    final private ExplorationMap map;
+public final class MapData {
+    private final ExplorationMap map;
 
     public MapData(ExplorationMap map) {
         this.map = map;

@@ -27,7 +27,14 @@ import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
-import fr.quatrevieux.araknemu.game.listener.player.*;
+import fr.quatrevieux.araknemu.game.listener.player.ComputeLifePoints;
+import fr.quatrevieux.araknemu.game.listener.player.InitializeRestrictions;
+import fr.quatrevieux.araknemu.game.listener.player.SavePlayer;
+import fr.quatrevieux.araknemu.game.listener.player.SendLifeChanged;
+import fr.quatrevieux.araknemu.game.listener.player.SendRestrictions;
+import fr.quatrevieux.araknemu.game.listener.player.SendShutdownScheduled;
+import fr.quatrevieux.araknemu.game.listener.player.SendStats;
+import fr.quatrevieux.araknemu.game.listener.player.StartTutorial;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
@@ -45,17 +52,17 @@ import java.util.stream.Stream;
 /**
  * Service for handle {@link GamePlayer}
  */
-final public class PlayerService implements EventsSubscriber {
-    final private PlayerRepository repository;
-    final private GameConfiguration configuration;
-    final private Dispatcher dispatcher;
-    final private InventoryService inventoryService;
-    final private PlayerRaceService playerRaceService;
-    final private SpellBookService spellBookService;
-    final private PlayerExperienceService experienceService;
+public final class PlayerService implements EventsSubscriber {
+    private final PlayerRepository repository;
+    private final GameConfiguration configuration;
+    private final Dispatcher dispatcher;
+    private final InventoryService inventoryService;
+    private final PlayerRaceService playerRaceService;
+    private final SpellBookService spellBookService;
+    private final PlayerExperienceService experienceService;
 
-    final private ConcurrentMap<Integer, GamePlayer> onlinePlayers = new ConcurrentHashMap<>();
-    final private ConcurrentMap<String, GamePlayer> playersByName  = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, GamePlayer> onlinePlayers = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, GamePlayer> playersByName  = new ConcurrentHashMap<>();
 
     public PlayerService(PlayerRepository repository, GameConfiguration configuration, Dispatcher dispatcher, InventoryService inventoryService, PlayerRaceService playerRaceService, SpellBookService spellBookService, PlayerExperienceService experienceService) {
         this.repository = repository;
@@ -81,7 +88,7 @@ final public class PlayerService implements EventsSubscriber {
             throw new IllegalStateException("The player is already loaded");
         }
 
-        Player player = repository.getForGame(
+        final Player player = repository.getForGame(
             Player.forGame(
                 id,
                 session.account().id(),
@@ -89,7 +96,7 @@ final public class PlayerService implements EventsSubscriber {
             )
         );
 
-        GamePlayer gamePlayer = new GamePlayer(
+        final GamePlayer gamePlayer = new GamePlayer(
             session.account(),
             player,
             playerRaceService.get(player.race()),

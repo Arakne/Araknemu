@@ -33,14 +33,30 @@ import fr.quatrevieux.araknemu.game.admin.account.AccountContext;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
 import fr.quatrevieux.araknemu.game.admin.account.Ban;
 import fr.quatrevieux.araknemu.game.admin.account.Info;
-import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
-import fr.quatrevieux.araknemu.game.admin.debug.*;
+import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.debug.Area;
+import fr.quatrevieux.araknemu.game.admin.debug.DebugContext;
+import fr.quatrevieux.araknemu.game.admin.debug.DebugContextResolver;
+import fr.quatrevieux.araknemu.game.admin.debug.FightPos;
+import fr.quatrevieux.araknemu.game.admin.debug.GenItem;
+import fr.quatrevieux.araknemu.game.admin.debug.LineOfSight;
+import fr.quatrevieux.araknemu.game.admin.debug.MapStats;
+import fr.quatrevieux.araknemu.game.admin.debug.Movement;
 import fr.quatrevieux.araknemu.game.admin.global.GlobalContext;
 import fr.quatrevieux.araknemu.game.admin.player.GetItem;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
-import fr.quatrevieux.araknemu.game.admin.player.teleport.*;
-import fr.quatrevieux.araknemu.game.admin.server.*;
+import fr.quatrevieux.araknemu.game.admin.player.teleport.CellResolver;
+import fr.quatrevieux.araknemu.game.admin.player.teleport.Goto;
+import fr.quatrevieux.araknemu.game.admin.player.teleport.LocationResolver;
+import fr.quatrevieux.araknemu.game.admin.player.teleport.MapResolver;
+import fr.quatrevieux.araknemu.game.admin.player.teleport.PlayerResolver;
+import fr.quatrevieux.araknemu.game.admin.player.teleport.PositionResolver;
+import fr.quatrevieux.araknemu.game.admin.server.Banip;
+import fr.quatrevieux.araknemu.game.admin.server.Online;
+import fr.quatrevieux.araknemu.game.admin.server.ServerContext;
+import fr.quatrevieux.araknemu.game.admin.server.ServerContextResolver;
+import fr.quatrevieux.araknemu.game.admin.server.Shutdown;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.game.item.ItemService;
@@ -55,8 +71,8 @@ import java.util.Arrays;
  *
  * Note: Only commands which needs dependencies from the container should be defined here. "simple" commands may be defined directly on the context
  */
-final public class AdminModule implements ContainerModule {
-    final private Araknemu app;
+public final class AdminModule implements ContainerModule {
+    private final Araknemu app;
 
     public AdminModule(Araknemu app) {
         this.app = app;
@@ -95,7 +111,7 @@ final public class AdminModule implements ContainerModule {
         configurator.factory(
             PlayerContextResolver.class,
             container -> new PlayerContextResolver(container.get(PlayerService.class), container.get(AccountContextResolver.class))
-                .register(new ContextConfigurator<PlayerContext>() {
+                .register(new AbstractContextConfigurator<PlayerContext>() {
                     @Override
                     public void configure(PlayerContext context) {
                         add(new GetItem(context.player(), container.get(ItemService.class)));
@@ -112,7 +128,7 @@ final public class AdminModule implements ContainerModule {
         configurator.persist(
             AccountContextResolver.class,
             container -> new AccountContextResolver(container.get(AccountService.class))
-                .register(new ContextConfigurator<AccountContext>() {
+                .register(new AbstractContextConfigurator<AccountContext>() {
                     @Override
                     public void configure(AccountContext context) {
                         add(new Info(context.account(), container.get(AccountRepository.class)));
@@ -124,7 +140,7 @@ final public class AdminModule implements ContainerModule {
         configurator.persist(
             DebugContextResolver.class,
             container -> new DebugContextResolver()
-                .register(new ContextConfigurator<DebugContext>() {
+                .register(new AbstractContextConfigurator<DebugContext>() {
                     @Override
                     public void configure(DebugContext context) {
                         add(new GenItem(container.get(ItemService.class)));
@@ -140,7 +156,7 @@ final public class AdminModule implements ContainerModule {
         configurator.persist(
             ServerContextResolver.class,
             container -> new ServerContextResolver()
-                .register(new ContextConfigurator<ServerContext>() {
+                .register(new AbstractContextConfigurator<ServerContext>() {
                     @Override
                     public void configure(ServerContext context) {
                         add(new Online(

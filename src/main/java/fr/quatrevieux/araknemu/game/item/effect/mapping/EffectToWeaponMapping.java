@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 /**
  * Map item effect to weapon effect
  */
-final public class EffectToWeaponMapping implements EffectMapper<WeaponEffect> {
+public final class EffectToWeaponMapping implements EffectMapper<WeaponEffect> {
     /**
      * Create the effect from the template
      */

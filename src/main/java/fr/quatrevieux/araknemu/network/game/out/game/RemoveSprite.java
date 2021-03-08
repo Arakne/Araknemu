@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.world.creature.Sprite;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L434
  */
-final public class RemoveSprite {
-    final private Sprite sprite;
+public final class RemoveSprite {
+    private final Sprite sprite;
 
     public RemoveSprite(Sprite sprite) {
         this.sprite = sprite;

@@ -19,14 +19,14 @@
 
 package fr.quatrevieux.araknemu.game.handler.chat;
 
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.chat.SubscribeChannels;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Save chat channel subscriptions
  */
-final public class SaveSubscription implements PacketHandler<GameSession, SubscribeChannels> {
+public final class SaveSubscription implements PacketHandler<GameSession, SubscribeChannels> {
     @Override
     public void handle(GameSession session, SubscribeChannels packet) throws Exception {
         if (packet.isSubscribe()) {

@@ -19,15 +19,15 @@
 
 package fr.quatrevieux.araknemu.realm.handler;
 
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.core.network.SessionCreated;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.network.realm.out.HelloConnection;
 
 /**
  * Handle starting session
  */
-final public class StartSession implements PacketHandler<RealmSession, SessionCreated> {
+public final class StartSession implements PacketHandler<RealmSession, SessionCreated> {
     @Override
     public void handle(RealmSession session, SessionCreated packet) {
         session.send(

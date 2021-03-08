@@ -28,7 +28,7 @@ import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 /**
  * Factories for npc exchanges
  */
-final public class NpcExchangeFactories implements ExchangeFactory<GameNpc> {
+public final class NpcExchangeFactories implements ExchangeFactory<GameNpc> {
     @Override
     public ExchangeInteraction create(ExchangeType type, ExplorationPlayer initiator, GameNpc target) {
         return target.exchange(type, initiator).dialog();

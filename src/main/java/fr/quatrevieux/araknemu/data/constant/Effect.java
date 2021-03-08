@@ -25,6 +25,8 @@ import java.util.NoSuchElementException;
 
 /**
  * Enum of all items effects
+ *
+ * @todo Should be refactored
  */
 public enum Effect {
     NONE(0, Type.SPECIAL),
@@ -227,13 +229,13 @@ public enum Effect {
         SPECIAL
     }
 
-    final private int id;
-    final private Type type;
-    
-    final static private Map<Integer, Effect> effects = new HashMap<>();
-    
+    private static final Map<Integer, Effect> effects = new HashMap<>();
+
+    private final int id;
+    private final Type type;
+
     static {
-        for(Effect effect : values()){
+        for (Effect effect : values()) {
             effects.put(effect.id, effect);
         }
     }
@@ -262,7 +264,7 @@ public enum Effect {
      *
      * @see Effect#id()
      */
-    static public Effect byId(int id){
+    public static Effect byId(int id) {
         if (!effects.containsKey(id)) {
             throw new NoSuchElementException("Effect " + id + " is not supported");
         }

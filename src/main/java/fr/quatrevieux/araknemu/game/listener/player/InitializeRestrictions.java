@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.account.AlterRestrictions;
 /**
  * Send restrictions to client for initialization
  */
-final public class InitializeRestrictions implements Listener<GameJoined> {
-    final private GamePlayer player;
+public final class InitializeRestrictions implements Listener<GameJoined> {
+    private final GamePlayer player;
 
     public InitializeRestrictions(GamePlayer player) {
         this.player = player;

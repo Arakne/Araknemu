@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 /**
  * Handle push state to the fighter
  */
-final public class PushStateHandler implements EffectHandler {
-    final private Fight fight;
+public final class PushStateHandler implements EffectHandler {
+    private final Fight fight;
 
     public PushStateHandler(Fight fight) {
         this.fight = fight;

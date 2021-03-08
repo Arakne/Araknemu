@@ -28,9 +28,9 @@ import java.util.function.Consumer;
  *     new SimpleListener<>(MyEvent.class, (evt) -> doSomething(evt))
  * );
  */
-final public class SimpleListener<E> implements Listener<E> {
-    final private Class<E> type;
-    final private Consumer<E> consumer;
+public final class SimpleListener<E> implements Listener<E> {
+    private final Class<E> type;
+    private final Consumer<E> consumer;
 
     public SimpleListener(Class<E> type, Consumer<E> consumer) {
         this.type = type;

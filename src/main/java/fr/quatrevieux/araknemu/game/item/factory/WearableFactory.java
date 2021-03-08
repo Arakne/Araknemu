@@ -35,9 +35,9 @@ import java.util.List;
 /**
  * Factory for wearable
  */
-final public class WearableFactory implements ItemFactory {
-    final private SuperType type;
-    final private EffectMappers mappers;
+public final class WearableFactory implements ItemFactory {
+    private final SuperType type;
+    private final EffectMappers mappers;
 
     public WearableFactory(SuperType type, EffectMappers mappers) {
         this.type = type;

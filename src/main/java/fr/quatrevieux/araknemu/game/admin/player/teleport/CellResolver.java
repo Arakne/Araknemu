@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.admin.player.teleport;
 /**
  * Resolve the target cell
  */
-final public class CellResolver implements LocationResolver {
+public final class CellResolver implements LocationResolver {
     @Override
     public String name() {
         return "cell";

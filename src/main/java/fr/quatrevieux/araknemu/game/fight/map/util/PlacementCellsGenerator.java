@@ -28,10 +28,10 @@ import java.util.List;
 /**
  * Generate placement cells on join fight
  */
-final public class PlacementCellsGenerator {
-    final private FightMap map;
-    final private List<Integer> available;
-    final private RandomUtil random;
+public final class PlacementCellsGenerator {
+    private final FightMap map;
+    private final List<Integer> available;
+    private final RandomUtil random;
 
     private int number = -1;
 
@@ -69,7 +69,7 @@ final public class PlacementCellsGenerator {
      * Returns the next available start cell
      */
     private FightCell nextAvailableCell() {
-        FightCell cell = map.get(available.get(++number));
+        final FightCell cell = map.get(available.get(++number));
 
         if (cell.walkable()) {
             return cell;
@@ -83,7 +83,7 @@ final public class PlacementCellsGenerator {
      */
     private FightCell randomFightCell() {
         for (;;) {
-            FightCell cell = map.get(random.nextInt(map.size()));
+            final FightCell cell = map.get(random.nextInt(map.size()));
 
             if (cell.walkable()) {
                 return cell;
@@ -97,8 +97,8 @@ final public class PlacementCellsGenerator {
      * @param map The fight map
      * @param available The available cells
      */
-    static public PlacementCellsGenerator randomized(FightMap map, List<Integer> available) {
-        RandomUtil random = new RandomUtil();
+    public static PlacementCellsGenerator randomized(FightMap map, List<Integer> available) {
+        final RandomUtil random = new RandomUtil(); // @todo keep static instance ?
 
         return new PlacementCellsGenerator(map, random.shuffle(available), random);
     }

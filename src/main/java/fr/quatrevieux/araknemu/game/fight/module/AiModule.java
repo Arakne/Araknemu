@@ -30,8 +30,8 @@ import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStarted;
 /**
  * Fight module for enable AI
  */
-final public class AiModule implements FightModule {
-    final private AiFactory factory;
+public final class AiModule implements FightModule {
+    private final AiFactory factory;
 
     public AiModule(AiFactory factory) {
         this.factory = factory;
@@ -61,7 +61,7 @@ final public class AiModule implements FightModule {
                 public Class<TurnStarted> event() {
                     return TurnStarted.class;
                 }
-            }
+            },
         };
     }
 
@@ -76,7 +76,7 @@ final public class AiModule implements FightModule {
      * Starts the AI on turn start
      */
     private void start(FightTurn turn) {
-        FighterAI ai = turn.fighter().attachment(FighterAI.class);
+        final FighterAI ai = turn.fighter().attachment(FighterAI.class);
 
         if (ai != null) {
             ai.start(turn);

@@ -20,16 +20,16 @@
 package fr.quatrevieux.araknemu.game.handler;
 
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
-import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.network.game.GameSession;
 
 /**
  * Switch between handler when the current player is in fight or exploring
  */
-final public class ExploringOrFightingSwitcher<P extends Packet> implements PacketHandler<GameSession, P> {
-    final private PacketHandler<GameSession, P> exploringHandler;
-    final private PacketHandler<GameSession, P> fightingHandler;
+public final class ExploringOrFightingSwitcher<P extends Packet> implements PacketHandler<GameSession, P> {
+    private final PacketHandler<GameSession, P> exploringHandler;
+    private final PacketHandler<GameSession, P> fightingHandler;
 
     /**
      * ExploringOrFightingSwitcher constructor

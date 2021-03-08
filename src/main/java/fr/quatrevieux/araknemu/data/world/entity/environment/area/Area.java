@@ -23,10 +23,10 @@ package fr.quatrevieux.araknemu.data.world.entity.environment.area;
  * Area data
  * The area contains multiple subarea, and is under a superarea
  */
-final public class Area {
-    final private int id;
-    final private String name;
-    final private int superarea;
+public final class Area {
+    private final int id;
+    private final String name;
+    private final int superarea;
 
     public Area(int id, String name, int superarea) {
         this.id = id;

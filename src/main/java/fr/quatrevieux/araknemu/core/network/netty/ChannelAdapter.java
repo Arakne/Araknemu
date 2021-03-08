@@ -27,8 +27,8 @@ import java.net.InetSocketAddress;
 /**
  * Adapt Netty channel to Araknemu Channel
  */
-final public class ChannelAdapter implements Channel {
-    final private ChannelHandlerContext channel;
+public final class ChannelAdapter implements Channel {
+    private final ChannelHandlerContext channel;
 
     public ChannelAdapter(ChannelHandlerContext channel) {
         this.channel = channel;

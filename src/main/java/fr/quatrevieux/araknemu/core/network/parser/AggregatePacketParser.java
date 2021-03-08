@@ -27,8 +27,8 @@ import java.util.concurrent.ConcurrentMap;
  * Base packet parser
  * Will aggregate multiple {@link SinglePacketParser} for parse the incoming packet
  */
-final public class AggregatePacketParser implements PacketParser {
-    final private ConcurrentMap<String, SinglePacketParser> parsers = new ConcurrentHashMap<>();
+public final class AggregatePacketParser implements PacketParser {
+    private final ConcurrentMap<String, SinglePacketParser> parsers = new ConcurrentHashMap<>();
 
     private int minCodeLength = 2;
     private int maxCodeLength = 2;
@@ -47,12 +47,10 @@ final public class AggregatePacketParser implements PacketParser {
 
     @Override
     public Packet parse(String input) throws ParsePacketException {
-        int len = maxCodeLength > input.length() ? input.length() : maxCodeLength;
+        for (int len = Math.min(maxCodeLength, input.length()); len >= minCodeLength; --len) {
+            final String header = input.substring(0, len);
 
-        for(; len >= minCodeLength; --len) {
-            String header = input.substring(0, len);
-
-            if(parsers.containsKey(header)){
+            if (parsers.containsKey(header)) {
                 return parsers
                     .get(header)
                     .parse(input.substring(len))

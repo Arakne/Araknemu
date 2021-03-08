@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristi
 /**
  * Adapter for transform immutable characteristics
  */
-final public class ImmutableCharacteristicsTransformer implements Transformer<Characteristics> {
-    final private CharacteristicsTransformer inner = new CharacteristicsTransformer();
+public final class ImmutableCharacteristicsTransformer implements Transformer<Characteristics> {
+    private final CharacteristicsTransformer inner = new CharacteristicsTransformer();
 
     @Override
     public String serialize(Characteristics value) {

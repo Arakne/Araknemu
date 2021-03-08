@@ -29,11 +29,11 @@ import java.util.Arrays;
 /**
  * Special effect
  */
-final public class SpecialEffect implements ItemEffect {
-    final private SpecialEffectHandler handler;
-    final private Effect effect;
-    final private int[] arguments;
-    final private String text;
+public final class SpecialEffect implements ItemEffect {
+    private final SpecialEffectHandler handler;
+    private final Effect effect;
+    private final int[] arguments;
+    private final String text;
 
     public SpecialEffect(SpecialEffectHandler handler, Effect effect, int[] arguments, String text) {
         this.handler = handler;
@@ -90,7 +90,7 @@ final public class SpecialEffect implements ItemEffect {
             return false;
         }
 
-        SpecialEffect that = (SpecialEffect) o;
+        final SpecialEffect that = (SpecialEffect) o;
 
         return effect == that.effect
             && Arrays.equals(arguments, that.arguments)

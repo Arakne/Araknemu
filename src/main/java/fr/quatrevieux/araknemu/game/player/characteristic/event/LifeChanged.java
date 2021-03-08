@@ -22,9 +22,9 @@ package fr.quatrevieux.araknemu.game.player.characteristic.event;
 /**
  * Event trigger when player life changed
  */
-final public class LifeChanged {
-    final private int last;
-    final private int current;
+public final class LifeChanged {
+    private final int last;
+    private final int current;
 
     public LifeChanged(int last, int current) {
         this.last = last;

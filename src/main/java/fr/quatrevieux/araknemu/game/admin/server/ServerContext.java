@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.admin.server;
 
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContext;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
-import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.context.SimpleContext;
 
 import java.util.List;
@@ -29,10 +29,10 @@ import java.util.List;
 /**
  * Context for server management
  */
-final public class ServerContext extends AbstractContext<ServerContext> {
-    final private Context baseContext;
+public final class ServerContext extends AbstractContext<ServerContext> {
+    private final Context baseContext;
 
-    public ServerContext(Context baseContext, List<ContextConfigurator<ServerContext>> contextConfigurators) {
+    public ServerContext(Context baseContext, List<AbstractContextConfigurator<ServerContext>> contextConfigurators) {
         super(contextConfigurators);
 
         this.baseContext = baseContext;

@@ -31,26 +31,8 @@ import fr.quatrevieux.araknemu.network.game.out.info.Information;
 /**
  * Teleport to Astrub statue
  */
-final public class GoToAstrub implements Action {
-    final static public class Factory implements ActionFactory {
-        final private ExplorationMapService service;
-
-        public Factory(ExplorationMapService service) {
-            this.service = service;
-        }
-
-        @Override
-        public String type() {
-            return "GOTO_ASTRUB";
-        }
-
-        @Override
-        public Action create(ResponseAction entity) {
-            return new GoToAstrub(service);
-        }
-    }
-
-    final private ExplorationMapService service;
+public final class GoToAstrub implements Action {
+    private final ExplorationMapService service;
 
     public GoToAstrub(ExplorationMapService service) {
         this.service = service;
@@ -68,5 +50,23 @@ final public class GoToAstrub implements Action {
         player.interactions().push(new ChangeMap(player, service.load(position.map()), position.cell(), 7));
         player.player().setSavedPosition(position);
         player.send(Information.positionSaved());
+    }
+
+    public static final class Factory implements ActionFactory {
+        private final ExplorationMapService service;
+
+        public Factory(ExplorationMapService service) {
+            this.service = service;
+        }
+
+        @Override
+        public String type() {
+            return "GOTO_ASTRUB";
+        }
+
+        @Override
+        public Action create(ResponseAction entity) {
+            return new GoToAstrub(service);
+        }
     }
 }

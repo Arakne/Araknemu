@@ -24,10 +24,10 @@ import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
 /**
  * Event trigger when a spell boost is changed
  */
-final public class SpellBoostChanged {
-    final private int spellId;
-    final private SpellsBoosts.Modifier modifier;
-    final private int value;
+public final class SpellBoostChanged {
+    private final int spellId;
+    private final SpellsBoosts.Modifier modifier;
+    private final int value;
 
     public SpellBoostChanged(int spellId, SpellsBoosts.Modifier modifier, int value) {
         this.spellId = spellId;

@@ -29,10 +29,10 @@ import java.util.Map;
 /**
  * Handle admin users contexts
  */
-final public class AdminUserContext {
-    final private Map<String, Context> contexts = new HashMap<>();
-    final private AdminService service;
-    final private Context self;
+public final class AdminUserContext {
+    private final Map<String, Context> contexts = new HashMap<>();
+    private final AdminService service;
+    private final Context self;
 
     private Context current;
 

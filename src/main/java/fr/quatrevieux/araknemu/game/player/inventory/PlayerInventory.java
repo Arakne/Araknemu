@@ -22,10 +22,14 @@ package fr.quatrevieux.araknemu.game.player.inventory;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.item.Item;
-import fr.quatrevieux.araknemu.game.item.inventory.*;
+import fr.quatrevieux.araknemu.game.item.inventory.Inventory;
+import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
+import fr.quatrevieux.araknemu.game.item.inventory.SimpleItemStorage;
+import fr.quatrevieux.araknemu.game.item.inventory.SimpleWallet;
+import fr.quatrevieux.araknemu.game.item.inventory.Wallet;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
-import fr.quatrevieux.araknemu.game.item.type.Equipment;
+import fr.quatrevieux.araknemu.game.item.type.AbstractEquipment;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.accessory.InventoryAccessories;
 import fr.quatrevieux.araknemu.game.player.inventory.itemset.ItemSets;
@@ -41,13 +45,13 @@ import java.util.stream.Collectors;
 /**
  * Inventory for player
  */
-final public class PlayerInventory implements Inventory<InventoryEntry>, Dispatcher {
-    final private Player player;
-    final private ItemStorage<InventoryEntry> storage;
-    final private Wallet wallet;
-    final private InventorySlots slots;
-    final private Accessories accessories;
-    final private ItemSets itemSets;
+public final class PlayerInventory implements Inventory<InventoryEntry>, Dispatcher {
+    private final Player player;
+    private final ItemStorage<InventoryEntry> storage;
+    private final Wallet wallet;
+    private final InventorySlots slots;
+    private final Accessories accessories;
+    private final ItemSets itemSets;
 
     private GamePlayer owner;
     private int weight;
@@ -76,7 +80,7 @@ final public class PlayerInventory implements Inventory<InventoryEntry>, Dispatc
 
     @Override
     public InventoryEntry add(Item item, int quantity, int position) throws InventoryException {
-        InventorySlot target = slots.get(position);
+        final InventorySlot target = slots.get(position);
 
         target.check(item, quantity);
 
@@ -85,7 +89,7 @@ final public class PlayerInventory implements Inventory<InventoryEntry>, Dispatc
 
     @Override
     public InventoryEntry delete(int id) throws InventoryException {
-        InventoryEntry entry = get(id);
+        final InventoryEntry entry = get(id);
 
         slots.get(entry.position()).unset();
 
@@ -126,7 +130,7 @@ final public class PlayerInventory implements Inventory<InventoryEntry>, Dispatc
     /**
      * Get current player equipments
      */
-    public Collection<Equipment> equipments() {
+    public Collection<AbstractEquipment> equipments() {
         return slots.equipments();
     }
 
@@ -208,7 +212,7 @@ final public class PlayerInventory implements Inventory<InventoryEntry>, Dispatc
      *         false if the entry is destroyed (like stacking or eat)
      */
     boolean move(InventoryEntry entry, int position) throws InventoryException {
-        InventorySlot target = slots.get(position);
+        final InventorySlot target = slots.get(position);
 
         target.check(entry.item(), entry.quantity());
 

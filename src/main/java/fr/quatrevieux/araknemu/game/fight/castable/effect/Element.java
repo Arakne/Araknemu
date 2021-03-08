@@ -36,11 +36,11 @@ public enum Element {
     AIR(Characteristic.AGILITY,       Characteristic.RESISTANCE_AIR,     Characteristic.RESISTANCE_PERCENT_AIR),
     FIRE(Characteristic.INTELLIGENCE, Characteristic.RESISTANCE_FIRE,    Characteristic.RESISTANCE_PERCENT_FIRE);
 
-    final private Characteristic boost;
-    final private Characteristic fixedResistance;
-    final private Characteristic percentResistance;
+    private static final Map<Integer, Set<Element>> bitSetCache = new HashMap<>();
 
-    static private Map<Integer, Set<Element>> bitSetCache = new HashMap<>();
+    private final Characteristic boost;
+    private final Characteristic fixedResistance;
+    private final Characteristic percentResistance;
 
     Element(Characteristic boost, Characteristic fixedResistance, Characteristic percentResistance) {
         this.boost = boost;
@@ -65,15 +65,15 @@ public enum Element {
      *
      * @param value The bit set
      */
-    static public Set<Element> fromBitSet(int value) {
+    public static Set<Element> fromBitSet(int value) {
         if (bitSetCache.containsKey(value)) {
             return bitSetCache.get(value);
         }
 
-        Set<Element> elements = EnumSet.noneOf(Element.class);
+        final Set<Element> elements = EnumSet.noneOf(Element.class);
 
         for (Element element : values()) {
-            int id = 1 << (element.ordinal());
+            final int id = 1 << (element.ordinal());
 
             if ((value & id) == id) {
                 elements.add(element);

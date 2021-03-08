@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 /**
  * Check if the fight is terminated when a fighter die
  */
-final public class CheckFightTerminated implements Listener<FighterDie> {
-    final private Fight fight;
+public final class CheckFightTerminated implements Listener<FighterDie> {
+    private final Fight fight;
 
     public CheckFightTerminated(Fight fight) {
         this.fight = fight;

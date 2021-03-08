@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupPositionRepository;
@@ -34,26 +34,8 @@ import java.util.Collection;
  * SQL implementation for monster group position repository
  */
 final class SqlMonsterGroupPositionRepository implements MonsterGroupPositionRepository {
-    private class Loader implements RepositoryUtils.Loader<MonsterGroupPosition> {
-        @Override
-        public MonsterGroupPosition create(ResultSet rs) throws SQLException {
-            return new MonsterGroupPosition(
-                new Position(
-                    rs.getInt("MAP_ID"),
-                    rs.getInt("CELL_ID")
-                ),
-                rs.getInt("MONSTER_GROUP_ID")
-            );
-        }
-
-        @Override
-        public MonsterGroupPosition fillKeys(MonsterGroupPosition entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<MonsterGroupPosition> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<MonsterGroupPosition> utils;
 
     public SqlMonsterGroupPositionRepository(QueryExecutor executor) {
         this.executor = executor;
@@ -119,5 +101,23 @@ final class SqlMonsterGroupPositionRepository implements MonsterGroupPositionRep
     @Override
     public Collection<MonsterGroupPosition> all() {
         return utils.findAll("SELECT * FROM MONSTER_GROUP_POSITION");
+    }
+
+    private class Loader implements RepositoryUtils.Loader<MonsterGroupPosition> {
+        @Override
+        public MonsterGroupPosition create(ResultSet rs) throws SQLException {
+            return new MonsterGroupPosition(
+                new Position(
+                    rs.getInt("MAP_ID"),
+                    rs.getInt("CELL_ID")
+                ),
+                rs.getInt("MONSTER_GROUP_ID")
+            );
+        }
+
+        @Override
+        public MonsterGroupPosition fillKeys(MonsterGroupPosition entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

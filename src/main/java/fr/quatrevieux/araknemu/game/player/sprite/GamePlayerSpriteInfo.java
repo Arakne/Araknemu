@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.world.creature.accessory.Accessories;
 /**
  * Sprite info for game player
  */
-final public class GamePlayerSpriteInfo extends AbstractPlayerSpriteInfo {
-    final private PlayerInventory inventory;
+public final class GamePlayerSpriteInfo extends AbstractPlayerSpriteInfo {
+    private final PlayerInventory inventory;
 
     public GamePlayerSpriteInfo(Player player, PlayerInventory inventory) {
         super(player);

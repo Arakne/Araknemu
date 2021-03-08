@@ -24,10 +24,10 @@ import java.time.Instant;
 /**
  * Log the connexion and logout on the server
  */
-final public class ConnectionLog {
-    final private int accountId;
-    final private Instant startDate;
-    final private String ipAddress;
+public final class ConnectionLog {
+    private final int accountId;
+    private final Instant startDate;
+    private final String ipAddress;
 
     private Integer serverId;
     private Integer playerId;

@@ -25,10 +25,10 @@ import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 /**
  * An item has been moved on the exchange
  */
-final public class ItemMoved implements ExchangeEvent {
-    final private ItemEntry entry;
-    final private int quantity;
-    final private ExchangeStorage storage;
+public final class ItemMoved implements ExchangeEvent {
+    private final ItemEntry entry;
+    private final int quantity;
+    private final ExchangeStorage storage;
 
     public ItemMoved(ItemEntry entry, int quantity, ExchangeStorage storage) {
         this.entry = entry;

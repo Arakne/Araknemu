@@ -33,11 +33,11 @@ import java.util.stream.Collectors;
 /**
  * Handle the bank accounts
  */
-final public class BankService {
-    final private ItemService itemService;
-    final private AccountBankRepository bankRepository;
-    final private BankItemRepository itemRepository;
-    final private GameConfiguration.EconomyConfiguration configuration;
+public final class BankService {
+    private final ItemService itemService;
+    private final AccountBankRepository bankRepository;
+    private final BankItemRepository itemRepository;
+    private final GameConfiguration.EconomyConfiguration configuration;
 
     public BankService(ItemService itemService, AccountBankRepository bankRepository, BankItemRepository itemRepository, GameConfiguration.EconomyConfiguration configuration) {
         this.itemService = itemService;
@@ -50,7 +50,7 @@ final public class BankService {
      * Load the bank for the given account
      */
     public Bank load(GameAccount account) {
-        Bank bank = new Bank(this, bankRepository.get(new AccountBank(account.id(), account.serverId(), 0)));
+        final Bank bank = new Bank(this, bankRepository.get(new AccountBank(account.id(), account.serverId(), 0)));
 
         bank.dispatcher().register(new SaveBank(itemRepository));
 

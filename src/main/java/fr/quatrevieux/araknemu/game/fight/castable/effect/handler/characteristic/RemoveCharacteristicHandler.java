@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 /**
  * Buff effect for removing characteristic points
  */
-public class RemoveCharacteristicHandler extends AlterCharacteristicHandler {
+public class RemoveCharacteristicHandler extends AbstractAlterCharacteristicHandler {
     public RemoveCharacteristicHandler(Fight fight, Characteristic characteristic) {
         super(fight, characteristic);
     }

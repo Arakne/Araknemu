@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 /**
  * Attach the fighter to the player
  */
-final public class AttachFighter implements Listener<FightJoined> {
-    final private GamePlayer player;
+public final class AttachFighter implements Listener<FightJoined> {
+    private final GamePlayer player;
 
     public AttachFighter(GamePlayer player) {
         this.player = player;

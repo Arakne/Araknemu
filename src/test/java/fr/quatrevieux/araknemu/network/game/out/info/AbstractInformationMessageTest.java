@@ -23,8 +23,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InformationMessageTest {
-    private static class Impl extends InformationMessage {
+class AbstractInformationMessageTest {
+    private static class Impl extends AbstractInformationMessage {
         public Impl(Type type, Entry... entries) {
             super(type, entries);
         }
@@ -34,7 +34,7 @@ class InformationMessageTest {
     void simple() {
         assertEquals(
             "Im012;",
-            new Impl(InformationMessage.Type.INFO, new InformationMessage.Entry(12)).toString()
+            new Impl(AbstractInformationMessage.Type.INFO, new AbstractInformationMessage.Entry(12)).toString()
         );
     }
 
@@ -43,10 +43,10 @@ class InformationMessageTest {
         assertEquals(
             "Im05;|6;|7;",
             new Impl(
-                InformationMessage.Type.INFO,
-                new InformationMessage.Entry(5),
-                new InformationMessage.Entry(6),
-                new InformationMessage.Entry(7)
+                AbstractInformationMessage.Type.INFO,
+                new AbstractInformationMessage.Entry(5),
+                new AbstractInformationMessage.Entry(6),
+                new AbstractInformationMessage.Entry(7)
             ).toString()
         );
     }
@@ -56,8 +56,8 @@ class InformationMessageTest {
         assertEquals(
             "Im05;Hello~45~World",
             new Impl(
-                InformationMessage.Type.INFO,
-                new InformationMessage.Entry(5, "Hello", 45, "World")
+                AbstractInformationMessage.Type.INFO,
+                new AbstractInformationMessage.Entry(5, "Hello", 45, "World")
             ).toString()
         );
     }

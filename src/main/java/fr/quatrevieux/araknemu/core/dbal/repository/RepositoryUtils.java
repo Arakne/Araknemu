@@ -34,46 +34,8 @@ import java.util.List;
  * @param <E> The entity class
  */
 public class RepositoryUtils<E> {
-    public interface Loader<E> {
-        /**
-         * Create an entity from database data
-         * The created entity MUST be filled
-         *
-         * @param rs Database data
-         *
-         * @return The created entity
-         *
-         * @throws SQLException
-         */
-        public E create(ResultSet rs) throws SQLException;
-
-        /**
-         * Fill the entity with generated keys
-         *
-         * @param entity Entity to fill
-         * @param keys The generated key {@link Statement#getGeneratedKeys()}
-         *
-         * @return The filled entity instance (may be new instance)
-         *
-         * @throws SQLException
-         */
-        public E fillKeys(E entity, ResultSet keys) throws SQLException;
-    }
-
-    public interface Binder {
-        /**
-         * Do nothing binder
-         */
-        final static public Binder NOP_BINDER = statement -> {};
-
-        /**
-         * Bind data into PreparedStatement
-         */
-        public void bind(PreparedStatement statement) throws SQLException;
-    }
-
-    final private QueryExecutor executor;
-    final private Loader<E> loader;
+    private final QueryExecutor executor;
+    private final Loader<E> loader;
 
     public RepositoryUtils(QueryExecutor executor, Loader<E> loader) {
         this.executor = executor;
@@ -105,7 +67,7 @@ public class RepositoryUtils<E> {
                 statement -> {
                     binder.bind(statement);
 
-                    ResultSet rs = statement.executeQuery();
+                    final ResultSet rs = statement.executeQuery();
 
                     if (!rs.next()) {
                         throw new EntityNotFoundException();
@@ -143,9 +105,8 @@ public class RepositoryUtils<E> {
                 statement -> {
                     binder.bind(statement);
 
-                    ResultSet rs = statement.executeQuery();
-
-                    List<E> result = new ArrayList<>();
+                    final ResultSet rs = statement.executeQuery();
+                    final List<E> result = new ArrayList<>();
 
                     while (rs.next()) {
                         result.add(loader.create(rs));
@@ -200,7 +161,7 @@ public class RepositoryUtils<E> {
                 statement -> {
                     binder.bind(statement);
 
-                    ResultSet rs = statement.executeQuery();
+                    final ResultSet rs = statement.executeQuery();
 
                     if (!rs.next()) {
                         throw new RepositoryException("Invalid aggregate query");
@@ -273,7 +234,7 @@ public class RepositoryUtils<E> {
                     binder.bind(statement);
                     statement.execute();
 
-                    ResultSet rs = statement.getGeneratedKeys();
+                    final ResultSet rs = statement.getGeneratedKeys();
 
                     if (!rs.next()) {
                         throw new RepositoryException("No generated keys. Use RepositoryUtils#update(String, Binder) instead");
@@ -286,5 +247,43 @@ public class RepositoryUtils<E> {
         } catch (SQLException e) {
             throw new RepositoryException(e);
         }
+    }
+
+    public interface Loader<E> {
+        /**
+         * Create an entity from database data
+         * The created entity MUST be filled
+         *
+         * @param rs Database data
+         *
+         * @return The created entity
+         *
+         * @throws SQLException Throws by ResultSet
+         */
+        public E create(ResultSet rs) throws SQLException;
+
+        /**
+         * Fill the entity with generated keys
+         *
+         * @param entity Entity to fill
+         * @param keys The generated key {@link Statement#getGeneratedKeys()}
+         *
+         * @return The filled entity instance (may be new instance)
+         *
+         * @throws SQLException Throws by ResultSet
+         */
+        public E fillKeys(E entity, ResultSet keys) throws SQLException;
+    }
+
+    public interface Binder {
+        /**
+         * Do nothing binder
+         */
+        public static final Binder NOP_BINDER = statement -> {};
+
+        /**
+         * Bind data into PreparedStatement
+         */
+        public void bind(PreparedStatement statement) throws SQLException;
     }
 }

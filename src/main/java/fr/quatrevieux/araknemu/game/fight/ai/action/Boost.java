@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.ai.action;
@@ -32,8 +32,8 @@ import java.util.Optional;
  * Self boost is priorized to allies boost.
  * The selected spell must, at least, boost allies or self.
  */
-final public class Boost implements ActionGenerator, CastSpell.SimulationSelector {
-    final private CastSpell generator;
+public final class Boost implements ActionGenerator, CastSpell.SimulationSelector {
+    private final CastSpell generator;
 
     public Boost(Simulator simulator) {
         this.generator = new CastSpell(simulator, this);
@@ -66,8 +66,8 @@ final public class Boost implements ActionGenerator, CastSpell.SimulationSelecto
      *
      * @return The score of the simulation
      */
-    private int score(CastSimulation simulation) {
-        int score =
+    private double score(CastSimulation simulation) {
+        final double score =
             + simulation.alliesBoost()
             + simulation.selfBoost() * 2
             - simulation.enemiesBoost()

@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L85
  */
-final public class GameCreated {
-    final private CreateGameRequest.Type type;
+public final class GameCreated {
+    private final CreateGameRequest.Type type;
 
     public GameCreated(CreateGameRequest.Type type) {
         this.type = type;

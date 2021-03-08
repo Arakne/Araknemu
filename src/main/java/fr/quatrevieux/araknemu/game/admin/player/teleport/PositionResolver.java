@@ -29,9 +29,9 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
  *
  * @todo handle area
  */
-final public class PositionResolver implements LocationResolver {
-    final private GamePlayer player;
-    final private GeolocationService service;
+public final class PositionResolver implements LocationResolver {
+    private final GamePlayer player;
+    private final GeolocationService service;
 
     public PositionResolver(GamePlayer player, GeolocationService service) {
         this.player = player;
@@ -45,7 +45,7 @@ final public class PositionResolver implements LocationResolver {
 
     @Override
     public void resolve(String argument, Target target) {
-        String[] parts = argument.split("[;,]", 2);
+        final String[] parts = argument.split("[;,]", 2);
 
         // @todo area ?
         if (parts.length != 2) {

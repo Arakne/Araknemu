@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.admin.player;
 
 import fr.quatrevieux.araknemu.game.admin.context.Context;
-import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
@@ -33,11 +33,11 @@ import java.util.NoSuchElementException;
 /**
  * Context resolver for player
  */
-final public class PlayerContextResolver implements ContextResolver {
-    final private PlayerService service;
-    final private ContextResolver accountContextResolver;
+public final class PlayerContextResolver implements ContextResolver {
+    private final PlayerService service;
+    private final ContextResolver accountContextResolver;
 
-    final private List<ContextConfigurator<PlayerContext>> configurators = new ArrayList<>();
+    private final List<AbstractContextConfigurator<PlayerContext>> configurators = new ArrayList<>();
 
     public PlayerContextResolver(PlayerService service, ContextResolver accountContextResolver) {
         this.service = service;
@@ -63,7 +63,7 @@ final public class PlayerContextResolver implements ContextResolver {
     /**
      * Register a new configurator for the player context
      */
-    public PlayerContextResolver register(ContextConfigurator<PlayerContext> configurator) {
+    public PlayerContextResolver register(AbstractContextConfigurator<PlayerContext> configurator) {
         configurators.add(configurator);
 
         return this;

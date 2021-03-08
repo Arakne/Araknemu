@@ -31,8 +31,8 @@ import inet.ipaddr.IPAddressString;
  *
  * @param <S> The session type
  */
-final public class BanIpCheck<S extends Session> implements SessionConfigurator.Configurator<S> {
-    final private BanIpService service;
+public final class BanIpCheck<S extends Session> implements SessionConfigurator.Configurator<S> {
+    private final BanIpService service;
 
     public BanIpCheck(BanIpService service) {
         this.service = service;

@@ -27,10 +27,10 @@ import fr.quatrevieux.araknemu.game.player.experience.event.PlayerXpChanged;
 /**
  * Manage the player level and experience
  */
-final public class GamePlayerExperience {
-    final private Player entity;
-    final private PlayerExperienceService service;
-    final private Dispatcher dispatcher;
+public final class GamePlayerExperience {
+    private final Player entity;
+    private final PlayerExperienceService service;
+    private final Dispatcher dispatcher;
 
     public GamePlayerExperience(Player entity, PlayerExperienceService service, Dispatcher dispatcher) {
         this.entity = entity;

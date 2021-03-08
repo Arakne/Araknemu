@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.value.BoostStatsData;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
-import fr.quatrevieux.araknemu.game.item.type.Equipment;
+import fr.quatrevieux.araknemu.game.item.type.AbstractEquipment;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsChanged;
 import fr.quatrevieux.araknemu.game.player.race.GamePlayerRace;
@@ -36,14 +36,14 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharac
  * Characteristic map for player
  * This class will handle aggregation of stats, and computed stats
  */
-final public class PlayerCharacteristics implements CharacterCharacteristics {
-    final private MutableCharacteristics base;
-    final private Dispatcher dispatcher;
-    final private Player entity;
-    final private GamePlayerRace race;
-    final private GamePlayer player;
+public final class PlayerCharacteristics implements CharacterCharacteristics {
+    private final MutableCharacteristics base;
+    private final Dispatcher dispatcher;
+    private final Player entity;
+    private final GamePlayerRace race;
+    private final GamePlayer player;
 
-    final private SpecialEffects specials = new SpecialEffects();
+    private final SpecialEffects specials = new SpecialEffects();
 
     private Characteristics stuff;
 
@@ -93,12 +93,12 @@ final public class PlayerCharacteristics implements CharacterCharacteristics {
      * Boost a characteristic
      */
     public void boostCharacteristic(Characteristic characteristic) {
-        BoostStatsData.Interval interval = race.boost(
+        final BoostStatsData.Interval interval = race.boost(
             characteristic,
             base.get(characteristic)
         );
 
-        int points = entity.boostPoints() - interval.cost();
+        final int points = entity.boostPoints() - interval.cost();
 
         if (points < 0) {
             throw new IllegalArgumentException("Not enough points for boost stats");
@@ -115,17 +115,19 @@ final public class PlayerCharacteristics implements CharacterCharacteristics {
 
     @Override
     public int initiative() {
-        int value = race.initiative(player.properties().life().max());
+        final int value =
+            race.initiative(player.properties().life().max())
+            + get(Characteristic.STRENGTH)
+            + get(Characteristic.LUCK)
+            + get(Characteristic.AGILITY)
+            + get(Characteristic.INTELLIGENCE)
+            + specials.get(SpecialEffects.Type.INITIATIVE)
+        ;
 
-        value += get(Characteristic.STRENGTH);
-        value += get(Characteristic.LUCK);
-        value += get(Characteristic.AGILITY);
-        value += get(Characteristic.INTELLIGENCE);
-        value += specials.get(SpecialEffects.Type.INITIATIVE);
-
-        int init = value * player.properties().life().current() / player.properties().life().max();
-
-        return Math.max(1, init);
+        return Math.max(
+            value * player.properties().life().current() / player.properties().life().max(),
+            1
+        );
     }
 
     @Override
@@ -159,7 +161,7 @@ final public class PlayerCharacteristics implements CharacterCharacteristics {
     public void rebuildSpecialEffects() {
         specials.clear();
 
-        for (Equipment equipment : player.inventory().equipments()) {
+        for (AbstractEquipment equipment : player.inventory().equipments()) {
             for (SpecialEffect effect : equipment.specials()) {
                 effect.apply(player);
             }
@@ -172,9 +174,9 @@ final public class PlayerCharacteristics implements CharacterCharacteristics {
      * Compute the stuff stats
      */
     private Characteristics computeStuffStats() {
-        MutableCharacteristics characteristics = new DefaultCharacteristics();
+        final MutableCharacteristics characteristics = new DefaultCharacteristics();
 
-        for (Equipment equipment : player.inventory().equipments()) {
+        for (AbstractEquipment equipment : player.inventory().equipments()) {
             equipment.apply(characteristics);
         }
 

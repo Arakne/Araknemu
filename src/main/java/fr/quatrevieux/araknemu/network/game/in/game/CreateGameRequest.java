@@ -28,14 +28,24 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L23
  */
-final public class CreateGameRequest implements Packet {
+public final class CreateGameRequest implements Packet {
     public enum Type {
         NONE,
         EXPLORATION,
         FIGHT
     }
 
-    final static public class Parser implements SinglePacketParser<CreateGameRequest> {
+    private final Type type;
+
+    public CreateGameRequest(Type type) {
+        this.type = type;
+    }
+
+    public Type type() {
+        return type;
+    }
+
+    public static final class Parser implements SinglePacketParser<CreateGameRequest> {
         @Override
         public CreateGameRequest parse(String input) throws ParsePacketException {
             return new CreateGameRequest(
@@ -47,15 +57,5 @@ final public class CreateGameRequest implements Packet {
         public String code() {
             return "GC";
         }
-    }
-
-    final private Type type;
-
-    public CreateGameRequest(Type type) {
-        this.type = type;
-    }
-
-    public Type type() {
-        return type;
     }
 }

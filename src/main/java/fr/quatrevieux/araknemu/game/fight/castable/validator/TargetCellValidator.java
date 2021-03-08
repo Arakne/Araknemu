@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 /**
  * Validate the target cell
  */
-final public class TargetCellValidator implements CastConstraintValidator {
+public final class TargetCellValidator implements CastConstraintValidator {
     @Override
     public Error validate(Turn turn, Castable castable, FightCell target) {
         if (!target.walkableIgnoreFighter()) {

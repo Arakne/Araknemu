@@ -24,13 +24,13 @@ package fr.quatrevieux.araknemu.network.game.out.account;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L1205
  */
-final public class RandomNameGenerationError {
+public final class RandomNameGenerationError {
     public enum Error {
         UNDEFINED,
         CANNOT_GENERATE_PASSWORD
     }
 
-    final private Error error;
+    private final Error error;
 
     public RandomNameGenerationError(Error error) {
         this.error = error;

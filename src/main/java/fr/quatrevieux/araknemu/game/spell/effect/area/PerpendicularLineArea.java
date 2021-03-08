@@ -30,8 +30,8 @@ import java.util.Set;
 /**
  * Resolve perpendicular line (i.e. baton area)
  */
-final public class PerpendicularLineArea implements SpellEffectArea {
-    final private EffectArea area;
+public final class PerpendicularLineArea implements SpellEffectArea {
+    private final EffectArea area;
 
     public PerpendicularLineArea(EffectArea area) {
         this.area = area;
@@ -39,9 +39,8 @@ final public class PerpendicularLineArea implements SpellEffectArea {
 
     @Override
     public <C extends MapCell> Set<C> resolve(C target, C source) {
-        Set<C> cells = new HashSet<>(area.size() * 2 + 1);
-
-        Direction direction = new CoordinateCell<>(source).directionTo(new CoordinateCell<>(target)).orthogonal();
+        final Set<C> cells = new HashSet<>(area.size() * 2 + 1);
+        final Direction direction = new CoordinateCell<>(source).directionTo(new CoordinateCell<>(target)).orthogonal();
 
         cells.add(target);
 

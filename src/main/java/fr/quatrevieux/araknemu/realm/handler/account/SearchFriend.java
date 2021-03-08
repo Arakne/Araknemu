@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.realm.host.HostService;
 /**
  * List the friend servers and character count
  */
-final public class SearchFriend implements PacketHandler<RealmSession, FriendSearch> {
-    final private HostService service;
+public final class SearchFriend implements PacketHandler<RealmSession, FriendSearch> {
+    private final HostService service;
 
     public SearchFriend(HostService service) {
         this.service = service;

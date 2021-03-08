@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 /**
  * Event dispatched when player leave a map
  */
-final public class MapLeaved {
-    final private ExplorationMap map;
+public final class MapLeaved {
+    private final ExplorationMap map;
 
     public MapLeaved(ExplorationMap map) {
         this.map = map;

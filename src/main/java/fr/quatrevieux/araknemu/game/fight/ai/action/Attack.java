@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.ai.action;
@@ -32,16 +32,25 @@ import java.util.Optional;
  * Select spells causing damage on enemies
  * All cells are tested for select the most effective target for each spells
  */
-final public class Attack implements ActionGenerator, CastSpell.SimulationSelector {
-    final private CastSpell generator;
+public final class Attack implements ActionGenerator, CastSpell.SimulationSelector {
+    private final CastSpell generator;
+    private final double suicidePenaltyFactor;
+
+    private double averageEnemyLifePoints = 0;
 
     public Attack(Simulator simulator) {
+        this(simulator, 2);
+    }
+
+    public Attack(Simulator simulator, double suicidePenaltyFactor) {
         this.generator = new CastSpell(simulator, this);
+        this.suicidePenaltyFactor = suicidePenaltyFactor;
     }
 
     @Override
     public void initialize(AI ai) {
         generator.initialize(ai);
+        averageEnemyLifePoints = ai.enemies().mapToInt(fighter -> fighter.life().max()).average().orElse(0);
     }
 
     @Override
@@ -68,15 +77,20 @@ final public class Attack implements ActionGenerator, CastSpell.SimulationSelect
      *
      * @todo Handle the boost value
      */
-    private int score(CastSimulation simulation) {
-        int score =
+    private double score(CastSimulation simulation) {
+        double score =
             - simulation.enemiesLife()
             + simulation.alliesLife()
             + simulation.selfLife() * 2
         ;
 
-        int killRatio = simulation.killedEnemies() - 2 * simulation.killedAllies();
-        score += 100 * killRatio; // @todo better algo ?
+        final double killRatio =
+            simulation.killedEnemies()
+            - 1.5 * simulation.killedAllies()
+            - suicidePenaltyFactor * simulation.suicideProbability()
+        ;
+
+        score += averageEnemyLifePoints * killRatio;
 
         return score / simulation.spell().apCost();
     }

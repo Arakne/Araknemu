@@ -27,8 +27,8 @@ import java.util.Set;
 /**
  * Resolve circle area
  */
-final public class CircleArea implements SpellEffectArea {
-    final private CircularArea area;
+public final class CircleArea implements SpellEffectArea {
+    private final CircularArea area;
 
     public CircleArea(EffectArea area) {
         this.area = new CircularArea(area, distance -> distance <= size());

@@ -26,10 +26,10 @@ import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Spells.as#L69
  */
-final public class SpellBoost {
-    final private int spellId;
-    final private SpellsBoosts.Modifier modifier;
-    final private int value;
+public final class SpellBoost {
+    private final int spellId;
+    private final SpellsBoosts.Modifier modifier;
+    private final int value;
 
     public SpellBoost(int spellId, SpellsBoosts.Modifier modifier, int value) {
         this.spellId = spellId;

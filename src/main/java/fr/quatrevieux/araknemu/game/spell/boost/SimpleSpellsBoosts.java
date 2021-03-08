@@ -22,14 +22,18 @@ package fr.quatrevieux.araknemu.game.spell.boost;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.boost.spell.BoostedSpell;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * Simple implementation of spell boosts
  */
-final public class SimpleSpellsBoosts implements SpellsBoosts {
-    final private Map<Integer, Map<Modifier, Integer>> spellsModifiers = new HashMap<>();
+public final class SimpleSpellsBoosts implements SpellsBoosts {
+    private final Map<Integer, Map<Modifier, Integer>> spellsModifiers = new HashMap<>();
 
     @Override
     public int boost(int spellId, Modifier modifier, int value) {
@@ -40,9 +44,9 @@ final public class SimpleSpellsBoosts implements SpellsBoosts {
             return set(spellId, modifier, value);
         }
 
-        Map<Modifier, Integer> modifiers = spellsModifiers.get(spellId);
+        final Map<Modifier, Integer> modifiers = spellsModifiers.get(spellId);
+        final int newValue = modifiers.get(modifier) + value;
 
-        int newValue = modifiers.get(modifier) + value;
         modifiers.put(modifier, newValue);
 
         return newValue;

@@ -30,12 +30,12 @@ import java.util.Map;
 /**
  * Base database handler
  */
-final public class DefaultDatabaseHandler implements DatabaseHandler {
-    final private DatabaseConfiguration configuration;
-    final private Map<String, Driver.Factory> factories;
-    final private Logger logger;
+public final class DefaultDatabaseHandler implements DatabaseHandler {
+    private final DatabaseConfiguration configuration;
+    private final Map<String, Driver.Factory> factories;
+    private final Logger logger;
 
-    final private Map<String, ConnectionPool> connections = new HashMap<>();
+    private final Map<String, ConnectionPool> connections = new HashMap<>();
 
     public DefaultDatabaseHandler(DatabaseConfiguration configuration, Logger logger, Map<String, Driver.Factory> factories) {
         this.configuration = configuration;
@@ -56,7 +56,7 @@ final public class DefaultDatabaseHandler implements DatabaseHandler {
             return connections.get(name);
         }
 
-        DatabaseConfiguration.Connection config = configuration.connection(name);
+        final DatabaseConfiguration.Connection config = configuration.connection(name);
 
         ConnectionPool pool = new SimpleConnectionPool(
             factories.get(config.type()).create(config),
@@ -81,8 +81,9 @@ final public class DefaultDatabaseHandler implements DatabaseHandler {
 
     /**
      * Register a new factory
-     * @param type
-     * @param factory
+     *
+     * @param type The factory type. {@link Driver#type()}
+     * @param factory The factory for create the driver
      */
     public void factory(String type, Driver.Factory factory) {
         factories.put(type, factory);
@@ -90,11 +91,16 @@ final public class DefaultDatabaseHandler implements DatabaseHandler {
 
     @Override
     public void stop() {
-        Collection<ConnectionPool> pools = new ArrayList<>(connections.values());
+        final Collection<ConnectionPool> pools = new ArrayList<>(connections.values());
+
         connections.clear();
 
         for (ConnectionPool pool : pools) {
-            try { pool.close(); } catch (Exception e) {}
+            try {
+                pool.close();
+            } catch (Exception e) {
+                // Stop is a no fail operation
+            }
         }
     }
 }

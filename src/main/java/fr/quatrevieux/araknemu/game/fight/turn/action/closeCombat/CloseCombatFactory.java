@@ -30,10 +30,10 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 /**
  * Factory for close combat action
  */
-final public class CloseCombatFactory implements FightActionFactory {
-    final private FightTurn turn;
-    final private WeaponConstraintsValidator validator;
-    final private CriticalityStrategy criticalityStrategy;
+public final class CloseCombatFactory implements FightActionFactory {
+    private final FightTurn turn;
+    private final WeaponConstraintsValidator validator;
+    private final CriticalityStrategy criticalityStrategy;
 
     public CloseCombatFactory(FightTurn turn) {
         this(turn, new WeaponConstraintsValidator(), new BaseCriticalityStrategy(turn.fighter()));

@@ -25,7 +25,6 @@ import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.core.network.session.Session;
 import fr.quatrevieux.araknemu.game.PreloadableService;
-import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 import fr.quatrevieux.araknemu.realm.event.AuthStopped;
 import org.apache.logging.log4j.Logger;
@@ -37,7 +36,7 @@ import java.util.function.Supplier;
 /**
  * Synchronize ban ip table for authentication service
  */
-final public class AuthBanIpSynchronizer extends AbstractBanIpSynchronizer implements EventsSubscriber, PreloadableService {
+public final class AuthBanIpSynchronizer extends AbstractBanIpSynchronizer implements EventsSubscriber, PreloadableService {
     public AuthBanIpSynchronizer(BanIpService<AuthenticationAccount> service, Supplier<Collection<? extends Session>> sessionsSupplier, Logger logger, Duration refreshDelay) {
         super(service, sessionsSupplier, logger, refreshDelay);
     }

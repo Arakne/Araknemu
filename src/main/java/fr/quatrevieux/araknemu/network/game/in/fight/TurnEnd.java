@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L50
  */
-final public class TurnEnd implements Packet {
-    final static public class Parser implements SinglePacketParser<TurnEnd> {
+public final class TurnEnd implements Packet {
+    public static final class Parser implements SinglePacketParser<TurnEnd> {
         @Override
         public TurnEnd parse(String input) throws ParsePacketException {
             return new TurnEnd();

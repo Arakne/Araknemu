@@ -30,60 +30,12 @@ import java.util.function.Predicate;
 /**
  * Simple session implementation with configurable handlers for each methods
  */
-final public class ConfigurableSession implements Session {
-    /**
-     * Handle exceptions thrown during a session
-     *
-     * @param <E> The exception type
-     */
-    public interface ExceptionHandler<E extends Throwable> {
-        /**
-         * The supported exception type
-         */
-        public Class<E> type();
+public final class ConfigurableSession implements Session {
+    private final Channel channel;
 
-        /**
-         * Handle the exception
-         *
-         * @return true for call next handlers, or false to stop exception handling
-         */
-        public boolean handleException(E cause);
-    }
-
-    /**
-     * Middleware for handle received packets
-     */
-    @FunctionalInterface
-    public interface ReceivePacketMiddleware {
-        /**
-         * Handle a packet
-         *
-         * @param packet Packet to handle
-         * @param next The next middleware to call
-         */
-        public void handlePacket(Object packet, Consumer<Object> next) throws Exception;
-    }
-
-    /**
-     * Transform packets before sending
-     */
-    @FunctionalInterface
-    public interface SendPacketTransformer {
-        /**
-         * Transform the packet
-         *
-         * @param packet Original packet
-         *
-         * @return The transformed packet, or null to cancel sending
-         */
-        public Object transformPacket(Object packet);
-    }
-
-    final private Channel channel;
-
-    final private List<SendPacketTransformer> sendTransformers = new ArrayList<>();
-    final private List<ReceivePacketMiddleware> receiveMiddlewares = new ArrayList<>();
-    final private List<ExceptionHandler> exceptionHandlers = new ArrayList<>();
+    private final List<SendPacketTransformer> sendTransformers = new ArrayList<>();
+    private final List<ReceivePacketMiddleware> receiveMiddlewares = new ArrayList<>();
+    private final List<ExceptionHandler> exceptionHandlers = new ArrayList<>();
 
     public ConfigurableSession(Channel channel) {
         this.channel = channel;
@@ -218,5 +170,53 @@ final public class ConfigurableSession implements Session {
                 return handle.test((E) cause);
             }
         });
+    }
+
+    /**
+     * Handle exceptions thrown during a session
+     *
+     * @param <E> The exception type
+     */
+    public interface ExceptionHandler<E extends Throwable> {
+        /**
+         * The supported exception type
+         */
+        public Class<E> type();
+
+        /**
+         * Handle the exception
+         *
+         * @return true for call next handlers, or false to stop exception handling
+         */
+        public boolean handleException(E cause);
+    }
+
+    /**
+     * Middleware for handle received packets
+     */
+    @FunctionalInterface
+    public interface ReceivePacketMiddleware {
+        /**
+         * Handle a packet
+         *
+         * @param packet Packet to handle
+         * @param next The next middleware to call
+         */
+        public void handlePacket(Object packet, Consumer<Object> next) throws Exception;
+    }
+
+    /**
+     * Transform packets before sending
+     */
+    @FunctionalInterface
+    public interface SendPacketTransformer {
+        /**
+         * Transform the packet
+         *
+         * @param packet Original packet
+         *
+         * @return The transformed packet, or null to cancel sending
+         */
+        public Object transformPacket(Object packet);
     }
 }

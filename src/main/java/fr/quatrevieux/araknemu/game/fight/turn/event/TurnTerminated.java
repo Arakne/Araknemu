@@ -26,9 +26,9 @@ import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
  *
  * Unlike TurnStopped, this event is dispatched whether is started or not
  */
-final public class TurnTerminated {
-    final private FightTurn turn;
-    final private boolean aborted;
+public final class TurnTerminated {
+    private final FightTurn turn;
+    private final boolean aborted;
 
     public TurnTerminated(FightTurn turn, boolean aborted) {
         this.turn = turn;

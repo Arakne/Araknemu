@@ -22,5 +22,5 @@ package fr.quatrevieux.araknemu.core.network;
 /**
  * Packet object for represents session create (new socket connection)
  */
-final public class SessionCreated implements InternalPacket {
+public final class SessionCreated implements InternalPacket {
 }

@@ -35,9 +35,9 @@ import java.util.NoSuchElementException;
 /**
  * Interaction for dialog with NPC
  */
-final public class NpcDialog implements Interaction {
-    final private ExplorationPlayer player;
-    final private GameNpc npc;
+public final class NpcDialog implements Interaction {
+    private final ExplorationPlayer player;
+    private final GameNpc npc;
 
     /**
      * Store the current question

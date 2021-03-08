@@ -23,18 +23,18 @@ import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.item.inventory.AbstractItemEntry;
-import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectMoved;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 
 import java.util.stream.Collectors;
 
 /**
  * Entry for player repository
  */
-final public class InventoryEntry extends AbstractItemEntry {
-    final private PlayerInventory inventory;
-    final private PlayerItem entity;
-    final private Item item;
+public final class InventoryEntry extends AbstractItemEntry {
+    private final PlayerInventory inventory;
+    private final PlayerItem entity;
+    private final Item item;
 
     public InventoryEntry(PlayerInventory inventory, PlayerItem entity, Item item) {
         super(inventory, entity, item, inventory);
@@ -73,9 +73,17 @@ final public class InventoryEntry extends AbstractItemEntry {
     }
 
     /**
+     * Set the item to the default position
+     * Note: this method is internal and should not be called
+     */
+    public void setToDefaultPosition() {
+        entity.setPosition(DEFAULT_POSITION);
+    }
+
+    /**
      * Get the database entity
      */
-    public PlayerItem entity() {
+    PlayerItem entity() {
         return entity;
     }
 

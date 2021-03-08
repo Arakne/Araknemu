@@ -20,9 +20,9 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.arakne.utils.maps.constant.Direction;
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcRepository;
@@ -39,31 +39,8 @@ import java.util.Collection;
  * @see Npc
  */
 final class SqlNpcRepository implements NpcRepository {
-    private class Loader implements RepositoryUtils.Loader<Npc> {
-        @Override
-        public Npc create(ResultSet rs) throws SQLException {
-            return new Npc(
-                rs.getInt("NPC_ID"),
-                rs.getInt("NPC_TEMPLATE_ID"),
-                new Position(
-                    rs.getInt("MAP_ID"),
-                    rs.getInt("CELL_ID")
-                ),
-                Direction.values()[rs.getInt("ORIENTATION")],
-                Arrays.stream(StringUtils.split(rs.getString("QUESTIONS"), ';'))
-                    .mapToInt(Integer::parseInt)
-                    .toArray()
-            );
-        }
-
-        @Override
-        public Npc fillKeys(Npc entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<Npc> utils;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<Npc> utils;
 
     public SqlNpcRepository(QueryExecutor executor) {
         this.executor = executor;
@@ -130,5 +107,28 @@ final class SqlNpcRepository implements NpcRepository {
             "SELECT * FROM NPC WHERE MAP_ID = ?",
             rs -> rs.setInt(1, mapId)
         );
+    }
+
+    private class Loader implements RepositoryUtils.Loader<Npc> {
+        @Override
+        public Npc create(ResultSet rs) throws SQLException {
+            return new Npc(
+                rs.getInt("NPC_ID"),
+                rs.getInt("NPC_TEMPLATE_ID"),
+                new Position(
+                    rs.getInt("MAP_ID"),
+                    rs.getInt("CELL_ID")
+                ),
+                Direction.values()[rs.getInt("ORIENTATION")],
+                Arrays.stream(StringUtils.split(rs.getString("QUESTIONS"), ';'))
+                    .mapToInt(Integer::parseInt)
+                    .toArray()
+            );
+        }
+
+        @Override
+        public Npc fillKeys(Npc entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

@@ -26,9 +26,9 @@ import fr.quatrevieux.araknemu.realm.host.LocalGameConnector;
 /**
  * GameConnector for local game server (i.e. Game and Realm on same application)
  */
-final public class LocalRealmConnector implements RealmConnector {
-    final private HostService realm;
-    final private ConnectorService service;
+public final class LocalRealmConnector implements RealmConnector {
+    private final HostService realm;
+    private final ConnectorService service;
 
     public LocalRealmConnector(HostService realm, ConnectorService service) {
         this.realm = realm;

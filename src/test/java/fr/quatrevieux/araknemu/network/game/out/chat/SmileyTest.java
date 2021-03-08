@@ -14,43 +14,21 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.network.game.out.chat;
 
-import fr.quatrevieux.araknemu.game.chat.ChannelType;
+import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ChannelSubscriptionChangedTest {
-    class Impl extends ChannelSubscriptionChanged {
-        public Impl(char sign, Collection<ChannelType> channels) {
-            super(sign, channels);
-        }
-    }
-
+class SmileyTest extends GameBaseCase {
     @Test
-    void withOneChannel() {
-        assertEquals(
-            "cC+@",
-            new Impl('+', Collections.singleton(ChannelType.ADMIN)).toString()
-        );
-    }
-
-    @Test
-    void withMultipleChannels() {
-        assertEquals(
-            "cC-ip*",
-            new Impl(
-                '-',
-                Arrays.asList(ChannelType.INFO, ChannelType.PRIVATE, ChannelType.MESSAGES)
-            ).toString()
-        );
+    void string() throws SQLException {
+        assertEquals("cS1|3", new Smiley(explorationPlayer(), 3).toString());
     }
 }

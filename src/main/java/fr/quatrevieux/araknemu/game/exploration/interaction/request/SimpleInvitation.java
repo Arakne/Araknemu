@@ -25,10 +25,10 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
 /**
  * Implementation of {@link Invitation} using {@link InvitationHandler}
  */
-final public class SimpleInvitation implements Invitation {
-    final private ExplorationPlayer initiator;
-    final private ExplorationPlayer target;
-    final private InvitationHandler handler;
+public final class SimpleInvitation implements Invitation {
+    private final ExplorationPlayer initiator;
+    private final ExplorationPlayer target;
+    private final InvitationHandler handler;
 
     public SimpleInvitation(InvitationHandler handler, ExplorationPlayer initiator, ExplorationPlayer target) {
         this.handler = handler;

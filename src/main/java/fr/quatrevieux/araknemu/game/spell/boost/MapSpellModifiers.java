@@ -24,9 +24,9 @@ import java.util.Map;
 /**
  * Implements {@link SpellModifiers} using map
  */
-final public class MapSpellModifiers implements SpellModifiers {
-    final private int spellId;
-    final private Map<SpellsBoosts.Modifier, Integer> modifiers;
+public final class MapSpellModifiers implements SpellModifiers {
+    private final int spellId;
+    private final Map<SpellsBoosts.Modifier, Integer> modifiers;
 
     public MapSpellModifiers(int spellId, Map<SpellsBoosts.Modifier, Integer> modifiers) {
         this.spellId = spellId;

@@ -27,18 +27,31 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Infos.as#L96
  */
-abstract public class InformationMessage {
+public abstract class AbstractInformationMessage {
     public enum Type {
         INFO,
         ERROR,
         PVP
     }
 
-    final static class Entry {
-        final static private Object[] EMPTY = new Object[0];
+    private final Type type;
+    private final Entry[] entries;
 
-        final private int id;
-        final private Object[] arguments;
+    AbstractInformationMessage(Type type, Entry... entries) {
+        this.type = type;
+        this.entries = entries;
+    }
+
+    @Override
+    public String toString() {
+        return "Im" + type.ordinal() + StringUtils.join(entries, "|");
+    }
+
+    static final class Entry {
+        private static final Object[] EMPTY = new Object[0];
+
+        private final int id;
+        private final Object[] arguments;
 
         Entry(int id, Object... arguments) {
             this.id = id;
@@ -53,18 +66,5 @@ abstract public class InformationMessage {
         public String toString() {
             return id + ";" + StringUtils.join(arguments, "~");
         }
-    }
-
-    final private Type type;
-    final private Entry[] entries;
-
-    InformationMessage(Type type, Entry... entries) {
-        this.type = type;
-        this.entries = entries;
-    }
-
-    @Override
-    public String toString() {
-        return "Im" + type.ordinal() + StringUtils.join(entries, "|");
     }
 }

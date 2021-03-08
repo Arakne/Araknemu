@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 /**
  * Validate spell AP cost
  */
-final public class ApCostValidator implements CastConstraintValidator {
+public final class ApCostValidator implements CastConstraintValidator {
     @Override
     public Error validate(Turn turn, Castable castable, FightCell target) {
         return castable.apCost() > turn.points().actionPoints()

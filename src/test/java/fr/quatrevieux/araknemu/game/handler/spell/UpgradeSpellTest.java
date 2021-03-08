@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookEntry;
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellUpgrade;
 import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
@@ -81,6 +82,30 @@ class UpgradeSpellTest extends FightBaseCase {
         handler.handle(session, new SpellUpgrade(3));
 
         SpellBookEntry entry = gamePlayer().properties().spells().entry(3);
+        assertEquals(4, gamePlayer().properties().spells().upgradePoints());
+        assertEquals(2, entry.spell().level());
+
+        requestStack.assertAll(
+            new UpdateSpell(entry),
+            new Stats(gamePlayer().properties())
+        );
+
+        assertEquals(4, dataSet.refresh(new Player(1)).spellPoints());
+        assertEquals(2, dataSet.refresh(entry.entity()).level());
+    }
+
+    /**
+     * See issue https://github.com/Arakne/Araknemu/issues/151
+     */
+    @Test
+    void upgradeLearnedSpell() throws Exception {
+        this.<Player>readField(gamePlayer(), "entity").setSpellPoints(5);
+        gamePlayer().properties().spells().learn(container.get(SpellService.class).get(202));
+        requestStack.clear();
+
+        handler.handle(session, new SpellUpgrade(202));
+
+        SpellBookEntry entry = gamePlayer().properties().spells().entry(202);
         assertEquals(4, gamePlayer().properties().spells().upgradePoints());
         assertEquals(2, entry.spell().level());
 

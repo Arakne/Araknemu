@@ -25,7 +25,12 @@ import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.living.transformer.ChannelsTransformer;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.chat.channel.Channel;
-import fr.quatrevieux.araknemu.game.listener.player.chat.*;
+import fr.quatrevieux.araknemu.game.listener.player.chat.AddChatChannels;
+import fr.quatrevieux.araknemu.game.listener.player.chat.InitializeChat;
+import fr.quatrevieux.araknemu.game.listener.player.chat.MessageReceived;
+import fr.quatrevieux.araknemu.game.listener.player.chat.PrivateMessageReceived;
+import fr.quatrevieux.araknemu.game.listener.player.chat.SubscriptionAddedAcknowledge;
+import fr.quatrevieux.araknemu.game.listener.player.chat.SubscriptionRemovedAcknowledge;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
@@ -37,10 +42,10 @@ import java.util.Map;
 /**
  * Service for handle chat system
  */
-final public class ChatService implements EventsSubscriber {
-    final private GameConfiguration.ChatConfiguration configuration;
+public final class ChatService implements EventsSubscriber {
+    private final GameConfiguration.ChatConfiguration configuration;
 
-    final private Map<ChannelType, Channel> channels = new EnumMap<>(ChannelType.class);
+    private final Map<ChannelType, Channel> channels = new EnumMap<>(ChannelType.class);
 
     public ChatService(GameConfiguration.ChatConfiguration configuration, Channel[] channels) {
         this.configuration = configuration;
@@ -56,7 +61,7 @@ final public class ChatService implements EventsSubscriber {
             new Listener<PlayerLoaded>() {
                 @Override
                 public void on(PlayerLoaded event) {
-                    ListenerAggregate dispatcher = event.player().dispatcher();
+                    final ListenerAggregate dispatcher = event.player().dispatcher();
 
                     dispatcher.add(new InitializeChat(event.player()));
                     dispatcher.add(new MessageReceived(event.player()));
@@ -70,7 +75,7 @@ final public class ChatService implements EventsSubscriber {
                     return PlayerLoaded.class;
                 }
             },
-            new AddChatChannels(configuration, new ChannelsTransformer())
+            new AddChatChannels(configuration, new ChannelsTransformer()),
         };
     }
 
@@ -93,7 +98,7 @@ final public class ChatService implements EventsSubscriber {
     }
 
     private boolean checkItemSyntax(String message, String items) {
-        String[] parts = StringUtils.splitByWholeSeparatorPreserveAllTokens(items, "!");
+        final String[] parts = StringUtils.splitByWholeSeparatorPreserveAllTokens(items, "!");
 
         if (parts.length % 2 != 0) {
             return false;
@@ -112,7 +117,7 @@ final public class ChatService implements EventsSubscriber {
                 continue;
             }
 
-            int effects = StringUtils.countMatches(parts[i + 1], ',') + 1;
+            final int effects = StringUtils.countMatches(parts[i + 1], ',') + 1;
 
             if (StringUtils.countMatches(parts[i + 1], '#') != 4 * effects) {
                 return false;

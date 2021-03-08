@@ -37,7 +37,7 @@ public interface Accessory {
      * Get the accessory item type
      * This method return -1 to use the appearance type
      */
-    default public int itemType() {
+    public default int itemType() {
         return -1;
     }
 
@@ -45,7 +45,7 @@ public interface Accessory {
      * Get the accessory display frame
      * This method must return 0 if not custom item type is given
      */
-    default public int frame() {
+    public default int frame() {
         return 0;
     }
 }

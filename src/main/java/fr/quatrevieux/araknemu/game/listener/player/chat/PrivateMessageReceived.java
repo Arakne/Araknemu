@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.chat.PrivateMessage;
 /**
  * Listen private messages
  */
-final public class PrivateMessageReceived implements Listener<ConcealedMessage> {
-    final private GamePlayer player;
+public final class PrivateMessageReceived implements Listener<ConcealedMessage> {
+    private final GamePlayer player;
 
     public PrivateMessageReceived(GamePlayer player) {
         this.player = player;

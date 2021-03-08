@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.player.spell.SpellBookEntry;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Spells.as#L31
  */
-final public class UpdateSpell {
-    final private SpellBookEntry entry;
+public final class UpdateSpell {
+    private final SpellBookEntry entry;
 
     public UpdateSpell(SpellBookEntry entry) {
         this.entry = entry;

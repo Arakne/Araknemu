@@ -36,7 +36,7 @@ public interface PlayerRaceRepository extends Repository<PlayerRace> {
      * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException When cannot found the player race
      * @throws RepositoryException When an error occurs during retrieving data
      */
-    PlayerRace get(Race race) throws RepositoryException;
+    public PlayerRace get(Race race) throws RepositoryException;
 
     /**
      * Load all player races

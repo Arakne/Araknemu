@@ -42,7 +42,7 @@ public interface ExplorationMapCell extends MapCell {
      *
      * @see ExplorationCreature#apply(Operation)
      */
-    default public void apply(Operation operation)  {
+    public default void apply(Operation operation)  {
         // Optimisation : the cell is not walkable, no creatures can be located here
         if (!walkable()) {
             return;

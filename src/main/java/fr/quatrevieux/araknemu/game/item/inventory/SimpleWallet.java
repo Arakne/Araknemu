@@ -26,9 +26,9 @@ import fr.quatrevieux.araknemu.game.item.inventory.event.KamasChanged;
 /**
  * Base implementation of Wallet
  */
-final public class SimpleWallet implements Wallet {
-    final private WalletEntity entity;
-    final private Dispatcher dispatcher;
+public final class SimpleWallet implements Wallet {
+    private final WalletEntity entity;
+    private final Dispatcher dispatcher;
 
     public SimpleWallet(WalletEntity entity, Dispatcher dispatcher) {
         this.entity = entity;

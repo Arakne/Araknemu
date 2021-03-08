@@ -26,9 +26,9 @@ import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L757
  */
-final public class LocalExchangeObject {
-    final private ItemEntry entry;
-    final private int quantity;
+public final class LocalExchangeObject {
+    private final ItemEntry entry;
+    private final int quantity;
 
     public LocalExchangeObject(ItemEntry entry, int quantity) {
         this.entry = entry;

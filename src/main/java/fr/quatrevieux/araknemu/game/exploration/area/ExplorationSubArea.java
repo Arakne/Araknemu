@@ -26,9 +26,9 @@ import fr.quatrevieux.araknemu.data.world.entity.environment.area.SubArea;
 /**
  * SubArea for exploration map
  */
-final public class ExplorationSubArea {
-    final private SubArea subArea;
-    final private Area area;
+public final class ExplorationSubArea {
+    private final SubArea subArea;
+    private final Area area;
 
     public ExplorationSubArea(SubArea subArea, Area area) {
         this.subArea = subArea;

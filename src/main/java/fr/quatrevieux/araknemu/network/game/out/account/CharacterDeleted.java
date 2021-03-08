@@ -24,8 +24,8 @@ package fr.quatrevieux.araknemu.network.game.out.account;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L214
  */
-final public class CharacterDeleted {
-    final private boolean success;
+public final class CharacterDeleted {
+    private final boolean success;
 
     public CharacterDeleted(boolean success) {
         this.success = success;

@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L31
  */
-final public class AcceptExchangeRequest implements Packet {
-    final static public class Parser implements SinglePacketParser<AcceptExchangeRequest> {
+public final class AcceptExchangeRequest implements Packet {
+    public static final class Parser implements SinglePacketParser<AcceptExchangeRequest> {
         @Override
         public AcceptExchangeRequest parse(String input) throws ParsePacketException {
             return new AcceptExchangeRequest();

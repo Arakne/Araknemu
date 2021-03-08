@@ -29,13 +29,13 @@ import fr.quatrevieux.araknemu.network.game.out.info.StopLifeTimer;
 /**
  * This class handles a Player life regeneration
  */
-final public class LifeRegeneration implements EventsSubscriber {
-    final static public int STANDARD_LIFE_REGENERATION = 1000;
+public final class LifeRegeneration implements EventsSubscriber {
+    public static final int STANDARD_LIFE_REGENERATION = 1000;
 
     @Override
     public Listener[] listeners() {
         return new Listener[]{
-            new Listener<StartExploration>(){
+            new Listener<StartExploration>() {
                 @Override
                 public void on(StartExploration event) {
                     event.player().player().properties().life().startLifeRegeneration(STANDARD_LIFE_REGENERATION);
@@ -48,7 +48,7 @@ final public class LifeRegeneration implements EventsSubscriber {
                 }
             },
 
-            new Listener<StopExploration>(){
+            new Listener<StopExploration>() {
                 @Override
                 public void on(StopExploration event) {
                     event.session().player().properties().life().stopLifeRegeneration();
@@ -59,7 +59,7 @@ final public class LifeRegeneration implements EventsSubscriber {
                 public Class<StopExploration> event() {
                     return StopExploration.class;
                 }
-            }
+            },
         };
     }
 }

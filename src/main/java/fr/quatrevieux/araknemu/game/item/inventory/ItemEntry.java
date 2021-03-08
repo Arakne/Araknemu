@@ -29,7 +29,7 @@ import java.util.List;
  * Entry for inventory
  */
 public interface ItemEntry {
-    final static public int DEFAULT_POSITION = -1;
+    public static final int DEFAULT_POSITION = -1;
 
     /**
      * Get the entry id
@@ -49,7 +49,7 @@ public interface ItemEntry {
      *
      * @see ItemEntry#position() For get the real position
      */
-    default public boolean isDefaultPosition() {
+    public default boolean isDefaultPosition() {
         return position() == DEFAULT_POSITION;
     }
 

@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.account.AccountCharacter;
 /**
  * Event dispatched when the character is created
  */
-final public class CharacterCreated {
-    final private AccountCharacter character;
+public final class CharacterCreated {
+    private final AccountCharacter character;
 
     public CharacterCreated(AccountCharacter character) {
         this.character = character;

@@ -28,10 +28,10 @@ import java.util.function.Consumer;
 /**
  * Handle exceptions
  */
-final public class ExceptionHandler {
-    final private AdminUser user;
+public final class ExceptionHandler {
+    private final AdminUser user;
 
-    final private Map<Class, Consumer<Throwable>> handlers = new HashMap<>();
+    private final Map<Class, Consumer<Throwable>> handlers = new HashMap<>();
 
     public ExceptionHandler(AdminUser user) {
         this.user = user;

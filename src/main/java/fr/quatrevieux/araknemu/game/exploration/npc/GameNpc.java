@@ -33,18 +33,22 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.NpcQuestion;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * Living NPC
  */
-final public class GameNpc implements ExplorationCreature {
-    final private Npc entity;
-    final private NpcTemplate template;
-    final private Collection<NpcQuestion> questions;
-    final private Map<ExchangeType, ExchangeProvider.Factory> exchangeFactoriesByType = new EnumMap<>(ExchangeType.class);
+public final class GameNpc implements ExplorationCreature {
+    private final Npc entity;
+    private final NpcTemplate template;
+    private final Collection<NpcQuestion> questions;
+    private final Map<ExchangeType, ExchangeProvider.Factory> exchangeFactoriesByType = new EnumMap<>(ExchangeType.class);
 
-    final private Sprite sprite;
+    private final Sprite sprite;
 
     private ExplorationMapCell cell;
 

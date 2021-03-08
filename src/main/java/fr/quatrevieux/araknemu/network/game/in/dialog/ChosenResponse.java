@@ -29,8 +29,24 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Dialog.as#L31
  */
-final public class ChosenResponse implements Packet {
-    final static public class Parser implements SinglePacketParser<ChosenResponse> {
+public final class ChosenResponse implements Packet {
+    private final int question;
+    private final int response;
+
+    public ChosenResponse(int question, int response) {
+        this.question = question;
+        this.response = response;
+    }
+
+    public int question() {
+        return question;
+    }
+
+    public int response() {
+        return response;
+    }
+
+    public static final class Parser implements SinglePacketParser<ChosenResponse> {
         @Override
         public ChosenResponse parse(String input) throws ParsePacketException {
             final String[] parts = StringUtils.split(input, "|", 2);
@@ -49,21 +65,5 @@ final public class ChosenResponse implements Packet {
         public String code() {
             return "DR";
         }
-    }
-
-    final private int question;
-    final private int response;
-
-    public ChosenResponse(int question, int response) {
-        this.question = question;
-        this.response = response;
-    }
-
-    public int question() {
-        return question;
-    }
-
-    public int response() {
-        return response;
     }
 }

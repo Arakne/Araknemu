@@ -31,8 +31,8 @@ import org.apache.logging.log4j.MarkerManager;
 /**
  * Configure base exception for a game session
  */
-final public class GameExceptionConfigurator implements SessionConfigurator.Configurator<GameSession> {
-    final private Logger logger;
+public final class GameExceptionConfigurator implements SessionConfigurator.Configurator<GameSession> {
+    private final Logger logger;
 
     public GameExceptionConfigurator(Logger logger) {
         this.logger = logger;

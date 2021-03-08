@@ -35,47 +35,10 @@ import java.util.stream.Stream;
 /**
  * List online players on the current server
  */
-final public class Online extends AbstractCommand {
-    final private PlayerService service;
-    final private ExplorationMapService mapService;
-    final private GameService gameService;
-
-    /**
-     * Store the command options
-     */
-    static class Options {
-        private int limit = 20;
-        private int skip = 0;
-        private String search = null;
-
-        public Options(List<String> arguments) {
-            for (int i = 1; i < arguments.size(); ++i) {
-                switch (arguments.get(i)) {
-                    case "--limit":
-                        limit = Integer.parseInt(arguments.get(++i));
-                        break;
-
-                    case "--skip":
-                        skip = Integer.parseInt(arguments.get(++i));
-                        break;
-
-                    default:
-                        search = arguments.get(i).toLowerCase();
-                }
-            }
-        }
-
-        /**
-         * Apply the options on the stream
-         */
-        public Stream<GamePlayer> apply(Stream<GamePlayer> stream) {
-            if (search != null) {
-                stream = stream.filter(player -> player.name().toLowerCase().contains(search));
-            }
-
-            return stream.skip(skip).limit(limit);
-        }
-    }
+public final class Online extends AbstractCommand {
+    private final PlayerService service;
+    private final ExplorationMapService mapService;
+    private final GameService gameService;
 
     public Online(PlayerService service, ExplorationMapService mapService, GameService gameService) {
         this.service = service;
@@ -109,9 +72,8 @@ final public class Online extends AbstractCommand {
     public void execute(AdminPerformer performer, List<String> arguments) {
         performer.success("There is {} online players with {} active sessions", service.online().size(), gameService.sessions().size());
 
-        Options options = new Options(arguments);
-
-        long count = options
+        final Options options = new Options(arguments);
+        final long count = options
             .apply(service.online().stream())
             .map(this::format)
             .peek(performer::info)
@@ -184,6 +146,43 @@ final public class Online extends AbstractCommand {
                 "------------------------------------------------\n" +
                 "\t<b>" + new Link().execute("${server} online --limit " + options.limit + " --skip " + (options.skip + options.limit)).text("next") + "</b>"
             );
+        }
+    }
+
+    /**
+     * Store the command options
+     */
+    static class Options {
+        private int limit = 20;
+        private int skip = 0;
+        private String search = null;
+
+        public Options(List<String> arguments) {
+            for (int i = 1; i < arguments.size(); ++i) {
+                switch (arguments.get(i)) {
+                    case "--limit":
+                        limit = Integer.parseInt(arguments.get(++i));
+                        break;
+
+                    case "--skip":
+                        skip = Integer.parseInt(arguments.get(++i));
+                        break;
+
+                    default:
+                        search = arguments.get(i).toLowerCase();
+                }
+            }
+        }
+
+        /**
+         * Apply the options on the stream
+         */
+        public Stream<GamePlayer> apply(Stream<GamePlayer> stream) {
+            if (search != null) {
+                stream = stream.filter(player -> player.name().toLowerCase().contains(search));
+            }
+
+            return stream.skip(skip).limit(limit);
         }
     }
 }

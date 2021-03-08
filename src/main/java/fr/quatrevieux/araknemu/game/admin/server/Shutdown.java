@@ -35,8 +35,8 @@ import java.util.List;
 /**
  * Command for shutdown the server
  */
-final public class Shutdown extends AbstractCommand {
-    final private ShutdownService service;
+public final class Shutdown extends AbstractCommand {
+    private final ShutdownService service;
 
     public Shutdown(ShutdownService service) {
         this.service = service;

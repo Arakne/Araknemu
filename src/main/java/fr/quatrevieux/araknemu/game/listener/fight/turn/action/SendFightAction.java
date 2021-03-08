@@ -29,8 +29,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.StartFightAction;
 /**
  * Send the fight action
  */
-final public class SendFightAction implements Listener<FightActionStarted> {
-    final private Fight fight;
+public final class SendFightAction implements Listener<FightActionStarted> {
+    private final Fight fight;
 
     public SendFightAction(Fight fight) {
         this.fight = fight;

@@ -29,11 +29,11 @@ import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 /**
  * Change current map after a move
  */
-final public class ChangeMap implements BlockingAction {
-    final private ExplorationPlayer player;
-    final private ExplorationMap map;
-    final private int cell;
-    final private int cinematic;
+public final class ChangeMap implements BlockingAction {
+    private final ExplorationPlayer player;
+    private final ExplorationMap map;
+    private final int cell;
+    private final int cinematic;
 
     private int id;
 

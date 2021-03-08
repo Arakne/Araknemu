@@ -30,13 +30,9 @@ import java.util.function.Function;
  *
  * @param <S> The session type
  */
-final public class SessionConfigurator<S extends Session> implements SessionFactory<S> {
-    public interface Configurator<S> {
-        public void configure(ConfigurableSession inner, S session);
-    }
-
-    final private Function<ConfigurableSession, S> factory;
-    final private List<Configurator<S>> configurators = new ArrayList<>();
+public final class SessionConfigurator<S extends Session> implements SessionFactory<S> {
+    private final Function<ConfigurableSession, S> factory;
+    private final List<Configurator<S>> configurators = new ArrayList<>();
 
     public SessionConfigurator(Function<ConfigurableSession, S> factory) {
         this.factory = factory;
@@ -70,5 +66,10 @@ final public class SessionConfigurator<S extends Session> implements SessionFact
         configurators.add(configurator);
 
         return this;
+    }
+
+    @FunctionalInterface
+    public interface Configurator<S> {
+        public void configure(ConfigurableSession inner, S session);
     }
 }

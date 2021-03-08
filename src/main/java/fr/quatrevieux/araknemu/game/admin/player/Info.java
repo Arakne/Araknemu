@@ -29,8 +29,8 @@ import java.util.List;
 /**
  * Info command for a player
  */
-final public class Info extends AbstractCommand {
-    final private GamePlayer player;
+public final class Info extends AbstractCommand {
+    private final GamePlayer player;
 
     public Info(GamePlayer player) {
         this.player = player;

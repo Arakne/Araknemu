@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
 /**
  * Effect for fireworks
  */
-final public class FireworkEffect implements UseEffectHandler {
-    final private RandomUtil random = new RandomUtil();
+public final class FireworkEffect implements UseEffectHandler {
+    private final RandomUtil random = new RandomUtil();
 
     @Override
     public void apply(UseEffect effect, ExplorationPlayer caster) {

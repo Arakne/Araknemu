@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.player.inventory.event.EquipmentChanged;
 /**
  * Apply the item set's special effects
  */
-final public class ApplyItemSetSpecialEffects implements Listener<EquipmentChanged> {
-    final private GamePlayer player;
+public final class ApplyItemSetSpecialEffects implements Listener<EquipmentChanged> {
+    private final GamePlayer player;
 
     public ApplyItemSetSpecialEffects(GamePlayer player) {
         this.player = player;

@@ -30,8 +30,8 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 /**
  * Create the exploration move action
  */
-final public class MoveFactory implements SingleActionFactory {
-    final private PathValidator[] validators;
+public final class MoveFactory implements SingleActionFactory {
+    private final PathValidator[] validators;
 
     public MoveFactory(PathValidator... validators) {
         this.validators = validators;
@@ -44,7 +44,7 @@ final public class MoveFactory implements SingleActionFactory {
 
     @Override
     public Action create(ExplorationPlayer player, ActionType action, String[] arguments) {
-        ExplorationMap map = player.map();
+        final ExplorationMap map = player.map();
 
         return new Move(
             player,

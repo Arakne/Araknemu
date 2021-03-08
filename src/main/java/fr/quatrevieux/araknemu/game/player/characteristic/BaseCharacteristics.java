@@ -29,10 +29,10 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharac
 /**
  * Characteristics wrapper for player base stats
  */
-final public class BaseCharacteristics implements MutableCharacteristics {
-    final private Dispatcher dispatcher;
-    final private GamePlayerRace race;
-    final private Player player;
+public final class BaseCharacteristics implements MutableCharacteristics {
+    private final Dispatcher dispatcher;
+    private final GamePlayerRace race;
+    private final Player player;
 
     public BaseCharacteristics(Dispatcher dispatcher, GamePlayerRace race, Player player) {
         this.dispatcher = dispatcher;

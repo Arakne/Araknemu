@@ -31,7 +31,7 @@ public class ChatException extends Exception {
         USER_NOT_CONNECTED_BUT_TRY_SEND_EXTERNAL("e"),
         USER_NOT_CONNECTED_EXTERNAL_NACK("n");
 
-        final private String id;
+        private final String id;
 
         Error(String id) {
             this.id = id;
@@ -42,13 +42,13 @@ public class ChatException extends Exception {
         }
     }
 
-    final private Error error;
+    private final Error error;
 
     public ChatException(Error error) {
         this.error = error;
     }
 
-    public Error error() {
+    public final Error error() {
         return error;
     }
 }

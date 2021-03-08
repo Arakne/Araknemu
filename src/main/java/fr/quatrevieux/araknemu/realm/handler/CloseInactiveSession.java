@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.network.realm.RealmSession;
  *
  * @todo refactor with game
  */
-final public class CloseInactiveSession implements PacketHandler<RealmSession, SessionIdle> {
+public final class CloseInactiveSession implements PacketHandler<RealmSession, SessionIdle> {
     @Override
     public void handle(RealmSession session, SessionIdle packet) {
         session.send(ServerMessage.inactivity());

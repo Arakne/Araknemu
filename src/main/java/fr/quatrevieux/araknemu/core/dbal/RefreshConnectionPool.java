@@ -33,12 +33,12 @@ import java.util.concurrent.TimeUnit;
 /**
  * Perform regularly ping on connections for keeping alive, or refresh if connection is lost
  */
-final public class RefreshConnectionPool implements ConnectionPool {
-    final private ConnectionPool pool;
-    final private long interval;
-    final private Logger logger;
+public final class RefreshConnectionPool implements ConnectionPool {
+    private final ConnectionPool pool;
+    private final long interval;
+    private final Logger logger;
 
-    final private ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
     public RefreshConnectionPool(ConnectionPool pool, long interval, Logger logger) {
         this.pool = pool;
@@ -79,7 +79,7 @@ final public class RefreshConnectionPool implements ConnectionPool {
 
         for (int i = 0; i < lastSize; ++i) {
             try {
-                Connection connection = acquire();
+                final Connection connection = acquire();
 
                 if (connection.isClosed()) {
                     logger.warn("Closed connection detected");
@@ -96,12 +96,12 @@ final public class RefreshConnectionPool implements ConnectionPool {
         }
 
         if (pool.size() == 0) {
-            int newSize = Math.max(lastSize, 1);
+            final int newSize = Math.max(lastSize, 1);
 
             logger.info("Pool is empty : try to recreate {} connections", newSize);
 
             try {
-                List<Connection> newConnections = new ArrayList<>();
+                final List<Connection> newConnections = new ArrayList<>();
 
                 for (int i = 0; i < newSize; ++i) {
                     newConnections.add(acquire());

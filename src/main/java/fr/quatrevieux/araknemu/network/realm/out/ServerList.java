@@ -28,11 +28,11 @@ import java.util.Collection;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L372
  */
-final public class ServerList {
-    final static public long ONE_YEAR = 31536000000L;
+public final class ServerList {
+    public static final long ONE_YEAR = 31536000000L;
     
-    final private long aboTime;
-    final private Collection<ServerCharacters> servers;
+    private final long aboTime;
+    private final Collection<ServerCharacters> servers;
 
     public ServerList(long aboTime, Collection<ServerCharacters> servers) {
         this.aboTime = aboTime;
@@ -41,7 +41,7 @@ final public class ServerList {
 
     @Override
     public String toString() {
-        StringBuilder ret = new StringBuilder(64);
+        final StringBuilder ret = new StringBuilder(64);
         
         ret.append("AxK").append(aboTime);
         
