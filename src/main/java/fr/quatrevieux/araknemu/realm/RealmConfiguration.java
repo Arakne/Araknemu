@@ -45,7 +45,7 @@ public final class RealmConfiguration implements ConfigurationModule {
     }
 
     /**
-     * The listner port for server
+     * The listened port for authentication server
      */
     public int port() {
         return pool.integer("server.port", 444);
