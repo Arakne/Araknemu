@@ -226,5 +226,40 @@ class PlayerLifeTest extends GameBaseCase {
         
         life.setLifeWithCurrentRegeneration();
         assertBetween(7,8, entity.life());
+
+        // Calling twice should not increment life
+        life.setLifeWithCurrentRegeneration();
+        assertBetween(7,8, entity.life());
+    }
+
+    @Test
+    void restartRegeneration() throws Exception {
+        life.set(5);
+
+        assertEquals(5, entity.life());
+
+        life.startLifeRegeneration(50);
+        Thread.sleep(100);
+        assertBetween(7, 8, life.current());
+
+        life.startLifeRegeneration(100);
+        Thread.sleep(100);
+        assertBetween(8, 9, life.current());
+    }
+
+    @Test
+    void setLifeRegenerationWithZeroShouldStopRegen() throws Exception {
+        life.set(5);
+        life.setLifeWithCurrentRegeneration();
+
+        life.startLifeRegeneration(50);
+        Thread.sleep(100);
+
+        life.setLifeWithCurrentRegeneration();
+        assertBetween(7, 8, entity.life());
+
+        life.startLifeRegeneration(0);
+        Thread.sleep(10);
+        assertBetween(7, 8, entity.life());
     }
 }

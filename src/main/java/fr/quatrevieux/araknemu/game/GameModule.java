@@ -390,6 +390,7 @@ public final class GameModule implements ContainerModule {
             ExplorationService.class,
             container -> new ExplorationService(
                 container.get(ExplorationMapService.class),
+                container.get(GameConfiguration.class).player(),
                 container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class)
             )
         );
