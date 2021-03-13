@@ -84,7 +84,10 @@ public final class PlayerLife implements Life {
      * set the life to: entity.life() + calculateLifeRegeneration()
      */
     public void setLifeWithCurrentRegeneration() {
-        entity.setLife(current());
+        if (lifeRegenerationStart != 0) {
+            entity.setLife(current());
+            lifeRegenerationStart = System.currentTimeMillis();
+        }
     }
 
     /**
@@ -92,8 +95,16 @@ public final class PlayerLife implements Life {
      * @param lifeRegenerationSpeed The required delay in milliseconds to regenerate 1 life point
      */
     public void startLifeRegeneration(int lifeRegenerationSpeed) {
-        this.lifeRegenerationSpeed = lifeRegenerationSpeed;
-        lifeRegenerationStart = System.currentTimeMillis();
+        // Regen already started : restart the regen
+        if (lifeRegenerationStart != 0) {
+            stopLifeRegeneration();
+        }
+
+        // Only start if regen speed is > 0
+        if (lifeRegenerationSpeed > 0) {
+            this.lifeRegenerationSpeed = lifeRegenerationSpeed;
+            this.lifeRegenerationStart = System.currentTimeMillis();
+        }
     }
 
     /**

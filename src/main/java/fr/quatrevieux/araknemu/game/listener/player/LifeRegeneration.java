@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.listener.player;
 
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
+import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.exploration.event.StartExploration;
 import fr.quatrevieux.araknemu.game.exploration.event.StopExploration;
 import fr.quatrevieux.araknemu.network.game.out.info.StartLifeTimer;
@@ -30,16 +31,24 @@ import fr.quatrevieux.araknemu.network.game.out.info.StopLifeTimer;
  * This class handles a Player life regeneration
  */
 public final class LifeRegeneration implements EventsSubscriber {
-    public static final int STANDARD_LIFE_REGENERATION = 1000;
+    private final GameConfiguration.PlayerConfiguration configuration;
+
+    public LifeRegeneration(GameConfiguration.PlayerConfiguration configuration) {
+        this.configuration = configuration;
+    }
 
     @Override
     public Listener[] listeners() {
-        return new Listener[]{
+        return new Listener[] {
             new Listener<StartExploration>() {
                 @Override
                 public void on(StartExploration event) {
-                    event.player().player().properties().life().startLifeRegeneration(STANDARD_LIFE_REGENERATION);
-                    event.player().send(new StartLifeTimer(STANDARD_LIFE_REGENERATION));
+                    final int rate = configuration.baseLifeRegeneration();
+
+                    if (rate > 0) {
+                        event.player().player().properties().life().startLifeRegeneration(rate);
+                        event.player().send(new StartLifeTimer(rate));
+                    }
                 }
 
                 @Override

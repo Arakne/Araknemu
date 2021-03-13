@@ -149,6 +149,10 @@ game.dbname = araknemu
 ; > Get the level up characteristic points
 ; > By default, value is set to 5
 ;player.level.characteristicPoints = 5
+; > The life regeneration rate.
+; > This is the number of milliseconds required to regenerate 1 life point. Set to 0 to disable.
+; > By default 1000 (1 LP / sec)
+;player.lifeRegeneration.base = 1000
 
 ; Chat
 ; ----

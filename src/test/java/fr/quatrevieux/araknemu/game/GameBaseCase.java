@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.config.Configuration;
 import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
+import fr.quatrevieux.araknemu.core.config.PoolUtils;
 import fr.quatrevieux.araknemu.core.dbal.DatabaseConfiguration;
 import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
@@ -155,6 +156,14 @@ public class GameBaseCase extends DatabaseTestCase {
             Assertions.fail("Cannot find packet of type" + type.getSimpleName());
         }
 
+        public void assertNotContains(Class type) {
+            for (Object message : channel.getMessages()) {
+                if (type.isInstance(message)) {
+                    Assertions.fail("A packet of type " + type.getSimpleName() + " has been found");
+                }
+            }
+        }
+
         public void assertOne(Object packet) {
             for (Object message : channel.getMessages()) {
                 if (message.toString().equals(packet.toString())) {
@@ -178,6 +187,7 @@ public class GameBaseCase extends DatabaseTestCase {
 
     protected Container container;
     protected GameConfiguration configuration;
+    private Ini initConfig;
     protected DummyServer<GameSession> server;
     protected DummyChannel channel;
     protected GameSession session;
@@ -192,7 +202,7 @@ public class GameBaseCase extends DatabaseTestCase {
         RandomUtil.enableTestingMode();
 
         Configuration conf = new DefaultConfiguration(
-            new IniDriver(new Ini(new File("src/test/test_config.ini")))
+            new IniDriver(initConfig = new Ini(new File("src/test/test_config.ini")))
         );
 
         app = new Araknemu(
@@ -476,5 +486,9 @@ public class GameBaseCase extends DatabaseTestCase {
 
     public void handlePacket(Packet packet) throws Exception {
         container.get(Dispatcher.class).dispatch(session, packet);
+    }
+
+    public void setConfigValue(String item, String value) {
+        initConfig.get("game").add(item, value);
     }
 }

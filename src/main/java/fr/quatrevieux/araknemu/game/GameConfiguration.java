@@ -198,6 +198,15 @@ public final class GameConfiguration implements ConfigurationModule {
         public int characteristicPointsOnLevelUp() {
             return pool.integer("player.level.characteristicPoints", 5);
         }
+
+        /**
+         * The life regeneration rate.
+         * This is the number of milliseconds required to regenerate 1 life point. Set to 0 to disable.
+         * By default 1000 (1 LP / sec)
+         */
+        public int baseLifeRegeneration() {
+            return pool.integer("player.lifeRegeneration.base", 1000);
+        }
     }
 
     public final class ChatConfiguration {
