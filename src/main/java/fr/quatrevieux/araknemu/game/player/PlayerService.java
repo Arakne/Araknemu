@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 import fr.quatrevieux.araknemu.game.listener.player.ComputeLifePoints;
 import fr.quatrevieux.araknemu.game.listener.player.InitializeRestrictions;
+import fr.quatrevieux.araknemu.game.listener.player.RestoreLifePointsOnLevelUp;
 import fr.quatrevieux.araknemu.game.listener.player.SavePlayer;
 import fr.quatrevieux.araknemu.game.listener.player.SendLifeChanged;
 import fr.quatrevieux.araknemu.game.listener.player.SendRestrictions;
@@ -55,6 +56,7 @@ import java.util.stream.Stream;
 public final class PlayerService implements EventsSubscriber {
     private final PlayerRepository repository;
     private final GameConfiguration configuration;
+    private final GameConfiguration.PlayerConfiguration playerConfiguration;
     private final Dispatcher dispatcher;
     private final InventoryService inventoryService;
     private final PlayerRaceService playerRaceService;
@@ -67,6 +69,7 @@ public final class PlayerService implements EventsSubscriber {
     public PlayerService(PlayerRepository repository, GameConfiguration configuration, Dispatcher dispatcher, InventoryService inventoryService, PlayerRaceService playerRaceService, SpellBookService spellBookService, PlayerExperienceService experienceService) {
         this.repository = repository;
         this.configuration = configuration;
+        this.playerConfiguration = configuration.player();
         this.dispatcher = dispatcher;
         this.inventoryService = inventoryService;
         this.playerRaceService = playerRaceService;
@@ -114,6 +117,11 @@ public final class PlayerService implements EventsSubscriber {
         gamePlayer.dispatcher().add(new SendRestrictions(gamePlayer));
         gamePlayer.dispatcher().add(new InitializeRestrictions(gamePlayer));
         gamePlayer.dispatcher().add(new StartTutorial(gamePlayer)); // @todo Move to "tutorial" package when implemented
+
+        if (playerConfiguration.restoreLifeOnLevelUp()) {
+            gamePlayer.dispatcher().add(new RestoreLifePointsOnLevelUp(gamePlayer));
+        }
+
         this.dispatcher.dispatch(new PlayerLoaded(gamePlayer));
         gamePlayer.dispatcher().add(new SavePlayer(gamePlayer)); // After all events
 

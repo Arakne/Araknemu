@@ -153,6 +153,9 @@ game.dbname = araknemu
 ; > This is the number of milliseconds required to regenerate 1 life point. Set to 0 to disable.
 ; > By default 1000 (1 LP / sec)
 ;player.lifeRegeneration.base = 1000
+; > Restore life points when player reach a new level
+; > By default true
+;player.restoreLifeOnLevelUp = true
 
 ; Chat
 ; ----

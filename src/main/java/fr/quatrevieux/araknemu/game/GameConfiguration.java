@@ -207,6 +207,14 @@ public final class GameConfiguration implements ConfigurationModule {
         public int baseLifeRegeneration() {
             return pool.integer("player.lifeRegeneration.base", 1000);
         }
+
+        /**
+         * Restore life points when player reach a new level
+         * By default true
+         */
+        public boolean restoreLifeOnLevelUp() {
+            return pool.bool("player.restoreLifeOnLevelUp", true);
+        }
     }
 
     public final class ChatConfiguration {

@@ -63,6 +63,7 @@ class GameConfigurationTest extends GameBaseCase {
         assertEquals(1, configuration.player().spellBoostPointsOnLevelUp());
         assertEquals(5, configuration.player().characteristicPointsOnLevelUp());
         assertEquals(1000, configuration.player().baseLifeRegeneration());
+        assertTrue(configuration.player().restoreLifeOnLevelUp());
     }
 
     @Test
