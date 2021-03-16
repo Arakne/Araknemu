@@ -109,6 +109,19 @@ class PlayerServiceTest extends GameBaseCase {
         assertTrue(player.dispatcher().has(SendRestrictions.class));
         assertTrue(player.dispatcher().has(InitializeRestrictions.class));
         assertTrue(player.dispatcher().has(StartTutorial.class));
+        assertTrue(player.dispatcher().has(RestoreLifePointsOnLevelUp.class));
+    }
+
+    @Test
+    void loadWithRestoreLifeOnLevelUpDisabled() throws ContainerException {
+        setConfigValue("player.restoreLifeOnLevelUp", "false");
+        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, null)).id();
+
+        GamePlayer player = service.load(session, id);
+
+        assertEquals(id, player.id());
+
+        assertFalse(player.dispatcher().has(RestoreLifePointsOnLevelUp.class));
     }
 
     @Test
