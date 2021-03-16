@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.fighter;
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -83,6 +84,9 @@ public interface Fighter extends Creature<FightCell>, Dispatcher, ActiveFighter 
 
     @Override
     public FightTeam team();
+
+    @Override
+    public BuffList buffs();
 
     /**
      * Join the fight

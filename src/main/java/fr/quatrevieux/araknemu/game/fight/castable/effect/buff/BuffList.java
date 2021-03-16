@@ -22,11 +22,13 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -104,28 +106,30 @@ public final class BuffList implements Iterable<Buff>, Buffs {
 
     @Override
     public void refresh() {
-        final Iterator<Buff> iterator = buffs.iterator();
-
-        while (iterator.hasNext()) {
-            final Buff buff = iterator.next();
-
+        removeIf(buff -> {
             buff.decrementRemainingTurns();
 
-            if (!buff.valid()) {
-                iterator.remove();
-                buff.hook().onBuffTerminated(buff);
-            }
-        }
+            return !buff.valid();
+        });
     }
 
     @Override
     public void removeAll() {
+        removeIf(Buff::canBeDispelled);
+    }
+
+    @Override
+    public void removeByCaster(PassiveFighter caster) {
+        removeIf(buff -> buff.caster().equals(caster));
+    }
+
+    private void removeIf(Predicate<Buff> predicate) {
         final Iterator<Buff> iterator = buffs.iterator();
 
         while (iterator.hasNext()) {
             final Buff buff = iterator.next();
 
-            if (buff.canBeDispelled()) {
+            if (predicate.test(buff)) {
                 iterator.remove();
                 buff.hook().onBuffTerminated(buff);
             }

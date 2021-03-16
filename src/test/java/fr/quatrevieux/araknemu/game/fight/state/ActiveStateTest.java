@@ -101,6 +101,7 @@ class ActiveStateTest extends GameBaseCase {
         assertTrue(fight.dispatcher().has(SendFighterLifeChanged.class));
         assertTrue(fight.dispatcher().has(SendFighterDie.class));
         assertTrue(fight.dispatcher().has(RemoveDeadFighter.class));
+        assertTrue(fight.dispatcher().has(DispelDeadFighterBuff.class));
         assertTrue(fight.dispatcher().has(CheckFightTerminated.class));
         assertTrue(fight.dispatcher().has(SendTurnList.class));
         assertTrue(fight.dispatcher().has(RefreshBuffs.class));
