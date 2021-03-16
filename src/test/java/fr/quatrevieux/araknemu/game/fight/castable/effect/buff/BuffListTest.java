@@ -253,4 +253,24 @@ class BuffListTest extends FightBaseCase {
         Mockito.verify(hook2, Mockito.never()).onBuffTerminated(buff2);
         Mockito.verify(hook3).onBuffTerminated(buff3);
     }
+
+    @Test
+    void removeByCaster(){
+        BuffHook hook1, hook2, hook3;
+        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), player.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class), false);
+        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class), true);
+
+        list.add(buff1);
+        list.add(buff2);
+        list.add(buff3);
+
+        list.removeByCaster(other.fighter());
+
+        assertIterableEquals(Collections.singletonList(buff2), list);
+
+        Mockito.verify(hook1).onBuffTerminated(buff1);
+        Mockito.verify(hook2, Mockito.never()).onBuffTerminated(buff2);
+        Mockito.verify(hook3).onBuffTerminated(buff3);
+    }
 }
