@@ -28,6 +28,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
 import fr.quatrevieux.araknemu.game.listener.fight.CheckFightTerminated;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
+import fr.quatrevieux.araknemu.network.game.out.fight.ClearAllBuffs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -66,9 +68,24 @@ class DispelDeadFighterBuffTest extends FightBaseCase {
         player.fighter().buffs().add(buff2);
         player.fighter().buffs().add(buff3);
 
+        requestStack.clear();
+
         listener.on(new FighterDie(other.fighter(), other.fighter()));
 
         assertIterableEquals(Collections.singletonList(buff2), player.fighter().buffs());
+
+        requestStack.assertAll(
+            new ClearAllBuffs(),
+            new AddBuff(buff2)
+        );
+    }
+
+    @Test
+    void onFighterDieWithoutBuff() {
+        requestStack.clear();
+
+        listener.on(new FighterDie(other.fighter(), other.fighter()));
+        requestStack.assertEmpty();
     }
 
     @Test
