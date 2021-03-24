@@ -114,17 +114,26 @@ public final class BuffList implements Iterable<Buff>, Buffs {
     }
 
     @Override
-    public void removeAll() {
-        removeIf(Buff::canBeDispelled);
+    public boolean removeAll() {
+        return removeIf(Buff::canBeDispelled);
     }
 
     @Override
-    public void removeByCaster(PassiveFighter caster) {
-        removeIf(buff -> buff.caster().equals(caster));
+    public boolean removeByCaster(PassiveFighter caster) {
+        return removeIf(buff -> buff.caster().equals(caster));
     }
 
-    private void removeIf(Predicate<Buff> predicate) {
+    /**
+     * Remove buff by a predicate
+     *
+     * @param predicate Takes the buff as parameter, and return true to delete (and terminate) the buff
+     *
+     * @return true if there is a change (i.e. a buff is terminated)
+     */
+    private boolean removeIf(Predicate<Buff> predicate) {
         final Iterator<Buff> iterator = buffs.iterator();
+
+        boolean hasChanged = false;
 
         while (iterator.hasNext()) {
             final Buff buff = iterator.next();
@@ -132,7 +141,10 @@ public final class BuffList implements Iterable<Buff>, Buffs {
             if (predicate.test(buff)) {
                 iterator.remove();
                 buff.hook().onBuffTerminated(buff);
+                hasChanged = true;
             }
         }
+
+        return hasChanged;
     }
 }

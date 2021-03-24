@@ -32,6 +32,7 @@ import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CircleArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
+import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -72,11 +73,15 @@ class DispelHandlerTest extends FightBaseCase {
         target.buffs().add(buff_wisdom);
 
         CastScope scope = makeDebuffSpell(target.cell());
+        requestStack.clear();
         handler.handle(scope, scope.effects().get(0));
 
         Optional<Buff> buff1 = target.buffs().stream().filter(x -> x.effect().effect() == 124).findFirst();
         assertTrue(buff1.isPresent());
-        requestStack.assertLast("GA;132;1;2");
+        requestStack.assertAll(
+            "GA;132;1;2",
+            new AddBuff(buff1.get())
+        );
     }
 
     @Test
