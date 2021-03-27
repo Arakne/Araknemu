@@ -49,6 +49,7 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MonsterEnvironmentServiceTest extends GameBaseCase {
     private MonsterEnvironmentService service;
@@ -146,6 +147,59 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
         service.respawn(monsterGroupPosition, Duration.ZERO);
 
         Thread.sleep(50);
+
+        MonsterGroup lastGroup = monsterGroupPosition.available().get(1);
+
+        requestStack.assertLast(new AddSprites(Collections.singleton(lastGroup.sprite())));
+    }
+
+    @RepeatedIfExceptionsTest
+    void respawnWithDelay() throws InterruptedException, SQLException {
+        LivingMonsterGroupPosition monsterGroupPosition = new LivingMonsterGroupPosition(
+            container.get(MonsterGroupFactory.class),
+            container.get(MonsterEnvironmentService.class),
+            container.get(FightService.class),
+            container.get(MonsterGroupDataRepository.class).get(3),
+            new RandomCellSelector()
+        );
+
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
+        monsterGroupPosition.populate(map);
+        int size = monsterGroupPosition.available().size();
+
+        explorationPlayer().join(map);
+        requestStack.clear();
+
+        service.respawn(monsterGroupPosition, Duration.ofMillis(50));
+        Thread.sleep(40);
+
+        assertEquals(size, monsterGroupPosition.available().size());
+        Thread.sleep(20);
+
+        MonsterGroup lastGroup = monsterGroupPosition.available().get(1);
+
+        requestStack.assertLast(new AddSprites(Collections.singleton(lastGroup.sprite())));
+    }
+
+    @RepeatedIfExceptionsTest
+    void respawnWithDelayAndRespawnSpeedFactor() throws InterruptedException, SQLException {
+        setConfigValue("activity.monsters.respawnSpeedFactor", "4");
+        LivingMonsterGroupPosition monsterGroupPosition = new LivingMonsterGroupPosition(
+            container.get(MonsterGroupFactory.class),
+            container.get(MonsterEnvironmentService.class),
+            container.get(FightService.class),
+            container.get(MonsterGroupDataRepository.class).get(3),
+            new RandomCellSelector()
+        );
+
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
+        monsterGroupPosition.populate(map);
+
+        explorationPlayer().join(map);
+        requestStack.clear();
+
+        service.respawn(monsterGroupPosition, Duration.ofMillis(50));
+        Thread.sleep(40);
 
         MonsterGroup lastGroup = monsterGroupPosition.available().get(1);
 
