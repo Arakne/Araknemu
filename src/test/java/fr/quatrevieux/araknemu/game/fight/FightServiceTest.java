@@ -69,7 +69,7 @@ class FightServiceTest extends FightBaseCase {
             container.get(MapTemplateRepository.class),
             dispatcher = new DefaultListenerAggregate(),
             Arrays.asList(
-                new ChallengeBuilderFactory(container.get(FighterFactory.class), container.get(Logger.class))
+                new ChallengeBuilderFactory(container.get(FighterFactory.class), container.get(ChallengeType.class), container.get(Logger.class))
             ),
             Arrays.asList(
                 RaulebaqueModule::new
@@ -207,7 +207,7 @@ class FightServiceTest extends FightBaseCase {
 
     @Test
     void modules() throws ContainerException {
-        BaseBuilder builder = new BaseBuilder(service, new RandomUtil(), new ChallengeType(), container.get(Logger.class), Executors.newSingleThreadScheduledExecutor());
+        BaseBuilder builder = new BaseBuilder(service, new RandomUtil(), new ChallengeType(configuration.fight()), container.get(Logger.class), Executors.newSingleThreadScheduledExecutor());
         builder.map(container.get(ExplorationMapService.class).load(10340));
         Fight fight = builder.build(1);
 

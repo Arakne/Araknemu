@@ -53,6 +53,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -73,7 +74,7 @@ class PlacementStateTest extends FightBaseCase {
 
         fight = new Fight(
             1,
-            new ChallengeType(),
+            new ChallengeType(configuration.fight()),
             container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
             new ArrayList<>(Arrays.asList(
                 new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(123, 222), 0),
@@ -88,6 +89,12 @@ class PlacementStateTest extends FightBaseCase {
             container.get(Logger.class),
             Executors.newSingleThreadScheduledExecutor()
         );
+    }
+
+    @Test
+    void remainingTimeNotSupported() {
+        state.start(fight);
+        assertThrows(UnsupportedOperationException.class, () -> state.remainingTime());
     }
 
     @Test
@@ -134,7 +141,7 @@ class PlacementStateTest extends FightBaseCase {
         FightType type = Mockito.mock(FightType.class);
 
         Mockito.when(type.hasPlacementTimeLimit()).thenReturn(true);
-        Mockito.when(type.placementTime()).thenReturn(0);
+        Mockito.when(type.placementDuration()).thenReturn(Duration.ZERO);
 
         fight = new Fight(
             1,

@@ -19,23 +19,30 @@
 
 package fr.quatrevieux.araknemu.game.fight.type;
 
-import fr.quatrevieux.araknemu._test.TestCase;
+import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.ChallengeRewardsGenerator;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ChallengeTypeTest extends TestCase {
+class ChallengeTypeTest extends GameBaseCase {
     @Test
     void values() {
-        ChallengeType type = new ChallengeType();
+        ChallengeType type = new ChallengeType(configuration.fight());
 
         assertEquals(0, type.id());
         assertFalse(type.hasPlacementTimeLimit());
         assertTrue(type.canCancel());
         assertEquals(Duration.ofSeconds(30), type.turnDuration());
+        assertNull(type.placementDuration());
         assertInstanceOf(ChallengeRewardsGenerator.class, type.rewards());
+
+        setConfigValue("fight.turnDuration", "45s");
+        assertEquals(Duration.ofSeconds(45), type.turnDuration());
     }
 }

@@ -68,7 +68,7 @@ class FightHandlerTest extends GameBaseCase {
     void withChallengeFight() throws ContainerException {
         FightHandler<ChallengeBuilder> handler = new FightHandler<>(
             container.get(FightService.class),
-            new ChallengeBuilder(container.get(FightService.class), container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), Executors.newSingleThreadScheduledExecutor())
+            new ChallengeBuilder(container.get(FightService.class), container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), Executors.newSingleThreadScheduledExecutor(), new ChallengeType(configuration.fight()))
         );
 
         Fight fight = handler.start(
@@ -100,7 +100,7 @@ class FightHandlerTest extends GameBaseCase {
 
         FightHandler<ChallengeBuilder> handler = new FightHandler<>(
             service,
-            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), Executors.newSingleThreadScheduledExecutor())
+            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), Executors.newSingleThreadScheduledExecutor(), new ChallengeType(configuration.fight()))
         );
 
         Fight fight = handler.start(
@@ -143,7 +143,7 @@ class FightHandlerTest extends GameBaseCase {
 
         FightHandler<ChallengeBuilder> handler = new FightHandler<>(
             service,
-            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), Executors.newSingleThreadScheduledExecutor())
+            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), Executors.newSingleThreadScheduledExecutor(), new ChallengeType(configuration.fight()))
         );
 
         Fight fight = handler.start(
@@ -176,14 +176,14 @@ class FightHandlerTest extends GameBaseCase {
                 container.get(MapTemplateRepository.class),
                 dispatcher,
                 Arrays.asList(
-                    new ChallengeBuilderFactory(container.get(FighterFactory.class), container.get(Logger.class))
+                    new ChallengeBuilderFactory(container.get(FighterFactory.class), new ChallengeType(configuration.fight()), container.get(Logger.class))
                 ),
                 Arrays.asList(
                     (fight) -> module
                 ),
                 container.get(GameConfiguration.class).fight()
             ),
-            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), Executors.newSingleThreadScheduledExecutor())
+            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), Executors.newSingleThreadScheduledExecutor(), new ChallengeType(configuration.fight()))
         );
 
         Fight fight = handler.start(

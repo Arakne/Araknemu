@@ -157,6 +157,7 @@ import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.module.LaunchedSpellsModule;
 import fr.quatrevieux.araknemu.game.fight.module.RaulebaqueModule;
 import fr.quatrevieux.araknemu.game.fight.module.StatesModule;
+import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.handler.loader.AdminLoader;
 import fr.quatrevieux.araknemu.game.handler.loader.AggregateLoader;
@@ -588,6 +589,7 @@ public final class GameModule implements ContainerModule {
                 Arrays.asList(
                     new ChallengeBuilderFactory(
                         container.get(FighterFactory.class),
+                        container.get(ChallengeType.class),
                         container.get(Logger.class) // @todo fight logger
                     ),
                     new PvmBuilderFactory(
@@ -798,8 +800,14 @@ public final class GameModule implements ContainerModule {
                     Arrays.asList(new AddExperience(), new SynchronizeLife(), new AddKamas(), new AddItems(container.get(ItemService.class))),
                     Arrays.asList(new SetDead(), new ReturnToSavePosition()),
                     Arrays.asList(new PvmXpProvider(), new PvmKamasProvider(), new PvmItemDropProvider(), new PvmEndFightActionProvider())
-                )
+                ),
+                container.get(GameConfiguration.class).fight()
             )
+        );
+
+        configurator.persist(
+            ChallengeType.class,
+            container -> new ChallengeType(container.get(GameConfiguration.class).fight())
         );
 
         configurator.persist(

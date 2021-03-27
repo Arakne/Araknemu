@@ -69,7 +69,7 @@ class ActiveStateTest extends GameBaseCase {
 
         fight = new Fight(
             1,
-            new ChallengeType(),
+            new ChallengeType(configuration.fight()),
             container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
             Arrays.asList(
                 new SimpleTeam(fighter = new PlayerFighter(gamePlayer(true)), Arrays.asList(123, 222), 0),

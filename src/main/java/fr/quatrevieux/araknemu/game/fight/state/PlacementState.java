@@ -45,7 +45,6 @@ import fr.quatrevieux.araknemu.game.listener.fight.StartFightWhenAllReady;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.ClearFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterRemoved;
 
-import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -89,7 +88,7 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
         addFighters(fight.fighters(false));
 
         if (fight.type().hasPlacementTimeLimit()) {
-            fight.schedule(this::startFight, Duration.ofMillis(remainingTime()));
+            fight.schedule(this::startFight, fight.type().placementDuration());
         }
     }
 
@@ -118,7 +117,11 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
      * Get the remaining placement time, in milliseconds
      */
     public long remainingTime() {
-        return (fight.type().placementTime() * 1000 + startTime) - System.currentTimeMillis();
+        if (!fight.type().hasPlacementTimeLimit()) {
+            throw new UnsupportedOperationException("The fight has no placement time limit");
+        }
+
+        return fight.type().placementDuration().toMillis() + startTime - System.currentTimeMillis();
     }
 
     /**

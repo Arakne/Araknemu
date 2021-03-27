@@ -88,7 +88,7 @@ public class FightBaseCase extends GameBaseCase {
     public Fight createFight(boolean init) throws Exception {
         Fight fight = new Fight(
             1,
-            new ChallengeType(),
+            new ChallengeType(configuration.fight()),
             container.get(FightService.class).map(
                 container.get(ExplorationMapService.class).load(10340)
             ),

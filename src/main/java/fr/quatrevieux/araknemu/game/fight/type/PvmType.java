@@ -14,11 +14,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.type;
 
+import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardsGenerator;
 
 import java.time.Duration;
@@ -28,9 +29,11 @@ import java.time.Duration;
  */
 public final class PvmType implements FightType {
     private final RewardsGenerator rewardsGenerator;
+    private final GameConfiguration.FightConfiguration configuration;
 
-    public PvmType(RewardsGenerator rewardsGenerator) {
+    public PvmType(RewardsGenerator rewardsGenerator, GameConfiguration.FightConfiguration configuration) {
         this.rewardsGenerator = rewardsGenerator;
+        this.configuration = configuration;
     }
 
     @Override
@@ -49,13 +52,13 @@ public final class PvmType implements FightType {
     }
 
     @Override
-    public int placementTime() {
-        return 45; // @todo configuration
+    public Duration placementDuration() {
+        return configuration.pvmPlacementDuration();
     }
 
     @Override
     public Duration turnDuration() {
-        return Duration.ofSeconds(30); // @todo configuration
+        return configuration.turnDuration();
     }
 
     @Override
