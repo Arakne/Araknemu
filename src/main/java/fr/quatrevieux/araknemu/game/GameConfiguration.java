@@ -273,6 +273,15 @@ public final class GameConfiguration implements ConfigurationModule {
         public int monsterMovePercent() {
             return pool.integer("activity.monsters.movePercent", 25);
         }
+
+        /**
+         * The delay divisor for respawn a monster group
+         * With a factor of 2, the respawn will be 2 times faster
+         * By default 1
+         */
+        public int monsterRespawnSpeedFactor() {
+            return pool.integer("activity.monsters.respawnSpeedFactor", 1);
+        }
     }
 
     public final class EconomyConfiguration {
