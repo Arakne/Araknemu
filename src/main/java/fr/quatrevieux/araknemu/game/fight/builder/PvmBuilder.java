@@ -31,6 +31,8 @@ import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import org.apache.logging.log4j.Logger;
 
+import java.util.concurrent.ScheduledExecutorService;
+
 /**
  * Builder for pvm fight
  *
@@ -43,23 +45,25 @@ public final class PvmBuilder implements FightBuilder {
     private final RandomUtil random;
     private final PvmType type;
     private final Logger logger;
+    private final ScheduledExecutorService executor;
 
     private ExplorationMap map;
     private GamePlayer initiator;
     private MonsterGroup group;
     private boolean randomize = true;
 
-    public PvmBuilder(FightService service, FighterFactory fighterFactory, RandomUtil random, PvmType type, Logger logger) {
+    public PvmBuilder(FightService service, FighterFactory fighterFactory, RandomUtil random, PvmType type, Logger logger, ScheduledExecutorService executor) {
         this.service = service;
         this.fighterFactory = fighterFactory;
         this.random = random;
         this.type = type;
         this.logger = logger;
+        this.executor = executor;
     }
 
     @Override
     public Fight build(int fightId) {
-        final BaseBuilder builder = new BaseBuilder(service, randomize ? random : null, type, logger);
+        final BaseBuilder builder = new BaseBuilder(service, randomize ? random : null, type, logger, executor);
 
         builder.map(map);
         builder.addTeam((number, startPlaces) -> new SimpleTeam(

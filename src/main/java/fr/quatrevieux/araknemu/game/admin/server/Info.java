@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.Araknemu;
 import fr.quatrevieux.araknemu.game.GameService;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
+import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 
 import java.lang.management.ManagementFactory;
@@ -38,11 +39,13 @@ public final class Info extends AbstractCommand {
     private final Araknemu app;
     private final PlayerService playerService;
     private final GameService gameService;
+    private final FightService fightService;
 
-    public Info(Araknemu app, PlayerService playerService, GameService gameService) {
+    public Info(Araknemu app, PlayerService playerService, GameService gameService, FightService fightService) {
         this.app = app;
         this.playerService = playerService;
         this.gameService = gameService;
+        this.fightService = fightService;
     }
 
     @Override
@@ -70,6 +73,10 @@ public final class Info extends AbstractCommand {
             app.startDate()
         );
         performer.info("Online : {} sessions and {} players", gameService.sessions().size(), playerService.online().size());
+        performer.info("Fights : {} fights with {} fighters",
+            fightService.fights().size(),
+            fightService.fights().stream().mapToLong(fight -> fight.fighters().size()).sum()
+        );
         performer.info(
             "RAM usage : {} / {}",
             formatBytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()),

@@ -59,6 +59,7 @@ import fr.quatrevieux.araknemu.game.admin.server.ServerContextResolver;
 import fr.quatrevieux.araknemu.game.admin.server.Shutdown;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
+import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
@@ -169,7 +170,8 @@ public final class AdminModule implements ContainerModule {
                         add(new fr.quatrevieux.araknemu.game.admin.server.Info(
                             container.get(Araknemu.class),
                             container.get(PlayerService.class),
-                            container.get(GameService.class)
+                            container.get(GameService.class),
+                            container.get(FightService.class)
                         ));
                     }
                 })

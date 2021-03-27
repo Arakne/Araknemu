@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight;
@@ -45,10 +45,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 /**
@@ -64,20 +65,22 @@ public final class Fight implements Dispatcher, Sender {
     private final List<FightModule> modules = new ArrayList<>();
     private final Map<Class, Object> attachments = new HashMap<>();
     private final ListenerAggregate dispatcher;
+    private final ScheduledExecutorService executor;
 
-    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private final Lock executorLock = new ReentrantLock();
     private final FightTurnList turnList = new FightTurnList(this);
     private final EffectsHandler effects = new EffectsHandler();
 
     private final StopWatch duration = new StopWatch();
 
-    public Fight(int id, FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow, Logger logger) {
+    public Fight(int id, FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow, Logger logger, ScheduledExecutorService executor) {
         this.id = id;
         this.type = type;
         this.map = map;
         this.teams = teams;
         this.statesFlow = statesFlow;
         this.logger = logger;
+        this.executor = executor;
         this.dispatcher = new DefaultListenerAggregate(logger);
     }
 
@@ -217,13 +220,16 @@ public final class Fight implements Dispatcher, Sender {
      * @param action Action to execute
      * @param delay The delay
      */
-    public ScheduledFuture schedule(Runnable action, Duration delay) {
+    public ScheduledFuture<?> schedule(Runnable action, Duration delay) {
         return executor.schedule(
             () -> {
                 try {
+                    executorLock.lock();
                     action.run();
                 } catch (Throwable e) {
                     logger.error("Error on fight executor : " + e.getMessage(), e);
+                } finally {
+                    executorLock.unlock();
                 }
             },
             delay.toMillis(),
@@ -239,9 +245,12 @@ public final class Fight implements Dispatcher, Sender {
     public void execute(Runnable action) {
         executor.execute(() -> {
             try {
+                executorLock.lock();
                 action.run();
             } catch (Throwable e) {
                 logger.error("Error on fight executor : " + e.getMessage(), e);
+            } finally {
+                executorLock.unlock();
             }
         });
     }
@@ -330,8 +339,6 @@ public final class Fight implements Dispatcher, Sender {
      * Destroy fight after terminated
      */
     public void destroy() {
-        executor.shutdownNow();
-
         teams.clear();
         map.destroy();
     }

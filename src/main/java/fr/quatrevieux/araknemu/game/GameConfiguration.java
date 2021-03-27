@@ -130,6 +130,13 @@ public final class GameConfiguration implements ConfigurationModule {
         return new EconomyConfiguration();
     }
 
+    /**
+     * Get the configuration for the fight system
+     */
+    public FightConfiguration fight() {
+        return new FightConfiguration();
+    }
+
     public final class PlayerConfiguration {
         /**
          * The player name regex
@@ -287,6 +294,17 @@ public final class GameConfiguration implements ConfigurationModule {
          */
         public double bankCostPerEntry() {
             return pool.decimal("economy.bank.costPerEntry", 1);
+        }
+    }
+
+    public final class FightConfiguration {
+        /**
+         * The threads count for run fight actions and AI
+         * This value should be greater than 2. A good value may be around 1 thread per 100 fights
+         * By default, 4
+         */
+        public int threadsCount() {
+            return pool.integer("fight.threadsCount", 4);
         }
     }
 }

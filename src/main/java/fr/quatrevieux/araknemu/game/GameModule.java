@@ -602,7 +602,8 @@ public final class GameModule implements ContainerModule {
                     RaulebaqueModule::new,
                     LaunchedSpellsModule::new,
                     fight -> new AiModule(container.get(AiFactory.class))
-                )
+                ),
+                container.get(GameConfiguration.class).fight()
             )
         );
 

@@ -24,6 +24,8 @@ import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import org.apache.logging.log4j.Logger;
 
+import java.util.concurrent.ScheduledExecutorService;
+
 /**
  * Create the challenge builder
  */
@@ -43,7 +45,7 @@ public final class ChallengeBuilderFactory implements FightBuilderFactory<Challe
     }
 
     @Override
-    public ChallengeBuilder create(FightService service) {
-        return new ChallengeBuilder(service, fighterFactory, random, logger);
+    public ChallengeBuilder create(FightService service, ScheduledExecutorService executor) {
+        return new ChallengeBuilder(service, fighterFactory, random, logger, executor);
     }
 }

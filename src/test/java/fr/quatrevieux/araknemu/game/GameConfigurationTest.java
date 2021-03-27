@@ -78,4 +78,11 @@ class GameConfigurationTest extends GameBaseCase {
         assertEquals(0.1, configuration.economy().npcSellPriceMultiplier());
         assertEquals(1, configuration.economy().bankCostPerEntry());
     }
+
+    @Test
+    void fight() {
+        assertEquals(4, configuration.fight().threadsCount());
+        setConfigValue("fight.threadsCount", "8");
+        assertEquals(8, configuration.fight().threadsCount());
+    }
 }

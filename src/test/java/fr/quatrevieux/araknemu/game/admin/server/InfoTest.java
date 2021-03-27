@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.BootException;
 import fr.quatrevieux.araknemu.game.GameService;
 import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
+import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ class InfoTest extends CommandTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        command = new Info(app, container.get(PlayerService.class), container.get(GameService.class));
+        command = new Info(app, container.get(PlayerService.class), container.get(GameService.class), container.get(FightService.class));
     }
 
     @Test
@@ -46,6 +47,8 @@ class InfoTest extends CommandTestCase {
         execute("info");
 
         assertOutputContains("===== Server information =====");
+        assertOutputContains("Online : 1 sessions and 1 players");
+        assertOutputContains("Fights : 0 fights with 0 fighters");
     }
 
     @Test

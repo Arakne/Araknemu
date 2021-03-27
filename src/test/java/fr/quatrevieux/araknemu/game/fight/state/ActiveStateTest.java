@@ -49,6 +49,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -79,7 +80,8 @@ class ActiveStateTest extends GameBaseCase {
                 new PlacementState(false),
                 state = new ActiveState()
             ),
-            container.get(Logger.class)
+            container.get(Logger.class),
+            Executors.newSingleThreadScheduledExecutor()
         );
 
         fight.nextState();
