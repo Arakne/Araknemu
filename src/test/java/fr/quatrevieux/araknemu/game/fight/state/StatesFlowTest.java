@@ -32,6 +32,7 @@ import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -53,7 +54,8 @@ class StatesFlowTest extends GameBaseCase {
             ),
             new ArrayList<>(),
             new StatesFlow(),
-            container.get(Logger.class)
+            container.get(Logger.class),
+            Executors.newSingleThreadScheduledExecutor()
         );
 
         flow.next(fight);

@@ -27,6 +27,8 @@ import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.Executors;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ChallengeBuilderFactoryTest extends GameBaseCase {
@@ -42,6 +44,6 @@ class ChallengeBuilderFactoryTest extends GameBaseCase {
 
     @Test
     void create() throws ContainerException {
-        assertNotNull(factory.create(container.get(FightService.class)));
+        assertNotNull(factory.create(container.get(FightService.class), Executors.newSingleThreadScheduledExecutor()));
     }
 }

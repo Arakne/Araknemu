@@ -36,6 +36,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Base builder for fight
@@ -45,20 +46,22 @@ public final class BaseBuilder implements FightBuilder {
     private final RandomUtil random;
     private final FightType type;
     private final Logger logger;
+    private final ScheduledExecutorService executor;
 
     private FightMap map;
     private final List<TeamFactory> teamFactories = new ArrayList<>();
 
-    public BaseBuilder(FightService service, RandomUtil random, FightType type, Logger logger) {
+    public BaseBuilder(FightService service, RandomUtil random, FightType type, Logger logger, ScheduledExecutorService executor) {
         this.service = service;
         this.random = random;
         this.type = type;
         this.logger = logger;
+        this.executor = executor;
     }
 
     @Override
     public Fight build(int fightId) {
-        return new Fight(fightId, type, map, buildTeams(), statesFlow(), logger);
+        return new Fight(fightId, type, map, buildTeams(), statesFlow(), logger, executor);
     }
 
     /**

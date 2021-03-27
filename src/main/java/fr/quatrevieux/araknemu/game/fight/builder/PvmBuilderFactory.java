@@ -25,6 +25,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import org.apache.logging.log4j.Logger;
 
+import java.util.concurrent.ScheduledExecutorService;
+
 /**
  * Create the pvm builder
  */
@@ -47,7 +49,7 @@ public final class PvmBuilderFactory implements FightBuilderFactory<PvmBuilder> 
     }
 
     @Override
-    public PvmBuilder create(FightService service) {
-        return new PvmBuilder(service, fighterFactory, random, type, logger);
+    public PvmBuilder create(FightService service, ScheduledExecutorService executor) {
+        return new PvmBuilder(service, fighterFactory, random, type, logger, executor);
     }
 }

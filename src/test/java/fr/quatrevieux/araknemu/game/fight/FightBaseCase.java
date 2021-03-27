@@ -66,6 +66,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.concurrent.Executors;
 
 public class FightBaseCase extends GameBaseCase {
     protected GamePlayer player;
@@ -102,7 +103,8 @@ public class FightBaseCase extends GameBaseCase {
                 new ActiveState(),
                 new FinishState()
             ),
-            container.get(Logger.class)
+            container.get(Logger.class),
+            Executors.newSingleThreadScheduledExecutor()
         );
 
         fight.register(new StatesModule(fight));
@@ -132,7 +134,8 @@ public class FightBaseCase extends GameBaseCase {
                 new ActiveState(),
                 new FinishState()
             ),
-            container.get(Logger.class)
+            container.get(Logger.class),
+            Executors.newSingleThreadScheduledExecutor()
         );
 
         fight.register(new StatesModule(fight));

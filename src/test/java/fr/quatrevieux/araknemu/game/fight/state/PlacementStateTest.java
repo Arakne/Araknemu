@@ -56,6 +56,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -84,7 +85,8 @@ class PlacementStateTest extends FightBaseCase {
                 state = new PlacementState(false),
                 new ActiveState()
             ),
-            container.get(Logger.class)
+            container.get(Logger.class),
+            Executors.newSingleThreadScheduledExecutor()
         );
     }
 
@@ -146,7 +148,8 @@ class PlacementStateTest extends FightBaseCase {
                 state = new PlacementState(false),
                 new ActiveState()
             ),
-            container.get(Logger.class)
+            container.get(Logger.class),
+            Executors.newSingleThreadScheduledExecutor()
         );
 
         state.start(fight);

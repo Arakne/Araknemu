@@ -190,3 +190,10 @@ game.dbname = araknemu
 ; > Default to 1
 ; > Set to 0 to disable the bank cost
 ;economy.bank.costPerEntry = 1
+
+; Fight
+; -----
+; > The threads count for run fight actions and AI
+; > This value should be greater than 2. A good value may be around 1 thread per 100 fights
+; > By default, 4
+;fight.threadsCount = 4

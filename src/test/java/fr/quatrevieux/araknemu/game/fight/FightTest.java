@@ -45,6 +45,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -80,7 +81,8 @@ class FightTest extends GameBaseCase {
                 new ActiveState(),
                 new FinishState()
             ),
-            logger = Mockito.mock(Logger.class)
+            logger = Mockito.mock(Logger.class),
+            Executors.newSingleThreadScheduledExecutor()
         );
     }
 
