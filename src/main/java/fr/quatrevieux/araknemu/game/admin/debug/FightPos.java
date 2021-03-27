@@ -19,29 +19,23 @@
 
 package fr.quatrevieux.araknemu.game.admin.debug;
 
+import fr.arakne.utils.maps.MapCell;
 import fr.quatrevieux.araknemu.common.account.Permission;
-import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
-import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.AdminUser;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.network.game.out.fight.CancelFight;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Show / hide fight places
  */
 public final class FightPos extends AbstractCommand {
-    private final MapTemplateRepository repository;
-
-    public FightPos(MapTemplateRepository repository) {
-        this.repository = repository;
-    }
-
     @Override
     protected void build(Builder builder) {
         builder
@@ -71,21 +65,21 @@ public final class FightPos extends AbstractCommand {
             return;
         }
 
-        final MapTemplate map = repository.get(user.player().position().map());
+        final ExplorationMap map = user.player().exploration().map();
+        final List<Integer>[] places = new List[] {
+            map.fightPlaces(0).stream().map(MapCell::id).collect(Collectors.toList()),
+            map.fightPlaces(1).stream().map(MapCell::id).collect(Collectors.toList()),
+        };
 
-        if (
-            map.fightPlaces().length < 2
-            || map.fightPlaces()[0].isEmpty()
-            || map.fightPlaces()[1].isEmpty()
-        ) {
+        if (places[0].isEmpty() || places[1].isEmpty()) {
             performer.error("No fight places found");
             return;
         }
 
-        performer.info("Places : {}", Arrays.toString(map.fightPlaces()));
+        performer.info("Places : {} | {}", places[0], places[1]);
 
         if (arguments.size() > 1 && arguments.get(1).equalsIgnoreCase("show")) {
-            user.send(new FightStartPositions(map.fightPlaces(), 0));
+            user.send(new FightStartPositions(places, 0));
         }
     }
 }
