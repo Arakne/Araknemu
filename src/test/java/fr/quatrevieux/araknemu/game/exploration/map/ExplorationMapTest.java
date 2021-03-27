@@ -234,6 +234,17 @@ class ExplorationMapTest extends GameBaseCase {
     }
 
     @Test
+    void fightPlaces() {
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
+
+        assertTrue(map.fightPlaces(4).isEmpty());
+        assertCollectionEquals(
+            map.fightPlaces(1),
+            map.get(48), map.get(63), map.get(75), map.get(90), map.get(92), map.get(106), map.get(121), map.get(122), map.get(137), map.get(150)
+        );
+    }
+
+    @Test
     void cellEquals() throws SQLException, ContainerException {
         ExplorationMap map = explorationPlayer().map();
 

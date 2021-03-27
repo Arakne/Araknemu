@@ -38,6 +38,8 @@ import fr.quatrevieux.araknemu.game.exploration.map.event.SpriteRemoveFromMap;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -209,6 +211,21 @@ public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispa
      */
     public boolean canLaunchFight() {
         return template.fightPlaces().length >= 2;
+    }
+
+    /**
+     * Get the available fight places for the given team
+     *
+     * @param team The team number. Starts at 0
+     *
+     * @return List of placement cells, or empty list if there is not place for the given team
+     */
+    public List<ExplorationMapCell> fightPlaces(int team) {
+        if (team >= template.fightPlaces().length) {
+            return Collections.emptyList();
+        }
+
+        return template.fightPlaces()[team].stream().map(this::get).collect(Collectors.toList());
     }
 
     /**

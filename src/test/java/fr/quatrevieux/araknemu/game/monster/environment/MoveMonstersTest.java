@@ -90,7 +90,7 @@ class MoveMonstersTest extends GameBaseCase {
         task.execute(container.get(Logger.class));
 
         assertNotEquals(lastCell, group.cell());
-        requestStack.assertLast(new GameActionResponse("", ActionType.MOVE, group.id(), "ab-fbVha3"));
+        requestStack.assertLast(new GameActionResponse("", ActionType.MOVE, group.id(), "acRddhfcPdc3fb7dcjfb6"));
     }
 
     @Test

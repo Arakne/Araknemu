@@ -46,7 +46,7 @@ class DebugContextTest extends GameBaseCase {
                     @Override
                     public void configure(DebugContext context) {
                         add(new GenItem(container.get(ItemService.class)));
-                        add(new FightPos(container.get(MapTemplateRepository.class)));
+                        add(new FightPos());
                         add(new Movement(container.get(MapTemplateRepository.class)));
                         add(new MapStats(container.get(MapTemplateRepository.class)));
                         add(new Area(container.get(SpellEffectService.class)));
