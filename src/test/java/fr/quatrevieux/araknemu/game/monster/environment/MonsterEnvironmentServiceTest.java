@@ -44,10 +44,13 @@ import org.mockito.Mockito;
 
 import java.sql.SQLException;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -135,7 +138,7 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
             container.get(MonsterEnvironmentService.class),
             container.get(FightService.class),
             container.get(MonsterGroupDataRepository.class).get(3),
-            new RandomCellSelector()
+            new RandomCellSelector(), false
         );
 
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
@@ -160,7 +163,7 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
             container.get(MonsterEnvironmentService.class),
             container.get(FightService.class),
             container.get(MonsterGroupDataRepository.class).get(3),
-            new RandomCellSelector()
+            new RandomCellSelector(), false
         );
 
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
@@ -189,7 +192,7 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
             container.get(MonsterEnvironmentService.class),
             container.get(FightService.class),
             container.get(MonsterGroupDataRepository.class).get(3),
-            new RandomCellSelector()
+            new RandomCellSelector(), false
         );
 
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
@@ -216,5 +219,9 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
 
         service.preload(container.get(Logger.class));
         assertEquals(3, service.groups().count());
+
+        assertFalse(service.groups().findFirst().get().fixed());
+        assertTrue(service.groups().skip(1).findFirst().get().fixed());
+        assertTrue(service.groups().skip(2).findFirst().get().fixed());
     }
 }

@@ -93,13 +93,7 @@ public final class MonsterEnvironmentService implements EventsSubscriber, Preloa
         for (MonsterGroupPosition position : positionRepository.all()) {
             groupsByMap
                 .computeIfAbsent(position.position().map(), mapId -> new ArrayList<>())
-                .add(new LivingMonsterGroupPosition(
-                    factory,
-                    this,
-                    fightService,
-                    groupsData.get(position.groupId()),
-                    SpawnCellSelector.forPosition(position.position())
-                ))
+                .add(createByPosition(position))
             ;
         }
 
@@ -111,7 +105,8 @@ public final class MonsterEnvironmentService implements EventsSubscriber, Preloa
             new MoveMonsters(
                 this,
                 Duration.ofSeconds(configuration.monsterMoveInterval()),
-                configuration.monsterMovePercent()
+                configuration.monsterMovePercent(),
+                configuration.monsterMoveDistance()
             )
         );
     }
@@ -153,13 +148,7 @@ public final class MonsterEnvironmentService implements EventsSubscriber, Preloa
         final Collection<LivingMonsterGroupPosition> groups = new ArrayList<>();
 
         for (MonsterGroupPosition position : positionRepository.byMap(mapId)) {
-            groups.add(new LivingMonsterGroupPosition(
-                factory,
-                this,
-                fightService,
-                dataRepository.get(position.groupId()),
-                SpawnCellSelector.forPosition(position.position())
-            ));
+            groups.add(createByPosition(position));
         }
 
         groupsByMap.put(mapId, groups);
@@ -184,5 +173,16 @@ public final class MonsterEnvironmentService implements EventsSubscriber, Preloa
      */
     Stream<LivingMonsterGroupPosition> groups() {
         return groupsByMap.values().stream().flatMap(Collection::stream);
+    }
+
+    private LivingMonsterGroupPosition createByPosition(MonsterGroupPosition position) {
+        return new LivingMonsterGroupPosition(
+            factory,
+            this,
+            fightService,
+            dataRepository.get(position.groupId()),
+            SpawnCellSelector.forPosition(position.position()),
+            position.position().cell() != -1
+        );
     }
 }

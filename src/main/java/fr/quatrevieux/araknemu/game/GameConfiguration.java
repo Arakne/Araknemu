@@ -275,6 +275,14 @@ public final class GameConfiguration implements ConfigurationModule {
         }
 
         /**
+         * The maximum move distance for monsters
+         * By default 5
+         */
+        public int monsterMoveDistance() {
+            return pool.integer("activity.monsters.moveDistance", 5);
+        }
+
+        /**
          * The delay divisor for respawn a monster group
          * With a factor of 2, the respawn will be 2 times faster
          * By default 1

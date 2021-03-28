@@ -178,6 +178,9 @@ game.dbname = araknemu
 ; > The value must be an integer value between ]0, 100]
 ; > By default 25%
 ;activity.monsters.movePercent = 25
+; > The maximum move distance for monsters
+; > By default 5
+;activity.monsters.moveDistance = 5
 ; > The delay divisor for respawn a monster group
 ; > With a factor of 2, the respawn will be 2 times faster
 ; > By default 1
