@@ -315,5 +315,23 @@ public final class GameConfiguration implements ConfigurationModule {
         public int threadsCount() {
             return pool.integer("fight.threadsCount", 4);
         }
+
+        /**
+         * The fight turn duration
+         * The value should be a duration string like 30s, 1m10s
+         * Default value : 30s
+         */
+        public Duration turnDuration() {
+            return pool.duration("fight.turnDuration", Duration.ofSeconds(30));
+        }
+
+        /**
+         * The placement duration for a PVM fight
+         * The value should be a duration string like 30s, 1m10s
+         * Default value : 45s
+         */
+        public Duration pvmPlacementDuration() {
+            return pool.duration("fight.pvm.placementDuration", Duration.ofSeconds(45));
+        }
     }
 }

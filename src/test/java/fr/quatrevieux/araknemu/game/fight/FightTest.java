@@ -68,7 +68,7 @@ class FightTest extends GameBaseCase {
 
         fight = new Fight(
             5,
-            new ChallengeType(),
+            new ChallengeType(configuration.fight()),
             map = container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
             teams = new ArrayList<>(Arrays.asList(
                 new SimpleTeam(fighter1 = new PlayerFighter(gamePlayer(true)), Arrays.asList(123), 0),

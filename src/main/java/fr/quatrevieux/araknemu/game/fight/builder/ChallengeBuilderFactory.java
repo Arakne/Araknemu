@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.builder;
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import fr.quatrevieux.araknemu.game.fight.type.FightType;
 import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.ScheduledExecutorService;
@@ -31,11 +32,13 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public final class ChallengeBuilderFactory implements FightBuilderFactory<ChallengeBuilder> {
     private final FighterFactory fighterFactory;
+    private final FightType type;
     private final Logger logger;
     private final RandomUtil random = new RandomUtil();
 
-    public ChallengeBuilderFactory(FighterFactory fighterFactory, Logger logger) {
+    public ChallengeBuilderFactory(FighterFactory fighterFactory, FightType type, Logger logger) {
         this.fighterFactory = fighterFactory;
+        this.type = type;
         this.logger = logger;
     }
 
@@ -46,6 +49,6 @@ public final class ChallengeBuilderFactory implements FightBuilderFactory<Challe
 
     @Override
     public ChallengeBuilder create(FightService service, ScheduledExecutorService executor) {
-        return new ChallengeBuilder(service, fighterFactory, random, logger, executor);
+        return new ChallengeBuilder(service, fighterFactory, random, logger, executor, type);
     }
 }

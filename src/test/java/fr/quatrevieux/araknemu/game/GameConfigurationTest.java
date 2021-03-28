@@ -87,5 +87,13 @@ class GameConfigurationTest extends GameBaseCase {
         assertEquals(4, configuration.fight().threadsCount());
         setConfigValue("fight.threadsCount", "8");
         assertEquals(8, configuration.fight().threadsCount());
+
+        assertEquals(Duration.ofSeconds(30), configuration.fight().turnDuration());
+        setConfigValue("fight.turnDuration", "1m30s");
+        assertEquals(Duration.ofSeconds(90), configuration.fight().turnDuration());
+
+        assertEquals(Duration.ofSeconds(45), configuration.fight().pvmPlacementDuration());
+        setConfigValue("fight.pvm.placementDuration", "1m30s");
+        assertEquals(Duration.ofSeconds(90), configuration.fight().pvmPlacementDuration());
     }
 }

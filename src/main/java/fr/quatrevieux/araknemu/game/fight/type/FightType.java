@@ -42,19 +42,17 @@ public interface FightType {
     /**
      * Does the fight type has a placement time limit ?
      *
-     * @see FightType#placementTime() For get the placement time limit
+     * @see FightType#placementDuration() For get the placement time limit
      */
     public boolean hasPlacementTimeLimit();
 
     /**
-     * Get the fight placement time in seconds
+     * Get the fight placement duration
      * This value must be used only, and only if hasPlacementTimeLimit is set to true
      *
      * @see FightType#hasPlacementTimeLimit()
-     *
-     * @todo Return duration instead of int
      */
-    public int placementTime();
+    public Duration placementDuration();
 
     /**
      * Get the maximum duration of a turn
