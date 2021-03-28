@@ -73,7 +73,9 @@ class GameConfigurationTest extends GameBaseCase {
         assertEquals(25, configuration.activity().monsterMovePercent());
         assertEquals(1, configuration.activity().monsterRespawnSpeedFactor());
         setConfigValue("activity.monsters.respawnSpeedFactor", "3");
-        assertEquals(3, configuration.activity().monsterRespawnSpeedFactor());
+        assertEquals(5, configuration.activity().monsterMoveDistance());
+        setConfigValue("activity.monsters.moveDistance", "3");
+        assertEquals(3, configuration.activity().monsterMoveDistance());
     }
 
     @Test
