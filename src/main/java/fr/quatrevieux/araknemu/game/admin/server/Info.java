@@ -30,12 +30,11 @@ import fr.quatrevieux.araknemu.game.player.PlayerService;
 import java.lang.management.ManagementFactory;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
 
 /**
  * Display information about the server
  */
-public final class Info extends AbstractCommand {
+public final class Info extends AbstractCommand<Void> {
     private final Araknemu app;
     private final PlayerService playerService;
     private final GameService gameService;
@@ -65,7 +64,7 @@ public final class Info extends AbstractCommand {
     }
 
     @Override
-    public void execute(AdminPerformer performer, List<String> arguments) {
+    public void execute(AdminPerformer performer, Void arguments) {
         performer.success("===== Server information =====");
         performer.info(
             "Uptime : {} (started at : {})",

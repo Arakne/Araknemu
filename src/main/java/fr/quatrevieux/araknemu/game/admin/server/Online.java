@@ -29,13 +29,14 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 /**
  * List online players on the current server
  */
-public final class Online extends AbstractCommand {
+public final class Online extends AbstractCommand<List<String>> {
     private final PlayerService service;
     private final ExplorationMapService mapService;
     private final GameService gameService;
@@ -70,6 +71,7 @@ public final class Online extends AbstractCommand {
 
     @Override
     public void execute(AdminPerformer performer, List<String> arguments) {
+        // @todo use Options object
         performer.success("There is {} online players with {} active sessions", service.online().size(), gameService.sessions().size());
 
         final Options options = new Options(arguments);
@@ -149,6 +151,11 @@ public final class Online extends AbstractCommand {
         }
     }
 
+    @Override
+    public List<String> createArguments() {
+        return new ArrayList<>();
+    }
+
     /**
      * Store the command options
      */
@@ -158,7 +165,7 @@ public final class Online extends AbstractCommand {
         private String search = null;
 
         public Options(List<String> arguments) {
-            for (int i = 1; i < arguments.size(); ++i) {
+            for (int i = 0; i < arguments.size(); ++i) {
                 switch (arguments.get(i)) {
                     case "--limit":
                         limit = Integer.parseInt(arguments.get(++i));

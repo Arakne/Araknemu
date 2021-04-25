@@ -24,13 +24,12 @@ import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-
-import java.util.List;
+import org.kohsuke.args4j.Argument;
 
 /**
  * Change the player life
  */
-public final class SetLife extends AbstractCommand {
+public final class SetLife extends AbstractCommand<SetLife.Arguments> {
     private final GamePlayer player;
 
     public SetLife(GamePlayer player) {
@@ -58,15 +57,41 @@ public final class SetLife extends AbstractCommand {
     }
 
     @Override
-    public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
-        if (arguments.get(1).equalsIgnoreCase("max")) {
+    public void execute(AdminPerformer performer, Arguments arguments) throws AdminException {
+        if (arguments.max()) {
             player.properties().life().set(player.properties().life().max());
 
             performer.success("{} retrieve all his life", player.name());
         } else {
-            player.properties().life().set(Integer.parseUnsignedInt(arguments.get(1)));
+            player.properties().life().set(arguments.number());
 
-            performer.success("Life of {} is set to {}", player.name(), arguments.get(1));
+            performer.success("Life of {} is set to {}", player.name(), arguments.value);
+        }
+    }
+
+    @Override
+    public Arguments createArguments() {
+        return new Arguments();
+    }
+
+    public static final class Arguments {
+        @Argument(required = true, metaVar = "number|max")
+        private String value;
+
+        public String value() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public boolean max() {
+            return "max".equalsIgnoreCase(value);
+        }
+
+        public int number() {
+            return Integer.parseInt(value);
         }
     }
 }

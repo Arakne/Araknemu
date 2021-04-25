@@ -24,12 +24,13 @@ import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.LogType;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Simple "echo" command
  */
-public final class Echo extends AbstractCommand {
+public final class Echo extends AbstractCommand<List<String>> {
     @Override
     protected void build(Builder builder) {
         builder
@@ -56,9 +57,9 @@ public final class Echo extends AbstractCommand {
     @Override
     public void execute(AdminPerformer performer, List<String> arguments) {
         LogType log = LogType.DEFAULT;
-        int start = 2;
+        int start = 1;
 
-        switch (arguments.get(1)) {
+        switch (arguments.get(0)) {
             case "-e":
                 log = LogType.ERROR;
                 break;
@@ -69,9 +70,14 @@ public final class Echo extends AbstractCommand {
                 log = LogType.DEFAULT;
                 break;
             default:
-                start = 1;
+                start = 0;
         }
 
         performer.log(log, StringUtils.join(arguments.listIterator(start), " "));
+    }
+
+    @Override
+    public List<String> createArguments() {
+        return new ArrayList<>();
     }
 }

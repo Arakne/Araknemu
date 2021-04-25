@@ -23,13 +23,12 @@ import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-
-import java.util.List;
+import org.kohsuke.args4j.Argument;
 
 /**
  * Add experience to player
  */
-public final class AddXp extends AbstractCommand {
+public final class AddXp extends AbstractCommand<AddXp.Arguments> {
     private final GamePlayer player;
 
     public AddXp(GamePlayer player) {
@@ -56,11 +55,30 @@ public final class AddXp extends AbstractCommand {
     }
 
     @Override
-    public void execute(AdminPerformer performer, List<String> arguments) {
-        final long xp = Long.parseUnsignedLong(arguments.get(1));
+    public void execute(AdminPerformer performer, Arguments arguments) {
+        player.properties().experience().add(arguments.quantity());
 
-        player.properties().experience().add(xp);
+        performer.success("Add {} xp to {} (level = {})", arguments.quantity(), player.name(), player.properties().experience().level());
+    }
 
-        performer.success("Add {} xp to {} (level = {})", xp, player.name(), player.properties().experience().level());
+    @Override
+    public Arguments createArguments() {
+        return new Arguments();
+    }
+
+    public static final class Arguments {
+        @Argument(required = true, metaVar = "quantity", usage = "The experience quantity to add. Must be an unsigned number.")
+        private long quantity;
+
+        /**
+         * The experience quantity to add
+         */
+        public long quantity() {
+            return quantity;
+        }
+
+        public void setQuantity(long quantity) {
+            this.quantity = quantity;
+        }
     }
 }

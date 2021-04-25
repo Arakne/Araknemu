@@ -27,12 +27,10 @@ import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 
-import java.util.List;
-
 /**
  * Get stats on map cells
  */
-public final class MapStats extends AbstractCommand {
+public final class MapStats extends AbstractCommand<Void> {
     private final MapTemplateRepository repository;
 
     public MapStats(MapTemplateRepository repository) {
@@ -53,7 +51,7 @@ public final class MapStats extends AbstractCommand {
     }
 
     @Override
-    public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
+    public void execute(AdminPerformer performer, Void arguments) throws AdminException {
         performer.info("Loading map stats...");
 
         final int[] movements = new int[10];

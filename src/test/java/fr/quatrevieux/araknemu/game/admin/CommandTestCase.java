@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
+import fr.quatrevieux.araknemu.game.admin.executor.CommandExecutor;
 import fr.quatrevieux.araknemu.util.LogFormatter;
 
 import java.sql.SQLException;
@@ -62,7 +63,7 @@ abstract public class CommandTestCase extends GameBaseCase {
 
         @Override
         public boolean isGranted(Set<Permission> permissions) {
-            return performer.isGranted(permissions);
+            return true;
         }
 
         @Override
@@ -81,16 +82,16 @@ abstract public class CommandTestCase extends GameBaseCase {
         }
     }
 
-    public AdminUser user() throws ContainerException, SQLException, ContextException {
+    public AdminUser user() throws ContainerException, SQLException, AdminException {
         return container.get(AdminService.class).user(gamePlayer(true));
     }
 
     public void execute(AdminPerformer performer, String... arguments) throws AdminException {
         try {
-            command.execute(
-                this.performer = new PerformerWrapper(performer),
-                new CommandParser.Arguments("", "", command.name(), Arrays.asList(arguments), user().context().current())
-            );
+            this.performer = new PerformerWrapper(performer);
+            final CommandParser.Arguments parsedArgs = new CommandParser.Arguments("", "", command.name(), Arrays.asList(arguments), user().context().current());
+
+            container.get(CommandExecutor.class).execute(command, this.performer, parsedArgs);
         } catch (SQLException e) {
             throw new AdminException(e);
         }
@@ -98,6 +99,19 @@ abstract public class CommandTestCase extends GameBaseCase {
 
     public void execute(String... arguments) throws ContainerException, SQLException, AdminException {
         execute(user(), arguments);
+    }
+
+    public void executeWithAdminUser(String... arguments) throws AdminException {
+        try {
+            final AdminUser performer = user();
+            performer.account().get().grant(Permission.values());
+
+            final CommandParser.Arguments parsedArgs = new CommandParser.Arguments("", "", command.name(), Arrays.asList(arguments), user().context().current());
+
+            container.get(CommandExecutor.class).execute(command, user(), parsedArgs);
+        } catch (SQLException e) {
+            throw new AdminException(e);
+        }
     }
 
     public void executeLine(String line) throws AdminException, SQLException {

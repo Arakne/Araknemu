@@ -23,13 +23,13 @@ import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
-import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.ChangeMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import org.kohsuke.args4j.Argument;
+import org.kohsuke.args4j.Option;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +37,7 @@ import java.util.Map;
 /**
  * Teleport the player to the desired location
  */
-public final class Goto extends AbstractCommand {
+public final class Goto extends AbstractCommand<Goto.Arguments> {
     private final GamePlayer player;
     private final ExplorationMapService mapService;
     private final Map<String, LocationResolver> resolvers = new LinkedHashMap<>();
@@ -93,15 +93,12 @@ public final class Goto extends AbstractCommand {
     }
 
     @Override
-    public void execute(AdminPerformer performer, CommandParser.Arguments arguments) throws AdminException {
-        final List<String> locationArguments = new ArrayList<>(arguments.arguments().subList(1, arguments.arguments().size()));
-        final boolean force = locationArguments.remove("--force");
-
-        if ((!player.isExploring() || player.exploration().interactions().busy()) && !force) {
+    public void execute(AdminPerformer performer, Arguments arguments) throws AdminException {
+        if ((!player.isExploring() || player.exploration().interactions().busy()) && !arguments.force) {
             throw new AdminException("The player is busy, and cannot be teleported. Use --force to force the teleportation.");
         }
 
-        final Target target = parseTarget(locationArguments);
+        final Target target = parseTarget(arguments.targets);
 
         teleportToTarget(performer, target);
         performer.success("Teleport {} to {}", player.name(), target);
@@ -191,5 +188,34 @@ public final class Goto extends AbstractCommand {
      */
     private void register(LocationResolver resolver) {
         resolvers.put(resolver.name(), resolver);
+    }
+
+    @Override
+    public Arguments createArguments() {
+        return new Arguments();
+    }
+
+    public static final class Arguments {
+        @Option(name = "--force", usage = "Force the teleporation even if the player is busy or in fight.")
+        private boolean force = false;
+
+        @Argument(metaVar = "[type] [target]...", multiValued = true)
+        private List<String> targets;
+
+        public boolean force() {
+            return force;
+        }
+
+        public void setForce(boolean force) {
+            this.force = force;
+        }
+
+        public List<String> targets() {
+            return targets;
+        }
+
+        public void setTargets(List<String> targets) {
+            this.targets = targets;
+        }
     }
 }

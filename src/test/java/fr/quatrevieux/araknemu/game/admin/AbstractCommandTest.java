@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AbstractCommandTest extends GameBaseCase {
     @Test
     void defaults() {
-        Command command = new AbstractCommand() {
+        Command command = new AbstractCommand<Void>() {
             @Override
             protected void build(Builder builder) {}
 
@@ -41,7 +41,7 @@ class AbstractCommandTest extends GameBaseCase {
             }
 
             @Override
-            public void execute(AdminPerformer output, List<String> arguments) {}
+            public void execute(AdminPerformer output, Void arguments) {}
         };
 
         assertEquals("No description", command.description());
@@ -59,7 +59,7 @@ class AbstractCommandTest extends GameBaseCase {
 
     @Test
     void withDescriptionAndHelp() {
-        Command command = new AbstractCommand() {
+        Command command = new AbstractCommand<Void>() {
             @Override
             protected void build(Builder builder) {
                 builder
@@ -75,7 +75,7 @@ class AbstractCommandTest extends GameBaseCase {
             }
 
             @Override
-            public void execute(AdminPerformer output, List<String> arguments) {}
+            public void execute(AdminPerformer output, Void arguments) {}
         };
 
         assertEquals("My very useful command", command.description());

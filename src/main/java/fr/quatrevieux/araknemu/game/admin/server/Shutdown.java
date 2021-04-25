@@ -30,12 +30,13 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Command for shutdown the server
  */
-public final class Shutdown extends AbstractCommand {
+public final class Shutdown extends AbstractCommand<List<String>> {
     private final ShutdownService service;
 
     public Shutdown(ShutdownService service) {
@@ -66,11 +67,11 @@ public final class Shutdown extends AbstractCommand {
 
     @Override
     public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
-        if (arguments.size() < 2) {
+        if (arguments.size() < 1) {
             throw new CommandException(name(), "Missing the action");
         }
 
-        switch (arguments.get(1)) {
+        switch (arguments.get(0)) {
             case "now":
                 service.now();
                 break;
@@ -92,16 +93,16 @@ public final class Shutdown extends AbstractCommand {
                 break;
 
             default:
-                throw new CommandException(name(), "The action " + arguments.get(1) + " is not valid");
+                throw new CommandException(name(), "The action " + arguments.get(0) + " is not valid");
         }
     }
 
     private void shutdownIn(AdminPerformer performer, List<String> arguments) throws AdminException {
-        if (arguments.size() < 3) {
+        if (arguments.size() < 2) {
             throw new CommandException(name(), "Missing the delay");
         }
 
-        String value = arguments.get(2).toUpperCase();
+        String value = arguments.get(1).toUpperCase();
 
         if (value.charAt(0) != 'P') {
             value = "PT" + value;
@@ -112,13 +113,13 @@ public final class Shutdown extends AbstractCommand {
     }
 
     private void shutdownAt(AdminPerformer performer, List<String> arguments) throws AdminException {
-        if (arguments.size() < 3) {
+        if (arguments.size() < 2) {
             throw new CommandException(name(), "Missing the time");
         }
 
         Duration delay = Duration.between(
             LocalTime.now(),
-            LocalTime.from(DateTimeFormatter.ofPattern("HH:mm[:ss]").parse(arguments.get(2)))
+            LocalTime.from(DateTimeFormatter.ofPattern("HH:mm[:ss]").parse(arguments.get(1)))
         );
 
         // scheduled time is before now : consider that it's scheduled for the next day
@@ -151,5 +152,10 @@ public final class Shutdown extends AbstractCommand {
         } else {
             performer.error("No shutdown has been scheduled");
         }
+    }
+
+    @Override
+    public List<String> createArguments() {
+        return new ArrayList<>();
     }
 }

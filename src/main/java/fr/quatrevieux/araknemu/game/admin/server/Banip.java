@@ -32,6 +32,7 @@ import inet.ipaddr.IPAddressString;
 
 import java.time.DateTimeException;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +41,7 @@ import java.util.stream.Collectors;
 /**
  * Bandle banned IP addresses
  */
-public final class Banip extends AbstractCommand {
+public final class Banip extends AbstractCommand<List<String>> {
     private final BanIpService<GameAccount> service;
 
     public Banip(BanIpService<GameAccount> service) {
@@ -75,11 +76,11 @@ public final class Banip extends AbstractCommand {
 
     @Override
     public void execute(AdminPerformer performer, List<String> arguments) throws CommandException {
-        if (arguments.size() < 2) {
+        if (arguments.size() < 1) {
             throw new CommandException(name(), "Missing the operation");
         }
 
-        switch (arguments.get(1).toLowerCase()) {
+        switch (arguments.get(0).toLowerCase()) {
             case "add":
                 add(performer, arguments);
                 break;
@@ -120,11 +121,11 @@ public final class Banip extends AbstractCommand {
      * Check if an IP address is banned
      */
     private void check(AdminPerformer performer, List<String> arguments) throws CommandException {
-        if (arguments.size() < 3) {
+        if (arguments.size() < 2) {
             throw new CommandException(name(), "Missing the IP address");
         }
 
-        final IPAddressString ipAddress = new IPAddressString(arguments.get(2));
+        final IPAddressString ipAddress = new IPAddressString(arguments.get(1));
 
         if (!ipAddress.isValid()) {
             throw new CommandException(name(), "Invalid IP address given");
@@ -149,11 +150,11 @@ public final class Banip extends AbstractCommand {
      * Remove a banned ip address rule
      */
     private void remove(AdminPerformer performer, List<String> arguments) throws CommandException {
-        if (arguments.size() < 3) {
+        if (arguments.size() < 2) {
             throw new CommandException(name(), "Missing the IP address");
         }
 
-        final IPAddressString ipAddress = new IPAddressString(arguments.get(2));
+        final IPAddressString ipAddress = new IPAddressString(arguments.get(1));
 
         if (!ipAddress.isValid()) {
             throw new CommandException(name(), "Invalid IP address given");
@@ -167,11 +168,11 @@ public final class Banip extends AbstractCommand {
      * Add a ban ip address rule
      */
     private void add(AdminPerformer performer, List<String> arguments) throws CommandException {
-        if (arguments.size() < 3) {
+        if (arguments.size() < 2) {
             throw new CommandException(name(), "Missing the IP address");
         }
 
-        final IPAddressString ipAddress = new IPAddressString(arguments.get(2));
+        final IPAddressString ipAddress = new IPAddressString(arguments.get(1));
 
         if (!ipAddress.isValid()) {
             throw new CommandException(name(), "Invalid IP address given");
@@ -187,24 +188,24 @@ public final class Banip extends AbstractCommand {
 
         final BanIpService<GameAccount>.RuleBuilder builder = service.newRule(ipAddress);
 
-        if (arguments.size() < 4) {
+        if (arguments.size() < 3) {
             throw new CommandException(name(), "Missing the duration");
         }
 
         final int causeOffset;
 
-        switch (arguments.get(3)) {
+        switch (arguments.get(2)) {
             case "for":
-                if (arguments.size() < 5) {
+                if (arguments.size() < 4) {
                     throw new CommandException(name(), "Missing the duration");
                 }
 
-                builder.duration(parseDuration(arguments.get(4)));
-                causeOffset = 5;
+                builder.duration(parseDuration(arguments.get(3)));
+                causeOffset = 4;
                 break;
 
             case "forever":
-                causeOffset = 4;
+                causeOffset = 3;
                 break;
 
             default:
@@ -261,5 +262,10 @@ public final class Banip extends AbstractCommand {
         } catch (DateTimeException e) {
             throw new CommandException(name(), "Invalid duration", e);
         }
+    }
+
+    @Override
+    public List<String> createArguments() {
+        return new ArrayList<>();
     }
 }

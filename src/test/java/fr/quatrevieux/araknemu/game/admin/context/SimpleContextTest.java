@@ -34,7 +34,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 class SimpleContextTest extends GameBaseCase {
-    class DummyCommand implements Command {
+    class DummyCommand implements Command<Void> {
         final String name;
 
         public DummyCommand(String name) {
@@ -57,7 +57,7 @@ class SimpleContextTest extends GameBaseCase {
         }
 
         @Override
-        public void execute(AdminPerformer output, CommandParser.Arguments arguments) {
+        public void execute(AdminPerformer output, Void arguments) {
 
         }
 

@@ -28,16 +28,16 @@ import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.handler.CustomEnumOptionHandler;
+import org.kohsuke.args4j.Argument;
 
-import java.time.DateTimeException;
 import java.time.Duration;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Handle banishment for an account
  */
-public final class Ban extends AbstractCommand {
+public final class Ban extends AbstractCommand<Ban.Arguments> {
     private final GameAccount account;
     private final BanishmentService<GameAccount> service;
 
@@ -73,26 +73,19 @@ public final class Ban extends AbstractCommand {
     }
 
     @Override
-    public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
-        if (arguments.size() < 2) {
-            throw new CommandException(name(), "Missing the action");
-        }
-
-        switch (arguments.get(1)) {
-            case "for":
+    public void execute(AdminPerformer performer, Arguments arguments) throws AdminException {
+        switch (arguments.action) {
+            case FOR:
                 banFor(performer, arguments);
                 break;
 
-            case "list":
+            case LIST:
                 list(performer);
                 break;
 
-            case "unban":
+            case UNBAN:
                 unban(performer);
                 break;
-
-            default:
-                throw new CommandException(name(), "The action " + arguments.get(1) + " is not valid");
         }
     }
 
@@ -132,31 +125,24 @@ public final class Ban extends AbstractCommand {
     /**
      * Ban the account for a given duration
      */
-    private void banFor(AdminPerformer performer, List<String> arguments) throws CommandException {
+    private void banFor(AdminPerformer performer, Arguments arguments) throws CommandException {
         checkCanBan(performer);
 
-        if (arguments.size() < 3) {
+        if (arguments.duration == null) {
             throw new CommandException(name(), "Missing the duration");
         }
 
-        final Duration duration = parseDuration(arguments.get(2));
+        // @todo handle by Arguments
+        if (arguments.cause == null || arguments.cause.isEmpty()) {
+            throw new CommandException(name(), "Missing the cause");
+        }
+
         final BanEntry<GameAccount> entry = performer.account().isPresent()
-            ? service.ban(account, duration, cause(arguments), performer.account().get())
-            : service.ban(account, duration, cause(arguments))
+            ? service.ban(account, arguments.duration, arguments.cause(), performer.account().get())
+            : service.ban(account, arguments.duration, arguments.cause())
         ;
 
         performer.success("The account {} has been banned until {}", account.pseudo(), entry.end());
-    }
-
-    /**
-     * Extract the ban cause
-     */
-    private String cause(List<String> arguments) throws CommandException {
-        if (arguments.size() < 4) {
-            throw new CommandException(name(), "Missing cause");
-        }
-
-        return arguments.stream().skip(3).collect(Collectors.joining(" "));
     }
 
     /**
@@ -172,25 +158,29 @@ public final class Ban extends AbstractCommand {
         }
     }
 
-    /**
-     * Parse the duration
-     * @todo refactor parsing with "arguments utils"
-     */
-    private Duration parseDuration(String argument) throws CommandException {
-        String value = argument.toUpperCase();
+    @Override
+    public Arguments createArguments() {
+        return new Arguments();
+    }
 
-        if (value.charAt(0) != 'P') {
-            if (!value.contains("T") && !value.contains("D")) {
-                value = "PT" + value;
-            } else {
-                value = "P" + value;
-            }
-        }
+    public static enum Action {
+        FOR,
+        LIST,
+        UNBAN,
+    }
 
-        try {
-            return Duration.parse(value);
-        } catch (DateTimeException e) {
-            throw new CommandException(name(), "Invalid duration", e);
+    public static final class Arguments {
+        @Argument(required = true, handler = CustomEnumOptionHandler.class)
+        private Action action;
+
+        @Argument(index = 1)
+        private Duration duration;
+
+        @Argument(multiValued = true, index = 2)
+        private List<String> cause;
+
+        public String cause() {
+            return String.join(" ", cause);
         }
     }
 }

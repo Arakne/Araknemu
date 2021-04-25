@@ -29,9 +29,9 @@ import fr.quatrevieux.araknemu.game.admin.formatter.Link;
 /**
  * Show help about the console usage
  */
-public final class Help extends AbstractCommand {
+public final class Help extends AbstractCommand<CommandParser.Arguments> {
     @Override
-    protected void build(AbstractCommand.Builder builder) {
+    protected void build(Builder builder) {
         builder
             .description("Show help for use the console commands")
             .help(formatter -> formatter

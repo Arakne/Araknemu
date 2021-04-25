@@ -20,19 +20,17 @@
 package fr.quatrevieux.araknemu.game.admin;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
-import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.formatter.HelpFormatter;
 
 import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
 /**
  * Base command class
  */
-public abstract class AbstractCommand implements Command {
+public abstract class AbstractCommand<A> implements Command<A> {
     private final HelpFormatter help = new HelpFormatter(this);
     private final EnumSet<Permission> permissions = EnumSet.of(Permission.ACCESS);
     private String description = "No description";
@@ -62,18 +60,6 @@ public abstract class AbstractCommand implements Command {
         initialize();
 
         return permissions;
-    }
-
-    @Override
-    public void execute(AdminPerformer performer, CommandParser.Arguments arguments) throws AdminException {
-        execute(performer, arguments.arguments());
-    }
-
-    /**
-     * Adapt the new Command interface to the legacy one
-     */
-    public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
-        throw new AdminException("Not implemented");
     }
 
     private void initialize() {

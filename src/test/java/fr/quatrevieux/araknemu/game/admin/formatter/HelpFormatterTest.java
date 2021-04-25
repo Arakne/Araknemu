@@ -32,7 +32,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HelpFormatterTest {
-    private Command command = new Command() {
+    private Command command = new Command<Void>() {
         @Override
         public String name() {
             return "cmd";
@@ -49,7 +49,7 @@ class HelpFormatterTest {
         }
 
         @Override
-        public void execute(AdminPerformer performer, CommandParser.Arguments arguments) throws AdminException {}
+        public void execute(AdminPerformer performer, Void arguments) throws AdminException {}
 
         @Override
         public Set<Permission> permissions() {

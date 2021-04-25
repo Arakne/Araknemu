@@ -24,15 +24,16 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.handler.CustomEnumOptionHandler;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import org.kohsuke.args4j.Argument;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Add stats to player base stats
  */
-public final class AddStats extends AbstractCommand {
+public final class AddStats extends AbstractCommand<AddStats.Arguments> {
     private final GamePlayer player;
 
     public AddStats(GamePlayer player) {
@@ -68,19 +69,47 @@ public final class AddStats extends AbstractCommand {
     }
 
     @Override
-    public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
-        final Characteristic characteristic = Characteristic.valueOf(arguments.get(1).toUpperCase());
-
+    public void execute(AdminPerformer performer, Arguments arguments) throws AdminException {
         player.properties().characteristics().base().add(
-            characteristic,
-            Integer.parseInt(arguments.get(2))
+            arguments.characteristic(),
+            arguments.value()
         );
 
         performer.success(
             "Characteristic changed for {} : {} = {}",
             player.name(),
-            characteristic,
-            player.properties().characteristics().base().get(characteristic)
+            arguments.characteristic(),
+            player.properties().characteristics().base().get(arguments.characteristic())
         );
     }
+
+    @Override
+    public Arguments createArguments() {
+        return new Arguments();
+    }
+
+    public static final class Arguments {
+        @Argument(index = 0, required = true, handler = CustomEnumOptionHandler.class, metaVar = "characteristic")
+        private Characteristic characteristic;
+
+        @Argument(index = 1, required = true, metaVar = "value")
+        private int value;
+
+        public Characteristic characteristic() {
+            return characteristic;
+        }
+
+        public void setCharacteristic(Characteristic characteristic) {
+            this.characteristic = characteristic;
+        }
+
+        public int value() {
+            return value;
+        }
+
+        public void setValue(int value) {
+            this.value = value;
+        }
+    }
+
 }
