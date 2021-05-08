@@ -71,15 +71,15 @@ public final class AddStats extends AbstractCommand<AddStats.Arguments> {
     @Override
     public void execute(AdminPerformer performer, Arguments arguments) throws AdminException {
         player.properties().characteristics().base().add(
-            arguments.characteristic(),
-            arguments.value()
+            arguments.characteristic,
+            arguments.value
         );
 
         performer.success(
             "Characteristic changed for {} : {} = {}",
             player.name(),
-            arguments.characteristic(),
-            player.properties().characteristics().base().get(arguments.characteristic())
+            arguments.characteristic,
+            player.properties().characteristics().base().get(arguments.characteristic)
         );
     }
 
@@ -94,22 +94,5 @@ public final class AddStats extends AbstractCommand<AddStats.Arguments> {
 
         @Argument(index = 1, required = true, metaVar = "value")
         private int value;
-
-        public Characteristic characteristic() {
-            return characteristic;
-        }
-
-        public void setCharacteristic(Characteristic characteristic) {
-            this.characteristic = characteristic;
-        }
-
-        public int value() {
-            return value;
-        }
-
-        public void setValue(int value) {
-            this.value = value;
-        }
     }
-
 }

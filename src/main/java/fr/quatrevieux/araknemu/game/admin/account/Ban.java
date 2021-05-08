@@ -28,8 +28,12 @@ import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
-import fr.quatrevieux.araknemu.game.admin.executor.argument.handler.CustomEnumOptionHandler;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.handler.ConcatRestOfArgumentsHandler;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.type.SubArguments;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.type.SubArgumentsCommandTrait;
 import org.kohsuke.args4j.Argument;
+import org.kohsuke.args4j.spi.SubCommand;
+import org.kohsuke.args4j.spi.SubCommands;
 
 import java.time.Duration;
 import java.util.List;
@@ -37,7 +41,7 @@ import java.util.List;
 /**
  * Handle banishment for an account
  */
-public final class Ban extends AbstractCommand<Ban.Arguments> {
+public final class Ban extends AbstractCommand<Ban.Arguments> implements SubArgumentsCommandTrait<Ban.Arguments> {
     private final GameAccount account;
     private final BanishmentService<GameAccount> service;
 
@@ -70,23 +74,6 @@ public final class Ban extends AbstractCommand<Ban.Arguments> {
     @Override
     public String name() {
         return "ban";
-    }
-
-    @Override
-    public void execute(AdminPerformer performer, Arguments arguments) throws AdminException {
-        switch (arguments.action) {
-            case FOR:
-                banFor(performer, arguments);
-                break;
-
-            case LIST:
-                list(performer);
-                break;
-
-            case UNBAN:
-                unban(performer);
-                break;
-        }
     }
 
     /**
@@ -125,21 +112,12 @@ public final class Ban extends AbstractCommand<Ban.Arguments> {
     /**
      * Ban the account for a given duration
      */
-    private void banFor(AdminPerformer performer, Arguments arguments) throws CommandException {
+    private void banFor(AdminPerformer performer, Arguments.ForArguments arguments) throws CommandException {
         checkCanBan(performer);
 
-        if (arguments.duration == null) {
-            throw new CommandException(name(), "Missing the duration");
-        }
-
-        // @todo handle by Arguments
-        if (arguments.cause == null || arguments.cause.isEmpty()) {
-            throw new CommandException(name(), "Missing the cause");
-        }
-
         final BanEntry<GameAccount> entry = performer.account().isPresent()
-            ? service.ban(account, arguments.duration, arguments.cause(), performer.account().get())
-            : service.ban(account, arguments.duration, arguments.cause())
+            ? service.ban(account, arguments.duration, arguments.cause, performer.account().get())
+            : service.ban(account, arguments.duration, arguments.cause)
         ;
 
         performer.success("The account {} has been banned until {}", account.pseudo(), entry.end());
@@ -163,24 +141,45 @@ public final class Ban extends AbstractCommand<Ban.Arguments> {
         return new Arguments();
     }
 
-    public static enum Action {
-        FOR,
-        LIST,
-        UNBAN,
-    }
+    public static final class Arguments implements SubArguments<Ban> {
+        @Argument(required = true)
+        @SubCommands({
+            @SubCommand(name = "for", impl = ForArguments.class),
+            @SubCommand(name = "list", impl = ListArguments.class),
+            @SubCommand(name = "unban", impl = UnbanArguments.class),
+        })
+        private SubArguments<Ban> action;
 
-    public static final class Arguments {
-        @Argument(required = true, handler = CustomEnumOptionHandler.class)
-        private Action action;
+        @Override
+        public void execute(AdminPerformer performer, Ban command) throws AdminException {
+            action.execute(performer, command);
+        }
 
-        @Argument(index = 1)
-        private Duration duration;
+        public static final class ForArguments implements SubArguments<Ban> {
+            @Argument(index = 0, required = true)
+            private Duration duration;
 
-        @Argument(multiValued = true, index = 2)
-        private List<String> cause;
+            @Argument(index = 1, required = true, handler = ConcatRestOfArgumentsHandler.class)
+            private String cause;
 
-        public String cause() {
-            return String.join(" ", cause);
+            @Override
+            public void execute(AdminPerformer performer, Ban command) throws AdminException {
+                command.banFor(performer, this);
+            }
+        }
+
+        public static final class ListArguments implements SubArguments<Ban> {
+            @Override
+            public void execute(AdminPerformer performer, Ban command) throws AdminException {
+                command.list(performer);
+            }
+        }
+
+        public static final class UnbanArguments implements SubArguments<Ban> {
+            @Override
+            public void execute(AdminPerformer performer, Ban command) throws AdminException {
+                command.unban(performer);
+            }
         }
     }
 }

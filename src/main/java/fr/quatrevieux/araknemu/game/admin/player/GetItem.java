@@ -160,20 +160,8 @@ public final class GetItem extends AbstractCommand<GetItem.Options> {
             return effects != null;
         }
 
-        public void setEffects(List<ItemTemplateEffectEntry> effects) {
-            this.effects = effects;
-        }
-
         public int itemId() {
             return itemId;
-        }
-
-        public void setItemId(int itemId) {
-            this.itemId = itemId;
-        }
-
-        public void setQuantity(int quantity) {
-            this.quantity = quantity;
         }
 
         public int times() {

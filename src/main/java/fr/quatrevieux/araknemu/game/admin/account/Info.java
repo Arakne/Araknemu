@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 /**
  * Info command for account
  */
-public final class Info extends AbstractCommand<Object> {
+public final class Info extends AbstractCommand<Void> {
     private final GameAccount account;
     private final AccountRepository repository;
 
@@ -61,7 +61,7 @@ public final class Info extends AbstractCommand<Object> {
     }
 
     @Override
-    public void execute(AdminPerformer performer, Object arguments) {
+    public void execute(AdminPerformer performer, Void arguments) {
         final Account entity = repository.get(new Account(account.id()));
 
         performer.success("Account info : {}", entity.name());
@@ -83,10 +83,5 @@ public final class Info extends AbstractCommand<Object> {
             performer.success("Admin account");
             performer.success("Permissions: {}", entity.permissions());
         }
-    }
-
-    @Override
-    public Object createArguments() {
-        return new Object();
     }
 }

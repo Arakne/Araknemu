@@ -56,9 +56,9 @@ public final class AddXp extends AbstractCommand<AddXp.Arguments> {
 
     @Override
     public void execute(AdminPerformer performer, Arguments arguments) {
-        player.properties().experience().add(arguments.quantity());
+        player.properties().experience().add(arguments.quantity);
 
-        performer.success("Add {} xp to {} (level = {})", arguments.quantity(), player.name(), player.properties().experience().level());
+        performer.success("Add {} xp to {} (level = {})", arguments.quantity, player.name(), player.properties().experience().level());
     }
 
     @Override
@@ -69,16 +69,5 @@ public final class AddXp extends AbstractCommand<AddXp.Arguments> {
     public static final class Arguments {
         @Argument(required = true, metaVar = "quantity", usage = "The experience quantity to add. Must be an unsigned number.")
         private long quantity;
-
-        /**
-         * The experience quantity to add
-         */
-        public long quantity() {
-            return quantity;
-        }
-
-        public void setQuantity(long quantity) {
-            this.quantity = quantity;
-        }
     }
 }

@@ -26,22 +26,26 @@ import fr.quatrevieux.araknemu.common.account.banishment.BanIpService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
+import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.handler.ConcatRestOfArgumentsHandler;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.type.SubArguments;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.type.SubArgumentsCommandTrait;
 import fr.quatrevieux.araknemu.game.admin.formatter.Link;
 import inet.ipaddr.IPAddressString;
+import org.kohsuke.args4j.Argument;
+import org.kohsuke.args4j.spi.SubCommand;
+import org.kohsuke.args4j.spi.SubCommandHandler;
+import org.kohsuke.args4j.spi.SubCommands;
 
-import java.time.DateTimeException;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Bandle banned IP addresses
  */
-public final class Banip extends AbstractCommand<List<String>> {
+public final class Banip extends AbstractCommand<Banip.Arguments> implements SubArgumentsCommandTrait<Banip.Arguments> {
     private final BanIpService<GameAccount> service;
 
     public Banip(BanIpService<GameAccount> service) {
@@ -74,34 +78,6 @@ public final class Banip extends AbstractCommand<List<String>> {
         return "banip";
     }
 
-    @Override
-    public void execute(AdminPerformer performer, List<String> arguments) throws CommandException {
-        if (arguments.size() < 1) {
-            throw new CommandException(name(), "Missing the operation");
-        }
-
-        switch (arguments.get(0).toLowerCase()) {
-            case "add":
-                add(performer, arguments);
-                break;
-
-            case "remove":
-                remove(performer, arguments);
-                break;
-
-            case "check":
-                check(performer, arguments);
-                break;
-
-            case "list":
-                list(performer);
-                break;
-
-            default:
-                throw new CommandException(name(), "Invalid operation");
-        }
-    }
-
     /**
      * List all ban ip rules
      */
@@ -120,103 +96,50 @@ public final class Banip extends AbstractCommand<List<String>> {
     /**
      * Check if an IP address is banned
      */
-    private void check(AdminPerformer performer, List<String> arguments) throws CommandException {
-        if (arguments.size() < 2) {
-            throw new CommandException(name(), "Missing the IP address");
-        }
-
-        final IPAddressString ipAddress = new IPAddressString(arguments.get(1));
-
-        if (!ipAddress.isValid()) {
-            throw new CommandException(name(), "Invalid IP address given");
-        }
-
-        final Optional<BanIpRule<GameAccount>> rule = service.matching(ipAddress);
+    private void check(AdminPerformer performer, Arguments.CheckArguments arguments) {
+        final Optional<BanIpRule<GameAccount>> rule = service.matching(arguments.ipAddress());
 
         if (!rule.isPresent()) {
             performer.error(
                 "The IP address {} is not banned. {}",
-                ipAddress.toNormalizedString(),
-                Link.Type.WRITE.create("${server} banip add " + ipAddress.toNormalizedString() + " for").text("add")
+                arguments.ipAddress().toNormalizedString(),
+                Link.Type.WRITE.create("${server} banip add " + arguments.ipAddress().toNormalizedString() + " for").text("add")
             );
             return;
         }
 
-        performer.success("The IP address {} is banned.", ipAddress.toNormalizedString());
+        performer.success("The IP address {} is banned.", arguments.ipAddress().toNormalizedString());
         performer.info("Rule : {}", render(rule.get()));
     }
 
     /**
      * Remove a banned ip address rule
      */
-    private void remove(AdminPerformer performer, List<String> arguments) throws CommandException {
-        if (arguments.size() < 2) {
-            throw new CommandException(name(), "Missing the IP address");
-        }
-
-        final IPAddressString ipAddress = new IPAddressString(arguments.get(1));
-
-        if (!ipAddress.isValid()) {
-            throw new CommandException(name(), "Invalid IP address given");
-        }
-
-        service.disable(ipAddress);
-        performer.success("The IP address {} has been unbanned.", ipAddress.toNormalizedString());
+    private void remove(AdminPerformer performer, Arguments.RemoveArguments arguments) {
+        service.disable(arguments.ipAddress());
+        performer.success("The IP address {} has been unbanned.", arguments.ipAddress().toNormalizedString());
     }
 
     /**
      * Add a ban ip address rule
      */
-    private void add(AdminPerformer performer, List<String> arguments) throws CommandException {
-        if (arguments.size() < 2) {
-            throw new CommandException(name(), "Missing the IP address");
-        }
-
-        final IPAddressString ipAddress = new IPAddressString(arguments.get(1));
-
-        if (!ipAddress.isValid()) {
-            throw new CommandException(name(), "Invalid IP address given");
-        }
-
+    private void add(AdminPerformer performer, Arguments.AddArguments arguments) throws CommandException {
         if (performer.account()
             .flatMap(GameAccount::session)
             .map(session -> new IPAddressString(session.channel().address().getAddress().getHostAddress()))
-            .filter(ipAddress::contains)
+            .filter(arguments.ipAddress()::contains)
             .isPresent()) {
             throw new CommandException(name(), "Cannot ban your own IP address");
         }
 
-        final BanIpService<GameAccount>.RuleBuilder builder = service.newRule(ipAddress);
+        final BanIpService<GameAccount>.RuleBuilder builder = service.newRule(arguments.ipAddress());
 
-        if (arguments.size() < 3) {
-            throw new CommandException(name(), "Missing the duration");
-        }
-
-        final int causeOffset;
-
-        switch (arguments.get(2)) {
-            case "for":
-                if (arguments.size() < 4) {
-                    throw new CommandException(name(), "Missing the duration");
-                }
-
-                builder.duration(parseDuration(arguments.get(3)));
-                causeOffset = 4;
-                break;
-
-            case "forever":
-                causeOffset = 3;
-                break;
-
-            default:
-                throw new CommandException(name(), "Invalid duration");
-        }
-
-        builder.cause(cause(arguments, causeOffset));
+        arguments.duration().ifPresent(builder::duration);
+        builder.cause(arguments.cause());
         performer.account().ifPresent(builder::banisher);
         builder.apply();
 
-        performer.success("The IP address {} has been banned.", ipAddress.toNormalizedString());
+        performer.success("The IP address {} has been banned.", arguments.ipAddress().toNormalizedString());
     }
 
     /**
@@ -231,41 +154,116 @@ public final class Banip extends AbstractCommand<List<String>> {
         ;
     }
 
-    /**
-     * Extract the ban cause
-     */
-    private String cause(List<String> arguments, int offset) throws CommandException {
-        if (arguments.size() <= offset) {
-            throw new CommandException(name(), "Missing cause");
-        }
-
-        return arguments.stream().skip(offset).collect(Collectors.joining(" "));
+    @Override
+    public Arguments createArguments() {
+        return new Arguments();
     }
 
-    /**
-     * Parse the duration
-     * @todo refactor parsing with "arguments utils"
-     */
-    private Duration parseDuration(String argument) throws CommandException {
-        String value = argument.toUpperCase();
+    public static final class Arguments implements SubArguments<Banip> {
+        @Argument(required = true)
+        @SubCommands({
+            @SubCommand(name = "add", impl = AddArguments.class),
+            @SubCommand(name = "remove", impl = RemoveArguments.class),
+            @SubCommand(name = "check", impl = CheckArguments.class),
+            @SubCommand(name = "list", impl = ListArguments.class),
+        })
+        private SubArguments<Banip> sub;
 
-        if (value.charAt(0) != 'P') {
-            if (!value.contains("T") && !value.contains("D")) {
-                value = "PT" + value;
-            } else {
-                value = "P" + value;
+        @Override
+        public void execute(AdminPerformer performer, Banip command) throws AdminException {
+            sub.execute(performer, command);
+        }
+
+        public abstract static class AbstractIpSubArguments implements SubArguments<Banip> {
+            @Argument(index = 0, required = true)
+            private IPAddressString ipAddress;
+
+            public final IPAddressString ipAddress() {
+                return ipAddress;
             }
         }
 
-        try {
-            return Duration.parse(value);
-        } catch (DateTimeException e) {
-            throw new CommandException(name(), "Invalid duration", e);
+        public static final class ListArguments implements SubArguments<Banip> {
+            @Override
+            public void execute(AdminPerformer performer, Banip command) {
+                command.list(performer);
+            }
         }
-    }
 
-    @Override
-    public List<String> createArguments() {
-        return new ArrayList<>();
+        public static final class CheckArguments extends AbstractIpSubArguments {
+            @Override
+            public void execute(AdminPerformer performer, Banip command) throws CommandException {
+                command.check(performer, this);
+            }
+        }
+
+        public static final class RemoveArguments extends AbstractIpSubArguments {
+            @Override
+            public void execute(AdminPerformer performer, Banip command) throws CommandException {
+                command.remove(performer, this);
+            }
+        }
+
+        public static final class AddArguments extends AbstractIpSubArguments {
+            // @todo do not use sub command here
+            @Argument(index = 1, required = true, handler = SubCommandHandler.class)
+            @SubCommands({
+                @SubCommand(name = "for", impl = For.class),
+                @SubCommand(name = "forever", impl = Forever.class),
+            })
+            private DurationContainer duration;
+
+            public Optional<Duration> duration() {
+                return duration.get();
+            }
+
+            public String cause() {
+                return duration.cause();
+            }
+
+            @Override
+            public void execute(AdminPerformer performer, Banip command) throws CommandException {
+                command.add(performer, this);
+            }
+
+            interface DurationContainer {
+                public Optional<Duration> get();
+
+                public String cause();
+            }
+
+            public static final class For implements DurationContainer {
+                @Argument(required = true)
+                private Duration duration;
+
+                @Argument(index = 1, required = true, handler = ConcatRestOfArgumentsHandler.class)
+                private String cause;
+
+                @Override
+                public Optional<Duration> get() {
+                    return Optional.of(duration);
+                }
+
+                @Override
+                public String cause() {
+                    return cause;
+                }
+            }
+
+            public static final class Forever implements DurationContainer {
+                @Argument(required = true, handler = ConcatRestOfArgumentsHandler.class)
+                private String cause;
+
+                @Override
+                public Optional<Duration> get() {
+                    return Optional.empty();
+                }
+
+                @Override
+                public String cause() {
+                    return cause;
+                }
+            }
+        }
     }
 }

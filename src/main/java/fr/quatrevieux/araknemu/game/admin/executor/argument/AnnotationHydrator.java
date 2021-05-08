@@ -22,11 +22,17 @@ package fr.quatrevieux.araknemu.game.admin.executor.argument;
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.executor.argument.handler.DurationOptionHandler;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.handler.IpAddressStringHandler;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.handler.LocalTimeHandler;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.type.SubArguments;
+import inet.ipaddr.IPAddressString;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.OptionHandlerRegistry;
 import org.kohsuke.args4j.ParserProperties;
+import org.kohsuke.args4j.spi.SubCommandHandler;
 
 import java.time.Duration;
+import java.time.LocalTime;
 
 /**
  * Hydrator using {@link org.kohsuke.args4j.CmdLineParser} parser for fill arguments
@@ -37,6 +43,9 @@ public final class AnnotationHydrator implements ArgumentsHydrator {
 
     public AnnotationHydrator() {
         OptionHandlerRegistry.getRegistry().registerHandler(Duration.class, DurationOptionHandler::new);
+        OptionHandlerRegistry.getRegistry().registerHandler(IPAddressString.class, IpAddressStringHandler::new);
+        OptionHandlerRegistry.getRegistry().registerHandler(LocalTime.class, LocalTimeHandler::new);
+        OptionHandlerRegistry.getRegistry().registerHandler(SubArguments.class, SubCommandHandler::new);
     }
 
     @Override
