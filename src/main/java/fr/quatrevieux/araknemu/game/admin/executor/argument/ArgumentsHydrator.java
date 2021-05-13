@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.admin.executor.argument;
 
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
+import fr.quatrevieux.araknemu.game.admin.formatter.HelpFormatter;
 
 /**
  * Factory for Command argument object
@@ -38,6 +39,19 @@ public interface ArgumentsHydrator {
      * @return The filled command arguments
      */
     public <A> A hydrate(Command<A> command, A commandArguments, CommandParser.Arguments parsedArguments) throws Exception;
+
+    /**
+     * Fill the command help object with the arguments system
+     *
+     * @param command The command
+     * @param commandArguments The argument object used by the command
+     * @param help The help object to fill
+     *
+     * @return The filled help object
+     */
+    public default <A> HelpFormatter help(Command<A> command, A commandArguments, HelpFormatter help) {
+        return help;
+    }
 
     /**
      * Check if the argument object is supported

@@ -53,9 +53,15 @@ class InfoTest extends CommandTestCase {
 
     @Test
     void help() {
-        String help = command.help();
-
-        assertTrue(help.contains("Display information about the server"));
-        assertTrue(help.contains("${server} info"));
+        assertHelp(
+            "info - Display information about the server",
+            "========================================",
+            "SYNOPSIS",
+                "\tinfo",
+            "EXAMPLES",
+                "\t${server} info - Display server info",
+            "PERMISSIONS",
+                "\t[ACCESS]"
+        );
     }
 }

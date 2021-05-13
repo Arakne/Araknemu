@@ -24,15 +24,22 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
-import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.admin.executor.CommandExecutor;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.ArgumentsHydrator;
 import fr.quatrevieux.araknemu.util.LogFormatter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 abstract public class CommandTestCase extends GameBaseCase {
     protected Command command;
@@ -160,5 +167,18 @@ abstract public class CommandTestCase extends GameBaseCase {
 
         assertTrue(log.isPresent(), () -> "Line not found in logs : " + line + "\nActual : \n" + performer.logs.stream().map(entry -> entry.message).collect(Collectors.joining("\n")));
         assertEquals(type, log.get().type, "Invalid log type");
+    }
+
+    public String commandHelp() {
+        return container.get(ArgumentsHydrator.class).help(command, command.createArguments(), command.help()).toString();
+    }
+
+    public void assertHelp(String ...lines) {
+        String help = commandHelp().replaceAll("(<.*?>)", "");
+
+        assertEquals(
+            Arrays.stream(lines).filter(s -> !s.isEmpty()).collect(Collectors.joining("\n")),
+            help.replace("\n\n", "\n")
+        );
     }
 }

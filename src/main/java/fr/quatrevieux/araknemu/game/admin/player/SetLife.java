@@ -42,7 +42,7 @@ public final class SetLife extends AbstractCommand<SetLife.Arguments> {
             .description("Change the player current life")
             .help(
                 formatter -> formatter
-                    .synopsis("setlife [number|max]")
+                    .synopsis("setlife number|max")
                     .example("setlife 300", "Set the player life to 300")
                     .example("setlife max", "Set full life to the player")
                     .example("${player:John} setlife 250", "Set John's life to 250")

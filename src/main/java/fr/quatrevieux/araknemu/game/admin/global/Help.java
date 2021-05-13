@@ -24,20 +24,28 @@ import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.ArgumentsHydrator;
+import fr.quatrevieux.araknemu.game.admin.formatter.HelpFormatter;
 import fr.quatrevieux.araknemu.game.admin.formatter.Link;
 
 /**
  * Show help about the console usage
  */
 public final class Help extends AbstractCommand<CommandParser.Arguments> {
+    private final ArgumentsHydrator hydrator;
+
+    public Help(ArgumentsHydrator hydrator) {
+        this.hydrator = hydrator;
+    }
+
     @Override
     protected void build(Builder builder) {
         builder
             .description("Show help for use the console commands")
             .help(formatter -> formatter
-                    .synopsis("help [command name]")
-                    .example("help", "List all available commands")
-                    .example("help echo", "Show the help for the echo command")
+                .synopsis("help [COMMAND NAME]")
+                .example("help", "List all available commands")
+                .example("help echo", "Show the help for the echo command")
             )
         ;
     }
@@ -62,9 +70,10 @@ public final class Help extends AbstractCommand<CommandParser.Arguments> {
      */
     private void command(AdminPerformer performer, CommandParser.Arguments arguments, String commandName) throws AdminException {
         final Command command = arguments.context().command(commandName);
+        final HelpFormatter help = hydrator.help(command, command.createArguments(), command.help());
 
         performer.success("<b>Help for {}</b>", command.name());
-        performer.info(command.help());
+        performer.info(help.toString());
     }
 
     /**

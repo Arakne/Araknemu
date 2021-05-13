@@ -52,7 +52,7 @@ class AbstractCommandTest extends GameBaseCase {
             "\tcmd\n\n" +
             "<b>PERMISSIONS</b>\n" +
             "\t[ACCESS]",
-            command.help()
+            command.help().toString()
         );
         assertEquals(EnumSet.of(Permission.ACCESS), command.permissions());
     }
@@ -87,7 +87,7 @@ class AbstractCommandTest extends GameBaseCase {
             "Do what you wants" +
             "\n\n<b>PERMISSIONS</b>\n" +
             "\t[ACCESS, SUPER_ADMIN]",
-            command.help()
+            command.help().toString()
         );
         assertEquals(EnumSet.of(Permission.ACCESS, Permission.SUPER_ADMIN), command.permissions());
     }

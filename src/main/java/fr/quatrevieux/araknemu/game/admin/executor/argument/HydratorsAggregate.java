@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.admin.executor.argument;
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
+import fr.quatrevieux.araknemu.game.admin.formatter.HelpFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,14 @@ public final class HydratorsAggregate implements ArgumentsHydrator {
         return supportedHydrator(command, commandArguments)
             .orElseThrow(() -> new CommandException(command.name(), "Cannot parse arguments for command " + command.getClass().getSimpleName()))
             .hydrate(command, commandArguments, parsedArguments)
+        ;
+    }
+
+    @Override
+    public <A> HelpFormatter help(Command<A> command, A commandArguments, HelpFormatter help) {
+        return supportedHydrator(command, commandArguments)
+            .map(hydrator -> hydrator.help(command, commandArguments, help))
+            .orElse(help)
         ;
     }
 

@@ -49,10 +49,10 @@ public abstract class AbstractCommand<A> implements Command<A> {
     }
 
     @Override
-    public final String help() {
+    public HelpFormatter help() {
         initialize();
 
-        return help.toString();
+        return new HelpFormatter(help);
     }
 
     @Override

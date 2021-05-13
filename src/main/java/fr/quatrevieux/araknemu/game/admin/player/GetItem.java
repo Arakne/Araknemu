@@ -62,19 +62,6 @@ public final class GetItem extends AbstractCommand<GetItem.Options> {
             .description("Add an item to the player")
             .help(
                 formatter -> formatter
-                    .synopsis("getitem [options] item_id [quantity=1]")
-
-                    .options("--max", "Generate item with maximized stats")
-                    .options("--each", "Regenerate item stats for each [quantity] items instead of generate the same item with [quantity]")
-                    .options("--effects",
-                        "Set the item effects\n" +
-                        "The effects should be a list of effects separated with comma ','. Available formats :\n" +
-                        "Item template format : 64#b#f#0#1d5+10,7d#b#0#0#0d0+11,9a#f#0#0#0d0+15\n" +
-                        "Simplified format    : INFLICT_DAMAGE_NEUTRAL:11:15,ADD_VITALITY:11,SUB_AGILITY:15\n" +
-                        "This option is not compatible with --max option.\n" +
-                        "If a range value is set for a characteristic effect, a random value will be generated\n"
-                    )
-
                     .example("getitem 2425", "Generate a random 'Amulette du Bouftou'")
                     .example("!getitem 2425 3", "Generate 3 random 'Amulette du Bouftou', and ensure that the admin user is the target")
                     .example("${player:Robert} getitem 39", "Add to Robert the 'Petite Amulette du Hibou'")
@@ -121,19 +108,33 @@ public final class GetItem extends AbstractCommand<GetItem.Options> {
     }
 
     public static final class Options {
-        @Option(name = "--max")
+        @Option(name = "--max", usage = "Generate item with maximized characteristics")
         private boolean max = false;
 
-        @Option(name = "--each")
+        @Option(name = "--each", usage = "Regenerate item stats for each QUANTITY items instead of generate the same item with QUANTITY")
         private boolean each = false;
 
-        @Option(name = "--effects", handler = EffectsConverter.class)
+        @Option(
+            name = "--effects", handler = EffectsConverter.class,
+            usage = "Set the item effects\n" +
+                "The effects should be a list of effects separated with comma ','. Available formats :\n" +
+                "Item template format : 64#b#f#0#1d5+10,7d#b#0#0#0d0+11,9a#f#0#0#0d0+15\n" +
+                "Simplified format    : INFLICT_DAMAGE_NEUTRAL:11:15,ADD_VITALITY:11,SUB_AGILITY:15\n" +
+                "This option is not compatible with --max option.\n" +
+                "If a range value is set for a characteristic effect, a random value will be generated"
+        )
         private List<ItemTemplateEffectEntry> effects = null;
 
-        @Argument(required = true, index = 0, metaVar = "item id")
+        @Argument(
+            required = true, index = 0, metaVar = "ITEM_ID",
+            usage = "The id of the item to generate. It can be found using /ui itemsummoner command"
+        )
         private int itemId;
 
-        @Argument(index = 1, metaVar = "quantity")
+        @Argument(
+            index = 1, metaVar = "QUANTITY",
+            usage = "The quantity of item to generate. By default all generated items will gets the same characteristics unless --each option is used."
+        )
         private int quantity = 1;
 
         public boolean max() {

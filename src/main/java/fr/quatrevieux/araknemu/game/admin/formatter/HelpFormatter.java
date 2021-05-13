@@ -21,11 +21,11 @@ package fr.quatrevieux.araknemu.game.admin.formatter;
 
 import fr.quatrevieux.araknemu.game.admin.Command;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Format the help page of a command
@@ -33,25 +33,53 @@ import java.util.List;
 public final class HelpFormatter {
     private final Command command;
     private String synopsis;
-    private final List<Pair<String, String>> options = new ArrayList<>();
-    private final List<LinkItem> examples = new ArrayList<>();
-    private final List<LinkItem> seeAlso = new ArrayList<>();
-    private final List<String> custom = new ArrayList<>();
+    private final Map<String, String> options;
+    private final List<LinkItem> examples;
+    private final List<LinkItem> seeAlso;
+    private final List<String> custom;
 
     public HelpFormatter(Command command) {
         this.command = command;
-        this.synopsis = command.name();
+
+        this.options = new LinkedHashMap<>();
+        this.examples = new ArrayList<>();
+        this.seeAlso = new ArrayList<>();
+        this.custom = new ArrayList<>();
+    }
+
+    public HelpFormatter(HelpFormatter help) {
+        this.command = help.command;
+        this.synopsis = help.synopsis;
+
+        this.options = new LinkedHashMap<>(help.options);
+        this.examples = new ArrayList<>(help.examples);
+        this.seeAlso = new ArrayList<>(help.seeAlso);
+        this.custom = new ArrayList<>(help.custom);
     }
 
     /**
      * Define the command synopsis
      * The synopsis define the options and arguments order
      *
-     * The options and arguments are surrounded by brackets "[option]", and should be described using {@link HelpFormatter#options(String, String)}
+     * The optional options and arguments are surrounded by brackets "[option]", and should be described using {@link HelpFormatter#options(String, String)}
      * A default option can be defined using format "[option=default value]"
      */
     public HelpFormatter synopsis(String synopsis) {
         this.synopsis = synopsis;
+
+        return this;
+    }
+
+    /**
+     * Define the command synopsis if not already provided
+     * If provided, this method will do nothing
+     *
+     * @see HelpFormatter#synopsis(String)
+     */
+    public HelpFormatter defaultSynopsis(String synopsis) {
+        if (this.synopsis == null) {
+            this.synopsis = synopsis;
+        }
 
         return this;
     }
@@ -63,7 +91,24 @@ public final class HelpFormatter {
      * @param description The option description. May be multiple lines.
      */
     public HelpFormatter options(String option, String description) {
-        options.add(new ImmutablePair<>(option, description));
+        options.put(option, description);
+
+        return this;
+    }
+
+    /**
+     * Describe an option or parameter only if not already provided
+     * If provided, this method will do nothing
+     *
+     * @param option The option or parameter name
+     * @param description The description
+     *
+     * @return this
+     */
+    public HelpFormatter defaultOption(String option, String description) {
+        if (!options.containsKey(option)) {
+            options.put(option, description);
+        }
 
         return this;
     }
@@ -143,7 +188,7 @@ public final class HelpFormatter {
      * Build the command synopsis section
      */
     private void buildSynopsis(OutputBuilder builder) {
-        builder.title("SYNOPSIS").indent(synopsis);
+        builder.title("SYNOPSIS").indent(synopsis == null ? command.name() : synopsis);
     }
 
     /**
@@ -156,11 +201,11 @@ public final class HelpFormatter {
 
         builder.title("OPTIONS");
 
-        for (Pair<String, String> line : options) {
-            builder.indent(line.getLeft());
+        for (Map.Entry<String, String> line : options.entrySet()) {
+            builder.indent(line.getKey());
 
-            if (line.getRight() != null) {
-                builder.append(" : ").append(line.getRight().replace("\n", "\n\t\t"));
+            if (line.getValue() != null) {
+                builder.append(" : ").append(line.getValue().replace("\n", "\n\t\t"));
             }
         }
     }

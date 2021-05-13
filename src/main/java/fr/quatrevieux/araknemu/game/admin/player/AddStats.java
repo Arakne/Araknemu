@@ -46,15 +46,12 @@ public final class AddStats extends AbstractCommand<AddStats.Arguments> {
             .description("Add stats to a player")
             .help(
                 formatter -> formatter
-                    .synopsis("addstats [characteristic] [value]")
-
                     .options(
-                        "characteristic",
+                        "CHARACTERISTIC",
                         "The characteristic to add.\n" +
                         "This parameter is case insensitive.\n" +
                         "It's value must be one of those : " + Arrays.toString(Characteristic.values())
                     )
-                    .options("value", "The value to add, must be an integer. Negative values are allowed, but be careful with negative vitality !!!")
 
                     .example("addstats vitality 150", "Add 150 vitality to current player")
                     .example("${player:John} addstats strength 50", "Add 50 strength to current John")
@@ -89,10 +86,21 @@ public final class AddStats extends AbstractCommand<AddStats.Arguments> {
     }
 
     public static final class Arguments {
-        @Argument(index = 0, required = true, handler = CustomEnumOptionHandler.class, metaVar = "characteristic")
+        @Argument(
+            index = 0,
+            required = true,
+            handler = CustomEnumOptionHandler.class,
+            metaVar = "CHARACTERISTIC",
+            usage = "The characteristic to add."
+        )
         private Characteristic characteristic;
 
-        @Argument(index = 1, required = true, metaVar = "value")
+        @Argument(
+            index = 1,
+            required = true,
+            metaVar = "VALUE",
+            usage = "The value to add, must be an integer. Negative values are allowed, but be careful with negative vitality !!!"
+        )
         private int value;
     }
 }

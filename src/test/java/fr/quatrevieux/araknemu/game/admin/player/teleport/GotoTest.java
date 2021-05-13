@@ -223,7 +223,7 @@ class GotoTest  extends CommandTestCase {
 
     @Test
     void help() {
-        String help = command.help();
+        String help = command.help().toString();
 
         assertTrue(help.contains("Teleport the player to the desired location"));
         assertTrue(help.contains("Define the target cell."));

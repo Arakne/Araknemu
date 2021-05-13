@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
+import fr.quatrevieux.araknemu.game.admin.formatter.HelpFormatter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.kohsuke.args4j.Argument;
@@ -64,6 +65,49 @@ class HydratorsAggregateTest extends TestCase {
         CommandParser.Arguments parsedArguments = new CommandParser.Arguments("", "", "", Arrays.asList("foo", "bar"), null);
 
         assertThrowsWithMessage(CommandException.class, "Cannot parse arguments for command CommandWithObject", () -> hydrator.hydrate(new CommandWithObject(), null, parsedArguments));
+    }
+
+    @Test
+    void helpNotSupported() {
+        CommandWithObject command = new CommandWithObject();
+        HelpFormatter help = command.help();
+
+        assertSame(help, hydrator.help(command, null, help));
+
+        assertEquals(
+            "foo - No description\n" +
+            "========================================\n" +
+            "\n" +
+            "<b>SYNOPSIS</b>\n" +
+                "\tfoo\n" +
+            "\n" +
+            "<b>PERMISSIONS</b>\n" +
+                "\t[ACCESS]",
+            help.toString()
+        );
+    }
+
+    @Test
+    void help() {
+        CommandWithObject command = new CommandWithObject();
+        HelpFormatter help = command.help();
+
+        assertSame(help, hydrator.help(command, command.createArguments(), help));
+
+        assertEquals(
+            "foo - No description\n" +
+            "========================================\n" +
+            "\n" +
+            "<b>SYNOPSIS</b>\n" +
+                "\tfoo [BAR=_]\n" +
+            "\n" +
+                "<b>OPTIONS</b>\n" +
+                    "\tBAR : Define bar\n" +
+            "\n" +
+            "<b>PERMISSIONS</b>\n" +
+                "\t[ACCESS]",
+            help.toString()
+        );
     }
 
     static class CommandWithString extends AbstractCommand<String> {
@@ -118,8 +162,8 @@ class HydratorsAggregateTest extends TestCase {
         public void execute(AdminPerformer performer, Arguments arguments) throws AdminException {}
 
         static public class Arguments {
-            @Argument
-            public String bar;
+            @Argument(metaVar = "BAR", usage = "Define bar")
+            public String bar = "_";
         }
 
         @Override

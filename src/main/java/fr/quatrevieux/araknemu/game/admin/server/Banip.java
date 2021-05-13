@@ -57,11 +57,13 @@ public final class Banip extends AbstractCommand<Banip.Arguments> implements Sub
         builder
             .description("Handle banned IP addresses")
             .help(formatter -> formatter
-                .synopsis("banip [add|remove|list|check] [parameters]")
-                .options("add [ip address] [for [duration]|forever] [cause]", "Add a new banned IP address. The IP address can be an IPv4 or IPv6 subnetwork mask.")
-                .options("remove [ip address]", "Remove a banned IP address.")
+                .synopsis("banip [add|remove|list|check] ARGUMENTS")
+
+                .options("add IP_ADDRESS [for DURATION|forever] CAUSE", "Add a new banned IP address. The IP address can be an IPv4 or IPv6 subnetwork mask.")
+                .options("remove IP_ADDRESS", "Remove a banned IP address.")
                 .options("list", "Dump list of banned ip rules.")
-                .options("check [ip address]", "Check if the IP address is banned, and the ban rule.")
+                .options("check IP_ADDRESS", "Check if the IP address is banned, and the ban rule.")
+
                 .example("${server} banip add 11.54.47.21 forever my ban message", "Ban the IP address 11.54.47.21 forever")
                 .example("${server} banip add 11.54.47.21 for 2h my ban message", "Ban the IP address 11.54.47.21 for 2 hours")
                 .example("${server} banip add 11.54.0.0/16 for 2h my ban message", "Ban with a subnetwork mask")

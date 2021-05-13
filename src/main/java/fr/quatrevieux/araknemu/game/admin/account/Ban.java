@@ -56,9 +56,9 @@ public final class Ban extends AbstractCommand<Ban.Arguments> implements SubArgu
             .description("Ban an account")
             .help(
                 formatter -> formatter
-                    .synopsis("[context] ban [for|list|unban] [arguments]")
+                    .synopsis("[context] ban [for|list|unban] ARGUMENTS")
 
-                    .options("for [duration] [cause]", "Ban the account for the given duration.\nThe duration is in format [days]dT[hours]h[minutes]m[seconds]s\nNote: You cannot ban a game master account.")
+                    .options("for DURATION CAUSE", "Ban the account for the given duration.\nThe duration is in format [days]dT[hours]h[minutes]m[seconds]s\nNote: You cannot ban a game master account.")
                     .options("list", "List all banishment entries for the account")
                     .options("unban", "Remove current banishment for the account")
 

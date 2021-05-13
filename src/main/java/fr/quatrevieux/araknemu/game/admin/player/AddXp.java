@@ -41,8 +41,6 @@ public final class AddXp extends AbstractCommand<AddXp.Arguments> {
             .description("Add experience to player")
             .help(
                 formatter -> formatter
-                    .synopsis("addxp [quantity]")
-                    .options("quantity", "The experience quantity to add. Must be an unsigned number.")
                     .example("${player:John} addxp 1000000", "Add 1 million xp to John")
             )
             .requires(Permission.MANAGE_PLAYER)
@@ -67,7 +65,11 @@ public final class AddXp extends AbstractCommand<AddXp.Arguments> {
     }
 
     public static final class Arguments {
-        @Argument(required = true, metaVar = "quantity", usage = "The experience quantity to add. Must be an unsigned number.")
+        @Argument(
+            required = true,
+            metaVar = "QUANTITY",
+            usage = "The experience quantity to add. Must be an unsigned number."
+        )
         private long quantity;
     }
 }

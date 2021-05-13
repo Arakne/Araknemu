@@ -181,10 +181,25 @@ class BanipTest extends CommandTestCase {
 
     @Test
     void help() {
-        String help = command.help();
-
-        assertTrue(help.contains("Handle banned IP addresses"));
-        assertTrue(help.contains("banip [add|remove|list|check] [parameters]"));
-        assertTrue(help.contains("${server} banip add 11.54.47.21 forever my ban message"));
+        assertHelp(
+            "banip - Handle banned IP addresses",
+            "========================================",
+            "SYNOPSIS",
+                "\tbanip [add|remove|list|check] ARGUMENTS",
+            "OPTIONS",
+                "\tadd IP_ADDRESS [for DURATION|forever] CAUSE : Add a new banned IP address. The IP address can be an IPv4 or IPv6 subnetwork mask.",
+                "\tremove IP_ADDRESS : Remove a banned IP address.",
+                "\tlist : Dump list of banned ip rules.",
+                "\tcheck IP_ADDRESS : Check if the IP address is banned, and the ban rule.",
+            "EXAMPLES",
+                "\t${server} banip add 11.54.47.21 forever my ban message - Ban the IP address 11.54.47.21 forever",
+                "\t${server} banip add 11.54.47.21 for 2h my ban message - Ban the IP address 11.54.47.21 for 2 hours",
+                "\t${server} banip add 11.54.0.0/16 for 2h my ban message - Ban with a subnetwork mask",
+                "\t${server} banip remove 11.54.52.32 - Remove the banned IP address 11.54.52.32",
+                "\t${server} banip list - List all banned IP addresses",
+                "\t${server} check 11.54.52.32 - Check if 11.54.52.32 is banned",
+            "PERMISSIONS",
+                "\t[ACCESS, SUPER_ADMIN]"
+        );
     }
 }

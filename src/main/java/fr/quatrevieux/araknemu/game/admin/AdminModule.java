@@ -46,6 +46,7 @@ import fr.quatrevieux.araknemu.game.admin.executor.DefaultCommandExecutor;
 import fr.quatrevieux.araknemu.game.admin.executor.argument.ArgumentsHydrator;
 import fr.quatrevieux.araknemu.game.admin.executor.argument.HydratorsAggregate;
 import fr.quatrevieux.araknemu.game.admin.global.GlobalContext;
+import fr.quatrevieux.araknemu.game.admin.global.Help;
 import fr.quatrevieux.araknemu.game.admin.player.GetItem;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
@@ -117,7 +118,12 @@ public final class AdminModule implements ContainerModule {
 
         configurator.persist(
             GlobalContext.class,
-            container -> new GlobalContext()
+            container -> new GlobalContext().register(new AbstractContextConfigurator<GlobalContext>() {
+                @Override
+                public void configure(GlobalContext context) {
+                    add(new Help(container.get(ArgumentsHydrator.class)));
+                }
+            })
         );
 
         configurator.persist(

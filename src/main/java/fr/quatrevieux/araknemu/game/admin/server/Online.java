@@ -52,10 +52,6 @@ public final class Online extends AbstractCommand<Online.Arguments> {
         builder
             .description("List online players")
             .help(formatter -> formatter
-                .synopsis("online [options] [search]")
-                .options("search", "Optional. Filter the online player name. Return only players containing the search term into the name.")
-                .options("--limit", "Limit the number of returned lines. By default the limit is set to 20.")
-                .options("--skip", "Skip the first lines.")
                 .example("${server} online", "List all online players")
                 .example("${server} online john", "List all online players, containing john in the name")
                 .example("${server} online --skip 3 --limit 5 j", "With pagination")
@@ -158,13 +154,13 @@ public final class Online extends AbstractCommand<Online.Arguments> {
      * Store the command options
      */
     public static class Arguments {
-        @Option(name = "--limit")
+        @Option(name = "--limit", usage = "Limit the number of returned lines. By default the limit is set to 20.")
         private int limit = 20;
 
-        @Option(name = "--skip")
+        @Option(name = "--skip", usage = "Skip the first lines.")
         private int skip = 0;
 
-        @Argument()
+        @Argument(metaVar = "SEARCH", usage = "Optional. Filter the online player name. Return only players containing the search term into the name.")
         private String search = null;
 
         /**

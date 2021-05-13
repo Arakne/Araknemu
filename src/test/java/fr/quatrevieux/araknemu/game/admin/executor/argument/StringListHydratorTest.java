@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
+import fr.quatrevieux.araknemu.game.admin.formatter.HelpFormatter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -58,7 +59,7 @@ class StringListHydratorTest {
             }
 
             @Override
-            public String help() {
+            public HelpFormatter help() {
                 return null;
             }
 
@@ -92,7 +93,7 @@ class StringListHydratorTest {
             }
 
             @Override
-            public String help() {
+            public HelpFormatter help() {
                 return null;
             }
 
@@ -125,7 +126,7 @@ class StringListHydratorTest {
             }
 
             @Override
-            public String help() {
+            public HelpFormatter help() {
                 return null;
             }
 
@@ -164,7 +165,7 @@ class StringListHydratorTest {
             }
 
             @Override
-            public String help() {
+            public HelpFormatter help() {
                 return null;
             }
 

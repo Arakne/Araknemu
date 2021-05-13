@@ -57,7 +57,6 @@ public final class GlobalContext extends AbstractContext<GlobalContext> {
     protected SimpleContext createContext() {
         return new SimpleContext(new NullContext())
             .add(new Echo())
-            .add(new Help())
         ;
     }
 }

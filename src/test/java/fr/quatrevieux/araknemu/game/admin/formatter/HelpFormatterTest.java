@@ -44,7 +44,7 @@ class HelpFormatterTest {
         }
 
         @Override
-        public String help() {
+        public HelpFormatter help() {
             return null;
         }
 
@@ -173,6 +173,57 @@ class HelpFormatterTest {
                 "\t[ACCESS]",
             new HelpFormatter(command)
                 .line("first", "second")
+                .toString()
+        );
+    }
+
+    @Test
+    void defaultSynopsis() {
+        assertEquals(
+            "cmd - cmd description\n" +
+                "========================================\n\n" +
+                "<b>SYNOPSIS</b>\n" +
+                "\tcmd ARG\n\n" +
+                "<b>PERMISSIONS</b>\n" +
+                "\t[ACCESS]",
+            new HelpFormatter(command)
+                .synopsis("cmd ARG")
+                .defaultSynopsis("other")
+                .toString()
+        );
+
+        assertEquals(
+            "cmd - cmd description\n" +
+                "========================================\n\n" +
+                "<b>SYNOPSIS</b>\n" +
+                "\tother\n\n" +
+                "<b>PERMISSIONS</b>\n" +
+                "\t[ACCESS]",
+            new HelpFormatter(command)
+                .defaultSynopsis("other")
+                .toString()
+        );
+    }
+
+    @Test
+    void defaultOption() {
+        assertEquals(
+            "cmd - cmd description\n" +
+            "========================================\n" +
+            "\n" +
+            "<b>SYNOPSIS</b>\n" +
+            "\tcmd\n" +
+            "\n" +
+            "<b>OPTIONS</b>\n" +
+            "\topt : descr opt\n" +
+            "\tfoo : bar\n" +
+            "\n" +
+            "<b>PERMISSIONS</b>\n" +
+            "\t[ACCESS]",
+            new HelpFormatter(command)
+                .options("opt", "descr opt")
+                .defaultOption("opt", "other descr")
+                .defaultOption("foo", "bar")
                 .toString()
         );
     }

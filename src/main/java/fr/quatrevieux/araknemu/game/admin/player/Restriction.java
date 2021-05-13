@@ -48,10 +48,10 @@ public final class Restriction extends AbstractCommand<List<String>> {
             .description("Change the player restrictions")
             .help(
                 formatter -> formatter
-                    .synopsis("restriction [+/-][restriction]...")
+                    .synopsis("restriction [+/-]RESTRICTION...")
 
-                    .options("+restriction", "Active the restriction on the player")
-                    .options("-restriction", "Remove the restriction on the player")
+                    .options("+RESTRICTION", "Active the restriction on the player")
+                    .options("-RESTRICTION", "Remove the restriction on the player")
 
                     .line("AVAILABLE RESTRICTIONS :",
                         "\t" + Arrays.stream(Restrictions.Restriction.values()).map(Enum::name).collect(Collectors.joining(", ")),

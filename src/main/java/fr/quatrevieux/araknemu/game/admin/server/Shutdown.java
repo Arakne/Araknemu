@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.admin.server;
 
+import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.ShutdownService;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
@@ -49,15 +50,16 @@ public final class Shutdown extends AbstractCommand<Shutdown.Arguments> implemen
         builder
             .description("Stop the server")
             .help(formatter -> formatter
-                .synopsis("shutdown [action] [parameter]")
+                .synopsis("shutdown [now|in|at|show] ARGUMENTS")
                 .options("now", "Shutdown the server immediately. Do not requires any parameters.")
-                .options("in", "Shutdown the server in a given amount of time. Format is <i>[hours]h[minutes]m[seconds]s</i>. All parts are optional.")
-                .options("at", "Shutdown the server at a given time. Format is <i>[hours]:[minutes]:[seconds]</i>. Seconds are optional.")
+                .options("in DURATION", "Shutdown the server in a given amount of time. Format is <i>[hours]h[minutes]m[seconds]s</i>. All parts are optional.")
+                .options("at TIME", "Shutdown the server at a given time. Format is <i>[hours]:[minutes]:[seconds]</i>. Seconds are optional.")
                 .options("show", "Show the current scheduled shutdown.")
                 .example("${server} shutdown now", "Stop the server immediately.")
                 .example("${server} shutdown at 15:00", "Stop the server at 15:00:00.")
                 .example("${server} shutdown in 30m", "Stop the server in 30 minutes.")
             )
+            .requires(Permission.SUPER_ADMIN)
         ;
     }
 

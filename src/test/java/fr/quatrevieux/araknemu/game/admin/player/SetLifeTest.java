@@ -65,4 +65,20 @@ class SetLifeTest extends CommandTestCase {
     void executeMissingParameter() throws ContainerException, SQLException, AdminException {
         assertThrowsWithMessage(CommandException.class, "Argument \"number|max\" is required", () -> execute("setlife"));
     }
+
+    @Test
+    void help() {
+        assertHelp(
+            "setlife - Change the player current life",
+            "========================================",
+            "SYNOPSIS",
+                "\tsetlife number|max",
+            "EXAMPLES",
+                "\tsetlife 300                - Set the player life to 300",
+                "\tsetlife max                - Set full life to the player",
+                "\t${player:John} setlife 250 - Set John's life to 250",
+            "PERMISSIONS",
+                "\t[ACCESS, MANAGE_PLAYER]"
+        );
+    }
 }

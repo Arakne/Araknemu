@@ -25,14 +25,19 @@ import fr.quatrevieux.araknemu.game.admin.executor.argument.handler.DurationOpti
 import fr.quatrevieux.araknemu.game.admin.executor.argument.handler.IpAddressStringHandler;
 import fr.quatrevieux.araknemu.game.admin.executor.argument.handler.LocalTimeHandler;
 import fr.quatrevieux.araknemu.game.admin.executor.argument.type.SubArguments;
+import fr.quatrevieux.araknemu.game.admin.formatter.HelpFormatter;
 import inet.ipaddr.IPAddressString;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.OptionHandlerRegistry;
 import org.kohsuke.args4j.ParserProperties;
+import org.kohsuke.args4j.spi.OptionHandler;
 import org.kohsuke.args4j.spi.SubCommandHandler;
 
+import java.io.ByteArrayOutputStream;
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Hydrator using {@link org.kohsuke.args4j.CmdLineParser} parser for fill arguments
@@ -59,7 +64,69 @@ public final class AnnotationHydrator implements ArgumentsHydrator {
     }
 
     @Override
+    public <A> HelpFormatter help(Command<A> command, A commandArguments, HelpFormatter help) {
+        final CmdLineParser parser = new CmdLineParser(commandArguments, parserProperties);
+        final Map<String, String> defaultOptionValues = new HashMap<>();
+
+        for (OptionHandler argument : parser.getArguments()) {
+            final String argumentName = argument.getNameAndMeta(null);
+
+            if (!argument.option.usage().isEmpty()) {
+                help.defaultOption(argumentName, argument.option.usage());
+            }
+
+            if (!argument.option.required()) {
+                final String defaultValue = argument.printDefaultValue();
+
+                if (!isEmptyDefault(defaultValue)) {
+                    defaultOptionValues.put(argumentName, defaultValue);
+                }
+            }
+        }
+
+        for (OptionHandler option : parser.getOptions()) {
+            if (!option.option.usage().isEmpty()) {
+                help.defaultOption(option.option.toString(), option.option.usage());
+            }
+
+            if (!option.option.required()) {
+                final String defaultValue = option.printDefaultValue();
+
+                if (!isEmptyDefault(defaultValue)) {
+                    defaultOptionValues.put(option.option.toString(), defaultValue);
+                }
+            }
+        }
+
+        help.defaultSynopsis(generateSynopsis(command, parser, defaultOptionValues));
+
+        // @todo handle default value on synopsis ?
+
+        return help;
+    }
+
+    @Override
     public <A> boolean supports(Command<A> command, A commandArguments) {
         return commandArguments != null;
+    }
+
+    private String generateSynopsis(Command command, CmdLineParser parser, Map<String, String> defaultsMap) {
+        final ByteArrayOutputStream os = new ByteArrayOutputStream();
+        parser.printSingleLineUsage(os);
+
+        // @todo check
+        String synopsis = command.name() + os;
+
+        for (Map.Entry<String, String> mapping : defaultsMap.entrySet()) {
+            synopsis = synopsis.replaceFirst("\\[(" + mapping.getKey() + ".*?)\\]", "[$1=" + mapping.getValue() + "]");
+        }
+
+        return synopsis;
+    }
+
+    private boolean isEmptyDefault(String defaultValue) {
+        return defaultValue == null || defaultValue.isEmpty()
+            || "false".equals(defaultValue) || "0".equals(defaultValue)
+        ;
     }
 }
