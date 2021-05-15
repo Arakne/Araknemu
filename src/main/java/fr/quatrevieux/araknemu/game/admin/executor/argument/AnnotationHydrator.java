@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.admin.executor.argument.handler.DurationOpti
 import fr.quatrevieux.araknemu.game.admin.executor.argument.handler.IpAddressStringHandler;
 import fr.quatrevieux.araknemu.game.admin.executor.argument.handler.LocalTimeHandler;
 import fr.quatrevieux.araknemu.game.admin.executor.argument.type.SubArguments;
-import fr.quatrevieux.araknemu.game.admin.formatter.HelpFormatter;
+import fr.quatrevieux.araknemu.game.admin.help.CommandHelp;
 import inet.ipaddr.IPAddressString;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.OptionHandlerRegistry;
@@ -37,7 +37,9 @@ import java.io.ByteArrayOutputStream;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Hydrator using {@link org.kohsuke.args4j.CmdLineParser} parser for fill arguments
@@ -64,45 +66,14 @@ public final class AnnotationHydrator implements ArgumentsHydrator {
     }
 
     @Override
-    public <A> HelpFormatter help(Command<A> command, A commandArguments, HelpFormatter help) {
-        final CmdLineParser parser = new CmdLineParser(commandArguments, parserProperties);
-        final Map<String, String> defaultOptionValues = new HashMap<>();
+    public <A> CommandHelp help(Command<A> command, A commandArguments, CommandHelp help) {
+        final HelpGenerator generator = new HelpGenerator(command, new CmdLineParser(commandArguments, parserProperties));
 
-        for (OptionHandler argument : parser.getArguments()) {
-            final String argumentName = argument.getNameAndMeta(null);
-
-            if (!argument.option.usage().isEmpty()) {
-                help.defaultOption(argumentName, argument.option.usage());
-            }
-
-            if (!argument.option.required()) {
-                final String defaultValue = argument.printDefaultValue();
-
-                if (!isEmptyDefault(defaultValue)) {
-                    defaultOptionValues.put(argumentName, defaultValue);
-                }
-            }
-        }
-
-        for (OptionHandler option : parser.getOptions()) {
-            if (!option.option.usage().isEmpty()) {
-                help.defaultOption(option.option.toString(), option.option.usage());
-            }
-
-            if (!option.option.required()) {
-                final String defaultValue = option.printDefaultValue();
-
-                if (!isEmptyDefault(defaultValue)) {
-                    defaultOptionValues.put(option.option.toString(), defaultValue);
-                }
-            }
-        }
-
-        help.defaultSynopsis(generateSynopsis(command, parser, defaultOptionValues));
-
-        // @todo handle default value on synopsis ?
-
-        return help;
+        return help.modify(builder -> {
+            generator.arguments(builder);
+            generator.options(builder);
+            generator.synopsis(builder);
+        });
     }
 
     @Override
@@ -110,23 +81,65 @@ public final class AnnotationHydrator implements ArgumentsHydrator {
         return commandArguments != null;
     }
 
-    private String generateSynopsis(Command command, CmdLineParser parser, Map<String, String> defaultsMap) {
-        final ByteArrayOutputStream os = new ByteArrayOutputStream();
-        parser.printSingleLineUsage(os);
+    private static class HelpGenerator {
+        private final Command command;
+        private final CmdLineParser parser;
+        private final Map<String, String> defaultOptionValues = new HashMap<>();
 
-        // @todo check
-        String synopsis = command.name() + os;
-
-        for (Map.Entry<String, String> mapping : defaultsMap.entrySet()) {
-            synopsis = synopsis.replaceFirst("\\[(" + mapping.getKey() + ".*?)\\]", "[$1=" + mapping.getValue() + "]");
+        public HelpGenerator(Command command, CmdLineParser parser) {
+            this.command = command;
+            this.parser = parser;
         }
 
-        return synopsis;
-    }
+        public void synopsis(CommandHelp.Builder help) {
+            if (!help.hasSynopsis()) {
+                help.synopsis(parseSynopsis());
+            }
+        }
 
-    private boolean isEmptyDefault(String defaultValue) {
-        return defaultValue == null || defaultValue.isEmpty()
-            || "false".equals(defaultValue) || "0".equals(defaultValue)
-        ;
+        public void options(CommandHelp.Builder help) {
+            parseOptions(parser.getOptions(), option -> option.option.toString(), help);
+        }
+
+        public void arguments(CommandHelp.Builder help) {
+            parseOptions(parser.getArguments(), argument -> argument.getNameAndMeta(null), help);
+        }
+
+        private void parseOptions(List<OptionHandler> options, Function<OptionHandler, String> nameMapper, CommandHelp.Builder help) {
+            for (OptionHandler option : options) {
+                final String name = nameMapper.apply(option);
+
+                if (!help.hasOption(name) && !option.option.usage().isEmpty()) {
+                    help.option(name, option.option.usage());
+                }
+
+                if (!option.option.required()) {
+                    final String defaultValue = option.printDefaultValue();
+
+                    if (!isEmptyDefault(defaultValue)) {
+                        defaultOptionValues.put(name, defaultValue);
+                    }
+                }
+            }
+        }
+
+        private boolean isEmptyDefault(String defaultValue) {
+            return defaultValue == null || defaultValue.isEmpty()
+                || "false".equals(defaultValue) || "0".equals(defaultValue)
+            ;
+        }
+
+        private String parseSynopsis() {
+            final ByteArrayOutputStream os = new ByteArrayOutputStream();
+            parser.printSingleLineUsage(os);
+
+            String synopsis = command.name() + os;
+
+            for (Map.Entry<String, String> mapping : defaultOptionValues.entrySet()) {
+                synopsis = synopsis.replaceFirst("\\[(" + mapping.getKey() + ".*?)\\]", "[$1=" + mapping.getValue() + "]");
+            }
+
+            return synopsis;
+        }
     }
 }

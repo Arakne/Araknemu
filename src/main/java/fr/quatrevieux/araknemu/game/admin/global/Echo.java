@@ -34,14 +34,14 @@ public final class Echo extends AbstractCommand<List<String>> {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Write to console the arguments")
             .help(
                 formatter -> formatter
+                    .description("Write to console the arguments")
                     .synopsis("echo [-i|s|e] [args ...]")
 
-                    .options("-i", "Print as information (default)")
-                    .options("-s", "Print as success")
-                    .options("-e", "Print as error")
+                    .option("-i", "Print as information (default)")
+                    .option("-s", "Print as success")
+                    .option("-e", "Print as error")
 
                     .example("echo Hello World !", "Print 'Hello World !' in white (info)")
                     .example("echo -e WAKE !!!", "Print 'WAKE !!!' in red (error)")

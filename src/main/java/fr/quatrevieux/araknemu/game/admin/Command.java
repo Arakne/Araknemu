@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.admin;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
-import fr.quatrevieux.araknemu.game.admin.formatter.HelpFormatter;
+import fr.quatrevieux.araknemu.game.admin.help.CommandHelp;
 
 import java.util.Set;
 
@@ -35,14 +35,9 @@ public interface Command<A> {
     public String name();
 
     /**
-     * Get a simple description for the command
-     */
-    public String description();
-
-    /**
      * Get the help formatter
      */
-    public HelpFormatter help();
+    public CommandHelp help();
 
     /**
      * Execute the command

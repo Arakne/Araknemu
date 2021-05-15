@@ -58,18 +58,18 @@ public final class Goto extends AbstractCommand<Goto.Arguments> {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Teleport the player to the desired location")
             .help(
                 formatter -> {
                     formatter
+                        .description("Teleport the player to the desired location")
                         .synopsis("goto [type] [target]...")
-                        .options("type", "Define the target type (available types are defined bellow). If not provided, will try all available resolvers.")
-                        .options("target", "Required. The target. This value depends of the type.")
-                        .options("--force", "Force the teleporation even if the player is busy or in fight.")
+                        .option("type", "Define the target type (available types are defined bellow). If not provided, will try all available resolvers.")
+                        .option("target", "Required. The target. This value depends of the type.")
+                        .option("--force", "Force the teleporation even if the player is busy or in fight.")
                     ;
 
                     for (LocationResolver resolver : resolvers.values()) {
-                        formatter.options("type: " + resolver.name(), resolver.help());
+                        formatter.option("type: " + resolver.name(), resolver.help());
                     }
 
                     formatter

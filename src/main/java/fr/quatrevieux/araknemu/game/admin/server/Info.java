@@ -50,8 +50,8 @@ public final class Info extends AbstractCommand<Void> {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Display information about the server")
             .help(formatter -> formatter
+                .description("Display information about the server")
                 .synopsis("info")
                 .example("${server} info", "Display server info")
             )

@@ -43,10 +43,10 @@ public final class AddStats extends AbstractCommand<AddStats.Arguments> {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Add stats to a player")
             .help(
                 formatter -> formatter
-                    .options(
+                    .description("Add stats to a player")
+                    .option(
                         "CHARACTERISTIC",
                         "The characteristic to add.\n" +
                         "This parameter is case insensitive.\n" +
@@ -57,6 +57,7 @@ public final class AddStats extends AbstractCommand<AddStats.Arguments> {
                     .example("${player:John} addstats strength 50", "Add 50 strength to current John")
             )
             .requires(Permission.MANAGE_PLAYER)
+            .arguments(Arguments::new)
         ;
     }
 
@@ -78,11 +79,6 @@ public final class AddStats extends AbstractCommand<AddStats.Arguments> {
             arguments.characteristic,
             player.properties().characteristics().base().get(arguments.characteristic)
         );
-    }
-
-    @Override
-    public Arguments createArguments() {
-        return new Arguments();
     }
 
     public static final class Arguments {

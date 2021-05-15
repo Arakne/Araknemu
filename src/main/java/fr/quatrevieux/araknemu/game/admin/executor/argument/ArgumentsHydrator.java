@@ -21,7 +21,7 @@ package fr.quatrevieux.araknemu.game.admin.executor.argument;
 
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
-import fr.quatrevieux.araknemu.game.admin.formatter.HelpFormatter;
+import fr.quatrevieux.araknemu.game.admin.help.CommandHelp;
 
 /**
  * Factory for Command argument object
@@ -49,7 +49,7 @@ public interface ArgumentsHydrator {
      *
      * @return The filled help object
      */
-    public default <A> HelpFormatter help(Command<A> command, A commandArguments, HelpFormatter help) {
+    public default <A> CommandHelp help(Command<A> command, A commandArguments, CommandHelp help) {
         return help;
     }
 

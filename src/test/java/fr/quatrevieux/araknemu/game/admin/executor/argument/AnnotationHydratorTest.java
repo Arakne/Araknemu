@@ -24,8 +24,7 @@ import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
-import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
-import fr.quatrevieux.araknemu.game.admin.formatter.HelpFormatter;
+import fr.quatrevieux.araknemu.game.admin.help.CommandHelp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.kohsuke.args4j.Argument;
@@ -36,7 +35,11 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AnnotationHydratorTest {
     private AnnotationHydrator hydrator;
@@ -55,12 +58,7 @@ class AnnotationHydratorTest {
             }
 
             @Override
-            public String description() {
-                return null;
-            }
-
-            @Override
-            public HelpFormatter help() {
+            public CommandHelp help() {
                 return null;
             }
 
@@ -101,12 +99,7 @@ class AnnotationHydratorTest {
             }
 
             @Override
-            public String description() {
-                return null;
-            }
-
-            @Override
-            public HelpFormatter help() {
+            public CommandHelp help() {
                 return null;
             }
 
@@ -153,13 +146,8 @@ class AnnotationHydratorTest {
             }
 
             @Override
-            public String description() {
-                return null;
-            }
-
-            @Override
-            public HelpFormatter help() {
-                return new HelpFormatter(this);
+            public CommandHelp help() {
+                return new CommandHelp(this);
             }
 
             @Override
@@ -178,10 +166,10 @@ class AnnotationHydratorTest {
             }
         };
 
-        HelpFormatter help = hydrator.help(command, command.createArguments(), command.help());
+        CommandHelp help = hydrator.help(command, command.createArguments(), command.help());
 
         assertEquals(
-            "foo - null\n" +
+            "foo - No description\n" +
             "========================================\n" +
             "\n" +
             "<b>SYNOPSIS</b>\n" +

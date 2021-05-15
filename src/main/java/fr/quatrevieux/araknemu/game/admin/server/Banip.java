@@ -55,14 +55,14 @@ public final class Banip extends AbstractCommand<Banip.Arguments> implements Sub
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Handle banned IP addresses")
             .help(formatter -> formatter
+                .description("Handle banned IP addresses")
                 .synopsis("banip [add|remove|list|check] ARGUMENTS")
 
-                .options("add IP_ADDRESS [for DURATION|forever] CAUSE", "Add a new banned IP address. The IP address can be an IPv4 or IPv6 subnetwork mask.")
-                .options("remove IP_ADDRESS", "Remove a banned IP address.")
-                .options("list", "Dump list of banned ip rules.")
-                .options("check IP_ADDRESS", "Check if the IP address is banned, and the ban rule.")
+                .option("add IP_ADDRESS [for DURATION|forever] CAUSE", "Add a new banned IP address. The IP address can be an IPv4 or IPv6 subnetwork mask.")
+                .option("remove IP_ADDRESS", "Remove a banned IP address.")
+                .option("list", "Dump list of banned ip rules.")
+                .option("check IP_ADDRESS", "Check if the IP address is banned, and the ban rule.")
 
                 .example("${server} banip add 11.54.47.21 forever my ban message", "Ban the IP address 11.54.47.21 forever")
                 .example("${server} banip add 11.54.47.21 for 2h my ban message", "Ban the IP address 11.54.47.21 for 2 hours")
@@ -72,6 +72,7 @@ public final class Banip extends AbstractCommand<Banip.Arguments> implements Sub
                 .example("${server} check 11.54.52.32", "Check if 11.54.52.32 is banned")
             )
             .requires(Permission.SUPER_ADMIN)
+            .arguments(Arguments::new)
         ;
     }
 
@@ -154,11 +155,6 @@ public final class Banip extends AbstractCommand<Banip.Arguments> implements Sub
             rule.cause() + " " +
             Link.Type.EXECUTE.create("${server} banip remove " + rule.ipAddress().toNormalizedString()).text("remove")
         ;
-    }
-
-    @Override
-    public Arguments createArguments() {
-        return new Arguments();
     }
 
     public static final class Arguments implements SubArguments<Banip> {

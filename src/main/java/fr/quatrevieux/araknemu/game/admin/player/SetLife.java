@@ -39,15 +39,16 @@ public final class SetLife extends AbstractCommand<SetLife.Arguments> {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Change the player current life")
             .help(
                 formatter -> formatter
+                    .description("Change the player current life")
                     .synopsis("setlife number|max")
                     .example("setlife 300", "Set the player life to 300")
                     .example("setlife max", "Set full life to the player")
                     .example("${player:John} setlife 250", "Set John's life to 250")
             )
             .requires(Permission.MANAGE_PLAYER)
+            .arguments(Arguments::new)
         ;
     }
 
@@ -67,11 +68,6 @@ public final class SetLife extends AbstractCommand<SetLife.Arguments> {
 
             performer.success("Life of {} is set to {}", player.name(), arguments.value);
         }
-    }
-
-    @Override
-    public Arguments createArguments() {
-        return new Arguments();
     }
 
     public static final class Arguments {

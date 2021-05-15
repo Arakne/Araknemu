@@ -40,7 +40,7 @@ public final class MapStats extends AbstractCommand<Void> {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Compute stats un maps and cells")
+            .help(help -> help.description("Compute stats un maps and cells"))
             .requires(Permission.DEBUG)
         ;
     }

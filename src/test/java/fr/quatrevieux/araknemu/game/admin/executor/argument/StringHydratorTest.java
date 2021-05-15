@@ -25,14 +25,17 @@ import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
-import fr.quatrevieux.araknemu.game.admin.formatter.HelpFormatter;
+import fr.quatrevieux.araknemu.game.admin.help.CommandHelp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StringHydratorTest {
     private StringHydrator hydrator;
@@ -51,12 +54,7 @@ class StringHydratorTest {
             }
 
             @Override
-            public String description() {
-                return null;
-            }
-
-            @Override
-            public HelpFormatter help() {
+            public CommandHelp help() {
                 return null;
             }
 
@@ -85,12 +83,7 @@ class StringHydratorTest {
             }
 
             @Override
-            public String description() {
-                return null;
-            }
-
-            @Override
-            public HelpFormatter help() {
+            public CommandHelp help() {
                 return null;
             }
 
@@ -122,12 +115,7 @@ class StringHydratorTest {
             }
 
             @Override
-            public String description() {
-                return null;
-            }
-
-            @Override
-            public HelpFormatter help() {
+            public CommandHelp help() {
                 return null;
             }
 

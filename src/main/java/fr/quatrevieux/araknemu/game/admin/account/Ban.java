@@ -53,14 +53,14 @@ public final class Ban extends AbstractCommand<Ban.Arguments> implements SubArgu
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Ban an account")
             .help(
                 formatter -> formatter
+                    .description("Ban an account")
                     .synopsis("[context] ban [for|list|unban] ARGUMENTS")
 
-                    .options("for DURATION CAUSE", "Ban the account for the given duration.\nThe duration is in format [days]dT[hours]h[minutes]m[seconds]s\nNote: You cannot ban a game master account.")
-                    .options("list", "List all banishment entries for the account")
-                    .options("unban", "Remove current banishment for the account")
+                    .option("for DURATION CAUSE", "Ban the account for the given duration.\nThe duration is in format [days]dT[hours]h[minutes]m[seconds]s\nNote: You cannot ban a game master account.")
+                    .option("list", "List all banishment entries for the account")
+                    .option("unban", "Remove current banishment for the account")
 
                     .example("${account:John} ban list", "Display all ban entries of the 'John' account")
                     .example("${account:John} ban for 5d", "Ban 'John' for 5 days")
@@ -68,6 +68,7 @@ public final class Ban extends AbstractCommand<Ban.Arguments> implements SubArgu
                     .example("${player:Alan} unban", "Unban 'Alan' account")
             )
             .requires(Permission.MANAGE_ACCOUNT)
+            .arguments(Arguments::new)
         ;
     }
 
@@ -134,11 +135,6 @@ public final class Ban extends AbstractCommand<Ban.Arguments> implements SubArgu
         if (account.isMaster()) {
             throw new CommandException(name(), "Cannot ban a game master");
         }
-    }
-
-    @Override
-    public Arguments createArguments() {
-        return new Arguments();
     }
 
     public static final class Arguments implements SubArguments<Ban> {

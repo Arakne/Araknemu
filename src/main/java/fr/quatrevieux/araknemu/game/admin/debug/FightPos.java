@@ -40,9 +40,9 @@ public final class FightPos extends AbstractCommand<FightPos.Arguments> {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Show all fight positions")
             .help(
                 formatter -> formatter
+                    .description("Show all fight positions")
                     .synopsis("fightpos [show|hide]")
                     .example("fightpos show", "Show the fight positions")
                     .example("fightpos hide", "Hide all fight positions")

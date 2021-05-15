@@ -17,21 +17,24 @@
  * Copyright (c) 2017-2020 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.admin.formatter;
+package fr.quatrevieux.araknemu.game.admin.help;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.Command;
-import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
+import fr.quatrevieux.araknemu.game.admin.formatter.Link;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class HelpFormatterTest {
+class CommandHelpTest {
     private Command command = new Command<Void>() {
         @Override
         public String name() {
@@ -39,12 +42,7 @@ class HelpFormatterTest {
         }
 
         @Override
-        public String description() {
-            return "cmd description";
-        }
-
-        @Override
-        public HelpFormatter help() {
+        public CommandHelp help() {
             return null;
         }
 
@@ -60,33 +58,46 @@ class HelpFormatterTest {
     @Test
     void empty() {
         assertEquals(
-            "cmd - cmd description\n" +
+            "cmd - No description\n" +
             "========================================\n\n" +
             "<b>SYNOPSIS</b>\n" +
             "\tcmd\n\n" +
             "<b>PERMISSIONS</b>\n" +
             "\t[ACCESS]",
-            new HelpFormatter(command).toString()
+            new CommandHelp(command).toString()
         );
     }
 
     @Test
     void synopsis() {
         assertEquals(
-            "cmd - cmd description\n" +
+            "cmd - No description\n" +
             "========================================\n\n" +
             "<b>SYNOPSIS</b>\n" +
             "\tcmd [options]\n\n" +
             "<b>PERMISSIONS</b>\n" +
             "\t[ACCESS]",
-            new HelpFormatter(command).synopsis("cmd [options]").toString()
+            new CommandHelp(command).modify(builder -> builder.synopsis("cmd [options]")).toString()
         );
     }
 
     @Test
-    void options() {
+    void description() {
         assertEquals(
-            "cmd - cmd description\n" +
+            "cmd - My cmd description\n" +
+            "========================================\n\n" +
+            "<b>SYNOPSIS</b>\n" +
+            "\tcmd\n\n" +
+            "<b>PERMISSIONS</b>\n" +
+            "\t[ACCESS]",
+            new CommandHelp(command).modify(builder -> builder.description("My cmd description")).toString()
+        );
+    }
+
+    @Test
+    void option() {
+        assertEquals(
+            "cmd - No description\n" +
             "========================================\n\n" +
             "<b>SYNOPSIS</b>\n" +
             "\tcmd\n\n" +
@@ -96,17 +107,17 @@ class HelpFormatterTest {
             "\t--other : other option\n\n" +
             "<b>PERMISSIONS</b>\n" +
             "\t[ACCESS]",
-            new HelpFormatter(command)
-                .options("--opt", "my option\non multiple lines")
-                .options("--other", "other option")
-                .toString()
+            new CommandHelp(command).modify(builder -> builder
+                .option("--opt", "my option\non multiple lines")
+                .option("--other", "other option")
+            ).toString()
         );
     }
 
     @Test
     void example() {
         assertEquals(
-            "cmd - cmd description\n" +
+            "cmd - No description\n" +
             "========================================\n\n" +
             "<b>SYNOPSIS</b>\n" +
             "\tcmd\n\n" +
@@ -115,17 +126,17 @@ class HelpFormatterTest {
             "\t<u><a href='asfunction:onHref,ExecCmd,cmd other arg,false'>cmd other arg</a></u> - second example\n\n" +
             "<b>PERMISSIONS</b>\n" +
             "\t[ACCESS]",
-            new HelpFormatter(command)
+            new CommandHelp(command).modify(builder -> builder
                 .example("cmd arg", "first example")
                 .example("cmd other arg", "second example")
-                .toString()
+            ).toString()
         );
     }
 
     @Test
     void exampleTooLongShouldBeAligned() {
         assertEquals(
-            "cmd - cmd description\n" +
+            "cmd - No description\n" +
             "========================================\n\n" +
             "<b>SYNOPSIS</b>\n" +
             "\tcmd\n\n" +
@@ -134,17 +145,17 @@ class HelpFormatterTest {
             "\t<u><a href='asfunction:onHref,ExecCmd,cmd other,false'>cmd other</a></u> - second example\n\n" +
             "<b>PERMISSIONS</b>\n" +
             "\t[ACCESS]",
-            new HelpFormatter(command)
+            new CommandHelp(command).modify(b -> b
                 .example("my cmd with too long arguments list", "first example")
                 .example("cmd other", "second example")
-                .toString()
+            ).toString()
         );
     }
 
     @Test
     void seeAlso() {
         assertEquals(
-            "cmd - cmd description\n" +
+            "cmd - No description\n" +
                 "========================================\n\n" +
                 "<b>SYNOPSIS</b>\n" +
                 "\tcmd\n\n" +
@@ -153,17 +164,17 @@ class HelpFormatterTest {
                 "\t<u><a href='asfunction:onHref,ExecCmd,other,true'>other</a></u> - second\n\n" +
                 "<b>PERMISSIONS</b>\n" +
                 "\t[ACCESS]",
-            new HelpFormatter(command)
+            new CommandHelp(command).modify(b -> b
                 .seeAlso("cmd", "first")
                 .seeAlso("other", "second", Link.Type.EXECUTE)
-                .toString()
+            ).toString()
         );
     }
 
     @Test
     void line() {
         assertEquals(
-            "cmd - cmd description\n" +
+            "cmd - No description\n" +
                 "========================================\n\n" +
                 "<b>SYNOPSIS</b>\n" +
                 "\tcmd\n" +
@@ -171,60 +182,58 @@ class HelpFormatterTest {
                 "second\n\n" +
                 "<b>PERMISSIONS</b>\n" +
                 "\t[ACCESS]",
-            new HelpFormatter(command)
+            new CommandHelp(command).modify(b -> b
                 .line("first", "second")
-                .toString()
+            ).toString()
         );
     }
 
     @Test
-    void defaultSynopsis() {
-        assertEquals(
-            "cmd - cmd description\n" +
-                "========================================\n\n" +
-                "<b>SYNOPSIS</b>\n" +
-                "\tcmd ARG\n\n" +
-                "<b>PERMISSIONS</b>\n" +
-                "\t[ACCESS]",
-            new HelpFormatter(command)
-                .synopsis("cmd ARG")
-                .defaultSynopsis("other")
-                .toString()
+    void hasSynopsis() {
+        new CommandHelp(command).modify(b ->
+            assertTrue(b.synopsis("cmd ARG").hasSynopsis())
         );
 
-        assertEquals(
-            "cmd - cmd description\n" +
-                "========================================\n\n" +
-                "<b>SYNOPSIS</b>\n" +
-                "\tother\n\n" +
-                "<b>PERMISSIONS</b>\n" +
-                "\t[ACCESS]",
-            new HelpFormatter(command)
-                .defaultSynopsis("other")
-                .toString()
+        new CommandHelp(command).modify(b ->
+            assertFalse(b.hasSynopsis())
         );
     }
 
     @Test
-    void defaultOption() {
+    void hasOption() {
+        new CommandHelp(command).modify(b -> {
+                b.option("opt", "descr opt");
+
+                assertTrue(b.hasOption("opt"));
+                assertFalse(b.hasOption("foo"));
+        }).toString();
+    }
+
+    @Test
+    void modifyShouldNoModifyCurrentInstance() {
+        CommandHelp help = new CommandHelp(command);
+        CommandHelp modified = help.modify(builder -> builder.synopsis("cmd [options]").description("My description"));
+
+        assertNotSame(help, modified);
+
         assertEquals(
-            "cmd - cmd description\n" +
-            "========================================\n" +
-            "\n" +
-            "<b>SYNOPSIS</b>\n" +
-            "\tcmd\n" +
-            "\n" +
-            "<b>OPTIONS</b>\n" +
-            "\topt : descr opt\n" +
-            "\tfoo : bar\n" +
-            "\n" +
-            "<b>PERMISSIONS</b>\n" +
-            "\t[ACCESS]",
-            new HelpFormatter(command)
-                .options("opt", "descr opt")
-                .defaultOption("opt", "other descr")
-                .defaultOption("foo", "bar")
-                .toString()
+            "cmd - No description\n" +
+                "========================================\n\n" +
+                "<b>SYNOPSIS</b>\n" +
+                "\tcmd\n\n" +
+                "<b>PERMISSIONS</b>\n" +
+                "\t[ACCESS]",
+            help.toString()
+        );
+
+        assertEquals(
+            "cmd - My description\n" +
+                "========================================\n\n" +
+                "<b>SYNOPSIS</b>\n" +
+                "\tcmd [options]\n\n" +
+                "<b>PERMISSIONS</b>\n" +
+                "\t[ACCESS]",
+            modified.toString()
         );
     }
 }

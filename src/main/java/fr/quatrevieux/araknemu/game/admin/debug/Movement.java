@@ -46,9 +46,9 @@ public final class Movement extends AbstractCommand<Movement.Arguments> {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Highlight cell by their movement value")
             .help(
                 formatter -> formatter
+                    .description("Highlight cell by their movement value")
                     .synopsis("movement [1-8]")
                     .seeAlso("${debug} fightpos hide", "For hide the cells", Link.Type.EXECUTE)
             )

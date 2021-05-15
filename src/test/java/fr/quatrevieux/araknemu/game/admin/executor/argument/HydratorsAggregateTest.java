@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
-import fr.quatrevieux.araknemu.game.admin.formatter.HelpFormatter;
+import fr.quatrevieux.araknemu.game.admin.help.CommandHelp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.kohsuke.args4j.Argument;
@@ -34,7 +34,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HydratorsAggregateTest extends TestCase {
     private HydratorsAggregate hydrator;
@@ -70,7 +77,7 @@ class HydratorsAggregateTest extends TestCase {
     @Test
     void helpNotSupported() {
         CommandWithObject command = new CommandWithObject();
-        HelpFormatter help = command.help();
+        CommandHelp help = command.help();
 
         assertSame(help, hydrator.help(command, null, help));
 
@@ -90,9 +97,11 @@ class HydratorsAggregateTest extends TestCase {
     @Test
     void help() {
         CommandWithObject command = new CommandWithObject();
-        HelpFormatter help = command.help();
+        CommandHelp help = command.help();
 
-        assertSame(help, hydrator.help(command, command.createArguments(), help));
+        CommandHelp newHelp = hydrator.help(command, command.createArguments(), help);
+        assertNotSame(help, newHelp);
+        assertNotEquals(help.toString(), newHelp.toString());
 
         assertEquals(
             "foo - No description\n" +
@@ -106,7 +115,7 @@ class HydratorsAggregateTest extends TestCase {
             "\n" +
             "<b>PERMISSIONS</b>\n" +
                 "\t[ACCESS]",
-            help.toString()
+            newHelp.toString()
         );
     }
 

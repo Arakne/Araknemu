@@ -37,9 +37,9 @@ public final class Info extends AbstractCommand<Void> {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Display information on the selected player")
             .help(
                 formatter -> formatter
+                    .description("Display information on the selected player")
                     .synopsis("[context] info")
                     .line("<i>Note: this command takes no arguments, the account is only resolved by the context</i>")
 

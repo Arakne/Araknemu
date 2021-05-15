@@ -48,18 +48,19 @@ public final class Shutdown extends AbstractCommand<Shutdown.Arguments> implemen
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Stop the server")
             .help(formatter -> formatter
+                .description("Stop the server")
                 .synopsis("shutdown [now|in|at|show] ARGUMENTS")
-                .options("now", "Shutdown the server immediately. Do not requires any parameters.")
-                .options("in DURATION", "Shutdown the server in a given amount of time. Format is <i>[hours]h[minutes]m[seconds]s</i>. All parts are optional.")
-                .options("at TIME", "Shutdown the server at a given time. Format is <i>[hours]:[minutes]:[seconds]</i>. Seconds are optional.")
-                .options("show", "Show the current scheduled shutdown.")
+                .option("now", "Shutdown the server immediately. Do not requires any parameters.")
+                .option("in DURATION", "Shutdown the server in a given amount of time. Format is <i>[hours]h[minutes]m[seconds]s</i>. All parts are optional.")
+                .option("at TIME", "Shutdown the server at a given time. Format is <i>[hours]:[minutes]:[seconds]</i>. Seconds are optional.")
+                .option("show", "Show the current scheduled shutdown.")
                 .example("${server} shutdown now", "Stop the server immediately.")
                 .example("${server} shutdown at 15:00", "Stop the server at 15:00:00.")
                 .example("${server} shutdown in 30m", "Stop the server in 30 minutes.")
             )
             .requires(Permission.SUPER_ADMIN)
+            .arguments(Arguments::new)
         ;
     }
 
@@ -109,11 +110,6 @@ public final class Shutdown extends AbstractCommand<Shutdown.Arguments> implemen
         } else {
             performer.error("No shutdown has been scheduled");
         }
-    }
-
-    @Override
-    public Arguments createArguments() {
-        return new Arguments();
     }
 
     public static final class Arguments implements SubArguments<Shutdown> {

@@ -24,7 +24,7 @@ import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
-import fr.quatrevieux.araknemu.game.admin.formatter.HelpFormatter;
+import fr.quatrevieux.araknemu.game.admin.help.CommandHelp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -52,12 +52,7 @@ class VoidHydratorTest {
             }
 
             @Override
-            public String description() {
-                return null;
-            }
-
-            @Override
-            public HelpFormatter help() {
+            public CommandHelp help() {
                 return null;
             }
 
@@ -86,12 +81,7 @@ class VoidHydratorTest {
             }
 
             @Override
-            public String description() {
-                return null;
-            }
-
-            @Override
-            public HelpFormatter help() {
+            public CommandHelp help() {
                 return null;
             }
 

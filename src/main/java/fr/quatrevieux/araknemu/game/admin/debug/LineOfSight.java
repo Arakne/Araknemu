@@ -51,11 +51,11 @@ public final class LineOfSight extends AbstractCommand<LineOfSight.Arguments> {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Highlight accessible cells by line of sight")
             .help(
                 formatter -> formatter
+                    .description("Highlight accessible cells by line of sight")
                     .synopsis("lineofsight [target cell id]")
-                    .options("target cell id", "Optional. The target cell id for dump the line of sight to this cell")
+                    .option("target cell id", "Optional. The target cell id for dump the line of sight to this cell")
                     .seeAlso("${debug} fightpos hide", "For hide the cells", Link.Type.EXECUTE)
             )
             .requires(Permission.DEBUG)

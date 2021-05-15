@@ -47,7 +47,7 @@ import java.util.List;
 /**
  * Get an item for the player
  */
-public final class GetItem extends AbstractCommand<GetItem.Options> {
+public final class GetItem extends AbstractCommand<GetItem.Arguments> {
     private final GamePlayer player;
     private final ItemService service;
 
@@ -59,9 +59,9 @@ public final class GetItem extends AbstractCommand<GetItem.Options> {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Add an item to the player")
             .help(
                 formatter -> formatter
+                    .description("Add an item to the player")
                     .example("getitem 2425", "Generate a random 'Amulette du Bouftou'")
                     .example("!getitem 2425 3", "Generate 3 random 'Amulette du Bouftou', and ensure that the admin user is the target")
                     .example("${player:Robert} getitem 39", "Add to Robert the 'Petite Amulette du Hibou'")
@@ -72,6 +72,7 @@ public final class GetItem extends AbstractCommand<GetItem.Options> {
                     .seeAlso("/ui itemsummoner", "Show the item picker", Link.Type.EXECUTE)
             )
             .requires(Permission.MANAGE_PLAYER)
+            .arguments(Arguments::new)
         ;
     }
 
@@ -81,21 +82,16 @@ public final class GetItem extends AbstractCommand<GetItem.Options> {
     }
 
     @Override
-    public Options createArguments() {
-        return new Options();
-    }
-
-    @Override
-    public void execute(AdminPerformer performer, Options options) throws CommandException {
-        for (int j = 0; j < options.times(); ++j) {
-            final Item item = options.hasCustomEffects()
-                ? service.retrieve(options.itemId(), options.effects())
-                : service.create(options.itemId(), options.max())
+    public void execute(AdminPerformer performer, Arguments arguments) throws CommandException {
+        for (int j = 0; j < arguments.times(); ++j) {
+            final Item item = arguments.hasCustomEffects()
+                ? service.retrieve(arguments.itemId(), arguments.effects())
+                : service.create(arguments.itemId(), arguments.max())
             ;
 
-            player.inventory().add(item, options.quantity());
+            player.inventory().add(item, arguments.quantity());
 
-            performer.success("Generate {} '{}'", options.quantity(), item.template().name());
+            performer.success("Generate {} '{}'", arguments.quantity(), item.template().name());
 
             if (!item.effects().isEmpty()) {
                 performer.success("Effects :");
@@ -107,7 +103,7 @@ public final class GetItem extends AbstractCommand<GetItem.Options> {
         }
     }
 
-    public static final class Options {
+    public static final class Arguments {
         @Option(name = "--max", usage = "Generate item with maximized characteristics")
         private boolean max = false;
 

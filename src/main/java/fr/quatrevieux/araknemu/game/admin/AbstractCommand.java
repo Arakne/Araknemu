@@ -20,20 +20,21 @@
 package fr.quatrevieux.araknemu.game.admin;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
-import fr.quatrevieux.araknemu.game.admin.formatter.HelpFormatter;
+import fr.quatrevieux.araknemu.game.admin.help.CommandHelp;
 
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Base command class
  */
 public abstract class AbstractCommand<A> implements Command<A> {
-    private final HelpFormatter help = new HelpFormatter(this);
+    private CommandHelp help = new CommandHelp(this);
     private final EnumSet<Permission> permissions = EnumSet.of(Permission.ACCESS);
-    private String description = "No description";
+    private Supplier<A> argumentsFactory;
     private boolean initialized = false;
 
     /**
@@ -42,17 +43,10 @@ public abstract class AbstractCommand<A> implements Command<A> {
     protected abstract void build(Builder builder);
 
     @Override
-    public final String description() {
+    public CommandHelp help() {
         initialize();
 
-        return description;
-    }
-
-    @Override
-    public HelpFormatter help() {
-        initialize();
-
-        return new HelpFormatter(help);
+        return help;
     }
 
     @Override
@@ -60,6 +54,17 @@ public abstract class AbstractCommand<A> implements Command<A> {
         initialize();
 
         return permissions;
+    }
+
+    @Override
+    public A createArguments() {
+        initialize();
+
+        if (argumentsFactory != null) {
+            return argumentsFactory.get();
+        }
+
+        return null;
     }
 
     private void initialize() {
@@ -71,10 +76,13 @@ public abstract class AbstractCommand<A> implements Command<A> {
 
     protected final class Builder {
         /**
-         * Set a command description
+         * Define the command arguments factory
+         *
+         * Note: this method should be used only for annotated object argument.
+         *       For other arguments type, prefer overrides the method {@link Command#createArguments()}
          */
-        public Builder description(String description) {
-            AbstractCommand.this.description = description;
+        public Builder arguments(Supplier<A> constructor) {
+            AbstractCommand.this.argumentsFactory = constructor;
 
             return this;
         }
@@ -91,8 +99,8 @@ public abstract class AbstractCommand<A> implements Command<A> {
          *     );
          * </code>
          */
-        public Builder help(Consumer<HelpFormatter> configurator) {
-            configurator.accept(help);
+        public Builder help(Consumer<CommandHelp.Builder> configurator) {
+            help = help.modify(configurator);
 
             return this;
         }

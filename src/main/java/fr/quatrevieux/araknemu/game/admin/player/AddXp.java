@@ -38,12 +38,13 @@ public final class AddXp extends AbstractCommand<AddXp.Arguments> {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Add experience to player")
             .help(
                 formatter -> formatter
+                    .description("Add experience to player")
                     .example("${player:John} addxp 1000000", "Add 1 million xp to John")
             )
             .requires(Permission.MANAGE_PLAYER)
+            .arguments(Arguments::new)
         ;
     }
 
@@ -57,11 +58,6 @@ public final class AddXp extends AbstractCommand<AddXp.Arguments> {
         player.properties().experience().add(arguments.quantity);
 
         performer.success("Add {} xp to {} (level = {})", arguments.quantity, player.name(), player.properties().experience().level());
-    }
-
-    @Override
-    public Arguments createArguments() {
-        return new Arguments();
     }
 
     public static final class Arguments {

@@ -51,11 +51,11 @@ public final class Area extends AbstractCommand<String> {
     protected void build(Builder builder) {
         builder
             .requires(Permission.DEBUG)
-            .description("Display spell effect area")
             .help(
                 formatter -> formatter
+                    .description("Display spell effect area")
                     .synopsis("area [area string]")
-                    .options(
+                    .option(
                         "area string",
                         "Contains two chars, the first one is the area type, the second if the size in pseudo base 64\n" +
                         "Types :\n" +

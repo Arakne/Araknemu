@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.admin.executor.argument;
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
-import fr.quatrevieux.araknemu.game.admin.formatter.HelpFormatter;
+import fr.quatrevieux.araknemu.game.admin.help.CommandHelp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ public final class HydratorsAggregate implements ArgumentsHydrator {
     }
 
     @Override
-    public <A> HelpFormatter help(Command<A> command, A commandArguments, HelpFormatter help) {
+    public <A> CommandHelp help(Command<A> command, A commandArguments, CommandHelp help) {
         return supportedHydrator(command, commandArguments)
             .map(hydrator -> hydrator.help(command, commandArguments, help))
             .orElse(help)

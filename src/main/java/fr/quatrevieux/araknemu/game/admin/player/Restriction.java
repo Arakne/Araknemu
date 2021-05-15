@@ -45,13 +45,13 @@ public final class Restriction extends AbstractCommand<List<String>> {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Change the player restrictions")
             .help(
                 formatter -> formatter
+                    .description("Change the player restrictions")
                     .synopsis("restriction [+/-]RESTRICTION...")
 
-                    .options("+RESTRICTION", "Active the restriction on the player")
-                    .options("-RESTRICTION", "Remove the restriction on the player")
+                    .option("+RESTRICTION", "Active the restriction on the player")
+                    .option("-RESTRICTION", "Remove the restriction on the player")
 
                     .line("AVAILABLE RESTRICTIONS :",
                         "\t" + Arrays.stream(Restrictions.Restriction.values()).map(Enum::name).collect(Collectors.joining(", ")),
