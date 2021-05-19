@@ -236,4 +236,73 @@ class CommandHelpTest {
             modified.toString()
         );
     }
+
+    @Test
+    void withSimpleVariable() {
+        assertEquals(
+            "cmd - My complex command description with My variable\n" +
+            "========================================\n" +
+            "\n" +
+            "<b>SYNOPSIS</b>\n" +
+                "\tcmd ARG\n" +
+            "\n" +
+            "<b>OPTIONS</b>\n" +
+                "\tARG : Should use My variable\n" +
+            "\n" +
+            "<b>PERMISSIONS</b>\n" +
+                "\t[ACCESS]",
+            new CommandHelp(command).modify(builder -> {
+                builder
+                    .description("My complex command description with {{var}}")
+                    .synopsis("cmd ARG")
+                    .option("ARG", "Should use {{var}}")
+                    .with("var", () -> "My variable")
+                ;
+            }).toString()
+        );
+    }
+
+    @Test
+    void withStringVariable() {
+        assertEquals(
+            "cmd - Use constant : Constant value\n" +
+            "========================================\n" +
+            "\n" +
+            "<b>SYNOPSIS</b>\n" +
+                "\tcmd\n" +
+            "\n" +
+            "<b>PERMISSIONS</b>\n" +
+                "\t[ACCESS]",
+            new CommandHelp(command).modify(builder -> {
+                builder
+                    .description("Use constant : {{var}}")
+                    .with("var", "Constant value")
+                ;
+            }).toString()
+        );
+    }
+
+    enum MyEnum {
+        FOO, BAR
+    }
+
+    @Test
+    void withEnumVariable() {
+        assertEquals(
+            "cmd - Use enum : FOO, BAR\n" +
+            "========================================\n" +
+            "\n" +
+            "<b>SYNOPSIS</b>\n" +
+                "\tcmd\n" +
+            "\n" +
+            "<b>PERMISSIONS</b>\n" +
+                "\t[ACCESS]",
+            new CommandHelp(command).modify(builder -> {
+                builder
+                    .description("Use enum : {{enum}}")
+                    .with("enum", MyEnum.class)
+                ;
+            }).toString()
+        );
+    }
 }

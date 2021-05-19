@@ -28,9 +28,7 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.Restrictions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Change the player restrictions
@@ -54,10 +52,11 @@ public final class Restriction extends AbstractCommand<List<String>> {
                     .option("-RESTRICTION", "Remove the restriction on the player")
 
                     .line("AVAILABLE RESTRICTIONS :",
-                        "\t" + Arrays.stream(Restrictions.Restriction.values()).map(Enum::name).collect(Collectors.joining(", ")),
+                        "\t{{restriction.enum}}",
                         "\tNote: The name is case insensitive"
                     )
                     .line("WARNING : This is a debug feature, and can cause bugs if misused")
+                    .with("restriction.enum", Restrictions.Restriction.class)
 
                     .example("restriction +DENY_CHALLENGE", "The player will not be allowed perform challenges")
                     .example("restriction +DENY_CHAT -ALLOW_MOVE_ALL_DIRECTION", "Perform multiple changes")

@@ -62,14 +62,12 @@ public final class Goto extends AbstractCommand<Goto.Arguments> {
                 formatter -> {
                     formatter
                         .description("Teleport the player to the desired location")
-                        .synopsis("goto [type] [target]...")
-                        .option("type", "Define the target type (available types are defined bellow). If not provided, will try all available resolvers.")
-                        .option("target", "Required. The target. This value depends of the type.")
-                        .option("--force", "Force the teleporation even if the player is busy or in fight.")
+                        .option("TYPE", "Define the target type (available types are defined bellow). If not provided, will try all available resolvers.")
+                        .option("TARGET", "Required. The target. This value depends of the type.")
                     ;
 
                     for (LocationResolver resolver : resolvers.values()) {
-                        formatter.option("type: " + resolver.name(), resolver.help());
+                        formatter.option("TYPE: " + resolver.name(), resolver.help());
                     }
 
                     formatter
@@ -199,7 +197,7 @@ public final class Goto extends AbstractCommand<Goto.Arguments> {
         @Option(name = "--force", usage = "Force the teleporation even if the player is busy or in fight.")
         private boolean force = false;
 
-        @Argument(metaVar = "[type] [target]...", multiValued = true)
+        @Argument(metaVar = "TYPE TARGET", multiValued = true)
         private List<String> targets;
 
         public boolean force() {

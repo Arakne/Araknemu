@@ -28,8 +28,6 @@ import fr.quatrevieux.araknemu.game.admin.executor.argument.handler.CustomEnumOp
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import org.kohsuke.args4j.Argument;
 
-import java.util.Arrays;
-
 /**
  * Add stats to player base stats
  */
@@ -46,15 +44,11 @@ public final class AddStats extends AbstractCommand<AddStats.Arguments> {
             .help(
                 formatter -> formatter
                     .description("Add stats to a player")
-                    .option(
-                        "CHARACTERISTIC",
-                        "The characteristic to add.\n" +
-                        "This parameter is case insensitive.\n" +
-                        "It's value must be one of those : " + Arrays.toString(Characteristic.values())
-                    )
 
                     .example("addstats vitality 150", "Add 150 vitality to current player")
                     .example("${player:John} addstats strength 50", "Add 50 strength to current John")
+
+                    .with("characteristic.enum", Characteristic.class)
             )
             .requires(Permission.MANAGE_PLAYER)
             .arguments(Arguments::new)
@@ -87,7 +81,9 @@ public final class AddStats extends AbstractCommand<AddStats.Arguments> {
             required = true,
             handler = CustomEnumOptionHandler.class,
             metaVar = "CHARACTERISTIC",
-            usage = "The characteristic to add."
+            usage = "The characteristic to add.\n" +
+                "This parameter is case insensitive.\n" +
+                "It's value must be one of those : {{characteristic.enum}}"
         )
         private Characteristic characteristic;
 

@@ -25,10 +25,13 @@ import fr.quatrevieux.araknemu.game.admin.formatter.Link;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Help page data for a command
@@ -44,6 +47,7 @@ public final class CommandHelp {
     private final List<LinkItem> examples;
     private final List<LinkItem> seeAlso;
     private final List<String> custom;
+    private final Map<String, Supplier<String>> variables;
 
     public CommandHelp(Command command) {
         this.command = command;
@@ -52,6 +56,7 @@ public final class CommandHelp {
         this.examples = new ArrayList<>();
         this.seeAlso = new ArrayList<>();
         this.custom = new ArrayList<>();
+        this.variables = new HashMap<>();
     }
 
     private CommandHelp(CommandHelp other) {
@@ -63,6 +68,7 @@ public final class CommandHelp {
         this.examples = new ArrayList<>(other.examples);
         this.seeAlso = new ArrayList<>(other.seeAlso);
         this.custom = new ArrayList<>(other.custom);
+        this.variables = new HashMap<>(other.variables);
     }
 
     /**
@@ -172,6 +178,13 @@ public final class CommandHelp {
      */
     List<String> custom() {
         return Collections.unmodifiableList(custom);
+    }
+
+    /**
+     * @return List of declared variable. The map is unmodifiable.
+     */
+    Map<String, Supplier<String>> variables() {
+        return Collections.unmodifiableMap(variables);
     }
 
     public static final class Builder {
@@ -307,6 +320,66 @@ public final class CommandHelp {
             help.custom.addAll(Arrays.asList(lines));
 
             return this;
+        }
+
+        /**
+         * Register a new variable for the output
+         *
+         * Variable are used with {{varname}} format in any place
+         * So you can use it to add dynamic value on annotation description
+         *
+         * Usage:
+         * <pre>{@code
+         * builder
+         *     .option("--opt", "My option. Available values are : {{opt.values}}")
+         *     .with("opt.values", () -> "My complex list of values")
+         * ;
+         * }</pre>
+         *
+         * @param varName The variable name. Should be alpha num + "_" "-" and "."
+         * @param variable The value generator
+         *
+         * @return this
+         */
+        public Builder with(String varName, Supplier<String> variable) {
+            help.variables.put(varName, variable);
+
+            return this;
+        }
+
+        /**
+         * Register a new constant value for the output
+         *
+         * Variable are used with {{varname}} format in any place
+         *
+         * @param varName The variable name. Should be alpha num + "_" "-" and "."
+         * @param value The value
+         *
+         * @return this
+         *
+         * @see Builder#with(String, String)
+         */
+        public Builder with(String varName, String value) {
+            return with(varName, () -> value);
+        }
+
+        /**
+         * Register an enum variable for the output
+         *
+         * Variable are used with {{varname}} format in any place
+         *
+         * @param varName The variable name. Should be alpha num + "_" "-" and "."
+         * @param value The value
+         *
+         * @return this
+         *
+         * @see Builder#with(String, String)
+         */
+        public Builder with(String varName, Class<? extends Enum> value) {
+            return with(
+                varName,
+                () -> Arrays.stream(value.getEnumConstants()).map(Enum::name).collect(Collectors.joining(", "))
+            );
         }
     }
 }

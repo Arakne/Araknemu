@@ -27,6 +27,8 @@ import java.util.Map;
 public final class DefaultHelpRenderer implements HelpRenderer {
     @Override
     public void build(OutputBuilder builder, CommandHelp help) {
+        builder.withAll(help.variables());
+
         buildHeader(builder, help);
         buildSynopsis(builder, help);
         buildOptions(builder, help);
