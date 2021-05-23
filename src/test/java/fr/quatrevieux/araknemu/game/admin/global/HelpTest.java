@@ -71,8 +71,8 @@ class HelpTest extends CommandTestCase {
             "<b>SYNOPSIS</b>\n" +
             "\tsetlife number|max\n\n" +
             "<b>EXAMPLES</b>\n" +
-            "\t<u><a href='asfunction:onHref,ExecCmd,setlife 300,false'>setlife 300</a></u>                - Set the player life to 300\n" +
-            "\t<u><a href='asfunction:onHref,ExecCmd,setlife max,false'>setlife max</a></u>                - Set full life to the player\n" +
+            "\t<u><a href='asfunction:onHref,ExecCmd,setlife 300,false'>setlife 300</a></u>                - Set the current player life to 300\n" +
+            "\t<u><a href='asfunction:onHref,ExecCmd,setlife max,false'>setlife max</a></u>                - Set full life to the current player\n" +
             "\t<u><a href='asfunction:onHref,ExecCmd,${player:John} setlife 250,false'>${player:John} setlife 250</a></u> - Set John's life to 250\n\n" +
             "<b>PERMISSIONS</b>\n" +
             "\t[ACCESS, MANAGE_PLAYER]"
