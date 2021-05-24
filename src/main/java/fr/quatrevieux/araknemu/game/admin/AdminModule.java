@@ -34,6 +34,8 @@ import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
 import fr.quatrevieux.araknemu.game.admin.account.Ban;
 import fr.quatrevieux.araknemu.game.admin.account.Info;
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.AggregationContext;
+import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
 import fr.quatrevieux.araknemu.game.admin.context.SelfContextResolver;
 import fr.quatrevieux.araknemu.game.admin.debug.Area;
 import fr.quatrevieux.araknemu.game.admin.debug.DebugContext;
@@ -136,11 +138,17 @@ public final class AdminModule implements ContainerModule {
         configurator.persist(
             CommandParser.class,
             container -> new ContextCommandParser(
-                container.get(PlayerContextResolver.class),
-                container.get(AccountContextResolver.class),
-                container.get(DebugContextResolver.class),
-                container.get(ServerContextResolver.class),
-                container.get(SelfContextResolver.class)
+                performer -> new AggregationContext(
+                    performer.self(),
+                    container.get(ServerContextResolver.class).resolve(performer, null)
+                ),
+                new ContextResolver[]{
+                    container.get(PlayerContextResolver.class),
+                    container.get(AccountContextResolver.class),
+                    container.get(DebugContextResolver.class),
+                    container.get(ServerContextResolver.class),
+                    container.get(SelfContextResolver.class),
+                }
             )
         );
 

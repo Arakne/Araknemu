@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -53,9 +54,12 @@ import java.util.function.Predicate;
  * @Robert > account gift 45 3
  */
 public final class ContextCommandParser implements CommandParser {
+    private final Function<AdminPerformer, Context> defaultContextFactory;
     private final Map<Character, ContextResolver> resolvers = new HashMap<>();
 
-    public ContextCommandParser(ContextResolver... resolvers) {
+    public ContextCommandParser(Function<AdminPerformer, Context> defaultContextFactory, ContextResolver[] resolvers) {
+        this.defaultContextFactory = defaultContextFactory;
+
         for (ContextResolver resolver : resolvers) {
             this.resolvers.put(resolver.prefix(), resolver);
         }
@@ -119,7 +123,7 @@ public final class ContextCommandParser implements CommandParser {
             state.next();
             context = resolvers.get(prefix).resolve(state.performer, () -> state.skipBlank().nextWord());
         } else {
-            context = state.performer.self(); // @todo séparer contexte "self" et "par défaut"
+            context = defaultContextFactory.apply(state.performer);
         }
 
         return resolveChildContext(state, context);

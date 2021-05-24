@@ -28,6 +28,8 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
+import fr.quatrevieux.araknemu.game.admin.context.AggregationContext;
+import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
 import fr.quatrevieux.araknemu.game.admin.context.SelfContextResolver;
 import fr.quatrevieux.araknemu.game.admin.debug.DebugContext;
 import fr.quatrevieux.araknemu.game.admin.debug.DebugContextResolver;
@@ -62,11 +64,17 @@ class ContextCommandParserTest extends GameBaseCase {
 
         user = container.get(AdminSessionService.class).user(gamePlayer());
         parser = new ContextCommandParser(
-            container.get(PlayerContextResolver.class),
-            container.get(AccountContextResolver.class),
-            container.get(DebugContextResolver.class),
-            container.get(ServerContextResolver.class),
-            container.get(SelfContextResolver.class)
+            performer -> new AggregationContext(
+                performer.self(),
+                container.get(ServerContextResolver.class).resolve(performer, null)
+            ),
+            new ContextResolver[]{
+                container.get(PlayerContextResolver.class),
+                container.get(AccountContextResolver.class),
+                container.get(DebugContextResolver.class),
+                container.get(ServerContextResolver.class),
+                container.get(SelfContextResolver.class),
+            }
         );
     }
 
@@ -83,7 +91,7 @@ class ContextCommandParserTest extends GameBaseCase {
         assertEquals("simple", arguments.line());
         assertEquals("", arguments.contextPath());
         assertEquals(Arrays.asList("simple"), arguments.arguments());
-        assertSame(user.self(), arguments.context());
+        assertInstanceOf(AggregationContext.class, arguments.context());
     }
 
     @Test
@@ -94,7 +102,7 @@ class ContextCommandParserTest extends GameBaseCase {
         assertEquals("cmd arg1   arg2  val1", arguments.line());
         assertEquals("", arguments.contextPath());
         assertEquals(Arrays.asList("cmd", "arg1", "arg2", "val1"), arguments.arguments());
-        assertSame(user.self(), arguments.context());
+        assertInstanceOf(AggregationContext.class, arguments.context());
     }
 
     @Test
