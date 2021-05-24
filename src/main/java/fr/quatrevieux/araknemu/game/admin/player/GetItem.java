@@ -64,7 +64,7 @@ public final class GetItem extends AbstractCommand<GetItem.Arguments> {
                     .description("Add an item to the player")
                     .example("getitem 2425", "Generate a random 'Amulette du Bouftou'")
                     .example("!getitem 2425 3", "Generate 3 random 'Amulette du Bouftou', and ensure that the admin user is the target")
-                    .example("${player:Robert} getitem 39", "Add to Robert the 'Petite Amulette du Hibou'")
+                    .example("@Robert getitem 39", "Add to Robert the 'Petite Amulette du Hibou'")
                     .example("getitem --max 2425", "Generate an 'Amulette du Bouftou' with max stats")
                     .example("getitem --effects 5b#1#32#0#,5c#1#32#0#,5d#1#32#0#,5e#1#32#0#,5f#1#32#0# 40", "Cheated 'Petite Epée de Boisaille'")
                     .example("getitem --effects STOLEN_WATER:1:50,STOLEN_EARTH:1:50,STOLEN_WIND:1:50,STOLEN_FIRE:1:50,STOLEN_NEUTRAL:1:50 40", "Same as above")

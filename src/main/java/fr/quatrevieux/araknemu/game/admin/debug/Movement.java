@@ -50,7 +50,7 @@ public final class Movement extends AbstractCommand<Movement.Arguments> {
                 formatter -> formatter
                     .description("Highlight cell by their movement value")
                     .synopsis("movement [1-8]")
-                    .seeAlso("${debug} fightpos hide", "For hide the cells", Link.Type.EXECUTE)
+                    .seeAlso(":fightpos hide", "For hide the cells", Link.Type.EXECUTE)
             )
             .requires(Permission.DEBUG)
         ;

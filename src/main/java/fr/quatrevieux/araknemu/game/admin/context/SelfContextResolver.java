@@ -14,32 +14,27 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.listener.admin;
+package fr.quatrevieux.araknemu.game.admin.context;
 
-import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.game.admin.AdminUser;
-import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
+import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
+import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
+
+import java.util.function.Supplier;
 
 /**
- * Remove admin session on disconnect
+ * Get the resolver for the "self" ('!') context
  */
-public final class RemoveAdminSession implements Listener<Disconnected> {
-    private final AdminUser user;
-
-    public RemoveAdminSession(AdminUser user) {
-        this.user = user;
+public final class SelfContextResolver implements ContextResolver {
+    @Override
+    public Context resolve(AdminPerformer performer, Supplier<String> argument) throws ContextException {
+        return performer.self();
     }
 
     @Override
-    public void on(Disconnected event) {
-        user.logout();
-    }
-
-    @Override
-    public Class<Disconnected> event() {
-        return Disconnected.class;
+    public char prefix() {
+        return '!';
     }
 }

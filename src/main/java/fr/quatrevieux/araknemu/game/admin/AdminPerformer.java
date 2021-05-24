@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.admin;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
@@ -55,4 +56,10 @@ public interface AdminPerformer extends AdminLogger {
      * Get the related account if exists
      */
     public Optional<GameAccount> account();
+
+    /**
+     * Get the context related to the current admin perform
+     * For an admin user, the context should be the player
+     */
+    public Context self();
 }

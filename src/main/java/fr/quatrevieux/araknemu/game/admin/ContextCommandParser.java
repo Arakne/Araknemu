@@ -20,17 +20,20 @@
 package fr.quatrevieux.araknemu.game.admin;
 
 import fr.quatrevieux.araknemu.game.admin.context.Context;
+import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 /**
- * Admin user parser for command line
+ * Command line parser using context system
  *
  * Examples:
  *
@@ -43,25 +46,24 @@ import java.util.function.Predicate;
  * Child context :
  * >account ban 120s
  *
- * Named context :
- * $global info
+ * Resolve context :
+ * @Robert levelup 55
  *
- * Anonymous context :
- * ${player:Robert} levelup 55
- *
- * Child anonymous context :
- * ${player:Robert} > account gift 45 3
+ * Resolve child context :
+ * @Robert > account gift 45 3
  */
-public final class AdminUserCommandParser implements CommandParser {
-    private final AdminUser user;
+public final class ContextCommandParser implements CommandParser {
+    private final Map<Character, ContextResolver> resolvers = new HashMap<>();
 
-    public AdminUserCommandParser(AdminUser user) {
-        this.user = user;
+    public ContextCommandParser(ContextResolver... resolvers) {
+        for (ContextResolver resolver : resolvers) {
+            this.resolvers.put(resolver.prefix(), resolver);
+        }
     }
 
     @Override
-    public Arguments parse(String line) throws AdminException {
-        final State state = new State(line.trim());
+    public Arguments parse(AdminPerformer performer, String line) throws AdminException {
+        final State state = new State(performer, line.trim());
 
         if (state.line.isEmpty()) {
             throw new CommandException("Empty command");
@@ -110,21 +112,14 @@ public final class AdminUserCommandParser implements CommandParser {
      * After resolve the root context, resolve the child contexts separated by >
      */
     private Context parseContext(State state) throws AdminException {
+        final char prefix = state.current();
         final Context context;
 
-        switch (state.current()) {
-            case '!':
-                state.next();
-                context = user.context().self();
-                break;
-
-            case '$':
-                state.next();
-                context = resolveDynamicContext(state);
-                break;
-
-            default:
-                context = user.context().current();
+        if (resolvers.containsKey(prefix)) {
+            state.next();
+            context = resolvers.get(prefix).resolve(state.performer, () -> state.skipBlank().nextWord());
+        } else {
+            context = state.performer.self(); // @todo séparer contexte "self" et "par défaut"
         }
 
         return resolveChildContext(state, context);
@@ -148,48 +143,13 @@ public final class AdminUserCommandParser implements CommandParser {
         return resolveChildContext(state, context.child(name));
     }
 
-    /**
-     * Resolve a dynamic context (start with $)
-     *
-     * If the line starts with {, try to resolve an anonymous context
-     * Else, get an already registered context
-     */
-    private Context resolveDynamicContext(State state) throws AdminException {
-        if (state.current() == '{') {
-            return resolveAnonymousContext(state.next());
-        }
-
-        return user.context().get(state.nextWord());
-    }
-
-    /**
-     * Resolve the anonymous context between accolades
-     *
-     * The anonymous context is in form : ${type:argument}
-     */
-    private Context resolveAnonymousContext(State state) throws AdminException {
-        final String[] arguments = StringUtils.split(state.moveWhile(c -> c != '}'), ":", 2);
-
-        if (!state.hasNext()) {
-            throw new CommandException("Syntax error : missing closing accolade");
-        }
-
-        state
-            .next()
-            .skipBlank()
-        ;
-
-        return user.context().resolve(
-            arguments[0],
-            arguments.length == 1 ? "" : arguments[1]
-        );
-    }
-
     private static class State {
+        private final AdminPerformer performer;
         private final String line;
         private int cursor = 0;
 
-        public State(String line) {
+        public State(AdminPerformer performer, String line) {
+            this.performer = performer;
             this.line = line;
         }
 

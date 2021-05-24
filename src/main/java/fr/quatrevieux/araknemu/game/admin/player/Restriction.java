@@ -60,7 +60,7 @@ public final class Restriction extends AbstractCommand<List<String>> {
 
                     .example("restriction +DENY_CHALLENGE", "The player will not be allowed perform challenges")
                     .example("restriction +DENY_CHAT -ALLOW_MOVE_ALL_DIRECTION", "Perform multiple changes")
-                    .example("${player:John} restriction +DENY_CHALLENGE", "Change John's restrictions")
+                    .example("@John restriction +DENY_CHALLENGE", "Change John's restrictions")
             )
             .requires(Permission.MANAGE_PLAYER)
             .requires(Permission.DEBUG)

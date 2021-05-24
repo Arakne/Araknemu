@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.admin.debug;
 
 import fr.quatrevieux.araknemu.data.value.Position;
-import fr.quatrevieux.araknemu.game.admin.AdminService;
+import fr.quatrevieux.araknemu.game.admin.AdminSessionService;
 import fr.quatrevieux.araknemu.game.admin.AdminUser;
 import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
@@ -43,7 +43,7 @@ class AreaTest extends CommandTestCase {
         explorationPlayer();
 
         command = new Area(container.get(SpellEffectService.class));
-        user = container.get(AdminService.class).user(gamePlayer());
+        user = container.get(AdminSessionService.class).user(gamePlayer());
 
         requestStack.clear();
     }

@@ -59,7 +59,7 @@ class InfoTest extends CommandTestCase {
             "SYNOPSIS",
                 "\tinfo",
             "EXAMPLES",
-                "\t${server} info - Display server info",
+                "\t*info - Display server info",
             "PERMISSIONS",
                 "\t[ACCESS]"
         );

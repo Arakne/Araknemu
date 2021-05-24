@@ -64,12 +64,12 @@ public final class Banip extends AbstractCommand<Banip.Arguments> implements Sub
                 .option("list", "Dump list of banned ip rules.")
                 .option("check IP_ADDRESS", "Check if the IP address is banned, and the ban rule.")
 
-                .example("${server} banip add 11.54.47.21 forever my ban message", "Ban the IP address 11.54.47.21 forever")
-                .example("${server} banip add 11.54.47.21 for 2h my ban message", "Ban the IP address 11.54.47.21 for 2 hours")
-                .example("${server} banip add 11.54.0.0/16 for 2h my ban message", "Ban with a subnetwork mask")
-                .example("${server} banip remove 11.54.52.32", "Remove the banned IP address 11.54.52.32")
-                .example("${server} banip list", "List all banned IP addresses")
-                .example("${server} check 11.54.52.32", "Check if 11.54.52.32 is banned")
+                .example("*banip add 11.54.47.21 forever my ban message", "Ban the IP address 11.54.47.21 forever")
+                .example("*banip add 11.54.47.21 for 2h my ban message", "Ban the IP address 11.54.47.21 for 2 hours")
+                .example("*banip add 11.54.0.0/16 for 2h my ban message", "Ban with a subnetwork mask")
+                .example("*banip remove 11.54.52.32", "Remove the banned IP address 11.54.52.32")
+                .example("*banip list", "List all banned IP addresses")
+                .example("*banip check 11.54.52.32", "Check if 11.54.52.32 is banned")
             )
             .requires(Permission.SUPER_ADMIN)
             .arguments(Arguments::new)
@@ -106,7 +106,7 @@ public final class Banip extends AbstractCommand<Banip.Arguments> implements Sub
             performer.error(
                 "The IP address {} is not banned. {}",
                 arguments.ipAddress().toNormalizedString(),
-                Link.Type.WRITE.create("${server} banip add " + arguments.ipAddress().toNormalizedString() + " for").text("add")
+                Link.Type.WRITE.create("*banip add " + arguments.ipAddress().toNormalizedString() + " for").text("add")
             );
             return;
         }
@@ -153,7 +153,7 @@ public final class Banip extends AbstractCommand<Banip.Arguments> implements Sub
             rule.expiresAt().map(instant -> "until " + instant).orElse("forever") + " " +
             "(by " + rule.banisher().map(LivingAccount::pseudo).orElse("system") + ") - " +
             rule.cause() + " " +
-            Link.Type.EXECUTE.create("${server} banip remove " + rule.ipAddress().toNormalizedString()).text("remove")
+            Link.Type.EXECUTE.create("*banip remove " + rule.ipAddress().toNormalizedString()).text("remove")
         ;
     }
 

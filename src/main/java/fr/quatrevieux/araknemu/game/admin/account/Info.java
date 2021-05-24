@@ -47,8 +47,8 @@ public final class Info extends AbstractCommand<Void> {
                     .synopsis("[context] info")
                     .line("<i>Note: this command takes no arguments, the account is only resolved by the context</i>")
 
-                    .example("${account:John} info", "Display information about the 'John' account")
-                    .example("${player:Alan} > account info", "Display information about the account of the 'Alan' player")
+                    .example("#John info", "Display information about the 'John' account")
+                    .example("@Alan > account info", "Display information about the account of the 'Alan' player")
                     .example("> account info", "Display self account information")
             )
             .requires(Permission.MANAGE_ACCOUNT)

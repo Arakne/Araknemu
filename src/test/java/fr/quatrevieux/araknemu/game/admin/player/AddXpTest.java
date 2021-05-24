@@ -75,7 +75,7 @@ class AddXpTest extends CommandTestCase {
             "OPTIONS",
                 "\tQUANTITY : The experience quantity to add. Must be an unsigned number.",
             "EXAMPLES",
-                "\t${player:John} addxp 1000000 - Add 1 million xp to John",
+                "\t@John addxp 1000000 - Add 1 million xp to John",
             "PERMISSIONS",
                 "\t[ACCESS, MANAGE_PLAYER]"
         );

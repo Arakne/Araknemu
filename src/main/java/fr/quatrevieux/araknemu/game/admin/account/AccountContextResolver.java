@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.admin.account;
 
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
@@ -29,32 +30,44 @@ import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * Context resolver for account
  */
 public final class AccountContextResolver implements ContextResolver {
     private final AccountService service;
+    private final Context parentContext;
     private final List<AbstractContextConfigurator<AccountContext>> configurators = new ArrayList<>();
 
-    public AccountContextResolver(AccountService service) {
+    public AccountContextResolver(AccountService service, Context parentContext) {
         this.service = service;
+        this.parentContext = parentContext;
     }
 
     @Override
-    public AccountContext resolve(Context globalContext, Object argument) throws ContextException {
-        if (argument instanceof GameAccount) {
-            return resolveByAccount(globalContext, GameAccount.class.cast(argument));
-        }
+    public AccountContext resolve(AdminPerformer performer, Supplier<String> argument) throws ContextException {
+        final String arg = argument.get();
 
-        return resolveByPseudo(globalContext, argument.toString())
-            .orElseThrow(() -> new ContextException("Invalid argument : " + argument))
+        return resolveByPseudo(arg)
+            .orElseThrow(() -> new ContextException("Invalid argument : " + arg))
         ;
     }
 
+    /**
+     * Get a context from an account instance
+     *
+     * @param account The account instance
+     *
+     * @return The created context
+     */
+    public AccountContext resolve(GameAccount account) {
+        return new AccountContext(parentContext, account, configurators);
+    }
+
     @Override
-    public String type() {
-        return "account";
+    public char prefix() {
+        return '#';
     }
 
     /**
@@ -66,11 +79,7 @@ public final class AccountContextResolver implements ContextResolver {
         return this;
     }
 
-    private AccountContext resolveByAccount(Context globalContext, GameAccount account) {
-        return new AccountContext(globalContext, account, configurators);
-    }
-
-    private Optional<AccountContext> resolveByPseudo(Context globalContext, String pseudo) {
-        return service.findByPseudo(pseudo).map(account -> resolveByAccount(globalContext, account));
+    private Optional<AccountContext> resolveByPseudo(String pseudo) {
+        return service.findByPseudo(pseudo).map(this::resolve);
     }
 }

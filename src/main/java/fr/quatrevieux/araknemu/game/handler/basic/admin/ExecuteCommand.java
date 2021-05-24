@@ -20,7 +20,7 @@
 package fr.quatrevieux.araknemu.game.handler.basic.admin;
 
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
-import fr.quatrevieux.araknemu.game.admin.AdminService;
+import fr.quatrevieux.araknemu.game.admin.AdminSessionService;
 import fr.quatrevieux.araknemu.game.admin.AdminUser;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminCommand;
@@ -29,9 +29,9 @@ import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminCommand;
  * Execute an admin command
  */
 public final class ExecuteCommand implements PacketHandler<GameSession, AdminCommand> {
-    private final AdminService service;
+    private final AdminSessionService service;
 
-    public ExecuteCommand(AdminService service) {
+    public ExecuteCommand(AdminSessionService service) {
         this.service = service;
     }
 

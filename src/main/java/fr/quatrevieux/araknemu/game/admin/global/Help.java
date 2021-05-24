@@ -88,10 +88,10 @@ public final class Help extends AbstractCommand<CommandParser.Arguments> {
             "Some commands needs a context to works. The context should be set in front of the command : [context] [command] [arguments...].\n" +
             "The context can define the target user or account. The contexts syntax are :\n" +
             "!                 - The current user\n" +
-            "$name             - A named context\n" +
-            "${account:[name]} - An account\n" +
-            "${player:[name]}  - A player\n" +
-            "${debug}          - Contains debug commands"
+            "@John             - The player 'John'\n" +
+            "#Foo              - The account 'Foo'\n" +
+            "*                 - The server context\n" +
+            ":                 - Contains debug commands"
         );
 
         performer.success("<b>List of available commands :</b>");

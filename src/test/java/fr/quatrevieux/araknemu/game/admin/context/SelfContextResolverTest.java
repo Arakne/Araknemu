@@ -14,32 +14,26 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.listener.admin;
+package fr.quatrevieux.araknemu.game.admin.context;
 
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.admin.AdminService;
-import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
-import org.junit.jupiter.api.BeforeEach;
+import fr.quatrevieux.araknemu.game.admin.AdminSessionService;
+import fr.quatrevieux.araknemu.game.admin.AdminUser;
+import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import org.junit.jupiter.api.Test;
 
-class RemoveAdminSessionTest extends GameBaseCase {
-    private RemoveAdminSession listener;
+import java.sql.SQLException;
 
-    @Override
-    @BeforeEach
-    public void setUp() throws Exception {
-        super.setUp();
+import static org.junit.jupiter.api.Assertions.*;
 
-        listener = new RemoveAdminSession(
-            container.get(AdminService.class).user(gamePlayer())
-        );
-    }
-
+class SelfContextResolverTest extends GameBaseCase {
     @Test
-    void onDisconnect() {
-        listener.on(new Disconnected());
+    void resolve() throws SQLException, AdminException {
+        AdminUser user = container.get(AdminSessionService.class).user(gamePlayer());
+
+        assertSame(user.self(), new SelfContextResolver().resolve(user, null));
     }
 }

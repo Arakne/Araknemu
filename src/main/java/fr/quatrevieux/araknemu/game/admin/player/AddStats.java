@@ -46,7 +46,7 @@ public final class AddStats extends AbstractCommand<AddStats.Arguments> {
                     .description("Add stats to a player")
 
                     .example("addstats vitality 150", "Add 150 vitality to current player")
-                    .example("${player:John} addstats strength 50", "Add 50 strength to current John")
+                    .example("@John addstats strength 50", "Add 50 strength to John")
 
                     .with("characteristic.enum", Characteristic.class)
             )

@@ -173,10 +173,10 @@ class BanTest extends CommandTestCase {
                 "\tlist : List all banishment entries for the account",
                 "\tunban : Remove current banishment for the account",
             "EXAMPLES",
-                "\t${account:John} ban list   - Display all ban entries of the 'John' account",
-                "\t${account:John} ban for 5d - Ban 'John' for 5 days",
-                "\t${player:Alan} ban for 10m - Ban 'Alan' account for 10 minutes",
-                "\t${player:Alan} unban       - Unban 'Alan' account",
+                "\t#John ban list    - Display all ban entries of the 'John' account",
+                "\t#John ban for 5d  - Ban 'John' for 5 days",
+                "\t@Alan ban for 10m - Ban 'Alan' account for 10 minutes",
+                "\t@Alan unban       - Unban 'Alan' account",
             "PERMISSIONS",
                 "\t[ACCESS, MANAGE_ACCOUNT]"
         );

@@ -53,7 +53,7 @@ public final class Info extends AbstractCommand<Void> {
             .help(formatter -> formatter
                 .description("Display information about the server")
                 .synopsis("info")
-                .example("${server} info", "Display server info")
+                .example("*info", "Display server info")
             )
         ;
     }

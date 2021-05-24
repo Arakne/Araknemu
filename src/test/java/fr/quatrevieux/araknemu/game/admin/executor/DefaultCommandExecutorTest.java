@@ -23,10 +23,9 @@ import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
-import fr.quatrevieux.araknemu.game.admin.AdminService;
+import fr.quatrevieux.araknemu.game.admin.AdminSessionService;
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
-import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandPermissionsException;
@@ -49,7 +48,7 @@ class DefaultCommandExecutorTest extends GameBaseCase {
         super.setUp();
 
         executor = new DefaultCommandExecutor(new HydratorsAggregate());
-        performer = container.get(AdminService.class).user(gamePlayer());
+        performer = container.get(AdminSessionService.class).user(gamePlayer());
 
         gamePlayer().account().grant(Permission.ACCESS);
     }
