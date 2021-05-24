@@ -21,9 +21,8 @@ package fr.quatrevieux.araknemu.game.admin.debug;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
-import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.admin.AdminService;
-import fr.quatrevieux.araknemu.game.admin.AdminUser;
+import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
 import fr.quatrevieux.araknemu.game.admin.LogType;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
@@ -34,12 +33,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 
-class FightPosTest extends GameBaseCase {
-    private FightPos command;
-    private AdminUser user;
-
+class FightPosTest extends CommandTestCase {
     @Override
     @BeforeEach
     public void setUp() throws Exception {
@@ -51,14 +46,13 @@ class FightPosTest extends GameBaseCase {
         player.changeMap(container.get(ExplorationMapService.class).load(10340), 200);
 
         command = new FightPos();
-        user = container.get(AdminService.class).user(gamePlayer());
 
         requestStack.clear();
     }
 
     @Test
-    void hide() throws AdminException {
-        command.execute(user, Arrays.asList("fightpos", "hide"));
+    void hide() throws AdminException, SQLException {
+        executeWithAdminUser("fightpos", "hide");
 
         requestStack.assertLast("GV");
     }
@@ -67,7 +61,7 @@ class FightPosTest extends GameBaseCase {
     void noFightPos() throws AdminException, SQLException {
         explorationPlayer().changeMap(container.get(ExplorationMapService.class).load(10300), 200);
 
-        command.execute(user, Arrays.asList("fightpos"));
+        executeWithAdminUser("fightpos");
 
         requestStack.assertLast(
             new CommandResult(LogType.ERROR, "No fight places found")
@@ -75,8 +69,8 @@ class FightPosTest extends GameBaseCase {
     }
 
     @Test
-    void noDisplay() throws AdminException {
-        command.execute(user, Arrays.asList("fightpos"));
+    void noDisplay() throws AdminException, SQLException {
+        executeWithAdminUser("fightpos");
 
         requestStack.assertLast(
             new CommandResult(LogType.DEFAULT, "Places : [55, 83, 114, 127, 128, 170, 171, 183, 185, 198] | [48, 63, 75, 90, 92, 106, 121, 122, 137, 150]")
@@ -84,8 +78,8 @@ class FightPosTest extends GameBaseCase {
     }
 
     @Test
-    void show() throws AdminException, ContainerException {
-        command.execute(user, Arrays.asList("fightpos", "show"));
+    void show() throws AdminException, ContainerException, SQLException {
+        executeWithAdminUser("fightpos", "show");
 
         requestStack.assertAll(
             new CommandResult(LogType.DEFAULT, "Places : [55, 83, 114, 127, 128, 170, 171, 183, 185, 198] | [48, 63, 75, 90, 92, 106, 121, 122, 137, 150]"),

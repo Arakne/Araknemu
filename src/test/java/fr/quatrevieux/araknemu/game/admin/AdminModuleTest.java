@@ -33,7 +33,13 @@ import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.debug.*;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
+import fr.quatrevieux.araknemu.game.admin.executor.CommandExecutor;
+import fr.quatrevieux.araknemu.game.admin.executor.DefaultCommandExecutor;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.ArgumentsHydrator;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.HydratorsAggregate;
+import fr.quatrevieux.araknemu.game.admin.global.Echo;
 import fr.quatrevieux.araknemu.game.admin.global.GlobalContext;
+import fr.quatrevieux.araknemu.game.admin.global.Help;
 import fr.quatrevieux.araknemu.game.admin.player.AddXp;
 import fr.quatrevieux.araknemu.game.admin.player.GetItem;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
@@ -49,7 +55,7 @@ import java.sql.SQLException;
 
 class AdminModuleTest extends GameBaseCase {
     @Test
-    void instances() throws SQLException {
+    void instances() throws SQLException, CommandNotFoundException {
         Container container = new ItemPoolContainer();
 
         container.register(new SqlLivingRepositoriesModule(app.database().get("game")));
@@ -62,7 +68,12 @@ class AdminModuleTest extends GameBaseCase {
         assertInstanceOf(AccountContextResolver.class, container.get(AccountContextResolver.class));
         assertInstanceOf(DebugContextResolver.class, container.get(DebugContextResolver.class));
         assertInstanceOf(GlobalContext.class, container.get(GlobalContext.class));
+        assertInstanceOf(Help.class, container.get(GlobalContext.class).command("help"));
+        assertInstanceOf(Echo.class, container.get(GlobalContext.class).command("echo"));
         assertInstanceOf(ServerContextResolver.class, container.get(ServerContextResolver.class));
+        assertInstanceOf(DefaultCommandExecutor.class, container.get(CommandExecutor.class));
+        assertInstanceOf(AdminUser.Factory.class, container.get(AdminUser.Factory.class));
+        assertInstanceOf(HydratorsAggregate.class, container.get(ArgumentsHydrator.class));
     }
 
     @Test
@@ -116,7 +127,6 @@ class AdminModuleTest extends GameBaseCase {
         Context context = container.get(DebugContextResolver.class).resolve(container.get(GlobalContext.class), null);
 
         assertInstanceOf(DebugContext.class, context);
-        assertInstanceOf(GenItem.class, context.command("genitem"));
         assertInstanceOf(FightPos.class, context.command("fightpos"));
         assertInstanceOf(Movement.class, context.command("movement"));
         assertInstanceOf(MapStats.class, context.command("mapstats"));

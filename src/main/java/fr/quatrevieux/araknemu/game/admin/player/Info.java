@@ -24,12 +24,10 @@ import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 
-import java.util.List;
-
 /**
  * Info command for a player
  */
-public final class Info extends AbstractCommand {
+public final class Info extends AbstractCommand<Void> {
     private final GamePlayer player;
 
     public Info(GamePlayer player) {
@@ -39,9 +37,9 @@ public final class Info extends AbstractCommand {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Display information on the selected player")
             .help(
                 formatter -> formatter
+                    .description("Display information on the selected player")
                     .synopsis("[context] info")
                     .line("<i>Note: this command takes no arguments, the account is only resolved by the context</i>")
 
@@ -58,7 +56,7 @@ public final class Info extends AbstractCommand {
     }
 
     @Override
-    public void execute(AdminPerformer performer, List<String> arguments) {
+    public void execute(AdminPerformer performer, Void arguments) {
         performer.success("Player info : {}", player.name());
         performer.success("==============================");
         performer.info("ID:    {}", player.id());

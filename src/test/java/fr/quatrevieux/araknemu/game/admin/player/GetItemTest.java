@@ -171,4 +171,36 @@ class GetItemTest extends CommandTestCase {
     void errorBadEffect() {
         assertThrows(CommandException.class, () -> execute("getitem", "--effects", "BAD_EFFECT:5", "2425"), "Undefined effect BAD_EFFECT");
     }
+
+    @Test
+    void help() {
+        assertHelp(
+            "getitem - Add an item to the player",
+            "========================================",
+            "SYNOPSIS",
+                "\tgetitem ITEM_ID [QUANTITY=1] [--each] [--effects effects,...] [--max]",
+            "OPTIONS",
+                "\tITEM_ID : The id of the item to generate. It can be found using /ui itemsummoner command",
+                "\tQUANTITY : The quantity of item to generate. By default all generated items will gets the same characteristics unless --each option is used.",
+                "\t--each : Regenerate item stats for each QUANTITY items instead of generate the same item with QUANTITY",
+                "\t--effects : Set the item effects",
+                    "\t\tThe effects should be a list of effects separated with comma ','. Available formats :",
+                    "\t\tItem template format : 64#b#f#0#1d5+10,7d#b#0#0#0d0+11,9a#f#0#0#0d0+15",
+                    "\t\tSimplified format    : INFLICT_DAMAGE_NEUTRAL:11:15,ADD_VITALITY:11,SUB_AGILITY:15",
+                    "\t\tThis option is not compatible with --max option.",
+                    "\t\tIf a range value is set for a characteristic effect, a random value will be generated",
+                "\t--max : Generate item with maximized characteristics",
+            "EXAMPLES",
+                "\tgetitem 2425 - Generate a random 'Amulette du Bouftou'",
+                "\t!getitem 2425 3 - Generate 3 random 'Amulette du Bouftou', and ensure that the admin user is the target",
+                "\t${player:Robert} getitem 39 - Add to Robert the 'Petite Amulette du Hibou'",
+                "\tgetitem --max 2425 - Generate an 'Amulette du Bouftou' with max stats",
+                "\tgetitem --effects 5b#1#32#0#,5c#1#32#0#,5d#1#32#0#,5e#1#32#0#,5f#1#32#0# 40 - Cheated 'Petite Epée de Boisaille'",
+                "\tgetitem --effects STOLEN_WATER:1:50,STOLEN_EARTH:1:50,STOLEN_WIND:1:50,STOLEN_FIRE:1:50,STOLEN_NEUTRAL:1:50 40 - Same as above",
+            "SEE ALSO",
+                "\t/ui itemsummoner - Show the item picker",
+            "PERMISSIONS",
+                "\t[ACCESS, MANAGE_PLAYER]"
+        );
+    }
 }

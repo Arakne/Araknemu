@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.admin.AdminUser;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.formatter.Link;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
+import org.kohsuke.args4j.Argument;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ import java.util.List;
 /**
  * Display cells by their movement value
  */
-public final class Movement extends AbstractCommand {
+public final class Movement extends AbstractCommand<Movement.Arguments> {
     private final MapTemplateRepository repository;
 
     public Movement(MapTemplateRepository repository) {
@@ -45,9 +46,9 @@ public final class Movement extends AbstractCommand {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Highlight cell by their movement value")
             .help(
                 formatter -> formatter
+                    .description("Highlight cell by their movement value")
                     .synopsis("movement [1-8]")
                     .seeAlso("${debug} fightpos hide", "For hide the cells", Link.Type.EXECUTE)
             )
@@ -61,15 +62,14 @@ public final class Movement extends AbstractCommand {
     }
 
     @Override
-    public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
+    public void execute(AdminPerformer performer, Arguments arguments) throws AdminException {
         final AdminUser user = AdminUser.class.cast(performer);
-        final int mov = Integer.parseInt(arguments.get(1));
         final MapTemplate map = repository.get(user.player().position().map());
 
         final List<Integer> cells = new ArrayList<>();
 
         for (int i = 0; i < map.cells().length; ++i) {
-            if (map.cells()[i].movement().ordinal() == mov) {
+            if (map.cells()[i].movement().ordinal() == arguments.movement) {
                 cells.add(i);
             }
         }
@@ -83,5 +83,23 @@ public final class Movement extends AbstractCommand {
                 0
             )
         );
+    }
+
+    @Override
+    public Arguments createArguments() {
+        return new Arguments();
+    }
+
+    public static final class Arguments {
+        @Argument(required = true)
+        private int movement;
+
+        public int movement() {
+            return movement;
+        }
+
+        public void setMovement(int movement) {
+            this.movement = movement;
+        }
     }
 }

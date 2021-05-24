@@ -167,10 +167,21 @@ class OnlineTest extends CommandTestCase {
 
     @Test
     void help() {
-        String help = command.help();
-
-        assertTrue(help.contains("List online players"));
-        assertTrue(help.contains("online [options] [search]"));
-        assertTrue(help.contains("${server} online john"));
+        assertHelp(
+            "online - List online players",
+            "========================================",
+            "SYNOPSIS",
+                "\tonline [SEARCH] [--limit N=20] [--skip N]",
+            "OPTIONS",
+                "\tSEARCH : Optional. Filter the online player name. Return only players containing the search term into the name.",
+                "\t--limit : Limit the number of returned lines. By default the limit is set to 20.",
+                "\t--skip : Skip the first lines.",
+            "EXAMPLES",
+                "\t${server} online - List all online players",
+                "\t${server} online john - List all online players, containing john in the name",
+                "\t${server} online --skip 3 --limit 5 j - With pagination",
+            "PERMISSIONS",
+                "\t[ACCESS, MANAGE_PLAYER]"
+        );
     }
 }

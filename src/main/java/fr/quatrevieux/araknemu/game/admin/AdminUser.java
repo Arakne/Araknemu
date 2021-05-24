@@ -22,9 +22,9 @@ package fr.quatrevieux.araknemu.game.admin;
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
-import fr.quatrevieux.araknemu.game.admin.exception.CommandPermissionsException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.admin.exception.ExceptionHandler;
+import fr.quatrevieux.araknemu.game.admin.executor.CommandExecutor;
 import fr.quatrevieux.araknemu.game.listener.admin.RemoveAdminSession;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.out.basic.admin.CommandResult;
@@ -41,15 +41,17 @@ import java.util.Set;
 public final class AdminUser implements AdminPerformer {
     private final AdminService service;
     private final GamePlayer player;
+    private final CommandExecutor executor;
     private final Logger logger;
 
     private final AdminUserContext context;
     private final AdminUserCommandParser parser;
     private final ExceptionHandler errorHandler;
 
-    public AdminUser(AdminService service, GamePlayer player, Logger logger) throws ContextException {
+    public AdminUser(AdminService service, GamePlayer player, CommandExecutor executor, Logger logger) throws ContextException {
         this.service = service;
         this.player = player;
+        this.executor = executor;
         this.logger = logger;
 
         this.context = new AdminUserContext(service, service.context("player", player));
@@ -136,10 +138,21 @@ public final class AdminUser implements AdminPerformer {
     private void execute(CommandParser.Arguments arguments) throws AdminException {
         final Command command = arguments.context().command(arguments.command());
 
-        if (!isGranted(command.permissions())) {
-            throw new CommandPermissionsException(command.name(), command.permissions());
-        }
+        executor.execute(command, this, arguments);
+    }
 
-        command.execute(this, arguments);
+    /**
+     * Factory create an AdminUser
+     */
+    public interface Factory {
+        /**
+         * Create the admin user
+         *
+         * @param service The admin service who handles the user
+         * @param player The authorized game player
+         *
+         * @return The created AdminUser
+         */
+        public AdminUser create(AdminService service, GamePlayer player) throws AdminException;
     }
 }

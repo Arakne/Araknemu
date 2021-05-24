@@ -23,9 +23,9 @@ import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.Command;
-import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
+import fr.quatrevieux.araknemu.game.admin.help.CommandHelp;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -34,7 +34,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 class SimpleContextTest extends GameBaseCase {
-    class DummyCommand implements Command {
+    class DummyCommand implements Command<Void> {
         final String name;
 
         public DummyCommand(String name) {
@@ -47,17 +47,12 @@ class SimpleContextTest extends GameBaseCase {
         }
 
         @Override
-        public String description() {
+        public CommandHelp help() {
             return null;
         }
 
         @Override
-        public String help() {
-            return null;
-        }
-
-        @Override
-        public void execute(AdminPerformer output, CommandParser.Arguments arguments) {
+        public void execute(AdminPerformer output, Void arguments) {
 
         }
 

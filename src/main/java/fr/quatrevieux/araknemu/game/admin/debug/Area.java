@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 /**
  * Display effect area
  */
-public final class Area extends AbstractCommand {
+public final class Area extends AbstractCommand<String> {
     private final SpellEffectService service;
     private final EffectAreaTransformer areaTransformer;
 
@@ -51,11 +51,11 @@ public final class Area extends AbstractCommand {
     protected void build(Builder builder) {
         builder
             .requires(Permission.DEBUG)
-            .description("Display spell effect area")
             .help(
                 formatter -> formatter
+                    .description("Display spell effect area")
                     .synopsis("area [area string]")
-                    .options(
+                    .option(
                         "area string",
                         "Contains two chars, the first one is the area type, the second if the size in pseudo base 64\n" +
                         "Types :\n" +
@@ -75,9 +75,9 @@ public final class Area extends AbstractCommand {
     }
 
     @Override
-    public void execute(AdminPerformer performer, List<String> arguments) {
+    public void execute(AdminPerformer performer, String arguments) {
         final AdminUser user = AdminUser.class.cast(performer);
-        final EffectArea area = areaTransformer.unserialize(arguments.get(1));
+        final EffectArea area = areaTransformer.unserialize(arguments);
         final ExplorationMap map = user.player().exploration().map();
 
         final List<Integer> cells = service.area(area)

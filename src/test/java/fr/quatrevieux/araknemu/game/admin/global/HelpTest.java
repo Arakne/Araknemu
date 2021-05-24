@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.admin.global;
 
 import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.ArgumentsHydrator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +33,7 @@ class HelpTest extends CommandTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        command = new Help();
+        command = new Help(container.get(ArgumentsHydrator.class));
     }
 
     @Test
@@ -68,13 +69,28 @@ class HelpTest extends CommandTestCase {
             "========================================\n" +
             "\n" +
             "<b>SYNOPSIS</b>\n" +
-            "\tsetlife [number|max]\n\n" +
+            "\tsetlife number|max\n\n" +
             "<b>EXAMPLES</b>\n" +
-            "\t<u><a href='asfunction:onHref,ExecCmd,setlife 300,false'>setlife 300</a></u>                - Set the player life to 300\n" +
-            "\t<u><a href='asfunction:onHref,ExecCmd,setlife max,false'>setlife max</a></u>                - Set full life to the player\n" +
+            "\t<u><a href='asfunction:onHref,ExecCmd,setlife 300,false'>setlife 300</a></u>                - Set the current player life to 300\n" +
+            "\t<u><a href='asfunction:onHref,ExecCmd,setlife max,false'>setlife max</a></u>                - Set full life to the current player\n" +
             "\t<u><a href='asfunction:onHref,ExecCmd,${player:John} setlife 250,false'>${player:John} setlife 250</a></u> - Set John's life to 250\n\n" +
             "<b>PERMISSIONS</b>\n" +
             "\t[ACCESS, MANAGE_PLAYER]"
+        );
+    }
+
+    @Test
+    void help() {
+        assertHelp(
+            "help - Show help for use the console commands",
+            "========================================",
+            "SYNOPSIS",
+                "\thelp [COMMAND NAME]",
+            "EXAMPLES",
+                "\thelp      - List all available commands",
+                "\thelp echo - Show the help for the echo command",
+            "PERMISSIONS",
+                "\t[ACCESS]"
         );
     }
 }

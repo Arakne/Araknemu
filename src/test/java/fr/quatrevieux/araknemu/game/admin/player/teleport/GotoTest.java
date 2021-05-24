@@ -223,12 +223,33 @@ class GotoTest  extends CommandTestCase {
 
     @Test
     void help() {
-        String help = command.help();
-
-        assertTrue(help.contains("Teleport the player to the desired location"));
-        assertTrue(help.contains("Define the target cell."));
-        assertTrue(help.contains("Resolve by map id."));
-        assertTrue(help.contains("Teleport to the player."));
-        assertTrue(help.contains("Resolve by map position."));
+        assertHelp(
+            "goto - Teleport the player to the desired location",
+            "========================================",
+            "SYNOPSIS",
+                "\tgoto [TYPE TARGET ...] [--force]",
+            "OPTIONS",
+                "\tTYPE : Define the target type (available types are defined bellow). If not provided, will try all available resolvers.",
+                "\tTARGET : Required. The target. This value depends of the type.",
+                "\tTYPE: position : Resolve by map position.",
+                    "\t\tUsage: goto position [x];[y]",
+                "\tTYPE: map : Resolve by map id.",
+                    "\t\tUsage: goto map [mapid]",
+                "\tTYPE: player : Teleport to the player.",
+                    "\t\tUsage: goto player [name]",
+                "\tTYPE: cell : Define the target cell.",
+                    "\t\tUsage: goto [map target] cell [cellid]",
+                "\t--force : Force the teleporation even if the player is busy or in fight.",
+            "EXAMPLES",
+                "\tgoto map 10340                  - Teleport to the map id 10340",
+                "\tgoto map 10340 cell 45          - Teleport to the map id 10340 at cell 45",
+                "\tgoto player John                - Teleport to the John's map",
+                "\tgoto position 3;5               - Teleport by geolocation",
+                "\t${player:John} goto map 10340   - Teleport John to map id 10340",
+                "\t${player:John} goto player Alan - Teleport John to the Alan's map",
+                "\tgoto 3;5 cell 42                - Command can works without [type] argument, if not ambiguous",
+            "PERMISSIONS",
+                "\t[ACCESS, MANAGE_PLAYER]"
+        );
     }
 }

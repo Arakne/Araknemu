@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AbstractCommandTest extends GameBaseCase {
     @Test
     void defaults() {
-        Command command = new AbstractCommand() {
+        Command command = new AbstractCommand<Void>() {
             @Override
             protected void build(Builder builder) {}
 
@@ -41,10 +41,10 @@ class AbstractCommandTest extends GameBaseCase {
             }
 
             @Override
-            public void execute(AdminPerformer output, List<String> arguments) {}
+            public void execute(AdminPerformer output, Void arguments) {}
         };
 
-        assertEquals("No description", command.description());
+        assertEquals("No description", command.help().description());
         assertEquals(
             "cmd - No description\n" +
             "========================================\n\n" +
@@ -52,19 +52,21 @@ class AbstractCommandTest extends GameBaseCase {
             "\tcmd\n\n" +
             "<b>PERMISSIONS</b>\n" +
             "\t[ACCESS]",
-            command.help()
+            command.help().toString()
         );
         assertEquals(EnumSet.of(Permission.ACCESS), command.permissions());
     }
 
     @Test
     void withDescriptionAndHelp() {
-        Command command = new AbstractCommand() {
+        Command command = new AbstractCommand<Void>() {
             @Override
             protected void build(Builder builder) {
                 builder
-                    .description("My very useful command")
-                    .help(formatter -> formatter.line("Do what you wants"))
+                    .help(formatter -> formatter
+                        .line("Do what you wants")
+                        .description("My very useful command")
+                    )
                     .requires(Permission.SUPER_ADMIN)
                 ;
             }
@@ -75,10 +77,10 @@ class AbstractCommandTest extends GameBaseCase {
             }
 
             @Override
-            public void execute(AdminPerformer output, List<String> arguments) {}
+            public void execute(AdminPerformer output, Void arguments) {}
         };
 
-        assertEquals("My very useful command", command.description());
+        assertEquals("My very useful command", command.help().description());
         assertEquals(
             "cmd - My very useful command\n" +
             "========================================\n\n" +
@@ -87,7 +89,7 @@ class AbstractCommandTest extends GameBaseCase {
             "Do what you wants" +
             "\n\n<b>PERMISSIONS</b>\n" +
             "\t[ACCESS, SUPER_ADMIN]",
-            command.help()
+            command.help().toString()
         );
         assertEquals(EnumSet.of(Permission.ACCESS, Permission.SUPER_ADMIN), command.permissions());
     }

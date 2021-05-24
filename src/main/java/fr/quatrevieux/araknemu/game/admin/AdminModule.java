@@ -38,11 +38,15 @@ import fr.quatrevieux.araknemu.game.admin.debug.Area;
 import fr.quatrevieux.araknemu.game.admin.debug.DebugContext;
 import fr.quatrevieux.araknemu.game.admin.debug.DebugContextResolver;
 import fr.quatrevieux.araknemu.game.admin.debug.FightPos;
-import fr.quatrevieux.araknemu.game.admin.debug.GenItem;
 import fr.quatrevieux.araknemu.game.admin.debug.LineOfSight;
 import fr.quatrevieux.araknemu.game.admin.debug.MapStats;
 import fr.quatrevieux.araknemu.game.admin.debug.Movement;
+import fr.quatrevieux.araknemu.game.admin.executor.CommandExecutor;
+import fr.quatrevieux.araknemu.game.admin.executor.DefaultCommandExecutor;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.ArgumentsHydrator;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.HydratorsAggregate;
 import fr.quatrevieux.araknemu.game.admin.global.GlobalContext;
+import fr.quatrevieux.araknemu.game.admin.global.Help;
 import fr.quatrevieux.araknemu.game.admin.player.GetItem;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
@@ -98,13 +102,38 @@ public final class AdminModule implements ContainerModule {
                     container.get(DebugContextResolver.class),
                     container.get(ServerContextResolver.class)
                 ),
-                LogManager.getLogger(AdminService.class)
+                container.get(AdminUser.Factory.class)
             )
         );
 
         configurator.persist(
+            AdminUser.Factory.class,
+            container -> ((service, player) -> new AdminUser(
+                service,
+                player,
+                container.get(CommandExecutor.class),
+                LogManager.getLogger(AdminService.class)
+            ))
+        );
+
+        configurator.persist(
             GlobalContext.class,
-            container -> new GlobalContext()
+            container -> new GlobalContext().register(new AbstractContextConfigurator<GlobalContext>() {
+                @Override
+                public void configure(GlobalContext context) {
+                    add(new Help(container.get(ArgumentsHydrator.class)));
+                }
+            })
+        );
+
+        configurator.persist(
+            CommandExecutor.class,
+            container -> new DefaultCommandExecutor(container.get(ArgumentsHydrator.class))
+        );
+
+        configurator.persist(
+            ArgumentsHydrator.class,
+            container -> new HydratorsAggregate()
         );
     }
 
@@ -144,7 +173,6 @@ public final class AdminModule implements ContainerModule {
                 .register(new AbstractContextConfigurator<DebugContext>() {
                     @Override
                     public void configure(DebugContext context) {
-                        add(new GenItem(container.get(ItemService.class)));
                         add(new FightPos());
                         add(new Movement(container.get(MapTemplateRepository.class)));
                         add(new MapStats(container.get(MapTemplateRepository.class)));

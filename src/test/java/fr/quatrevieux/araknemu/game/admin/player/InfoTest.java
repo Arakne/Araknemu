@@ -55,4 +55,20 @@ class InfoTest extends CommandTestCase {
             "=============================="
         );
     }
+
+    @Test
+    void help() {
+        assertHelp(
+            "info - Display information on the selected player",
+            "========================================",
+            "SYNOPSIS",
+                "\t[context] info",
+            "Note: this command takes no arguments, the account is only resolved by the context",
+            "EXAMPLES",
+                "\t${player:Alan} info - Display information about the player Alan",
+                "\tinfo                - Display self player information",
+            "PERMISSIONS",
+                "\t[ACCESS, MANAGE_PLAYER]"
+        );
+    }
 }

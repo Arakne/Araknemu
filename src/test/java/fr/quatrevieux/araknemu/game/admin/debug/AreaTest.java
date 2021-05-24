@@ -20,18 +20,18 @@
 package fr.quatrevieux.araknemu.game.admin.debug;
 
 import fr.quatrevieux.araknemu.data.value.Position;
-import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.admin.AdminService;
 import fr.quatrevieux.araknemu.game.admin.AdminUser;
+import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
+import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
+import java.sql.SQLException;
 
-class AreaTest extends GameBaseCase {
-    private Area command;
+class AreaTest extends CommandTestCase {
     private AdminUser user;
 
     @Override
@@ -49,10 +49,10 @@ class AreaTest extends GameBaseCase {
     }
 
     @Test
-    void show() {
+    void show() throws SQLException, AdminException {
         user.player().setPosition(new Position(10340, 123));
 
-        command.execute(user, Arrays.asList("area", "Cb"));
+        command.execute(user, "Cb");
 
         requestStack.assertContains(FightStartPositions.class);
     }

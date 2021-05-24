@@ -28,14 +28,15 @@ import fr.quatrevieux.araknemu.game.admin.formatter.Link;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
+import org.kohsuke.args4j.Argument;
+import org.kohsuke.args4j.Option;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 /**
  * List online players on the current server
  */
-public final class Online extends AbstractCommand {
+public final class Online extends AbstractCommand<Online.Arguments> {
     private final PlayerService service;
     private final ExplorationMapService mapService;
     private final GameService gameService;
@@ -49,17 +50,14 @@ public final class Online extends AbstractCommand {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("List online players")
             .help(formatter -> formatter
-                .synopsis("online [options] [search]")
-                .options("search", "Optional. Filter the online player name. Return only players containing the search term into the name.")
-                .options("--limit", "Limit the number of returned lines. By default the limit is set to 20.")
-                .options("--skip", "Skip the first lines.")
+                .description("List online players")
                 .example("${server} online", "List all online players")
                 .example("${server} online john", "List all online players, containing john in the name")
                 .example("${server} online --skip 3 --limit 5 j", "With pagination")
             )
             .requires(Permission.MANAGE_PLAYER)
+            .arguments(Arguments::new)
         ;
     }
 
@@ -69,18 +67,17 @@ public final class Online extends AbstractCommand {
     }
 
     @Override
-    public void execute(AdminPerformer performer, List<String> arguments) {
+    public void execute(AdminPerformer performer, Arguments arguments) {
         performer.success("There is {} online players with {} active sessions", service.online().size(), gameService.sessions().size());
 
-        final Options options = new Options(arguments);
-        final long count = options
+        final long count = arguments
             .apply(service.online().stream())
             .map(this::format)
             .peek(performer::info)
             .count()
         ;
 
-        pagination(performer, options, count);
+        pagination(performer, arguments, count);
     }
 
     /**
@@ -135,16 +132,16 @@ public final class Online extends AbstractCommand {
     /**
      * Display the "next" link
      */
-    private void pagination(AdminPerformer performer, Options options, long currentCount) {
+    private void pagination(AdminPerformer performer, Arguments arguments, long currentCount) {
         if (currentCount == 0) {
             performer.error("No results found");
             return;
         }
 
-        if (currentCount == options.limit) {
+        if (currentCount == arguments.limit) {
             performer.info(
                 "------------------------------------------------\n" +
-                "\t<b>" + new Link().execute("${server} online --limit " + options.limit + " --skip " + (options.skip + options.limit)).text("next") + "</b>"
+                "\t<b>" + new Link().execute("${server} online --limit " + arguments.limit + " --skip " + (arguments.skip + arguments.limit)).text("next") + "</b>"
             );
         }
     }
@@ -152,27 +149,15 @@ public final class Online extends AbstractCommand {
     /**
      * Store the command options
      */
-    static class Options {
+    public static class Arguments {
+        @Option(name = "--limit", usage = "Limit the number of returned lines. By default the limit is set to 20.")
         private int limit = 20;
+
+        @Option(name = "--skip", usage = "Skip the first lines.")
         private int skip = 0;
+
+        @Argument(metaVar = "SEARCH", usage = "Optional. Filter the online player name. Return only players containing the search term into the name.")
         private String search = null;
-
-        public Options(List<String> arguments) {
-            for (int i = 1; i < arguments.size(); ++i) {
-                switch (arguments.get(i)) {
-                    case "--limit":
-                        limit = Integer.parseInt(arguments.get(++i));
-                        break;
-
-                    case "--skip":
-                        skip = Integer.parseInt(arguments.get(++i));
-                        break;
-
-                    default:
-                        search = arguments.get(i).toLowerCase();
-                }
-            }
-        }
 
         /**
          * Apply the options on the stream

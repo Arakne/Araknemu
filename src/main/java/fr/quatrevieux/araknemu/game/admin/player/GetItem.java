@@ -32,6 +32,14 @@ import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import org.apache.commons.lang3.StringUtils;
+import org.kohsuke.args4j.Argument;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
+import org.kohsuke.args4j.OptionDef;
+import org.kohsuke.args4j.spi.OptionHandler;
+import org.kohsuke.args4j.spi.Parameters;
+import org.kohsuke.args4j.spi.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +47,7 @@ import java.util.List;
 /**
  * Get an item for the player
  */
-public final class GetItem extends AbstractCommand {
+public final class GetItem extends AbstractCommand<GetItem.Arguments> {
     private final GamePlayer player;
     private final ItemService service;
 
@@ -51,22 +59,9 @@ public final class GetItem extends AbstractCommand {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Add an item to the player")
             .help(
                 formatter -> formatter
-                    .synopsis("getitem [options] item_id [quantity=1]")
-
-                    .options("--max", "Generate item with maximized stats")
-                    .options("--each", "Regenerate item stats for each [quantity] items instead of generate the same item with [quantity]")
-                    .options("--effects",
-                        "Set the item effects\n" +
-                        "The effects should be a list of effects separated with comma ','. Available formats :\n" +
-                        "Item template format : 64#b#f#0#1d5+10,7d#b#0#0#0d0+11,9a#f#0#0#0d0+15\n" +
-                        "Simplified format    : INFLICT_DAMAGE_NEUTRAL:11:15,ADD_VITALITY:11,SUB_AGILITY:15\n" +
-                        "This option is not compatible with --max option.\n" +
-                        "If a range value is set for a characteristic effect, a random value will be generated\n"
-                    )
-
+                    .description("Add an item to the player")
                     .example("getitem 2425", "Generate a random 'Amulette du Bouftou'")
                     .example("!getitem 2425 3", "Generate 3 random 'Amulette du Bouftou', and ensure that the admin user is the target")
                     .example("${player:Robert} getitem 39", "Add to Robert the 'Petite Amulette du Hibou'")
@@ -77,6 +72,7 @@ public final class GetItem extends AbstractCommand {
                     .seeAlso("/ui itemsummoner", "Show the item picker", Link.Type.EXECUTE)
             )
             .requires(Permission.MANAGE_PLAYER)
+            .arguments(Arguments::new)
         ;
     }
 
@@ -86,18 +82,16 @@ public final class GetItem extends AbstractCommand {
     }
 
     @Override
-    public void execute(AdminPerformer performer, List<String> arguments) throws CommandException {
-        final Options options = new Options(arguments);
-
-        for (int j = 0; j < options.times; ++j) {
-            final Item item = options.effects == null
-                ? service.create(options.itemId, options.max)
-                : service.retrieve(options.itemId, options.effects)
+    public void execute(AdminPerformer performer, Arguments arguments) throws CommandException {
+        for (int j = 0; j < arguments.times(); ++j) {
+            final Item item = arguments.hasCustomEffects()
+                ? service.retrieve(arguments.itemId(), arguments.effects())
+                : service.create(arguments.itemId(), arguments.max())
             ;
 
-            player.inventory().add(item, options.quantity);
+            player.inventory().add(item, arguments.quantity());
 
-            performer.success("Generate {} '{}'", options.quantity, item.template().name());
+            performer.success("Generate {} '{}'", arguments.quantity(), item.template().name());
 
             if (!item.effects().isEmpty()) {
                 performer.success("Effects :");
@@ -109,58 +103,93 @@ public final class GetItem extends AbstractCommand {
         }
     }
 
-    private static class Options {
+    public static final class Arguments {
+        @Option(name = "--max", usage = "Generate item with maximized characteristics")
         private boolean max = false;
+
+        @Option(name = "--each", usage = "Regenerate item stats for each QUANTITY items instead of generate the same item with QUANTITY")
         private boolean each = false;
+
+        @Option(
+            name = "--effects", handler = EffectsConverter.class,
+            usage = "Set the item effects\n" +
+                "The effects should be a list of effects separated with comma ','. Available formats :\n" +
+                "Item template format : 64#b#f#0#1d5+10,7d#b#0#0#0d0+11,9a#f#0#0#0d0+15\n" +
+                "Simplified format    : INFLICT_DAMAGE_NEUTRAL:11:15,ADD_VITALITY:11,SUB_AGILITY:15\n" +
+                "This option is not compatible with --max option.\n" +
+                "If a range value is set for a characteristic effect, a random value will be generated"
+        )
         private List<ItemTemplateEffectEntry> effects = null;
-        private int quantity = 1;
-        private int times = 1;
+
+        @Argument(
+            required = true, index = 0, metaVar = "ITEM_ID",
+            usage = "The id of the item to generate. It can be found using /ui itemsummoner command"
+        )
         private int itemId;
 
-        public Options(List<String> arguments) throws CommandException {
-            parseArguments(parseOptions(arguments), arguments);
+        @Argument(
+            index = 1, metaVar = "QUANTITY",
+            usage = "The quantity of item to generate. By default all generated items will gets the same characteristics unless --each option is used."
+        )
+        private int quantity = 1;
+
+        public boolean max() {
+            return max;
         }
 
-        private int parseOptions(List<String> arguments) throws CommandException {
-            int i;
-
-            for (i = 1; i < arguments.size() && arguments.get(i).startsWith("--"); ++i) {
-                switch (arguments.get(i)) {
-                    case "--max":
-                        max = true;
-                        break;
-                    case "--each":
-                        each = true;
-                        break;
-                    case "--effects":
-                        effects = parseEffects(arguments.get(++i));
-                        break;
-                    default:
-                        throw new CommandException(arguments.get(0), "Undefined option " + arguments.get(i));
-                }
-            }
-
-            return i;
+        public void setMax(boolean max) {
+            this.max = max;
         }
 
-        private void parseArguments(int argIndex, List<String> arguments) throws CommandException {
-            if (argIndex == arguments.size()) {
-                throw new CommandException(arguments.get(0), "Missing argument item_id");
-            }
-
-            itemId = Integer.parseInt(arguments.get(argIndex));
-
-            if (arguments.size() > argIndex + 1) {
-                quantity = Integer.parseInt(arguments.get(argIndex + 1));
-            }
-
-            if (each) {
-                times = quantity;
-                quantity = 1;
-            }
+        public boolean each() {
+            return each;
         }
 
-        private static List<ItemTemplateEffectEntry> parseEffects(String value) throws CommandException {
+        public void setEach(boolean each) {
+            this.each = each;
+        }
+
+        public List<ItemTemplateEffectEntry> effects() {
+            return effects;
+        }
+
+        public boolean hasCustomEffects() {
+            return effects != null;
+        }
+
+        public int itemId() {
+            return itemId;
+        }
+
+        public int times() {
+            return each ? quantity : 1;
+        }
+
+        public int quantity() {
+            return each ? 1 : quantity;
+        }
+    }
+
+    public static class EffectsConverter extends OptionHandler<ItemTemplateEffectEntry> {
+        public EffectsConverter(CmdLineParser parser, OptionDef option, Setter<? super ItemTemplateEffectEntry> setter) {
+            super(parser, option, setter);
+        }
+
+        @Override
+        public int parseArguments(Parameters params) throws CmdLineException {
+            for (ItemTemplateEffectEntry effect : parseEffects(params.getParameter(0))) {
+                setter.addValue(effect);
+            }
+
+            return 1;
+        }
+
+        @Override
+        public String getDefaultMetaVariable() {
+            return "effects,...";
+        }
+
+        private List<ItemTemplateEffectEntry> parseEffects(String value) throws CmdLineException {
             if (value.contains("#")) {
                 return new ItemEffectsTransformer().unserialize(value);
             }
@@ -174,7 +203,7 @@ public final class GetItem extends AbstractCommand {
                 try {
                     effect = Effect.valueOf(parts[0].toUpperCase());
                 } catch (IllegalArgumentException e) {
-                    throw new CommandException("getitem", "Undefined effect " + parts[0]);
+                    throw new CmdLineException(owner, "Undefined effect " + parts[0], e);
                 }
 
                 effects.add(

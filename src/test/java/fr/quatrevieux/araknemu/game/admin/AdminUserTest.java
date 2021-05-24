@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandPermissionsException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
+import fr.quatrevieux.araknemu.game.admin.executor.CommandExecutor;
 import fr.quatrevieux.araknemu.network.game.out.basic.admin.CommandResult;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -51,6 +52,7 @@ class AdminUserTest extends GameBaseCase {
         user = new AdminUser(
             container.get(AdminService.class),
             gamePlayer(),
+            container.get(CommandExecutor.class),
             logger = Mockito.mock(Logger.class)
         );
 

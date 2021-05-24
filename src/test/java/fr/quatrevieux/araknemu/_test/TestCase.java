@@ -19,19 +19,21 @@
 
 package fr.quatrevieux.araknemu._test;
 
-import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.core.network.exception.WritePacket;
-import fr.quatrevieux.araknemu.game.listener.player.inventory.SendInventoryUpdate;
 import org.junit.jupiter.api.function.Executable;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class TestCase {
     public void assertInstanceOf(Class type, Object object) {
@@ -137,5 +139,11 @@ public class TestCase {
             assertTrue(dispatcher.has(listener.getClass()), "Failing expecting that subscriber " + subscriber.getClass().getSimpleName() + " is registered into the dispatcher");
             return;
         }
+    }
+
+    public <T extends Throwable> void assertThrowsWithMessage(Class<T> expectedType, String expectedMessage, Executable executable) {
+        final T ex = assertThrows(expectedType, executable);
+
+        assertEquals(expectedMessage, ex.getMessage());
     }
 }

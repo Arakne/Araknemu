@@ -21,9 +21,9 @@ package fr.quatrevieux.araknemu.game.admin;
 
 import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
+import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,13 +37,13 @@ import java.util.stream.Collectors;
 public final class AdminService {
     private final Context globalContext;
     private final Map<String, ContextResolver> resolvers;
-    private final Logger logger;
+    private final AdminUser.Factory userFactory;
 
     private final Map<Integer, AdminUser> usersById = new HashMap<>();
 
-    public AdminService(Context globalContext, Collection<ContextResolver> resolvers, Logger logger) {
+    public AdminService(Context globalContext, Collection<ContextResolver> resolvers, AdminUser.Factory userFactory) {
         this.globalContext = globalContext;
-        this.logger = logger;
+        this.userFactory = userFactory;
         this.resolvers = resolvers
             .stream()
             .collect(
@@ -60,12 +60,9 @@ public final class AdminService {
      *
      * @param player The admin player
      */
-    public AdminUser user(GamePlayer player) throws ContextException {
+    public AdminUser user(GamePlayer player) throws AdminException {
         if (!usersById.containsKey(player.id())) {
-            usersById.put(
-                player.id(),
-                new AdminUser(this, player, logger)
-            );
+            usersById.put(player.id(), userFactory.create(this, player));
         }
 
         return usersById.get(player.id());

@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
+import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.admin.global.GlobalContext;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
@@ -51,19 +52,19 @@ class AdminServiceTest extends GameBaseCase {
                 container.get(PlayerContextResolver.class),
                 container.get(AccountContextResolver.class)
             ),
-            LogManager.getLogger()
+            container.get(AdminUser.Factory.class)
         );
     }
 
     @Test
-    void userWillCreateAnAdminUser() throws SQLException, ContainerException, ContextException {
+    void userWillCreateAnAdminUser() throws SQLException, ContainerException, AdminException {
         AdminUser user = service.user(gamePlayer());
 
         assertEquals(gamePlayer().id(), user.id());
     }
 
     @Test
-    void userGetSameUser() throws SQLException, ContainerException, ContextException {
+    void userGetSameUser() throws SQLException, ContainerException, AdminException {
         assertSame(
             service.user(gamePlayer()),
             service.user(gamePlayer())
@@ -71,7 +72,7 @@ class AdminServiceTest extends GameBaseCase {
     }
 
     @Test
-    void userGetAndDisconnectWillRemovePlayer() throws SQLException, ContainerException, ContextException {
+    void userGetAndDisconnectWillRemovePlayer() throws SQLException, ContainerException, AdminException {
         AdminUser user = service.user(gamePlayer());
 
         gamePlayer().dispatch(new Disconnected());

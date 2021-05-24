@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.network.game.out.fight.CancelFight;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
+import org.kohsuke.args4j.Argument;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,13 +36,13 @@ import java.util.stream.Collectors;
 /**
  * Show / hide fight places
  */
-public final class FightPos extends AbstractCommand {
+public final class FightPos extends AbstractCommand<FightPos.Arguments> {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Show all fight positions")
             .help(
                 formatter -> formatter
+                    .description("Show all fight positions")
                     .synopsis("fightpos [show|hide]")
                     .example("fightpos show", "Show the fight positions")
                     .example("fightpos hide", "Hide all fight positions")
@@ -56,10 +57,10 @@ public final class FightPos extends AbstractCommand {
     }
 
     @Override
-    public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
+    public void execute(AdminPerformer performer, Arguments arguments) throws AdminException {
         final AdminUser user = AdminUser.class.cast(performer);
 
-        if (arguments.size() > 1 && arguments.get(1).equalsIgnoreCase("hide")) {
+        if (arguments.hide()) {
             user.player().exploration().leave();
             user.send(new CancelFight());
             return;
@@ -78,8 +79,34 @@ public final class FightPos extends AbstractCommand {
 
         performer.info("Places : {} | {}", places[0], places[1]);
 
-        if (arguments.size() > 1 && arguments.get(1).equalsIgnoreCase("show")) {
+        if (arguments.show()) {
             user.send(new FightStartPositions(places, 0));
+        }
+    }
+
+    @Override
+    public Arguments createArguments() {
+        return new Arguments();
+    }
+
+    public static final class Arguments {
+        @Argument
+        private Action action;
+
+        public void setAction(Action action) {
+            this.action = action;
+        }
+
+        public boolean hide() {
+            return action == Action.HIDE;
+        }
+
+        public boolean show() {
+            return action == Action.SHOW;
+        }
+
+        public enum Action {
+            SHOW, HIDE
         }
     }
 }

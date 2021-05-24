@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.admin.player;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
+import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -58,5 +59,26 @@ class SetLifeTest extends CommandTestCase {
 
         assertTrue(gamePlayer().properties().life().isFull());
         assertOutput("Bob retrieve all his life");
+    }
+
+    @Test
+    void executeMissingParameter() throws ContainerException, SQLException, AdminException {
+        assertThrowsWithMessage(CommandException.class, "Argument \"number|max\" is required", () -> execute("setlife"));
+    }
+
+    @Test
+    void help() {
+        assertHelp(
+            "setlife - Change the player current life",
+            "========================================",
+            "SYNOPSIS",
+                "\tsetlife number|max",
+            "EXAMPLES",
+                "\tsetlife 300                - Set the current player life to 300",
+                "\tsetlife max                - Set full life to the current player",
+                "\t${player:John} setlife 250 - Set John's life to 250",
+            "PERMISSIONS",
+                "\t[ACCESS, MANAGE_PLAYER]"
+        );
     }
 }

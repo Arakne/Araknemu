@@ -24,20 +24,29 @@ import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.ArgumentsHydrator;
 import fr.quatrevieux.araknemu.game.admin.formatter.Link;
+import fr.quatrevieux.araknemu.game.admin.help.CommandHelp;
+import fr.quatrevieux.araknemu.game.admin.help.DefaultHelpRenderer;
 
 /**
  * Show help about the console usage
  */
-public final class Help extends AbstractCommand {
+public final class Help extends AbstractCommand<CommandParser.Arguments> {
+    private final ArgumentsHydrator hydrator;
+
+    public Help(ArgumentsHydrator hydrator) {
+        this.hydrator = hydrator;
+    }
+
     @Override
-    protected void build(AbstractCommand.Builder builder) {
+    protected void build(Builder builder) {
         builder
-            .description("Show help for use the console commands")
             .help(formatter -> formatter
-                    .synopsis("help [command name]")
-                    .example("help", "List all available commands")
-                    .example("help echo", "Show the help for the echo command")
+                .description("Show help for use the console commands")
+                .synopsis("help [COMMAND NAME]")
+                .example("help", "List all available commands")
+                .example("help echo", "Show the help for the echo command")
             )
         ;
     }
@@ -62,9 +71,10 @@ public final class Help extends AbstractCommand {
      */
     private void command(AdminPerformer performer, CommandParser.Arguments arguments, String commandName) throws AdminException {
         final Command command = arguments.context().command(commandName);
+        final CommandHelp help = hydrator.help(command, command.createArguments(), command.help());
 
         performer.success("<b>Help for {}</b>", command.name());
-        performer.info(command.help());
+        performer.info(help.render(new DefaultHelpRenderer()));
     }
 
     /**
@@ -93,7 +103,7 @@ public final class Help extends AbstractCommand {
                 new Link()
                     .text(command.name())
                     .execute((arguments.contextPath().isEmpty() ? "" : arguments.contextPath() + " ") + arguments.command() + " " + command.name()),
-                command.description()
+                command.help().description()
             );
         }
     }

@@ -24,14 +24,22 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
-import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
+import fr.quatrevieux.araknemu.game.admin.executor.CommandExecutor;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.ArgumentsHydrator;
 import fr.quatrevieux.araknemu.util.LogFormatter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 abstract public class CommandTestCase extends GameBaseCase {
     protected Command command;
@@ -62,7 +70,7 @@ abstract public class CommandTestCase extends GameBaseCase {
 
         @Override
         public boolean isGranted(Set<Permission> permissions) {
-            return performer.isGranted(permissions);
+            return true;
         }
 
         @Override
@@ -81,16 +89,16 @@ abstract public class CommandTestCase extends GameBaseCase {
         }
     }
 
-    public AdminUser user() throws ContainerException, SQLException, ContextException {
+    public AdminUser user() throws ContainerException, SQLException, AdminException {
         return container.get(AdminService.class).user(gamePlayer(true));
     }
 
     public void execute(AdminPerformer performer, String... arguments) throws AdminException {
         try {
-            command.execute(
-                this.performer = new PerformerWrapper(performer),
-                new CommandParser.Arguments("", "", command.name(), Arrays.asList(arguments), user().context().current())
-            );
+            this.performer = new PerformerWrapper(performer);
+            final CommandParser.Arguments parsedArgs = new CommandParser.Arguments("", "", command.name(), Arrays.asList(arguments), user().context().current());
+
+            container.get(CommandExecutor.class).execute(command, this.performer, parsedArgs);
         } catch (SQLException e) {
             throw new AdminException(e);
         }
@@ -98,6 +106,19 @@ abstract public class CommandTestCase extends GameBaseCase {
 
     public void execute(String... arguments) throws ContainerException, SQLException, AdminException {
         execute(user(), arguments);
+    }
+
+    public void executeWithAdminUser(String... arguments) throws AdminException {
+        try {
+            final AdminUser performer = user();
+            performer.account().get().grant(Permission.values());
+
+            final CommandParser.Arguments parsedArgs = new CommandParser.Arguments("", "", command.name(), Arrays.asList(arguments), user().context().current());
+
+            container.get(CommandExecutor.class).execute(command, user(), parsedArgs);
+        } catch (SQLException e) {
+            throw new AdminException(e);
+        }
     }
 
     public void executeLine(String line) throws AdminException, SQLException {
@@ -146,5 +167,18 @@ abstract public class CommandTestCase extends GameBaseCase {
 
         assertTrue(log.isPresent(), () -> "Line not found in logs : " + line + "\nActual : \n" + performer.logs.stream().map(entry -> entry.message).collect(Collectors.joining("\n")));
         assertEquals(type, log.get().type, "Invalid log type");
+    }
+
+    public String commandHelp() {
+        return container.get(ArgumentsHydrator.class).help(command, command.createArguments(), command.help()).toString();
+    }
+
+    public void assertHelp(String ...lines) {
+        String help = commandHelp().replaceAll("(<.*?>)", "");
+
+        assertEquals(
+            Arrays.stream(lines).filter(s -> !s.isEmpty()).collect(Collectors.joining("\n")),
+            help.replace("\n\n", "\n")
+        );
     }
 }
