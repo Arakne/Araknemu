@@ -21,37 +21,26 @@ package fr.quatrevieux.araknemu.game.admin;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
-import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
-import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
-import fr.quatrevieux.araknemu.game.admin.global.GlobalContext;
-import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
-import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
-import org.apache.logging.log4j.LogManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
-class AdminServiceTest extends GameBaseCase {
-    private AdminService service;
+class AdminSessionServiceTest extends GameBaseCase {
+    private AdminSessionService service;
 
     @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
-        service = new AdminService(
-            container.get(GlobalContext.class),
-            Arrays.asList(
-                container.get(PlayerContextResolver.class),
-                container.get(AccountContextResolver.class)
-            ),
+        service = new AdminSessionService(
             container.get(AdminUser.Factory.class)
         );
     }
@@ -78,18 +67,5 @@ class AdminServiceTest extends GameBaseCase {
         gamePlayer().dispatch(new Disconnected());
 
         assertNotSame(user, service.user(gamePlayer()));
-    }
-
-    @Test
-    void contextNotFound() {
-        assertThrows(ContextException.class, () -> service.context("not_found", null));
-    }
-
-    @Test
-    void contextSuccess() throws SQLException, ContextException {
-        Context context = service.context("player", gamePlayer(true).name());
-
-        assertInstanceOf(PlayerContext.class, context);
-        assertEquals(gamePlayer(), ((PlayerContext) (context)).player());
     }
 }

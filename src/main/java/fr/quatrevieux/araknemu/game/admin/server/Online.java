@@ -52,9 +52,9 @@ public final class Online extends AbstractCommand<Online.Arguments> {
         builder
             .help(formatter -> formatter
                 .description("List online players")
-                .example("${server} online", "List all online players")
-                .example("${server} online john", "List all online players, containing john in the name")
-                .example("${server} online --skip 3 --limit 5 j", "With pagination")
+                .example("*online", "List all online players")
+                .example("*online john", "List all online players, containing john in the name")
+                .example("*online --skip 3 --limit 5 j", "With pagination")
             )
             .requires(Permission.MANAGE_PLAYER)
             .arguments(Arguments::new)
@@ -88,7 +88,7 @@ public final class Online extends AbstractCommand<Online.Arguments> {
             " " + player.race().name() +
             " " + geolocation(player) +
             " " + state(player) + " [" + ipAddress(player) + "] - " +
-            Link.Type.EXECUTE.create("${player:" + player.name() + "} info").text("info") +
+            Link.Type.EXECUTE.create("@" + player.name() + " info").text("info") +
             " " + Link.Type.EXECUTE.create("goto player " + player.name()).text("goto")
         ;
     }
@@ -141,7 +141,7 @@ public final class Online extends AbstractCommand<Online.Arguments> {
         if (currentCount == arguments.limit) {
             performer.info(
                 "------------------------------------------------\n" +
-                "\t<b>" + new Link().execute("${server} online --limit " + arguments.limit + " --skip " + (arguments.skip + arguments.limit)).text("next") + "</b>"
+                "\t<b>" + new Link().execute("*online --limit " + arguments.limit + " --skip " + (arguments.skip + arguments.limit)).text("next") + "</b>"
             );
         }
     }

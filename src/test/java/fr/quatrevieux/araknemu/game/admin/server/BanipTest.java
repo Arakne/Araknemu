@@ -142,9 +142,9 @@ class BanipTest extends CommandTestCase {
 
         assertOutput(
             "List of ban ip rules :",
-            "12.36.54.98 forever (by system) - cause 1 <u><a href='asfunction:onHref,ExecCmd,${server} banip remove 12.36.54.98,true'>remove</a></u>",
-            "12.36.54.99 forever (by bob) - cause 2 <u><a href='asfunction:onHref,ExecCmd,${server} banip remove 12.36.54.99,true'>remove</a></u>",
-            "12.36.54.100 until " + service.matching(new IPAddressString("12.36.54.100")).get().expiresAt().get() + " (by system) - cause 3 <u><a href='asfunction:onHref,ExecCmd,${server} banip remove 12.36.54.100,true'>remove</a></u>"
+            "12.36.54.98 forever (by system) - cause 1 <u><a href='asfunction:onHref,ExecCmd,*banip remove 12.36.54.98,true'>remove</a></u>",
+            "12.36.54.99 forever (by bob) - cause 2 <u><a href='asfunction:onHref,ExecCmd,*banip remove 12.36.54.99,true'>remove</a></u>",
+            "12.36.54.100 until " + service.matching(new IPAddressString("12.36.54.100")).get().expiresAt().get() + " (by system) - cause 3 <u><a href='asfunction:onHref,ExecCmd,*banip remove 12.36.54.100,true'>remove</a></u>"
         );
     }
 
@@ -152,7 +152,7 @@ class BanipTest extends CommandTestCase {
     void checkNotMatching() throws SQLException, AdminException {
         execute("banip", "check", "14.25.66.78");
 
-        assertOutput("The IP address 14.25.66.78 is not banned. <u><a href='asfunction:onHref,ExecCmd,${server} banip add 14.25.66.78 for,false'>add</a></u>");
+        assertOutput("The IP address 14.25.66.78 is not banned. <u><a href='asfunction:onHref,ExecCmd,*banip add 14.25.66.78 for,false'>add</a></u>");
     }
 
     @Test
@@ -163,7 +163,7 @@ class BanipTest extends CommandTestCase {
 
         assertOutput(
             "The IP address 14.25.66.78 is banned.",
-            "Rule : 14.25.66.0/24 forever (by system) -  <u><a href='asfunction:onHref,ExecCmd,${server} banip remove 14.25.66.0/24,true'>remove</a></u>"
+            "Rule : 14.25.66.0/24 forever (by system) -  <u><a href='asfunction:onHref,ExecCmd,*banip remove 14.25.66.0/24,true'>remove</a></u>"
         );
     }
 
@@ -192,12 +192,12 @@ class BanipTest extends CommandTestCase {
                 "\tlist : Dump list of banned ip rules.",
                 "\tcheck IP_ADDRESS : Check if the IP address is banned, and the ban rule.",
             "EXAMPLES",
-                "\t${server} banip add 11.54.47.21 forever my ban message - Ban the IP address 11.54.47.21 forever",
-                "\t${server} banip add 11.54.47.21 for 2h my ban message - Ban the IP address 11.54.47.21 for 2 hours",
-                "\t${server} banip add 11.54.0.0/16 for 2h my ban message - Ban with a subnetwork mask",
-                "\t${server} banip remove 11.54.52.32 - Remove the banned IP address 11.54.52.32",
-                "\t${server} banip list - List all banned IP addresses",
-                "\t${server} check 11.54.52.32 - Check if 11.54.52.32 is banned",
+                "\t*banip add 11.54.47.21 forever my ban message - Ban the IP address 11.54.47.21 forever",
+                "\t*banip add 11.54.47.21 for 2h my ban message - Ban the IP address 11.54.47.21 for 2 hours",
+                "\t*banip add 11.54.0.0/16 for 2h my ban message - Ban with a subnetwork mask",
+                "\t*banip remove 11.54.52.32 - Remove the banned IP address 11.54.52.32",
+                "\t*banip list - List all banned IP addresses",
+                "\t*banip check 11.54.52.32 - Check if 11.54.52.32 is banned",
             "PERMISSIONS",
                 "\t[ACCESS, SUPER_ADMIN]"
         );

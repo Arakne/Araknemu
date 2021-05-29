@@ -23,11 +23,11 @@ import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.executor.CommandExecutor;
 import fr.quatrevieux.araknemu.game.admin.executor.argument.ArgumentsHydrator;
 import fr.quatrevieux.araknemu.util.LogFormatter;
-import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -79,6 +79,11 @@ abstract public class CommandTestCase extends GameBaseCase {
         }
 
         @Override
+        public Context self() {
+            return performer.self();
+        }
+
+        @Override
         public void log(LogType type, String message, Object... arguments) {
             logs.add(
                 new Entry(
@@ -90,13 +95,13 @@ abstract public class CommandTestCase extends GameBaseCase {
     }
 
     public AdminUser user() throws ContainerException, SQLException, AdminException {
-        return container.get(AdminService.class).user(gamePlayer(true));
+        return container.get(AdminSessionService.class).user(gamePlayer(true));
     }
 
     public void execute(AdminPerformer performer, String... arguments) throws AdminException {
         try {
             this.performer = new PerformerWrapper(performer);
-            final CommandParser.Arguments parsedArgs = new CommandParser.Arguments("", "", command.name(), Arrays.asList(arguments), user().context().current());
+            final CommandParser.Arguments parsedArgs = new CommandParser.Arguments("", "", command.name(), Arrays.asList(arguments), user().self());
 
             container.get(CommandExecutor.class).execute(command, this.performer, parsedArgs);
         } catch (SQLException e) {
@@ -113,7 +118,7 @@ abstract public class CommandTestCase extends GameBaseCase {
             final AdminUser performer = user();
             performer.account().get().grant(Permission.values());
 
-            final CommandParser.Arguments parsedArgs = new CommandParser.Arguments("", "", command.name(), Arrays.asList(arguments), user().context().current());
+            final CommandParser.Arguments parsedArgs = new CommandParser.Arguments("", "", command.name(), Arrays.asList(arguments), user().self());
 
             container.get(CommandExecutor.class).execute(command, user(), parsedArgs);
         } catch (SQLException e) {
@@ -123,7 +128,7 @@ abstract public class CommandTestCase extends GameBaseCase {
 
     public void executeLine(String line) throws AdminException, SQLException {
         performer = new PerformerWrapper(user());
-        command.execute(performer, new AdminUserCommandParser(user()).parse(line));
+        command.execute(performer, container.get(CommandParser.class).parse(user(), line));
     }
 
     public void assertOutput(String... lines) {

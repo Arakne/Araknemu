@@ -74,9 +74,9 @@ class SetLifeTest extends CommandTestCase {
             "SYNOPSIS",
                 "\tsetlife number|max",
             "EXAMPLES",
-                "\tsetlife 300                - Set the current player life to 300",
-                "\tsetlife max                - Set full life to the current player",
-                "\t${player:John} setlife 250 - Set John's life to 250",
+                "\tsetlife 300       - Set the current player life to 300",
+                "\tsetlife max       - Set full life to the current player",
+                "\t@John setlife 250 - Set John's life to 250",
             "PERMISSIONS",
                 "\t[ACCESS, MANAGE_PLAYER]"
         );

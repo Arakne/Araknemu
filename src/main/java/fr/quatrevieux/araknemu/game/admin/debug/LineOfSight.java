@@ -56,7 +56,7 @@ public final class LineOfSight extends AbstractCommand<LineOfSight.Arguments> {
                     .description("Highlight accessible cells by line of sight")
                     .synopsis("lineofsight [target cell id]")
                     .option("target cell id", "Optional. The target cell id for dump the line of sight to this cell")
-                    .seeAlso("${debug} fightpos hide", "For hide the cells", Link.Type.EXECUTE)
+                    .seeAlso(":fightpos hide", "For hide the cells", Link.Type.EXECUTE)
             )
             .requires(Permission.DEBUG)
         ;

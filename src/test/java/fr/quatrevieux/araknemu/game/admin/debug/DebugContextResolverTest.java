@@ -40,12 +40,12 @@ class DebugContextResolverTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        resolver = new DebugContextResolver();
+        resolver = new DebugContextResolver(new NullContext());
     }
 
     @Test
     void resolve() throws ContextException {
-        assertInstanceOf(DebugContext.class, resolver.resolve(new NullContext(), null));
+        assertInstanceOf(DebugContext.class, resolver.resolve(null, null));
     }
 
     @Test
@@ -60,7 +60,7 @@ class DebugContextResolverTest extends GameBaseCase {
             }
         });
 
-        Context context = resolver.resolve(new NullContext(), null);
+        Context context = resolver.resolve(null, null);
 
         assertSame(command, context.command("mocked"));
     }

@@ -75,8 +75,8 @@ public final class Goto extends AbstractCommand<Goto.Arguments> {
                         .example("goto map 10340 cell 45", "Teleport to the map id 10340 at cell 45")
                         .example("goto player John", "Teleport to the John's map")
                         .example("goto position 3;5", "Teleport by geolocation")
-                        .example("${player:John} goto map 10340", "Teleport John to map id 10340")
-                        .example("${player:John} goto player Alan", "Teleport John to the Alan's map")
+                        .example("@John goto map 10340", "Teleport John to map id 10340")
+                        .example("@John goto player Alan", "Teleport John to the Alan's map")
                         .example("goto 3;5 cell 42", "Command can works without [type] argument, if not ambiguous")
                     ;
                 }

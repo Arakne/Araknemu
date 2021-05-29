@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.game.admin.player;
 
+import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
+import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
@@ -29,35 +31,36 @@ import fr.quatrevieux.araknemu.game.player.PlayerService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Supplier;
 
 /**
  * Context resolver for player
  */
 public final class PlayerContextResolver implements ContextResolver {
     private final PlayerService service;
-    private final ContextResolver accountContextResolver;
+    private final AccountContextResolver accountContextResolver;
 
     private final List<AbstractContextConfigurator<PlayerContext>> configurators = new ArrayList<>();
 
-    public PlayerContextResolver(PlayerService service, ContextResolver accountContextResolver) {
+    public PlayerContextResolver(PlayerService service, AccountContextResolver accountContextResolver) {
         this.service = service;
         this.accountContextResolver = accountContextResolver;
     }
 
     @Override
-    public Context resolve(Context globalContext, Object argument) throws ContextException {
-        if (argument instanceof GamePlayer) {
-            return resolve(globalContext, GamePlayer.class.cast(argument));
-        } else if (argument instanceof String) {
-            return resolve(globalContext, String.class.cast(argument));
-        }
+    public Context resolve(AdminPerformer performer, Supplier<String> argument) throws ContextException {
+        final String name = argument.get();
 
-        throw new ContextException("Invalid argument : " + argument);
+        try {
+            return resolve(service.get(name));
+        } catch (NoSuchElementException e) {
+            throw new ContextException("Cannot found the player " + name);
+        }
     }
 
     @Override
-    public String type() {
-        return "player";
+    public char prefix() {
+        return '@';
     }
 
     /**
@@ -69,19 +72,18 @@ public final class PlayerContextResolver implements ContextResolver {
         return this;
     }
 
-    private PlayerContext resolve(Context globalContext, GamePlayer player) throws ContextException {
+    /**
+     * Create the context from the given player instance
+     *
+     * @param player The player instance
+     *
+     * @return The created context
+     */
+    public PlayerContext resolve(GamePlayer player) throws ContextException {
         return new PlayerContext(
             player,
-            accountContextResolver.resolve(globalContext, player.account()),
+            accountContextResolver.resolve(player.account()),
             configurators
         );
-    }
-
-    private PlayerContext resolve(Context globalContext, String name) throws ContextException {
-        try {
-            return resolve(globalContext, service.get(name));
-        } catch (NoSuchElementException e) {
-            throw new ContextException("Cannot found the player " + name);
-        }
     }
 }

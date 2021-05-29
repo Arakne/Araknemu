@@ -41,7 +41,7 @@ public final class AddXp extends AbstractCommand<AddXp.Arguments> {
             .help(
                 formatter -> formatter
                     .description("Add experience to player")
-                    .example("${player:John} addxp 1000000", "Add 1 million xp to John")
+                    .example("@John addxp 1000000", "Add 1 million xp to John")
             )
             .requires(Permission.MANAGE_PLAYER)
             .arguments(Arguments::new)

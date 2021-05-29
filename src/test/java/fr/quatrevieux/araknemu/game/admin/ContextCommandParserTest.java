@@ -27,14 +27,20 @@ import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
-import fr.quatrevieux.araknemu.game.admin.context.Context;
-import fr.quatrevieux.araknemu.game.admin.context.NullContext;
+import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
+import fr.quatrevieux.araknemu.game.admin.context.AggregationContext;
+import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
+import fr.quatrevieux.araknemu.game.admin.context.SelfContextResolver;
 import fr.quatrevieux.araknemu.game.admin.debug.DebugContext;
+import fr.quatrevieux.araknemu.game.admin.debug.DebugContextResolver;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
+import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
+import fr.quatrevieux.araknemu.game.admin.server.ServerContextResolver;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,8 +53,8 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @todo recursive context child
  */
-class AdminUserCommandParserTest extends GameBaseCase {
-    private AdminUserCommandParser parser;
+class ContextCommandParserTest extends GameBaseCase {
+    private ContextCommandParser parser;
     private AdminUser user;
 
     @Override
@@ -56,88 +62,78 @@ class AdminUserCommandParserTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        parser = new AdminUserCommandParser(
-            user = container.get(AdminService.class).user(gamePlayer())
+        user = container.get(AdminSessionService.class).user(gamePlayer());
+        parser = new ContextCommandParser(
+            performer -> new AggregationContext(
+                performer.self(),
+                container.get(ServerContextResolver.class).resolve(performer, null)
+            ),
+            new ContextResolver[]{
+                container.get(PlayerContextResolver.class),
+                container.get(AccountContextResolver.class),
+                container.get(DebugContextResolver.class),
+                container.get(ServerContextResolver.class),
+                container.get(SelfContextResolver.class),
+            }
         );
     }
 
     @Test
     void parseEmpty() {
-        assertThrows(CommandException.class, () -> parser.parse("  "), "Empty command");
+        assertThrows(CommandException.class, () -> parser.parse(user, "  "), "Empty command");
     }
 
     @Test
     void parseSimple() throws AdminException {
-        CommandParser.Arguments arguments = parser.parse("simple");
+        CommandParser.Arguments arguments = parser.parse(user, "simple");
 
         assertEquals("simple", arguments.command());
         assertEquals("simple", arguments.line());
         assertEquals("", arguments.contextPath());
         assertEquals(Arrays.asList("simple"), arguments.arguments());
-        assertSame(user.context().current(), arguments.context());
+        assertInstanceOf(AggregationContext.class, arguments.context());
     }
 
     @Test
     void parseWithArguments() throws AdminException {
-        CommandParser.Arguments arguments = parser.parse("  cmd arg1   arg2  val1  ");
+        CommandParser.Arguments arguments = parser.parse(user, "  cmd arg1   arg2  val1  ");
 
         assertEquals("cmd", arguments.command());
         assertEquals("cmd arg1   arg2  val1", arguments.line());
         assertEquals("", arguments.contextPath());
         assertEquals(Arrays.asList("cmd", "arg1", "arg2", "val1"), arguments.arguments());
-        assertSame(user.context().current(), arguments.context());
+        assertInstanceOf(AggregationContext.class, arguments.context());
     }
 
     @Test
     void parseWithForceSelfContext() throws AdminException {
-        user.context().setCurrent(new NullContext());
-
-        CommandParser.Arguments arguments = parser.parse("!cmd arg");
+        CommandParser.Arguments arguments = parser.parse(user, "!cmd arg");
 
         assertEquals("cmd", arguments.command());
         assertEquals("!cmd arg", arguments.line());
         assertEquals("!", arguments.contextPath());
         assertEquals(Arrays.asList("cmd", "arg"), arguments.arguments());
-        assertSame(user.context().self(), arguments.context());
-    }
-
-    @Test
-    void parseWithNamedContext() throws AdminException {
-        Context context = new NullContext();
-        user.context().set("myContext", context);
-
-        CommandParser.Arguments arguments = parser.parse("$myContext cmd arg");
-
-        assertEquals("cmd", arguments.command());
-        assertEquals("$myContext cmd arg", arguments.line());
-        assertEquals("$myContext", arguments.contextPath());
-        assertEquals(Arrays.asList("cmd", "arg"), arguments.arguments());
-        assertSame(context, arguments.context());
-    }
-
-    @Test
-    void parseWithNotFoundNamedContext() {
-        assertThrows(ContextNotFoundException.class, () -> parser.parse("$notFound cmd"));
+        assertSame(user.self(), arguments.context());
     }
 
     @Test
     void parseWithSubContext() throws AdminException {
-        CommandParser.Arguments arguments = parser.parse("> account cmd arg");
+        CommandParser.Arguments arguments = parser.parse(user, "> account cmd arg");
 
         assertEquals("cmd", arguments.command());
         assertEquals("> account cmd arg", arguments.line());
         assertEquals("> account", arguments.contextPath());
         assertEquals(Arrays.asList("cmd", "arg"), arguments.arguments());
-        assertSame(user.context().self().child("account"), arguments.context());
+        assertSame(user.self().child("account"), arguments.context());
     }
 
     @Test
     void parseWithNotFoundSubContext() {
-        assertThrows(ContextNotFoundException.class, () -> parser.parse(">notFound cmd"));
+        assertThrows(ContextNotFoundException.class, () -> parser.parse(user, ">notFound cmd"));
     }
 
     @Test
-    void parseWithAnonymousContext() throws ContainerException, AdminException {
+    void parseWithResolvedContext() throws ContainerException, AdminException {
         Player player = dataSet.pushPlayer("John", 5, 2);
 
         GameSession session = (GameSession) container.get(SessionFactory.class).create(new DummyChannel());
@@ -148,47 +144,38 @@ class AdminUserCommandParserTest extends GameBaseCase {
             2
         ));
 
-        container.get(PlayerService.class).load(
+        GamePlayer john = container.get(PlayerService.class).load(
             session,
             player.id()
         );
 
-        CommandParser.Arguments arguments = parser.parse("${player:John} cmd arg");
+        CommandParser.Arguments arguments = parser.parse(user, "@John cmd arg");
         assertEquals("cmd", arguments.command());
-        assertEquals("${player:John} cmd arg", arguments.line());
-        assertEquals("${player:John}", arguments.contextPath());
+        assertEquals("@John cmd arg", arguments.line());
+        assertEquals("@John", arguments.contextPath());
         assertEquals(Arrays.asList("cmd", "arg"), arguments.arguments());
         assertInstanceOf(PlayerContext.class, arguments.context());
+        assertSame(john, PlayerContext.class.cast(arguments.context()).player());
     }
 
     @Test
-    void parseWithAnonymousContextWithoutArgument() throws ContainerException, AdminException {
+    void parseWithResolvedContextWithoutArgument() throws ContainerException, AdminException {
         session.attach(new GameAccount(
             new Account(5),
             container.get(AccountService.class),
             2
         ));
 
-        CommandParser.Arguments arguments = parser.parse("${debug} cmd arg");
+        CommandParser.Arguments arguments = parser.parse(user, ":cmd arg");
         assertEquals("cmd", arguments.command());
-        assertEquals("${debug} cmd arg", arguments.line());
-        assertEquals("${debug}", arguments.contextPath());
+        assertEquals(":cmd arg", arguments.line());
+        assertEquals(":", arguments.contextPath());
         assertEquals(Arrays.asList("cmd", "arg"), arguments.arguments());
         assertInstanceOf(DebugContext.class, arguments.context());
     }
 
     @Test
-    void parseWithBadContextType() {
-        assertThrows(ContextException.class, () -> parser.parse("${badType:Arg} cmd"), "Context type 'badType' not found");
-    }
-
-    @Test
     void parseWithBadContextArgument() {
-        assertThrows(ContextException.class, () -> parser.parse("${player:NotFound} cmd"), "Cannot found the player NotFound");
-    }
-
-    @Test
-    void parseWithBadContextSyntax() {
-        assertThrows(CommandException.class, () -> parser.parse("${player:"), "Syntax error : missing closing accolade");
+        assertThrows(ContextException.class, () -> parser.parse(user, "@NotFound cmd"), "Cannot found the player NotFound");
     }
 }

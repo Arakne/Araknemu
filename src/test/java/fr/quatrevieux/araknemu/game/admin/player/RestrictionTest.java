@@ -88,7 +88,7 @@ class RestrictionTest extends CommandTestCase {
             "EXAMPLES",
                 "\trestriction +DENY_CHALLENGE - The player will not be allowed perform challenges",
                 "\trestriction +DENY_CHAT -ALLOW_MOVE_ALL_DIRECTION - Perform multiple changes",
-                "\t${player:John} restriction +DENY_CHALLENGE - Change John's restrictions",
+                "\t@John restriction +DENY_CHALLENGE - Change John's restrictions",
             "PERMISSIONS",
                 "\t[ACCESS, MANAGE_PLAYER, DEBUG]"
         );

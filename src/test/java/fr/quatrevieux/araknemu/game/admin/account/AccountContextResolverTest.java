@@ -24,6 +24,8 @@ import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.game.admin.AdminSessionService;
+import fr.quatrevieux.araknemu.game.admin.AdminUser;
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
@@ -38,6 +40,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AccountContextResolverTest extends GameBaseCase {
     private AccountContextResolver resolver;
+    private AdminUser adminUser;
 
     @Override
     @BeforeEach
@@ -46,25 +49,25 @@ class AccountContextResolverTest extends GameBaseCase {
 
         dataSet.use(Account.class);
 
-        resolver = new AccountContextResolver(container.get(AccountService.class));
+        resolver = new AccountContextResolver(container.get(AccountService.class), new NullContext());
+        adminUser = container.get(AdminSessionService.class).user(gamePlayer());
     }
 
     @Test
     void resolveByGameAccount() throws ContainerException, ContextException {
         Account account = dataSet.push(new Account(-1, "aaa", "", "aaa"));
+        GameAccount ga = container.get(AccountService.class).load(account);
 
-        Context context = resolver.resolve(
-            new NullContext(),
-            container.get(AccountService.class).load(account)
-        );
+        AccountContext context = resolver.resolve(ga);
 
         assertInstanceOf(AccountContext.class, context);
+        assertSame(ga, context.account());
     }
 
     @Test
     void resolveByPseudoNotLogged() throws ContextException {
         Account account = dataSet.push(new Account(-1, "login", "", "pseudo"));
-        Context context = resolver.resolve(new NullContext(), "pseudo");
+        Context context = resolver.resolve(adminUser, () -> "pseudo");
 
         assertInstanceOf(AccountContext.class, context);
         assertEquals(account.id(), ((AccountContext) context).account().id());
@@ -76,7 +79,7 @@ class AccountContextResolverTest extends GameBaseCase {
         GameAccount account = container.get(AccountService.class).load(dataSet.push(new Account(-1, "login", "", "pseudo")));
         account.attach(server.createSession());
 
-        Context context = resolver.resolve(new NullContext(), "pseudo");
+        Context context = resolver.resolve(adminUser, () -> "pseudo");
 
         assertInstanceOf(AccountContext.class, context);
         assertSame(account, ((AccountContext) context).account());
@@ -85,8 +88,7 @@ class AccountContextResolverTest extends GameBaseCase {
 
     @Test
     void invalidArgument() {
-        assertThrows(ContextException.class, () -> resolver.resolve(new NullContext(), new Object()));
-        assertThrows(ContextException.class, () -> resolver.resolve(new NullContext(), "nout_found"));
+        assertThrows(ContextException.class, () -> resolver.resolve(adminUser, () -> "not_found"));
     }
 
     @Test
@@ -103,10 +105,7 @@ class AccountContextResolverTest extends GameBaseCase {
 
         Account account = dataSet.push(new Account(-1, "aaa", "", "aaa"));
 
-        Context context = resolver.resolve(
-            new NullContext(),
-            container.get(AccountService.class).load(account)
-        );
+        Context context = resolver.resolve(container.get(AccountService.class).load(account));
 
         assertSame(command, context.command("mocked"));
     }

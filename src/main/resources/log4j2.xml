@@ -94,7 +94,7 @@
         <Logger name="fr.quatrevieux.araknemu.realm.RealmService">
             <AppenderRef ref="realm" level="TRACE" />
         </Logger>
-        <Logger name="fr.quatrevieux.araknemu.game.admin.AdminService">
+        <Logger name="fr.quatrevieux.araknemu.game.admin.AdminModule">
             <AppenderRef ref="admin" level="INFO" />
         </Logger>
         <Root level="INFO">

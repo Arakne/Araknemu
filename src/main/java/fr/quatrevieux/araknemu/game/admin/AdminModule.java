@@ -34,6 +34,9 @@ import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
 import fr.quatrevieux.araknemu.game.admin.account.Ban;
 import fr.quatrevieux.araknemu.game.admin.account.Info;
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.AggregationContext;
+import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
+import fr.quatrevieux.araknemu.game.admin.context.SelfContextResolver;
 import fr.quatrevieux.araknemu.game.admin.debug.Area;
 import fr.quatrevieux.araknemu.game.admin.debug.DebugContext;
 import fr.quatrevieux.araknemu.game.admin.debug.DebugContextResolver;
@@ -41,6 +44,7 @@ import fr.quatrevieux.araknemu.game.admin.debug.FightPos;
 import fr.quatrevieux.araknemu.game.admin.debug.LineOfSight;
 import fr.quatrevieux.araknemu.game.admin.debug.MapStats;
 import fr.quatrevieux.araknemu.game.admin.debug.Movement;
+import fr.quatrevieux.araknemu.game.admin.exception.ExceptionHandler;
 import fr.quatrevieux.araknemu.game.admin.executor.CommandExecutor;
 import fr.quatrevieux.araknemu.game.admin.executor.DefaultCommandExecutor;
 import fr.quatrevieux.araknemu.game.admin.executor.argument.ArgumentsHydrator;
@@ -69,8 +73,6 @@ import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
 import org.apache.logging.log4j.LogManager;
 
-import java.util.Arrays;
-
 /**
  * Register the admin service and console commands
  *
@@ -93,26 +95,21 @@ public final class AdminModule implements ContainerModule {
         configurator.factory(Araknemu.class, container -> app);
 
         configurator.persist(
-            AdminService.class,
-            container -> new AdminService(
-                container.get(GlobalContext.class),
-                Arrays.asList(
-                    container.get(PlayerContextResolver.class),
-                    container.get(AccountContextResolver.class),
-                    container.get(DebugContextResolver.class),
-                    container.get(ServerContextResolver.class)
-                ),
+            AdminSessionService.class,
+            container -> new AdminSessionService(
                 container.get(AdminUser.Factory.class)
             )
         );
 
         configurator.persist(
             AdminUser.Factory.class,
-            container -> ((service, player) -> new AdminUser(
-                service,
+            container -> ((player) -> new AdminUser(
                 player,
                 container.get(CommandExecutor.class),
-                LogManager.getLogger(AdminService.class)
+                container.get(CommandParser.class),
+                container.get(PlayerContextResolver.class).resolve(player),
+                container.get(ExceptionHandler.class),
+                LogManager.getLogger(AdminModule.class)
             ))
         );
 
@@ -126,6 +123,8 @@ public final class AdminModule implements ContainerModule {
             })
         );
 
+        configurator.persist(SelfContextResolver.class, container -> new SelfContextResolver());
+
         configurator.persist(
             CommandExecutor.class,
             container -> new DefaultCommandExecutor(container.get(ArgumentsHydrator.class))
@@ -135,6 +134,25 @@ public final class AdminModule implements ContainerModule {
             ArgumentsHydrator.class,
             container -> new HydratorsAggregate()
         );
+
+        configurator.persist(
+            CommandParser.class,
+            container -> new ContextCommandParser(
+                performer -> new AggregationContext(
+                    performer.self(),
+                    container.get(ServerContextResolver.class).resolve(performer, null)
+                ),
+                new ContextResolver[]{
+                    container.get(PlayerContextResolver.class),
+                    container.get(AccountContextResolver.class),
+                    container.get(DebugContextResolver.class),
+                    container.get(ServerContextResolver.class),
+                    container.get(SelfContextResolver.class),
+                }
+            )
+        );
+
+        configurator.persist(ExceptionHandler.class, container -> new ExceptionHandler());
     }
 
     private void configureResolvers(ContainerConfigurator configurator) {
@@ -157,7 +175,7 @@ public final class AdminModule implements ContainerModule {
 
         configurator.persist(
             AccountContextResolver.class,
-            container -> new AccountContextResolver(container.get(AccountService.class))
+            container -> new AccountContextResolver(container.get(AccountService.class), container.get(GlobalContext.class))
                 .register(new AbstractContextConfigurator<AccountContext>() {
                     @Override
                     public void configure(AccountContext context) {
@@ -169,7 +187,7 @@ public final class AdminModule implements ContainerModule {
 
         configurator.persist(
             DebugContextResolver.class,
-            container -> new DebugContextResolver()
+            container -> new DebugContextResolver(container.get(GlobalContext.class))
                 .register(new AbstractContextConfigurator<DebugContext>() {
                     @Override
                     public void configure(DebugContext context) {
@@ -184,7 +202,7 @@ public final class AdminModule implements ContainerModule {
 
         configurator.persist(
             ServerContextResolver.class,
-            container -> new ServerContextResolver()
+            container -> new ServerContextResolver(container.get(GlobalContext.class))
                 .register(new AbstractContextConfigurator<ServerContext>() {
                     @Override
                     public void configure(ServerContext context) {

@@ -20,18 +20,13 @@
 package fr.quatrevieux.araknemu.game.handler.basic.admin;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
-import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.admin.AdminService;
+import fr.quatrevieux.araknemu.game.admin.AdminSessionService;
 import fr.quatrevieux.araknemu.game.admin.LogType;
 import fr.quatrevieux.araknemu.network.game.in.basic.admin.AdminCommand;
 import fr.quatrevieux.araknemu.network.game.out.basic.admin.CommandResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.sql.SQLException;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ExecuteCommandTest extends GameBaseCase {
     private ExecuteCommand handler;
@@ -45,7 +40,7 @@ class ExecuteCommandTest extends GameBaseCase {
         gamePlayer().account().grant(Permission.ACCESS);
 
         handler = new ExecuteCommand(
-            container.get(AdminService.class)
+            container.get(AdminSessionService.class)
         );
     }
 

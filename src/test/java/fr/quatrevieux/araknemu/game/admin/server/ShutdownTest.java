@@ -153,9 +153,9 @@ class ShutdownTest extends CommandTestCase {
                 "\tat TIME : Shutdown the server at a given time. Format is [hours]:[minutes]:[seconds]. Seconds are optional.",
                 "\tshow : Show the current scheduled shutdown.",
             "EXAMPLES",
-                "\t${server} shutdown now      - Stop the server immediately.",
-                "\t${server} shutdown at 15:00 - Stop the server at 15:00:00.",
-                "\t${server} shutdown in 30m   - Stop the server in 30 minutes.",
+                "\t*shutdown now      - Stop the server immediately.",
+                "\t*shutdown at 15:00 - Stop the server at 15:00:00.",
+                "\t*shutdown in 30m   - Stop the server in 30 minutes.",
             "PERMISSIONS",
                 "\t[ACCESS, SUPER_ADMIN]"
         );

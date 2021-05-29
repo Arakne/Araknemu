@@ -21,7 +21,8 @@ package fr.quatrevieux.araknemu.game.admin.exception;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.admin.AdminService;
+import fr.quatrevieux.araknemu.game.admin.AdminSessionService;
+import fr.quatrevieux.araknemu.game.admin.AdminUser;
 import fr.quatrevieux.araknemu.game.admin.LogType;
 import fr.quatrevieux.araknemu.network.game.out.basic.admin.CommandResult;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,19 +30,17 @@ import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class ExceptionHandlerTest extends GameBaseCase {
     private ExceptionHandler handler;
+    private AdminUser adminUser;
 
     @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
-        handler = new ExceptionHandler(
-            container.get(AdminService.class).user(gamePlayer())
-        );
+        adminUser = container.get(AdminSessionService.class).user(gamePlayer());
+        handler = new ExceptionHandler();
     }
 
     @Test
@@ -61,7 +60,7 @@ class ExceptionHandlerTest extends GameBaseCase {
     }
 
     public void assertHandle(String message, Exception e) {
-        handler.handle(e);
+        handler.handle(adminUser, e);
         assertMessage(message);
     }
 }

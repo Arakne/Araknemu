@@ -65,8 +65,8 @@ class InfoTest extends CommandTestCase {
                 "\t[context] info",
             "Note: this command takes no arguments, the account is only resolved by the context",
             "EXAMPLES",
-                "\t${player:Alan} info - Display information about the player Alan",
-                "\tinfo                - Display self player information",
+                "\t@Alan info - Display information about the player Alan",
+                "\tinfo       - Display self player information",
             "PERMISSIONS",
                 "\t[ACCESS, MANAGE_PLAYER]"
         );

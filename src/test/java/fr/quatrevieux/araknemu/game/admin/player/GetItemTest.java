@@ -193,7 +193,7 @@ class GetItemTest extends CommandTestCase {
             "EXAMPLES",
                 "\tgetitem 2425 - Generate a random 'Amulette du Bouftou'",
                 "\t!getitem 2425 3 - Generate 3 random 'Amulette du Bouftou', and ensure that the admin user is the target",
-                "\t${player:Robert} getitem 39 - Add to Robert the 'Petite Amulette du Hibou'",
+                "\t@Robert getitem 39 - Add to Robert the 'Petite Amulette du Hibou'",
                 "\tgetitem --max 2425 - Generate an 'Amulette du Bouftou' with max stats",
                 "\tgetitem --effects 5b#1#32#0#,5c#1#32#0#,5d#1#32#0#,5e#1#32#0#,5f#1#32#0# 40 - Cheated 'Petite Epée de Boisaille'",
                 "\tgetitem --effects STOLEN_WATER:1:50,STOLEN_EARTH:1:50,STOLEN_WIND:1:50,STOLEN_FIRE:1:50,STOLEN_NEUTRAL:1:50 40 - Same as above",

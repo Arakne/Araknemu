@@ -84,8 +84,8 @@ class AddStatsTest extends CommandTestCase {
                     "\t\tIt's value must be one of those : ACTION_POINT, MOVEMENT_POINT, STRENGTH, VITALITY, WISDOM, LUCK, AGILITY, INTELLIGENCE, SIGHT_BOOST, MAX_SUMMONED_CREATURES, FIXED_DAMAGE, PHYSICAL_DAMAGE, WEAPON_MASTER, PERCENT_DAMAGE, HEALTH_BOOST, TRAP_BOOST, PERCENT_TRAP_BOOST, COUNTER_DAMAGE, CRITICAL_BONUS, FAIL_MALUS, RESISTANCE_ACTION_POINT, RESISTANCE_MOVEMENT_POINT, RESISTANCE_NEUTRAL, RESISTANCE_PERCENT_NEUTRAL, RESISTANCE_PVP_NEUTRAL, RESISTANCE_PERCENT_PVP_NEUTRAL, RESISTANCE_EARTH, RESISTANCE_PERCENT_EARTH, RESISTANCE_PVP_EARTH, RESISTANCE_PERCENT_PVP_EARTH, RESISTANCE_WATER, RESISTANCE_PERCENT_WATER, RESISTANCE_PVP_WATER, RESISTANCE_PERCENT_PVP_WATER, RESISTANCE_AIR, RESISTANCE_PERCENT_AIR, RESISTANCE_PVP_AIR, RESISTANCE_PERCENT_PVP_AIR, RESISTANCE_FIRE, RESISTANCE_PERCENT_FIRE, RESISTANCE_PVP_FIRE, RESISTANCE_PERCENT_PVP_FIRE",
                 "\tVALUE : The value to add, must be an integer. Negative values are allowed, but be careful with negative vitality !!!",
             "EXAMPLES",
-                "\taddstats vitality 150 - Add 150 vitality to current player",
-                "\t${player:John} addstats strength 50 - Add 50 strength to current John",
+                "\taddstats vitality 150      - Add 150 vitality to current player",
+                "\t@John addstats strength 50 - Add 50 strength to John",
             "PERMISSIONS",
                 "\t[ACCESS, MANAGE_PLAYER]"
         );
