@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Server for admin
+ * Handle admin sessions
  */
 public final class AdminSessionService {
     private final AdminUser.Factory userFactory;

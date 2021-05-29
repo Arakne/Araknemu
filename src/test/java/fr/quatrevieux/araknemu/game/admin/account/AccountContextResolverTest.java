@@ -88,7 +88,7 @@ class AccountContextResolverTest extends GameBaseCase {
 
     @Test
     void invalidArgument() {
-        assertThrows(ContextException.class, () -> resolver.resolve(adminUser, () -> "nout_found"));
+        assertThrows(ContextException.class, () -> resolver.resolve(adminUser, () -> "not_found"));
     }
 
     @Test

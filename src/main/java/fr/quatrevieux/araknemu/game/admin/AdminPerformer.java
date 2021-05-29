@@ -58,7 +58,7 @@ public interface AdminPerformer extends AdminLogger {
     public Optional<GameAccount> account();
 
     /**
-     * Get the context related to the current admin perform
+     * Get the context related to the current admin performer
      * For an admin user, the context should be the player
      */
     public Context self();
