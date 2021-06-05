@@ -20,9 +20,9 @@
 package fr.quatrevieux.araknemu.game.admin.server;
 
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
-import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
-import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
+import fr.quatrevieux.araknemu.game.admin.context.ConfigurableContextResolver;
+import fr.quatrevieux.araknemu.game.admin.context.Context;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ import java.util.function.Supplier;
 /**
  * Resolve the server context
  */
-public final class ServerContextResolver implements ContextResolver {
+public final class ServerContextResolver implements ConfigurableContextResolver<ServerContext> {
     private final Context parentContext;
 
     private final List<AbstractContextConfigurator<ServerContext>> configurators = new ArrayList<>();
@@ -50,9 +50,7 @@ public final class ServerContextResolver implements ContextResolver {
         return '*';
     }
 
-    /**
-     * Register a new configurator for the server context
-     */
+    @Override
     public ServerContextResolver register(AbstractContextConfigurator<ServerContext> configurator) {
         configurators.add(configurator);
 

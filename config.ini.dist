@@ -212,3 +212,23 @@ game.dbname = araknemu
 ; > The value should be a duration string like 30s, 1m10s
 ; > Default value : 45s
 ;fight.pvm.placementDuration = 45s
+
+[admin]
+; Section for configure admin commands
+
+; Scripts
+; -------
+; > Does scripts are enable
+; > If set to false, the scripts are not loaded
+; > Default value: true
+;account.scripts.enable = false
+;player.scripts.enable = false
+;debug.scripts.enable = false
+;server.scripts.enable = false
+; > Get the commands scripts path
+; > Should be a directory path
+; > Default: "scripts/commands/[context]"
+;account.scripts.path = scripts/commands/account
+;player.scripts.path = scripts/commands/player
+;debug.scripts.path = scripts/commands/debug
+;server.scripts.path = scripts/commands/server
