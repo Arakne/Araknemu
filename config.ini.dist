@@ -218,7 +218,7 @@ game.dbname = araknemu
 
 ; Scripts
 ; -------
-; > Does scripts are enable
+; > Are scripts enabled
 ; > If set to false, the scripts are not loaded
 ; > Default value: true
 ;account.scripts.enable = false

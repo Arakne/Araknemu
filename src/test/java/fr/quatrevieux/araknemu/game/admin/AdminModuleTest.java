@@ -31,7 +31,10 @@ import fr.quatrevieux.araknemu.game.admin.account.Ban;
 import fr.quatrevieux.araknemu.game.admin.account.Info;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.SelfContextResolver;
-import fr.quatrevieux.araknemu.game.admin.debug.*;
+import fr.quatrevieux.araknemu.game.admin.debug.DebugContext;
+import fr.quatrevieux.araknemu.game.admin.debug.DebugContextResolver;
+import fr.quatrevieux.araknemu.game.admin.debug.FightPos;
+import fr.quatrevieux.araknemu.game.admin.debug.LineOfSight;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.admin.exception.ExceptionHandler;
@@ -47,7 +50,11 @@ import fr.quatrevieux.araknemu.game.admin.player.GetItem;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
 import fr.quatrevieux.araknemu.game.admin.player.teleport.Goto;
-import fr.quatrevieux.araknemu.game.admin.server.*;
+import fr.quatrevieux.araknemu.game.admin.server.Banip;
+import fr.quatrevieux.araknemu.game.admin.server.Online;
+import fr.quatrevieux.araknemu.game.admin.server.ServerContext;
+import fr.quatrevieux.araknemu.game.admin.server.ServerContextResolver;
+import fr.quatrevieux.araknemu.game.admin.server.Shutdown;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import org.junit.jupiter.api.Test;
@@ -178,9 +185,6 @@ class AdminModuleTest extends GameBaseCase {
 
         assertInstanceOf(DebugContext.class, context);
         assertInstanceOf(FightPos.class, context.command("fightpos"));
-        assertInstanceOf(Movement.class, context.command("movement"));
-        assertInstanceOf(MapStats.class, context.command("mapstats"));
-        assertInstanceOf(Area.class, context.command("area"));
         assertInstanceOf(LineOfSight.class, context.command("lineofsight"));
     }
 

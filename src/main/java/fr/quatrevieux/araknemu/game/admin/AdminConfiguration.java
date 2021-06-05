@@ -56,7 +56,7 @@ public final class AdminConfiguration implements ConfigurationModule {
         }
 
         /**
-         * Does scripts are enable
+         * Are scripts enabled ?
          * If set to false, the scripts are not loaded
          * Default value: true
          */

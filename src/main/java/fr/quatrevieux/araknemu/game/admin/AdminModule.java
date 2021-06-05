@@ -40,13 +40,10 @@ import fr.quatrevieux.araknemu.game.admin.context.ConfigurableContextResolver;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
 import fr.quatrevieux.araknemu.game.admin.context.SelfContextResolver;
-import fr.quatrevieux.araknemu.game.admin.debug.Area;
 import fr.quatrevieux.araknemu.game.admin.debug.DebugContext;
 import fr.quatrevieux.araknemu.game.admin.debug.DebugContextResolver;
 import fr.quatrevieux.araknemu.game.admin.debug.FightPos;
 import fr.quatrevieux.araknemu.game.admin.debug.LineOfSight;
-import fr.quatrevieux.araknemu.game.admin.debug.MapStats;
-import fr.quatrevieux.araknemu.game.admin.debug.Movement;
 import fr.quatrevieux.araknemu.game.admin.exception.ExceptionHandler;
 import fr.quatrevieux.araknemu.game.admin.executor.CommandExecutor;
 import fr.quatrevieux.araknemu.game.admin.executor.DefaultCommandExecutor;
@@ -74,7 +71,6 @@ import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
-import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
 import org.apache.logging.log4j.LogManager;
 
 import java.nio.file.Paths;
@@ -210,9 +206,6 @@ public final class AdminModule implements ContainerModule {
                     @Override
                     public void configure(DebugContext context) {
                         add(new FightPos());
-                        add(new Movement(container.get(MapTemplateRepository.class)));
-                        add(new MapStats(container.get(MapTemplateRepository.class)));
-                        add(new Area(container.get(SpellEffectService.class)));
                         add(new LineOfSight(container.get(MapTemplateRepository.class)));
                     }
                 }),

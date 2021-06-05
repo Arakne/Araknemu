@@ -34,6 +34,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * Load commands from groovy scripts
@@ -68,8 +69,8 @@ public final class ScriptLoaderContextConfigurator<C extends Context> extends Ab
 
         final Container container = containerResolver.apply(context);
 
-        try {
-            Files.list(path).forEach(file -> {
+        try (Stream<Path> stream = Files.list(path)) {
+            stream.forEach(file -> {
                 logger.debug("Load command script {}", file.toAbsolutePath().toString());
 
                 try {
