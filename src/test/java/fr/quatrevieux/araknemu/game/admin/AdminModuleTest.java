@@ -31,7 +31,10 @@ import fr.quatrevieux.araknemu.game.admin.account.Ban;
 import fr.quatrevieux.araknemu.game.admin.account.Info;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.SelfContextResolver;
-import fr.quatrevieux.araknemu.game.admin.debug.*;
+import fr.quatrevieux.araknemu.game.admin.debug.DebugContext;
+import fr.quatrevieux.araknemu.game.admin.debug.DebugContextResolver;
+import fr.quatrevieux.araknemu.game.admin.debug.FightPos;
+import fr.quatrevieux.araknemu.game.admin.debug.LineOfSight;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.admin.exception.ExceptionHandler;
@@ -47,13 +50,20 @@ import fr.quatrevieux.araknemu.game.admin.player.GetItem;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
 import fr.quatrevieux.araknemu.game.admin.player.teleport.Goto;
-import fr.quatrevieux.araknemu.game.admin.server.*;
+import fr.quatrevieux.araknemu.game.admin.server.Banip;
+import fr.quatrevieux.araknemu.game.admin.server.Online;
+import fr.quatrevieux.araknemu.game.admin.server.ServerContext;
+import fr.quatrevieux.araknemu.game.admin.server.ServerContextResolver;
+import fr.quatrevieux.araknemu.game.admin.server.Shutdown;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.sql.SQLException;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class AdminModuleTest extends GameBaseCase {
     @Test
@@ -101,6 +111,27 @@ class AdminModuleTest extends GameBaseCase {
     }
 
     @Test
+    void playerResolverScripts() throws SQLException, ContextException, CommandNotFoundException, NoSuchFieldException, IllegalAccessException {
+        setConfigValue("admin", "player.scripts.enable", "true");
+        setConfigValue("admin", "player.scripts.path", "src/test/scripts/commands/player");
+
+        Container container = new ItemPoolContainer();
+
+        container.register(new SqlLivingRepositoriesModule(app.database().get("game")));
+        container.register(new SqlWorldRepositoriesModule(app.database().get("game")));
+        container.register(new GameModule(app));
+        container.register(new AdminModule(app));
+
+        container.get(PlayerService.class).load(session, gamePlayer().id());
+
+        Context context = container.get(PlayerContextResolver.class).resolve(gamePlayer());
+
+        Command<?> command = context.command("sp");
+
+        assertSame(gamePlayer(), command.getClass().getField("player").get(command));
+    }
+
+    @Test
     void accountResolver() throws SQLException, CommandNotFoundException {
         Container container = new ItemPoolContainer();
 
@@ -119,6 +150,27 @@ class AdminModuleTest extends GameBaseCase {
     }
 
     @Test
+    void accountResolverScripts() throws SQLException, ContextException, CommandNotFoundException, NoSuchFieldException, IllegalAccessException {
+        setConfigValue("admin", "account.scripts.enable", "true");
+        setConfigValue("admin", "account.scripts.path", "src/test/scripts/commands/account");
+
+        Container container = new ItemPoolContainer();
+
+        container.register(new SqlLivingRepositoriesModule(app.database().get("game")));
+        container.register(new SqlWorldRepositoriesModule(app.database().get("game")));
+        container.register(new GameModule(app));
+        container.register(new AdminModule(app));
+
+        container.get(PlayerService.class).load(session, gamePlayer().id());
+
+        Context context = container.get(AccountContextResolver.class).resolve(gamePlayer().account());
+
+        Command<?> command = context.command("sa");
+
+        assertSame(gamePlayer().account(), command.getClass().getField("account").get(command));
+    }
+
+    @Test
     void debugResolver() throws SQLException, CommandNotFoundException {
         Container container = new ItemPoolContainer();
 
@@ -133,10 +185,26 @@ class AdminModuleTest extends GameBaseCase {
 
         assertInstanceOf(DebugContext.class, context);
         assertInstanceOf(FightPos.class, context.command("fightpos"));
-        assertInstanceOf(Movement.class, context.command("movement"));
-        assertInstanceOf(MapStats.class, context.command("mapstats"));
-        assertInstanceOf(Area.class, context.command("area"));
         assertInstanceOf(LineOfSight.class, context.command("lineofsight"));
+    }
+
+    @Test
+    void debugResolverScripts() throws SQLException, ContextException, CommandNotFoundException, NoSuchFieldException, IllegalAccessException {
+        setConfigValue("admin", "debug.scripts.enable", "true");
+        setConfigValue("admin", "debug.scripts.path", "src/test/scripts/commands/simple");
+
+        Container container = new ItemPoolContainer();
+
+        container.register(new SqlLivingRepositoriesModule(app.database().get("game")));
+        container.register(new SqlWorldRepositoriesModule(app.database().get("game")));
+        container.register(new GameModule(app));
+        container.register(new AdminModule(app));
+
+        container.get(PlayerService.class).load(session, gamePlayer().id());
+
+        Context context = container.get(DebugContextResolver.class).resolve(null, null);
+
+        assertNotNull(context.command("simple"));
     }
 
     @Test
@@ -158,5 +226,25 @@ class AdminModuleTest extends GameBaseCase {
         assertInstanceOf(Shutdown.class, context.command("shutdown"));
         assertInstanceOf(Banip.class, context.command("banip"));
         assertInstanceOf(fr.quatrevieux.araknemu.game.admin.server.Info.class, context.command("info"));
+    }
+
+    @Test
+    void serverResolverScripts() throws SQLException, ContextException, CommandNotFoundException, NoSuchFieldException, IllegalAccessException {
+        setConfigValue("admin", "server.scripts.enable", "true");
+        setConfigValue("admin", "server.scripts.path", "src/test/scripts/commands/simple");
+
+        Container container = new ItemPoolContainer();
+
+        container.register(new SqlLivingRepositoriesModule(app.database().get("game")));
+        container.register(new SqlWorldRepositoriesModule(app.database().get("game")));
+        container.register(new GameModule(app));
+        container.register(new AdminModule(app));
+        container.register(configurator -> configurator.set(RealmConnector.class, Mockito.mock(RealmConnector.class)));
+
+        container.get(PlayerService.class).load(session, gamePlayer().id());
+
+        Context context = container.get(ServerContextResolver.class).resolve(null, null);
+
+        assertNotNull(context.command("simple"));
     }
 }

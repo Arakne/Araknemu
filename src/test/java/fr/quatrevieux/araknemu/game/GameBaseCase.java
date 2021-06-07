@@ -99,6 +99,7 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ini4j.Ini;
+import org.ini4j.Profile;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -109,7 +110,11 @@ import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class GameBaseCase extends DatabaseTestCase {
     static public class SendingRequestStack {
@@ -489,6 +494,14 @@ public class GameBaseCase extends DatabaseTestCase {
     }
 
     public void setConfigValue(String item, String value) {
-        initConfig.get("game").add(item, value);
+        setConfigValue("game", item, value);
+    }
+
+    public void setConfigValue(String config, String item, String value) {
+        initConfig.get(config).add(item, value);
+    }
+
+    public void removeConfigValue(String config, String item) {
+        initConfig.get(config).remove(item);
     }
 }

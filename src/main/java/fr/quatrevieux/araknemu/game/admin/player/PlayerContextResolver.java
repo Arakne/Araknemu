@@ -21,9 +21,9 @@ package fr.quatrevieux.araknemu.game.admin.player;
 
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
-import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
-import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
+import fr.quatrevieux.araknemu.game.admin.context.ConfigurableContextResolver;
+import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
@@ -36,7 +36,7 @@ import java.util.function.Supplier;
 /**
  * Context resolver for player
  */
-public final class PlayerContextResolver implements ContextResolver {
+public final class PlayerContextResolver implements ConfigurableContextResolver<PlayerContext> {
     private final PlayerService service;
     private final AccountContextResolver accountContextResolver;
 
@@ -63,9 +63,7 @@ public final class PlayerContextResolver implements ContextResolver {
         return '@';
     }
 
-    /**
-     * Register a new configurator for the player context
-     */
+    @Override
     public PlayerContextResolver register(AbstractContextConfigurator<PlayerContext> configurator) {
         configurators.add(configurator);
 

@@ -22,9 +22,9 @@ package fr.quatrevieux.araknemu.game.admin.account;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
-import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
-import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
+import fr.quatrevieux.araknemu.game.admin.context.ConfigurableContextResolver;
+import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ import java.util.function.Supplier;
 /**
  * Context resolver for account
  */
-public final class AccountContextResolver implements ContextResolver {
+public final class AccountContextResolver implements ConfigurableContextResolver<AccountContext> {
     private final AccountService service;
     private final Context parentContext;
     private final List<AbstractContextConfigurator<AccountContext>> configurators = new ArrayList<>();
@@ -70,9 +70,7 @@ public final class AccountContextResolver implements ContextResolver {
         return '#';
     }
 
-    /**
-     * Register a configurator for the account resolver
-     */
+    @Override
     public AccountContextResolver register(AbstractContextConfigurator<AccountContext> configurator) {
         configurators.add(configurator);
 

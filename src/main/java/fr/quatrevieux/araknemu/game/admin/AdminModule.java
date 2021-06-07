@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.admin;
 import fr.quatrevieux.araknemu.Araknemu;
 import fr.quatrevieux.araknemu.common.account.banishment.BanIpService;
 import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
+import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerConfigurator;
 import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
@@ -35,15 +36,14 @@ import fr.quatrevieux.araknemu.game.admin.account.Ban;
 import fr.quatrevieux.araknemu.game.admin.account.Info;
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.context.AggregationContext;
+import fr.quatrevieux.araknemu.game.admin.context.ConfigurableContextResolver;
+import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
 import fr.quatrevieux.araknemu.game.admin.context.SelfContextResolver;
-import fr.quatrevieux.araknemu.game.admin.debug.Area;
 import fr.quatrevieux.araknemu.game.admin.debug.DebugContext;
 import fr.quatrevieux.araknemu.game.admin.debug.DebugContextResolver;
 import fr.quatrevieux.araknemu.game.admin.debug.FightPos;
 import fr.quatrevieux.araknemu.game.admin.debug.LineOfSight;
-import fr.quatrevieux.araknemu.game.admin.debug.MapStats;
-import fr.quatrevieux.araknemu.game.admin.debug.Movement;
 import fr.quatrevieux.araknemu.game.admin.exception.ExceptionHandler;
 import fr.quatrevieux.araknemu.game.admin.executor.CommandExecutor;
 import fr.quatrevieux.araknemu.game.admin.executor.DefaultCommandExecutor;
@@ -60,6 +60,7 @@ import fr.quatrevieux.araknemu.game.admin.player.teleport.LocationResolver;
 import fr.quatrevieux.araknemu.game.admin.player.teleport.MapResolver;
 import fr.quatrevieux.araknemu.game.admin.player.teleport.PlayerResolver;
 import fr.quatrevieux.araknemu.game.admin.player.teleport.PositionResolver;
+import fr.quatrevieux.araknemu.game.admin.script.ScriptLoaderContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.server.Banip;
 import fr.quatrevieux.araknemu.game.admin.server.Online;
 import fr.quatrevieux.araknemu.game.admin.server.ServerContext;
@@ -70,8 +71,10 @@ import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
-import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
 import org.apache.logging.log4j.LogManager;
+
+import java.nio.file.Paths;
+import java.util.function.Function;
 
 /**
  * Register the admin service and console commands
@@ -93,6 +96,11 @@ public final class AdminModule implements ContainerModule {
 
     private void configureService(ContainerConfigurator configurator) {
         configurator.factory(Araknemu.class, container -> app);
+
+        configurator.factory(
+            AdminConfiguration.class,
+            container -> app.configuration().module(AdminConfiguration.class)
+        );
 
         configurator.persist(
             AdminSessionService.class,
@@ -158,7 +166,7 @@ public final class AdminModule implements ContainerModule {
     private void configureResolvers(ContainerConfigurator configurator) {
         configurator.factory(
             PlayerContextResolver.class,
-            container -> new PlayerContextResolver(container.get(PlayerService.class), container.get(AccountContextResolver.class))
+            container -> configureScripts(new PlayerContextResolver(container.get(PlayerService.class), container.get(AccountContextResolver.class))
                 .register(new AbstractContextConfigurator<PlayerContext>() {
                     @Override
                     public void configure(PlayerContext context) {
@@ -170,39 +178,45 @@ public final class AdminModule implements ContainerModule {
                             new CellResolver(),
                         }));
                     }
-                })
+                }),
+                ctx -> container.with(ctx.player()),
+                container.get(AdminConfiguration.class).context("player")
+            )
         );
 
         configurator.persist(
             AccountContextResolver.class,
-            container -> new AccountContextResolver(container.get(AccountService.class), container.get(GlobalContext.class))
+            container -> configureScripts(new AccountContextResolver(container.get(AccountService.class), container.get(GlobalContext.class))
                 .register(new AbstractContextConfigurator<AccountContext>() {
                     @Override
                     public void configure(AccountContext context) {
                         add(new Info(context.account(), container.get(AccountRepository.class)));
                         add(new Ban(context.account(), container.get(BanishmentService.class)));
                     }
-                })
+                }),
+                ctx -> container.with(ctx.account()),
+                container.get(AdminConfiguration.class).context("account")
+            )
         );
 
         configurator.persist(
             DebugContextResolver.class,
-            container -> new DebugContextResolver(container.get(GlobalContext.class))
+            container -> configureScripts(new DebugContextResolver(container.get(GlobalContext.class))
                 .register(new AbstractContextConfigurator<DebugContext>() {
                     @Override
                     public void configure(DebugContext context) {
                         add(new FightPos());
-                        add(new Movement(container.get(MapTemplateRepository.class)));
-                        add(new MapStats(container.get(MapTemplateRepository.class)));
-                        add(new Area(container.get(SpellEffectService.class)));
                         add(new LineOfSight(container.get(MapTemplateRepository.class)));
                     }
-                })
+                }),
+                ctx -> container,
+                container.get(AdminConfiguration.class).context("debug")
+            )
         );
 
         configurator.persist(
             ServerContextResolver.class,
-            container -> new ServerContextResolver(container.get(GlobalContext.class))
+            container -> configureScripts(new ServerContextResolver(container.get(GlobalContext.class))
                 .register(new AbstractContextConfigurator<ServerContext>() {
                     @Override
                     public void configure(ServerContext context) {
@@ -220,7 +234,22 @@ public final class AdminModule implements ContainerModule {
                             container.get(FightService.class)
                         ));
                     }
-                })
+                }),
+                ctx -> container,
+                container.get(AdminConfiguration.class).context("server")
+            )
         );
+    }
+
+    private <C extends Context, R extends ConfigurableContextResolver<C>> R configureScripts(R resolver, Function<C, Container> containerResolver, AdminConfiguration.ContextConfiguration configuration) {
+        if (configuration.enableScripts()) {
+            resolver.register(new ScriptLoaderContextConfigurator<>(
+                Paths.get(configuration.scriptsPath()),
+                containerResolver,
+                LogManager.getLogger(AdminModule.class)
+            ));
+        }
+
+        return resolver;
     }
 }
