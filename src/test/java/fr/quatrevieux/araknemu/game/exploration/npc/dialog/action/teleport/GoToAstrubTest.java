@@ -63,7 +63,6 @@ class GoToAstrubTest extends GameBaseCase {
     @Test
     void apply() {
         factory.create(new ResponseAction(1, "", "")).apply(player);
-        player.interactions().end(1);
 
         assertEquals(player.player().race().astrubPosition(), player.position());
         assertEquals(player.player().race().astrubPosition(), player.player().savedPosition());
@@ -72,9 +71,9 @@ class GoToAstrubTest extends GameBaseCase {
         assertEquals(250, player.cell().id());
 
         requestStack.assertAll(
-            new GameActionResponse("1", ActionType.CHANGE_MAP, player.id(), "7"),
-            Information.positionSaved(),
-            new MapData(player.map())
+            new MapData(player.map()),
+            new GameActionResponse("", ActionType.CHANGE_MAP, player.id(), "7"),
+            Information.positionSaved()
         );
     }
 }

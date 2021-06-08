@@ -34,7 +34,7 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GotoTest  extends CommandTestCase {
+class GotoTest extends CommandTestCase {
     @Override
     @BeforeEach
     public void setUp() throws Exception {
@@ -59,7 +59,6 @@ class GotoTest  extends CommandTestCase {
         ExplorationPlayer player = explorationPlayer();
 
         execute("goto", "map", "10340");
-        player.interactions().end(1);
 
         assertEquals(10340, player.map().id());
         assertOutput("Teleport Bob to [3,6] (10340) at cell 15");
@@ -70,7 +69,6 @@ class GotoTest  extends CommandTestCase {
         ExplorationPlayer player = explorationPlayer();
 
         execute("goto", "position", "3;6");
-        player.interactions().end(1);
 
         assertEquals(10340, player.map().id());
         assertOutput("Teleport Bob to [3,6] (10340) at cell 15");
@@ -82,7 +80,6 @@ class GotoTest  extends CommandTestCase {
         ExplorationPlayer player = explorationPlayer();
 
         execute("goto", "player", other.player().name());
-        player.interactions().end(1);
 
         assertEquals(10540, player.map().id());
         assertOutput("Teleport Bob to [-51,10] (10540) at cell 15");
@@ -93,7 +90,6 @@ class GotoTest  extends CommandTestCase {
         ExplorationPlayer player = explorationPlayer();
 
         execute("goto", "cell", "266");
-        player.interactions().end(1);
 
         assertEquals(10300, player.map().id());
         assertEquals(266, player.position().cell());
@@ -105,7 +101,6 @@ class GotoTest  extends CommandTestCase {
         ExplorationPlayer player = explorationPlayer();
 
         execute("goto", "map", "10340", "cell", "42");
-        player.interactions().end(1);
 
         assertEquals(10340, player.map().id());
         assertEquals(42, player.position().cell());
@@ -170,8 +165,6 @@ class GotoTest  extends CommandTestCase {
         execute("goto", "map", "10340", "--force");
         assertFalse(player.interactions().interacting());
 
-        player.interactions().end(1);
-
         assertEquals(10340, player.map().id());
         assertEquals(15, player.position().cell());
 
@@ -186,7 +179,6 @@ class GotoTest  extends CommandTestCase {
         ExplorationPlayer player = explorationPlayer();
 
         execute("goto", "10340");
-        player.interactions().end(1);
 
         assertEquals(10340, player.map().id());
     }
@@ -196,7 +188,6 @@ class GotoTest  extends CommandTestCase {
         ExplorationPlayer player = explorationPlayer();
 
         execute("goto", "3;6");
-        player.interactions().end(1);
 
         assertEquals(10340, player.map().id());
     }
@@ -207,7 +198,6 @@ class GotoTest  extends CommandTestCase {
         ExplorationPlayer player = explorationPlayer();
 
         execute("goto", other.player().name());
-        player.interactions().end(1);
 
         assertEquals(10540, player.map().id());
     }
