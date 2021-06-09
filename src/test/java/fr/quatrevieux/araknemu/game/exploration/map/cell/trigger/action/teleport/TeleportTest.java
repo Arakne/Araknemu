@@ -21,9 +21,11 @@ package fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.telepor
 
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
+import fr.quatrevieux.araknemu.network.game.out.game.MapData;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,13 +68,16 @@ class TeleportTest extends GameBaseCase {
 
     @Test
     void teleportOnOtherMap() throws Exception {
+        ExplorationPlayer player = explorationPlayer();
+        requestStack.clear();
         teleport = new Teleport(service, 123, new Position(10540, 321));
-        teleport.perform(explorationPlayer());
+        teleport.perform(player);
 
-        assertTrue(explorationPlayer().interactions().busy());
+        assertEquals(new Position(10540, 321), player.position());
 
-        requestStack.assertLast(
-            new GameActionResponse("1", ActionType.CHANGE_MAP, explorationPlayer().id(), "")
+        requestStack.assertAll(
+            new MapData(player.map()),
+            new GameActionResponse("", ActionType.CHANGE_MAP, player.id(), "")
         );
     }
 }
