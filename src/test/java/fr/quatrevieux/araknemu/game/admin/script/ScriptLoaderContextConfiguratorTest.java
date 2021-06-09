@@ -140,4 +140,18 @@ class ScriptLoaderContextConfiguratorTest extends CommandTestCase {
 
         Mockito.verify(logger, Mockito.never()).debug(Mockito.anyString(), Mockito.anyString());
     }
+
+    @Test
+    void loadShouldKeepCompiledClassAfterReload() throws AdminException, SQLException {
+        Logger logger = Mockito.mock(Logger.class);
+        ScriptLoaderContextConfigurator<DebugContext> loader = new ScriptLoaderContextConfigurator<>(Paths.get("src/test/scripts/commands/simple"), c -> container, logger);
+
+        DebugContext context = new DebugContext(new NullContext(), Arrays.asList(loader));
+
+        Class commandClass = context.command("simple").getClass();
+
+        DebugContext newContext = new DebugContext(new NullContext(), Arrays.asList(loader));
+
+        assertSame(commandClass, newContext.command("simple").getClass());
+    }
 }

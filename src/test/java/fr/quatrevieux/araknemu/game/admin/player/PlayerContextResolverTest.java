@@ -31,6 +31,7 @@ import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
+import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +40,7 @@ import org.mockito.Mockito;
 
 import java.sql.SQLException;
 
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -99,5 +101,19 @@ class PlayerContextResolverTest extends GameBaseCase {
         Context context = resolver.resolve(adminUser, player::name);
 
         assertSame(command, context.command("mocked"));
+    }
+
+    @Test
+    void resolveShouldKeepContextInstance() throws ContextException, CommandNotFoundException, SQLException {
+        Context context1 = resolver.resolve(adminUser, () -> "Bob");
+        Context context2 = resolver.resolve(adminUser, () -> "Bob");
+
+        assertSame(context1, context2);
+        assertSame(context1.command("info"), context2.command("info"));
+
+        PlayerContext.class.cast(context1).player().dispatcher().dispatch(new Disconnected());
+        container.get(PlayerService.class).load(session, gamePlayer().id());
+
+        assertNotSame(context1, resolver.resolve(adminUser, () -> "Bob"));
     }
 }
