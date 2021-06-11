@@ -35,6 +35,7 @@ public final class ServerContextResolver implements ConfigurableContextResolver<
     private final Context parentContext;
 
     private final List<AbstractContextConfigurator<ServerContext>> configurators = new ArrayList<>();
+    private ServerContext context;
 
     public ServerContextResolver(Context parentContext) {
         this.parentContext = parentContext;
@@ -42,7 +43,11 @@ public final class ServerContextResolver implements ConfigurableContextResolver<
 
     @Override
     public Context resolve(AdminPerformer performer, Supplier<String> argument) {
-        return new ServerContext(parentContext, configurators);
+        if (context != null) {
+            return context;
+        }
+
+        return context = new ServerContext(parentContext, configurators);
     }
 
     @Override

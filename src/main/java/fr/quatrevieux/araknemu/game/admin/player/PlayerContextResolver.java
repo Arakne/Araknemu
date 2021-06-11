@@ -19,17 +19,21 @@
 
 package fr.quatrevieux.araknemu.game.admin.player;
 
+import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.context.ConfigurableContextResolver;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
+import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.function.Supplier;
 
@@ -41,6 +45,7 @@ public final class PlayerContextResolver implements ConfigurableContextResolver<
     private final AccountContextResolver accountContextResolver;
 
     private final List<AbstractContextConfigurator<PlayerContext>> configurators = new ArrayList<>();
+    private final Map<GamePlayer, PlayerContext> contexts = new HashMap<>();
 
     public PlayerContextResolver(PlayerService service, AccountContextResolver accountContextResolver) {
         this.service = service;
@@ -78,10 +83,33 @@ public final class PlayerContextResolver implements ConfigurableContextResolver<
      * @return The created context
      */
     public PlayerContext resolve(GamePlayer player) throws ContextException {
-        return new PlayerContext(
-            player,
-            accountContextResolver.resolve(player.account()),
-            configurators
-        );
+        return contexts.computeIfAbsent(player, key -> {
+            final PlayerContext context = new PlayerContext(
+                player,
+                accountContextResolver.resolve(player.account()),
+                configurators
+            );
+
+            configurePlayerListener(player);
+
+            return context;
+        });
+    }
+
+    /**
+     * Register listener on player dispatch for free cached context on disconnect
+     */
+    private void configurePlayerListener(GamePlayer player) {
+        player.dispatcher().add(new Listener<Disconnected>() {
+            @Override
+            public void on(Disconnected event) {
+                contexts.remove(player);
+            }
+
+            @Override
+            public Class<Disconnected> event() {
+                return Disconnected.class;
+            }
+        });
     }
 }
