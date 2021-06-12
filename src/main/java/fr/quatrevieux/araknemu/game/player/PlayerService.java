@@ -41,6 +41,7 @@ import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
+import fr.quatrevieux.araknemu.game.world.util.Sender;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 import java.util.Collection;
@@ -53,7 +54,7 @@ import java.util.stream.Stream;
 /**
  * Service for handle {@link GamePlayer}
  */
-public final class PlayerService implements EventsSubscriber {
+public final class PlayerService implements EventsSubscriber, Sender {
     private final PlayerRepository repository;
     private final GameConfiguration configuration;
     private final GameConfiguration.PlayerConfiguration playerConfiguration;
@@ -147,6 +148,16 @@ public final class PlayerService implements EventsSubscriber {
             .stream()
             .filter(predicate)
         ;
+    }
+
+    /**
+     * Send a packet to all connected players
+     *
+     * @param packet The packet to send
+     */
+    @Override
+    public void send(Object packet) {
+        onlinePlayers.forEach((id, player) -> player.send(packet));
     }
 
     /**

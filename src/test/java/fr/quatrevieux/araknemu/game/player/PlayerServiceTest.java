@@ -41,6 +41,7 @@ import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.event.ShutdownScheduled;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 import fr.quatrevieux.araknemu.game.listener.player.*;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
@@ -53,6 +54,7 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.NoSuchElementException;
@@ -260,5 +262,22 @@ class PlayerServiceTest extends GameBaseCase {
 
         dispatcher.dispatch(new ShutdownScheduled(Duration.ofMinutes(10)));
         requestStack.assertLast(Error.shutdownScheduled("10min"));
+    }
+
+    @Test
+    void send() throws Exception {
+        GamePlayer other = makeOtherPlayer();
+        gamePlayer(true);
+
+        Field field = other.getClass().getDeclaredField("session");
+        field.setAccessible(true);
+
+        GameSession otherSession = (GameSession) field.get(other);
+        SendingRequestStack otherRequestStack = new SendingRequestStack((DummyChannel) otherSession.channel());
+
+        container.get(PlayerService.class).send("my packet");
+
+        requestStack.assertLast("my packet");
+        otherRequestStack.assertLast("my packet");
     }
 }

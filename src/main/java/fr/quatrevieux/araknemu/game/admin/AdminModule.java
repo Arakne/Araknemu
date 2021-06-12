@@ -62,6 +62,7 @@ import fr.quatrevieux.araknemu.game.admin.player.teleport.PlayerResolver;
 import fr.quatrevieux.araknemu.game.admin.player.teleport.PositionResolver;
 import fr.quatrevieux.araknemu.game.admin.script.ScriptLoaderContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.server.Banip;
+import fr.quatrevieux.araknemu.game.admin.server.Message;
 import fr.quatrevieux.araknemu.game.admin.server.Online;
 import fr.quatrevieux.araknemu.game.admin.server.ServerContext;
 import fr.quatrevieux.araknemu.game.admin.server.ServerContextResolver;
@@ -147,8 +148,8 @@ public final class AdminModule implements ContainerModule {
             CommandParser.class,
             container -> new ContextCommandParser(
                 performer -> new AggregationContext(
-                    performer.self(),
-                    container.get(ServerContextResolver.class).resolve(performer, null)
+                    container.get(ServerContextResolver.class).resolve(performer, null),
+                    performer.self()
                 ),
                 new ContextResolver[]{
                     container.get(PlayerContextResolver.class),
@@ -177,6 +178,7 @@ public final class AdminModule implements ContainerModule {
                             new PlayerResolver(container.get(PlayerService.class), container.get(ExplorationMapService.class)),
                             new CellResolver(),
                         }));
+                        add(new fr.quatrevieux.araknemu.game.admin.player.Message(context.player()));
                     }
                 }),
                 ctx -> container.with(ctx.player()),
@@ -233,6 +235,7 @@ public final class AdminModule implements ContainerModule {
                             container.get(GameService.class),
                             container.get(FightService.class)
                         ));
+                        add(new Message(container.get(PlayerService.class)));
                     }
                 }),
                 ctx -> container,

@@ -51,6 +51,7 @@ import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
 import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
 import fr.quatrevieux.araknemu.game.admin.player.teleport.Goto;
 import fr.quatrevieux.araknemu.game.admin.server.Banip;
+import fr.quatrevieux.araknemu.game.admin.server.Message;
 import fr.quatrevieux.araknemu.game.admin.server.Online;
 import fr.quatrevieux.araknemu.game.admin.server.ServerContext;
 import fr.quatrevieux.araknemu.game.admin.server.ServerContextResolver;
@@ -108,6 +109,7 @@ class AdminModuleTest extends GameBaseCase {
         assertInstanceOf(GetItem.class, context.command("getitem"));
         assertInstanceOf(Goto.class, context.command("goto"));
         assertInstanceOf(AddXp.class, context.command("addxp"));
+        assertInstanceOf(fr.quatrevieux.araknemu.game.admin.player.Message.class, context.command("msg"));
     }
 
     @Test
@@ -226,6 +228,7 @@ class AdminModuleTest extends GameBaseCase {
         assertInstanceOf(Shutdown.class, context.command("shutdown"));
         assertInstanceOf(Banip.class, context.command("banip"));
         assertInstanceOf(fr.quatrevieux.araknemu.game.admin.server.Info.class, context.command("info"));
+        assertInstanceOf(Message.class, context.command("msg"));
     }
 
     @Test

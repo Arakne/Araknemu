@@ -138,8 +138,8 @@ class AdminUserTest extends GameBaseCase {
 
     @Test
     void executeNoPermissions() {
-        assertThrows(CommandPermissionsException.class, () -> user.execute("info"));
-        Mockito.verify(logger).log(Level.INFO, AdminPerformer.EXECUTE_MARKER, "[{}] {}", user, "info");
+        assertThrows(CommandPermissionsException.class, () -> user.execute("ban"));
+        Mockito.verify(logger).log(Level.INFO, AdminPerformer.EXECUTE_MARKER, "[{}] {}", user, "ban");
     }
 
     @Test
