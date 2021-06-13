@@ -40,6 +40,8 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.game.event.GameSaved;
+import fr.quatrevieux.araknemu.game.event.SavingGame;
 import fr.quatrevieux.araknemu.game.event.ShutdownScheduled;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
@@ -262,6 +264,21 @@ class PlayerServiceTest extends GameBaseCase {
 
         dispatcher.dispatch(new ShutdownScheduled(Duration.ofMinutes(10)));
         requestStack.assertLast(Error.shutdownScheduled("10min"));
+    }
+
+    @Test
+    void savePackets() {
+        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, null)).id();
+        service.load(session, id);
+
+        ListenerAggregate dispatcher = new DefaultListenerAggregate();
+        dispatcher.register(service);
+
+        dispatcher.dispatch(new SavingGame());
+        requestStack.assertLast(Error.saveInProgress());
+
+        dispatcher.dispatch(new GameSaved());
+        requestStack.assertLast(Error.saveTerminated());
     }
 
     @Test

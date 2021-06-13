@@ -33,6 +33,8 @@ import fr.quatrevieux.araknemu.game.listener.player.RestoreLifePointsOnLevelUp;
 import fr.quatrevieux.araknemu.game.listener.player.SavePlayer;
 import fr.quatrevieux.araknemu.game.listener.player.SendLifeChanged;
 import fr.quatrevieux.araknemu.game.listener.player.SendRestrictions;
+import fr.quatrevieux.araknemu.game.listener.player.SendSaveInProgress;
+import fr.quatrevieux.araknemu.game.listener.player.SendSaveTerminated;
 import fr.quatrevieux.araknemu.game.listener.player.SendShutdownScheduled;
 import fr.quatrevieux.araknemu.game.listener.player.SendStats;
 import fr.quatrevieux.araknemu.game.listener.player.StartTutorial;
@@ -197,6 +199,8 @@ public final class PlayerService implements EventsSubscriber, Sender {
     public Listener[] listeners() {
         return new Listener[] {
             new SendShutdownScheduled(this),
+            new SendSaveInProgress(this),
+            new SendSaveTerminated(this),
         };
     }
 

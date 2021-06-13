@@ -98,4 +98,16 @@ class GameConfigurationTest extends GameBaseCase {
         setConfigValue("fight.pvm.placementDuration", "1m30s");
         assertEquals(Duration.ofSeconds(90), configuration.fight().pvmPlacementDuration());
     }
+
+    @Test
+    void autosave() {
+        assertTrue(configuration.autosaveEnabled());
+        assertEquals(Duration.ofHours(4), configuration.autosaveInterval());
+
+        setConfigValue("autosave.enabled", "no");
+        setConfigValue("autosave.interval", "30s");
+
+        assertFalse(configuration.autosaveEnabled());
+        assertEquals(Duration.ofSeconds(30), configuration.autosaveInterval());
+    }
 }

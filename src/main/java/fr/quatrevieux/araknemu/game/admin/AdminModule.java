@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameService;
+import fr.quatrevieux.araknemu.game.SavingService;
 import fr.quatrevieux.araknemu.game.ShutdownService;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContext;
@@ -64,6 +65,7 @@ import fr.quatrevieux.araknemu.game.admin.script.ScriptLoaderContextConfigurator
 import fr.quatrevieux.araknemu.game.admin.server.Banip;
 import fr.quatrevieux.araknemu.game.admin.server.Message;
 import fr.quatrevieux.araknemu.game.admin.server.Online;
+import fr.quatrevieux.araknemu.game.admin.server.Save;
 import fr.quatrevieux.araknemu.game.admin.server.ServerContext;
 import fr.quatrevieux.araknemu.game.admin.server.ServerContextResolver;
 import fr.quatrevieux.araknemu.game.admin.server.Shutdown;
@@ -178,7 +180,6 @@ public final class AdminModule implements ContainerModule {
                             new PlayerResolver(container.get(PlayerService.class), container.get(ExplorationMapService.class)),
                             new CellResolver(),
                         }));
-                        add(new fr.quatrevieux.araknemu.game.admin.player.Message(context.player()));
                     }
                 }),
                 ctx -> container.with(ctx.player()),
@@ -236,6 +237,7 @@ public final class AdminModule implements ContainerModule {
                             container.get(FightService.class)
                         ));
                         add(new Message(container.get(PlayerService.class)));
+                        add(new Save(container.get(SavingService.class)));
                     }
                 }),
                 ctx -> container,

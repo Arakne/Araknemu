@@ -213,6 +213,16 @@ game.dbname = araknemu
 ; > Default value : 45s
 ;fight.pvm.placementDuration = 45s
 
+; Auto save
+; ---------
+; > The interval between two automatic save of connected players
+; > Note: Players are regularly saved apart of autosave, so it's not required to set a small value
+; > Default: 4 hours (4h)
+;autosave.interval = 4h
+; > Enable automatic saving of connected players
+; > Default: true
+;autosave.enabled = true
+
 [admin]
 ; Section for configure admin commands
 

@@ -14,34 +14,34 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.listener.player;
 
-import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.game.event.ShutdownScheduled;
+import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.event.GameSaved;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-/**
- * Send to all connected players the scheduled shutdown
- */
-public final class SendShutdownScheduled implements Listener<ShutdownScheduled> {
-    private final PlayerService service;
-
-    public SendShutdownScheduled(PlayerService service) {
-        this.service = service;
-    }
+class SendSaveTerminatedTest extends GameBaseCase {
+    private SendSaveTerminated listener;
 
     @Override
-    public void on(ShutdownScheduled event) {
-        // @todo Should be translated : Dofus client do not translate this delay
-        service.send(Error.shutdownScheduled(event.delay().toMinutes() + "min"));
+    @BeforeEach
+    public void setUp() throws Exception {
+        super.setUp();
+
+        gamePlayer(true);
+        listener = new SendSaveTerminated(container.get(PlayerService.class));
     }
 
-    @Override
-    public Class<ShutdownScheduled> event() {
-        return ShutdownScheduled.class;
+    @Test
+    void onGameSaved() {
+        listener.on(new GameSaved());
+
+        requestStack.assertLast(Error.saveTerminated());
     }
 }

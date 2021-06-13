@@ -14,34 +14,33 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.listener.player;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.game.event.ShutdownScheduled;
+import fr.quatrevieux.araknemu.game.event.SavingGame;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 
 /**
- * Send to all connected players the scheduled shutdown
+ * Send to all connected players that the server perform a save
  */
-public final class SendShutdownScheduled implements Listener<ShutdownScheduled> {
+public final class SendSaveInProgress implements Listener<SavingGame> {
     private final PlayerService service;
 
-    public SendShutdownScheduled(PlayerService service) {
+    public SendSaveInProgress(PlayerService service) {
         this.service = service;
     }
 
     @Override
-    public void on(ShutdownScheduled event) {
-        // @todo Should be translated : Dofus client do not translate this delay
-        service.send(Error.shutdownScheduled(event.delay().toMinutes() + "min"));
+    public void on(SavingGame event) {
+        service.send(Error.saveInProgress());
     }
 
     @Override
-    public Class<ShutdownScheduled> event() {
-        return ShutdownScheduled.class;
+    public Class<SavingGame> event() {
+        return SavingGame.class;
     }
 }

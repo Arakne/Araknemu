@@ -160,6 +160,7 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(BanIpService.class, container.get(BanIpService.class));
         assertInstanceOf(GameBanIpSynchronizer.class, container.get(GameBanIpSynchronizer.class));
         assertInstanceOf(Simulator.class, container.get(Simulator.class));
+        assertInstanceOf(SavingService.class, container.get(SavingService.class));
 
         assertSame(
             container.get(ListenerAggregate.class),
