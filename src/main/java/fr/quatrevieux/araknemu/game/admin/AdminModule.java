@@ -63,6 +63,7 @@ import fr.quatrevieux.araknemu.game.admin.player.teleport.PlayerResolver;
 import fr.quatrevieux.araknemu.game.admin.player.teleport.PositionResolver;
 import fr.quatrevieux.araknemu.game.admin.script.ScriptLoaderContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.server.Banip;
+import fr.quatrevieux.araknemu.game.admin.server.Kick;
 import fr.quatrevieux.araknemu.game.admin.server.Message;
 import fr.quatrevieux.araknemu.game.admin.server.Online;
 import fr.quatrevieux.araknemu.game.admin.server.Save;
@@ -238,6 +239,7 @@ public final class AdminModule implements ContainerModule {
                         ));
                         add(new Message(container.get(PlayerService.class)));
                         add(new Save(container.get(SavingService.class)));
+                        add(new Kick(container.get(PlayerService.class)));
                     }
                 }),
                 ctx -> container,

@@ -52,6 +52,7 @@ public final class PlayerContext extends AbstractContext<PlayerContext> {
             .add(new Restriction(player))
             .add(new Save(player))
             .add(new Message(player))
+            .add(new Kick(player))
         ;
     }
 

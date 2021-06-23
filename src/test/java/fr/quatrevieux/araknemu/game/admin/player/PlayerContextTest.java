@@ -57,6 +57,7 @@ class PlayerContextTest extends GameBaseCase {
         assertInstanceOf(Restriction.class, context.command("restriction"));
         assertInstanceOf(Message.class, context.command("msg"));
         assertInstanceOf(Save.class, context.command("save"));
+        assertInstanceOf(Kick.class, context.command("kick"));
 
         assertContainsType(Info.class, context.commands());
         assertContainsType(SetLife.class, context.commands());
@@ -64,7 +65,7 @@ class PlayerContextTest extends GameBaseCase {
         assertContainsType(AddXp.class, context.commands());
         assertContainsType(Restriction.class, context.commands());
         assertContainsType(Message.class, context.commands());
-        assertContainsType(Save.class, context.commands());
+        assertContainsType(Kick.class, context.commands());
     }
 
     @Test

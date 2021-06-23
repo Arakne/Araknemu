@@ -58,8 +58,8 @@ class MapChannelTest extends FightBaseCase {
     void sendExplorationMap() throws SQLException, ContainerException {
         ExplorationPlayer player = explorationPlayer();
 
-        GameSession s2 = makeSimpleExplorationSession(2);
-        GameSession s3 = makeSimpleExplorationSession(3);
+        GameSession s2 = makeSimpleExplorationSession(5);
+        GameSession s3 = makeSimpleExplorationSession(6);
 
         GamePlayer gp1 = gamePlayer();
         GamePlayer gp2 = s2.player();

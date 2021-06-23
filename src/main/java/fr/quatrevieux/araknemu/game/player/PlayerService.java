@@ -84,7 +84,7 @@ public final class PlayerService implements EventsSubscriber, Sender {
      * Load the player for entering game
      *
      * @param session The current session
-     * @param id The player race
+     * @param id The player id
      *
      * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException When cannot found player on server
      * @throws RepositoryException For any other repository errors

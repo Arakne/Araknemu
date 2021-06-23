@@ -402,11 +402,14 @@ public class GameBaseCase extends DatabaseTestCase {
         Player player = dataSet.push(new Player(-1, 5, 2, "Other", Race.CRA, Gender.MALE, new Colors(-1, -1, -1), level, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, -1, 0, new Position(10540, 210), 0));
         GameSession session = server.createSession();
 
+        // @todo à tester
         session.attach(new GameAccount(
             new Account(5),
             container.get(AccountService.class),
             2
         ));
+
+        session.account().attach(session);
 
         GamePlayer gp =  container.get(PlayerService.class).load(
             session,
@@ -457,6 +460,10 @@ public class GameBaseCase extends DatabaseTestCase {
     }
 
     public GamePlayer makeSimpleGamePlayer(int id, GameSession session) throws ContainerException, SQLException {
+        return makeSimpleGamePlayer(id, session, false);
+    }
+
+    public GamePlayer makeSimpleGamePlayer(int id, GameSession session, boolean load) throws ContainerException, SQLException {
         dataSet
             .pushSpells()
             .pushRaces()
@@ -467,22 +474,32 @@ public class GameBaseCase extends DatabaseTestCase {
 
         container.get(PlayerExperienceService.class).preload(container.get(Logger.class));
 
-        Player player = dataSet.createPlayer(id);
+        Player player = dataSet.pushPlayer(dataSet.createPlayer(id));
 
-        GamePlayer gp = new GamePlayer(
-            new GameAccount(
-                new Account(id),
-                container.get(AccountService.class),
-                2
-            ),
-            player,
-            container.get(PlayerRaceService.class).get(Race.FECA),
-            session,
-            container.get(PlayerService.class),
-            container.get(InventoryService.class).load(player),
-            container.get(SpellBookService.class).load(session, player),
-            container.get(PlayerExperienceService.class).load(session, player)
-        );
+        Account account = new Account(player.accountId(), "ACCOUNT_" + id, "test", "ACCOUNT_" + id, EnumSet.noneOf(Permission.class), "", "");
+        GameAccount ga = new GameAccount(account, container.get(AccountService.class), 2);
+        ga.attach(session);
+
+        GamePlayer gp;
+
+        if (load) {
+            gp = container.get(PlayerService.class).load(session, id);
+        } else {
+            gp = new GamePlayer(
+                new GameAccount(
+                    new Account(player.accountId()),
+                    container.get(AccountService.class),
+                    2
+                ),
+                player,
+                container.get(PlayerRaceService.class).get(Race.FECA),
+                session,
+                container.get(PlayerService.class),
+                container.get(InventoryService.class).load(player),
+                container.get(SpellBookService.class).load(session, player),
+                container.get(PlayerExperienceService.class).load(session, player)
+            );
+        }
 
         session.setPlayer(gp);
 
