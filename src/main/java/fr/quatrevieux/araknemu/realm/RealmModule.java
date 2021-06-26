@@ -100,7 +100,8 @@ public final class RealmModule implements ContainerModule {
                     container.get(AuthBanIpSynchronizer.class)
                 ),
                 Arrays.asList(
-                    container.get(AuthBanIpSynchronizer.class)
+                    container.get(AuthBanIpSynchronizer.class),
+                    container.get(AuthenticationService.class)
                 )
             )
         );
@@ -187,7 +188,8 @@ public final class RealmModule implements ContainerModule {
         configurator.persist(
             HostService.class,
             container -> new HostService(
-                container.get(PlayerRepository.class)
+                container.get(PlayerRepository.class),
+                container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class)
             )
         );
 
