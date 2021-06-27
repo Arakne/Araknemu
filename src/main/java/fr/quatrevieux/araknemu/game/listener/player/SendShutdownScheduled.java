@@ -37,7 +37,7 @@ public final class SendShutdownScheduled implements Listener<ShutdownScheduled> 
     @Override
     public void on(ShutdownScheduled event) {
         // @todo Should be translated : Dofus client do not translate this delay
-        service.online().forEach(player -> player.send(Error.shutdownScheduled(event.delay().toMinutes() + "min")));
+        service.send(Error.shutdownScheduled(event.delay().toMinutes() + "min"));
     }
 
     @Override

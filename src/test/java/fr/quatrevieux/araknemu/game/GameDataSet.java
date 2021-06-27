@@ -142,7 +142,7 @@ public class GameDataSet extends TestingDataSet {
      * Create a simple player data
      */
     public Player createPlayer(int id) {
-        return new Player(id, 10000 + id, 1, "PLAYER_" + id, Race.CRA, Gender.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, -1, 0, new Position(10540, 210), 0);
+        return new Player(id, 10000 + id, 2, "PLAYER_" + id, Race.CRA, Gender.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, -1, 0, new Position(10540, 210), 0);
     }
 
     /**
@@ -152,6 +152,26 @@ public class GameDataSet extends TestingDataSet {
         Player player = new Player(-1, accountId, serverId, name, Race.CRA, Gender.MALE, new Colors(-1, -1, -1), 1, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, -1, 0, new Position(10540, 210), 0);
 
         return push(player);
+    }
+
+    /**
+     * Create a new player
+     */
+    public Player pushPlayer(Player player) throws SQLException {
+        Player dbPlayer = push(player);
+
+        if (player.id() == -1) {
+            return dbPlayer;
+        }
+
+        // Change the DB id
+        connection.prepare("UPDATE PLAYER SET PLAYER_ID = ? WHERE PLAYER_ID = ?", stmt -> {
+            stmt.setInt(1, player.id());
+            stmt.setInt(2, dbPlayer.id());
+            return stmt.executeUpdate();
+        });
+
+        return player;
     }
 
     public MapTrigger pushTrigger(MapTrigger trigger) throws ContainerException, SQLException {

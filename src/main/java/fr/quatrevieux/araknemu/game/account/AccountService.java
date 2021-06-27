@@ -25,6 +25,8 @@ import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.listener.KickBannedAccount;
+import fr.quatrevieux.araknemu.game.listener.account.SendAdminAccess;
+import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -128,6 +130,17 @@ public final class AccountService implements EventsSubscriber {
     public Listener[] listeners() {
         return new Listener[] {
             new KickBannedAccount(),
+            new Listener<PlayerLoaded>() {
+                @Override
+                public void on(PlayerLoaded event) {
+                    event.player().dispatcher().add(new SendAdminAccess());
+                }
+
+                @Override
+                public Class<PlayerLoaded> event() {
+                    return PlayerLoaded.class;
+                }
+            },
         };
     }
 

@@ -33,6 +33,8 @@ import fr.quatrevieux.araknemu.game.listener.player.RestoreLifePointsOnLevelUp;
 import fr.quatrevieux.araknemu.game.listener.player.SavePlayer;
 import fr.quatrevieux.araknemu.game.listener.player.SendLifeChanged;
 import fr.quatrevieux.araknemu.game.listener.player.SendRestrictions;
+import fr.quatrevieux.araknemu.game.listener.player.SendSaveInProgress;
+import fr.quatrevieux.araknemu.game.listener.player.SendSaveTerminated;
 import fr.quatrevieux.araknemu.game.listener.player.SendShutdownScheduled;
 import fr.quatrevieux.araknemu.game.listener.player.SendStats;
 import fr.quatrevieux.araknemu.game.listener.player.StartTutorial;
@@ -41,6 +43,7 @@ import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
+import fr.quatrevieux.araknemu.game.world.util.Sender;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 import java.util.Collection;
@@ -53,7 +56,7 @@ import java.util.stream.Stream;
 /**
  * Service for handle {@link GamePlayer}
  */
-public final class PlayerService implements EventsSubscriber {
+public final class PlayerService implements EventsSubscriber, Sender {
     private final PlayerRepository repository;
     private final GameConfiguration configuration;
     private final GameConfiguration.PlayerConfiguration playerConfiguration;
@@ -81,7 +84,7 @@ public final class PlayerService implements EventsSubscriber {
      * Load the player for entering game
      *
      * @param session The current session
-     * @param id The player race
+     * @param id The player id
      *
      * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException When cannot found player on server
      * @throws RepositoryException For any other repository errors
@@ -150,6 +153,16 @@ public final class PlayerService implements EventsSubscriber {
     }
 
     /**
+     * Send a packet to all connected players
+     *
+     * @param packet The packet to send
+     */
+    @Override
+    public void send(Object packet) {
+        onlinePlayers.forEach((id, player) -> player.send(packet));
+    }
+
+    /**
      * Check if the player is online
      *
      * @param name The player name
@@ -186,6 +199,8 @@ public final class PlayerService implements EventsSubscriber {
     public Listener[] listeners() {
         return new Listener[] {
             new SendShutdownScheduled(this),
+            new SendSaveInProgress(this),
+            new SendSaveTerminated(this),
         };
     }
 

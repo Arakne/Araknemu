@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.core.di.ContainerModule;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameService;
+import fr.quatrevieux.araknemu.game.SavingService;
 import fr.quatrevieux.araknemu.game.ShutdownService;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.admin.account.AccountContext;
@@ -62,7 +63,10 @@ import fr.quatrevieux.araknemu.game.admin.player.teleport.PlayerResolver;
 import fr.quatrevieux.araknemu.game.admin.player.teleport.PositionResolver;
 import fr.quatrevieux.araknemu.game.admin.script.ScriptLoaderContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.server.Banip;
+import fr.quatrevieux.araknemu.game.admin.server.Kick;
+import fr.quatrevieux.araknemu.game.admin.server.Message;
 import fr.quatrevieux.araknemu.game.admin.server.Online;
+import fr.quatrevieux.araknemu.game.admin.server.Save;
 import fr.quatrevieux.araknemu.game.admin.server.ServerContext;
 import fr.quatrevieux.araknemu.game.admin.server.ServerContextResolver;
 import fr.quatrevieux.araknemu.game.admin.server.Shutdown;
@@ -147,8 +151,8 @@ public final class AdminModule implements ContainerModule {
             CommandParser.class,
             container -> new ContextCommandParser(
                 performer -> new AggregationContext(
-                    performer.self(),
-                    container.get(ServerContextResolver.class).resolve(performer, null)
+                    container.get(ServerContextResolver.class).resolve(performer, null),
+                    performer.self()
                 ),
                 new ContextResolver[]{
                     container.get(PlayerContextResolver.class),
@@ -233,6 +237,9 @@ public final class AdminModule implements ContainerModule {
                             container.get(GameService.class),
                             container.get(FightService.class)
                         ));
+                        add(new Message(container.get(PlayerService.class)));
+                        add(new Save(container.get(SavingService.class)));
+                        add(new Kick(container.get(PlayerService.class)));
                     }
                 }),
                 ctx -> container,

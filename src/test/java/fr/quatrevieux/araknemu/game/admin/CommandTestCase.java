@@ -117,6 +117,7 @@ abstract public class CommandTestCase extends GameBaseCase {
         try {
             final AdminUser performer = user();
             performer.account().get().grant(Permission.values());
+            requestStack.clear();
 
             final CommandParser.Arguments parsedArgs = new CommandParser.Arguments("", "", command.name(), Arrays.asList(arguments), user().self());
 

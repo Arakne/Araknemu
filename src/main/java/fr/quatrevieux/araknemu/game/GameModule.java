@@ -250,7 +250,8 @@ public final class GameModule implements ContainerModule {
                     container.get(PlayerRaceService.class),
                     container.get(PlayerExperienceService.class),
 
-                    container.get(GameBanIpSynchronizer.class)
+                    container.get(GameBanIpSynchronizer.class),
+                    container.get(SavingService.class)
                 ),
 
                 // Subscribers
@@ -271,7 +272,8 @@ public final class GameModule implements ContainerModule {
                     container.get(PlayerService.class),
                     container.get(AccountService.class),
                     container.get(ShutdownService.class),
-                    container.get(GameBanIpSynchronizer.class)
+                    container.get(GameBanIpSynchronizer.class),
+                    container.get(SavingService.class)
                 )
             )
         );
@@ -899,6 +901,12 @@ public final class GameModule implements ContainerModule {
 
         configurator.persist(SessionLogService.class, container -> new SessionLogService(
             container.get(ConnectionLogRepository.class)
+        ));
+
+        configurator.persist(SavingService.class, container -> new SavingService(
+            container.get(PlayerService.class),
+            container.get(GameConfiguration.class),
+            container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class)
         ));
     }
 }

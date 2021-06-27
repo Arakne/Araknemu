@@ -43,7 +43,10 @@ public final class AccountContext extends AbstractContext<AccountContext> {
 
     @Override
     protected SimpleContext createContext() {
-        return new SimpleContext(globalContext);
+        return new SimpleContext(globalContext)
+            .add(new Grant(account))
+            .add(new Revoke(account))
+        ;
     }
 
     /**

@@ -158,4 +158,18 @@ public final class Error extends AbstractInformationMessage {
     public static Error shutdownScheduled(String delay) {
         return new Error(15, delay);
     }
+
+    /**
+     * A game server save is in progress
+     */
+    public static Error saveInProgress() {
+        return new Error(164);
+    }
+
+    /**
+     * The current game server save is terminated
+     */
+    public static Error saveTerminated() {
+        return new Error(165);
+    }
 }

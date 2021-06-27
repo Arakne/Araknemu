@@ -105,4 +105,14 @@ class ErrorTest {
     void shutdownScheduled() {
         assertEquals("Im115;10min", Error.shutdownScheduled("10min").toString());
     }
+
+    @Test
+    void saveInProgress() {
+        assertEquals("Im1164;", Error.saveInProgress().toString());
+    }
+
+    @Test
+    void saveTerminated() {
+        assertEquals("Im1165;", Error.saveTerminated().toString());
+    }
 }

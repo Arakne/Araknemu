@@ -103,6 +103,23 @@ public final class GameConfiguration implements ConfigurationModule {
     }
 
     /**
+     * The interval between two automatic save of connected players
+     * Note: Players are regularly saved apart of autosave, so it's not required to set a small value
+     * Default: 4 hours (4h)
+     */
+    public Duration autosaveInterval() {
+        return pool.duration("autosave.interval", Duration.ofHours(4));
+    }
+
+    /**
+     * Enable automatic saving of connected players
+     * Default: true
+     */
+    public boolean autosaveEnabled() {
+        return pool.bool("autosave.enabled", true);
+    }
+
+    /**
      * Get player configuration
      */
     public PlayerConfiguration player() {
