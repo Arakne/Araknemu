@@ -98,6 +98,10 @@ public final class Help extends AbstractCommand<CommandParser.Arguments> {
         performer.info("<i>(i) You can click on the command name for open its help page</i>");
 
         for (Command command : arguments.context().commands()) {
+            if (!performer.isGranted(command.permissions())) {
+                continue;
+            }
+
             performer.info(
                 "{} - {}",
                 new Link()

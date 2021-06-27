@@ -19,13 +19,27 @@
 
 package fr.quatrevieux.araknemu.game.admin.global;
 
+import fr.quatrevieux.araknemu.common.account.Permission;
+import fr.quatrevieux.araknemu.game.admin.AdminUser;
+import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
+import fr.quatrevieux.araknemu.game.admin.executor.CommandExecutor;
 import fr.quatrevieux.araknemu.game.admin.executor.argument.ArgumentsHydrator;
+import fr.quatrevieux.araknemu.network.game.out.basic.admin.CommandResult;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HelpTest extends CommandTestCase {
     @Override
@@ -46,6 +60,39 @@ class HelpTest extends CommandTestCase {
         assertInfo("<u><a href='asfunction:onHref,ExecCmd,help setlife,true'>setlife</a></u> - Change the player current life");
         assertInfo("<u><a href='asfunction:onHref,ExecCmd,help help,true'>help</a></u> - Show help for use the console commands");
         assertInfo("<u><a href='asfunction:onHref,ExecCmd,help info,true'>info</a></u> - Display information on the selected player");
+    }
+
+    @Test
+    void executeShouldFilterForbiddenCommands() throws SQLException, AdminException {
+        final AdminUser performer = user();
+        final CommandParser.Arguments parsedArgs = new CommandParser.Arguments("", "", command.name(), Collections.singletonList("help"), user().self());
+
+        performer.account().get().grant(Permission.ACCESS);
+
+        requestStack.clear();
+        container.get(CommandExecutor.class).execute(command, performer, parsedArgs);
+        List<String> messages = requestStack.channel.getMessages().stream().filter(CommandResult.class::isInstance).skip(6).map(Object::toString).map(s -> s.substring(4)).collect(Collectors.toList());
+
+        assertTrue(messages.stream().anyMatch(s -> s.contains("msg")));
+        assertTrue(messages.stream().anyMatch(s -> s.contains("help")));
+        assertFalse(messages.stream().anyMatch(s -> s.contains("kick")));
+        assertFalse(messages.stream().anyMatch(s -> s.contains("goto")));
+        assertFalse(messages.stream().anyMatch(s -> s.contains("ban")));
+        assertFalse(messages.stream().anyMatch(s -> s.contains("grant")));
+
+        performer.account().get().grant(Permission.values());
+
+        requestStack.clear();
+
+        container.get(CommandExecutor.class).execute(command, performer, parsedArgs);
+        messages = requestStack.channel.getMessages().stream().filter(CommandResult.class::isInstance).skip(6).map(Object::toString).map(s -> s.substring(4)).collect(Collectors.toList());
+
+        assertTrue(messages.stream().anyMatch(s -> s.contains("msg")));
+        assertTrue(messages.stream().anyMatch(s -> s.contains("help")));
+        assertTrue(messages.stream().anyMatch(s -> s.contains("kick")));
+        assertTrue(messages.stream().anyMatch(s -> s.contains("goto")));
+        assertTrue(messages.stream().anyMatch(s -> s.contains("ban")));
+        assertTrue(messages.stream().anyMatch(s -> s.contains("grant")));
     }
 
     @Test
