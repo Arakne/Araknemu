@@ -136,4 +136,20 @@ class AuthenticationAccountTest extends RealmBaseCase {
         assertFalse(service.isAuthenticated(account));
         assertFalse(session.isLogged());
     }
+
+    @Test
+    void send() {
+        AuthenticationAccount account = new AuthenticationAccount(
+            new Account(1, "user", "pass", "pseudo"),
+            new PlainTextHash().parse("password"),
+            service
+        );
+
+        account.send("aaa");
+
+        account.attach(session);
+
+        account.send("bbb");
+        requestStack.assertLast("bbb");
+    }
 }
