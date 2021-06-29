@@ -55,10 +55,12 @@ class ExecuteCommandTest extends GameBaseCase {
 
     @Test
     void handleWithError() throws Exception {
+        requestStack.clear();
         handler.handle(session, new AdminCommand("badCommand"));
 
-        requestStack.assertLast(
-            new CommandResult(LogType.ERROR, "Command 'badCommand' is not found")
+        requestStack.assertAll(
+            new CommandResult(LogType.ERROR, "Command 'badCommand' is not found"),
+            new CommandResult(LogType.ERROR, "Did you mean <u><a href='asfunction:onHref,ExecCmd, addstats,false'>addstats</a></u> ? (See <u><a href='asfunction:onHref,ExecCmd, help addstats,true'>help</a></u>)")
         );
     }
 }

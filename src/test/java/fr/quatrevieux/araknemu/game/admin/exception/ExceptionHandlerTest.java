@@ -23,44 +23,65 @@ import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.admin.AdminSessionService;
 import fr.quatrevieux.araknemu.game.admin.AdminUser;
+import fr.quatrevieux.araknemu.game.admin.CommandParser;
+import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
 import fr.quatrevieux.araknemu.game.admin.LogType;
 import fr.quatrevieux.araknemu.network.game.out.basic.admin.CommandResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.EnumSet;
 
-class ExceptionHandlerTest extends GameBaseCase {
+class ExceptionHandlerTest extends CommandTestCase {
     private ExceptionHandler handler;
-    private AdminUser adminUser;
 
     @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
-        adminUser = container.get(AdminSessionService.class).user(gamePlayer());
+        performer = new PerformerWrapper(user());
         handler = new ExceptionHandler();
     }
 
     @Test
-    void errors() {
-        assertHandle("Command 'TEST' is not found", new CommandNotFoundException("TEST"));
-        assertHandle("An error occurs during execution of 'TEST' : MY ERROR", new CommandException("TEST", "MY ERROR"));
-        assertHandle("Unauthorized command 'TEST', you need at least these permissions [ACCESS, MANAGE_PLAYER]", new CommandPermissionsException("TEST", EnumSet.of(Permission.ACCESS, Permission.MANAGE_PLAYER)));
-        assertHandle("Error during resolving context : MY ERROR", new ContextException("MY ERROR"));
-        assertHandle("The context 'TEST' is not found", new ContextNotFoundException("TEST"));
-        assertHandle("Error : java.lang.Exception: my error", new Exception("my error"));
+    void simpleErrors() {
+        assertHandle(new CommandNotFoundException("TEST"), "Command 'TEST' is not found");
+        assertHandle(new CommandException("TEST", "MY ERROR"),
+            "An error occurs during execution of 'TEST' : MY ERROR",
+            "See <u><a href='asfunction:onHref,ExecCmd, help TEST,true'>help</a></u> for usage"
+        );
+        assertHandle(new CommandPermissionsException("TEST", EnumSet.of(Permission.ACCESS, Permission.MANAGE_PLAYER)), "Unauthorized command 'TEST', you need at least these permissions [ACCESS, MANAGE_PLAYER]");
+        assertHandle(new ContextException("MY ERROR"), "Error during resolving context : MY ERROR");
+        assertHandle(new ContextNotFoundException("TEST"), "The context 'TEST' is not found");
+        assertHandle(new Exception("my error"), "Error : java.lang.Exception: my error");
     }
 
-    public void assertMessage(String message) {
-        requestStack.assertLast(
-            new CommandResult(LogType.ERROR, message)
+    @Test
+    void commandExecutionError() {
+        CommandParser.Arguments arguments = new CommandParser.Arguments("", "!", "foo", Arrays.asList("foo", "bar", "baz"), performer.self());
+
+        assertHandle(new CommandExecutionException(arguments, new CommandNotFoundException("foo")),
+            "Command 'foo' is not found",
+            "Did you mean <u><a href='asfunction:onHref,ExecCmd,! goto bar baz,false'>goto</a></u> ? (See <u><a href='asfunction:onHref,ExecCmd,! help goto,true'>help</a></u>)"
+        );
+        assertHandle(new CommandExecutionException(arguments, new CommandException("foo", "MY ERROR")),
+            "An error occurs during execution of 'foo' : MY ERROR",
+            "See <u><a href='asfunction:onHref,ExecCmd,! help foo,true'>help</a></u> for usage"
+        );
+        assertHandle(new CommandExecutionException(arguments, new CommandPermissionsException("foo", EnumSet.of(Permission.ACCESS, Permission.MANAGE_PLAYER))), "Unauthorized command 'foo', you need at least these permissions [ACCESS, MANAGE_PLAYER]");
+        assertHandle(new CommandExecutionException(arguments, new ContextException("MY ERROR")), "Error during resolving context : MY ERROR");
+        assertHandle(new CommandExecutionException(arguments, new ContextNotFoundException("foo")), "The context 'foo' is not found");
+        assertHandle(new CommandExecutionException(arguments, new Exception("my error")),
+            "An error occurs during execution of 'foo' : my error",
+            "See <u><a href='asfunction:onHref,ExecCmd,! help foo,true'>help</a></u> for usage"
         );
     }
 
-    public void assertHandle(String message, Exception e) {
-        handler.handle(adminUser, e);
-        assertMessage(message);
+    public void assertHandle(Exception e, String... messages) {
+        handler.handle(performer, e);
+        assertOutput(messages);
+        performer.logs.clear();
     }
 }

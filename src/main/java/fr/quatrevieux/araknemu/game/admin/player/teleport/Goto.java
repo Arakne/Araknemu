@@ -93,7 +93,7 @@ public final class Goto extends AbstractCommand<Goto.Arguments> {
     @Override
     public void execute(AdminPerformer performer, Arguments arguments) throws AdminException {
         if ((!player.isExploring() || player.exploration().interactions().busy()) && !arguments.force) {
-            throw new AdminException("The player is busy, and cannot be teleported. Use --force to force the teleportation.");
+            error("The player is busy, and cannot be teleported. Use --force to force the teleportation.");
         }
 
         final Target target = parseTarget(arguments.targets);
@@ -118,7 +118,7 @@ public final class Goto extends AbstractCommand<Goto.Arguments> {
                 ++argIndex;
 
                 if (arguments.size() < argIndex + 1) {
-                    throw new AdminException("Missing argument for type " + argument);
+                    error("Missing argument for type " + argument);
                 }
 
                 try {
@@ -131,7 +131,7 @@ public final class Goto extends AbstractCommand<Goto.Arguments> {
             }
 
             if (!autoResolve(argument, target)) {
-                throw new AdminException("Cannot resolve the argument or type " + argument);
+                error("Cannot resolve the argument or type " + argument);
             }
         }
 

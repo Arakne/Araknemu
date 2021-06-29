@@ -77,7 +77,7 @@ public final class Kick extends AbstractCommand<List<String>> {
      */
     private void checkNotSelf(AdminPerformer performer) throws CommandException {
         if (performer.account().filter(player.account()::equals).isPresent()) {
-            throw new CommandException(name(), "Cannot kick yourself");
+            error("Cannot kick yourself");
         }
     }
 }

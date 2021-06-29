@@ -113,7 +113,7 @@ public final class Shutdown extends AbstractCommand<Shutdown.Arguments> implemen
     }
 
     public static final class Arguments implements SubArguments<Shutdown> {
-        @Argument(required = true)
+        @Argument(required = true, metaVar = "TIME")
         @SubCommands({
             @SubCommand(name = "now", impl = NowArguments.class),
             @SubCommand(name = "in", impl = InArguments.class),
@@ -150,7 +150,7 @@ public final class Shutdown extends AbstractCommand<Shutdown.Arguments> implemen
         }
 
         public static final class InArguments implements SubArguments<Shutdown> {
-            @Argument(required = true)
+            @Argument(required = true, metaVar = "DURATION")
             private Duration duration;
 
             @Override
@@ -160,7 +160,7 @@ public final class Shutdown extends AbstractCommand<Shutdown.Arguments> implemen
         }
 
         public static final class AtArguments implements SubArguments<Shutdown> {
-            @Argument(required = true)
+            @Argument(required = true, metaVar = "TIME")
             private LocalTime time;
 
             @Override

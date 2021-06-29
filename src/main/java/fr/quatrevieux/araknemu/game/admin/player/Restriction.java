@@ -90,7 +90,7 @@ public final class Restriction extends AbstractCommand<List<String>> {
                     break;
 
                 default:
-                    throw new CommandException(name(), "Invalid or missing operation on argument " + argument);
+                    error("Invalid or missing operation on argument " + argument);
             }
         }
 
