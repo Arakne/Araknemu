@@ -95,16 +95,16 @@ class BanipTest extends CommandTestCase {
 
     @Test
     void addBadParameters() {
-        assertThrows(CommandException.class, () -> execute("banip", "add"));
-        assertThrows(CommandException.class, () -> execute("banip", "add", "invalid"));
-        assertThrows(CommandException.class, () -> execute("banip", "add", "14.25.36.21"));
-        assertThrows(CommandException.class, () -> execute("banip", "add", "14.25.36.21", "invalid"));
-        assertThrows(CommandException.class, () -> execute("banip", "add", "14.25.36.21", "for"));
-        assertThrows(CommandException.class, () -> execute("banip", "add", "14.25.36.21", "for", "invalid"));
-        assertThrows(CommandException.class, () -> execute("banip", "add", "14.25.36.21", "forever"));
-        assertThrows(CommandException.class, () -> execute("banip", "add", "14.25.36.21", "for", "1h"));
-        assertThrows(CommandException.class, () -> execute("banip", "add", "127.0.0.1", "forever", "cause"));
-        assertThrows(CommandException.class, () -> execute("banip", "add", "127.0.0.0/24", "forever", "cause"));
+        assertThrowsWithMessage(CommandException.class, "Argument \"IP_ADDRESS\" is required", () -> execute("banip", "add"));
+        assertThrowsWithMessage(CommandException.class, "Invalid IP address given", () -> execute("banip", "add", "invalid"));
+        assertThrowsWithMessage(CommandException.class, "Argument \"DURATION\" is required", () -> execute("banip", "add", "14.25.36.21"));
+        assertThrowsWithMessage(CommandException.class, "\"invalid\" is not a valid value for \"DURATION\"", () -> execute("banip", "add", "14.25.36.21", "invalid"));
+        assertThrowsWithMessage(CommandException.class, "Argument \"DURATION\" is required", () -> execute("banip", "add", "14.25.36.21", "for"));
+        assertThrowsWithMessage(CommandException.class, "Option \"DURATION\" takes an operand", () -> execute("banip", "add", "14.25.36.21", "for", "invalid"));
+        assertThrowsWithMessage(CommandException.class, "Argument \"MESSAGE\" is required", () -> execute("banip", "add", "14.25.36.21", "forever"));
+        assertThrowsWithMessage(CommandException.class, "Argument \"MESSAGE\" is required", () -> execute("banip", "add", "14.25.36.21", "for", "1h"));
+        assertThrowsWithMessage(CommandException.class, "Cannot ban your own IP address", () -> execute("banip", "add", "127.0.0.1", "forever", "cause"));
+        assertThrowsWithMessage(CommandException.class, "Cannot ban your own IP address", () -> execute("banip", "add", "127.0.0.0/24", "forever", "cause"));
     }
 
     @Test

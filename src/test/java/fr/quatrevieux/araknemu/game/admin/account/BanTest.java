@@ -66,8 +66,8 @@ class BanTest extends CommandTestCase {
 
     @Test
     void banInvalidAction() {
-        assertThrows(CommandException.class, () -> execute("ban"));
-        assertThrows(CommandException.class, () -> execute("ban", "invalid"));
+        assertThrowsWithMessage(CommandException.class, "Argument \"ACTION\" is required", () -> execute("ban"));
+        assertThrowsWithMessage(CommandException.class, "\"invalid\" is not a valid value for \"ACTION\"", () -> execute("ban", "invalid"));
     }
 
     @Test
@@ -119,9 +119,9 @@ class BanTest extends CommandTestCase {
 
     @Test
     void banForInvalidArguments() {
-        assertThrows(CommandException.class, () -> execute("ban", "for"));
-        assertThrows(CommandException.class, () -> execute("ban", "for", "invalid"));
-        assertThrows(CommandException.class, () -> execute("ban", "for", "1h"));
+        assertThrowsWithMessage(CommandException.class, "Argument \"DURATION\" is required", () -> execute("ban", "for"));
+        assertThrowsWithMessage(CommandException.class, "Option \"DURATION\" takes an operand", () -> execute("ban", "for", "invalid"));
+        assertThrowsWithMessage(CommandException.class, "Argument \"CAUSE\" is required", () -> execute("ban", "for", "1h"));
     }
 
     @Test
@@ -132,7 +132,7 @@ class BanTest extends CommandTestCase {
             container.get(BanishmentService.class)
         );
 
-        assertThrows(CommandException.class, () -> execute("ban", "for", "1h", "cause"));
+        assertThrowsWithMessage(CommandException.class, "Cannot ban yourself", () -> execute("ban", "for", "1h", "cause"));
     }
 
     @Test
@@ -146,7 +146,7 @@ class BanTest extends CommandTestCase {
             container.get(BanishmentService.class)
         );
 
-        assertThrows(CommandException.class, () -> execute("ban", "for", "1h", "cause"));
+        assertThrowsWithMessage(CommandException.class, "Cannot ban a game master", () -> execute("ban", "for", "1h", "cause"));
     }
 
     @Test

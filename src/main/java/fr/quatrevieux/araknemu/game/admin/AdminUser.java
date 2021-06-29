@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
+import fr.quatrevieux.araknemu.game.admin.exception.CommandExecutionException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.admin.exception.ExceptionHandler;
 import fr.quatrevieux.araknemu.game.admin.executor.CommandExecutor;
@@ -121,9 +122,13 @@ public final class AdminUser implements AdminPerformer {
     }
 
     private void execute(CommandParser.Arguments arguments) throws AdminException {
-        final Command command = arguments.context().command(arguments.command());
+        try {
+            final Command command = arguments.context().command(arguments.command());
 
-        executor.execute(command, this, arguments);
+            executor.execute(command, this, arguments);
+        } catch (Exception e) {
+            throw new CommandExecutionException(arguments, e);
+        }
     }
 
     /**

@@ -129,16 +129,16 @@ public final class Ban extends AbstractCommand<Ban.Arguments> implements SubArgu
      */
     private void checkCanBan(AdminPerformer performer) throws CommandException {
         if (performer.account().filter(performerAccount -> performerAccount.id() == account.id()).isPresent()) {
-            throw new CommandException(name(), "Cannot ban yourself");
+            error("Cannot ban yourself");
         }
 
         if (account.isMaster()) {
-            throw new CommandException(name(), "Cannot ban a game master");
+            error("Cannot ban a game master");
         }
     }
 
     public static final class Arguments implements SubArguments<Ban> {
-        @Argument(required = true)
+        @Argument(required = true, metaVar = "ACTION")
         @SubCommands({
             @SubCommand(name = "for", impl = ForArguments.class),
             @SubCommand(name = "list", impl = ListArguments.class),
@@ -152,10 +152,10 @@ public final class Ban extends AbstractCommand<Ban.Arguments> implements SubArgu
         }
 
         public static final class ForArguments implements SubArguments<Ban> {
-            @Argument(index = 0, required = true)
+            @Argument(index = 0, required = true, metaVar = "DURATION")
             private Duration duration;
 
-            @Argument(index = 1, required = true, handler = ConcatRestOfArgumentsHandler.class)
+            @Argument(index = 1, required = true, metaVar = "CAUSE", handler = ConcatRestOfArgumentsHandler.class)
             private String cause;
 
             @Override

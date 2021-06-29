@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
+import fr.quatrevieux.araknemu.game.admin.exception.CommandExecutionException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandPermissionsException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
@@ -137,14 +138,24 @@ class AdminUserTest extends GameBaseCase {
     }
 
     @Test
-    void executeNoPermissions() {
-        assertThrows(CommandPermissionsException.class, () -> user.execute("ban"));
+    void executeNoPermissions() throws AdminException {
+        try {
+            user.execute("ban");
+            fail("Excepts exception");
+        } catch (CommandExecutionException e) {
+            assertInstanceOf(CommandPermissionsException.class, e.getCause());
+        }
         Mockito.verify(logger).log(Level.INFO, AdminPerformer.EXECUTE_MARKER, "[{}] {}", user, "ban");
     }
 
     @Test
-    void executeCommandNotFound() {
-        assertThrows(CommandNotFoundException.class, () -> user.execute("not_found_command"));
+    void executeCommandNotFound() throws AdminException {
+        try {
+            user.execute("not_found_command");
+            fail("Excepts exception");
+        } catch (CommandExecutionException e) {
+            assertInstanceOf(CommandNotFoundException.class, e.getCause());
+        }
         Mockito.verify(logger).log(Level.INFO, AdminPerformer.EXECUTE_MARKER, "[{}] {}", user, "not_found_command");
     }
 

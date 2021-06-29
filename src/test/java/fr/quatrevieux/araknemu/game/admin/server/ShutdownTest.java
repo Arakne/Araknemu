@@ -56,8 +56,8 @@ class ShutdownTest extends CommandTestCase {
 
     @Test
     void executeInvalidAction() {
-        assertThrows(CommandException.class, () -> execute("shutdown", "invalid"));
-        assertThrows(CommandException.class, () -> execute("shutdown"));
+        assertThrowsWithMessage(CommandException.class, "\"invalid\" is not a valid value for \"TIME\"", () -> execute("shutdown", "invalid"));
+        assertThrowsWithMessage(CommandException.class, "Argument \"TIME\" is required", () -> execute("shutdown"));
     }
 
     @Test
@@ -78,7 +78,7 @@ class ShutdownTest extends CommandTestCase {
 
     @Test
     void executeInMissingDelay() {
-        assertThrows(CommandException.class, () -> execute("shutdown", "in"));
+        assertThrowsWithMessage(CommandException.class, "Argument \"DURATION\" is required", () -> execute("shutdown", "in"));
     }
 
     @Test
@@ -106,7 +106,7 @@ class ShutdownTest extends CommandTestCase {
 
     @Test
     void executeAtMissingTime() {
-        assertThrows(CommandException.class, () -> execute("shutdown", "at"));
+        assertThrowsWithMessage(CommandException.class, "Argument \"TIME\" is required", () -> execute("shutdown", "at"));
     }
 
     @Test

@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.admin;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
+import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
 import fr.quatrevieux.araknemu.game.admin.help.CommandHelp;
 
 import java.util.Arrays;
@@ -65,6 +66,15 @@ public abstract class AbstractCommand<A> implements Command<A> {
         }
 
         return null;
+    }
+
+    /**
+     * Raise a command error and stop execution of the command
+     *
+     * @param message The error message
+     */
+    protected final void error(String message) throws CommandException {
+        throw new CommandException(name(), message);
     }
 
     private void initialize() {

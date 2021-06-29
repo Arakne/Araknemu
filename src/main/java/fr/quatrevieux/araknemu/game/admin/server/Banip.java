@@ -132,7 +132,7 @@ public final class Banip extends AbstractCommand<Banip.Arguments> implements Sub
             .map(session -> new IPAddressString(session.channel().address().getAddress().getHostAddress()))
             .filter(arguments.ipAddress()::contains)
             .isPresent()) {
-            throw new CommandException(name(), "Cannot ban your own IP address");
+            error("Cannot ban your own IP address");
         }
 
         final BanIpService<GameAccount>.RuleBuilder builder = service.newRule(arguments.ipAddress());
@@ -158,7 +158,7 @@ public final class Banip extends AbstractCommand<Banip.Arguments> implements Sub
     }
 
     public static final class Arguments implements SubArguments<Banip> {
-        @Argument(required = true)
+        @Argument(required = true, metaVar = "ACTION")
         @SubCommands({
             @SubCommand(name = "add", impl = AddArguments.class),
             @SubCommand(name = "remove", impl = RemoveArguments.class),
@@ -173,7 +173,7 @@ public final class Banip extends AbstractCommand<Banip.Arguments> implements Sub
         }
 
         public abstract static class AbstractIpSubArguments implements SubArguments<Banip> {
-            @Argument(index = 0, required = true)
+            @Argument(index = 0, required = true, metaVar = "IP_ADDRESS")
             private IPAddressString ipAddress;
 
             public final IPAddressString ipAddress() {
@@ -204,7 +204,7 @@ public final class Banip extends AbstractCommand<Banip.Arguments> implements Sub
 
         public static final class AddArguments extends AbstractIpSubArguments {
             // @todo do not use sub command here
-            @Argument(index = 1, required = true, handler = SubCommandHandler.class)
+            @Argument(index = 1, required = true, handler = SubCommandHandler.class, metaVar = "DURATION")
             @SubCommands({
                 @SubCommand(name = "for", impl = For.class),
                 @SubCommand(name = "forever", impl = Forever.class),
@@ -231,10 +231,10 @@ public final class Banip extends AbstractCommand<Banip.Arguments> implements Sub
             }
 
             public static final class For implements DurationContainer {
-                @Argument(required = true)
+                @Argument(required = true, metaVar = "DURATION")
                 private Duration duration;
 
-                @Argument(index = 1, required = true, handler = ConcatRestOfArgumentsHandler.class)
+                @Argument(index = 1, required = true, handler = ConcatRestOfArgumentsHandler.class, metaVar = "MESSAGE")
                 private String cause;
 
                 @Override
@@ -249,7 +249,7 @@ public final class Banip extends AbstractCommand<Banip.Arguments> implements Sub
             }
 
             public static final class Forever implements DurationContainer {
-                @Argument(required = true, handler = ConcatRestOfArgumentsHandler.class)
+                @Argument(required = true, handler = ConcatRestOfArgumentsHandler.class, metaVar = "MESSAGE")
                 private String cause;
 
                 @Override
