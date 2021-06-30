@@ -67,7 +67,7 @@ public final class SavingService implements EventsSubscriber, PreloadableService
             new Listener<GameStopped>() {
                 @Override
                 public void on(GameStopped event) {
-                    executor.shutdown();
+                    executor.shutdownNow();
                 }
 
                 @Override

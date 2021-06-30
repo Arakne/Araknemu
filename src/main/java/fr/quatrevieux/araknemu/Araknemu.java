@@ -53,7 +53,7 @@ public class Araknemu {
      */
     public static final String VERSION = Araknemu.class.getPackage().getImplementationVersion();
     public static final String NAME = "Araknemu";
-    public static final String YEAR = "2017-2020";
+    public static final String YEAR = "2017-2021";
     public static final String AUTHOR = "Vincent Quatrevieux";
 
     private final Logger logger = LogManager.getLogger(getClass());
