@@ -23,15 +23,21 @@ import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
 import fr.quatrevieux.araknemu.game.admin.context.NullContext;
 import fr.quatrevieux.araknemu.game.admin.debug.DebugContext;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
+import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.io.IOException;
+import java.nio.file.FileVisitOption;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -153,5 +159,42 @@ class ScriptLoaderContextConfiguratorTest extends CommandTestCase {
         DebugContext newContext = new DebugContext(new NullContext(), Arrays.asList(loader));
 
         assertSame(commandClass, newContext.command("simple").getClass());
+    }
+
+    @Test
+    void loadDirectoryCreatedAfterStartup() throws IOException, CommandNotFoundException {
+        Path directory = Paths.get("src/test/scripts/commands/not_exists");
+
+        if (Files.isDirectory(directory)) {
+            Files.walk(directory)
+                .sorted(Comparator.reverseOrder())
+                .forEach(path -> {
+                    try {
+                        Files.delete(path);
+                    } catch (IOException e) {
+                    }
+                })
+            ;
+        }
+
+        Logger logger = Mockito.mock(Logger.class);
+        ScriptLoaderContextConfigurator<DebugContext> loader = new ScriptLoaderContextConfigurator<>(directory, c -> container, logger);
+
+        DebugContext context = new DebugContext(new NullContext(), Arrays.asList(loader));
+        assertTrue(context.commands().isEmpty());
+
+        Files.createDirectory(directory);
+        Files.copy(Paths.get("src/test/scripts/commands/simple/SimpleCommand.groovy"), directory.resolve("SimpleCommand.groovy"));
+
+        context = new DebugContext(new NullContext(), Arrays.asList(loader));
+        assertEquals("SimpleCommand", context.command("simple").getClass().getSimpleName());
+        Files.walk(directory)
+            .sorted(Comparator.reverseOrder())
+            .forEach(path -> {
+                try {
+                    Files.delete(path);
+                } catch (IOException e) {}
+            })
+        ;
     }
 }

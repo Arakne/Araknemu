@@ -80,6 +80,7 @@ class AdminModuleTest extends GameBaseCase {
 
         assertInstanceOf(AdminSessionService.class, container.get(AdminSessionService.class));
         assertInstanceOf(PlayerContextResolver.class, container.get(PlayerContextResolver.class));
+        assertSame(container.get(PlayerContextResolver.class), container.get(PlayerContextResolver.class));
         assertInstanceOf(AccountContextResolver.class, container.get(AccountContextResolver.class));
         assertInstanceOf(DebugContextResolver.class, container.get(DebugContextResolver.class));
         assertInstanceOf(GlobalContext.class, container.get(GlobalContext.class));
