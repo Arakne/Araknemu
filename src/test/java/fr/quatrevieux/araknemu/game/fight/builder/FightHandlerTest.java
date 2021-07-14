@@ -95,7 +95,7 @@ class FightHandlerTest extends GameBaseCase {
     void displayOnMap() throws SQLException, ContainerException {
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
 
-        explorationPlayer().join(map);
+        explorationPlayer().changeMap(map, 123);
         requestStack.clear();
 
         FightHandler<ChallengeBuilder> handler = new FightHandler<>(

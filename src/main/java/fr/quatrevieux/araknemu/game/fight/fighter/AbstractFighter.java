@@ -161,12 +161,4 @@ public abstract class AbstractFighter implements Fighter {
     public final int hashCode() {
         return id();
     }
-
-    /**
-     * Clear fighter data
-     */
-    public void destroy() {
-        this.fight = null;
-        this.attachments.clear();
-    }
 }

@@ -46,7 +46,7 @@ class SendTeamFighterAddedTest extends FightBaseCase {
         dataSet.pushMaps().pushSubAreas().pushAreas();
 
         map = container.get(ExplorationMapService.class).load(10340);
-        explorationPlayer().join(map);
+        explorationPlayer().changeMap(map, 123);
 
         fight = createSimpleFight(map);
         listener = new SendTeamFighterAdded(map);

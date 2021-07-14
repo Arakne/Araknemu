@@ -33,6 +33,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -46,19 +47,12 @@ public final class ScriptLoaderContextConfigurator<C extends Context> extends Ab
     private final Function<C, Container> containerResolver;
     private final Logger logger;
 
-    private final GroovyScriptEngine engine;
+    private final AtomicReference<GroovyScriptEngine> engine = new AtomicReference<>();
 
     public ScriptLoaderContextConfigurator(Path path, Function<C, Container> containerResolver, Logger logger) {
         this.path = path;
         this.containerResolver = containerResolver;
         this.logger = logger;
-
-        try {
-            engine = new GroovyScriptEngine(new URL[] {path.toUri().toURL()});
-        } catch (MalformedURLException e) {
-            // Should not occurs
-            throw new RuntimeException();
-        }
     }
 
     @Override
@@ -67,6 +61,9 @@ public final class ScriptLoaderContextConfigurator<C extends Context> extends Ab
             return;
         }
 
+        // Issue #185 : engine must be loaded only if directory exists
+        loadEngine();
+
         final Container container = containerResolver.apply(context);
 
         try (Stream<Path> stream = Files.list(path)) {
@@ -74,7 +71,7 @@ public final class ScriptLoaderContextConfigurator<C extends Context> extends Ab
                 logger.debug("Load command script {}", file.toAbsolutePath().toString());
 
                 try {
-                    final Class type = engine.loadScriptByName(file.getFileName().toString());
+                    final Class type = engine.get().loadScriptByName(file.getFileName().toString());
 
                     if (Command.class.isAssignableFrom(type)) {
                         logger.debug("Find command {}", type.getSimpleName());
@@ -115,5 +112,18 @@ public final class ScriptLoaderContextConfigurator<C extends Context> extends Ab
         }
 
         return parameters;
+    }
+
+    private synchronized void loadEngine() {
+        if (engine.get() != null) {
+            return;
+        }
+
+        try {
+            engine.set(new GroovyScriptEngine(new URL[] {path.toUri().toURL()}));
+        } catch (MalformedURLException e) {
+            // Should not occurs
+            throw new RuntimeException();
+        }
     }
 }

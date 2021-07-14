@@ -52,6 +52,10 @@ public final class Move implements BlockingAction {
             throw new IllegalArgumentException("Empty path");
         }
 
+        if (!path.get(0).cell().equals(performer().cell())) {
+            throw new IllegalArgumentException("Start cell do not match with player cell");
+        }
+
         try {
             for (PathValidator validator : validators) {
                 path = validator.validate(this, path);

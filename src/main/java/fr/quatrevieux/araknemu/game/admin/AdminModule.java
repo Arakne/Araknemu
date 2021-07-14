@@ -168,7 +168,7 @@ public final class AdminModule implements ContainerModule {
     }
 
     private void configureResolvers(ContainerConfigurator configurator) {
-        configurator.factory(
+        configurator.persist(
             PlayerContextResolver.class,
             container -> configureScripts(new PlayerContextResolver(container.get(PlayerService.class), container.get(AccountContextResolver.class))
                 .register(new AbstractContextConfigurator<PlayerContext>() {

@@ -98,6 +98,16 @@ class MoveObjectTest extends FightBaseCase {
     }
 
     @Test
+    void handleErrorAlreadyOnRequestPosition() throws Exception {
+        handler.handle(session, new ObjectMoveRequest(1, 0, 1));
+
+        requestStack.assertLast(new AddItemError(AddItemError.Error.ALREADY_EQUIPED));
+
+        assertEquals(0, gamePlayer().inventory().get(1).position());
+        assertEquals(1, gamePlayer().inventory().get(1).quantity());
+    }
+
+    @Test
     void functionalNotAllowedOnActiveFight() throws Exception {
         Fight fight = createFight();
         fight.start();

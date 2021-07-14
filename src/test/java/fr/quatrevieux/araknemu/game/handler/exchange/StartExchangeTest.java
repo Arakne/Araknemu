@@ -45,7 +45,7 @@ class StartExchangeTest extends GameBaseCase {
         player = explorationPlayer();
         other = makeOtherExplorationPlayer();
 
-        other.join(player.map());
+        other.changeMap(player.map(), 123);
 
         other.interactions().start(new PlayerExchangeRequest(other, player));
     }

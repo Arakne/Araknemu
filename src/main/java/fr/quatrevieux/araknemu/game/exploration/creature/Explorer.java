@@ -37,6 +37,8 @@ public interface Explorer {
      * Move to the cell
      *
      * @param cell The cell
+     *
+     * @throws IllegalArgumentException When the cell is not on the current map
      */
     public void move(ExplorationMapCell cell, Direction direction);
 

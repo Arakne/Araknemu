@@ -44,7 +44,7 @@ class HideFightOnStartTest extends FightBaseCase {
             map = container.get(ExplorationMapService.class).load(10340)
         );
 
-        explorationPlayer().join(map);
+        explorationPlayer().changeMap(map, 123);
     }
 
     @Test

@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.item.inventory.AbstractItemEntry;
 import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectMoved;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.MoveException;
 
 import java.util.stream.Collectors;
 
@@ -54,10 +55,16 @@ public final class InventoryEntry extends AbstractItemEntry {
      *
      * @param position The new position
      * @param quantity Quantity to move
+     *
+     * @throws MoveException When the item is already on the requested position
      */
     public void move(int position, int quantity) throws InventoryException {
         if (quantity > quantity() || quantity <= 0) {
             throw new InventoryException("Invalid quantity given");
+        }
+
+        if (position == position()) {
+            throw new MoveException("The item is already on the requested position");
         }
 
         if (quantity == quantity()) {

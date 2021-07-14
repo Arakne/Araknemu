@@ -72,7 +72,7 @@ class ListFightsTest extends FightBaseCase {
     @Test
     void fightsOnCurrentMap() throws SQLException, ContainerException {
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
-        explorationPlayer().join(map);
+        explorationPlayer().changeMap(map, 123);
 
         List<Fight> fights = Arrays.asList(
             createSimpleFight(map),

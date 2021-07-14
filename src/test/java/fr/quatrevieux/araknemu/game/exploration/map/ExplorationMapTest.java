@@ -194,7 +194,7 @@ class ExplorationMapTest extends GameBaseCase {
 
         ExplorationMap map = explorationPlayer().map();
 
-        other.join(map);
+        other.changeMap(map, 123);
         map.remove(other);
 
         requestStack.assertLast(
