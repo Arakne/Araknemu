@@ -106,7 +106,13 @@ public final class ActiveState implements LeavableState, EventsSubscriber {
     }
 
     @Override
-    public void leave(Fighter fighter) {
+    public synchronized void leave(Fighter fighter) {
+        // nextState is performed 1.5s after fight stop
+        // So leave can occurs on terminated fight
+        if (!fight.active()) {
+            return;
+        }
+
         fighter.life().kill(fighter);
 
         // Fight terminated

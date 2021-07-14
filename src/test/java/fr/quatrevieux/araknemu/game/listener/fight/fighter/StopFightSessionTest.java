@@ -48,7 +48,6 @@ class StopFightSessionTest extends FightBaseCase {
     void onFighterRemoved() {
         listener.on(new FightLeaved());
 
-        assertNull(fighter.fight());
         assertFalse(player.isFighting());
     }
 }

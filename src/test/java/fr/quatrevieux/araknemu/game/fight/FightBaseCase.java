@@ -58,6 +58,7 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
 import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 
@@ -67,10 +68,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class FightBaseCase extends GameBaseCase {
     protected GamePlayer player;
     protected GamePlayer other;
+    protected ScheduledExecutorService executor;
 
     private int lastPlayerId = 5;
 
@@ -83,6 +86,15 @@ public class FightBaseCase extends GameBaseCase {
 
         player = gamePlayer(true);
         other  = makeOtherPlayer();
+        executor = Executors.newSingleThreadScheduledExecutor();
+    }
+
+    @Override
+    @AfterEach
+    public void tearDown() throws ContainerException {
+        executor.shutdownNow();
+
+        super.tearDown();
     }
 
     public Fight createFight(boolean init) throws Exception {
@@ -104,7 +116,7 @@ public class FightBaseCase extends GameBaseCase {
                 new FinishState()
             ),
             container.get(Logger.class),
-            Executors.newSingleThreadScheduledExecutor()
+            executor
         );
 
         fight.register(new StatesModule(fight));
@@ -135,7 +147,7 @@ public class FightBaseCase extends GameBaseCase {
                 new FinishState()
             ),
             container.get(Logger.class),
-            Executors.newSingleThreadScheduledExecutor()
+            executor
         );
 
         fight.register(new StatesModule(fight));

@@ -35,6 +35,7 @@ import fr.quatrevieux.araknemu.game.listener.fight.fighter.RefreshStates;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import io.github.artsok.RepeatedIfExceptionsTest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -59,11 +60,20 @@ class FightTurnTest extends FightBaseCase {
         fight.fighters().forEach(Fighter::init);
         fight.turnList().init(teams -> Arrays.asList(player.fighter(), other.fighter()));
         fight.turnList().start();
+        fight.start();
 
         fight.dispatcher().add(new RefreshBuffs());
         fight.dispatcher().add(new RefreshStates());
 
         turn = new FightTurn(player.fighter(), fight, Duration.ofMillis(250));
+    }
+
+    @Override
+    @AfterEach
+    public void tearDown() throws fr.quatrevieux.araknemu.core.di.ContainerException {
+        fight.cancel(true);
+
+        super.tearDown();
     }
 
     @Test

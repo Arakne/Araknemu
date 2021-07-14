@@ -72,6 +72,13 @@ class FightTurnListTest extends FightBaseCase {
     }
 
     @Test
+    void initWithoutFighters() {
+        fight.cancel(true);
+
+        assertThrowsWithMessage(IllegalStateException.class, "Cannot initialise turn list without fighters", () -> turnList.init(new AlternateTeamFighterOrder()));
+    }
+
+    @Test
     void currentNotStarted() {
         assertFalse(turnList.current().isPresent());
     }

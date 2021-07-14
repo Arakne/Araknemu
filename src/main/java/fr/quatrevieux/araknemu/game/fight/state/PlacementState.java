@@ -49,6 +49,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * Placement before start fight
@@ -58,6 +59,7 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
     private Fight fight;
     private Listener[] listeners;
     private Map<FightTeam, PlacementCellsGenerator> cellsGenerators;
+    private ScheduledFuture<?> timer;
 
     private final boolean randomize;
 
@@ -88,7 +90,7 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
         addFighters(fight.fighters(false));
 
         if (fight.type().hasPlacementTimeLimit()) {
-            fight.schedule(this::startFight, fight.type().placementDuration());
+            timer = fight.schedule(this::innerStartFight, fight.type().placementDuration());
         }
     }
 
@@ -131,6 +133,10 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
      * @param cell The target cell
      */
     public synchronized void changePlace(Fighter fighter, FightCell cell) {
+        if (invalidState()) {
+            return;
+        }
+
         if (fighter.ready()) {
             throw new FightException("The fighter is ready");
         }
@@ -156,7 +162,7 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
      * @throws JoinFightException When cannot join the team
      */
     public synchronized void joinTeam(Fighter fighter, FightTeam team) throws JoinFightException {
-        if (fight.state() != this) {
+        if (invalidState()) {
             throw new JoinFightException(JoinFightError.CANT_DO_TOO_LATE);
         }
 
@@ -166,7 +172,7 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
 
     @Override
     public synchronized void leave(Fighter fighter) {
-        if (fight.state() != this) {
+        if (invalidState()) {
             throw new InvalidFightStateException(getClass());
         }
 
@@ -180,10 +186,24 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
     }
 
     /**
-     * Start the fight
+     * Manually start the fight
      */
     public synchronized void startFight() {
-        if (fight.state() != this) {
+        // Try to cancel the timer
+        if (timer != null) {
+            if (!timer.cancel(false)) {
+                return; // Should not occurs : the fight is already started by the timer
+            }
+        }
+
+        innerStartFight();
+    }
+
+    /**
+     * Start the fight
+     */
+    private void innerStartFight() {
+        if (invalidState()) {
             return;
         }
 
@@ -251,8 +271,22 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
      * Check if the fight is valid after fighter leaved
      */
     private void checkFightValid() {
-        if (fight.teams().stream().filter(FightTeam::alive).count() <= 1) {
-            fight.cancel();
+        if (fight.teams().stream().filter(FightTeam::alive).count() > 1) {
+            return;
         }
+
+        fight.cancel();
+
+        if (timer != null) {
+            timer.cancel(true);
+        }
+    }
+
+    /**
+     * Check if the fight state is not placement
+     * This method will return true is the state is active (or following), or if it's cancelled or finished
+     */
+    private boolean invalidState() {
+        return fight.state() != this || !fight.alive();
     }
 }
