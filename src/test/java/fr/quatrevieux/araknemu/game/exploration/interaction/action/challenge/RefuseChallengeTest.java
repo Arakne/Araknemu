@@ -49,8 +49,8 @@ class RefuseChallengeTest extends GameBaseCase {
         player = explorationPlayer();
         other = new ExplorationPlayer(makeOtherPlayer());
 
-        player.join(container.get(ExplorationMapService.class).load(10340));
-        other.join(player.map());
+        player.changeMap(container.get(ExplorationMapService.class).load(10340), 123);
+        other.changeMap(player.map(), 123);
     }
 
     @Test

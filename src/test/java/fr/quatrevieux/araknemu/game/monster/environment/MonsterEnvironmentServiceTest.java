@@ -144,7 +144,7 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
         monsterGroupPosition.populate(map);
 
-        explorationPlayer().join(map);
+        explorationPlayer().changeMap(map, 123);
         requestStack.clear();
 
         service.respawn(monsterGroupPosition, Duration.ZERO);
@@ -170,7 +170,7 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
         monsterGroupPosition.populate(map);
         int size = monsterGroupPosition.available().size();
 
-        explorationPlayer().join(map);
+        explorationPlayer().changeMap(map, 123);
         requestStack.clear();
 
         service.respawn(monsterGroupPosition, Duration.ofMillis(50));
@@ -198,7 +198,7 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
         monsterGroupPosition.populate(map);
 
-        explorationPlayer().join(map);
+        explorationPlayer().changeMap(map, 123);
         requestStack.clear();
 
         service.respawn(monsterGroupPosition, Duration.ofMillis(50));

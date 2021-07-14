@@ -51,8 +51,8 @@ class ChallengeInvitationHandlerTest extends GameBaseCase {
         challenger = new ExplorationPlayer(makeOtherPlayer());
 
         initiator.leave();
-        initiator.join(container.get(ExplorationMapService.class).load(10340));
-        challenger.join(initiator.map());
+        initiator.changeMap(container.get(ExplorationMapService.class).load(10340), 123);
+        challenger.changeMap(initiator.map(), 123);
 
         handler = new ChallengeInvitationHandler(container.get(FightService.class).handler(ChallengeBuilder.class));
         invitation = handler.invitation(initiator, challenger);
@@ -118,8 +118,9 @@ class ChallengeInvitationHandlerTest extends GameBaseCase {
 
     @Test
     void startNotOneSameMap() throws ContainerException {
-        challenger.join(
-            container.get(ExplorationMapService.class).load(10540)
+        challenger.changeMap(
+            container.get(ExplorationMapService.class).load(10540),
+            123
         );
 
         assertNull(invitation.start());
@@ -131,8 +132,8 @@ class ChallengeInvitationHandlerTest extends GameBaseCase {
 
     @Test
     void startCannotLaunchFightOnMap() throws ContainerException {
-        initiator.join(container.get(ExplorationMapService.class).load(10300));
-        challenger.join(container.get(ExplorationMapService.class).load(10300));
+        initiator.changeMap(container.get(ExplorationMapService.class).load(10300), 132);
+        challenger.changeMap(container.get(ExplorationMapService.class).load(10300), 132);
 
         assertNull(invitation.start());
 

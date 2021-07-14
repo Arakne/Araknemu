@@ -130,7 +130,7 @@ class MonsterGroupTest extends GameBaseCase {
     @Test
     void startFight() throws SQLException {
         ExplorationPlayer player = explorationPlayer();
-        player.join(map);
+        player.changeMap(map, 123);
 
         Fight fight = group.startFight(player);
 

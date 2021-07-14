@@ -72,7 +72,7 @@ class ExplorationPlayerTest extends GameBaseCase {
 
     @Test
     void join() throws ContainerException {
-        ExplorationMap map = container.get(ExplorationMapService.class).load(10300);
+        ExplorationMap map = container.get(ExplorationMapService.class).load(player.position().map());
 
         AtomicReference<ExplorationMap> ref = new AtomicReference<>();
         Listener<MapJoined> listener = new Listener<MapJoined>() {
@@ -95,8 +95,15 @@ class ExplorationPlayerTest extends GameBaseCase {
     }
 
     @Test
+    void joinInvalidMap() throws ContainerException {
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
+
+        assertThrows(IllegalArgumentException.class, () -> player.join(map));
+    }
+
+    @Test
     void move() throws ContainerException {
-        ExplorationMap map = container.get(ExplorationMapService.class).load(10300);
+        ExplorationMap map = container.get(ExplorationMapService.class).load(player.position().map());
         player.join(map);
 
         AtomicReference<PlayerMoveFinished> ref = new AtomicReference<>();
@@ -113,8 +120,16 @@ class ExplorationPlayerTest extends GameBaseCase {
     }
 
     @Test
+    void moveInvalidCell() throws ContainerException {
+        ExplorationMap map = container.get(ExplorationMapService.class).load(player.position().map());
+        player.join(map);
+
+        assertThrows(IllegalArgumentException.class, () -> player.move(container.get(ExplorationMapService.class).load(10340).get(123), Direction.EAST));
+    }
+
+    @Test
     void leave() throws ContainerException {
-        ExplorationMap map = container.get(ExplorationMapService.class).load(10300);
+        ExplorationMap map = container.get(ExplorationMapService.class).load(player.position().map());
         player.join(map);
 
         AtomicReference<ExplorationMap> ref = new AtomicReference<>();
@@ -141,7 +156,7 @@ class ExplorationPlayerTest extends GameBaseCase {
 
     @Test
     void changeCell() throws ContainerException {
-        ExplorationMap map = container.get(ExplorationMapService.class).load(10300);
+        ExplorationMap map = container.get(ExplorationMapService.class).load(player.position().map());
         player.join(map);
 
         player.changeCell(147);
@@ -229,7 +244,7 @@ class ExplorationPlayerTest extends GameBaseCase {
     void unregisterShouldLeaveMap() throws ContainerException {
         session.setExploration(player);
 
-        ExplorationMap map = container.get(ExplorationMapService.class).load(10300);
+        ExplorationMap map = container.get(ExplorationMapService.class).load(player.position().map());
         player.join(map);
 
         player.unregister(session);
@@ -242,7 +257,7 @@ class ExplorationPlayerTest extends GameBaseCase {
     void unregisterShouldStopExploration() throws ContainerException {
         session.setExploration(player);
 
-        ExplorationMap map = container.get(ExplorationMapService.class).load(10300);
+        ExplorationMap map = container.get(ExplorationMapService.class).load(player.position().map());
         player.join(map);
 
         AtomicReference<StopExploration> ref = new AtomicReference<>();
@@ -277,7 +292,7 @@ class ExplorationPlayerTest extends GameBaseCase {
     void orientation() throws ContainerException {
         assertEquals(Direction.SOUTH_EAST, player.orientation());
 
-        ExplorationMap map = container.get(ExplorationMapService.class).load(10300);
+        ExplorationMap map = container.get(ExplorationMapService.class).load(player.position().map());
         player.join(map);
 
         AtomicReference<OrientationChanged> ref = new AtomicReference<>();

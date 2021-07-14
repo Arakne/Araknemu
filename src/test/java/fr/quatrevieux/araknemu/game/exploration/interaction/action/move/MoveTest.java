@@ -110,6 +110,22 @@ class MoveTest extends GameBaseCase {
     }
 
     @Test
+    void invalidStartCell() {
+        player.changeCell(123);
+
+        Move move = new Move(
+            player,
+            new Decoder<>(player.map()).decode("bftdgl", player.map().get(279)),
+            new PathValidator[] {new ValidateWalkable()}
+        );
+
+        move.setId(1);
+
+        assertThrowsWithMessage(IllegalArgumentException.class, "Start cell do not match with player cell", () -> player.interactions().push(move));
+        assertFalse(player.interactions().busy());
+    }
+
+    @Test
     void moveWithCancel() throws Exception {
         Move move = new Move(
             player,
@@ -184,7 +200,7 @@ class MoveTest extends GameBaseCase {
 
     @Test
     void blockedPath() throws PathException, ContainerException {
-        player.join(container.get(ExplorationMapService.class).load(10340));
+        player.changeMap(container.get(ExplorationMapService.class).load(10340), 123);
         player.move(player.map().get(169), Direction.SOUTH_EAST);
         requestStack.clear();
 
@@ -202,7 +218,7 @@ class MoveTest extends GameBaseCase {
 
     @Test
     void pathValidationExceptionWithErrorPacket() throws PathException, ContainerException {
-        player.join(container.get(ExplorationMapService.class).load(10340));
+        player.changeMap(container.get(ExplorationMapService.class).load(10340), 123);
         player.move(player.map().get(169), Direction.SOUTH_EAST);
         requestStack.clear();
 
@@ -222,7 +238,7 @@ class MoveTest extends GameBaseCase {
 
     @Test
     void pathValidationExceptionWithoutErrorPacket() throws PathException, ContainerException {
-        player.join(container.get(ExplorationMapService.class).load(10340));
+        player.changeMap(container.get(ExplorationMapService.class).load(10340), 123);
         player.move(player.map().get(169), Direction.SOUTH_EAST);
         requestStack.clear();
 

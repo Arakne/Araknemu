@@ -77,8 +77,8 @@ class MapChannelTest extends FightBaseCase {
         gp2.dispatcher().add(l2);
         gp3.dispatcher().add(l3);
 
-        s2.exploration().join(player.map());
-        s3.exploration().join(player.map());
+        s2.exploration().changeMap(player.map(), 123);
+        s3.exploration().changeMap(player.map(), 123);
 
         channel.send(
             gamePlayer(),

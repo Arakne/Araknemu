@@ -83,7 +83,7 @@ class LoadExtraInfoTest extends FightBaseCase {
         );
 
         ExplorationPlayer player = explorationPlayer();
-        player.join(map);
+        player.changeMap(map, 123);
 
         requestStack.clear();
 
@@ -123,7 +123,7 @@ class LoadExtraInfoTest extends FightBaseCase {
         fights.forEach(Fight::nextState);
 
         ExplorationPlayer player = explorationPlayer();
-        player.join(map);
+        player.changeMap(map, 123);
 
         requestStack.clear();
 
@@ -144,7 +144,7 @@ class LoadExtraInfoTest extends FightBaseCase {
         dataSet.pushNpcs();
 
         ExplorationPlayer player = explorationPlayer();
-        player.join(container.get(ExplorationMapService.class).load(10340));
+        player.changeMap(container.get(ExplorationMapService.class).load(10340), 123);
 
         requestStack.clear();
 
@@ -173,7 +173,7 @@ class LoadExtraInfoTest extends FightBaseCase {
         dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, -1), 1));
 
         ExplorationPlayer player = explorationPlayer();
-        player.join(container.get(ExplorationMapService.class).load(10340));
+        player.changeMap(container.get(ExplorationMapService.class).load(10340), 123);
 
         requestStack.clear();
 

@@ -53,7 +53,7 @@ class PlayerExchangeRequestTest extends GameBaseCase {
         player = explorationPlayer();
         other = makeOtherExplorationPlayer();
 
-        other.join(player.map());
+        other.changeMap(player.map(), 123);
 
         request = new PlayerExchangeRequest(player, other);
         requestStack.clear();
@@ -123,8 +123,9 @@ class PlayerExchangeRequestTest extends GameBaseCase {
 
     @Test
     void startBadMap() {
-        other.join(
-            container.get(ExplorationMapService.class).load(10540)
+        other.changeMap(
+            container.get(ExplorationMapService.class).load(10540),
+            123
         );
 
         player.interactions().start(request);

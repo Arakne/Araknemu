@@ -56,7 +56,7 @@ class LaunchMonsterFightTest extends GameBaseCase {
 
         listener = new LaunchMonsterFight();
         player = explorationPlayer();
-        player.join(map);
+        player.changeMap(map, 123);
     }
 
     @Test

@@ -145,7 +145,7 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
         monsterGroupPosition.populate(map);
 
         ExplorationPlayer player = explorationPlayer();
-        player.join(map);
+        player.changeMap(map, 123);
 
         MonsterGroup group = monsterGroupPosition.available().get(0);
         Fight fight = monsterGroupPosition.startFight(group, player);
@@ -172,7 +172,7 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
         monsterGroupPosition.populate(map);
 
         ExplorationPlayer player = explorationPlayer();
-        player.join(map);
+        player.changeMap(map, 123);
 
         MonsterGroup group = monsterGroupPosition.available().get(0);
         Fight fight = monsterGroupPosition.startFight(group, player);
@@ -195,7 +195,7 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
 
 
         ExplorationPlayer player = explorationPlayer();
-        player.join(map);
+        player.changeMap(map, 123);
 
         MonsterGroup group = monsterGroupPosition.available().get(0);
         monsterGroupPosition.startFight(group, player);

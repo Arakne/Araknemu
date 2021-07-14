@@ -86,7 +86,7 @@ class MoveMonstersTest extends GameBaseCase {
         dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, -1), 3));
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
 
-        explorationPlayer().join(map);
+        explorationPlayer().changeMap(map, 123);
         requestStack.clear();
 
         MonsterGroup group = container.get(MonsterEnvironmentService.class).byMap(10340).stream().findFirst().get().available().get(0);
@@ -104,7 +104,7 @@ class MoveMonstersTest extends GameBaseCase {
         dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, 123), 3));
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
 
-        explorationPlayer().join(map);
+        explorationPlayer().changeMap(map, 123);
         requestStack.clear();
 
         MonsterGroup group = container.get(MonsterEnvironmentService.class).byMap(10340).stream().findFirst().get().available().get(0);
@@ -120,7 +120,7 @@ class MoveMonstersTest extends GameBaseCase {
         dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, -1), 2));
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
 
-        explorationPlayer().join(map);
+        explorationPlayer().changeMap(map, 123);
         requestStack.clear();
 
         LivingMonsterGroupPosition position = container.get(MonsterEnvironmentService.class).byMap(10340).stream().findFirst().get();

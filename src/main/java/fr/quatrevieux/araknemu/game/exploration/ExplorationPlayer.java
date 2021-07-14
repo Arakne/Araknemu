@@ -140,6 +140,10 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
 
     @Override
     public void move(ExplorationMapCell cell, Direction orientation) {
+        if (!cell.map().equals(map)) {
+            throw new IllegalArgumentException("Cell is not on the current map");
+        }
+
         player.setPosition(player.position().newCell(cell.id()));
         this.cell = cell;
         this.orientation = orientation;
@@ -154,8 +158,14 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
 
     /**
      * Join an exploration map
+     *
+     * @throws IllegalArgumentException When the joined map do not corresponds with player's position
      */
     public void join(ExplorationMap map) {
+        if (position().map() != map.id()) {
+            throw new IllegalArgumentException("Map id do not corresponds with player's position");
+        }
+
         this.cell = map.get(position().cell());
         this.map = map;
         map.add(this);

@@ -62,7 +62,7 @@ class SendNewSpriteTest extends GameBaseCase {
     @Test
     void onOtherSprite() throws Exception {
         ExplorationPlayer player = new ExplorationPlayer(makeOtherPlayer());
-        player.join(explorationPlayer().map());
+        player.changeMap(explorationPlayer().map(), 123);
         Sprite sprite = new PlayerSprite(player);
 
         listener.on(

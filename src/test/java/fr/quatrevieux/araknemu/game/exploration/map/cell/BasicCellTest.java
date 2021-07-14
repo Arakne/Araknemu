@@ -96,7 +96,7 @@ class BasicCellTest extends GameBaseCase {
     void freeWithCreature() throws Exception {
         ExplorationPlayer player = makeOtherExplorationPlayer();
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
-        player.join(map);
+        player.changeMap(map, 123);
 
         player.changeCell(185);
         assertFalse(new BasicCell(185, repository.get(10340).cells()[185], service.load(10340)).free());

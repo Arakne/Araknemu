@@ -99,7 +99,7 @@ class UseObjectTest extends GameBaseCase {
 
         GamePlayer other = makeOtherPlayer();
         ExplorationPlayer otherPlayer = new ExplorationPlayer(other);
-        otherPlayer.join(explorationPlayer().map());
+        otherPlayer.changeMap(explorationPlayer().map(), 123);
         other.properties().life().set(10);
         requestStack.clear();
 

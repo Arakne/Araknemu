@@ -50,7 +50,7 @@ public class FunctionalFromExplorationMapTest extends FightBaseCase {
 
         map = container.get(ExplorationMapService.class).load(10340);
 
-        explorationPlayer().join(map);
+        explorationPlayer().changeMap(map, 123);
         requestStack.clear();
     }
 
@@ -81,7 +81,7 @@ public class FunctionalFromExplorationMapTest extends FightBaseCase {
         Fight fight = createSimpleFight(map);
 
         ExplorationPlayer explorationPlayer = makeExplorationPlayer(other);
-        explorationPlayer.join(map);
+        explorationPlayer.changeMap(map, 123);
         requestStack.clear();
 
         PlayerFighter otherFighter = makePlayerFighter(other);
@@ -104,7 +104,7 @@ public class FunctionalFromExplorationMapTest extends FightBaseCase {
         Fight fight = createSimpleFight(map);
 
         ExplorationPlayer explorationPlayer = makeExplorationPlayer(other);
-        explorationPlayer.join(map);
+        explorationPlayer.changeMap(map, 123);
 
         PlayerFighter otherFighter = makePlayerFighter(other);
         fight.state(PlacementState.class).joinTeam(otherFighter, fight.team(0));

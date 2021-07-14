@@ -52,7 +52,7 @@ class StopOnTriggerTest extends GameBaseCase {
         dataSet.pushMaps().pushSubAreas().pushAreas();
         dataSet.pushTrigger(new MapTrigger(10340, 21, 0, "10300,123", ""));
         map = container.get(ExplorationMapService.class).load(10340);
-        explorationPlayer().join(map);
+        explorationPlayer().changeMap(map, 123);
 
         validator = new StopOnTrigger();
     }

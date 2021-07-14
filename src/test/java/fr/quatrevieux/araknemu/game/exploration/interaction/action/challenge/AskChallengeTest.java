@@ -19,27 +19,24 @@
 
 package fr.quatrevieux.araknemu.game.exploration.interaction.action.challenge;
 
-import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
-import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.challenge.AskChallenge;
 import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.ChallengerDialog;
 import fr.quatrevieux.araknemu.game.exploration.interaction.challenge.InitiatorDialog;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
-import fr.quatrevieux.araknemu.game.item.ItemService;
-import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AskChallengeTest extends GameBaseCase {
     @Test
@@ -47,7 +44,7 @@ class AskChallengeTest extends GameBaseCase {
         ExplorationPlayer current = explorationPlayer();
         ExplorationPlayer other = new ExplorationPlayer(makeOtherPlayer());
 
-        other.join(current.map());
+        other.changeMap(current.map(), 123);
 
         Interaction interaction = Mockito.mock(Interaction.class);
         Mockito.when(interaction.start()).thenReturn(interaction);
@@ -67,12 +64,13 @@ class AskChallengeTest extends GameBaseCase {
         ExplorationPlayer current = explorationPlayer();
         ExplorationPlayer other = new ExplorationPlayer(makeOtherPlayer());
 
-        other.join(current.map());
+        other.changeMap(current.map(), 123);
 
         AskChallenge action = new AskChallenge(current, other.id(), container.get(FightService.class));
 
-        other.join(
-            container.get(ExplorationMapService.class).load(10540)
+        other.changeMap(
+            container.get(ExplorationMapService.class).load(10540),
+            123
         );
 
         action.start(new ActionQueue());
@@ -104,8 +102,8 @@ class AskChallengeTest extends GameBaseCase {
         ExplorationPlayer current = explorationPlayer();
         ExplorationPlayer other = new ExplorationPlayer(makeOtherPlayer());
 
-        current.join(container.get(ExplorationMapService.class).load(10340));
-        other.join(current.map());
+        current.changeMap(container.get(ExplorationMapService.class).load(10340), 123);
+        other.changeMap(current.map(), 123);
 
         AskChallenge action = new AskChallenge(current, other.id(), container.get(FightService.class));
 

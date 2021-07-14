@@ -50,7 +50,7 @@ class FightActionsFactoriesTest extends FightBaseCase {
         ExplorationPlayer player = explorationPlayer();
 
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
-        player.join(map);
+        player.changeMap(map, 123);
 
         Fight fight = createSimpleFight(map);
 
