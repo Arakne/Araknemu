@@ -126,8 +126,8 @@ public final class TeleportNearEnemy implements ActionGenerator {
         private Spell spell;
 
         public Selector(FightCell enemyCell, FightCell currentCell) {
-            this.enemyCell = new CoordinateCell<>(enemyCell);
-            this.distance = this.enemyCell.distance(new CoordinateCell<>(currentCell));
+            this.enemyCell = enemyCell.coordinate();
+            this.distance = this.enemyCell.distance(currentCell);
         }
 
         /**
@@ -143,7 +143,7 @@ public final class TeleportNearEnemy implements ActionGenerator {
          * @return true if the new cell is adjacent to the target
          */
         public boolean push(Spell spell, FightCell cell) {
-            final int currentDistance = new CoordinateCell<>(cell).distance(enemyCell);
+            final int currentDistance = enemyCell.distance(cell);
 
             if (currentDistance < distance) {
                 this.spell = spell;

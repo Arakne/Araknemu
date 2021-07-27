@@ -59,7 +59,7 @@ public final class MoveFarEnemies implements ActionGenerator {
         }
 
         enemiesCells = ai.enemies().map(PassiveFighter::cell).map(CoordinateCell::new).collect(Collectors.toList());
-        currentCellScore = score(new CoordinateCell<>(ai.fighter().cell()));
+        currentCellScore = score(ai.fighter().cell().coordinate());
 
         return movement.generate(ai);
     }

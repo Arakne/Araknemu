@@ -34,7 +34,7 @@ public interface SpellEffectArea {
      * @param target The target cell
      * @param source The source cell (caster cell)
      */
-    public <C extends MapCell> Set<C> resolve(C target, C source);
+    public <C extends MapCell<C>> Set<C> resolve(C target, C source);
 
     /**
      * The area type

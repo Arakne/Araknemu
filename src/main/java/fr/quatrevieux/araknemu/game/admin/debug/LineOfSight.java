@@ -72,7 +72,7 @@ public final class LineOfSight extends AbstractCommand<LineOfSight.Arguments> {
         final AdminUser user = AdminUser.class.cast(performer);
         final FightMap map = new FightMap(repository.get(user.player().position().map()));
 
-        final CoordinateCell<FightCell> current = new CoordinateCell<>(map.get(user.player().position().cell()));
+        final CoordinateCell<FightCell> current = map.get(user.player().position().cell()).coordinate();
         final CellSight<FightCell> sight = new CellSight<>(current);
 
         final List<Integer> accessible;

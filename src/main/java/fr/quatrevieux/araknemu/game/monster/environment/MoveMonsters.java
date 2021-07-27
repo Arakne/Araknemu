@@ -120,14 +120,14 @@ public final class MoveMonsters implements Task {
      * @return The target cell, if available
      */
     private Optional<ExplorationMapCell> targetCell(ExplorationMapCell currentCell) {
-        final CoordinateCell<ExplorationMapCell> currentCoordinates = new CoordinateCell<>(currentCell);
+        final CoordinateCell<ExplorationMapCell> currentCoordinates = currentCell.coordinate();
         final List<ExplorationMapCell> cells = new ArrayList<>();
         final ExplorationMap map = currentCell.map();
 
         for (int id = 0; id < map.size(); ++id) {
             final ExplorationMapCell cell = map.get(id);
 
-            if (cell.free() && currentCoordinates.distance(new CoordinateCell<>(cell)) <= maxDistance) {
+            if (cell.free() && currentCoordinates.distance(cell) <= maxDistance) {
                 cells.add(cell);
             }
         }

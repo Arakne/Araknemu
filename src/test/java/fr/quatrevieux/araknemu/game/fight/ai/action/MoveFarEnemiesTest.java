@@ -127,6 +127,6 @@ class MoveFarEnemiesTest extends FightBaseCase {
     }
 
     private int distance(Fighter enemy) {
-        return new CoordinateCell<>(fighter.cell()).distance(new CoordinateCell<>(enemy.cell()));
+        return fighter.cell().coordinate().distance(enemy.cell());
     }
 }

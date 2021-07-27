@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 /**
  * Cell of exploration map
  */
-public interface ExplorationMapCell extends MapCell {
+public interface ExplorationMapCell extends MapCell<ExplorationMapCell> {
     @Override
     public ExplorationMap map();
 

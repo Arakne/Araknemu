@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.cast;
 
-import fr.arakne.utils.maps.CoordinateCell;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
@@ -84,10 +83,7 @@ public final class Cast implements Action {
     @Override
     public ActionResult start() {
         if (!target.equals(caster.cell())) {
-            caster.setOrientation(
-                new CoordinateCell<>(caster.cell())
-                    .directionTo(new CoordinateCell<>(target))
-            );
+            caster.setOrientation(caster.cell().coordinate().directionTo(target));
         }
 
         if (criticalityStrategy.failed(spell.criticalFailure())) {

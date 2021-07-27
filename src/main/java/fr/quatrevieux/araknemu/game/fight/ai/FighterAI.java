@@ -131,10 +131,8 @@ public final class FighterAI implements Runnable, AI {
 
     @Override
     public Optional<? extends PassiveFighter> enemy() {
-        final CoordinateCell<FightCell> currentCell = new CoordinateCell<>(fighter.cell());
+        final CoordinateCell<FightCell> currentCell = fighter.cell().coordinate();
 
-        return enemies()
-            .min(Comparator.comparingInt(f -> currentCell.distance(new CoordinateCell<>(f.cell()))))
-        ;
+        return enemies().min(Comparator.comparingInt(f -> currentCell.distance(f.cell())));
     }
 }
