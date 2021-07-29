@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.player.characteristic.event.LifeChanged;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -182,7 +183,7 @@ class PlayerLifeTest extends GameBaseCase {
         assertEquals(123, ref.get().current());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void lifeRegenerationIsCorrect() throws Exception {
         life.set(5);
         life.startLifeRegeneration(15);
@@ -191,7 +192,7 @@ class PlayerLifeTest extends GameBaseCase {
         assertBetween(6, 8, life.current());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void lifeRegenerationIsCorrectWithDifferentSpeed() throws Exception {
         life.set(5);
         life.startLifeRegeneration(10);
@@ -200,7 +201,7 @@ class PlayerLifeTest extends GameBaseCase {
         assertBetween(14, 16, life.current());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void callCurrentDuringRegeneration() throws Exception {
         life.set(5);
         life.startLifeRegeneration(30);
@@ -214,7 +215,7 @@ class PlayerLifeTest extends GameBaseCase {
         assertBetween(10, 12, life.current());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void setLifeRegeneration() throws Exception {
         life.set(5);
         life.setLifeWithCurrentRegeneration();
@@ -232,7 +233,7 @@ class PlayerLifeTest extends GameBaseCase {
         assertBetween(7,8, entity.life());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void restartRegeneration() throws Exception {
         life.set(5);
 
@@ -247,7 +248,7 @@ class PlayerLifeTest extends GameBaseCase {
         assertBetween(8, 9, life.current());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void setLifeRegenerationWithZeroShouldStopRegen() throws Exception {
         life.set(5);
         life.setLifeWithCurrentRegeneration();

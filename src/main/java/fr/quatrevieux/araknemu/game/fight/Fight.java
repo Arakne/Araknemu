@@ -356,13 +356,14 @@ public final class Fight implements Dispatcher, Sender {
 
         @Override
         public void run() {
-            if (!alive) {
-                logger.warn("Cannot run task " + action.getClass().toString() + " on dead fight");
-                return;
-            }
-
             try {
                 executorLock.lock();
+
+                if (!alive) {
+                    logger.warn("Cannot run task " + action.getClass().toString() + " on dead fight");
+                    return;
+                }
+
                 action.run();
             } catch (Throwable e) {
                 logger.error("Error on fight executor : " + e.getMessage(), e);

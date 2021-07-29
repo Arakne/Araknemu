@@ -56,6 +56,8 @@ class WalkableFightCellTest extends GameBaseCase {
         assertFalse(cell.sightBlocking());
         assertFalse(cell.fighter().isPresent());
         assertSame(map, cell.map());
+        assertSame(cell.coordinate(), cell.coordinate());
+        assertSame(cell, cell.coordinate().cell());
     }
 
     @Test

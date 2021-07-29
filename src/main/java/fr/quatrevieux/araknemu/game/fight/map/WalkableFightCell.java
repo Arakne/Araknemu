@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.map;
 
+import fr.arakne.utils.maps.CoordinateCell;
 import fr.arakne.utils.maps.serializer.CellData;
 import fr.quatrevieux.araknemu.game.fight.exception.FightMapException;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
@@ -32,6 +33,7 @@ public final class WalkableFightCell implements FightCell {
     private final FightMap map;
     private final CellData template;
     private final int id;
+    private final CoordinateCell<FightCell> coordinate;
 
     private PassiveFighter fighter;
 
@@ -39,6 +41,7 @@ public final class WalkableFightCell implements FightCell {
         this.map = map;
         this.template = template;
         this.id = id;
+        this.coordinate = new CoordinateCell<>(this);
     }
 
     @Override
@@ -64,6 +67,11 @@ public final class WalkableFightCell implements FightCell {
     @Override
     public boolean sightBlocking() {
         return !template.lineOfSight() || fighter != null;
+    }
+
+    @Override
+    public CoordinateCell<FightCell> coordinate() {
+        return coordinate;
     }
 
     @Override
