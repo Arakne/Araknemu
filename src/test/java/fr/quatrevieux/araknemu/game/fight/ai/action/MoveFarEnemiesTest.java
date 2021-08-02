@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
-import fr.arakne.utils.maps.CoordinateCell;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
@@ -127,6 +126,6 @@ class MoveFarEnemiesTest extends FightBaseCase {
     }
 
     private int distance(Fighter enemy) {
-        return new CoordinateCell<>(fighter.cell()).distance(new CoordinateCell<>(enemy.cell()));
+        return fighter.cell().coordinate().distance(enemy.cell());
     }
 }

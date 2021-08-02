@@ -103,7 +103,15 @@ public final class PlayerFighter extends AbstractFighter implements Fighter, Pla
 
     @Override
     public void dispatch(Object event) {
+        final boolean fighting = player.isFighting();
+
         player.dispatch(event);
+
+        // Forward event to fighter is the player is not in fight (i.e. has left or not yet join the fight)
+        // Note: because the first dispatch may change the isFighting value, this value should be checked before and after
+        if (!fighting && !player.isFighting()) {
+            dispatcher().dispatch(event);
+        }
     }
 
     @Override

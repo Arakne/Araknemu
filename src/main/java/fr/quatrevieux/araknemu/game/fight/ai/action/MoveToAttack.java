@@ -85,7 +85,7 @@ public final class MoveToAttack implements ActionGenerator {
             return Optional.empty();
         }
 
-        currentCell = new CoordinateCell<>(fighter.cell());
+        currentCell = fighter.cell().coordinate();
 
         return movement.generate(ai);
     }

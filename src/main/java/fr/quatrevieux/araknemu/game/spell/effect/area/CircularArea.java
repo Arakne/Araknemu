@@ -41,14 +41,13 @@ public final class CircularArea implements SpellEffectArea {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <C extends MapCell> Set<C> resolve(C target, C source) {
+    public <C extends MapCell<C>> Set<C> resolve(C target, C source) {
         final Set<C> cells = new HashSet<>();
-        final DofusMap<C> map = (DofusMap<C>) target.map();
-        final CoordinateCell<C> center = new CoordinateCell<>(target);
+        final DofusMap<C> map = target.map();
+        final CoordinateCell<C> center = target.coordinate();
 
         for (int i = 0; i < map.size(); ++i) {
-            final CoordinateCell<C> cell = new CoordinateCell<>(map.get(i));
+            final CoordinateCell<C> cell = map.get(i).coordinate();
 
             if (distanceChecker.test(center.distance(cell))) {
                 cells.add(cell.cell());

@@ -40,12 +40,12 @@ public final class LineArea implements SpellEffectArea {
     }
 
     @Override
-    public <C extends MapCell> Set<C> resolve(C target, C source) {
+    public <C extends MapCell<C>> Set<C> resolve(C target, C source) {
         if (area.size() == 0) {
             return Collections.singleton(target);
         }
 
-        final Direction direction = new CoordinateCell<>(source).directionTo(new CoordinateCell<>(target));
+        final Direction direction = source.coordinate().directionTo(target.coordinate());
         final Set<C> cells = new HashSet<>(area.size() + 1);
 
         cells.add(target);
@@ -64,12 +64,11 @@ public final class LineArea implements SpellEffectArea {
         return area.size();
     }
 
-    @SuppressWarnings("unchecked")
-    static  <C extends MapCell> void addCells(Set<C> cells, C start, Direction direction, int size) {
-        final DofusMap<C> map = (DofusMap<C>) start.map();
+    static <C extends MapCell<C>> void addCells(Set<C> cells, C start, Direction direction, int size) {
+        final DofusMap<C> map = start.map();
         final int inc = direction.nextCellIncrement(map.dimensions().width());
 
-        CoordinateCell<C> last = new CoordinateCell<>(start);
+        CoordinateCell<C> last = start.coordinate();
 
         for (int i = 0; i < size; ++i) {
             final int cellId = last.id() + inc;
@@ -78,7 +77,7 @@ public final class LineArea implements SpellEffectArea {
                 break;
             }
 
-            final CoordinateCell<C> next = new CoordinateCell<>(map.get(cellId));
+            final CoordinateCell<C> next = map.get(cellId).coordinate();
 
             // The next cell is out of the direction
             if (last.directionTo(next) != direction) {

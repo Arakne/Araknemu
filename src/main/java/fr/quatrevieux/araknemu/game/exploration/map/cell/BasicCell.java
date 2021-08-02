@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.world.creature.Creature;
 /**
  * Simple cell type
  */
-public final class BasicCell extends AbstractCellDataAdapter<ExplorationMap> implements ExplorationMapCell {
+public final class BasicCell extends AbstractCellDataAdapter<ExplorationMap, ExplorationMapCell> implements ExplorationMapCell {
     public BasicCell(int id, CellData template, ExplorationMap map) {
         super(map, template, id);
     }
@@ -39,7 +39,7 @@ public final class BasicCell extends AbstractCellDataAdapter<ExplorationMap> imp
             return false;
         }
 
-        for (Creature creature : map().creatures()) {
+        for (Creature<ExplorationMapCell> creature : map().creatures()) {
             if (equals(creature.cell())) {
                 return false;
             }

@@ -103,7 +103,7 @@ public final class Movement implements ActionGenerator {
      * Select all reachable cells for movement
      */
     private List<ScoredCell> selectCells(AI ai, int movementPoints) {
-        final CoordinateCell<FightCell> currentCell = new CoordinateCell<>(ai.fighter().cell());
+        final CoordinateCell<FightCell> currentCell = ai.fighter().cell().coordinate();
         final List<ScoredCell> selectedCells = new ArrayList<>();
 
         for (FightCell cell : ai.map()) {
@@ -111,7 +111,7 @@ public final class Movement implements ActionGenerator {
                 continue;
             }
 
-            final CoordinateCell<FightCell> coordinates = new CoordinateCell<>(cell);
+            final CoordinateCell<FightCell> coordinates = cell.coordinate();
 
             if (coordinates.distance(currentCell) > movementPoints) {
                 continue;
