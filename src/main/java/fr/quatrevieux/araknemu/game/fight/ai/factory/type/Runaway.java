@@ -49,9 +49,9 @@ public final class Runaway implements AiFactory {
         return Optional.of(
             new FighterAI(fighter, fighter.fight(), new ActionGenerator[] {
                 new Attack(simulator),
-                new MoveToAttack(simulator),
+                MoveToAttack.nearest(simulator),
                 new MoveFarEnemies(),
-                new Boost(simulator),
+                Boost.self(simulator),
             })
         );
     }

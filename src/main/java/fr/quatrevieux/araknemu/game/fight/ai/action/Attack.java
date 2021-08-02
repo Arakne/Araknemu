@@ -37,6 +37,7 @@ public final class Attack implements ActionGenerator, CastSpell.SimulationSelect
     private final double suicidePenaltyFactor;
 
     private double averageEnemyLifePoints = 0;
+    private long enemiesCount = 0;
 
     public Attack(Simulator simulator) {
         this(simulator, 2);
@@ -51,6 +52,7 @@ public final class Attack implements ActionGenerator, CastSpell.SimulationSelect
     public void initialize(AI ai) {
         generator.initialize(ai);
         averageEnemyLifePoints = ai.enemies().mapToInt(fighter -> fighter.life().max()).average().orElse(0);
+        enemiesCount = ai.enemies().count();
     }
 
     @Override
@@ -60,7 +62,25 @@ public final class Attack implements ActionGenerator, CastSpell.SimulationSelect
 
     @Override
     public boolean valid(CastSimulation simulation) {
-        return simulation.enemiesLife() < 0;
+        // @todo test filters
+        if (simulation.enemiesLife() >= 0) {
+            return false;
+        }
+
+        if (simulation.killedEnemies() >= enemiesCount) {
+            return true;
+        }
+
+        // @todo à revoir
+        if (simulation.killedAllies() + simulation.suicideProbability() > simulation.killedEnemies()) {
+            return false;
+        }
+
+        if (simulation.enemiesLife() > simulation.alliesLife() + simulation.selfLife()) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -77,7 +97,7 @@ public final class Attack implements ActionGenerator, CastSpell.SimulationSelect
      *
      * @todo Handle the boost value
      */
-    private double score(CastSimulation simulation) {
+    public double score(CastSimulation simulation) {
         double score =
             - simulation.enemiesLife()
             + simulation.alliesLife()

@@ -19,131 +19,81 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
-import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
-import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
+import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.fight.module.AiModule;
-import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
-import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
-import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
-import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
-import fr.quatrevieux.araknemu.game.spell.SpellService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class AttackTest extends FightBaseCase {
-    private Fighter fighter;
-    private Fight fight;
-
-    private Fighter enemy;
-    private Fighter otherEnemy;
-
-    private Attack action;
-    private FighterAI ai;
-
-    private FightTurn turn;
-
+class AttackTest extends AiBaseCase {
     @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
-        fight = createFight();
-        fight.register(new AiModule(new ChainAiFactory()));
-        fight.register(new CommonEffectsModule(fight));
-
-        fighter = player.fighter();
-        enemy = other.fighter();
-
-        otherEnemy = new PlayerFighter(makeSimpleGamePlayer(10));
-
-        fight.state(PlacementState.class).joinTeam(otherEnemy, enemy.team());
-        fight.nextState();
-
-        fight.turnList().start();
-
         action = new Attack(container.get(Simulator.class));
-
-        ai = new FighterAI(fighter, fight, new ActionGenerator[] { new DummyGenerator() });
-        ai.start(turn = fight.turnList().current().get());
-        action.initialize(ai);
     }
 
     @Test
     void success() {
-        Optional<Action> result = action.generate(ai);
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122))
+            .addEnemy(builder -> builder.player(other).cell(125))
+        );
 
-        assertTrue(result.isPresent());
-        assertInstanceOf(Cast.class, result.get());
-
-        Cast cast = (Cast) result.get();
-
-        assertEquals(3, cast.spell().id());
-        assertEquals(enemy.cell(), cast.target());
+        assertCast(3, 125);
     }
 
     @Test
     void shouldKillEnemyWhenLowLife() {
-        otherEnemy.life().alter(otherEnemy, -45);
-        otherEnemy.move(fight.map().get(135));
-        Optional<Action> result = action.generate(ai);
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122))
+            .addEnemy(builder -> builder.player(other).cell(125))
+            .addEnemy(builder -> builder.cell(135).currentLife(5))
+        );
 
-        assertTrue(result.isPresent());
-        assertInstanceOf(Cast.class, result.get());
-
-        Cast cast = (Cast) result.get();
-
-        assertEquals(3, cast.spell().id());
-        assertEquals(otherEnemy.cell(), cast.target());
+        assertCast(3, 135);
     }
 
     @Test
     void notEnoughAP() {
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122))
+            .addEnemy(builder -> builder.player(other).cell(125))
+        );
+
         turn.points().useActionPoints(5);
-
-        Optional<Action> result = action.generate(ai);
-
-        assertFalse(result.isPresent());
+        assertDotNotGenerateAction();
     }
 
     @Test
     void notAP() {
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122))
+            .addEnemy(builder -> builder.player(other).cell(125))
+        );
+
         turn.points().useActionPoints(6);
-
-        Optional<Action> result = action.generate(ai);
-
-        assertFalse(result.isPresent());
+        assertDotNotGenerateAction();
     }
 
     @Test
     void withAreaSpell() throws SQLException {
         dataSet.pushFunctionalSpells();
-        player.properties().spells().learn(container.get(SpellService.class).get(223));
 
-        Optional<Action> result = action.generate(ai);
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122).spells(223))
+            .addEnemy(builder -> builder.player(other).cell(125))
+            .addEnemy(builder -> builder.player(other).cell(126))
+        );
 
-        assertTrue(result.isPresent());
-        assertInstanceOf(Cast.class, result.get());
-
-        Cast cast = (Cast) result.get();
+        Cast cast = generateCast();
 
         assertEquals(223, cast.spell().id());
         assertEquals(96, cast.target().id());
-
-        turn.perform(cast);
-        turn.terminate();
-
-        assertBetween(20, 39, enemy.life().current());
-        assertBetween(20, 39, otherEnemy.life().current());
     }
 }

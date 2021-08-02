@@ -50,7 +50,7 @@ public final class Aggressive implements AiFactory {
                 new Attack(simulator),
                 new MoveNearEnemy(),
                 new TeleportNearEnemy(),
-                new Boost(simulator),
+                Boost.self(simulator),
             })
         );
     }

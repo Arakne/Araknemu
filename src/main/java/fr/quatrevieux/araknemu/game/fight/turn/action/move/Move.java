@@ -89,4 +89,9 @@ public final class Move implements Action {
         // @todo handle walk and run
         return Duration.ofMillis(300L * path.size());
     }
+
+    @Override
+    public String toString() {
+        return "Move{size=" + (path.size() - 1) + ", target=" + path.target().id() + '}';
+    }
 }

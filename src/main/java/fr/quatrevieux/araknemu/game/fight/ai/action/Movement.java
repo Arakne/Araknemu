@@ -55,6 +55,8 @@ public final class Movement implements ActionGenerator {
      *
      * @param scoreFunction The score function. The returned score is used for select the best cell. Lower score are selected first.
      * @param filter The selection cell filter
+     *
+     * @todo check score: select the highest score instead of the lowest !
      */
     public Movement(Function<CoordinateCell<FightCell>, Integer> scoreFunction, Predicate<ScoredCell> filter) {
         this.scoreFunction = scoreFunction;
@@ -68,6 +70,7 @@ public final class Movement implements ActionGenerator {
 
     @Override
     public Optional<Action> generate(AI ai) {
+        // @todo handle no movement if current cell score > other cells ?
         final int movementPoints = ai.turn().points().movementPoints();
         final List<ScoredCell> selectedCells = selectCells(ai, movementPoints);
 
