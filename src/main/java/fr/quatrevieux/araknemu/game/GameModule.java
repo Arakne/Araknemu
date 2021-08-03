@@ -800,7 +800,9 @@ public final class GameModule implements ContainerModule {
             PvmType.class,
             container -> new PvmType(
                 new PvmRewardsGenerator(
-                    Arrays.asList(new AddExperience(), new SynchronizeLife(), new AddKamas(), new AddItems(container.get(ItemService.class))),
+                    // Issue #192 (https://github.com/Arakne/Araknemu/issues/192) : Perform SynchronizeLife before AddExperience
+                    // to ensure that level up (which trigger restore life) is performed after life synchronisation
+                    Arrays.asList(new SynchronizeLife(), new AddExperience(), new AddKamas(), new AddItems(container.get(ItemService.class))),
                     Arrays.asList(new SetDead(), new ReturnToSavePosition()),
                     Arrays.asList(new PvmXpProvider(), new PvmKamasProvider(), new PvmItemDropProvider(), new PvmEndFightActionProvider())
                 ),
