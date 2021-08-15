@@ -31,8 +31,8 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.ToDoubleFunction;
 
 /**
  * Try to select the best move action
@@ -45,7 +45,7 @@ import java.util.function.Predicate;
  * - If a path is found, and can be performed by the current number of MPs, return the move action
  */
 public final class Movement implements ActionGenerator {
-    private final Function<CoordinateCell<FightCell>, Integer> scoreFunction;
+    private final ToDoubleFunction<CoordinateCell<FightCell>> scoreFunction;
     private final Predicate<ScoredCell> filter;
 
     private Pathfinder<FightCell> pathfinder;
@@ -53,12 +53,10 @@ public final class Movement implements ActionGenerator {
     /**
      * Creates the Movement action generator
      *
-     * @param scoreFunction The score function. The returned score is used for select the best cell. Lower score are selected first.
+     * @param scoreFunction The score function. The returned score is used for select the best cell. Higher score are selected first.
      * @param filter The selection cell filter
-     *
-     * @todo check score: select the highest score instead of the lowest !
      */
-    public Movement(Function<CoordinateCell<FightCell>, Integer> scoreFunction, Predicate<ScoredCell> filter) {
+    public Movement(ToDoubleFunction<CoordinateCell<FightCell>> scoreFunction, Predicate<ScoredCell> filter) {
         this.scoreFunction = scoreFunction;
         this.filter = filter;
     }
@@ -70,14 +68,17 @@ public final class Movement implements ActionGenerator {
 
     @Override
     public Optional<Action> generate(AI ai) {
-        // @todo handle no movement if current cell score > other cells ?
         final int movementPoints = ai.turn().points().movementPoints();
         final List<ScoredCell> selectedCells = selectCells(ai, movementPoints);
+
+        final CoordinateCell<FightCell> currentCell = ai.fighter().cell().coordinate();
+        final ScoredCell currentCellScore = new ScoredCell(currentCell, scoreFunction.applyAsDouble(currentCell));
+        final boolean currentCellIsValid = filter.test(currentCellScore);
 
         selectedCells.sort(ScoredCell::compareTo);
 
         for (ScoredCell cell : selectedCells) {
-            if (!filter.test(cell)) {
+            if ((currentCellIsValid && currentCellScore.score() >= cell.score()) || !filter.test(cell)) {
                 continue;
             }
 
@@ -120,7 +121,7 @@ public final class Movement implements ActionGenerator {
                 continue;
             }
 
-            selectedCells.add(new ScoredCell(coordinates, scoreFunction.apply(coordinates)));
+            selectedCells.add(new ScoredCell(coordinates, scoreFunction.applyAsDouble(coordinates)));
         }
 
         return selectedCells;
@@ -128,24 +129,31 @@ public final class Movement implements ActionGenerator {
 
     public static final class ScoredCell implements Comparable<ScoredCell> {
         private final CoordinateCell<FightCell> coordinates;
-        private final int score;
+        private final double score;
 
-        public ScoredCell(CoordinateCell<FightCell> coordinates, int score) {
+        public ScoredCell(CoordinateCell<FightCell> coordinates, double score) {
             this.coordinates = coordinates;
             this.score = score;
         }
 
+        /**
+         * Get the cell coordinates
+         */
         public CoordinateCell<FightCell> coordinates() {
             return coordinates;
         }
 
-        public int score() {
+        /**
+         * Get the cell score
+         * Higher score are prioritized
+         */
+        public double score() {
             return score;
         }
 
         @Override
         public int compareTo(ScoredCell o) {
-            return score - o.score;
+            return Double.compare(o.score, score);
         }
     }
 }

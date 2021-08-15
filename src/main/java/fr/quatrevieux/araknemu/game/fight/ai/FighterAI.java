@@ -19,18 +19,16 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai;
 
-import fr.arakne.utils.maps.CoordinateCell;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
+import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 
 import java.time.Duration;
-import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -51,6 +49,7 @@ public final class FighterAI implements Runnable, AI {
     private final ActiveFighter fighter;
     private final Fight fight;
     private final ActionGenerator[] actions;
+    private final AIHelper helper;
 
     private Turn turn;
 
@@ -64,6 +63,7 @@ public final class FighterAI implements Runnable, AI {
         this.fighter = fighter;
         this.fight = fight;
         this.actions = actions;
+        this.helper = new AIHelper(this);
     }
 
     @Override
@@ -125,14 +125,12 @@ public final class FighterAI implements Runnable, AI {
     }
 
     @Override
-    public Stream<? extends PassiveFighter> enemies() {
-        return fighters().filter(other -> !other.team().equals(fighter.team()));
+    public Optional<? extends PassiveFighter> enemy() {
+        return helper.enemies().nearest();
     }
 
     @Override
-    public Optional<? extends PassiveFighter> enemy() {
-        final CoordinateCell<FightCell> currentCell = fighter.cell().coordinate();
-
-        return enemies().min(Comparator.comparingInt(f -> currentCell.distance(f.cell())));
+    public AIHelper helper() {
+        return helper;
     }
 }

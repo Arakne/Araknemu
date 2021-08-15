@@ -75,9 +75,16 @@ public class AiBaseCase extends FightBaseCase {
 
         fight.turnList().start();
 
+        while (fight.turnList().currentFighter() != fighter) {
+            fight.turnList().current().get().stop();
+        }
+
         ai = new FighterAI(fighter, fight, new ActionGenerator[] { new DummyGenerator() });
         ai.start(turn = fight.turnList().current().get());
-        action.initialize(ai);
+
+        if (action != null) {
+            action.initialize(ai);
+        }
     }
 
     public Optional<Action> generateAction() {
@@ -131,7 +138,7 @@ public class AiBaseCase extends FightBaseCase {
         Set<Integer> targetCells = getCastEffectAreaCellIds();
 
         for (int cellId : cellIds) {
-            assertTrue(targetCells.contains(cellId), "The cell " + cellId + " is not in the effect area");
+            assertTrue(targetCells.contains(cellId), "The cell " + cellId + " is not in the effect area : " + targetCells);
         }
     }
 
@@ -149,7 +156,7 @@ public class AiBaseCase extends FightBaseCase {
 
         return cast.spell().effects().stream()
             .map(SpellEffect::area)
-            .flatMap(area -> area.resolve(cast.caster().cell(), cast.target()).stream())
+            .flatMap(area -> area.resolve(cast.target(), cast.caster().cell()).stream())
             .map(FightCell::id)
             .collect(Collectors.toSet())
         ;
@@ -194,6 +201,20 @@ public class AiBaseCase extends FightBaseCase {
             turn.points().addActionPoints(toAdd);
         } else {
             turn.points().removeActionPoints(-toAdd);
+        }
+    }
+
+    public void setMP(int points) {
+        final int toAdd = points - turn.points().movementPoints();
+
+        if (toAdd == 0) {
+            return;
+        }
+
+        if (toAdd > 0) {
+            turn.points().addMovementPoints(toAdd);
+        } else {
+            turn.points().removeMovementPoints(-toAdd);
         }
     }
 

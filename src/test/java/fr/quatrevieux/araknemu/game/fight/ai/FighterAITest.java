@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.ai;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
+import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
@@ -168,5 +169,13 @@ class FighterAITest extends FightBaseCase {
         FighterAI ai = new FighterAI(fighter, fight, new ActionGenerator[] {});
 
         assertThrows(IllegalStateException.class, ai::run);
+    }
+
+    @Test
+    void helper() {
+        FighterAI ai = new FighterAI(fighter, fight, new ActionGenerator[] {});
+
+        assertInstanceOf(AIHelper.class, ai.helper());
+        assertSame(ai.helper(), ai.helper());
     }
 }

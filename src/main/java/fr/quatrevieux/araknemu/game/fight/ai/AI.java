@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai;
 
+import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
@@ -61,16 +62,17 @@ public interface AI {
     public Stream<? extends PassiveFighter> fighters();
 
     /**
-     * Get all alive enemies of the fighter
-     * This method behavior can change, depending of the AI resolution strategy
-     */
-    public Stream<? extends PassiveFighter> enemies();
-
-    /**
      * Get the best enemy
-     * This method behavior can change, depending of the AI resolution strategy
+     * This method behavior can change, depending on the AI resolution strategy
      *
      * An empty optional can be returned, if there is no enemy which match
      */
     public Optional<? extends PassiveFighter> enemy();
+
+    /**
+     * Get helper for the current AI
+     */
+    public default AIHelper helper() {
+        return new AIHelper(this);
+    }
 }

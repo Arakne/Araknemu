@@ -34,25 +34,25 @@ import java.util.Optional;
  */
 public final class Attack implements ActionGenerator, CastSpell.SimulationSelector {
     private final CastSpell generator;
-    private final double suicidePenaltyFactor;
+    private final SuicideStrategy suicideStrategy;
 
     private double averageEnemyLifePoints = 0;
-    private long enemiesCount = 0;
+    private int enemiesCount = 0;
 
     public Attack(Simulator simulator) {
-        this(simulator, 2);
+        this(simulator, SuicideStrategy.IF_KILL_ENEMY);
     }
 
-    public Attack(Simulator simulator, double suicidePenaltyFactor) {
+    public Attack(Simulator simulator, SuicideStrategy suicideStrategy) {
         this.generator = new CastSpell(simulator, this);
-        this.suicidePenaltyFactor = suicidePenaltyFactor;
+        this.suicideStrategy = suicideStrategy;
     }
 
     @Override
     public void initialize(AI ai) {
         generator.initialize(ai);
-        averageEnemyLifePoints = ai.enemies().mapToInt(fighter -> fighter.life().max()).average().orElse(0);
-        enemiesCount = ai.enemies().count();
+        averageEnemyLifePoints = ai.helper().enemies().stream().mapToInt(fighter -> fighter.life().max()).average().orElse(0);
+        enemiesCount = ai.helper().enemies().count();
     }
 
     @Override
@@ -62,25 +62,31 @@ public final class Attack implements ActionGenerator, CastSpell.SimulationSelect
 
     @Override
     public boolean valid(CastSimulation simulation) {
-        // @todo test filters
         if (simulation.enemiesLife() >= 0) {
             return false;
         }
 
+        // Kill all enemies
         if (simulation.killedEnemies() >= enemiesCount) {
             return true;
         }
 
-        // @todo à revoir
-        if (simulation.killedAllies() + simulation.suicideProbability() > simulation.killedEnemies()) {
+        if (!suicideStrategy.allow(simulation)) {
             return false;
         }
 
-        if (simulation.enemiesLife() > simulation.alliesLife() + simulation.selfLife()) {
+        // Kill more allies than enemies
+        if (simulation.killedAllies() > simulation.killedEnemies()) {
             return false;
         }
 
-        return true;
+        // At least one enemy will be killed
+        if (simulation.killedEnemies() >= 0.99) {
+            return true;
+        }
+
+        // Cause more damage on enemies than allies
+        return simulation.enemiesLife() < simulation.alliesLife() + simulation.selfLife();
     }
 
     @Override
@@ -94,24 +100,75 @@ public final class Attack implements ActionGenerator, CastSpell.SimulationSelect
      * @param simulation The simulation result
      *
      * @return The score of the simulation. 0 is null
-     *
-     * @todo Handle the boost value
      */
     public double score(CastSimulation simulation) {
-        double score =
-            - simulation.enemiesLife()
-            + simulation.alliesLife()
-            + simulation.selfLife() * 2
-        ;
-
-        final double killRatio =
-            simulation.killedEnemies()
-            - 1.5 * simulation.killedAllies()
-            - suicidePenaltyFactor * simulation.suicideProbability()
-        ;
-
-        score += averageEnemyLifePoints * killRatio;
+        final double score = damageScore(simulation) + killScore(simulation) + boostScore(simulation);
 
         return score / simulation.spell().apCost();
+    }
+
+    private double damageScore(CastSimulation simulation) {
+        return - simulation.enemiesLife() + simulation.alliesLife() + simulation.selfLife() * 2;
+    }
+
+    private double killScore(CastSimulation simulation) {
+        final double killRatio = simulation.killedEnemies()
+            - 1.5 * simulation.killedAllies()
+            - 2 * simulation.suicideProbability()
+        ;
+
+        return averageEnemyLifePoints * killRatio;
+    }
+
+    private double boostScore(CastSimulation simulation) {
+        return (simulation.alliesBoost() + simulation.selfBoost() - simulation.enemiesBoost()) / 10;
+    }
+
+    /**
+     * Filter the cast by the suicide probability
+     *
+     * @see CastSimulation#suicideProbability()
+     */
+    enum SuicideStrategy {
+        /**
+         * Always allow suicide
+         * Should be used on The Sacrificial Doll AI
+         */
+        ALLOW {
+            @Override
+            public boolean allow(CastSimulation simulation) {
+                return true;
+            }
+        },
+
+        /**
+         * Suicide is never accepted
+         */
+        DENY {
+            @Override
+            public boolean allow(CastSimulation simulation) {
+                return simulation.suicideProbability() <= 0;
+            }
+        },
+
+        /**
+         * Suicide is accepted only if there is more chance (or number) to kill an enemy
+         */
+        IF_KILL_ENEMY {
+            @Override
+            public boolean allow(CastSimulation simulation) {
+                return simulation.suicideProbability() <= simulation.killedEnemies();
+            }
+        },
+        ;
+
+        /**
+         * Does the simulation is allowed about the suicide probability ?
+         *
+         * @param simulation The cast simulation to check
+         *
+         * @return false if the cast must not be performed
+         */
+        public abstract boolean allow(CastSimulation simulation);
     }
 }

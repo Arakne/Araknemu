@@ -24,27 +24,25 @@ import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValid
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastActionFactory;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 
 /**
  * Utility class for cast spells
  */
 public final class SpellCaster {
-    private final Turn turn;
-    private final CastConstraintValidator<Spell> validator;
-    private final CastActionFactory factory;
+    private final AI ai;
 
     public SpellCaster(AI ai) {
-        turn = ai.turn();
-        factory = turn.actions().cast();
-        validator = factory.validator();
+        this.ai = ai;
     }
 
     /**
      * Validate the cast action
      */
     public boolean validate(Spell spell, FightCell target) {
+        final Turn turn = ai.turn();
+        final CastConstraintValidator<Spell> validator = turn.actions().cast().validator();
+
         return validator.validate(turn, spell, target) == null;
     }
 
@@ -52,6 +50,6 @@ public final class SpellCaster {
      * Create the action
      */
     public Action create(Spell spell, FightCell target) {
-        return factory.create(spell, target);
+        return ai.turn().actions().cast().create(spell, target);
     }
 }

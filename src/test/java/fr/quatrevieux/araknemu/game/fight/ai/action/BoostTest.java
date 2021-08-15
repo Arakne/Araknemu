@@ -153,7 +153,7 @@ class BoostTest extends AiBaseCase {
 
         // Ally is on adjacent cell
         configureFight(fb -> fb
-            .addSelf(builder -> builder.cell(122).spell(145).charac(Characteristic.AGILITY, -100)) // épée divine
+            .addSelf(builder -> builder.cell(122).spell(145).charac(Characteristic.AGILITY, -50)) // épée divine
             .addAlly(builder -> builder.cell(136))
             .addEnemy(builder -> builder.cell(125))
         );
@@ -161,6 +161,24 @@ class BoostTest extends AiBaseCase {
         removeSpell(6);
 
         assertCast(145, 122);
+        assertInCastEffectArea(136);
+    }
+
+    @Test
+    void allyBoostShouldFavorBoostWithoutDamage() throws NoSuchFieldException, IllegalAccessException {
+        action = Boost.allies(container.get(Simulator.class));
+
+        // Ally is on adjacent cell
+        // divine sword (145) and amplification (148)
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122).spell(145, 5).spell(148).charac(Characteristic.AGILITY, -50))
+            .addAlly(builder -> builder.cell(136))
+            .addEnemy(builder -> builder.cell(125))
+        );
+
+        removeSpell(6);
+
+        assertCast(148, 136);
     }
 
     @Test

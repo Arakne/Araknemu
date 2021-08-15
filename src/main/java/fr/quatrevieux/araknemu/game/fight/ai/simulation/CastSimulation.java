@@ -261,6 +261,7 @@ public final class CastSimulation {
 
         killedAllies += simulation.killedAllies * percent / 100d;
         killedEnemies += simulation.killedEnemies * percent / 100d;
+        suicide += simulation.suicide * percent / 100d;
     }
 
     /**

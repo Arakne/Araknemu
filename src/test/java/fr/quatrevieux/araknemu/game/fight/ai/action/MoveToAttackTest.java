@@ -24,6 +24,8 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MoveToAttackTest extends AiBaseCase {
@@ -32,7 +34,6 @@ class MoveToAttackTest extends AiBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        // @todo test "best target"
         action = MoveToAttack.nearest(container.get(Simulator.class));
     }
 
@@ -97,5 +98,98 @@ class MoveToAttackTest extends AiBaseCase {
         setAP(3);
 
         assertDotNotGenerateAction();
+    }
+
+    @Test
+    void bestTarget() throws SQLException {
+        dataSet.pushFunctionalSpells();
+        action = MoveToAttack.bestTarget(container.get(Simulator.class));
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(180).spell(145, 5))
+            .addEnemy(builder -> builder.cell(210).currentLife(15))
+            .addEnemy(builder -> builder.cell(150))
+        );
+
+        generateAndPerformMove();
+
+        assertEquals(195, fighter.cell().id());
+        // @todo check selected action
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(180).spell(168, 5))
+            .addEnemy(builder -> builder.cell(210))
+            .addEnemy(builder -> builder.cell(150))
+        );
+
+        generateAndPerformMove();
+
+        assertEquals(136, fighter.cell().id());
+    }
+
+    @Test
+    void shouldNotMoveIfBlockedByOtherFighters() throws SQLException, NoSuchFieldException, IllegalAccessException {
+        dataSet.pushFunctionalSpells();
+        action = MoveToAttack.bestTarget(container.get(Simulator.class));
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(210))
+            .addEnemy(builder -> builder.cell(195))
+            .addEnemy(builder -> builder.cell(196))
+        );
+
+        removeSpell(3);
+
+        assertDotNotGenerateAction();
+    }
+
+    @Test
+    void shouldNotMoveIfCanAttackButWithEnemyOnAdjacentCell() throws SQLException, NoSuchFieldException, IllegalAccessException {
+        dataSet.pushFunctionalSpells();
+        action = MoveToAttack.bestTarget(container.get(Simulator.class));
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(210).spell(145))
+            .addEnemy(builder -> builder.cell(195)) // Adjacent
+            .addEnemy(builder -> builder.cell(180).currentLife(5)) // => better target with divide sword
+        );
+
+        removeSpell(3);
+
+        assertDotNotGenerateAction();
+    }
+
+    @Test
+    void shouldMoveIfCanAttackDespiteEnemyOnAdjacentCell() throws SQLException, NoSuchFieldException, IllegalAccessException {
+        dataSet.pushFunctionalSpells();
+        action = MoveToAttack.bestTarget(container.get(Simulator.class));
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(210).spell(164))
+            .addEnemy(builder -> builder.cell(195)) // Adjacent
+        );
+
+        removeSpell(3);
+
+        generateAndPerformMove();
+
+        assertEquals(196, fighter.cell().id());
+    }
+
+    @Test
+    void nearestShouldSelectBestTargetIfInSameDistance() throws SQLException, NoSuchFieldException, IllegalAccessException {
+        dataSet.pushFunctionalSpells();
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(180).spell(145, 5))
+            .addEnemy(builder -> builder.cell(210).currentLife(15))
+            .addEnemy(builder -> builder.cell(150))
+        );
+
+        removeSpell(3);
+
+        generateAndPerformMove();
+
+        assertEquals(195, fighter.cell().id());
     }
 }
