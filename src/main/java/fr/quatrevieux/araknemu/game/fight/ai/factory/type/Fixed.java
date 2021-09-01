@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.ai.factory.type;
@@ -24,24 +24,18 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.AbstractAiBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 
 /**
- * AI for run away monsters (like Tofu)
- *
- * This AI use the smallest MP quantity for attack, and flees farthest from enemies
+ * AI for poutch ingball or any fixed monsters
+ * This AI can only perform attack
  */
-public final class Runaway extends AbstractAiBuilderFactory {
+public final class Fixed extends AbstractAiBuilderFactory {
     private final Simulator simulator;
 
-    public Runaway(Simulator simulator) {
+    public Fixed(Simulator simulator) {
         this.simulator = simulator;
     }
 
     @Override
     public void configure(GeneratorBuilder builder) {
-        builder
-            .boostSelf(simulator)
-            .attackFromNearestCell(simulator)
-            .boostAllies(simulator)
-            .moveFarEnemies()
-        ;
+        builder.attack(simulator);
     }
 }

@@ -25,7 +25,9 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.spell.Spell;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -81,8 +83,20 @@ public final class SpellsHelper {
      * @return Stream of spells with the given effect
      */
     public Stream<Spell> withEffect(int effectId) {
+        return withEffect(spellEffect -> spellEffect.effect() == effectId);
+    }
+
+    /**
+     * Filter spells to return only those with the given effect
+     * Note: it does not filter available spells : it may return a spell with too high AP required
+     *
+     * @param filter The effect predicate
+     *
+     * @return Stream of spells with the given effect
+     */
+    public Stream<Spell> withEffect(Predicate<SpellEffect> filter) {
         return StreamSupport.stream(ai.fighter().spells().spliterator(), false)
-            .filter(spell -> spell.effects().stream().anyMatch(spellEffect -> spellEffect.effect() == effectId))
+            .filter(spell -> spell.effects().stream().anyMatch(filter))
         ;
     }
 

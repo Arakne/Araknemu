@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.DummyGenerator;
+import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
 import fr.quatrevieux.araknemu.game.spell.Spell;
@@ -45,7 +46,7 @@ class SpellCasterTest extends FightBaseCase {
         fight = createFight();
         fighter = player.fighter();
 
-        FighterAI ai = new FighterAI(fighter, fight, new ActionGenerator[] {new DummyGenerator()});
+        FighterAI ai = new FighterAI(fighter, fight, new DummyGenerator());
         fight.nextState();
         fight.turnList().start();
         ai.start(fight.turnList().current().get());

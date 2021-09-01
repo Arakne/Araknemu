@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.ai.util;
 
 import fr.arakne.utils.maps.CoordinateCell;
+import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -106,6 +107,19 @@ public final class FightersHelper {
      */
     public Stream<FightCell> cells() {
         return stream().map(PassiveFighter::cell);
+    }
+
+    /**
+     * Get all fighters which are in the given range
+     *
+     * @param range Range to check
+     *
+     * @return Stream of fighters
+     */
+    public Stream<? extends PassiveFighter> inRange(Interval range) {
+        final CoordinateCell<FightCell> currentCell = ai.fighter().cell().coordinate();
+
+        return stream().filter(fighter -> range.contains(currentCell.distance(fighter.cell())));
     }
 
     /**

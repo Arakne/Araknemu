@@ -78,6 +78,16 @@ class SpellsHelperTest extends AiBaseCase {
     }
 
     @Test
+    void withEffectWithPredicate() {
+        configureFight(fb -> fb
+            .addSelf(b -> b.cell(123))
+            .addEnemy(b -> b.cell(125))
+        );
+
+        assertArrayEquals(new int [] {17, 6}, helper().withEffect(e -> e.effect() > 100).mapToInt(Spell::id).toArray());
+    }
+
+    @Test
     void simulate() {
         configureFight(fb -> fb
             .addSelf(b -> b.cell(123))

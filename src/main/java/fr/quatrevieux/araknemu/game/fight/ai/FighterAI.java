@@ -35,12 +35,6 @@ import java.util.stream.Stream;
 /**
  * Base class to handle AI actions
  *
- * The AI can be seen as a pipeline of action generators :
- * - If a generator cannot generate an action, the next one is called
- * - If all generators fail, the turn is stopped
- * - When an action is successfully generated, it will be executed,
- *   and the "pipeline" is reset after the action termination
- *
  * Note: The AI execution is deferred, each action is executed by the fight executor,
  *       and the next action is scheduled after the last one.
  *       So the AI execution is not blocking, and executed in parallel of the turn timer.
@@ -48,7 +42,7 @@ import java.util.stream.Stream;
 public final class FighterAI implements Runnable, AI {
     private final ActiveFighter fighter;
     private final Fight fight;
-    private final ActionGenerator[] actions;
+    private final ActionGenerator generator;
     private final AIHelper helper;
 
     private Turn turn;
@@ -57,12 +51,12 @@ public final class FighterAI implements Runnable, AI {
      * Creates the AI
      *
      * @param fighter The fighter to control
-     * @param actions The actions pipeline
+     * @param generator The action generator
      */
-    public FighterAI(ActiveFighter fighter, Fight fight, ActionGenerator[] actions) {
+    public FighterAI(ActiveFighter fighter, Fight fight, ActionGenerator generator) {
         this.fighter = fighter;
         this.fight = fight;
-        this.actions = actions;
+        this.generator = generator;
         this.helper = new AIHelper(this);
     }
 
@@ -70,10 +64,7 @@ public final class FighterAI implements Runnable, AI {
     public void start(Turn turn) {
         this.turn = turn;
 
-        for (ActionGenerator generator : actions) {
-            generator.initialize(this);
-        }
-
+        generator.initialize(this);
         fight.execute(this);
     }
 
@@ -85,19 +76,17 @@ public final class FighterAI implements Runnable, AI {
 
         final Turn currentTurn = turn;
 
-        for (ActionGenerator generator : actions) {
-            if (!currentTurn.active()) {
-                turn = null;
-                return;
-            }
+        if (!currentTurn.active()) {
+            turn = null;
+            return;
+        }
 
-            final Optional<Action> action = generator.generate(this);
+        final Optional<Action> action = generator.generate(this);
 
-            if (action.isPresent()) {
-                currentTurn.perform(action.get());
-                currentTurn.later(() -> fight.schedule(this, Duration.ofMillis(800)));
-                return;
-            }
+        if (action.isPresent()) {
+            currentTurn.perform(action.get());
+            currentTurn.later(() -> fight.schedule(this, Duration.ofMillis(800)));
+            return;
         }
 
         turn = null;

@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.util;
 
+import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import org.junit.jupiter.api.Test;
 
@@ -92,6 +93,20 @@ class FightersHelperTest extends AiBaseCase {
         );
 
         assertEquals(getEnemy(1), helper().nearest().get());
+    }
+
+    @Test
+    void inRange() {
+        configureFight(fb -> fb
+            .addSelf(b -> b.cell(123))
+            .addEnemy(b -> b.cell(125))
+            .addEnemy(b -> b.cell(135))
+        );
+
+        assertArrayEquals(new Object[] {}, helper().inRange(new Interval(0, 1)).toArray());
+        assertArrayEquals(new Object[] {getEnemy(0)}, helper().inRange(new Interval(0, 4)).toArray());
+        assertArrayEquals(new Object[] {getEnemy(0), getEnemy(1)}, helper().inRange(new Interval(0, 5)).toArray());
+        assertArrayEquals(new Object[] {getEnemy(1)}, helper().inRange(new Interval(5, 5)).toArray());
     }
 
     private FightersHelper helper() {

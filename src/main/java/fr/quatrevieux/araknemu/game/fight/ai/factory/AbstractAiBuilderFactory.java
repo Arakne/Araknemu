@@ -14,34 +14,33 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.ai.factory.type;
+package fr.quatrevieux.araknemu.game.fight.ai.factory;
 
+import fr.quatrevieux.araknemu.game.fight.ai.AI;
+import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder;
-import fr.quatrevieux.araknemu.game.fight.ai.factory.AbstractAiBuilderFactory;
-import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+
+import java.util.Optional;
 
 /**
- * AI for run away monsters (like Tofu)
- *
- * This AI use the smallest MP quantity for attack, and flees farthest from enemies
+ * AiFactory implementation using a generator builder for configure the AI
  */
-public final class Runaway extends AbstractAiBuilderFactory {
-    private final Simulator simulator;
-
-    public Runaway(Simulator simulator) {
-        this.simulator = simulator;
-    }
+public abstract class AbstractAiBuilderFactory implements AiFactory {
+    /**
+     * Configure the AI generator
+     */
+    public abstract void configure(GeneratorBuilder builder);
 
     @Override
-    public void configure(GeneratorBuilder builder) {
-        builder
-            .boostSelf(simulator)
-            .attackFromNearestCell(simulator)
-            .boostAllies(simulator)
-            .moveFarEnemies()
-        ;
+    public final Optional<AI> create(Fighter fighter) {
+        final GeneratorBuilder builder = new GeneratorBuilder();
+
+        configure(builder);
+
+        return Optional.of(new FighterAI(fighter, fighter.fight(), builder.build()));
     }
 }

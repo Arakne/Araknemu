@@ -79,7 +79,7 @@ public class AiBaseCase extends FightBaseCase {
             fight.turnList().current().get().stop();
         }
 
-        ai = new FighterAI(fighter, fight, new ActionGenerator[] { new DummyGenerator() });
+        ai = new FighterAI(fighter, fight, new DummyGenerator());
         ai.start(turn = fight.turnList().current().get());
 
         if (action != null) {

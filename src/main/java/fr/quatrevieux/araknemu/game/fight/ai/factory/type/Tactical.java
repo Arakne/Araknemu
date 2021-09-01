@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.ai.factory.type;
@@ -22,16 +22,20 @@ package fr.quatrevieux.araknemu.game.fight.ai.factory.type;
 import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AbstractAiBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
+import fr.quatrevieux.araknemu.game.fight.ai.util.Predicates;
 
 /**
- * AI for run away monsters (like Tofu)
+ * AI between {@link Runaway} and {@link Aggressive}
  *
- * This AI use the smallest MP quantity for attack, and flees farthest from enemies
+ * It will choose the best move for attack,
+ * and move near enemies if out of range, or move away otherwise
+ *
+ * This AI is designed for monsters with long range attack spells
  */
-public final class Runaway extends AbstractAiBuilderFactory {
+public final class Tactical extends AbstractAiBuilderFactory {
     private final Simulator simulator;
 
-    public Runaway(Simulator simulator) {
+    public Tactical(Simulator simulator) {
         this.simulator = simulator;
     }
 
@@ -39,9 +43,12 @@ public final class Runaway extends AbstractAiBuilderFactory {
     public void configure(GeneratorBuilder builder) {
         builder
             .boostSelf(simulator)
-            .attackFromNearestCell(simulator)
+            .attackFromBestCell(simulator)
             .boostAllies(simulator)
-            .moveFarEnemies()
+            .when(Predicates.hasEnemyInRange(), cond -> cond
+                .success(GeneratorBuilder::moveFarEnemies)
+                .otherwise(GeneratorBuilder::moveOrTeleportNearEnemy)
+            )
         ;
     }
 }

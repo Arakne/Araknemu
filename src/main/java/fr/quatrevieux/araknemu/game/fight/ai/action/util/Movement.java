@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.ai.action;
+package fr.quatrevieux.araknemu.game.fight.ai.action.util;
 
 import fr.arakne.utils.maps.CoordinateCell;
 import fr.arakne.utils.maps.path.Decoder;
@@ -25,6 +25,7 @@ import fr.arakne.utils.maps.path.Path;
 import fr.arakne.utils.maps.path.PathException;
 import fr.arakne.utils.maps.path.Pathfinder;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
+import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 

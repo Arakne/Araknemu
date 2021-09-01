@@ -31,18 +31,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Try to move far all enemies
- *
- * The selected cell is the cell with the highest distance from the nearest enemy
- * Select only cells with higher distance than current cell
+ * Try to move near the allies
  */
-public final class MoveFarEnemies implements ActionGenerator {
+public final class MoveNearAllies implements ActionGenerator {
     private final Movement movement;
 
-    private List<CoordinateCell<FightCell>> enemiesCells;
+    private List<CoordinateCell<FightCell>> alliesCells;
 
-    public MoveFarEnemies() {
-        movement = new Movement(this::score, scoredCell -> true);
+    public MoveNearAllies() {
+        this.movement = new Movement(this::score, scoredCell -> true);
     }
 
     @Override
@@ -54,11 +51,11 @@ public final class MoveFarEnemies implements ActionGenerator {
     public Optional<Action> generate(AI ai) {
         final AIHelper helper = ai.helper();
 
-        if (!helper.canMove()) {
+        if (!helper.canMove() || !helper.allies().stream().findAny().isPresent()) {
             return Optional.empty();
         }
 
-        enemiesCells = helper.enemies().cells().map(FightCell::coordinate).collect(Collectors.toList());
+        alliesCells = helper.allies().cells().map(FightCell::coordinate).collect(Collectors.toList());
 
         return movement.generate(ai);
     }
@@ -66,9 +63,21 @@ public final class MoveFarEnemies implements ActionGenerator {
     /**
      * The score function
      *
-     * Select the highest distance
+     * Select the lowest distance from one ally + lowest average distance
      */
     private double score(CoordinateCell<FightCell> cell) {
-        return enemiesCells.stream().mapToDouble(cell::distance).min().orElse(0);
+        final Iterable<Double> distances = () -> alliesCells.stream().mapToDouble(cell::distance).iterator();
+
+        double min = Double.MAX_VALUE;
+        double total = 0;
+        int count = 0;
+
+        for (double distance : distances) {
+            min = Math.min(min, distance);
+            total += distance;
+            ++count;
+        }
+
+        return -(min + (total / count));
     }
 }
