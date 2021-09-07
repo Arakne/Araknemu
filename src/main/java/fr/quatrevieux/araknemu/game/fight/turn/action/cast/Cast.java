@@ -145,4 +145,9 @@ public final class Cast implements Action {
     public FightCell target() {
         return target;
     }
+
+    @Override
+    public String toString() {
+        return "Cast{spell=" + spell.id() + ", target=" + target.id() + '}';
+    }
 }

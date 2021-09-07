@@ -21,7 +21,8 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.arakne.utils.maps.CoordinateCell;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.ai.action.util.Movement;
+import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 
@@ -39,10 +40,9 @@ public final class MoveFarEnemies implements ActionGenerator {
     private final Movement movement;
 
     private List<CoordinateCell<FightCell>> enemiesCells;
-    private int currentCellScore = 0;
 
     public MoveFarEnemies() {
-        movement = new Movement(this::score, scoredCell -> scoredCell.score() < currentCellScore);
+        movement = new Movement(this::score, scoredCell -> true);
     }
 
     @Override
@@ -52,14 +52,13 @@ public final class MoveFarEnemies implements ActionGenerator {
 
     @Override
     public Optional<Action> generate(AI ai) {
-        final int movementPoints = ai.turn().points().movementPoints();
+        final AIHelper helper = ai.helper();
 
-        if (movementPoints < 1) {
+        if (!helper.canMove()) {
             return Optional.empty();
         }
 
-        enemiesCells = ai.enemies().map(PassiveFighter::cell).map(FightCell::coordinate).collect(Collectors.toList());
-        currentCellScore = score(ai.fighter().cell().coordinate());
+        enemiesCells = helper.enemies().cells().map(FightCell::coordinate).collect(Collectors.toList());
 
         return movement.generate(ai);
     }
@@ -67,10 +66,9 @@ public final class MoveFarEnemies implements ActionGenerator {
     /**
      * The score function
      *
-     * Negates the score valid because lowest score is selected first,
-     * but we needs that the highest distance is selected first.
+     * Select the highest distance
      */
-    private int score(CoordinateCell<FightCell> cell) {
-        return -enemiesCells.stream().mapToInt(cell::distance).min().orElse(0);
+    private double score(CoordinateCell<FightCell> cell) {
+        return enemiesCells.stream().mapToDouble(cell::distance).min().orElse(0);
     }
 }

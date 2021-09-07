@@ -75,6 +75,7 @@ class CastTest extends FightBaseCase {
 
         assertSame(fighter, cast.performer());
         assertSame(ActionType.CAST, cast.type());
+        assertEquals("Cast{spell=3, target=186}", cast.toString());
     }
 
     @Test

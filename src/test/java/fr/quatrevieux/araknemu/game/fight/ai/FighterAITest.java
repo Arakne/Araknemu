@@ -22,6 +22,9 @@ package fr.quatrevieux.araknemu.game.fight.ai;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
+import fr.quatrevieux.araknemu.game.fight.ai.action.logic.GeneratorAggregate;
+import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
+import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
@@ -61,7 +64,7 @@ class FighterAITest extends FightBaseCase {
 
     @Test
     void getters() {
-        FighterAI ai = new FighterAI(fighter, fight, new ActionGenerator[0]);
+        FighterAI ai = new FighterAI(fighter, fight, NullGenerator.INSTANCE);
 
         assertSame(fighter, ai.fighter());
         assertSame(enemy, ai.enemy().get());
@@ -69,7 +72,7 @@ class FighterAITest extends FightBaseCase {
 
     @Test
     void enemyShouldFilterDeadFighters() {
-        FighterAI ai = new FighterAI(fighter, fight, new ActionGenerator[0]);
+        FighterAI ai = new FighterAI(fighter, fight, NullGenerator.INSTANCE);
 
         enemy.life().kill(fighter);
 
@@ -81,7 +84,7 @@ class FighterAITest extends FightBaseCase {
         fight.turnList().start();
         FightTurn turn = fight.turnList().current().get();
 
-        FighterAI ai = new FighterAI(fighter, fight, new ActionGenerator[0]);
+        FighterAI ai = new FighterAI(fighter, fight, NullGenerator.INSTANCE);
         ai.start(turn);
 
         Thread.sleep(20);
@@ -97,7 +100,7 @@ class FighterAITest extends FightBaseCase {
         fight.turnList().start();
         FightTurn turn = fight.turnList().current().get();
 
-        FighterAI ai = new FighterAI(fighter, fight, new ActionGenerator[] {generator1, generator2});
+        FighterAI ai = new FighterAI(fighter, fight, new GeneratorAggregate(new ActionGenerator[] {generator1, generator2}));
 
         Mockito.when(generator1.generate(ai)).thenReturn(Optional.of(Mockito.mock(Action.class)));
 
@@ -123,7 +126,7 @@ class FighterAITest extends FightBaseCase {
         fight.turnList().start();
         FightTurn turn = fight.turnList().current().get();
 
-        FighterAI ai = new FighterAI(fighter, fight, new ActionGenerator[] {generator1, generator2});
+        FighterAI ai = new FighterAI(fighter, fight, new GeneratorAggregate(new ActionGenerator[] {generator1, generator2}));
 
         Mockito.when(generator1.generate(ai)).thenReturn(Optional.empty());
         Mockito.when(generator2.generate(ai)).thenReturn(Optional.empty());
@@ -149,7 +152,7 @@ class FighterAITest extends FightBaseCase {
         fight.turnList().start();
         FightTurn turn = fight.turnList().current().get();
 
-        FighterAI ai = new FighterAI(fighter, fight, new ActionGenerator[] {generator1, generator2});
+        FighterAI ai = new FighterAI(fighter, fight, new GeneratorAggregate(new ActionGenerator[] {generator1, generator2}));
 
         turn.stop();
         ai.start(turn);
@@ -165,8 +168,16 @@ class FighterAITest extends FightBaseCase {
 
     @Test
     void runWithoutStart() {
-        FighterAI ai = new FighterAI(fighter, fight, new ActionGenerator[] {});
+        FighterAI ai = new FighterAI(fighter, fight, NullGenerator.INSTANCE);
 
         assertThrows(IllegalStateException.class, ai::run);
+    }
+
+    @Test
+    void helper() {
+        FighterAI ai = new FighterAI(fighter, fight, NullGenerator.INSTANCE);
+
+        assertInstanceOf(AIHelper.class, ai.helper());
+        assertSame(ai.helper(), ai.helper());
     }
 }

@@ -131,9 +131,13 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.MonsterAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Aggressive;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Fixed;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Runaway;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Support;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Tactical;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AlterCharacteristicSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.ArmorSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.DamageSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.StealLifeSimulator;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
@@ -873,6 +877,9 @@ public final class GameModule implements ContainerModule {
             simulator.register(179, new AlterCharacteristicSimulator(-8)); // -heal
             simulator.register(186, new AlterCharacteristicSimulator(-2)); // -percent damage
 
+            simulator.register(105, new ArmorSimulator());
+            simulator.register(265, new ArmorSimulator());
+
             return simulator;
         });
 
@@ -884,7 +891,9 @@ public final class GameModule implements ContainerModule {
 
                 factory.register("AGGRESSIVE", new Aggressive(simulator));
                 factory.register("RUNAWAY", new Runaway(simulator));
-                factory.register("SUPPORT", new Runaway(simulator));
+                factory.register("SUPPORT", new Support(simulator));
+                factory.register("TACTICAL", new Tactical(simulator));
+                factory.register("FIXED", new Fixed(simulator));
 
                 return factory;
             }

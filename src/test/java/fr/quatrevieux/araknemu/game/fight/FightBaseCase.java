@@ -22,6 +22,9 @@ package fr.quatrevieux.araknemu.game.fight;
 import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.event.Listener;
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
@@ -30,6 +33,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
+import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
@@ -40,6 +44,7 @@ import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
+import fr.quatrevieux.araknemu.game.fight.type.FightType;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.ItemService;
@@ -51,9 +56,12 @@ import fr.quatrevieux.araknemu.game.monster.environment.RandomCellSelector;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.PlayerData;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.WeaponSlot;
+import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
+import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
@@ -62,13 +70,20 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 
+import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class FightBaseCase extends GameBaseCase {
     protected GamePlayer player;
@@ -256,5 +271,208 @@ public class FightBaseCase extends GameBaseCase {
 
     public PlayerFighter makePlayerFighter(GamePlayer player) throws ContainerException {
         return container.get(FighterFactory.class).create(player);
+    }
+
+    public FightBuilder fightBuilder() {
+        return new FightBuilder();
+    }
+
+    private static int lastFighterId = 10;
+
+    public class FightBuilder {
+        private int id = 1;
+        private int mapId = 10340;
+        private FightType type = new ChallengeType(configuration.fight());
+        private StatesFlow states = new StatesFlow(
+            new NullState(),
+            new InitialiseState(),
+            new PlacementState(false),
+            new ActiveState(),
+            new FinishState()
+        );
+        private List<FightTeam> teams = new ArrayList<>();
+        private List<FighterBuilder> fighterBuilders = new ArrayList<>();
+
+        public FightBuilder addSimpleTeam(PlayerFighter leader, List<Integer> places) {
+            teams.add(new SimpleTeam(leader, places, teams.size()));
+
+            return this;
+        }
+
+        public FightBuilder addSelf(Consumer<FighterBuilder> configurator) {
+            return addAlly(builder -> {
+                builder.player(player);
+                configurator.accept(builder);
+            });
+        }
+
+        public FightBuilder addAlly(Consumer<FighterBuilder> configurator) {
+            try {
+                return addToTeam(0, configurator);
+            } catch (Exception throwables) {
+                throw new RuntimeException(throwables);
+            }
+        }
+
+        public FightBuilder addEnemy(Consumer<FighterBuilder> configurator) {
+            if (teams.isEmpty()) {
+                addSelf(builder -> {});
+            }
+
+            try {
+                return addToTeam(1, configurator);
+            } catch (Exception throwables) {
+                throw new RuntimeException(throwables);
+            }
+        }
+
+        public FightBuilder addToTeam(int teamNumber, Consumer<FighterBuilder> configurator) throws SQLException, NoSuchFieldException {
+            FighterBuilder builder = new FighterBuilder();
+            configurator.accept(builder);
+            fighterBuilders.add(builder);
+
+            PlayerFighter fighter = builder.build();
+
+            if (teams.size() < teamNumber + 1) {
+                addSimpleTeam(fighter, IntStream.range(10, 300).filter(value -> value % 2 == teamNumber).boxed().collect(Collectors.toList()));
+            } else {
+                teams.get(teamNumber).join(fighter);
+            }
+
+            return this;
+        }
+
+        public Fight build(boolean init) {
+            Fight fight = new Fight(
+                id,
+                type,
+                container.get(FightService.class).map(
+                    container.get(ExplorationMapService.class).load(mapId)
+                ),
+                teams,
+                states,
+                container.get(Logger.class),
+                executor
+            );
+
+            fight.register(new StatesModule(fight));
+            fight.dispatcher().add(new Listener<FightStarted>() {
+                @Override
+                public void on(FightStarted event) {
+                    fighterBuilders.forEach(FighterBuilder::init);
+                }
+
+                @Override
+                public Class<FightStarted> event() {
+                    return FightStarted.class;
+                }
+            });
+
+            if (init) {
+                fight.nextState();
+            }
+
+            return fight;
+        }
+
+        public class FighterBuilder {
+            private GamePlayer player;
+            private PlayerFighter fighter;
+            private int maxLife = 100;
+            private int currentLife = 100;
+            private int cell = -1;
+            private Map<Integer, Integer> spells = new HashMap<>();
+            private Map<Characteristic, Integer> characteristics = new HashMap<>();
+
+            // @todo characteristics
+
+            public FighterBuilder player(GamePlayer player) {
+                this.player = player;
+                return this;
+            }
+
+            public FighterBuilder fighter(PlayerFighter fighter) {
+                this.fighter = fighter;
+                return this;
+            }
+
+            public FighterBuilder maxLife(int maxLife) {
+                this.maxLife = maxLife;
+                return this;
+            }
+
+            public FighterBuilder currentLife(int currentLife) {
+                this.currentLife = currentLife;
+                return this;
+            }
+
+            public FighterBuilder cell(int cell) {
+                this.cell = cell;
+                return this;
+            }
+
+            public FighterBuilder spells(int... spellIds) {
+                for (int spellId : spellIds) {
+                    spells.put(spellId, 1);
+                }
+
+                return this;
+            }
+
+            public FighterBuilder spell(int id) {
+                return spell(id, 1);
+            }
+
+            public FighterBuilder spell(int id, int level) {
+                spells.put(id, level);
+
+                return this;
+            }
+
+            public FighterBuilder charac(Characteristic characteristic, int value) {
+                characteristics.put(characteristic, value);
+
+                return this;
+            }
+
+            public PlayerFighter build() throws SQLException, NoSuchFieldException {
+                if (fighter == null) {
+                    if (player == null) {
+                        player = makeSimpleGamePlayer(++lastFighterId);
+                    }
+
+                    final PlayerData properties = player.properties();
+
+                    properties.characteristics().base().add(Characteristic.VITALITY, maxLife - properties.life().max());
+                    properties.life().rebuild();
+                    properties.life().set(currentLife);
+
+                    final SpellBook spellBook = properties.spells();
+                    final SpellService service = container.get(SpellService.class);
+
+                    spells.forEach((id, level) -> {
+                        if (!spellBook.has(id)) {
+                            spellBook.learn(service.get(id));
+                        }
+
+                        spellBook.entry(id).entity().setLevel(level);
+                    });
+
+                    characteristics.forEach((characteristic, value) -> {
+                        properties.characteristics().base().set(characteristic, value);
+                    });
+
+                    fighter = new PlayerFighter(player);
+                }
+
+                return fighter;
+            }
+
+            public void init() {
+                if (cell != -1) {
+                    fighter.move(fighter.fight().map().get(cell));
+                }
+            }
+        }
     }
 }

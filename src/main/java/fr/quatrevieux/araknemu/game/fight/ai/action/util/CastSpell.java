@@ -14,18 +14,17 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.ai.action;
+package fr.quatrevieux.araknemu.game.fight.ai.action.util;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
+import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
-import fr.quatrevieux.araknemu.game.fight.ai.util.SpellCaster;
-import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.spell.Spell;
 
 import java.util.Optional;
 
@@ -36,8 +35,6 @@ public final class CastSpell implements ActionGenerator {
     private final Simulator simulator;
     private final SimulationSelector selector;
 
-    private SpellCaster caster;
-
     public CastSpell(Simulator simulator, SimulationSelector selector) {
         this.simulator = simulator;
         this.selector = selector;
@@ -45,55 +42,22 @@ public final class CastSpell implements ActionGenerator {
 
     @Override
     public void initialize(AI ai) {
-        caster = new SpellCaster(ai);
     }
 
     @Override
     public Optional<Action> generate(AI ai) {
-        final int actionPoints = ai.turn().points().actionPoints();
+        final AIHelper helper = ai.helper();
 
-        if (actionPoints < 1 || !ai.enemy().isPresent()) {
+        if (!helper.canCast() || !ai.enemy().isPresent()) {
             return Optional.empty();
         }
 
-        CastSimulation bestSimulation = null;
-
-        for (Spell spell : ai.fighter().spells()) {
-            if (spell.apCost() > actionPoints) {
-                continue;
-            }
-
-            bestSimulation = bestTargetForSpell(ai, spell, bestSimulation);
-        }
-
-        return Optional
-            .ofNullable(bestSimulation)
-            .map(simulation -> caster.create(simulation.spell(), simulation.target()))
+        return helper.spells()
+            .simulate(simulator)
+            .filter(selector::valid)
+            .reduce((s1, s2) -> selector.compare(s2, s1) ? s2 : s1)
+            .map(helper.spells()::createAction)
         ;
-    }
-
-    private CastSimulation bestTargetForSpell(AI ai, Spell spell, CastSimulation bestSimulation) {
-        for (FightCell targetCell : ai.map()) {
-            // Target or launch is not valid
-            if (!targetCell.walkableIgnoreFighter() || !caster.validate(spell, targetCell)) {
-                continue;
-            }
-
-            // Simulate spell effects
-            final CastSimulation simulation = simulator.simulate(spell, ai.fighter(), targetCell);
-
-            // The spell is not valid for the selector
-            if (!selector.valid(simulation)) {
-                continue;
-            }
-
-            // Select the best simulation
-            if (bestSimulation == null || selector.compare(simulation, bestSimulation)) {
-                bestSimulation = simulation;
-            }
-        }
-
-        return bestSimulation;
     }
 
     public interface SimulationSelector {

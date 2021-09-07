@@ -81,6 +81,6 @@ class AiModuleTest extends FightBaseCase {
         Thread.sleep(100);
 
         // Move action started
-        requestStack.assertOne("GA0;1;-2;ab-fbGdbU");
+        requestStack.assertOne("GA0;1;-2;ab-fbG");
     }
 }
