@@ -115,11 +115,11 @@ public final class MoveToAttack implements ActionGenerator {
             return possibleCasts;
         }
 
-        possibleCasts = helper.simulateMove(cell, fighter -> helper.spells()
+        possibleCasts = helper.withPosition(cell).spells()
             .simulate(simulator)
             .filter(attack::valid) // Keep only effective attacks
             .collect(Collectors.toList())
-        );
+        ;
 
         possibleActionsCache.put(cell, possibleCasts);
 

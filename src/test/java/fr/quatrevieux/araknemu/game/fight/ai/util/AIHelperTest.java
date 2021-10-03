@@ -21,11 +21,17 @@ package fr.quatrevieux.araknemu.game.fight.ai.util;
 
 import fr.arakne.utils.maps.MapCell;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import org.junit.jupiter.api.Test;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AIHelperTest extends AiBaseCase {
     @Test
@@ -125,32 +131,27 @@ class AIHelperTest extends AiBaseCase {
     }
 
     @Test
-    void simulateMove() {
+    void withPosition() {
         configureFight(fb -> fb
             .addSelf(b -> b.cell(123))
             .addEnemy(b -> b.cell(125))
         );
 
-        AtomicInteger ref = new AtomicInteger();
+        AIHelper helper = ai.helper().withPosition(ai.map().get(111));
 
-        assertEquals(12, (int) ai.helper().simulateMove(ai.map().get(111), fighter -> {
-            ref.set(fighter.cell().id());
+        assertNotSame(helper, ai.helper());
+        CastSimulation simulation = helper.spells()
+            .simulate(container.get(Simulator.class))
+            .findAny()
+            .get();
 
-            return 12;
-        }));
-        assertEquals(111, ref.get());
+        assertEquals(111, simulation.caster().cell().id());
+        assertEquals(simulation.caster(), simulation.caster().cell().fighter().get());
+        assertFalse(simulation.caster().cell().map().get(123).fighter().isPresent());
+
         assertEquals(123, fighter.cell().id());
-    }
-
-    @Test
-    void simulateMoveWithExceptionShouldResetCell() {
-        configureFight(fb -> fb
-            .addSelf(b -> b.cell(123))
-            .addEnemy(b -> b.cell(125))
-        );
-
-        assertThrows(RuntimeException.class, () -> ai.helper().simulateMove(ai.map().get(111), fighter -> { throw new RuntimeException(); }));
-        assertEquals(123, fighter.cell().id());
+        assertFalse(fight.map().get(111).fighter().isPresent());
+        assertTrue(fight.map().get(123).fighter().isPresent());
     }
 
     @Test

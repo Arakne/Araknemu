@@ -67,7 +67,7 @@ class FighterAITest extends FightBaseCase {
         FighterAI ai = new FighterAI(fighter, fight, NullGenerator.INSTANCE);
 
         assertSame(fighter, ai.fighter());
-        assertSame(enemy, ai.enemy().get());
+        assertEquals(enemy, ai.enemy().get());
     }
 
     @Test
@@ -76,7 +76,7 @@ class FighterAITest extends FightBaseCase {
 
         enemy.life().kill(fighter);
 
-        assertSame(otherEnemy, ai.enemy().get());
+        assertEquals(otherEnemy, ai.enemy().get());
     }
 
     @RepeatedIfExceptionsTest
