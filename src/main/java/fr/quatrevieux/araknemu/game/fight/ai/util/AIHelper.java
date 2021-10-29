@@ -20,10 +20,8 @@
 package fr.quatrevieux.araknemu.game.fight.ai.util;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.ai.proxy.ProxyAI;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-
-import java.util.function.Function;
 
 /**
  * Utility class for perform common AI operations on the current fighter
@@ -31,13 +29,17 @@ import java.util.function.Function;
  * @see AI#helper()
  */
 public final class AIHelper {
-    private final AI ai;
+    private final ProxyAI ai;
     private final CellsHelper cells;
     private final SpellsHelper spells;
     private final FightersHelper enemies;
     private final FightersHelper allies;
 
     public AIHelper(AI ai) {
+        this(new ProxyAI(ai));
+    }
+
+    public AIHelper(ProxyAI ai) {
         this.ai = ai;
 
         this.cells = new CellsHelper(ai);
@@ -124,30 +126,22 @@ public final class AIHelper {
     /**
      * Simulate a movement to a given cell by changing the current cell of the fighter
      *
+     * Note: this method will not modify the current fighter or AI,
+     *   but will return a new helper instance with the configured position
+     *
      * <pre>{@code
-     * ai.helper().simulateMove(newCell, fighter -> {
-     *     // fighter is on "newCell"
-     *     return performSimulation(fighter);
-     * });
+     * // Simulate all possible casts from the given position
+     * Collection<CastSimulation> possibleCasts = ai.helper().withPosition(newCell).spells()
+     *     .simulate(simulator)
+     *     .collect(Collectors.toList())
+     * ;
      * }</pre>
      *
      * @param cell The new cell
-     * @param task Action to perform on the moved fighter. It takes as argument the fighter, and returns the action result
      *
-     * @param <R> The action result type
-     *
-     * @return The action result
+     * @return The modified AI helper instance
      */
-    public <R> R simulateMove(FightCell cell, Function<ActiveFighter, R> task) {
-        final ActiveFighter fighter = ai.fighter();
-        final FightCell currentCell = fighter.cell();
-
-        try {
-            fighter.move(cell);
-
-            return task.apply(fighter);
-        } finally {
-            fighter.move(currentCell);
-        }
+    public AIHelper withPosition(FightCell cell) {
+        return new AIHelper(ai.withPosition(cell.id()));
     }
 }
