@@ -41,6 +41,11 @@ public final class NullChannel implements Channel {
     }
 
     @Override
+    public boolean authorized(GamePlayer from) {
+        return true;
+    }
+
+    @Override
     public void send(GamePlayer from, Message message) throws ChatException {
         from.send(new Noop());
     }

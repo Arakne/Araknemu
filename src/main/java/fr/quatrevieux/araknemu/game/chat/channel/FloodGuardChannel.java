@@ -49,6 +49,11 @@ public final class FloodGuardChannel implements Channel {
     }
 
     @Override
+    public boolean authorized(GamePlayer from) {
+        return channel.authorized(from);
+    }
+
+    @Override
     public void send(GamePlayer from, Message message) throws ChatException {
         if (!checkFlood(from)) {
             return;

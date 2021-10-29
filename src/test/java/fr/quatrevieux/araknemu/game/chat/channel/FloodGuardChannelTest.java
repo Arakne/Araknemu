@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import fr.quatrevieux.araknemu.network.game.out.info.Information;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.sql.SQLException;
@@ -46,6 +47,14 @@ class FloodGuardChannelTest extends GameBaseCase {
             inner = Mockito.mock(Channel.class),
             configuration.chat()
         );
+    }
+
+    @Test
+    void authorized() throws SQLException, ContainerException {
+        Mockito.when(inner.authorized(gamePlayer())).thenReturn(true);
+
+        assertTrue(channel.authorized(gamePlayer()));
+        Mockito.verify(inner).authorized(gamePlayer());
     }
 
     @Test

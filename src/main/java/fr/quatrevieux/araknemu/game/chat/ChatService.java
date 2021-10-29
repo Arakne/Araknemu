@@ -36,6 +36,9 @@ import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -45,8 +48,12 @@ import java.util.Map;
 public final class ChatService implements EventsSubscriber {
     private final GameConfiguration.ChatConfiguration configuration;
 
-    private final Map<ChannelType, Channel> channels = new EnumMap<>(ChannelType.class);
+    private final Map<ChannelType, Collection<Channel>> channels = new EnumMap<>(ChannelType.class);
 
+    /**
+     * @param configuration The chat configuration
+     * @param channels List of enabled channels
+     */
     public ChatService(GameConfiguration.ChatConfiguration configuration, Channel[] channels) {
         this.configuration = configuration;
 
@@ -80,21 +87,30 @@ public final class ChatService implements EventsSubscriber {
     }
 
     /**
-     * Resolve channel and send the message
+     * Resolve channel and send the message.
+     * The message will be sent to the first authorized requested channel.
+     *
+     * If any authorized channel cannot be found, an UNAUTHORIZED chat error will be triggered.
+     *
+     * @throws ChatException When cannot send the message
      */
     public void send(GamePlayer sender, Message message) throws ChatException {
         if (!message.items().isEmpty() && !checkItemSyntax(message.message(), message.items())) {
             throw new ChatException(ChatException.Error.SYNTAX_ERROR);
         }
 
-        channels
-            .get(message.channel())
-            .send(sender, message)
-        ;
+        for (Channel channel : channels.getOrDefault(message.channel(), Collections.emptyList())) {
+            if (channel.authorized(sender)) {
+                channel.send(sender, message);
+                return;
+            }
+        }
+
+        throw new ChatException(ChatException.Error.UNAUTHORIZED);
     }
 
     private void register(Channel channel) {
-        channels.put(channel.type(), channel);
+        channels.computeIfAbsent(channel.type(), type -> new ArrayList<>()).add(channel);
     }
 
     private boolean checkItemSyntax(String message, String items) {

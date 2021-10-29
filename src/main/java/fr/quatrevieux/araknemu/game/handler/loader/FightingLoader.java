@@ -25,7 +25,6 @@ import fr.quatrevieux.araknemu.game.handler.EnsureFighting;
 import fr.quatrevieux.araknemu.game.handler.fight.ChangeFighterReadyState;
 import fr.quatrevieux.araknemu.game.handler.fight.ChangeFighterStartPlace;
 import fr.quatrevieux.araknemu.game.handler.fight.EndFighterTurn;
-import fr.quatrevieux.araknemu.game.handler.fight.LeaveFight;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 /**
@@ -43,7 +42,6 @@ public final class FightingLoader extends AbstractLoader {
             new ChangeFighterStartPlace(),
             new ChangeFighterReadyState(),
             new EndFighterTurn(),
-            new LeaveFight(),
         };
     }
 }

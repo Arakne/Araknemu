@@ -82,6 +82,8 @@ import fr.quatrevieux.araknemu.game.activity.ActivityService;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.chat.channel.Channel;
+import fr.quatrevieux.araknemu.game.chat.channel.FightChannel;
+import fr.quatrevieux.araknemu.game.chat.channel.FightSpectatorChannel;
 import fr.quatrevieux.araknemu.game.chat.channel.FightTeamChannel;
 import fr.quatrevieux.araknemu.game.chat.channel.FloodGuardChannel;
 import fr.quatrevieux.araknemu.game.chat.channel.GlobalChannel;
@@ -161,6 +163,8 @@ import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.module.LaunchedSpellsModule;
 import fr.quatrevieux.araknemu.game.fight.module.RaulebaqueModule;
 import fr.quatrevieux.araknemu.game.fight.module.StatesModule;
+import fr.quatrevieux.araknemu.game.fight.spectator.DefaultSpectatorFactory;
+import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.handler.loader.AdminLoader;
@@ -456,7 +460,8 @@ public final class GameModule implements ContainerModule {
                 new ChallengeActionsFactories(container.get(FightService.class)),
                 new FightActionsFactories(
                     container.get(FightService.class),
-                    container.get(FighterFactory.class)
+                    container.get(FighterFactory.class),
+                    container.get(SpectatorFactory.class)
                 )
             )
         );
@@ -467,22 +472,13 @@ public final class GameModule implements ContainerModule {
                 container.get(GameConfiguration.class).chat(),
                 new Channel[] {
                     new MapChannel(),
-                    new GlobalChannel(
-                        ChannelType.INCARNAM,
-                        container.get(PlayerService.class)
-                    ),
+                    new GlobalChannel(ChannelType.INCARNAM, container.get(PlayerService.class)),
                     new FloodGuardChannel(
-                        new GlobalChannel(
-                            ChannelType.TRADE,
-                            container.get(PlayerService.class)
-                        ),
+                        new GlobalChannel(ChannelType.TRADE, container.get(PlayerService.class)),
                         container.get(GameConfiguration.class).chat()
                     ),
                     new FloodGuardChannel(
-                        new GlobalChannel(
-                            ChannelType.RECRUITMENT,
-                            container.get(PlayerService.class)
-                        ),
+                        new GlobalChannel(ChannelType.RECRUITMENT, container.get(PlayerService.class)),
                         container.get(GameConfiguration.class).chat()
                     ),
                     new GlobalChannel(
@@ -491,10 +487,11 @@ public final class GameModule implements ContainerModule {
                         container.get(PlayerService.class)
                     ),
                     new NullChannel(ChannelType.MEETIC),
-                    new PrivateChannel(
-                        container.get(PlayerService.class)
-                    ),
+                    new PrivateChannel(container.get(PlayerService.class)),
+                    new FightChannel(),
                     new FightTeamChannel(),
+                    new FightSpectatorChannel(ChannelType.FIGHT_TEAM),
+                    new FightSpectatorChannel(ChannelType.MESSAGES),
                 }
             )
         );
@@ -756,6 +753,8 @@ public final class GameModule implements ContainerModule {
                 container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class)
             )
         );
+
+        configurator.persist(SpectatorFactory.class, container -> new DefaultSpectatorFactory());
 
         configurator.persist(
             EffectMappers.class,

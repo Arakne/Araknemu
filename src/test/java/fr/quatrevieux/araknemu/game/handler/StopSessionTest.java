@@ -32,9 +32,13 @@ import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.spectator.event.SpectatorLeaved;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
+import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
@@ -44,6 +48,7 @@ import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -241,5 +246,22 @@ class StopSessionTest extends FightBaseCase {
         handler.handle(session, new SessionClosed());
         
         assertBetween(6, 8, dataSet.refresh(new Player(explorationPlayer.id())).life());
+    }
+
+    @Test
+    void withSpectatorWillLeaveTheFight() throws Exception {
+        Fight fight = createSimpleFight(container.get(ExplorationMapService.class).load(10340));
+        fight.state(PlacementState.class).startFight();
+
+        Spectator spectator = container.get(SpectatorFactory.class).create(gamePlayer(), fight);
+        spectator.join();
+
+        AtomicReference<SpectatorLeaved> ref = new AtomicReference<>();
+        fight.dispatcher().add(SpectatorLeaved.class, ref::set);
+
+        handler.handle(session, new SessionClosed());
+
+        assertNull(session.spectator());
+        assertSame(spectator, ref.get().spectator());
     }
 }

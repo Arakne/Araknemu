@@ -20,30 +20,25 @@
 package fr.quatrevieux.araknemu.game.chat.channel;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
-import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.chat.event.BroadcastedMessage;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
-import fr.quatrevieux.araknemu.network.game.out.chat.MessageSent;
 import fr.quatrevieux.araknemu.network.game.out.info.Information;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.sql.SQLException;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class MapChannelTest extends FightBaseCase {
+class MapChannelTest extends GameBaseCase {
     private MapChannel channel;
 
     @Override
@@ -52,6 +47,12 @@ class MapChannelTest extends FightBaseCase {
         super.setUp();
 
         channel = new MapChannel();
+    }
+
+    @Test
+    void authorized() throws SQLException {
+        assertFalse(channel.authorized(gamePlayer()));
+        assertTrue(channel.authorized(explorationPlayer().player()));
     }
 
     @Test
@@ -98,21 +99,5 @@ class MapChannelTest extends FightBaseCase {
         );
 
         requestStack.assertLast(Information.cannotPostItemOnChannel());
-    }
-
-    @Test
-    void sendToFight() throws Exception {
-        Fight fight = createFight();
-
-        requestStack.clear();
-
-        AtomicInteger count = new AtomicInteger();
-        player.fighter().dispatcher().add(BroadcastedMessage.class, m -> count.incrementAndGet());
-        other.fighter().dispatcher().add(BroadcastedMessage.class, m -> count.incrementAndGet());
-
-        channel.send(player, new Message(ChannelType.MESSAGES, null, "hello", ""));
-
-        requestStack.assertLast(new MessageSent(player, ChannelType.MESSAGES, "hello", ""));
-        assertEquals(2, count.get());
     }
 }

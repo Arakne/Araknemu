@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.core.network.session.Session;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.AccountSession;
 
@@ -37,6 +38,7 @@ public final class GameSession extends AbstractDelegatedSession implements Accou
     private GamePlayer player;
     private ExplorationPlayer exploration;
     private PlayerFighter fighter;
+    private Spectator spectator;
     private SessionLog log;
 
     public GameSession(Session session) {
@@ -118,6 +120,20 @@ public final class GameSession extends AbstractDelegatedSession implements Accou
     }
 
     /**
+     * Get the current active spectator session
+     */
+    public Spectator spectator() {
+        return spectator;
+    }
+
+    /**
+     * Define the spectator session
+     */
+    public void setSpectator(Spectator spectator) {
+        this.spectator = spectator;
+    }
+
+    /**
      * Get the session log
      */
     public SessionLog log() {
@@ -144,6 +160,10 @@ public final class GameSession extends AbstractDelegatedSession implements Accou
         if (fighter != null) {
             fighter.dispatcher().dispatch(event);
         }
+
+        if (spectator != null) {
+            spectator.dispatcher().dispatch(event);
+        }
     }
 
     @Override
@@ -164,6 +184,10 @@ public final class GameSession extends AbstractDelegatedSession implements Accou
 
         if (fighter != null) {
             str += "; state=fighting";
+        }
+
+        if (spectator != null) {
+            str += "; state=spectator";
         }
 
         return str;

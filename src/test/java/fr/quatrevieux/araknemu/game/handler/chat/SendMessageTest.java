@@ -19,14 +19,20 @@
 
 package fr.quatrevieux.araknemu.game.handler.chat;
 
-import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.core.event.Dispatcher;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.chat.ChatException;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
-import fr.quatrevieux.araknemu.core.event.Dispatcher;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.Restrictions;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
-import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import fr.quatrevieux.araknemu.network.game.out.chat.MessageSent;
 import fr.quatrevieux.araknemu.network.game.out.chat.SendMessageError;
@@ -34,9 +40,13 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.lang.reflect.Field;
+import java.sql.SQLException;
 
-class SendMessageTest extends GameBaseCase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
+class SendMessageTest extends FightBaseCase {
     private SendMessage handler;
 
     @Override
@@ -158,5 +168,35 @@ class SendMessageTest extends GameBaseCase {
         } catch (ErrorPacket packet) {
             assertEquals(Error.cantDoOnCurrentState().toString(), packet.packet().toString());
         }
+    }
+
+    @Test
+    void asSpectatorFromGlobalChannel() throws Exception {
+        Fight fight = createSimpleFight(container.get(ExplorationMapService.class).load(10340));
+
+        Spectator spectator = new Spectator(gamePlayer(), fight);
+        spectator.join();
+
+        Field sf = GamePlayer.class.getDeclaredField("session");
+        sf.setAccessible(true);
+        GameSession otherSession = (GameSession) sf.get(other);
+        Spectator otherSpectator = new Spectator(other, fight);
+        otherSpectator.join();
+
+        handlePacket(new Message(ChannelType.MESSAGES, "", "Hello World !", ""));
+
+        requestStack.assertLast(new MessageSent(
+            gamePlayer(),
+            ChannelType.FIGHT_TEAM,
+            "Hello World !",
+            ""
+        ));
+
+        new SendingRequestStack(DummyChannel.class.cast(otherSession.channel())).assertLast(new MessageSent(
+            gamePlayer(),
+            ChannelType.FIGHT_TEAM,
+            "Hello World !",
+            ""
+        ));
     }
 }

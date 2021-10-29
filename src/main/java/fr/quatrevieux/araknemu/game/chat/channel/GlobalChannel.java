@@ -52,11 +52,12 @@ public final class GlobalChannel implements Channel {
     }
 
     @Override
-    public void send(GamePlayer from, Message message) throws ChatException {
-        if (!filter.test(from)) {
-            throw new ChatException(ChatException.Error.UNAUTHORIZED);
-        }
+    public boolean authorized(GamePlayer from) {
+        return filter.test(from);
+    }
 
+    @Override
+    public void send(GamePlayer from, Message message) throws ChatException {
         final BroadcastedMessage event = new BroadcastedMessage(
             type(),
             from,

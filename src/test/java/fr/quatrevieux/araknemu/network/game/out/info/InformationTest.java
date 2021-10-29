@@ -102,4 +102,9 @@ class InformationTest {
             Information.currentIpAddress("141.22.12.34").toString()
         );
     }
+
+    @Test
+    void spectatorHasJoinFight() {
+        assertEquals("Im036;Bob", Information.spectatorHasJoinFight("Bob").toString());
+    }
 }
