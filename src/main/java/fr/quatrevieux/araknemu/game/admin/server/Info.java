@@ -24,34 +24,36 @@ import fr.quatrevieux.araknemu.Araknemu;
 import fr.quatrevieux.araknemu.game.GameService;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
+import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 
 import java.lang.management.ManagementFactory;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
 
 /**
  * Display information about the server
  */
-public final class Info extends AbstractCommand {
+public final class Info extends AbstractCommand<Void> {
     private final Araknemu app;
     private final PlayerService playerService;
     private final GameService gameService;
+    private final FightService fightService;
 
-    public Info(Araknemu app, PlayerService playerService, GameService gameService) {
+    public Info(Araknemu app, PlayerService playerService, GameService gameService, FightService fightService) {
         this.app = app;
         this.playerService = playerService;
         this.gameService = gameService;
+        this.fightService = fightService;
     }
 
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Display information about the server")
             .help(formatter -> formatter
+                .description("Display information about the server")
                 .synopsis("info")
-                .example("${server} info", "Display server info")
+                .example("*info", "Display server info")
             )
         ;
     }
@@ -62,7 +64,7 @@ public final class Info extends AbstractCommand {
     }
 
     @Override
-    public void execute(AdminPerformer performer, List<String> arguments) {
+    public void execute(AdminPerformer performer, Void arguments) {
         performer.success("===== Server information =====");
         performer.info(
             "Uptime : {} (started at : {})",
@@ -70,6 +72,10 @@ public final class Info extends AbstractCommand {
             app.startDate()
         );
         performer.info("Online : {} sessions and {} players", gameService.sessions().size(), playerService.online().size());
+        performer.info("Fights : {} fights with {} fighters",
+            fightService.fights().size(),
+            fightService.fights().stream().mapToLong(fight -> fight.fighters().size()).sum()
+        );
         performer.info(
             "RAM usage : {} / {}",
             formatBytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()),

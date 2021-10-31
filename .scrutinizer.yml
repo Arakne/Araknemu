@@ -1,5 +1,9 @@
 build:
     nodes:
+        analysis:
+          dependencies:
+            override:
+              - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dcheckstyle.skip -B -V
         tests:
             environment:
                 java: 'java-8-oracle'
@@ -7,6 +11,10 @@ build:
 
             services:
                 mysql: 5.7
+
+            dependencies:
+              override:
+                - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dcheckstyle.skip -B -V
 
             tests:
                 override:

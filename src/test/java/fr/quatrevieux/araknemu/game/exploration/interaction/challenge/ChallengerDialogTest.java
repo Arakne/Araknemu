@@ -50,8 +50,8 @@ class ChallengerDialogTest extends GameBaseCase {
         initiator = explorationPlayer();
         challenger = makeOtherExplorationPlayer();
 
-        initiator.join(container.get(ExplorationMapService.class).load(10340));
-        challenger.join(initiator.map());
+        initiator.changeMap(container.get(ExplorationMapService.class).load(10340), 123);
+        challenger.changeMap(initiator.map(), 123);
 
         invitation = new ChallengeInvitationHandler(container.get(FightService.class).handler(ChallengeBuilder.class)).invitation(initiator, challenger);
         initiator.interactions().start(invitation);

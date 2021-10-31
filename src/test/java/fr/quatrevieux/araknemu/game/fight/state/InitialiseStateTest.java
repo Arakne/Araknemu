@@ -31,6 +31,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -48,7 +49,7 @@ class InitialiseStateTest extends GameBaseCase {
 
         fight = new Fight(
             1,
-            new ChallengeType(),
+            new ChallengeType(configuration.fight()),
             container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
             Arrays.asList(
                 new SimpleTeam(new PlayerFighter(gamePlayer()), Arrays.asList(123), 0),
@@ -58,7 +59,8 @@ class InitialiseStateTest extends GameBaseCase {
                 new NullState(),
                 nextState = new NullState()
             ),
-            container.get(Logger.class)
+            container.get(Logger.class),
+            Executors.newSingleThreadScheduledExecutor()
         );
     }
 

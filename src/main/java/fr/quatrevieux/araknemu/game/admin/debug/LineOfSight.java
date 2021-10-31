@@ -31,6 +31,7 @@ import fr.quatrevieux.araknemu.game.admin.formatter.Link;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
+import org.kohsuke.args4j.Argument;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -40,7 +41,7 @@ import java.util.stream.Collectors;
 /**
  * Display accessible cells by line of sight
  */
-public final class LineOfSight extends AbstractCommand {
+public final class LineOfSight extends AbstractCommand<LineOfSight.Arguments> {
     private final MapTemplateRepository repository;
 
     public LineOfSight(MapTemplateRepository repository) {
@@ -50,12 +51,12 @@ public final class LineOfSight extends AbstractCommand {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Highlight accessible cells by line of sight")
             .help(
                 formatter -> formatter
+                    .description("Highlight accessible cells by line of sight")
                     .synopsis("lineofsight [target cell id]")
-                    .options("target cell id", "Optional. The target cell id for dump the line of sight to this cell")
-                    .seeAlso("${debug} fightpos hide", "For hide the cells", Link.Type.EXECUTE)
+                    .option("target cell id", "Optional. The target cell id for dump the line of sight to this cell")
+                    .seeAlso(":fightpos hide", "For hide the cells", Link.Type.EXECUTE)
             )
             .requires(Permission.DEBUG)
         ;
@@ -67,21 +68,21 @@ public final class LineOfSight extends AbstractCommand {
     }
 
     @Override
-    public void execute(AdminPerformer performer, List<String> arguments) {
+    public void execute(AdminPerformer performer, Arguments arguments) {
         final AdminUser user = AdminUser.class.cast(performer);
         final FightMap map = new FightMap(repository.get(user.player().position().map()));
 
-        final CoordinateCell<FightCell> current = new CoordinateCell<>(map.get(user.player().position().cell()));
+        final CoordinateCell<FightCell> current = map.get(user.player().position().cell()).coordinate();
         final CellSight<FightCell> sight = new CellSight<>(current);
 
         final List<Integer> accessible;
         final List<Integer> blocked;
 
-        if (arguments.size() < 2) {
+        if (!arguments.hasTargetCell()) {
             accessible = sight.accessible().stream().map(MapCell::id).collect(Collectors.toList());
             blocked = sight.blocked().stream().map(MapCell::id).collect(Collectors.toList());
         } else {
-            final Iterator<FightCell> los = sight.to(map.get(Integer.parseInt(arguments.get(1))));
+            final Iterator<FightCell> los = sight.to(map.get(arguments.cellId()));
 
             accessible = new ArrayList<>();
             blocked = new ArrayList<>();
@@ -101,5 +102,27 @@ public final class LineOfSight extends AbstractCommand {
         }
 
         user.send(new FightStartPositions(new List[] {blocked, accessible}, 0));
+    }
+
+    @Override
+    public Arguments createArguments() {
+        return new Arguments();
+    }
+
+    public static final class Arguments {
+        @Argument(metaVar = "target cell id")
+        private Integer cellId;
+
+        public void setCellId(Integer cellId) {
+            this.cellId = cellId;
+        }
+
+        public int cellId() {
+            return cellId;
+        }
+
+        public boolean hasTargetCell() {
+            return cellId != null;
+        }
     }
 }

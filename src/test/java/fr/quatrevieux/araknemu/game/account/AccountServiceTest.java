@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.account;
 
+import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.common.account.banishment.BanEntry;
 import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
 import fr.quatrevieux.araknemu.common.account.banishment.event.AccountBanned;
@@ -31,10 +32,13 @@ import fr.quatrevieux.araknemu.data.living.entity.account.Banishment;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
+import fr.quatrevieux.araknemu.network.game.out.basic.admin.TemporaryRightsGranted;
+import fr.quatrevieux.araknemu.network.game.out.basic.admin.TemporaryRightsRevoked;
 import fr.quatrevieux.araknemu.network.out.ServerMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
@@ -166,5 +170,23 @@ class AccountServiceTest extends GameBaseCase {
 
         requestStack.assertLast(ServerMessage.kick("system", "cause"));
         assertFalse(session.isAlive());
+    }
+
+    @Test
+    void listenerShouldSendAdminAccessOnPermissionChanged() throws SQLException {
+        GameAccount account = gamePlayer(true).account();
+        requestStack.clear();
+
+        GameAccount admin = new GameAccount(new Account(-1, "admin", "pass", "admin", Collections.emptySet(), "", ""), service, 1);
+
+        account.grant(new Permission[] {Permission.MANAGE_PLAYER}, admin);
+        requestStack.assertLast(new TemporaryRightsGranted("admin"));
+
+        account.revoke(admin);
+        requestStack.assertLast(new TemporaryRightsRevoked("admin"));
+        requestStack.clear();
+
+        account.revoke(admin);
+        requestStack.assertEmpty();
     }
 }

@@ -19,9 +19,11 @@
 
 package fr.quatrevieux.araknemu.realm.host;
 
+import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.value.ServerCharacters;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
+import fr.quatrevieux.araknemu.realm.host.event.HostsUpdated;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,10 +38,13 @@ import java.util.concurrent.ConcurrentMap;
  */
 public final class HostService {
     private final PlayerRepository playerRepository;
+    private final Dispatcher dispatcher;
+
     private final ConcurrentMap<Integer, GameHost> hosts = new ConcurrentHashMap<>();
 
-    public HostService(PlayerRepository playerRepository) {
+    public HostService(PlayerRepository playerRepository, Dispatcher dispatcher) {
         this.playerRepository = playerRepository;
+        this.dispatcher = dispatcher;
     }
 
     /**
@@ -54,6 +59,7 @@ public final class HostService {
      */
     public void declare(GameHost host) {
         hosts.put(host.id(), host);
+        dispatcher.dispatch(new HostsUpdated(hosts.values()));
     }
 
     /**
@@ -68,6 +74,7 @@ public final class HostService {
 
         host.setState(state);
         host.setCanLog(canLog);
+        dispatcher.dispatch(new HostsUpdated(hosts.values()));
     }
 
     /**

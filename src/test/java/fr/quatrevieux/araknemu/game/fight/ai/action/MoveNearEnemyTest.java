@@ -19,72 +19,30 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
-import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
-import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.fight.module.AiModule;
-import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
-import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
-import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
-import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
+import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class MoveNearEnemyTest extends FightBaseCase {
-    private Fighter fighter;
-    private Fight fight;
-
-    private Fighter enemy;
-    private Fighter otherEnemy;
-
-    private MoveNearEnemy action;
-    private FighterAI ai;
-
-    private FightTurn turn;
-
+class MoveNearEnemyTest extends AiBaseCase {
     @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
-        fight = createFight();
-        fight.register(new AiModule(new ChainAiFactory()));
-        fight.register(new CommonEffectsModule(fight));
-
-        fighter = player.fighter();
-        enemy = other.fighter();
-
-        otherEnemy = new PlayerFighter(makeSimpleGamePlayer(10));
-
-        fight.state(PlacementState.class).joinTeam(otherEnemy, enemy.team());
-        fight.nextState();
-
-        fight.turnList().start();
-
         action = new MoveNearEnemy();
-
-        ai = new FighterAI(fighter, fight, new ActionGenerator[] { new DummyGenerator() });
-        ai.start(turn = fight.turnList().current().get());
-        action.initialize(ai);
     }
 
     @Test
     void success() {
-        Optional<Action> result = action.generate(ai);
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122))
+            .addEnemy(builder -> builder.cell(125))
+            .addEnemy(builder -> builder.cell(126))
+        );
 
-        assertTrue(result.isPresent());
-        assertInstanceOf(Move.class, result.get());
-
-        turn.perform(result.get());
-        turn.terminate();
+        generateAndPerformMove();
 
         assertEquals(109, fighter.cell().id());
         assertEquals(0, turn.points().movementPoints());
@@ -92,19 +50,23 @@ class MoveNearEnemyTest extends FightBaseCase {
 
     @Test
     void noMP() {
-        turn.points().useMovementPoints(3);
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122))
+            .addEnemy(builder -> builder.cell(125))
+        );
 
-        Optional<Action> result = action.generate(ai);
+        removeAllMP();
 
-        assertFalse(result.isPresent());
+        assertDotNotGenerateAction();
     }
 
     @Test
     void onAdjacentCell() {
-        fighter.move(fight.map().get(110));
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(110))
+            .addEnemy(builder -> builder.cell(125))
+        );
 
-        Optional<Action> result = action.generate(ai);
-
-        assertFalse(result.isPresent());
+        assertDotNotGenerateAction();
     }
 }

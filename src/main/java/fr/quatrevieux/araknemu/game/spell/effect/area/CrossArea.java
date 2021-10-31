@@ -37,7 +37,7 @@ public final class CrossArea implements SpellEffectArea {
     }
 
     @Override
-    public <C extends MapCell> Set<C> resolve(C target, C source) {
+    public <C extends MapCell<C>> Set<C> resolve(C target, C source) {
         final Set<C> cells = new HashSet<>(area.size() * 4 + 1);
 
         cells.add(target);

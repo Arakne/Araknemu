@@ -21,10 +21,15 @@ package fr.quatrevieux.araknemu.network.game.out.info;
 
 import fr.arakne.utils.value.Interval;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Error message
  */
 public final class Error extends AbstractInformationMessage {
+    private static final Map<Integer, Error> simpleErrorsByCode = new HashMap<>();
+
     public Error(Entry... entries) {
         super(Type.ERROR, entries);
     }
@@ -41,21 +46,21 @@ public final class Error extends AbstractInformationMessage {
      * Get the welcome message
      */
     public static Error welcome() {
-        return new Error(89);
+        return forCode(89);
     }
 
     /**
      * Cannot do the action on this server
      */
     public static Error cantDoOnServer() {
-        return new Error(226);
+        return forCode(226);
     }
 
     /**
      * Cannot do the action on the current state
      */
     public static Error cantDoOnCurrentState() {
-        return new Error(116);
+        return forCode(116);
     }
 
     /**
@@ -71,7 +76,7 @@ public final class Error extends AbstractInformationMessage {
      * Cannot cast the spell : not in the spell list
      */
     public static Error cantCastNotFound() {
-        return new Error(169);
+        return forCode(169);
     }
 
     /**
@@ -88,35 +93,35 @@ public final class Error extends AbstractInformationMessage {
      * Cannot cast the spell : The target cell is invalid
      */
     public static Error cantCastInvalidCell() {
-        return new Error(193);
+        return forCode(193);
     }
 
     /**
      * Cannot cast the spell : The target cell is not available
      */
     public static Error cantCastCellNotAvailable() {
-        return new Error(172);
+        return forCode(172);
     }
 
     /**
      * Cannot cast the spell : The target cell is not in line
      */
     public static Error cantCastLineLaunch() {
-        return new Error(173);
+        return forCode(173);
     }
 
     /**
      * Cannot cast the spell : The sight is blocked
      */
     public static Error cantCastSightBlocked() {
-        return new Error(174);
+        return forCode(174);
     }
 
     /**
      * Cannot cast the spell : The cast is in invalid state
      */
     public static Error cantCastBadState() {
-        return new Error(116);
+        return forCode(116);
     }
 
     /**
@@ -133,21 +138,21 @@ public final class Error extends AbstractInformationMessage {
      * Cannot cast the spell
      */
     public static Error cantCast() {
-        return new Error(175);
+        return forCode(175);
     }
 
     /**
      * Cannot perform the action during fight
      */
     public static Error cantDoDuringFight() {
-        return new Error(91);
+        return forCode(91);
     }
 
     /**
      * Cannot move : the player is overweight
      */
     public static Error cantMoveOverweight() {
-        return new Error(12);
+        return forCode(12);
     }
 
     /**
@@ -157,5 +162,30 @@ public final class Error extends AbstractInformationMessage {
      */
     public static Error shutdownScheduled(String delay) {
         return new Error(15, delay);
+    }
+
+    /**
+     * A game server save is in progress
+     */
+    public static Error saveInProgress() {
+        return forCode(164);
+    }
+
+    /**
+     * The current game server save is terminated
+     */
+    public static Error saveTerminated() {
+        return forCode(165);
+    }
+
+    /**
+     * Create and cache a simple Error with a code
+     *
+     * @param code The error code
+     *
+     * @return The Error instance
+     */
+    private static Error forCode(int code) {
+        return simpleErrorsByCode.computeIfAbsent(code, Error::new);
     }
 }

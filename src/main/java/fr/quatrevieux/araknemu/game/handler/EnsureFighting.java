@@ -43,6 +43,11 @@ public final class EnsureFighting<P extends Packet> implements PacketHandler<Gam
         }
 
         session.fighter().fight().execute(() -> {
+            // The player has left the fight before the execution of the action
+            if (session.fighter() == null) {
+                return;
+            }
+
             try {
                 handler.handle(session, packet);
             } catch (Exception e) {

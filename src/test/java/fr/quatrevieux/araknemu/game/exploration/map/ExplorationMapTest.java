@@ -194,7 +194,7 @@ class ExplorationMapTest extends GameBaseCase {
 
         ExplorationMap map = explorationPlayer().map();
 
-        other.join(map);
+        other.changeMap(map, 123);
         map.remove(other);
 
         requestStack.assertLast(
@@ -231,6 +231,17 @@ class ExplorationMapTest extends GameBaseCase {
     void canLaunchFight() throws ContainerException {
         assertFalse(container.get(ExplorationMapService.class).load(10300).canLaunchFight());
         assertTrue(container.get(ExplorationMapService.class).load(10340).canLaunchFight());
+    }
+
+    @Test
+    void fightPlaces() {
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
+
+        assertTrue(map.fightPlaces(4).isEmpty());
+        assertCollectionEquals(
+            map.fightPlaces(1),
+            map.get(48), map.get(63), map.get(75), map.get(90), map.get(92), map.get(106), map.get(121), map.get(122), map.get(137), map.get(150)
+        );
     }
 
     @Test

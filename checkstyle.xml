@@ -256,7 +256,7 @@
 
     <!-- Ignore Modules. TODO remove after modules refactor -->
     <module name="SuppressionSingleFilter">
-        <property name="checks" value="MethodLengthCheck"/>
+        <property name="checks" value="(MethodLengthCheck|AnonInnerLength)"/>
         <property name="files" value="Module.java$"/>
     </module>
 

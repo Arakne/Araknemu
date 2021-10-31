@@ -84,6 +84,11 @@ public final class ActionHandler {
 
         future.cancel(false);
 
+        // The fight is stopped (caused by a leave) during an action
+        if (!fight.active()) {
+            return;
+        }
+
         final Action action = current;
 
         try {

@@ -70,4 +70,27 @@ class RestrictionTest extends CommandTestCase {
 
         assertOutput("Bob restrictions updated");
     }
+
+    @Test
+    void help() {
+        assertHelp(
+            "restriction - Change the player restrictions",
+            "========================================",
+            "SYNOPSIS",
+                "\trestriction [+/-]RESTRICTION...",
+            "OPTIONS",
+                "\t+RESTRICTION : Active the restriction on the player",
+                "\t-RESTRICTION : Remove the restriction on the player",
+            "AVAILABLE RESTRICTIONS :",
+                "\tDENY_ASSAULT, DENY_CHALLENGE, DENY_EXCHANGE, ALLOW_ATTACK, DENY_CHAT, DENY_MERCHANT, DENY_USE_OBJECT, DENY_INTERACT_COLLECTOR, DENY_USE_IO, DENY_SPEAK_NPC, UNUSED_1024, UNUSED_2048, ALLOW_DUNGEON_MUTANT, ALLOW_MOVE_ALL_DIRECTION, ALLOW_ATTACK_MONSTERS_MUTANT, DENY_INTERACT_PRISM",
+                "\tNote: The name is case insensitive",
+            "WARNING : This is a debug feature, and can cause bugs if misused",
+            "EXAMPLES",
+                "\trestriction +DENY_CHALLENGE - The player will not be allowed perform challenges",
+                "\trestriction +DENY_CHAT -ALLOW_MOVE_ALL_DIRECTION - Perform multiple changes",
+                "\t@John restriction +DENY_CHALLENGE - Change John's restrictions",
+            "PERMISSIONS",
+                "\t[ACCESS, MANAGE_PLAYER, DEBUG]"
+        );
+    }
 }

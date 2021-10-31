@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight;
@@ -45,10 +45,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 /**
@@ -64,20 +65,23 @@ public final class Fight implements Dispatcher, Sender {
     private final List<FightModule> modules = new ArrayList<>();
     private final Map<Class, Object> attachments = new HashMap<>();
     private final ListenerAggregate dispatcher;
+    private final ScheduledExecutorService executor;
 
-    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private final Lock executorLock = new ReentrantLock();
     private final FightTurnList turnList = new FightTurnList(this);
     private final EffectsHandler effects = new EffectsHandler();
 
     private final StopWatch duration = new StopWatch();
+    private volatile boolean alive = true;
 
-    public Fight(int id, FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow, Logger logger) {
+    public Fight(int id, FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow, Logger logger, ScheduledExecutorService executor) {
         this.id = id;
         this.type = type;
         this.map = map;
         this.teams = teams;
         this.statesFlow = statesFlow;
         this.logger = logger;
+        this.executor = executor;
         this.dispatcher = new DefaultListenerAggregate(logger);
     }
 
@@ -217,18 +221,12 @@ public final class Fight implements Dispatcher, Sender {
      * @param action Action to execute
      * @param delay The delay
      */
-    public ScheduledFuture schedule(Runnable action, Duration delay) {
-        return executor.schedule(
-            () -> {
-                try {
-                    action.run();
-                } catch (Throwable e) {
-                    logger.error("Error on fight executor : " + e.getMessage(), e);
-                }
-            },
-            delay.toMillis(),
-            TimeUnit.MILLISECONDS
-        );
+    public ScheduledFuture<?> schedule(Runnable action, Duration delay) {
+        if (!alive) {
+            throw new IllegalStateException("The fight is not alive");
+        }
+
+        return executor.schedule(new Task(action), delay.toMillis(), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -237,13 +235,11 @@ public final class Fight implements Dispatcher, Sender {
      * @param action Action to execute
      */
     public void execute(Runnable action) {
-        executor.execute(() -> {
-            try {
-                action.run();
-            } catch (Throwable e) {
-                logger.error("Error on fight executor : " + e.getMessage(), e);
-            }
-        });
+        if (!alive) {
+            throw new IllegalStateException("The fight is not alive");
+        }
+
+        executor.execute(new Task(action));
     }
 
     /**
@@ -306,9 +302,21 @@ public final class Fight implements Dispatcher, Sender {
 
     /**
      * Check if the fight is active
+     * The fight is active after the placement but before the end
+     * To check if the fight is not finished nor cancelled, use {@link Fight#alive()}
+     *
+     * @see Fight#alive()
      */
     public boolean active() {
         return duration.isStarted();
+    }
+
+    /**
+     * Check if the fight is not cancelled nor finished
+     * A "dead" fight cannot be used anymore
+     */
+    public boolean alive() {
+        return alive;
     }
 
     /**
@@ -330,9 +338,38 @@ public final class Fight implements Dispatcher, Sender {
      * Destroy fight after terminated
      */
     public void destroy() {
-        executor.shutdownNow();
-
+        alive = false;
         teams.clear();
         map.destroy();
+        attachments.clear();
+    }
+
+    /**
+     * Wrap action to submit to executor to ensure that tasks are run sequentially (i.e. no task are run in parallel)
+     */
+    private final class Task implements Runnable {
+        private final Runnable action;
+
+        public Task(Runnable action) {
+            this.action = action;
+        }
+
+        @Override
+        public void run() {
+            try {
+                executorLock.lock();
+
+                if (!alive) {
+                    logger.warn("Cannot run task " + action.getClass().toString() + " on dead fight");
+                    return;
+                }
+
+                action.run();
+            } catch (Throwable e) {
+                logger.error("Error on fight executor : " + e.getMessage(), e);
+            } finally {
+                executorLock.unlock();
+            }
+        }
     }
 }

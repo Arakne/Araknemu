@@ -72,7 +72,7 @@ class BaseFighterLifeTest extends FightBaseCase {
                     container.get(MonsterEnvironmentService.class),
                     container.get(FightService.class),
                     new MonsterGroupData(3, Duration.ofMillis(60000), 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100), 1), new MonsterGroupData.Monster(34, new Interval(1, 100), 1), new MonsterGroupData.Monster(36, new Interval(1, 100), 1)), "", new Position(0, 0), false),
-                    new RandomCellSelector()
+                    new RandomCellSelector(), false
                 ),
                 5,
                 Collections.singletonList(service.load(31).all().get(2)),

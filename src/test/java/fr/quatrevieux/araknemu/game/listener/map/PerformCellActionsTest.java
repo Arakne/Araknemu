@@ -70,9 +70,8 @@ class PerformCellActionsTest extends GameBaseCase {
     void onNonEmptyCell() throws SQLException, ContainerException {
         listener.on(new PlayerMoveFinished(player, map.get(120)));
 
-        assertTrue(player.interactions().busy());
         requestStack.assertLast(
-            new GameActionResponse("1", ActionType.CHANGE_MAP, explorationPlayer().id(), "")
+            new GameActionResponse("", ActionType.CHANGE_MAP, explorationPlayer().id(), "")
         );
     }
 }

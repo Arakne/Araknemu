@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.config.Configuration;
 import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
+import fr.quatrevieux.araknemu.core.config.PoolUtils;
 import fr.quatrevieux.araknemu.core.dbal.DatabaseConfiguration;
 import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
@@ -98,6 +99,7 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ini4j.Ini;
+import org.ini4j.Profile;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -108,7 +110,11 @@ import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class GameBaseCase extends DatabaseTestCase {
     static public class SendingRequestStack {
@@ -155,6 +161,14 @@ public class GameBaseCase extends DatabaseTestCase {
             Assertions.fail("Cannot find packet of type" + type.getSimpleName());
         }
 
+        public void assertNotContains(Class type) {
+            for (Object message : channel.getMessages()) {
+                if (type.isInstance(message)) {
+                    Assertions.fail("A packet of type " + type.getSimpleName() + " has been found");
+                }
+            }
+        }
+
         public void assertOne(Object packet) {
             for (Object message : channel.getMessages()) {
                 if (message.toString().equals(packet.toString())) {
@@ -178,6 +192,7 @@ public class GameBaseCase extends DatabaseTestCase {
 
     protected Container container;
     protected GameConfiguration configuration;
+    private Ini initConfig;
     protected DummyServer<GameSession> server;
     protected DummyChannel channel;
     protected GameSession session;
@@ -192,7 +207,7 @@ public class GameBaseCase extends DatabaseTestCase {
         RandomUtil.enableTestingMode();
 
         Configuration conf = new DefaultConfiguration(
-            new IniDriver(new Ini(new File("src/test/test_config.ini")))
+            new IniDriver(initConfig = new Ini(new File("src/test/test_config.ini")))
         );
 
         app = new Araknemu(
@@ -387,11 +402,14 @@ public class GameBaseCase extends DatabaseTestCase {
         Player player = dataSet.push(new Player(-1, 5, 2, "Other", Race.CRA, Gender.MALE, new Colors(-1, -1, -1), level, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, -1, 0, new Position(10540, 210), 0));
         GameSession session = server.createSession();
 
+        // @todo à tester
         session.attach(new GameAccount(
             new Account(5),
             container.get(AccountService.class),
             2
         ));
+
+        session.account().attach(session);
 
         GamePlayer gp =  container.get(PlayerService.class).load(
             session,
@@ -442,6 +460,10 @@ public class GameBaseCase extends DatabaseTestCase {
     }
 
     public GamePlayer makeSimpleGamePlayer(int id, GameSession session) throws ContainerException, SQLException {
+        return makeSimpleGamePlayer(id, session, false);
+    }
+
+    public GamePlayer makeSimpleGamePlayer(int id, GameSession session, boolean load) throws ContainerException, SQLException {
         dataSet
             .pushSpells()
             .pushRaces()
@@ -452,22 +474,32 @@ public class GameBaseCase extends DatabaseTestCase {
 
         container.get(PlayerExperienceService.class).preload(container.get(Logger.class));
 
-        Player player = dataSet.createPlayer(id);
+        Player player = dataSet.pushPlayer(dataSet.createPlayer(id));
 
-        GamePlayer gp = new GamePlayer(
-            new GameAccount(
-                new Account(id),
-                container.get(AccountService.class),
-                2
-            ),
-            player,
-            container.get(PlayerRaceService.class).get(Race.FECA),
-            session,
-            container.get(PlayerService.class),
-            container.get(InventoryService.class).load(player),
-            container.get(SpellBookService.class).load(session, player),
-            container.get(PlayerExperienceService.class).load(session, player)
-        );
+        Account account = new Account(player.accountId(), "ACCOUNT_" + id, "test", "ACCOUNT_" + id, EnumSet.noneOf(Permission.class), "", "");
+        GameAccount ga = new GameAccount(account, container.get(AccountService.class), 2);
+        ga.attach(session);
+
+        GamePlayer gp;
+
+        if (load) {
+            gp = container.get(PlayerService.class).load(session, id);
+        } else {
+            gp = new GamePlayer(
+                new GameAccount(
+                    new Account(player.accountId()),
+                    container.get(AccountService.class),
+                    2
+                ),
+                player,
+                container.get(PlayerRaceService.class).get(Race.FECA),
+                session,
+                container.get(PlayerService.class),
+                container.get(InventoryService.class).load(player),
+                container.get(SpellBookService.class).load(session, player),
+                container.get(PlayerExperienceService.class).load(session, player)
+            );
+        }
 
         session.setPlayer(gp);
 
@@ -476,5 +508,17 @@ public class GameBaseCase extends DatabaseTestCase {
 
     public void handlePacket(Packet packet) throws Exception {
         container.get(Dispatcher.class).dispatch(session, packet);
+    }
+
+    public void setConfigValue(String item, String value) {
+        setConfigValue("game", item, value);
+    }
+
+    public void setConfigValue(String config, String item, String value) {
+        initConfig.get(config).add(item, value);
+    }
+
+    public void removeConfigValue(String config, String item) {
+        initConfig.get(config).remove(item);
     }
 }

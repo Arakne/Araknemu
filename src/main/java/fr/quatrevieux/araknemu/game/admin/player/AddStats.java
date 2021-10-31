@@ -24,15 +24,14 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.handler.CustomEnumOptionHandler;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
-
-import java.util.Arrays;
-import java.util.List;
+import org.kohsuke.args4j.Argument;
 
 /**
  * Add stats to player base stats
  */
-public final class AddStats extends AbstractCommand {
+public final class AddStats extends AbstractCommand<AddStats.Arguments> {
     private final GamePlayer player;
 
     public AddStats(GamePlayer player) {
@@ -42,23 +41,17 @@ public final class AddStats extends AbstractCommand {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Add stats to a player")
             .help(
                 formatter -> formatter
-                    .synopsis("addstats [characteristic] [value]")
-
-                    .options(
-                        "characteristic",
-                        "The characteristic to add.\n" +
-                        "This parameter is case insensitive.\n" +
-                        "It's value must be one of those : " + Arrays.toString(Characteristic.values())
-                    )
-                    .options("value", "The value to add, must be an integer. Negative values are allowed, but be careful with negative vitality !!!")
+                    .description("Add stats to a player")
 
                     .example("addstats vitality 150", "Add 150 vitality to current player")
-                    .example("${player:John} addstats strength 50", "Add 50 strength to current John")
+                    .example("@John addstats strength 50", "Add 50 strength to John")
+
+                    .with("characteristic.enum", Characteristic.class)
             )
             .requires(Permission.MANAGE_PLAYER)
+            .arguments(Arguments::new)
         ;
     }
 
@@ -68,19 +61,38 @@ public final class AddStats extends AbstractCommand {
     }
 
     @Override
-    public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
-        final Characteristic characteristic = Characteristic.valueOf(arguments.get(1).toUpperCase());
-
+    public void execute(AdminPerformer performer, Arguments arguments) throws AdminException {
         player.properties().characteristics().base().add(
-            characteristic,
-            Integer.parseInt(arguments.get(2))
+            arguments.characteristic,
+            arguments.value
         );
 
         performer.success(
             "Characteristic changed for {} : {} = {}",
             player.name(),
-            characteristic,
-            player.properties().characteristics().base().get(characteristic)
+            arguments.characteristic,
+            player.properties().characteristics().base().get(arguments.characteristic)
         );
+    }
+
+    public static final class Arguments {
+        @Argument(
+            index = 0,
+            required = true,
+            handler = CustomEnumOptionHandler.class,
+            metaVar = "CHARACTERISTIC",
+            usage = "The characteristic to add.\n" +
+                "This parameter is case insensitive.\n" +
+                "It's value must be one of those : {{characteristic.enum}}"
+        )
+        private Characteristic characteristic;
+
+        @Argument(
+            index = 1,
+            required = true,
+            metaVar = "VALUE",
+            usage = "The value to add, must be an integer. Negative values are allowed, but be careful with negative vitality !!!"
+        )
+        private int value;
     }
 }

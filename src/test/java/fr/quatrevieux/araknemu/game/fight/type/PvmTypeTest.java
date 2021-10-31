@@ -19,27 +19,35 @@
 
 package fr.quatrevieux.araknemu.game.fight.type;
 
-import fr.quatrevieux.araknemu._test.TestCase;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.PvmRewardsGenerator;
+import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardsGenerator;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.PvmRewardsGenerator;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class PvmTypeTest extends TestCase {
+class PvmTypeTest extends GameBaseCase {
     @Test
     void values() {
         RewardsGenerator generator = new PvmRewardsGenerator(Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
-        PvmType type = new PvmType(generator);
+        PvmType type = new PvmType(generator, configuration.fight());
 
         assertEquals(4, type.id());
         assertTrue(type.hasPlacementTimeLimit());
         assertFalse(type.canCancel());
         assertEquals(Duration.ofSeconds(30), type.turnDuration());
-        assertEquals(45, type.placementTime());
+        assertEquals(Duration.ofSeconds(45), type.placementDuration());
         assertSame(generator, type.rewards());
+
+        setConfigValue("fight.turnDuration", "45s");
+        setConfigValue("fight.pvm.placementDuration", "1m");
+        assertEquals(Duration.ofSeconds(45), type.turnDuration());
+        assertEquals(Duration.ofSeconds(60), type.placementDuration());
     }
 }

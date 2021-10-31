@@ -55,6 +55,11 @@ public final class FightTurnList {
         }
 
         fighters = orderStrategy.compute(fight.teams());
+
+        if (fighters.isEmpty()) {
+            throw new IllegalStateException("Cannot initialise turn list without fighters");
+        }
+
         current = fighters.get(0); // Always init the first fighter
     }
 

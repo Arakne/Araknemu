@@ -23,13 +23,13 @@ import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
-import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.ChangeMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import org.kohsuke.args4j.Argument;
+import org.kohsuke.args4j.Option;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +37,7 @@ import java.util.Map;
 /**
  * Teleport the player to the desired location
  */
-public final class Goto extends AbstractCommand {
+public final class Goto extends AbstractCommand<Goto.Arguments> {
     private final GamePlayer player;
     private final ExplorationMapService mapService;
     private final Map<String, LocationResolver> resolvers = new LinkedHashMap<>();
@@ -58,18 +58,16 @@ public final class Goto extends AbstractCommand {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Teleport the player to the desired location")
             .help(
                 formatter -> {
                     formatter
-                        .synopsis("goto [type] [target]...")
-                        .options("type", "Define the target type (available types are defined bellow). If not provided, will try all available resolvers.")
-                        .options("target", "Required. The target. This value depends of the type.")
-                        .options("--force", "Force the teleporation even if the player is busy or in fight.")
+                        .description("Teleport the player to the desired location")
+                        .option("TYPE", "Define the target type (available types are defined bellow). If not provided, will try all available resolvers.")
+                        .option("TARGET", "Required. The target. This value depends of the type.")
                     ;
 
                     for (LocationResolver resolver : resolvers.values()) {
-                        formatter.options("type: " + resolver.name(), resolver.help());
+                        formatter.option("TYPE: " + resolver.name(), resolver.help());
                     }
 
                     formatter
@@ -77,8 +75,8 @@ public final class Goto extends AbstractCommand {
                         .example("goto map 10340 cell 45", "Teleport to the map id 10340 at cell 45")
                         .example("goto player John", "Teleport to the John's map")
                         .example("goto position 3;5", "Teleport by geolocation")
-                        .example("${player:John} goto map 10340", "Teleport John to map id 10340")
-                        .example("${player:John} goto player Alan", "Teleport John to the Alan's map")
+                        .example("@John goto map 10340", "Teleport John to map id 10340")
+                        .example("@John goto player Alan", "Teleport John to the Alan's map")
                         .example("goto 3;5 cell 42", "Command can works without [type] argument, if not ambiguous")
                     ;
                 }
@@ -93,15 +91,12 @@ public final class Goto extends AbstractCommand {
     }
 
     @Override
-    public void execute(AdminPerformer performer, CommandParser.Arguments arguments) throws AdminException {
-        final List<String> locationArguments = new ArrayList<>(arguments.arguments().subList(1, arguments.arguments().size()));
-        final boolean force = locationArguments.remove("--force");
-
-        if ((!player.isExploring() || player.exploration().interactions().busy()) && !force) {
-            throw new AdminException("The player is busy, and cannot be teleported. Use --force to force the teleportation.");
+    public void execute(AdminPerformer performer, Arguments arguments) throws AdminException {
+        if ((!player.isExploring() || player.exploration().interactions().busy()) && !arguments.force) {
+            error("The player is busy, and cannot be teleported. Use --force to force the teleportation.");
         }
 
-        final Target target = parseTarget(locationArguments);
+        final Target target = parseTarget(arguments.targets);
 
         teleportToTarget(performer, target);
         performer.success("Teleport {} to {}", player.name(), target);
@@ -123,7 +118,7 @@ public final class Goto extends AbstractCommand {
                 ++argIndex;
 
                 if (arguments.size() < argIndex + 1) {
-                    throw new AdminException("Missing argument for type " + argument);
+                    error("Missing argument for type " + argument);
                 }
 
                 try {
@@ -136,7 +131,7 @@ public final class Goto extends AbstractCommand {
             }
 
             if (!autoResolve(argument, target)) {
-                throw new AdminException("Cannot resolve the argument or type " + argument);
+                error("Cannot resolve the argument or type " + argument);
             }
         }
 
@@ -191,5 +186,34 @@ public final class Goto extends AbstractCommand {
      */
     private void register(LocationResolver resolver) {
         resolvers.put(resolver.name(), resolver);
+    }
+
+    @Override
+    public Arguments createArguments() {
+        return new Arguments();
+    }
+
+    public static final class Arguments {
+        @Option(name = "--force", usage = "Force the teleporation even if the player is busy or in fight.")
+        private boolean force = false;
+
+        @Argument(metaVar = "TYPE TARGET", multiValued = true)
+        private List<String> targets;
+
+        public boolean force() {
+            return force;
+        }
+
+        public void setForce(boolean force) {
+            this.force = force;
+        }
+
+        public List<String> targets() {
+            return targets;
+        }
+
+        public void setTargets(List<String> targets) {
+            this.targets = targets;
+        }
     }
 }

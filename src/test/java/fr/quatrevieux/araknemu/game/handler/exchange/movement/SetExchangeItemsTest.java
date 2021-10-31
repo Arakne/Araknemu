@@ -44,7 +44,7 @@ class SetExchangeItemsTest extends GameBaseCase {
         player = explorationPlayer();
         other = makeOtherExplorationPlayer();
 
-        other.join(player.map());
+        other.changeMap(player.map(), 123);
 
         for (PlayerExchangeParty party : PlayerExchangeParty.make(player, other)) {
             party.start();

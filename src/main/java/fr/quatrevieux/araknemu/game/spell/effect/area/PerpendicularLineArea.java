@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.spell.effect.area;
 
-import fr.arakne.utils.maps.CoordinateCell;
 import fr.arakne.utils.maps.MapCell;
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
@@ -38,9 +37,9 @@ public final class PerpendicularLineArea implements SpellEffectArea {
     }
 
     @Override
-    public <C extends MapCell> Set<C> resolve(C target, C source) {
+    public <C extends MapCell<C>> Set<C> resolve(C target, C source) {
         final Set<C> cells = new HashSet<>(area.size() * 2 + 1);
-        final Direction direction = new CoordinateCell<>(source).directionTo(new CoordinateCell<>(target)).orthogonal();
+        final Direction direction = source.coordinate().directionTo(target).orthogonal();
 
         cells.add(target);
 

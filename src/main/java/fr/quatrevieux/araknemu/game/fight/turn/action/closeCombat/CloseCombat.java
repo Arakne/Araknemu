@@ -116,4 +116,9 @@ public final class CloseCombat implements Action {
     public Duration duration() {
         return Duration.ofMillis(500);
     }
+
+    @Override
+    public String toString() {
+        return "CloseCombat{target=" + target.id() + '}';
+    }
 }

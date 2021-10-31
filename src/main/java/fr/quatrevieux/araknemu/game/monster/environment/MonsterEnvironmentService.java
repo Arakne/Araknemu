@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.monster.environment;
@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.game.activity.ActivityService;
 import fr.quatrevieux.araknemu.game.activity.SimpleTask;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.listener.map.monster.LaunchMonsterFight;
@@ -92,13 +93,7 @@ public final class MonsterEnvironmentService implements EventsSubscriber, Preloa
         for (MonsterGroupPosition position : positionRepository.all()) {
             groupsByMap
                 .computeIfAbsent(position.position().map(), mapId -> new ArrayList<>())
-                .add(new LivingMonsterGroupPosition(
-                    factory,
-                    this,
-                    fightService,
-                    groupsData.get(position.groupId()),
-                    SpawnCellSelector.forPosition(position.position())
-                ))
+                .add(createByPosition(position))
             ;
         }
 
@@ -110,7 +105,8 @@ public final class MonsterEnvironmentService implements EventsSubscriber, Preloa
             new MoveMonsters(
                 this,
                 Duration.ofSeconds(configuration.monsterMoveInterval()),
-                configuration.monsterMovePercent()
+                configuration.monsterMovePercent(),
+                configuration.monsterMoveDistance()
             )
         );
     }
@@ -121,8 +117,10 @@ public final class MonsterEnvironmentService implements EventsSubscriber, Preloa
             new Listener<MapLoaded>() {
                 @Override
                 public void on(MapLoaded event) {
-                    byMap(event.map().id()).forEach(group -> group.populate(event.map()));
-                    event.map().dispatcher().add(new LaunchMonsterFight());
+                    final ExplorationMap map = event.map();
+
+                    byMap(map.id()).forEach(group -> group.populate(map));
+                    map.dispatcher().add(new LaunchMonsterFight());
                 }
 
                 @Override
@@ -150,13 +148,7 @@ public final class MonsterEnvironmentService implements EventsSubscriber, Preloa
         final Collection<LivingMonsterGroupPosition> groups = new ArrayList<>();
 
         for (MonsterGroupPosition position : positionRepository.byMap(mapId)) {
-            groups.add(new LivingMonsterGroupPosition(
-                factory,
-                this,
-                fightService,
-                dataRepository.get(position.groupId()),
-                SpawnCellSelector.forPosition(position.position())
-            ));
+            groups.add(createByPosition(position));
         }
 
         groupsByMap.put(mapId, groups);
@@ -170,7 +162,7 @@ public final class MonsterEnvironmentService implements EventsSubscriber, Preloa
     void respawn(LivingMonsterGroupPosition position, Duration delay) {
         activityService.execute(
             new SimpleTask(logger -> position.spawn())
-                .setDelay(delay)
+                .setDelay(delay.dividedBy(configuration.monsterRespawnSpeedFactor()))
                 .setMaxTries(2)
                 .setName("Respawn")
         );
@@ -181,5 +173,16 @@ public final class MonsterEnvironmentService implements EventsSubscriber, Preloa
      */
     Stream<LivingMonsterGroupPosition> groups() {
         return groupsByMap.values().stream().flatMap(Collection::stream);
+    }
+
+    private LivingMonsterGroupPosition createByPosition(MonsterGroupPosition position) {
+        return new LivingMonsterGroupPosition(
+            factory,
+            this,
+            fightService,
+            dataRepository.get(position.groupId()),
+            SpawnCellSelector.forPosition(position.position()),
+            position.position().cell() != -1
+        );
     }
 }

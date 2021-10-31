@@ -80,7 +80,7 @@ class DefaultExchangeFactoryTest extends GameBaseCase {
         dataSet.pushNpcWithStore();
 
         ExplorationPlayer player = explorationPlayer();
-        player.join(container.get(ExplorationMapService.class).load(10340));
+        player.changeMap(container.get(ExplorationMapService.class).load(10340), 123);
         ExplorationCreature target = explorationPlayer().map().creature(-1000104);
 
         assertInstanceOf(StoreDialog.class, factory.create(ExchangeType.NPC_STORE, player, target));

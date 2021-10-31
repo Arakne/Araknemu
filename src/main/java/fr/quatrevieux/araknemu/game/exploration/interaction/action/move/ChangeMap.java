@@ -20,22 +20,20 @@
 package fr.quatrevieux.araknemu.game.exploration.interaction.action.move;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 
 /**
  * Change current map after a move
  */
-public final class ChangeMap implements BlockingAction {
+public final class ChangeMap implements Action {
     private final ExplorationPlayer player;
     private final ExplorationMap map;
     private final int cell;
     private final int cinematic;
-
-    private int id;
 
     public ChangeMap(ExplorationPlayer player, ExplorationMap map, int cell, int cinematic) {
         this.player = player;
@@ -50,33 +48,10 @@ public final class ChangeMap implements BlockingAction {
 
     @Override
     public void start(ActionQueue queue) {
-        queue.setPending(this);
-
         player.leave();
+        player.changeMap(map, cell);
 
         player.send(new GameActionResponse(this));
-    }
-
-    @Override
-    public void cancel(String argument) {
-        if (argument != null) {
-            throw new UnsupportedOperationException("Cannot cancel map change");
-        }
-    }
-
-    @Override
-    public void end() {
-        player.changeMap(map, cell);
-    }
-
-    @Override
-    public int id() {
-        return id;
-    }
-
-    @Override
-    public void setId(int id) {
-        this.id = id;
     }
 
     @Override

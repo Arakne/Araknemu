@@ -48,7 +48,7 @@ class SendFightsCountTest extends FightBaseCase {
             container.get(FightService.class)
         );
 
-        explorationPlayer().join(map);
+        explorationPlayer().changeMap(map, 123);
     }
 
     @Test

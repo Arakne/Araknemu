@@ -66,8 +66,8 @@ class BanTest extends CommandTestCase {
 
     @Test
     void banInvalidAction() {
-        assertThrows(CommandException.class, () -> execute("ban"));
-        assertThrows(CommandException.class, () -> execute("ban", "invalid"));
+        assertThrowsWithMessage(CommandException.class, "Argument \"ACTION\" is required", () -> execute("ban"));
+        assertThrowsWithMessage(CommandException.class, "\"invalid\" is not a valid value for \"ACTION\"", () -> execute("ban", "invalid"));
     }
 
     @Test
@@ -119,9 +119,9 @@ class BanTest extends CommandTestCase {
 
     @Test
     void banForInvalidArguments() {
-        assertThrows(CommandException.class, () -> execute("ban", "for"));
-        assertThrows(CommandException.class, () -> execute("ban", "for", "invalid"));
-        assertThrows(CommandException.class, () -> execute("ban", "for", "1h"));
+        assertThrowsWithMessage(CommandException.class, "Argument \"DURATION\" is required", () -> execute("ban", "for"));
+        assertThrowsWithMessage(CommandException.class, "Option \"DURATION\" takes an operand", () -> execute("ban", "for", "invalid"));
+        assertThrowsWithMessage(CommandException.class, "Argument \"CAUSE\" is required", () -> execute("ban", "for", "1h"));
     }
 
     @Test
@@ -132,7 +132,7 @@ class BanTest extends CommandTestCase {
             container.get(BanishmentService.class)
         );
 
-        assertThrows(CommandException.class, () -> execute("ban", "for", "1h", "cause"));
+        assertThrowsWithMessage(CommandException.class, "Cannot ban yourself", () -> execute("ban", "for", "1h", "cause"));
     }
 
     @Test
@@ -146,7 +146,7 @@ class BanTest extends CommandTestCase {
             container.get(BanishmentService.class)
         );
 
-        assertThrows(CommandException.class, () -> execute("ban", "for", "1h", "cause"));
+        assertThrowsWithMessage(CommandException.class, "Cannot ban a game master", () -> execute("ban", "for", "1h", "cause"));
     }
 
     @Test
@@ -161,9 +161,24 @@ class BanTest extends CommandTestCase {
 
     @Test
     void help() {
-        String help = command.help();
-
-        assertTrue(help.contains("Ban an account"));
-        assertTrue(help.contains("[context] ban [for|list|unban] [arguments]"));
+        assertHelp(
+            "ban - Ban an account",
+            "========================================",
+            "SYNOPSIS",
+                "\t[context] ban [for|list|unban] ARGUMENTS",
+            "OPTIONS",
+                "\tfor DURATION CAUSE : Ban the account for the given duration.",
+                    "\t\tThe duration is in format [days]dT[hours]h[minutes]m[seconds]s",
+                    "\t\tNote: You cannot ban a game master account.",
+                "\tlist : List all banishment entries for the account",
+                "\tunban : Remove current banishment for the account",
+            "EXAMPLES",
+                "\t#John ban list    - Display all ban entries of the 'John' account",
+                "\t#John ban for 5d  - Ban 'John' for 5 days",
+                "\t@Alan ban for 10m - Ban 'Alan' account for 10 minutes",
+                "\t@Alan unban       - Unban 'Alan' account",
+            "PERMISSIONS",
+                "\t[ACCESS, MANAGE_ACCOUNT]"
+        );
     }
 }

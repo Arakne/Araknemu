@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.builder;
@@ -24,6 +24,8 @@ import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import org.apache.logging.log4j.Logger;
+
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Create the pvm builder
@@ -47,7 +49,7 @@ public final class PvmBuilderFactory implements FightBuilderFactory<PvmBuilder> 
     }
 
     @Override
-    public PvmBuilder create(FightService service) {
-        return new PvmBuilder(service, fighterFactory, random, type, logger);
+    public PvmBuilder create(FightService service, ScheduledExecutorService executor) {
+        return new PvmBuilder(service, fighterFactory, random, type, logger, executor);
     }
 }

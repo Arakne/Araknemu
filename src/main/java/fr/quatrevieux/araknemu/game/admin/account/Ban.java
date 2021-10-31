@@ -28,16 +28,20 @@ import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.handler.ConcatRestOfArgumentsHandler;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.type.SubArguments;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.type.SubArgumentsCommandTrait;
+import org.kohsuke.args4j.Argument;
+import org.kohsuke.args4j.spi.SubCommand;
+import org.kohsuke.args4j.spi.SubCommands;
 
-import java.time.DateTimeException;
 import java.time.Duration;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Handle banishment for an account
  */
-public final class Ban extends AbstractCommand {
+public final class Ban extends AbstractCommand<Ban.Arguments> implements SubArgumentsCommandTrait<Ban.Arguments> {
     private final GameAccount account;
     private final BanishmentService<GameAccount> service;
 
@@ -49,51 +53,28 @@ public final class Ban extends AbstractCommand {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Ban an account")
             .help(
                 formatter -> formatter
-                    .synopsis("[context] ban [for|list|unban] [arguments]")
+                    .description("Ban an account")
+                    .synopsis("[context] ban [for|list|unban] ARGUMENTS")
 
-                    .options("for [duration] [cause]", "Ban the account for the given duration.\nThe duration is in format [days]dT[hours]h[minutes]m[seconds]s\nNote: You cannot ban a game master account.")
-                    .options("list", "List all banishment entries for the account")
-                    .options("unban", "Remove current banishment for the account")
+                    .option("for DURATION CAUSE", "Ban the account for the given duration.\nThe duration is in format [days]dT[hours]h[minutes]m[seconds]s\nNote: You cannot ban a game master account.")
+                    .option("list", "List all banishment entries for the account")
+                    .option("unban", "Remove current banishment for the account")
 
-                    .example("${account:John} ban list", "Display all ban entries of the 'John' account")
-                    .example("${account:John} ban for 5d", "Ban 'John' for 5 days")
-                    .example("${player:Alan} ban for 10m", "Ban 'Alan' account for 10 minutes")
-                    .example("${player:Alan} unban", "Unban 'Alan' account")
+                    .example("#John ban list", "Display all ban entries of the 'John' account")
+                    .example("#John ban for 5d", "Ban 'John' for 5 days")
+                    .example("@Alan ban for 10m", "Ban 'Alan' account for 10 minutes")
+                    .example("@Alan unban", "Unban 'Alan' account")
             )
             .requires(Permission.MANAGE_ACCOUNT)
+            .arguments(Arguments::new)
         ;
     }
 
     @Override
     public String name() {
         return "ban";
-    }
-
-    @Override
-    public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
-        if (arguments.size() < 2) {
-            throw new CommandException(name(), "Missing the action");
-        }
-
-        switch (arguments.get(1)) {
-            case "for":
-                banFor(performer, arguments);
-                break;
-
-            case "list":
-                list(performer);
-                break;
-
-            case "unban":
-                unban(performer);
-                break;
-
-            default:
-                throw new CommandException(name(), "The action " + arguments.get(1) + " is not valid");
-        }
     }
 
     /**
@@ -132,31 +113,15 @@ public final class Ban extends AbstractCommand {
     /**
      * Ban the account for a given duration
      */
-    private void banFor(AdminPerformer performer, List<String> arguments) throws CommandException {
+    private void banFor(AdminPerformer performer, Arguments.ForArguments arguments) throws CommandException {
         checkCanBan(performer);
 
-        if (arguments.size() < 3) {
-            throw new CommandException(name(), "Missing the duration");
-        }
-
-        final Duration duration = parseDuration(arguments.get(2));
         final BanEntry<GameAccount> entry = performer.account().isPresent()
-            ? service.ban(account, duration, cause(arguments), performer.account().get())
-            : service.ban(account, duration, cause(arguments))
+            ? service.ban(account, arguments.duration, arguments.cause, performer.account().get())
+            : service.ban(account, arguments.duration, arguments.cause)
         ;
 
         performer.success("The account {} has been banned until {}", account.pseudo(), entry.end());
-    }
-
-    /**
-     * Extract the ban cause
-     */
-    private String cause(List<String> arguments) throws CommandException {
-        if (arguments.size() < 4) {
-            throw new CommandException(name(), "Missing cause");
-        }
-
-        return arguments.stream().skip(3).collect(Collectors.joining(" "));
     }
 
     /**
@@ -164,33 +129,53 @@ public final class Ban extends AbstractCommand {
      */
     private void checkCanBan(AdminPerformer performer) throws CommandException {
         if (performer.account().filter(performerAccount -> performerAccount.id() == account.id()).isPresent()) {
-            throw new CommandException(name(), "Cannot ban yourself");
+            error("Cannot ban yourself");
         }
 
         if (account.isMaster()) {
-            throw new CommandException(name(), "Cannot ban a game master");
+            error("Cannot ban a game master");
         }
     }
 
-    /**
-     * Parse the duration
-     * @todo refactor parsing with "arguments utils"
-     */
-    private Duration parseDuration(String argument) throws CommandException {
-        String value = argument.toUpperCase();
+    public static final class Arguments implements SubArguments<Ban> {
+        @Argument(required = true, metaVar = "ACTION")
+        @SubCommands({
+            @SubCommand(name = "for", impl = ForArguments.class),
+            @SubCommand(name = "list", impl = ListArguments.class),
+            @SubCommand(name = "unban", impl = UnbanArguments.class),
+        })
+        private SubArguments<Ban> action;
 
-        if (value.charAt(0) != 'P') {
-            if (!value.contains("T") && !value.contains("D")) {
-                value = "PT" + value;
-            } else {
-                value = "P" + value;
+        @Override
+        public void execute(AdminPerformer performer, Ban command) throws AdminException {
+            action.execute(performer, command);
+        }
+
+        public static final class ForArguments implements SubArguments<Ban> {
+            @Argument(index = 0, required = true, metaVar = "DURATION")
+            private Duration duration;
+
+            @Argument(index = 1, required = true, metaVar = "CAUSE", handler = ConcatRestOfArgumentsHandler.class)
+            private String cause;
+
+            @Override
+            public void execute(AdminPerformer performer, Ban command) throws AdminException {
+                command.banFor(performer, this);
             }
         }
 
-        try {
-            return Duration.parse(value);
-        } catch (DateTimeException e) {
-            throw new CommandException(name(), "Invalid duration", e);
+        public static final class ListArguments implements SubArguments<Ban> {
+            @Override
+            public void execute(AdminPerformer performer, Ban command) throws AdminException {
+                command.list(performer);
+            }
+        }
+
+        public static final class UnbanArguments implements SubArguments<Ban> {
+            @Override
+            public void execute(AdminPerformer performer, Ban command) throws AdminException {
+                command.unban(performer);
+            }
         }
     }
 }

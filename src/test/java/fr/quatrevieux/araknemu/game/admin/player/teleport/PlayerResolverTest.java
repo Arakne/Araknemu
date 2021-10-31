@@ -74,7 +74,7 @@ class PlayerResolverTest extends GameBaseCase {
     @Test
     void resolveExploring() throws Exception {
         ExplorationPlayer player = makeOtherExplorationPlayer();
-        player.join(container.get(ExplorationMapService.class).load(10340));
+        player.changeMap(container.get(ExplorationMapService.class).load(10340), 250);
         Target target = new Target(explorationPlayer().map(), 123);
 
         resolver.resolve(player.player().name(), target);

@@ -19,32 +19,38 @@
 
 package fr.quatrevieux.araknemu.game.admin.debug;
 
+import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
+import fr.quatrevieux.araknemu.game.admin.context.ConfigurableContextResolver;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
-import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Resolver for debug context
  */
-public final class DebugContextResolver implements ContextResolver {
+public final class DebugContextResolver implements ConfigurableContextResolver<DebugContext> {
+    private final Context parentContext;
+
     private final List<AbstractContextConfigurator<DebugContext>> configurators = new ArrayList<>();
 
-    @Override
-    public Context resolve(Context globalContext, Object argument) {
-        return new DebugContext(globalContext, configurators);
+    public DebugContextResolver(Context parentContext) {
+        this.parentContext = parentContext;
     }
 
     @Override
-    public String type() {
-        return "debug";
+    public Context resolve(AdminPerformer performer, Supplier<String> argument) {
+        return new DebugContext(parentContext, configurators);
     }
 
-    /**
-     * Register a configurator for the debug context
-     */
+    @Override
+    public char prefix() {
+        return ':';
+    }
+
+    @Override
     public DebugContextResolver register(AbstractContextConfigurator<DebugContext> configurator) {
         configurators.add(configurator);
 

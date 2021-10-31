@@ -23,10 +23,15 @@ import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.account.event.AccountPermissionsUpdated;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.out.ServerMessage;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.EnumSet;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -100,5 +105,80 @@ class GameAccountTest extends GameBaseCase {
         account.kick(ServerMessage.inactivity());
         requestStack.assertLast(ServerMessage.inactivity());
         assertFalse(session.isAlive());
+    }
+
+    @Test
+    void grantAndRevokeWithoutSession() throws ContainerException {
+        GameAccount account = new GameAccount(
+            new Account(1, "name", "password", "pseudo", EnumSet.noneOf(Permission.class), "", ""),
+            container.get(AccountService.class),
+            1
+        );
+
+        assertFalse(account.isGranted(Permission.ACCESS));
+        assertFalse(account.isMaster());
+
+        account.grant(Permission.ACCESS);
+
+        assertTrue(account.isGranted(Permission.ACCESS));
+        assertTrue(account.isMaster());
+
+        account.revoke(null);
+
+        assertFalse(account.isGranted(Permission.ACCESS));
+        assertFalse(account.isMaster());
+    }
+
+    @Test
+    void grantAndRevokeWithSessionShouldTriggerAccountPermissionsUpdated() throws ContainerException, SQLException {
+        GameSession session = server.createSession();
+        GamePlayer player = makeSimpleGamePlayer(10, session, true);
+        GameAccount account = player.account();
+
+        AtomicReference<AccountPermissionsUpdated> ref = new AtomicReference<>();
+        player.dispatcher().add(AccountPermissionsUpdated.class, ref::set);
+
+        account.grant(Permission.ACCESS);
+        assertSame(account, ref.get().account());
+        assertFalse(ref.get().performer().isPresent());
+        assertTrue(ref.get().authorized());
+
+        account.revoke(null);
+        assertSame(account, ref.get().account());
+        assertFalse(ref.get().performer().isPresent());
+        assertFalse(ref.get().authorized());
+    }
+
+    @Test
+    void grantAndRevokeWithSessionShouldTriggerAccountPermissionsUpdatedWithPerformer() throws ContainerException, SQLException {
+        GameSession session = server.createSession();
+        GamePlayer player = makeSimpleGamePlayer(10, session, true);
+        GameAccount account = player.account();
+
+        AtomicReference<AccountPermissionsUpdated> ref = new AtomicReference<>();
+        player.dispatcher().add(AccountPermissionsUpdated.class, ref::set);
+
+        account.grant(new Permission[] {Permission.ACCESS}, gamePlayer().account());
+        assertSame(account, ref.get().account());
+        assertSame(gamePlayer().account(), ref.get().performer().get());
+        assertTrue(ref.get().authorized());
+
+        account.revoke(gamePlayer().account());
+        assertSame(account, ref.get().account());
+        assertSame(gamePlayer().account(), ref.get().performer().get());
+        assertFalse(ref.get().authorized());
+    }
+
+    @Test
+    void revokeWithoutTemporaryPermissionsShouldNotDispatchEvent() throws SQLException {
+        GameSession session = server.createSession();
+        GamePlayer player = makeSimpleGamePlayer(10, session, true);
+        GameAccount account = player.account();
+
+        AtomicReference<AccountPermissionsUpdated> ref = new AtomicReference<>();
+        player.dispatcher().add(AccountPermissionsUpdated.class, ref::set);
+
+        account.revoke(gamePlayer().account());
+        assertNull(ref.get());
     }
 }

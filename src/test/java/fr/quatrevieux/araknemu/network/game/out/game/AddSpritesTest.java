@@ -38,7 +38,7 @@ class AddSpritesTest extends GameBaseCase {
 
         ExplorationPlayer p1 = explorationPlayer();
         ExplorationPlayer p2 = new ExplorationPlayer(makeOtherPlayer());
-        p2.join(p1.map());
+        p2.changeMap(p1.map(), 210);
 
         p1.inventory().add(container.get(ItemService.class).create(2416), 1, 1);
 

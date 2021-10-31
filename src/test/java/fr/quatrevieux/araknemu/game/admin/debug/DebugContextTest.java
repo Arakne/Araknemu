@@ -19,13 +19,10 @@
 
 package fr.quatrevieux.araknemu.game.admin.debug;
 
-import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.context.NullContext;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
-import fr.quatrevieux.araknemu.game.item.ItemService;
-import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -45,11 +42,7 @@ class DebugContextTest extends GameBaseCase {
                 new AbstractContextConfigurator<DebugContext>() {
                     @Override
                     public void configure(DebugContext context) {
-                        add(new GenItem(container.get(ItemService.class)));
-                        add(new FightPos(container.get(MapTemplateRepository.class)));
-                        add(new Movement(container.get(MapTemplateRepository.class)));
-                        add(new MapStats(container.get(MapTemplateRepository.class)));
-                        add(new Area(container.get(SpellEffectService.class)));
+                        add(new FightPos());
                     }
                 }
             )
@@ -58,16 +51,8 @@ class DebugContextTest extends GameBaseCase {
 
     @Test
     void commands() throws CommandNotFoundException {
-        assertInstanceOf(GenItem.class, context.command("genitem"));
         assertInstanceOf(FightPos.class, context.command("fightpos"));
-        assertInstanceOf(MapStats.class, context.command("mapstats"));
-        assertInstanceOf(Movement.class, context.command("movement"));
-        assertInstanceOf(Area.class, context.command("area"));
 
-        assertContainsType(GenItem.class, context.commands());
         assertContainsType(FightPos.class, context.commands());
-        assertContainsType(MapStats.class, context.commands());
-        assertContainsType(Movement.class, context.commands());
-        assertContainsType(Area.class, context.commands());
     }
 }

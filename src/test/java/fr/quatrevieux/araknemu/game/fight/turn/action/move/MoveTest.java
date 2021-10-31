@@ -157,6 +157,7 @@ class MoveTest extends FightBaseCase {
         assertSame(fighter, result.performer());
         assertEquals(1, result.action());
         assertArrayEquals(new String[] {"ac5ddvfdg"}, result.arguments());
+        assertEquals("Move{size=3, target=198}", move.toString());
     }
 
     @Test

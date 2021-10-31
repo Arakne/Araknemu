@@ -44,11 +44,14 @@ import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,6 +61,7 @@ class ActiveStateTest extends GameBaseCase {
     private Fight fight;
     private PlayerFighter fighter;
     private PlayerFighter other;
+    private ScheduledExecutorService executor;
 
     @Override
     @BeforeEach
@@ -68,7 +72,7 @@ class ActiveStateTest extends GameBaseCase {
 
         fight = new Fight(
             1,
-            new ChallengeType(),
+            new ChallengeType(configuration.fight()),
             container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
             Arrays.asList(
                 new SimpleTeam(fighter = new PlayerFighter(gamePlayer(true)), Arrays.asList(123, 222), 0),
@@ -79,11 +83,20 @@ class ActiveStateTest extends GameBaseCase {
                 new PlacementState(false),
                 state = new ActiveState()
             ),
-            container.get(Logger.class)
+            container.get(Logger.class),
+            executor = Executors.newSingleThreadScheduledExecutor()
         );
 
         fight.nextState();
         requestStack.clear();
+    }
+
+    @Override
+    @AfterEach
+    public void tearDown() throws ContainerException {
+        executor.shutdownNow();
+
+        super.tearDown();
     }
 
     @RepeatedIfExceptionsTest
@@ -101,6 +114,7 @@ class ActiveStateTest extends GameBaseCase {
         assertTrue(fight.dispatcher().has(SendFighterLifeChanged.class));
         assertTrue(fight.dispatcher().has(SendFighterDie.class));
         assertTrue(fight.dispatcher().has(RemoveDeadFighter.class));
+        assertTrue(fight.dispatcher().has(DispelDeadFighterBuff.class));
         assertTrue(fight.dispatcher().has(CheckFightTerminated.class));
         assertTrue(fight.dispatcher().has(SendTurnList.class));
         assertTrue(fight.dispatcher().has(RefreshBuffs.class));
@@ -158,6 +172,17 @@ class ActiveStateTest extends GameBaseCase {
         assertContains(other, fight.fighters());
 
         requestStack.assertLast(ActionEffect.fighterDie(other, other));
+    }
+
+    @Test
+    void leaveFightCancelledShouldDoNothing() {
+        fight.nextState();
+        state.terminate();
+
+        state.leave(other);
+
+        assertFalse(other.dead());
+        assertContains(other, fight.fighters());
     }
 
     @Test

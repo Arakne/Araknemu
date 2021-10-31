@@ -20,22 +20,22 @@
 package fr.quatrevieux.araknemu.game.admin;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
-import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
-import fr.quatrevieux.araknemu.game.admin.formatter.HelpFormatter;
+import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
+import fr.quatrevieux.araknemu.game.admin.help.CommandHelp;
 
 import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Base command class
  */
-public abstract class AbstractCommand implements Command {
-    private final HelpFormatter help = new HelpFormatter(this);
+public abstract class AbstractCommand<A> implements Command<A> {
+    private CommandHelp help = new CommandHelp(this);
     private final EnumSet<Permission> permissions = EnumSet.of(Permission.ACCESS);
-    private String description = "No description";
+    private Supplier<A> argumentsFactory;
     private boolean initialized = false;
 
     /**
@@ -44,17 +44,10 @@ public abstract class AbstractCommand implements Command {
     protected abstract void build(Builder builder);
 
     @Override
-    public final String description() {
+    public CommandHelp help() {
         initialize();
 
-        return description;
-    }
-
-    @Override
-    public final String help() {
-        initialize();
-
-        return help.toString();
+        return help;
     }
 
     @Override
@@ -65,15 +58,23 @@ public abstract class AbstractCommand implements Command {
     }
 
     @Override
-    public void execute(AdminPerformer performer, CommandParser.Arguments arguments) throws AdminException {
-        execute(performer, arguments.arguments());
+    public A createArguments() {
+        initialize();
+
+        if (argumentsFactory != null) {
+            return argumentsFactory.get();
+        }
+
+        return null;
     }
 
     /**
-     * Adapt the new Command interface to the legacy one
+     * Raise a command error and stop execution of the command
+     *
+     * @param message The error message
      */
-    public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
-        throw new AdminException("Not implemented");
+    protected final void error(String message) throws CommandException {
+        throw new CommandException(name(), message);
     }
 
     private void initialize() {
@@ -85,10 +86,13 @@ public abstract class AbstractCommand implements Command {
 
     protected final class Builder {
         /**
-         * Set a command description
+         * Define the command arguments factory
+         *
+         * Note: this method should be used only for annotated object argument.
+         *       For other arguments type, prefer overrides the method {@link Command#createArguments()}
          */
-        public Builder description(String description) {
-            AbstractCommand.this.description = description;
+        public Builder arguments(Supplier<A> constructor) {
+            AbstractCommand.this.argumentsFactory = constructor;
 
             return this;
         }
@@ -105,8 +109,8 @@ public abstract class AbstractCommand implements Command {
          *     );
          * </code>
          */
-        public Builder help(Consumer<HelpFormatter> configurator) {
-            configurator.accept(help);
+        public Builder help(Consumer<CommandHelp.Builder> configurator) {
+            help = help.modify(configurator);
 
             return this;
         }

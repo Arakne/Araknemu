@@ -114,4 +114,37 @@ class ItemPoolContainerTest {
         assertSame(container.get(A.class), container.get(A.class));
         assertSame(container.get(A.class), container.get(B.class).a);
     }
+
+    @Test
+    void with() {
+        container.register(new Module());
+
+        C c = new C();
+
+        Container scoped = container.with(c, I.class);
+
+        assertSame(c, scoped.get(C.class));
+        assertSame(c, scoped.get(I.class));
+        assertNotSame(scoped.get(I.class), container.get(I.class));
+        assertSame(scoped.get(A.class), container.get(A.class));
+    }
+
+    @Test
+    void withAll() {
+        container.register(new Module());
+
+        C c = new C();
+        A a = new A();
+
+        Container scoped = container.withAll(
+            new ScopedContainer.Mapping<>(c, I.class),
+            new ScopedContainer.Mapping<>(a)
+        );
+
+        assertSame(c, scoped.get(C.class));
+        assertSame(c, scoped.get(I.class));
+        assertSame(a, scoped.get(A.class));
+        assertNotSame(scoped.get(I.class), container.get(I.class));
+        assertSame(container.get(B.class), scoped.get(B.class));
+    }
 }

@@ -155,11 +155,19 @@ class CastSimulationTest extends FightBaseCase {
 
         assertEquals(1, simulation.killedAllies());
         assertEquals(0, simulation.killedEnemies());
+        assertEquals(0, simulation.suicideProbability());
 
         simulation.addDamage(new Interval(1000, 1000), ennemy);
 
         assertEquals(1, simulation.killedAllies());
         assertEquals(1, simulation.killedEnemies());
+        assertEquals(0, simulation.suicideProbability());
+
+        simulation.addDamage(new Interval(1000, 1000), fighter);
+
+        assertEquals(1, simulation.killedAllies());
+        assertEquals(1, simulation.killedEnemies());
+        assertEquals(1, simulation.suicideProbability());
     }
 
     @ParameterizedTest
@@ -222,5 +230,20 @@ class CastSimulationTest extends FightBaseCase {
         simulation.merge(other, 20);
 
         assertEquals(.2, simulation.killedEnemies());
+    }
+
+    @Test
+    void mergeSuicide() {
+        simulation.addDamage(new Interval(0, 500), fighter);
+        assertEquals(0.41, simulation.suicideProbability());
+
+        CastSimulation other = new CastSimulation(Mockito.mock(Spell.class), fighter, fight.map().get(123));
+
+        other.addDamage(new Interval(100, 300), fighter);
+        assertEquals(0.025, other.suicideProbability());
+
+        simulation.merge(other, 20);
+
+        assertEquals(.415, simulation.suicideProbability());
     }
 }

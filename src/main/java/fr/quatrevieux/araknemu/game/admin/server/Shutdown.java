@@ -19,23 +19,26 @@
 
 package fr.quatrevieux.araknemu.game.admin.server;
 
+import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.ShutdownService;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
-import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.type.SubArguments;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.type.SubArgumentsCommandTrait;
 import org.apache.commons.lang3.time.DurationFormatUtils;
+import org.kohsuke.args4j.Argument;
+import org.kohsuke.args4j.spi.SubCommand;
+import org.kohsuke.args4j.spi.SubCommands;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 /**
  * Command for shutdown the server
  */
-public final class Shutdown extends AbstractCommand {
+public final class Shutdown extends AbstractCommand<Shutdown.Arguments> implements SubArgumentsCommandTrait<Shutdown.Arguments> {
     private final ShutdownService service;
 
     public Shutdown(ShutdownService service) {
@@ -45,17 +48,19 @@ public final class Shutdown extends AbstractCommand {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Stop the server")
             .help(formatter -> formatter
-                .synopsis("shutdown [action] [parameter]")
-                .options("now", "Shutdown the server immediately. Do not requires any parameters.")
-                .options("in", "Shutdown the server in a given amount of time. Format is <i>[hours]h[minutes]m[seconds]s</i>. All parts are optional.")
-                .options("at", "Shutdown the server at a given time. Format is <i>[hours]:[minutes]:[seconds]</i>. Seconds are optional.")
-                .options("show", "Show the current scheduled shutdown.")
-                .example("${server} shutdown now", "Stop the server immediately.")
-                .example("${server} shutdown at 15:00", "Stop the server at 15:00:00.")
-                .example("${server} shutdown in 30m", "Stop the server in 30 minutes.")
+                .description("Stop the server")
+                .synopsis("shutdown [now|in|at|show] ARGUMENTS")
+                .option("now", "Shutdown the server immediately. Do not requires any parameters.")
+                .option("in DURATION", "Shutdown the server in a given amount of time. Format is <i>[hours]h[minutes]m[seconds]s</i>. All parts are optional.")
+                .option("at TIME", "Shutdown the server at a given time. Format is <i>[hours]:[minutes]:[seconds]</i>. Seconds are optional.")
+                .option("show", "Show the current scheduled shutdown.")
+                .example("*shutdown now", "Stop the server immediately.")
+                .example("*shutdown at 15:00", "Stop the server at 15:00:00.")
+                .example("*shutdown in 30m", "Stop the server in 30 minutes.")
             )
+            .requires(Permission.SUPER_ADMIN)
+            .arguments(Arguments::new)
         ;
     }
 
@@ -64,70 +69,24 @@ public final class Shutdown extends AbstractCommand {
         return "shutdown";
     }
 
-    @Override
-    public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
-        if (arguments.size() < 2) {
-            throw new CommandException(name(), "Missing the action");
-        }
-
-        switch (arguments.get(1)) {
-            case "now":
-                service.now();
-                break;
-
-            case "in":
-                shutdownIn(performer, arguments);
-                break;
-
-            case "at":
-                shutdownAt(performer, arguments);
-                break;
-
-            case "show":
-                show(performer);
-                break;
-
-            case "cancel":
-                cancel(performer);
-                break;
-
-            default:
-                throw new CommandException(name(), "The action " + arguments.get(1) + " is not valid");
-        }
+    private void shutdownNow() {
+        service.now();
     }
 
-    private void shutdownIn(AdminPerformer performer, List<String> arguments) throws AdminException {
-        if (arguments.size() < 3) {
-            throw new CommandException(name(), "Missing the delay");
-        }
-
-        String value = arguments.get(2).toUpperCase();
-
-        if (value.charAt(0) != 'P') {
-            value = "PT" + value;
-        }
-
-        service.schedule(Duration.parse(value));
+    private void shutdownIn(AdminPerformer performer, Duration duration) {
+        service.schedule(duration);
         show(performer);
     }
 
-    private void shutdownAt(AdminPerformer performer, List<String> arguments) throws AdminException {
-        if (arguments.size() < 3) {
-            throw new CommandException(name(), "Missing the time");
-        }
-
-        Duration delay = Duration.between(
-            LocalTime.now(),
-            LocalTime.from(DateTimeFormatter.ofPattern("HH:mm[:ss]").parse(arguments.get(2)))
-        );
+    private void shutdownAt(AdminPerformer performer, LocalTime time) {
+        Duration delay = Duration.between(LocalTime.now(), time);
 
         // scheduled time is before now : consider that it's scheduled for the next day
         if (delay.isNegative()) {
             delay = delay.plusDays(1);
         }
 
-        service.schedule(delay);
-        show(performer);
+        shutdownIn(performer, delay);
     }
 
     private void show(AdminPerformer performer) {
@@ -150,6 +109,64 @@ public final class Shutdown extends AbstractCommand {
             performer.success("Shutdown has been cancelled");
         } else {
             performer.error("No shutdown has been scheduled");
+        }
+    }
+
+    public static final class Arguments implements SubArguments<Shutdown> {
+        @Argument(required = true, metaVar = "TIME")
+        @SubCommands({
+            @SubCommand(name = "now", impl = NowArguments.class),
+            @SubCommand(name = "in", impl = InArguments.class),
+            @SubCommand(name = "at", impl = AtArguments.class),
+            @SubCommand(name = "show", impl = ShowArguments.class),
+            @SubCommand(name = "cancel", impl = CancelArguments.class),
+        })
+        private SubArguments<Shutdown> sub;
+
+        @Override
+        public void execute(AdminPerformer performer, Shutdown command) throws AdminException {
+            sub.execute(performer, command);
+        }
+
+        public static final class NowArguments implements SubArguments<Shutdown> {
+            @Override
+            public void execute(AdminPerformer performer, Shutdown command) throws AdminException {
+                command.shutdownNow();
+            }
+        }
+
+        public static final class ShowArguments implements SubArguments<Shutdown> {
+            @Override
+            public void execute(AdminPerformer performer, Shutdown command) throws AdminException {
+                command.show(performer);
+            }
+        }
+
+        public static final class CancelArguments implements SubArguments<Shutdown> {
+            @Override
+            public void execute(AdminPerformer performer, Shutdown command) throws AdminException {
+                command.cancel(performer);
+            }
+        }
+
+        public static final class InArguments implements SubArguments<Shutdown> {
+            @Argument(required = true, metaVar = "DURATION")
+            private Duration duration;
+
+            @Override
+            public void execute(AdminPerformer performer, Shutdown command) throws AdminException {
+                command.shutdownIn(performer, duration);
+            }
+        }
+
+        public static final class AtArguments implements SubArguments<Shutdown> {
+            @Argument(required = true, metaVar = "TIME")
+            private LocalTime time;
+
+            @Override
+            public void execute(AdminPerformer performer, Shutdown command) throws AdminException {
+                command.shutdownAt(performer, time);
+            }
         }
     }
 }

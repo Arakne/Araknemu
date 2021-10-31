@@ -138,6 +138,7 @@ class StopSessionTest extends FightBaseCase {
         handler.handle(session, new SessionClosed());
 
         assertNull(session.fighter());
+        Thread.sleep(100);
         assertFalse(fight.fighters().contains(fighter));
     }
 
@@ -151,8 +152,45 @@ class StopSessionTest extends FightBaseCase {
         handler.handle(session, new SessionClosed());
 
         assertNull(session.fighter());
+        Thread.sleep(100);
         assertFalse(fight.active());
         assertTrue(fighter.dead());
+    }
+
+    @Test
+    void withFighterShouldApplyPunishRewardsOnActiveFight() throws Exception {
+        Fight fight = createPvmFight();
+        PlayerFighter fighter = player.fighter();
+        PlayerFighter other = makePlayerFighter(this.other);
+
+        fight.state(PlacementState.class).joinTeam(other, fighter.team());
+        fight.state(PlacementState.class).startFight();
+
+        handler.handle(session, new SessionClosed());
+
+        assertNull(session.fighter());
+        Thread.sleep(100);
+
+        assertTrue(fighter.dead());
+        assertEquals(0, player.properties().life().current());
+        assertEquals(player.savedPosition(), player.position());
+    }
+
+    @Test
+    void withFighterShouldApplyPunishRewardsOnPlacement() throws Exception {
+        Fight fight = createPvmFight();
+        PlayerFighter fighter = player.fighter();
+        PlayerFighter other = makePlayerFighter(this.other);
+
+        fight.state(PlacementState.class).joinTeam(other, fighter.team());
+
+        handler.handle(session, new SessionClosed());
+
+        assertNull(session.fighter());
+        Thread.sleep(100);
+
+        assertEquals(0, player.properties().life().current());
+        assertEquals(player.savedPosition(), player.position());
     }
 
     @Test

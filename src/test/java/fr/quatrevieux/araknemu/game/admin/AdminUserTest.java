@@ -23,12 +23,16 @@ import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
+import fr.quatrevieux.araknemu.game.admin.exception.CommandExecutionException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandPermissionsException;
-import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
+import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
+import fr.quatrevieux.araknemu.game.admin.exception.ExceptionHandler;
+import fr.quatrevieux.araknemu.game.admin.executor.CommandExecutor;
+import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
+import fr.quatrevieux.araknemu.game.admin.player.PlayerContextResolver;
 import fr.quatrevieux.araknemu.network.game.out.basic.admin.CommandResult;
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,8 +53,11 @@ class AdminUserTest extends GameBaseCase {
         super.setUp();
 
         user = new AdminUser(
-            container.get(AdminService.class),
             gamePlayer(),
+            container.get(CommandExecutor.class),
+            container.get(CommandParser.class),
+            container.get(PlayerContextResolver.class).resolve(gamePlayer()),
+            container.get(ExceptionHandler.class),
             logger = Mockito.mock(Logger.class)
         );
 
@@ -131,21 +138,37 @@ class AdminUserTest extends GameBaseCase {
     }
 
     @Test
-    void executeNoPermissions() {
-        assertThrows(CommandPermissionsException.class, () -> user.execute("info"));
-        Mockito.verify(logger).log(Level.INFO, AdminPerformer.EXECUTE_MARKER, "[{}] {}", user, "info");
+    void executeNoPermissions() throws AdminException {
+        try {
+            user.execute("ban");
+            fail("Excepts exception");
+        } catch (CommandExecutionException e) {
+            assertInstanceOf(CommandPermissionsException.class, e.getCause());
+        }
+        Mockito.verify(logger).log(Level.INFO, AdminPerformer.EXECUTE_MARKER, "[{}] {}", user, "ban");
     }
 
     @Test
-    void executeCommandNotFound() {
-        assertThrows(CommandNotFoundException.class, () -> user.execute("not_found_command"));
+    void executeCommandNotFound() throws AdminException {
+        try {
+            user.execute("not_found_command");
+            fail("Excepts exception");
+        } catch (CommandExecutionException e) {
+            assertInstanceOf(CommandNotFoundException.class, e.getCause());
+        }
         Mockito.verify(logger).log(Level.INFO, AdminPerformer.EXECUTE_MARKER, "[{}] {}", user, "not_found_command");
     }
 
     @Test
     void executeContextNotFound() {
-        assertThrows(ContextNotFoundException.class, () -> user.execute("$not_found info"));
-        Mockito.verify(logger).log(Level.INFO, AdminPerformer.EXECUTE_MARKER, "[{}] {}", user, "$not_found info");
+        assertThrows(ContextException.class, () -> user.execute("@not_found info"));
+        Mockito.verify(logger).log(Level.INFO, AdminPerformer.EXECUTE_MARKER, "[{}] {}", user, "@not_found info");
+    }
+
+    @Test
+    void self() {
+        assertInstanceOf(PlayerContext.class, user.self());
+        assertSame(user.player(), PlayerContext.class.cast(user.self()).player());
     }
 
     @Test

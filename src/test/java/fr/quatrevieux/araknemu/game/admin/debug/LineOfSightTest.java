@@ -20,20 +20,17 @@
 package fr.quatrevieux.araknemu.game.admin.debug;
 
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
-import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.admin.AdminService;
-import fr.quatrevieux.araknemu.game.admin.AdminUser;
+import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
+import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-class LineOfSightTest extends GameBaseCase {
-    private LineOfSight command;
-    private AdminUser user;
-
+class LineOfSightTest extends CommandTestCase {
     @Override
     @BeforeEach
     public void setUp() throws Exception {
@@ -43,14 +40,13 @@ class LineOfSightTest extends GameBaseCase {
         explorationPlayer();
 
         command = new LineOfSight(container.get(MapTemplateRepository.class));
-        user = container.get(AdminService.class).user(gamePlayer());
 
         requestStack.clear();
     }
 
     @Test
-    void success() {
-        command.execute(user, Arrays.asList("lineofsight"));
+    void success() throws AdminException, SQLException {
+        executeWithAdminUser("lineofsight");
 
         requestStack.assertLast(
             new FightStartPositions(
@@ -64,8 +60,8 @@ class LineOfSightTest extends GameBaseCase {
     }
 
     @Test
-    void withTarget() {
-        command.execute(user, Arrays.asList("lineofsight", "269"));
+    void withTarget() throws AdminException, SQLException {
+        executeWithAdminUser("lineofsight", "269");
 
         requestStack.assertLast(
             new FightStartPositions(

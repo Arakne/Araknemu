@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.validator;
 
-import fr.arakne.utils.maps.CoordinateCell;
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
@@ -33,10 +32,7 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 public final class RangeValidator implements CastConstraintValidator {
     @Override
     public Error validate(Turn turn, Castable castable, FightCell target) {
-        final CoordinateCell<FightCell> from = new CoordinateCell<>(turn.fighter().cell());
-        final CoordinateCell<FightCell> to   = new CoordinateCell<>(target);
-
-        final int distance = from.distance(to);
+        final int distance = turn.fighter().cell().coordinate().distance(target);
 
         Interval range = castable.constraints().range();
 

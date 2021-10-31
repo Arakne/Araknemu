@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.fight.turn.order.FighterOrderStrategy;
 import fr.quatrevieux.araknemu.game.listener.fight.CheckFightTerminated;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightStarted;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.DispelDeadFighterBuff;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.RefreshBuffs;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.RemoveDeadFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterDie;
@@ -89,6 +90,7 @@ public final class ActiveState implements LeavableState, EventsSubscriber {
                 new SendFighterLifeChanged(fight),
                 new SendFighterDie(fight),
                 new RemoveDeadFighter(fight),
+                new DispelDeadFighterBuff(fight),
                 new CheckFightTerminated(fight),
                 new SendTurnList(fight),
                 new RefreshBuffs(),
@@ -104,7 +106,13 @@ public final class ActiveState implements LeavableState, EventsSubscriber {
     }
 
     @Override
-    public void leave(Fighter fighter) {
+    public synchronized void leave(Fighter fighter) {
+        // nextState is performed 1.5s after fight stop
+        // So leave can occurs on terminated fight
+        if (!fight.active()) {
+            return;
+        }
+
         fighter.life().kill(fighter);
 
         // Fight terminated

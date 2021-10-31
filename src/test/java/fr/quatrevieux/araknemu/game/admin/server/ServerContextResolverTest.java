@@ -21,10 +21,15 @@ package fr.quatrevieux.araknemu.game.admin.server;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
+import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
+import fr.quatrevieux.araknemu.game.admin.AdminSessionService;
+import fr.quatrevieux.araknemu.game.admin.AdminUser;
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.context.NullContext;
+import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,18 +41,20 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 
 class ServerContextResolverTest extends GameBaseCase {
     private ServerContextResolver resolver;
+    private AdminUser adminUser;
 
     @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
-        resolver = new ServerContextResolver();
+        resolver = new ServerContextResolver(new NullContext());
+        adminUser = container.get(AdminSessionService.class).user(gamePlayer());
     }
 
     @Test
     void resolve() throws ContainerException {
-        Context context = resolver.resolve(new NullContext(), null);
+        Context context = resolver.resolve(adminUser, () -> null);
 
         assertInstanceOf(ServerContext.class, context);
     }
@@ -64,8 +71,35 @@ class ServerContextResolverTest extends GameBaseCase {
             }
         });
 
-        Context context = resolver.resolve(new NullContext(), gamePlayer(true).name());
+        Context context = resolver.resolve(adminUser, () -> null);
 
         assertSame(command, context.command("mocked"));
+    }
+
+    @Test
+    void resolveShouldKeepInstance() throws ContainerException, CommandNotFoundException {
+        resolver.register(new AbstractContextConfigurator<ServerContext>() {
+            @Override
+            public void configure(ServerContext context) {
+                add(new AbstractCommand<Void>() {
+                    @Override
+                    protected void build(Builder builder) {}
+
+                    @Override
+                    public String name() {
+                        return "test";
+                    }
+
+                    @Override
+                    public void execute(AdminPerformer performer, Void arguments) {}
+                });
+            }
+        });
+
+        Context context = resolver.resolve(adminUser, () -> null);
+        Context context2 = resolver.resolve(adminUser, () -> null);
+
+        assertSame(context, context2);
+        assertSame(context.command("test"), context2.command("test"));
     }
 }

@@ -44,6 +44,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -70,7 +71,8 @@ class PvmBuilderTest extends GameBaseCase {
             container.get(FighterFactory.class),
             new RandomUtil(),
             container.get(PvmType.class),
-            container.get(Logger.class)
+            container.get(Logger.class),
+            Executors.newSingleThreadScheduledExecutor()
         );
 
         MonsterService service = container.get(MonsterService.class);
@@ -81,7 +83,7 @@ class PvmBuilderTest extends GameBaseCase {
                 container.get(MonsterEnvironmentService.class),
                 container.get(FightService.class),
                 new MonsterGroupData(3, Duration.ofMillis(60000), 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100), 1), new MonsterGroupData.Monster(34, new Interval(1, 100), 1), new MonsterGroupData.Monster(36, new Interval(1, 100), 1)), "", new Position(0, 0), false),
-                new RandomCellSelector()
+                new RandomCellSelector(), false
             ),
             5,
             Arrays.asList(
@@ -125,7 +127,8 @@ class PvmBuilderTest extends GameBaseCase {
                 container.get(FighterFactory.class),
                 random,
                 container.get(PvmType.class),
-                container.get(Logger.class)
+                container.get(Logger.class),
+                Executors.newSingleThreadScheduledExecutor()
             );
 
             Fight fight = builder
@@ -150,7 +153,8 @@ class PvmBuilderTest extends GameBaseCase {
             container.get(FighterFactory.class),
             null,
             container.get(PvmType.class),
-            container.get(Logger.class)
+            container.get(Logger.class),
+            Executors.newSingleThreadScheduledExecutor()
         );
 
         for (int i = 0; i < 100; ++i) {

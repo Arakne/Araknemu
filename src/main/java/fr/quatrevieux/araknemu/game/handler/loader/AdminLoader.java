@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
-import fr.quatrevieux.araknemu.game.admin.AdminService;
+import fr.quatrevieux.araknemu.game.admin.AdminSessionService;
 import fr.quatrevieux.araknemu.game.handler.EnsureAdmin;
 import fr.quatrevieux.araknemu.game.handler.basic.admin.ExecuteCommand;
 import fr.quatrevieux.araknemu.network.game.GameSession;
@@ -40,7 +40,7 @@ public final class AdminLoader extends AbstractLoader {
     protected PacketHandler<GameSession, ?>[] handlers(Container container) throws ContainerException {
         return new PacketHandler[] {
             new ExecuteCommand(
-                container.get(AdminService.class)
+                container.get(AdminSessionService.class)
             ),
         };
     }

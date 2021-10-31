@@ -31,7 +31,7 @@ public interface CommandParser {
     /**
      * Parse a command line
      */
-    public Arguments parse(String line) throws AdminException;
+    public Arguments parse(AdminPerformer performer, String line) throws AdminException;
 
     public static final class Arguments {
         private final String line;

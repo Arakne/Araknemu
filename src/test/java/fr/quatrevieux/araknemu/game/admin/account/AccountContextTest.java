@@ -54,7 +54,11 @@ class AccountContextTest extends GameBaseCase {
     @Test
     void commands() throws CommandNotFoundException {
         assertInstanceOf(Info.class, context.command("info"));
+        assertInstanceOf(Grant.class, context.command("grant"));
+        assertInstanceOf(Revoke.class, context.command("revoke"));
 
         assertContainsType(Info.class, context.commands());
+        assertContainsType(Grant.class, context.commands());
+        assertContainsType(Revoke.class, context.commands());
     }
 }

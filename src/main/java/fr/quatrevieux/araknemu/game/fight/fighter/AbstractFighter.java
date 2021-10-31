@@ -154,19 +154,19 @@ public abstract class AbstractFighter implements Fighter {
 
     @Override
     public final boolean equals(Object obj) {
-        return obj != null && getClass().equals(obj.getClass()) && id() == ((Fighter) obj).id();
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof PassiveFighter)) {
+            return false;
+        }
+
+        return id() == ((PassiveFighter) obj).id();
     }
 
     @Override
     public final int hashCode() {
         return id();
-    }
-
-    /**
-     * Clear fighter data
-     */
-    public void destroy() {
-        this.fight = null;
-        this.attachments.clear();
     }
 }

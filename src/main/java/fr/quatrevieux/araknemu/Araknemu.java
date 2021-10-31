@@ -22,8 +22,7 @@ package fr.quatrevieux.araknemu;
 import fr.quatrevieux.araknemu.core.BootException;
 import fr.quatrevieux.araknemu.core.Service;
 import fr.quatrevieux.araknemu.core.config.Configuration;
-import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
-import fr.quatrevieux.araknemu.core.config.IniDriver;
+import fr.quatrevieux.araknemu.core.config.ConfigurationLoader;
 import fr.quatrevieux.araknemu.core.dbal.DatabaseConfiguration;
 import fr.quatrevieux.araknemu.core.dbal.DatabaseHandler;
 import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
@@ -39,9 +38,7 @@ import fr.quatrevieux.araknemu.realm.RealmModule;
 import fr.quatrevieux.araknemu.realm.RealmService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.ini4j.Ini;
 
-import java.io.File;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -56,7 +53,7 @@ public class Araknemu {
      */
     public static final String VERSION = Araknemu.class.getPackage().getImplementationVersion();
     public static final String NAME = "Araknemu";
-    public static final String YEAR = "2017-2020";
+    public static final String YEAR = "2017-2021";
     public static final String AUTHOR = "Vincent Quatrevieux";
 
     private final Logger logger = LogManager.getLogger(getClass());
@@ -156,11 +153,13 @@ public class Araknemu {
      * Application entry point
      */
     public static void main(String[] args) throws Exception {
-        final Configuration configuration = new DefaultConfiguration(
-            new IniDriver(
-                new Ini(new File("config.ini"))
-            )
-        );
+        final ConfigurationLoader configurationLoader = new ConfigurationLoader();
+
+        if (args.length > 0) {
+            configurationLoader.configFileName(args[0]);
+        }
+
+        final Configuration configuration = configurationLoader.load();
 
         final Araknemu app = new Araknemu(
             configuration,

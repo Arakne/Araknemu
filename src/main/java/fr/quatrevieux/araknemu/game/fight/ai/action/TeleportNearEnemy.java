@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 import fr.arakne.utils.maps.CoordinateCell;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.util.SpellCaster;
+import fr.quatrevieux.araknemu.game.fight.ai.util.SpellsHelper;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
@@ -29,10 +30,10 @@ import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Try to teleport near enemy
@@ -43,16 +44,14 @@ public final class TeleportNearEnemy implements ActionGenerator {
 
     @Override
     public void initialize(AI ai) {
-        caster = new SpellCaster(ai);
-        teleportSpells = new ArrayList<>();
+        final SpellsHelper helper = ai.helper().spells();
 
-        for (Spell spell : ai.fighter().spells()) {
-            if (spell.effects().stream().anyMatch(spellEffect -> spellEffect.effect() == 4)) {
-                teleportSpells.add(spell);
-            }
-        }
-
-        teleportSpells.sort(Comparator.comparingInt(Castable::apCost));
+        caster = helper.caster();
+        teleportSpells = helper
+            .withEffect(4)
+            .sorted(Comparator.comparingInt(Castable::apCost))
+            .collect(Collectors.toList())
+        ;
     }
 
     @Override
@@ -126,8 +125,8 @@ public final class TeleportNearEnemy implements ActionGenerator {
         private Spell spell;
 
         public Selector(FightCell enemyCell, FightCell currentCell) {
-            this.enemyCell = new CoordinateCell<>(enemyCell);
-            this.distance = this.enemyCell.distance(new CoordinateCell<>(currentCell));
+            this.enemyCell = enemyCell.coordinate();
+            this.distance = this.enemyCell.distance(currentCell);
         }
 
         /**
@@ -143,7 +142,7 @@ public final class TeleportNearEnemy implements ActionGenerator {
          * @return true if the new cell is adjacent to the target
          */
         public boolean push(Spell spell, FightCell cell) {
-            final int currentDistance = new CoordinateCell<>(cell).distance(enemyCell);
+            final int currentDistance = enemyCell.distance(cell);
 
             if (currentDistance < distance) {
                 this.spell = spell;
@@ -156,7 +155,7 @@ public final class TeleportNearEnemy implements ActionGenerator {
 
         /**
          * Get the best cast action
-         * May return an empty optional if no teleport spell can be found, or if the fighter is already on the best cell
+         * May returns an empty optional if no teleport spell can be found, or if the fighter is already on the best cell
          */
         public Optional<Action> action() {
             if (spell == null) {

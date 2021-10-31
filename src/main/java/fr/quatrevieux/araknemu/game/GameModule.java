@@ -131,9 +131,13 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.MonsterAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Aggressive;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Fixed;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Runaway;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Support;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Tactical;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AlterCharacteristicSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.ArmorSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.DamageSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.StealLifeSimulator;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
@@ -157,6 +161,7 @@ import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.module.LaunchedSpellsModule;
 import fr.quatrevieux.araknemu.game.fight.module.RaulebaqueModule;
 import fr.quatrevieux.araknemu.game.fight.module.StatesModule;
+import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.handler.loader.AdminLoader;
 import fr.quatrevieux.araknemu.game.handler.loader.AggregateLoader;
@@ -249,7 +254,8 @@ public final class GameModule implements ContainerModule {
                     container.get(PlayerRaceService.class),
                     container.get(PlayerExperienceService.class),
 
-                    container.get(GameBanIpSynchronizer.class)
+                    container.get(GameBanIpSynchronizer.class),
+                    container.get(SavingService.class)
                 ),
 
                 // Subscribers
@@ -270,7 +276,8 @@ public final class GameModule implements ContainerModule {
                     container.get(PlayerService.class),
                     container.get(AccountService.class),
                     container.get(ShutdownService.class),
-                    container.get(GameBanIpSynchronizer.class)
+                    container.get(GameBanIpSynchronizer.class),
+                    container.get(SavingService.class)
                 )
             )
         );
@@ -390,6 +397,7 @@ public final class GameModule implements ContainerModule {
             ExplorationService.class,
             container -> new ExplorationService(
                 container.get(ExplorationMapService.class),
+                container.get(GameConfiguration.class).player(),
                 container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class)
             )
         );
@@ -587,6 +595,7 @@ public final class GameModule implements ContainerModule {
                 Arrays.asList(
                     new ChallengeBuilderFactory(
                         container.get(FighterFactory.class),
+                        container.get(ChallengeType.class),
                         container.get(Logger.class) // @todo fight logger
                     ),
                     new PvmBuilderFactory(
@@ -601,7 +610,8 @@ public final class GameModule implements ContainerModule {
                     RaulebaqueModule::new,
                     LaunchedSpellsModule::new,
                     fight -> new AiModule(container.get(AiFactory.class))
-                )
+                ),
+                container.get(GameConfiguration.class).fight()
             )
         );
 
@@ -793,11 +803,19 @@ public final class GameModule implements ContainerModule {
             PvmType.class,
             container -> new PvmType(
                 new PvmRewardsGenerator(
-                    Arrays.asList(new AddExperience(), new SynchronizeLife(), new AddKamas(), new AddItems(container.get(ItemService.class))),
+                    // Issue #192 (https://github.com/Arakne/Araknemu/issues/192) : Perform SynchronizeLife before AddExperience
+                    // to ensure that level up (which trigger restore life) is performed after life synchronisation
+                    Arrays.asList(new SynchronizeLife(), new AddExperience(), new AddKamas(), new AddItems(container.get(ItemService.class))),
                     Arrays.asList(new SetDead(), new ReturnToSavePosition()),
                     Arrays.asList(new PvmXpProvider(), new PvmKamasProvider(), new PvmItemDropProvider(), new PvmEndFightActionProvider())
-                )
+                ),
+                container.get(GameConfiguration.class).fight()
             )
+        );
+
+        configurator.persist(
+            ChallengeType.class,
+            container -> new ChallengeType(container.get(GameConfiguration.class).fight())
         );
 
         configurator.persist(
@@ -859,6 +877,9 @@ public final class GameModule implements ContainerModule {
             simulator.register(179, new AlterCharacteristicSimulator(-8)); // -heal
             simulator.register(186, new AlterCharacteristicSimulator(-2)); // -percent damage
 
+            simulator.register(105, new ArmorSimulator());
+            simulator.register(265, new ArmorSimulator());
+
             return simulator;
         });
 
@@ -870,7 +891,9 @@ public final class GameModule implements ContainerModule {
 
                 factory.register("AGGRESSIVE", new Aggressive(simulator));
                 factory.register("RUNAWAY", new Runaway(simulator));
-                factory.register("SUPPORT", new Runaway(simulator));
+                factory.register("SUPPORT", new Support(simulator));
+                factory.register("TACTICAL", new Tactical(simulator));
+                factory.register("FIXED", new Fixed(simulator));
 
                 return factory;
             }
@@ -889,6 +912,12 @@ public final class GameModule implements ContainerModule {
 
         configurator.persist(SessionLogService.class, container -> new SessionLogService(
             container.get(ConnectionLogRepository.class)
+        ));
+
+        configurator.persist(SavingService.class, container -> new SavingService(
+            container.get(PlayerService.class),
+            container.get(GameConfiguration.class),
+            container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class)
         ));
     }
 }

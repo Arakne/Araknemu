@@ -33,6 +33,7 @@ import fr.quatrevieux.araknemu.game.fight.exception.FightMapException;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
@@ -52,10 +53,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.lang.reflect.Field;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -72,7 +77,7 @@ class PlacementStateTest extends FightBaseCase {
 
         fight = new Fight(
             1,
-            new ChallengeType(),
+            new ChallengeType(configuration.fight()),
             container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
             new ArrayList<>(Arrays.asList(
                 new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(123, 222), 0),
@@ -84,8 +89,15 @@ class PlacementStateTest extends FightBaseCase {
                 state = new PlacementState(false),
                 new ActiveState()
             ),
-            container.get(Logger.class)
+            container.get(Logger.class),
+            Executors.newSingleThreadScheduledExecutor()
         );
+    }
+
+    @Test
+    void remainingTimeNotSupported() {
+        state.start(fight);
+        assertThrows(UnsupportedOperationException.class, () -> state.remainingTime());
     }
 
     @Test
@@ -132,7 +144,7 @@ class PlacementStateTest extends FightBaseCase {
         FightType type = Mockito.mock(FightType.class);
 
         Mockito.when(type.hasPlacementTimeLimit()).thenReturn(true);
-        Mockito.when(type.placementTime()).thenReturn(0);
+        Mockito.when(type.placementDuration()).thenReturn(Duration.ZERO);
 
         fight = new Fight(
             1,
@@ -146,7 +158,8 @@ class PlacementStateTest extends FightBaseCase {
                 state = new PlacementState(false),
                 new ActiveState()
             ),
-            container.get(Logger.class)
+            container.get(Logger.class),
+            Executors.newSingleThreadScheduledExecutor()
         );
 
         state.start(fight);
@@ -156,8 +169,77 @@ class PlacementStateTest extends FightBaseCase {
     }
 
     @Test
-    void changePlaceToNotWalkable() {
+    void startWithPlacementTimeLimitShouldCancelTimerOnStartFight() throws NoSuchFieldException, IllegalAccessException {
+        FightType type = Mockito.mock(FightType.class);
+
+        Mockito.when(type.hasPlacementTimeLimit()).thenReturn(true);
+        Mockito.when(type.placementDuration()).thenReturn(Duration.ofSeconds(10));
+
+        fight = new Fight(
+            1,
+            type,
+            container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
+            new ArrayList<>(Arrays.asList(
+                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(123, 222), 0),
+                new SimpleTeam(makePlayerFighter(other), Arrays.asList(321), 1)
+            )),
+            new StatesFlow(
+                state = new PlacementState(false),
+                new ActiveState()
+            ),
+            container.get(Logger.class),
+            Executors.newSingleThreadScheduledExecutor()
+        );
+
         state.start(fight);
+        state.startFight();
+
+        assertInstanceOf(ActiveState.class, fight.state());
+
+        Field timer = state.getClass().getDeclaredField("timer");
+        timer.setAccessible(true);
+
+        assertTrue(((ScheduledFuture) timer.get(state)).isCancelled());
+    }
+
+    @Test
+    void startWithPlacementTimeLimitShouldCancelTimerOnCancel() throws NoSuchFieldException, IllegalAccessException {
+        FightType type = Mockito.mock(FightType.class);
+
+        Mockito.when(type.hasPlacementTimeLimit()).thenReturn(true);
+        Mockito.when(type.placementDuration()).thenReturn(Duration.ofSeconds(10));
+
+        fight = new Fight(
+            1,
+            type,
+            container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
+            new ArrayList<>(Arrays.asList(
+                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(123, 222), 0),
+                new SimpleTeam(makePlayerFighter(other), Arrays.asList(321), 1)
+            )),
+            new StatesFlow(
+                state = new PlacementState(false),
+                new ActiveState()
+            ),
+            container.get(Logger.class),
+            Executors.newSingleThreadScheduledExecutor()
+        );
+
+        state.start(fight);
+        fight.cancel();
+        state.startFight();
+
+        assertSame(state, fight.state());
+
+        Field timer = state.getClass().getDeclaredField("timer");
+        timer.setAccessible(true);
+
+        assertTrue(((ScheduledFuture) timer.get(state)).isCancelled());
+    }
+
+    @Test
+    void changePlaceToNotWalkable() {
+        fight.nextState();
 
         assertThrows(FightMapException.class, () -> state.changePlace(fighter, fight.map().get(0)));
         assertEquals(123, fighter.cell().id());
@@ -165,7 +247,7 @@ class PlacementStateTest extends FightBaseCase {
 
     @Test
     void changePlaceNotTeamCell() {
-        state.start(fight);
+        fight.nextState();
 
         assertThrows(FightException.class, () -> state.changePlace(fighter, fight.map().get(223)));
         assertEquals(123, fighter.cell().id());
@@ -173,7 +255,7 @@ class PlacementStateTest extends FightBaseCase {
 
     @Test
     void changePlaceFighterReady() {
-        state.start(fight);
+        fight.nextState();
         fighter.setReady(true);
 
         assertThrows(FightException.class, () -> state.changePlace(fighter, fight.map().get(222)));
@@ -181,8 +263,27 @@ class PlacementStateTest extends FightBaseCase {
     }
 
     @Test
+    void changePlaceFightCancelled() {
+        fight.nextState();
+        FightCell cell = fight.map().get(222);
+        fight.cancel();
+
+        state.changePlace(fighter, cell);
+        assertEquals(123, fighter.cell().id());
+    }
+
+    @Test
+    void changePlaceFightStarted() {
+        fight.nextState();
+        state.startFight();
+
+        state.changePlace(fighter, fight.map().get(222));
+        assertEquals(123, fighter.cell().id());
+    }
+
+    @Test
     void changePlaceSuccess() {
-        state.start(fight);
+        fight.nextState();
 
         state.changePlace(fighter, fight.map().get(222));
 
@@ -198,6 +299,15 @@ class PlacementStateTest extends FightBaseCase {
         state.startFight();
 
         assertInstanceOf(NullState.class, fight.state());
+    }
+
+    @Test
+    void startFightCancelledDoNothing() {
+        fight.nextState();
+        fight.cancel();
+        state.startFight();
+
+        assertSame(state, fight.state());
     }
 
     @Test

@@ -46,14 +46,14 @@ class LifeRegenerationTest extends GameBaseCase {
         player = makeExplorationPlayer(
             gamePlayer()
         );
-        requestStack.clear();
 
+        requestStack.clear();
     }
 
     @Test
     void onStartExploration() throws Exception{
         player.dispatch(new StartExploration(player));
-        requestStack.assertContains(StartLifeTimer.class);
+        requestStack.assertLast(new StartLifeTimer(1000));
 
         Field privateLongField = player.properties().life().getClass().getDeclaredField("lifeRegenerationStart");
         privateLongField.setAccessible(true);
@@ -63,7 +63,32 @@ class LifeRegenerationTest extends GameBaseCase {
     @Test
     void onStopExploration() throws Exception{
         player.dispatch(new StopExploration(session));
-        requestStack.assertContains(StopLifeTimer.class);
+        requestStack.assertLast(new StopLifeTimer());
+
+        Field privateLongField = player.properties().life().getClass().getDeclaredField("lifeRegenerationStart");
+        privateLongField.setAccessible(true);
+        assertEquals(0, (long) privateLongField.get(player.properties().life()));
+    }
+
+    @Test
+    void onStartExplorationWithCustomRate() throws Exception {
+        setConfigValue("player.lifeRegeneration.base", "100");
+
+        player.dispatch(new StartExploration(player));
+        requestStack.assertLast(new StartLifeTimer(100));
+
+        Field privateLongField = player.properties().life().getClass().getDeclaredField("lifeRegenerationStart");
+        privateLongField.setAccessible(true);
+        assertNotEquals(0, (long) privateLongField.get(player.properties().life()));
+    }
+
+    @Test
+    void onStartExplorationRegenDisabled() throws Exception {
+        setConfigValue("player.lifeRegeneration.base", "0");
+        requestStack.clear();
+
+        player.dispatch(new StartExploration(player));
+        requestStack.assertNotContains(StartLifeTimer.class);
 
         Field privateLongField = player.properties().life().getClass().getDeclaredField("lifeRegenerationStart");
         privateLongField.setAccessible(true);

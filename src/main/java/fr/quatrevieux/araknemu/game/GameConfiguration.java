@@ -103,6 +103,23 @@ public final class GameConfiguration implements ConfigurationModule {
     }
 
     /**
+     * The interval between two automatic save of connected players
+     * Note: Players are regularly saved apart of autosave, so it's not required to set a small value
+     * Default: 4 hours (4h)
+     */
+    public Duration autosaveInterval() {
+        return pool.duration("autosave.interval", Duration.ofHours(4));
+    }
+
+    /**
+     * Enable automatic saving of connected players
+     * Default: true
+     */
+    public boolean autosaveEnabled() {
+        return pool.bool("autosave.enabled", true);
+    }
+
+    /**
      * Get player configuration
      */
     public PlayerConfiguration player() {
@@ -128,6 +145,13 @@ public final class GameConfiguration implements ConfigurationModule {
      */
     public EconomyConfiguration economy() {
         return new EconomyConfiguration();
+    }
+
+    /**
+     * Get the configuration for the fight system
+     */
+    public FightConfiguration fight() {
+        return new FightConfiguration();
     }
 
     public final class PlayerConfiguration {
@@ -198,6 +222,23 @@ public final class GameConfiguration implements ConfigurationModule {
         public int characteristicPointsOnLevelUp() {
             return pool.integer("player.level.characteristicPoints", 5);
         }
+
+        /**
+         * The life regeneration rate.
+         * This is the number of milliseconds required to regenerate 1 life point. Set to 0 to disable.
+         * By default 1000 (1 LP / sec)
+         */
+        public int baseLifeRegeneration() {
+            return pool.integer("player.lifeRegeneration.base", 1000);
+        }
+
+        /**
+         * Restore life points when player reach a new level
+         * By default true
+         */
+        public boolean restoreLifeOnLevelUp() {
+            return pool.bool("player.restoreLifeOnLevelUp", true);
+        }
     }
 
     public final class ChatConfiguration {
@@ -249,6 +290,23 @@ public final class GameConfiguration implements ConfigurationModule {
         public int monsterMovePercent() {
             return pool.integer("activity.monsters.movePercent", 25);
         }
+
+        /**
+         * The maximum move distance for monsters
+         * By default 5
+         */
+        public int monsterMoveDistance() {
+            return pool.integer("activity.monsters.moveDistance", 5);
+        }
+
+        /**
+         * The delay divisor for respawn a monster group
+         * With a factor of 2, the respawn will be 2 times faster
+         * By default 1
+         */
+        public int monsterRespawnSpeedFactor() {
+            return pool.integer("activity.monsters.respawnSpeedFactor", 1);
+        }
     }
 
     public final class EconomyConfiguration {
@@ -270,6 +328,35 @@ public final class GameConfiguration implements ConfigurationModule {
          */
         public double bankCostPerEntry() {
             return pool.decimal("economy.bank.costPerEntry", 1);
+        }
+    }
+
+    public final class FightConfiguration {
+        /**
+         * The threads count for run fight actions and AI
+         * This value should be greater than 2. A good value may be around 1 thread per 100 fights
+         * By default, 4
+         */
+        public int threadsCount() {
+            return pool.integer("fight.threadsCount", 4);
+        }
+
+        /**
+         * The fight turn duration
+         * The value should be a duration string like 30s, 1m10s
+         * Default value : 30s
+         */
+        public Duration turnDuration() {
+            return pool.duration("fight.turnDuration", Duration.ofSeconds(30));
+        }
+
+        /**
+         * The placement duration for a PVM fight
+         * The value should be a duration string like 30s, 1m10s
+         * Default value : 45s
+         */
+        public Duration pvmPlacementDuration() {
+            return pool.duration("fight.pvm.placementDuration", Duration.ofSeconds(45));
         }
     }
 }

@@ -37,6 +37,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -45,6 +46,8 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -55,6 +58,7 @@ class FightTest extends GameBaseCase {
     private FightMap map;
     private List<FightTeam> teams;
     private Logger logger;
+    private ScheduledExecutorService executor;
 
     private PlayerFighter fighter1, fighter2;
 
@@ -67,7 +71,7 @@ class FightTest extends GameBaseCase {
 
         fight = new Fight(
             5,
-            new ChallengeType(),
+            new ChallengeType(configuration.fight()),
             map = container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
             teams = new ArrayList<>(Arrays.asList(
                 new SimpleTeam(fighter1 = new PlayerFighter(gamePlayer(true)), Arrays.asList(123), 0),
@@ -80,8 +84,18 @@ class FightTest extends GameBaseCase {
                 new ActiveState(),
                 new FinishState()
             ),
-            logger = Mockito.mock(Logger.class)
+            logger = Mockito.mock(Logger.class),
+            executor = Executors.newSingleThreadScheduledExecutor()
         );
+    }
+
+    @Override
+    @AfterEach
+    public void tearDown() throws fr.quatrevieux.araknemu.core.di.ContainerException {
+        executor.shutdownNow();
+        fight.cancel(true);
+
+        super.tearDown();
     }
 
     @Test
@@ -94,6 +108,7 @@ class FightTest extends GameBaseCase {
         assertInstanceOf(ChallengeType.class, fight.type());
         assertInstanceOf(EffectsHandler.class, fight.effects());
         assertFalse(fight.active());
+        assertTrue(fight.alive());
     }
 
     @Test
@@ -188,11 +203,32 @@ class FightTest extends GameBaseCase {
     }
 
     @Test
+    void executeOnDeadFightShouldBeIgnored() {
+        fight.cancel();
+
+        assertThrows(IllegalStateException.class, () -> fight.execute(() -> {}));
+        assertThrows(IllegalStateException.class, () -> fight.schedule(() -> {}, Duration.ZERO));
+    }
+
+    @Test
+    void scheduleOnFightDeadShouldBeIgnored() throws InterruptedException {
+        AtomicBoolean executed = new AtomicBoolean(false);
+        fight.schedule(() -> executed.set(true), Duration.ofMillis(10));
+        fight.cancel();
+
+        Thread.sleep(100);
+
+        Mockito.verify(logger).warn(Mockito.matches("Cannot run task .* on dead fight"));
+        assertFalse(executed.get());
+    }
+
+    @Test
     void destroy() {
         fight.destroy();
 
         assertCount(0, fight.teams());
         assertEquals(0, fight.map().size());
+        assertFalse(fight.alive());
     }
 
     @RepeatedIfExceptionsTest
@@ -248,6 +284,7 @@ class FightTest extends GameBaseCase {
         fight.start();
 
         assertThrows(IllegalStateException.class, () -> fight.cancel());
+        assertTrue(fight.alive());
     }
 
     @Test
@@ -260,6 +297,7 @@ class FightTest extends GameBaseCase {
         assertSame(fight, ref.get().fight());
         assertCount(0, fight.teams());
         assertCount(0, fight.fighters());
+        assertFalse(fight.alive());
     }
 
     @Test
@@ -274,6 +312,7 @@ class FightTest extends GameBaseCase {
         assertSame(fight, ref.get().fight());
         assertCount(0, fight.teams());
         assertCount(0, fight.fighters());
+        assertFalse(fight.alive());
     }
 
     @Test

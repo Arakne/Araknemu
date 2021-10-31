@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.listener.fight.fighter;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.state.LeavableState;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
@@ -36,7 +37,10 @@ public final class LeaveOnDisconnect implements Listener<Disconnected> {
 
     @Override
     public void on(Disconnected event) {
-        fighter.fight().state(LeavableState.class).leave(fighter);
+        final Fight fight = fighter.fight();
+
+        // Issue #189 : all fight actions must be executed by the fight thread
+        fight.execute(() -> fight.state(LeavableState.class).leave(fighter));
     }
 
     @Override

@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.event.FightActionStarted;
 import fr.quatrevieux.araknemu.game.fight.turn.action.event.FightActionTerminated;
 import io.github.artsok.RepeatedIfExceptionsTest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -46,7 +47,16 @@ class ActionHandlerTest extends FightBaseCase {
         super.setUp();
 
         fight = createFight();
+        fight.start();
         actionHandler = new ActionHandler(fight);
+    }
+
+    @Override
+    @AfterEach
+    public void tearDown() throws fr.quatrevieux.araknemu.core.di.ContainerException {
+        fight.cancel(true);
+
+        super.tearDown();
     }
 
     @Test
@@ -293,4 +303,28 @@ class ActionHandlerTest extends FightBaseCase {
         actionHandler.terminated(() -> b.set(true));
         assertTrue(b.get());
     }
+
+    @Test
+    void terminateOnStoppedFightShouldBeIgnored() {
+        Action action = Mockito.mock(Action.class);
+        ActionResult result = Mockito.mock(ActionResult.class);
+
+        Mockito.when(action.validate()).thenReturn(true);
+        Mockito.when(action.start()).thenReturn(result);
+        Mockito.when(action.duration()).thenReturn(Duration.ofMillis(1000));
+
+        Mockito.when(result.success()).thenReturn(true);
+
+        actionHandler.start(action);
+        fight.stop();
+
+        AtomicReference<FightActionTerminated> ref = new AtomicReference<>();
+        fight.dispatcher().add(FightActionTerminated.class, ref::set);
+
+        actionHandler.terminate();
+
+        Mockito.verify(action, Mockito.never()).end();
+        assertNull(ref.get());
+    }
+
 }

@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.util.DofusDate;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -48,7 +49,7 @@ class FightListTest extends FightBaseCase {
         );
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void generateActive() throws SQLException, ContainerException {
         dataSet.pushMaps().pushSubAreas().pushAreas();
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);

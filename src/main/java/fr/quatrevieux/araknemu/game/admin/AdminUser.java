@@ -21,11 +21,12 @@ package fr.quatrevieux.araknemu.game.admin;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
+import fr.quatrevieux.araknemu.game.admin.context.Context;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
-import fr.quatrevieux.araknemu.game.admin.exception.CommandPermissionsException;
+import fr.quatrevieux.araknemu.game.admin.exception.CommandExecutionException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
 import fr.quatrevieux.araknemu.game.admin.exception.ExceptionHandler;
-import fr.quatrevieux.araknemu.game.listener.admin.RemoveAdminSession;
+import fr.quatrevieux.araknemu.game.admin.executor.CommandExecutor;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.out.basic.admin.CommandResult;
 import fr.quatrevieux.araknemu.util.LogFormatter;
@@ -39,31 +40,20 @@ import java.util.Set;
  * Admin user session
  */
 public final class AdminUser implements AdminPerformer {
-    private final AdminService service;
     private final GamePlayer player;
+    private final CommandExecutor executor;
+    private final CommandParser parser;
+    private final Context self;
+    private final ExceptionHandler errorHandler;
     private final Logger logger;
 
-    private final AdminUserContext context;
-    private final AdminUserCommandParser parser;
-    private final ExceptionHandler errorHandler;
-
-    public AdminUser(AdminService service, GamePlayer player, Logger logger) throws ContextException {
-        this.service = service;
+    public AdminUser(GamePlayer player, CommandExecutor executor, CommandParser parser, Context self, ExceptionHandler errorHandler, Logger logger) throws ContextException {
         this.player = player;
+        this.executor = executor;
+        this.parser = parser;
+        this.self = self;
+        this.errorHandler = errorHandler;
         this.logger = logger;
-
-        this.context = new AdminUserContext(service, service.context("player", player));
-        this.parser = new AdminUserCommandParser(this);
-        this.errorHandler = new ExceptionHandler(this);
-
-        player.dispatcher().add(new RemoveAdminSession(this));
-    }
-
-    /**
-     * Get the admin user context handler
-     */
-    public AdminUserContext context() {
-        return context;
     }
 
     @Override
@@ -75,12 +65,17 @@ public final class AdminUser implements AdminPerformer {
     public void execute(String command) throws AdminException {
         logger.log(Level.INFO, EXECUTE_MARKER, "[{}] {}", this, command);
 
-        execute(parser.parse(command));
+        execute(parser.parse(this, command));
     }
 
     @Override
     public boolean isGranted(Set<Permission> permissions) {
         return player.account().isGranted(permissions);
+    }
+
+    @Override
+    public Context self() {
+        return self;
     }
 
     @Override
@@ -95,14 +90,7 @@ public final class AdminUser implements AdminPerformer {
      * Send the exception error to the console
      */
     public void error(Throwable error) {
-        errorHandler.handle(error);
-    }
-
-    /**
-     * Destroy this user session
-     */
-    public void logout() {
-        service.removeSession(this);
+        errorHandler.handle(this, error);
     }
 
     /**
@@ -134,12 +122,26 @@ public final class AdminUser implements AdminPerformer {
     }
 
     private void execute(CommandParser.Arguments arguments) throws AdminException {
-        final Command command = arguments.context().command(arguments.command());
+        try {
+            final Command command = arguments.context().command(arguments.command());
 
-        if (!isGranted(command.permissions())) {
-            throw new CommandPermissionsException(command.name(), command.permissions());
+            executor.execute(command, this, arguments);
+        } catch (Exception e) {
+            throw new CommandExecutionException(arguments, e);
         }
+    }
 
-        command.execute(this, arguments);
+    /**
+     * Factory create an AdminUser
+     */
+    public interface Factory {
+        /**
+         * Create the admin user
+         *
+         * @param player The authorized game player
+         *
+         * @return The created AdminUser
+         */
+        public AdminUser create(GamePlayer player) throws AdminException;
     }
 }

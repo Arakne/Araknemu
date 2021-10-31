@@ -27,7 +27,7 @@ import java.util.Optional;
 /**
  * Cell for a fight map
  */
-public interface FightCell extends BattlefieldCell {
+public interface FightCell extends BattlefieldCell<FightCell> {
     @Override
     public BattlefieldMap map();
 
