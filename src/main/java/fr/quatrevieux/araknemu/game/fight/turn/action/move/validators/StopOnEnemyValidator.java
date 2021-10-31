@@ -15,17 +15,23 @@ final public class StopOnEnemyValidator implements PathValidatorFight {
     public MoveResult validate(Move move, MoveResult result) {
         final BattlefieldMap map = move.performer().cell().map();
 
-        for (int i = 0; i < result.path().size(); i++) {
+        // @todo do not check the last step
+        for (int i = 1; i < result.path().size(); i++) {
             final PathStep<FightCell> step = result.path().get(i);
 
-            if (step.equals(result.path().first()))
-                continue;
-
             for (Direction direction : Direction.restrictedDirections()) {
-                FightCell fightCell = map.get(direction.nextCellIncrement(map.dimensions().width()) + step.cell().id());
+                // @todo use Decoder
+                final int adjacentCellId = direction.nextCellIncrement(map.dimensions().width()) + step.cell().id();
+
+                if (map.size() <= adjacentCellId) {
+                    continue;
+                }
+
+                final FightCell fightCell = map.get(adjacentCellId);
 
                 if (fightCell.fighter().isPresent() && !fightCell.fighter().get().team().equals(move.performer().team())) {
-                    return new MoveSuccess(move.performer(), result.path().truncate(i));
+                    // Truncate the path until the current cell (index + 1 because the argument is a size)
+                    return new MoveSuccess(move.performer(), result.path().truncate(i + 1));
                 }
             }
         }

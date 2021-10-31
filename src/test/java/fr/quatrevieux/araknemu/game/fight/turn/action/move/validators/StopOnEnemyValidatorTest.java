@@ -106,6 +106,7 @@ class StopOnEnemyValidatorTest extends FightBaseCase {
 
         assertNotSame(result, result2);
         assertEquals(4, result.path().size());
-        assertEquals(2, result2.path().size());
+        assertEquals(3, result2.path().size());
+        assertEquals(213, result2.target().id());
     }
 }

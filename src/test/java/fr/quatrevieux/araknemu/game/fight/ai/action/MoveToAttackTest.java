@@ -124,7 +124,7 @@ class MoveToAttackTest extends AiBaseCase {
 
         generateAndPerformMove();
 
-        assertEquals(136, fighter.cell().id());
+        assertEquals(165, fighter.cell().id());
     }
 
     @Test

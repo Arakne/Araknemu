@@ -51,7 +51,7 @@ public final class MoveFactory implements MoveActionFactory {
 
     @Override
     public Move create(Path<FightCell> path) {
-        final PathValidatorFight[] validators = new PathValidatorFight[]{
+        final PathValidatorFight[] validators = new PathValidatorFight[] {
             new TackleValidator(),
             new StopOnEnemyValidator(),
         };

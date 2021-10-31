@@ -42,8 +42,9 @@ public final class Move implements Action {
 
     private MoveResult result;
 
+    @Deprecated
     public Move(FightTurn turn, Fighter fighter, Path<FightCell> path) {
-        this(turn, fighter, path, null);
+        this(turn, fighter, path, new PathValidatorFight[0]);
     }
 
     public Move(FightTurn turn, Fighter fighter, Path<FightCell> path, PathValidatorFight[] validators) {
@@ -73,7 +74,7 @@ public final class Move implements Action {
                     break;
                 }
         }
-        
+
         return result;
     }
 
