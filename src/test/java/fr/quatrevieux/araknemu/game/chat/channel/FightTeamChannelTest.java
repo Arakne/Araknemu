@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.chat.channel;
 
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.chat.ChatException;
+import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.chat.event.BroadcastedMessage;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
@@ -32,11 +33,14 @@ import fr.quatrevieux.araknemu.network.game.out.info.Information;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FightTeamChannelTest extends FightBaseCase {
     private FightTeamChannel channel;
@@ -55,8 +59,16 @@ class FightTeamChannelTest extends FightBaseCase {
     }
 
     @Test
+    void authorized() throws Exception {
+        assertFalse(channel.authorized(gamePlayer()));
+
+        createFight();
+        assertTrue(channel.authorized(gamePlayer()));
+    }
+
+    @Test
     void sendDuringExploration() {
-        assertThrows(ChatException.class, () -> channel.send(gamePlayer(), new Message(ChannelType.FIGHT_TEAM, null, "hello", "")));
+        assertThrows(ChatException.class, () -> new ChatService(configuration.chat(), new Channel[] {channel}).send(gamePlayer(), new Message(ChannelType.FIGHT_TEAM, null, "hello", "")));
     }
 
     @Test

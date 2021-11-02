@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.chat.ChannelSet;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
 import fr.quatrevieux.araknemu.game.player.experience.GamePlayerExperience;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.game.player.race.GamePlayerRace;
@@ -230,6 +231,24 @@ public final class GamePlayer implements PlayerSessionScope {
      */
     public boolean isFighting() {
         return session.fighter() != null;
+    }
+
+    /**
+     * Get the attached spectator
+     */
+    public Spectator spectator() {
+        if (!isSpectator()) {
+            throw new IllegalStateException("The current player is not a spectator");
+        }
+
+        return session.spectator();
+    }
+
+    /**
+     * Check if the current player is a spectator
+     */
+    public boolean isSpectator() {
+        return session.spectator() != null;
     }
 
     /**

@@ -112,6 +112,13 @@ class ChatServiceTest extends GameBaseCase {
     }
 
     @Test
+    void sendUnauthorized() throws SQLException, ContainerException, ChatException {
+        explorationPlayer();
+
+        assertThrows(ChatException.class, () -> service.send(gamePlayer(), new Message(ChannelType.ADMIN, "", "°0", "1234")));
+    }
+
+    @Test
     void sendWithItemSuccess() throws SQLException, ContainerException, ChatException {
         gamePlayer(true).dispatcher().add(new MessageReceived(
             gamePlayer()

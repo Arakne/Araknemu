@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.network.game.out.info;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -140,5 +141,14 @@ public final class Information extends AbstractInformationMessage {
      */
     public static Information currentIpAddress(String ipAddress) {
         return new Information(153, ipAddress);
+    }
+
+    /**
+     * Inform fighter that a spectator has joined the fight
+     *
+     * @param spectatorName The spectator name
+     */
+    public static Information spectatorHasJoinFight(String spectatorName) {
+        return new Information(36, spectatorName);
     }
 }

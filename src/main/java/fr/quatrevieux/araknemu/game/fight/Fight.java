@@ -31,6 +31,7 @@ import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.module.FightModule;
+import fr.quatrevieux.araknemu.game.fight.spectator.Spectators;
 import fr.quatrevieux.araknemu.game.fight.state.FightState;
 import fr.quatrevieux.araknemu.game.fight.state.StatesFlow;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
@@ -66,6 +67,7 @@ public final class Fight implements Dispatcher, Sender {
     private final Map<Class, Object> attachments = new HashMap<>();
     private final ListenerAggregate dispatcher;
     private final ScheduledExecutorService executor;
+    private final Spectators spectators;
 
     private final Lock executorLock = new ReentrantLock();
     private final FightTurnList turnList = new FightTurnList(this);
@@ -83,6 +85,7 @@ public final class Fight implements Dispatcher, Sender {
         this.logger = logger;
         this.executor = executor;
         this.dispatcher = new DefaultListenerAggregate(logger);
+        this.spectators = new Spectators(this);
     }
 
     /**
@@ -208,11 +211,35 @@ public final class Fight implements Dispatcher, Sender {
         for (FightTeam team : teams) {
             team.send(sPacket);
         }
+
+        spectators.send(sPacket);
     }
 
     @Override
     public void dispatch(Object event) {
         dispatcher.dispatch(event);
+    }
+
+    /**
+     * Dispatch the event to all fighters and spectators
+     * This method should not raise any exceptions
+     *
+     * Note: this method will not call the Fight's dispatcher, but only fighters and spectators ones
+     *
+     * @param event Event to dispatch
+     *
+     * @see Fight#dispatch(Object) To dispatch on the Fight's listeners
+     */
+    public void dispatchToAll(Object event) {
+        for (FightTeam team : teams) {
+            for (Fighter fighter : team.fighters()) {
+                if (fighter.isOnFight()) {
+                    fighter.dispatch(event);
+                }
+            }
+        }
+
+        spectators.dispatch(event);
     }
 
     /**
@@ -335,6 +362,13 @@ public final class Fight implements Dispatcher, Sender {
     }
 
     /**
+     * Get the spectators handler
+     */
+    public Spectators spectators() {
+        return spectators;
+    }
+
+    /**
      * Destroy fight after terminated
      */
     public void destroy() {
@@ -342,6 +376,7 @@ public final class Fight implements Dispatcher, Sender {
         teams.clear();
         map.destroy();
         attachments.clear();
+        spectators.clear();
     }
 
     /**

@@ -129,4 +129,9 @@ class ErrorTest {
         assertEquals("Im1165;", Error.saveTerminated().toString());
         assertSame(Error.saveTerminated(), Error.saveTerminated());
     }
+
+    @Test
+    void cantJoinFightAsSpectator() {
+        assertEquals("Im157;", Error.cantJoinFightAsSpectator().toString());
+    }
 }

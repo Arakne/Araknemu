@@ -42,6 +42,11 @@ public final class PrivateChannel implements Channel {
     }
 
     @Override
+    public boolean authorized(GamePlayer from) {
+        return true;
+    }
+
+    @Override
     public void send(GamePlayer from, Message message) throws ChatException {
         if (!service.isOnline(message.target())) {
             throw new ChatException(ChatException.Error.USER_NOT_CONNECTED);

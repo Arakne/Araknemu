@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.chat.ChatException;
+import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.chat.event.BroadcastedMessage;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
@@ -41,6 +42,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
@@ -122,11 +125,21 @@ class GlobalChannelTest extends GameBaseCase {
     }
 
     @Test
+    void authorized() {
+        GlobalChannel channel = new GlobalChannel(ChannelType.TRADE, player -> false, service);
+        assertFalse(channel.authorized(gp1));
+
+        channel = new GlobalChannel(ChannelType.TRADE, player -> true, service);
+        assertTrue(channel.authorized(gp1));
+    }
+
+    @Test
     void notAuthorized() {
         GlobalChannel channel = new GlobalChannel(ChannelType.TRADE, player -> false, service);
+        ChatService service = new ChatService(configuration.chat(), new Channel[] {channel});
 
         try {
-            channel.send(
+            service.send(
                 gp1,
                 new Message(
                     ChannelType.TRADE,

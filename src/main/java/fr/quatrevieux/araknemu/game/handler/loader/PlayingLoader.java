@@ -24,11 +24,14 @@ import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
+import fr.quatrevieux.araknemu.game.handler.EnsureFightingOrSpectator;
 import fr.quatrevieux.araknemu.game.handler.EnsureInactiveFight;
 import fr.quatrevieux.araknemu.game.handler.EnsurePlaying;
 import fr.quatrevieux.araknemu.game.handler.account.BoostCharacteristic;
 import fr.quatrevieux.araknemu.game.handler.chat.SaveSubscription;
 import fr.quatrevieux.araknemu.game.handler.chat.SendMessage;
+import fr.quatrevieux.araknemu.game.handler.fight.LeaveFight;
+import fr.quatrevieux.araknemu.game.handler.fight.LeaveSpectatorFight;
 import fr.quatrevieux.araknemu.game.handler.game.CreateGame;
 import fr.quatrevieux.araknemu.game.handler.object.MoveObject;
 import fr.quatrevieux.araknemu.game.handler.object.RemoveObject;
@@ -60,6 +63,7 @@ public final class PlayingLoader extends AbstractLoader {
             new EnsureInactiveFight(new BoostCharacteristic()),
             new EnsureInactiveFight(new UpgradeSpell()),
             new MoveSpell(),
+            new EnsureFightingOrSpectator(new LeaveFight(), new LeaveSpectatorFight()),
         };
     }
 }

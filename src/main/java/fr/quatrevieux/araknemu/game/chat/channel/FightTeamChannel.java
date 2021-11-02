@@ -36,22 +36,18 @@ public final class FightTeamChannel implements Channel {
     }
 
     @Override
-    public void send(GamePlayer from, Message message) throws ChatException {
-        if (!from.isFighting()) {
-            throw new ChatException(ChatException.Error.UNAUTHORIZED);
-        }
+    public boolean authorized(GamePlayer from) {
+        return from.isFighting();
+    }
 
+    @Override
+    public void send(GamePlayer from, Message message) throws ChatException {
         if (!message.items().isEmpty()) {
             from.send(Information.cannotPostItemOnChannel());
             return;
         }
 
-        final BroadcastedMessage event = new BroadcastedMessage(
-            type(),
-            from,
-            message.message(),
-            ""
-        );
+        final BroadcastedMessage event = new BroadcastedMessage(type(), from, message.message(), "");
 
         from
             .fighter()

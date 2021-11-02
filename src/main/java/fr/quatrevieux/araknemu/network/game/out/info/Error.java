@@ -179,6 +179,13 @@ public final class Error extends AbstractInformationMessage {
     }
 
     /**
+     * The player cannot join the fight as spectator
+     */
+    public static Error cantJoinFightAsSpectator() {
+        return forCode(57);
+    }
+
+    /**
      * Create and cache a simple Error with a code
      *
      * @param code The error code

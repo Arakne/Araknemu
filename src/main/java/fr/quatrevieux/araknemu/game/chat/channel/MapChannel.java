@@ -27,12 +27,17 @@ import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import fr.quatrevieux.araknemu.network.game.out.info.Information;
 
 /**
- * The default chat channel : send to all map
+ * The default chat channel : send to all player on the map
  */
 public final class MapChannel implements Channel {
     @Override
     public ChannelType type() {
         return ChannelType.MESSAGES;
+    }
+
+    @Override
+    public boolean authorized(GamePlayer from) {
+        return from.isExploring();
     }
 
     @Override
@@ -42,24 +47,6 @@ public final class MapChannel implements Channel {
             return;
         }
 
-        final BroadcastedMessage event = new BroadcastedMessage(
-            type(),
-            from,
-            message.message(),
-            ""
-        );
-
-        if (from.isExploring()) {
-            from.exploration().map().apply(new DispatchEvent(event));
-        }
-
-        if (from.isFighting()) {
-            from
-                .fighter()
-                .fight()
-                .fighters()
-                .forEach(player -> player.dispatch(event))
-            ;
-        }
+        from.exploration().map().apply(new DispatchEvent(new BroadcastedMessage(type(), from, message.message(), "")));
     }
 }
