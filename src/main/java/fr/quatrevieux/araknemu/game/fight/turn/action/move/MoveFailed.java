@@ -14,47 +14,58 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux, Jean-Alexandre Valentin
  */
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 
 import fr.arakne.utils.maps.constant.Direction;
+import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.maps.path.Path;
+import fr.arakne.utils.maps.path.PathStep;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+
+import java.util.Collections;
 
 /**
- * Successful move result
- * A path can be truncated due to enemies on path, which will also result to a MoveSuccess result
+ * The fighter has been tackle during its move action
+ * He'll lose all its MP, and some AP
  */
-public final class MoveSuccess implements MoveResult {
+public final class MoveFailed implements MoveResult {
     private final Fighter performer;
-    private final Path<FightCell> path;
+    private final int lostActionPoints;
 
     /**
-     * @param performer The current fighter which perform the action
-     * @param path The new path
+     * @param performer The current fighter
+     * @param lostActionPoints Number of lost action points
      */
-    public MoveSuccess(Fighter performer, Path<FightCell> path) {
+    public MoveFailed(Fighter performer, int lostActionPoints) {
         this.performer = performer;
-        this.path = path;
+        this.lostActionPoints = lostActionPoints;
     }
 
     @Override
     public int action() {
-        return ActionType.MOVE.id();
+        return 104;
     }
 
     @Override
     public boolean success() {
-        return true;
+        return false;
     }
 
     @Override
     public int lostActionPoints() {
-        return 0;
+        return lostActionPoints;
+    }
+
+    @Override
+    public Path<FightCell> path() {
+        return new Path<>(
+            new Decoder<>(performer.cell().map()),
+            Collections.singletonList(new PathStep<>(performer.cell(), Direction.EAST))
+        );
     }
 
     @Override
@@ -63,27 +74,22 @@ public final class MoveSuccess implements MoveResult {
     }
 
     @Override
-    public Object[] arguments() {
-        return new Object[] { path.encodeWithStartCell() };
-    }
-
-    @Override
-    public FightCell target() {
-        return path.target();
-    }
-
-    @Override
     public Direction orientation() {
-        return path.last().direction();
+        return performer.orientation();
     }
 
     @Override
     public int lostMovementPoints() {
-        return path.size() - 1; // The path contains the current fighter's cell
+        return performer.turn().points().movementPoints();
     }
 
     @Override
-    public Path<FightCell> path() {
-        return path;
+    public FightCell target() {
+        return performer.cell();
+    }
+
+    @Override
+    public Object[] arguments() {
+        return new Object[0];
     }
 }

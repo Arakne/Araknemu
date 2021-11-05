@@ -159,6 +159,11 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
+        public FightTurn turn() {
+            return null;
+        }
+
+        @Override
         public boolean dead() {
             return false;
         }

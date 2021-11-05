@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.FightPathValidator;
 
 import java.time.Duration;
 
@@ -36,13 +37,15 @@ public final class Move implements Action {
     private final FightTurn turn;
     private final Fighter fighter;
     private final Path<FightCell> path;
+    private final FightPathValidator[] validators;
 
-    private MoveSuccess result;
+    private MoveResult result;
 
-    public Move(FightTurn turn, Fighter fighter, Path<FightCell> path) {
+    public Move(FightTurn turn, Fighter fighter, Path<FightCell> path, FightPathValidator[] validators) {
         this.turn = turn;
         this.fighter = fighter;
         this.path = path;
+        this.validators = validators;
     }
 
     @Override
@@ -58,20 +61,27 @@ public final class Move implements Action {
     public ActionResult start() {
         result = new MoveSuccess(fighter, path);
 
+        for (FightPathValidator validator : validators) {
+            result = validator.validate(this, result);
+
+            if (!result.success()) {
+                break;
+            }
+        }
+
         return result;
     }
 
     @Override
     public void end() {
-        turn.points().useMovementPoints(result.steps());
+        removePoints(result);
         fighter.move(result.target());
         fighter.setOrientation(result.orientation());
     }
 
     @Override
     public void failed() {
-        // @todo Handle tackle
-        throw new UnsupportedOperationException("Tackle not implemented");
+        removePoints(result);
     }
 
     @Override
@@ -93,5 +103,18 @@ public final class Move implements Action {
     @Override
     public String toString() {
         return "Move{size=" + (path.size() - 1) + ", target=" + path.target().id() + '}';
+    }
+
+    /**
+     * Remove the action and movement points to perform the move action
+     *
+     * @param result The action result
+     */
+    private void removePoints(MoveResult result) {
+        if (result.lostActionPoints() > 0) {
+            turn.points().useActionPoints(result.lostActionPoints());
+        }
+
+        turn.points().useMovementPoints(result.lostMovementPoints());
     }
 }

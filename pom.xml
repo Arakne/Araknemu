@@ -32,7 +32,7 @@
 
     <groupId>fr.quatrevieux.araknemu</groupId>
     <artifactId>araknemu</artifactId>
-    <version>0.8.2-alpha</version>
+    <version>0.9-SNAPSHOT</version>
     <dependencies>
         <dependency>
             <groupId>io.netty</groupId>
@@ -225,4 +225,15 @@
             </plugin>
         </plugins>
     </reporting>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 </project>

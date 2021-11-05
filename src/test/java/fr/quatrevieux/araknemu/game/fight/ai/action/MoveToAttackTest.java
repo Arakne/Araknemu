@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import org.junit.jupiter.api.BeforeEach;
@@ -124,7 +125,7 @@ class MoveToAttackTest extends AiBaseCase {
 
         generateAndPerformMove();
 
-        assertEquals(136, fighter.cell().id());
+        assertEquals(165, fighter.cell().id());
     }
 
     @Test
@@ -165,7 +166,7 @@ class MoveToAttackTest extends AiBaseCase {
         action = MoveToAttack.bestTarget(container.get(Simulator.class));
 
         configureFight(fb -> fb
-            .addSelf(builder -> builder.cell(210).spell(164))
+            .addSelf(builder -> builder.cell(210).spell(164).charac(Characteristic.AGILITY, 100))
             .addEnemy(builder -> builder.cell(195)) // Adjacent
         );
 

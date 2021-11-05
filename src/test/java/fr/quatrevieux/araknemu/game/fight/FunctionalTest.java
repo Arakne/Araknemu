@@ -48,6 +48,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastSuccess;
 import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombat;
 import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombatSuccess;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.FightPathValidator;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.arakne.utils.maps.constant.Direction;
@@ -63,7 +64,7 @@ import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
@@ -192,7 +193,8 @@ public class FunctionalTest extends GameBaseCase {
                     new PathStep<>(fight.map().get(213), Direction.SOUTH_WEST),
                     new PathStep<>(fight.map().get(198), Direction.NORTH_WEST)
                 )
-            )
+            ),
+            new FightPathValidator[0]
         );
 
         fighter1.turn().perform(move);
@@ -240,7 +242,8 @@ public class FunctionalTest extends GameBaseCase {
                     new PathStep<>(fight.map().get(150), Direction.SOUTH_EAST),
                     new PathStep<>(fight.map().get(195), Direction.SOUTH_EAST)
                 )
-            )
+            ),
+            new FightPathValidator[0]
         );
 
         fighter2.turn().perform(move);
