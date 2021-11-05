@@ -33,15 +33,34 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveResult;
 /**
  * Apply tackle to the fighter when enemies are present on adjacent cells
  * If a tackle is performed, a {@link MoveFailed} result will be returned
- *
- * @todo stabilisation
  */
 public final class TackleValidator implements FightPathValidator {
+    public static final int STATE_ROOTED = 6;
+
+    private final int[] ignoredStates;
     private final RandomUtil random = new RandomUtil();
+
+    public TackleValidator() {
+        this(new int[] {STATE_ROOTED});
+    }
+
+    /**
+     * @param ignoredStates List of fighter states to ignore for apply the tackle
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.States
+     */
+    public TackleValidator(int[] ignoredStates) {
+        this.ignoredStates = ignoredStates;
+    }
 
     @Override
     public MoveResult validate(Move move, MoveResult result) {
         final Fighter performer = move.performer();
+
+        // Ignore tackle if he has at least on of those states
+        if (performer.states().hasOne(ignoredStates)) {
+            return result;
+        }
+
         final FightCell currentCell = result.path().first().cell();
         final Decoder<FightCell> decoder = new Decoder<>(performer.cell().map());
 
@@ -53,6 +72,7 @@ public final class TackleValidator implements FightPathValidator {
             escapeProbability *= decoder.nextCellByDirection(currentCell, direction)
                 .flatMap(FightCell::fighter)
                 .filter(fighter -> !fighter.team().equals(performer.team()))
+                .filter(fighter -> !fighter.states().hasOne(ignoredStates))
                 .map(adjacentEnemy -> computeTackle(performer, adjacentEnemy))
                 .orElse(1d)
             ;

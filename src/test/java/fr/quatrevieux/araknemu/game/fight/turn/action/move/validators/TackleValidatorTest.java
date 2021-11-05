@@ -51,6 +51,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TackleValidatorTest extends FightBaseCase {
     private Fight fight;
@@ -165,6 +166,56 @@ class TackleValidatorTest extends FightBaseCase {
         assertEquals(6, result2.lostActionPoints());
         assertEquals(104, result2.action());
         assertEquals(185, result2.target().id());
+    }
+
+    @Test
+    void validateWithRootedStateShouldIgnoreTackle() throws SQLException {
+        fighter.states().push(TackleValidator.STATE_ROOTED);
+
+        Path<FightCell> path = new Path<FightCell>(
+            new Decoder<FightCell>(fight.map()),
+            Arrays.asList(
+                new PathStep<FightCell>(fight.map().get(185), Direction.EAST),
+                new PathStep<FightCell>(fight.map().get(199), Direction.SOUTH_WEST),
+                new PathStep<FightCell>(fight.map().get(213), Direction.SOUTH_WEST),
+                new PathStep<FightCell>(fight.map().get(227), Direction.NORTH_WEST)
+            )
+        );
+
+        other.fighter().characteristics().alter(Characteristic.AGILITY, 500);
+        other.fighter().move(fight.map().get(170));
+
+        Move move = new Move(turn, turn.fighter(), path, new FightPathValidator[0]);
+
+        MoveResult result = validator.validate(move, new MoveSuccess(fighter, path));
+
+        assertTrue(result.success());
+        assertEquals(227, result.target().id());
+    }
+
+    @Test
+    void validateWithRootedStateEnemyShouldIgnoreTackle() throws SQLException {
+
+        Path<FightCell> path = new Path<FightCell>(
+            new Decoder<FightCell>(fight.map()),
+            Arrays.asList(
+                new PathStep<FightCell>(fight.map().get(185), Direction.EAST),
+                new PathStep<FightCell>(fight.map().get(199), Direction.SOUTH_WEST),
+                new PathStep<FightCell>(fight.map().get(213), Direction.SOUTH_WEST),
+                new PathStep<FightCell>(fight.map().get(227), Direction.NORTH_WEST)
+            )
+        );
+
+        other.fighter().characteristics().alter(Characteristic.AGILITY, 500);
+        other.fighter().states().push(TackleValidator.STATE_ROOTED);
+        other.fighter().move(fight.map().get(170));
+
+        Move move = new Move(turn, turn.fighter(), path, new FightPathValidator[0]);
+
+        MoveResult result = validator.validate(move, new MoveSuccess(fighter, path));
+
+        assertTrue(result.success());
+        assertEquals(227, result.target().id());
     }
 
     @Test
