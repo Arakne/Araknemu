@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.event.FightActionTerminated;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.arakne.utils.maps.constant.Direction;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.FightPathValidator;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.FinishFightAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,7 +65,8 @@ class SendFightActionTerminatedTest extends FightBaseCase {
                     new PathStep<>(fight.map().get(213), Direction.SOUTH_WEST),
                     new PathStep<>(fight.map().get(198), Direction.NORTH_WEST)
                 )
-            )
+            ),
+            new FightPathValidator[0]
         );
 
         listener.on(new FightActionTerminated(move));
@@ -87,7 +89,8 @@ class SendFightActionTerminatedTest extends FightBaseCase {
                     new PathStep<>(fight.map().get(213), Direction.SOUTH_WEST),
                     new PathStep<>(fight.map().get(198), Direction.NORTH_WEST)
                 )
-            )
+            ),
+            new FightPathValidator[0]
         );
 
         requestStack.clear();

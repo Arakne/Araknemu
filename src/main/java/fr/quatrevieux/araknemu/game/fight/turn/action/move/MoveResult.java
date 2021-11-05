@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux, Jean-Alexandre Valentin
  */
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.move;
@@ -25,17 +25,35 @@ import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 
 /**
- * Define a Move result
+ * The result of a {@link Move} action
  */
 public interface MoveResult extends ActionResult {
-
+    /**
+     * Get the cost in AP of the action
+     *
+     * @see fr.quatrevieux.araknemu.game.fight.turn.TurnPoints#actionPoints()
+     */
     public int lostActionPoints();
 
+    /**
+     * Get the cost in MP of the action
+     *
+     * @see fr.quatrevieux.araknemu.game.fight.turn.TurnPoints#movementPoints()
+     */
+    public int lostMovementPoints();
+
+    /**
+     * Get the validated path
+     */
     public Path<FightCell> path();
 
-    public int movementPointCost();
-
+    /**
+     * Get the target cell
+     */
     public FightCell target();
 
+    /**
+     * Get the final orientation
+     */
     public Direction orientation();
 }

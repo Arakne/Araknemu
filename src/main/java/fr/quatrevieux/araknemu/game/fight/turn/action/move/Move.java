@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
-import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.PathValidatorFight;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.FightPathValidator;
 
 import java.time.Duration;
 
@@ -37,17 +37,11 @@ public final class Move implements Action {
     private final FightTurn turn;
     private final Fighter fighter;
     private final Path<FightCell> path;
-    private final PathValidatorFight[] validators;
-
+    private final FightPathValidator[] validators;
 
     private MoveResult result;
 
-    @Deprecated
-    public Move(FightTurn turn, Fighter fighter, Path<FightCell> path) {
-        this(turn, fighter, path, new PathValidatorFight[0]);
-    }
-
-    public Move(FightTurn turn, Fighter fighter, Path<FightCell> path, PathValidatorFight[] validators) {
+    public Move(FightTurn turn, Fighter fighter, Path<FightCell> path, FightPathValidator[] validators) {
         this.turn = turn;
         this.fighter = fighter;
         this.path = path;
@@ -66,13 +60,13 @@ public final class Move implements Action {
     @Override
     public ActionResult start() {
         result = new MoveSuccess(fighter, path);
-        
-        for (PathValidatorFight validator : validators) {
-                result = validator.validate(this, result);
-                
-                if (!result.success()) {
-                    break;
-                }
+
+        for (FightPathValidator validator : validators) {
+            result = validator.validate(this, result);
+
+            if (!result.success()) {
+                break;
+            }
         }
 
         return result;
@@ -80,15 +74,14 @@ public final class Move implements Action {
 
     @Override
     public void end() {
-        turn.points().useMovementPoints(result.movementPointCost());
+        removePoints(result);
         fighter.move(result.target());
         fighter.setOrientation(result.orientation());
     }
 
     @Override
     public void failed() {
-        turn.points().useActionPoints(result.lostActionPoints());
-        turn.points().useMovementPoints(result.movementPointCost());
+        removePoints(result);
     }
 
     @Override
@@ -110,5 +103,18 @@ public final class Move implements Action {
     @Override
     public String toString() {
         return "Move{size=" + (path.size() - 1) + ", target=" + path.target().id() + '}';
+    }
+
+    /**
+     * Remove the action and movement points to perform the move action
+     *
+     * @param result The action result
+     */
+    private void removePoints(MoveResult result) {
+        if (result.lostActionPoints() > 0) {
+            turn.points().useActionPoints(result.lostActionPoints());
+        }
+
+        turn.points().useMovementPoints(result.lostMovementPoints());
     }
 }

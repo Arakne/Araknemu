@@ -14,23 +14,32 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux, Jean-Alexandre Valentin
  */
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 
 import fr.arakne.utils.maps.constant.Direction;
+import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.maps.path.Path;
+import fr.arakne.utils.maps.path.PathStep;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 
+import java.util.Collections;
+
 /**
- * Failed move result
+ * The fighter has been tackle during its move action
+ * He'll lose all its MP, and some AP
  */
 public final class MoveFailed implements MoveResult {
-    private final int lostActionPoints;
     private final Fighter performer;
+    private final int lostActionPoints;
 
+    /**
+     * @param performer The current fighter
+     * @param lostActionPoints Number of lost action points
+     */
     public MoveFailed(Fighter performer, int lostActionPoints) {
         this.performer = performer;
         this.lostActionPoints = lostActionPoints;
@@ -53,7 +62,10 @@ public final class MoveFailed implements MoveResult {
 
     @Override
     public Path<FightCell> path() {
-        return null;
+        return new Path<>(
+            new Decoder<>(performer.cell().map()),
+            Collections.singletonList(new PathStep<>(performer.cell(), Direction.EAST))
+        );
     }
 
     @Override
@@ -67,13 +79,13 @@ public final class MoveFailed implements MoveResult {
     }
 
     @Override
-    public int movementPointCost() {
-        return performer.fight().turnList().current().get().points().movementPoints();
+    public int lostMovementPoints() {
+        return performer.turn().points().movementPoints();
     }
 
     @Override
     public FightCell target() {
-        return null;
+        return performer.cell();
     }
 
     @Override

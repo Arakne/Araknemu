@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
+import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
@@ -50,6 +51,13 @@ public interface Fighter extends Creature<FightCell>, Dispatcher, ActiveFighter 
      * @throws fr.quatrevieux.araknemu.game.fight.exception.FightException When cannot get any weapon on the fighter
      */
     public CastableWeapon weapon();
+
+    /**
+     * Get the current fighter turn
+     *
+     * @throws FightException If it's not the turn of the current fighter
+     */
+    public FightTurn turn();
 
     /**
      * Attach an attribute to the fighter

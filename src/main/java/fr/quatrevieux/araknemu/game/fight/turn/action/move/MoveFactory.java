@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
-import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.PathValidatorFight;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.FightPathValidator;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.StopOnEnemyValidator;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.TackleValidator;
 
@@ -51,7 +51,7 @@ public final class MoveFactory implements MoveActionFactory {
 
     @Override
     public Move create(Path<FightCell> path) {
-        final PathValidatorFight[] validators = new PathValidatorFight[] {
+        final FightPathValidator[] validators = new FightPathValidator[] {
             new TackleValidator(),
             new StopOnEnemyValidator(),
         };

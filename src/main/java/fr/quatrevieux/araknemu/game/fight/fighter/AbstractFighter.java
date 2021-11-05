@@ -126,9 +126,7 @@ public abstract class AbstractFighter implements Fighter {
         turn = null;
     }
 
-    /**
-     * Get the current fighter turn
-     */
+    @Override
     public final FightTurn turn() {
         if (turn == null) {
             throw new FightException("It's not your turn");

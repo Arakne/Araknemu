@@ -27,12 +27,16 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 
 /**
  * Successful move result
+ * A path can be truncated due to enemies on path, which will also result to a MoveSuccess result
  */
 public final class MoveSuccess implements MoveResult {
     private final Fighter performer;
     private final Path<FightCell> path;
 
-
+    /**
+     * @param performer The current fighter which perform the action
+     * @param path The new path
+     */
     public MoveSuccess(Fighter performer, Path<FightCell> path) {
         this.performer = performer;
         this.path = path;
@@ -48,6 +52,7 @@ public final class MoveSuccess implements MoveResult {
         return true;
     }
 
+    @Override
     public int lostActionPoints() {
         return 0;
     }
@@ -62,15 +67,18 @@ public final class MoveSuccess implements MoveResult {
         return new Object[] { path.encodeWithStartCell() };
     }
 
+    @Override
     public FightCell target() {
         return path.target();
     }
 
+    @Override
     public Direction orientation() {
         return path.last().direction();
     }
 
-    public int movementPointCost() {
+    @Override
+    public int lostMovementPoints() {
         return path.size() - 1; // The path contains the current fighter's cell
     }
 

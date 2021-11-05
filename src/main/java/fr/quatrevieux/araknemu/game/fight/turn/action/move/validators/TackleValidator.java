@@ -1,65 +1,99 @@
+/*
+ * This file is part of Araknemu.
+ *
+ * Araknemu is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Araknemu is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Copyright (c) 2017-2021 Vincent Quatrevieux, Jean-Alexandre Valentin
+ */
+
 package fr.quatrevieux.araknemu.game.fight.turn.action.move.validators;
 
 import fr.arakne.utils.maps.constant.Direction;
-import fr.arakne.utils.maps.path.PathStep;
+import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
-import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFailed;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveResult;
 
-public final class TackleValidator implements PathValidatorFight {
-    private static final RandomUtil randomUtil = new RandomUtil();
+/**
+ * Apply tackle to the fighter when enemies are present on adjacent cells
+ * If a tackle is performed, a {@link MoveFailed} result will be returned
+ *
+ * @todo stabilisation
+ */
+public final class TackleValidator implements FightPathValidator {
+    private final RandomUtil random = new RandomUtil();
 
     @Override
     public MoveResult validate(Move move, MoveResult result) {
-        final BattlefieldMap map = move.performer().cell().map();
-        final PathStep<FightCell> step = result.path().first();
+        final Fighter performer = move.performer();
+        final FightCell currentCell = result.path().first().cell();
+        final Decoder<FightCell> decoder = new Decoder<>(performer.cell().map());
 
+        // The escape probability (i.e. between 0 and 1)
+        double escapeProbability = 1d;
+
+        // Combine escape probability from all adjacent enemies
         for (Direction direction : Direction.restrictedDirections()) {
-            final FightCell fightCell = map.get(direction.nextCellIncrement(map.dimensions().width()) + step.cell().id());
+            escapeProbability *= decoder.nextCellByDirection(currentCell, direction)
+                .flatMap(FightCell::fighter)
+                .filter(fighter -> !fighter.team().equals(performer.team()))
+                .map(adjacentEnemy -> computeTackle(performer, adjacentEnemy))
+                .orElse(1d)
+            ;
+        }
 
-            if (!fightCell.fighter().isPresent()) {
-                continue;
-            }
-
-            if (fightCell.fighter().isPresent() && fightCell.fighter().get().team().equals(move.performer().team())) {
-                continue;
-            }
-
-            int chance = getTackle(move.performer(), fightCell.fighter().get());
-
-            if (randomUtil.bool(chance)) {
-                final int lostPa = (int)(move.performer().fight().turnList().current().get().points().actionPoints() * (chance / 100d));                   
-                return new MoveFailed(move.performer(), lostPa);
-            }
+        if (random.nextDouble() > escapeProbability) {
+            final int lostPa = (int) (performer.turn().points().actionPoints() * (1d - escapeProbability));
+            return new MoveFailed(performer, lostPa);
         }
 
         return result;
     }
 
-    private int getTackle(Fighter fighter, PassiveFighter toTackle) {
+    /**
+     * Compute the tackle for a single enemy
+     *
+     * See: https://wiki-dofus.eu/w/Cat%C3%A9gorie:MAJ_1.27.0#L.27esquive.2Ftacle
+     *
+     * @param fighter The fighter which perform the move action
+     * @param enemy The adjacent enemy
+     *
+     * @return The dodge chance between 0 and 1.
+     *     0 means that it's impossible to escape, 1 means that it's certain to escape
+     */
+    private double computeTackle(Fighter fighter, PassiveFighter enemy) {
         final int fighterAgility = fighter.characteristics().get(Characteristic.AGILITY);
-        final int toTackleAgility = toTackle.characteristics().get(Characteristic.AGILITY);
+        final int enemyAgility = enemy.characteristics().get(Characteristic.AGILITY);
 
-        final int a = fighterAgility + 25;
-        int b = toTackleAgility + fighterAgility + 50;
+        final double a = fighterAgility + 25;
+        final double b = Math.max(enemyAgility + fighterAgility + 50, 1);
 
-        if (b <= 0) {
-            b = 1;
+        final double chance = (3 * a / b) - 1;
+
+        if (chance < 0) {
+            return 0;
         }
 
-        int chance = (int) ((300 * a / b) - 100);
-		if (chance < 10) {
-            chance = 10;
-        } else if (chance > 90){
-            chance = 90;
+        if (chance > 1) {
+            return 1;
         }
 
-		return chance;
+        return chance;
     }
 }

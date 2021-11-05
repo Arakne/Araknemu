@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.event.FightActionStarted;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.arakne.utils.maps.constant.Direction;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.FightPathValidator;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.FightAction;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.StartFightAction;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,8 +39,6 @@ import org.mockito.Mockito;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class SendFightActionTest extends FightBaseCase {
     private Fight fight;
@@ -70,7 +69,8 @@ class SendFightActionTest extends FightBaseCase {
                     new PathStep<>(fight.map().get(213), Direction.SOUTH_WEST),
                     new PathStep<>(fight.map().get(198), Direction.NORTH_WEST)
                 )
-            )
+            ),
+            new FightPathValidator[0]
         );
 
         ActionResult result = move.start();
@@ -88,7 +88,8 @@ class SendFightActionTest extends FightBaseCase {
             new Path<>(
                 new Decoder<>(fight.map()),
                 new ArrayList<>()
-            )
+            ),
+            new FightPathValidator[0]
         );
 
         ActionResult result = Mockito.mock(ActionResult.class);

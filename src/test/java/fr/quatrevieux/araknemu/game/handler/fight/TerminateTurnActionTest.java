@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.arakne.utils.maps.constant.Direction;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.FightPathValidator;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import io.github.artsok.RepeatedIfExceptionsTest;
@@ -73,7 +74,8 @@ class TerminateTurnActionTest extends FightBaseCase {
                         new PathStep<>(fight.map().get(213), Direction.SOUTH_WEST),
                         new PathStep<>(fight.map().get(198), Direction.NORTH_WEST)
                     )
-                )
+                ),
+                new FightPathValidator[0]
             )
         );
 
