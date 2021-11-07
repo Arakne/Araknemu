@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.object.UpdateItemSet;
 /**
  * Send to the client the item set changes
  */
-final public class SendItemSetChange implements Listener<EquipmentChanged> {
-    final private GamePlayer player;
+public final class SendItemSetChange implements Listener<EquipmentChanged> {
+    private final GamePlayer player;
 
     public SendItemSetChange(GamePlayer player) {
         this.player = player;

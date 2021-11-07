@@ -19,15 +19,15 @@
 
 package fr.quatrevieux.araknemu.common.account;
 
-import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.core.network.session.Session;
+import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 
 /**
  * Abstract class for Living Account
  * @param <S> The session type
  */
-abstract public class AbstractLivingAccount<S extends Session> implements LivingAccount<S> {
-    final protected Account account;
+public abstract class AbstractLivingAccount<S extends Session> implements LivingAccount<S> {
+    protected final Account account;
 
     protected S session;
 

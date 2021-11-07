@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.network.game.out.info;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -28,7 +29,7 @@ import java.time.ZoneId;
 /**
  * Information messages
  */
-final public class Information extends InformationMessage {
+public final class Information extends AbstractInformationMessage {
     public Information(Entry... entries) {
         super(Type.INFO, entries);
     }
@@ -46,14 +47,14 @@ final public class Information extends InformationMessage {
      *
      * @param remainingSeconds Remaining time in seconds before send another message
      */
-    static public Information chatFlood(int remainingSeconds) {
+    public static Information chatFlood(int remainingSeconds) {
         return new Information(115, remainingSeconds);
     }
 
     /**
      * An item cannot be posted to the channel
      */
-    static public Information cannotPostItemOnChannel() {
+    public static Information cannotPostItemOnChannel() {
         return new Information(114);
     }
 
@@ -62,7 +63,7 @@ final public class Information extends InformationMessage {
      *
      * @param value The recovered life points
      */
-    static public Information heal(int value) {
+    public static Information heal(int value) {
         return new Information(1, value);
     }
 
@@ -71,7 +72,7 @@ final public class Information extends InformationMessage {
      *
      * @param spellId The learned spell id
      */
-    static public Information spellLearn(int spellId) {
+    public static Information spellLearn(int spellId) {
         return new Information(3, spellId);
     }
 
@@ -81,7 +82,7 @@ final public class Information extends InformationMessage {
      * @param characteristic The boosted characteristic
      * @param value The boost value
      */
-    static public Information characteristicBoosted(Characteristic characteristic, int value) {
+    public static Information characteristicBoosted(Characteristic characteristic, int value) {
         switch (characteristic) {
             case WISDOM:
                 return new Information(9, value);
@@ -103,7 +104,7 @@ final public class Information extends InformationMessage {
     /**
      * The position of the player is saved
      */
-    static public Information positionSaved() {
+    public static Information positionSaved() {
         return new Information(6);
     }
 
@@ -112,7 +113,7 @@ final public class Information extends InformationMessage {
      *
      * @param cost The kamas given by the player
      */
-    static public Information bankTaxPayed(long cost) {
+    public static Information bankTaxPayed(long cost) {
         return new Information(20, cost);
     }
 
@@ -122,7 +123,7 @@ final public class Information extends InformationMessage {
      * @param date Last login date
      * @param ipAddress Last login IP address
      */
-    static public Information lastLogin(Instant date, String ipAddress) {
+    public static Information lastLogin(Instant date, String ipAddress) {
         final LocalDateTime localDateTime = LocalDateTime.ofInstant(date, ZoneId.systemDefault());
 
         return new Information(
@@ -138,7 +139,16 @@ final public class Information extends InformationMessage {
      *
      * @param ipAddress IP address to show
      */
-    static public Information currentIpAddress(String ipAddress) {
+    public static Information currentIpAddress(String ipAddress) {
         return new Information(153, ipAddress);
+    }
+
+    /**
+     * Inform fighter that a spectator has joined the fight
+     *
+     * @param spectatorName The spectator name
+     */
+    public static Information spectatorHasJoinFight(String spectatorName) {
+        return new Information(36, spectatorName);
     }
 }

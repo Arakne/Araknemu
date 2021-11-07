@@ -19,11 +19,9 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
-import fr.arakne.utils.maps.constant.Direction;
-import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.maps.path.Pathfinder;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 
@@ -32,17 +30,14 @@ import java.util.Optional;
 /**
  * Try to move near the selected enemy
  */
-final public class MoveNearEnemy implements ActionGenerator {
-    private Decoder<FightCell> decoder;
+public final class MoveNearEnemy implements ActionGenerator {
     private Pathfinder<FightCell> pathfinder;
-    private ActiveFighter fighter;
+    private AIHelper helper;
 
     @Override
     public void initialize(AI ai) {
-        this.fighter = ai.fighter();
-        this.decoder = new Decoder<>(ai.map());
-        this.pathfinder = decoder
-            .pathfinder()
+        this.helper = ai.helper();
+        this.pathfinder = helper.cells().pathfinder()
             .targetDistance(1)
             .walkablePredicate(FightCell::walkableIgnoreFighter)
             .cellWeightFunction(this::cellCost)
@@ -51,11 +46,11 @@ final public class MoveNearEnemy implements ActionGenerator {
 
     @Override
     public Optional<Action> generate(AI ai) {
-        final int movementPoints = ai.turn().points().movementPoints();
-
-        if (movementPoints < 1) {
+        if (!helper.canMove()) {
             return Optional.empty();
         }
+
+        final int movementPoints = helper.movementPoints();
 
         return ai.enemy()
             .map(enemy -> pathfinder.findPath(ai.fighter().cell(), enemy.cell()).truncate(movementPoints + 1))
@@ -75,21 +70,8 @@ final public class MoveNearEnemy implements ActionGenerator {
             return 15;
         }
 
-        int cost = 1;
-
-        // @todo check agility for tackle ?
-        for (Direction direction : Direction.restrictedDirections()) {
-            if (decoder.nextCellByDirection(cell, direction)
-                .flatMap(FightCell::fighter)
-                .filter(other -> !other.team().equals(fighter.team()))
-                .isPresent()
-            ) {
-                // Add a cost of 3 for each enemy around the cell
-                // This cost corresponds to the detour cost + 1
-                cost += 3;
-            }
-        }
-
-        return cost;
+        // Add a cost of 3 for each enemy around the cell
+        // This cost corresponds to the detour cost + 1
+        return 1 + (int) (3 * helper.enemies().adjacent(cell).count());
     }
 }

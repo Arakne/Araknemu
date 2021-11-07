@@ -19,131 +19,304 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
-import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
-import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.fight.module.AiModule;
-import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
-import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
-import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
-import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
-import fr.quatrevieux.araknemu.game.spell.SpellService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class AttackTest extends FightBaseCase {
-    private Fighter fighter;
-    private Fight fight;
-
-    private Fighter enemy;
-    private Fighter otherEnemy;
-
-    private Attack action;
-    private FighterAI ai;
-
-    private FightTurn turn;
-
+class AttackTest extends AiBaseCase {
     @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
-        fight = createFight();
-        fight.register(new AiModule(new ChainAiFactory()));
-        fight.register(new CommonEffectsModule(fight));
-
-        fighter = player.fighter();
-        enemy = other.fighter();
-
-        otherEnemy = new PlayerFighter(makeSimpleGamePlayer(10));
-
-        fight.state(PlacementState.class).joinTeam(otherEnemy, enemy.team());
-        fight.nextState();
-
-        fight.turnList().start();
-
         action = new Attack(container.get(Simulator.class));
-
-        ai = new FighterAI(fighter, fight, new ActionGenerator[] { new DummyGenerator() });
-        ai.start(turn = fight.turnList().current().get());
-        action.initialize(ai);
     }
 
     @Test
     void success() {
-        Optional<Action> result = action.generate(ai);
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122))
+            .addEnemy(builder -> builder.player(other).cell(125))
+        );
 
-        assertTrue(result.isPresent());
-        assertInstanceOf(Cast.class, result.get());
-
-        Cast cast = (Cast) result.get();
-
-        assertEquals(3, cast.spell().id());
-        assertEquals(enemy.cell(), cast.target());
+        assertCast(3, 125);
     }
 
     @Test
     void shouldKillEnemyWhenLowLife() {
-        otherEnemy.life().alter(otherEnemy, -45);
-        otherEnemy.move(fight.map().get(135));
-        Optional<Action> result = action.generate(ai);
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122))
+            .addEnemy(builder -> builder.player(other).cell(125))
+            .addEnemy(builder -> builder.cell(135).currentLife(5))
+        );
 
-        assertTrue(result.isPresent());
-        assertInstanceOf(Cast.class, result.get());
-
-        Cast cast = (Cast) result.get();
-
-        assertEquals(3, cast.spell().id());
-        assertEquals(otherEnemy.cell(), cast.target());
+        assertCast(3, 135);
     }
 
     @Test
     void notEnoughAP() {
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122))
+            .addEnemy(builder -> builder.player(other).cell(125))
+        );
+
         turn.points().useActionPoints(5);
-
-        Optional<Action> result = action.generate(ai);
-
-        assertFalse(result.isPresent());
+        assertDotNotGenerateAction();
     }
 
     @Test
     void notAP() {
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122))
+            .addEnemy(builder -> builder.player(other).cell(125))
+        );
+
         turn.points().useActionPoints(6);
-
-        Optional<Action> result = action.generate(ai);
-
-        assertFalse(result.isPresent());
+        assertDotNotGenerateAction();
     }
 
     @Test
     void withAreaSpell() throws SQLException {
         dataSet.pushFunctionalSpells();
-        player.properties().spells().learn(container.get(SpellService.class).get(223));
 
-        Optional<Action> result = action.generate(ai);
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122).spells(223))
+            .addEnemy(builder -> builder.player(other).cell(125))
+            .addEnemy(builder -> builder.cell(126))
+        );
 
-        assertTrue(result.isPresent());
-        assertInstanceOf(Cast.class, result.get());
-
-        Cast cast = (Cast) result.get();
+        Cast cast = generateCast();
 
         assertEquals(223, cast.spell().id());
         assertEquals(96, cast.target().id());
 
-        turn.perform(cast);
-        turn.terminate();
+        assertInCastEffectArea(125, 126);
+        assertNotInCastEffectArea(122);
+    }
 
-        assertBetween(20, 39, enemy.life().current());
-        assertBetween(20, 39, otherEnemy.life().current());
+    @Test
+    void allowAttackAlliesIfMostDamageAreForEnemies() throws SQLException, NoSuchFieldException, IllegalAccessException {
+        dataSet.pushFunctionalSpells();
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(152).spell(145, 5))
+            .addAlly(builder -> builder.cell(167))
+            .addEnemy(builder -> builder.cell(137))
+            .addEnemy(builder -> builder.cell(138))
+            .addEnemy(builder -> builder.cell(166))
+        );
+
+        removeSpell(3);
+
+        Cast cast = generateCast();
+
+        assertEquals(145, cast.spell().id());
+        assertEquals(152, cast.target().id());
+
+        assertInCastEffectArea(152, 167, 137, 138, 166);
+    }
+
+    @Test
+    void disallowAttackAlliesIfMostDamageAreForAllies() throws SQLException, NoSuchFieldException, IllegalAccessException {
+        dataSet.pushFunctionalSpells();
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(152).spell(145, 5))
+            .addAlly(builder -> builder.cell(167))
+            .addAlly(builder -> builder.cell(137))
+            .addAlly(builder -> builder.cell(138))
+            .addEnemy(builder -> builder.cell(166))
+        );
+
+        removeSpell(3);
+
+        assertDotNotGenerateAction();
+    }
+
+    @Test
+    void disallowAttackAlliesIfItKilledMoreAlliesThanEnemies() throws SQLException, NoSuchFieldException, IllegalAccessException {
+        dataSet.pushFunctionalSpells();
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(152).spell(145, 5))
+            .addAlly(builder -> builder.cell(167).currentLife(5))
+            .addEnemy(builder -> builder.cell(137).currentLife(500))
+            .addEnemy(builder -> builder.cell(138).currentLife(500))
+            .addEnemy(builder -> builder.cell(166).currentLife(500))
+        );
+
+        removeSpell(3);
+
+        assertDotNotGenerateAction();
+    }
+
+    @Test
+    void allowAttackAlliesIfItKilledMoreEnemies() throws SQLException, NoSuchFieldException, IllegalAccessException {
+        dataSet.pushFunctionalSpells();
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(152).spell(145, 5))
+            .addAlly(builder -> builder.cell(167).currentLife(5))
+            .addEnemy(builder -> builder.cell(137).currentLife(3))
+            .addEnemy(builder -> builder.cell(138).currentLife(4))
+            .addEnemy(builder -> builder.cell(166))
+        );
+
+        removeSpell(3);
+
+        Cast cast = generateCast();
+
+        assertEquals(145, cast.spell().id());
+        assertEquals(152, cast.target().id());
+    }
+
+    @Test
+    void allowAttackAlliesIfItKilledAtLeastOneEnemy() throws SQLException, NoSuchFieldException, IllegalAccessException {
+        dataSet.pushFunctionalSpells();
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(152).spell(145, 5))
+            .addAlly(builder -> builder.cell(167))
+            .addEnemy(builder -> builder.cell(137).currentLife(3))
+            .addAlly(builder -> builder.cell(138))
+            .addAlly(builder -> builder.cell(166))
+            .addEnemy(builder -> builder.cell(122))
+        );
+
+        removeSpell(3);
+
+        Cast cast = generateCast();
+
+        assertEquals(145, cast.spell().id());
+        assertEquals(152, cast.target().id());
+    }
+
+    @Test
+    void allowAttackAlliesIfItKillTheLastEnemy() throws SQLException, NoSuchFieldException, IllegalAccessException {
+        dataSet.pushFunctionalSpells();
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(152).spell(145, 5))
+            .addAlly(builder -> builder.cell(167).currentLife(5))
+            .addAlly(builder -> builder.cell(137).currentLife(3))
+            .addEnemy(builder -> builder.cell(138).currentLife(4))
+        );
+
+        removeSpell(3);
+
+        Cast cast = generateCast();
+
+        assertEquals(145, cast.spell().id());
+        assertEquals(152, cast.target().id());
+    }
+
+    @Test
+    void suicideStrategyAllow() throws SQLException, NoSuchFieldException, IllegalAccessException {
+        dataSet.pushFunctionalSpells();
+        player.properties().experience().add(10000000000L);
+
+        action = new Attack(container.get(Simulator.class), Attack.SuicideStrategy.ALLOW);
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(152).spell(157, 5).currentLife(5))
+            .addEnemy(builder -> builder.cell(167).currentLife(1000))
+            .addEnemy(builder -> builder.cell(137).currentLife(1000))
+            .addEnemy(builder -> builder.cell(138).currentLife(1000))
+            .addEnemy(builder -> builder.cell(166).currentLife(1000))
+        );
+
+        removeSpell(3);
+
+        Cast cast = generateCast();
+
+        assertEquals(157, cast.spell().id());
+        assertEquals(137, cast.target().id());
+    }
+
+    @Test
+    void suicideStrategyDeny() throws SQLException, NoSuchFieldException, IllegalAccessException {
+        dataSet.pushFunctionalSpells();
+        player.properties().experience().add(10000000000L);
+
+        action = new Attack(container.get(Simulator.class), Attack.SuicideStrategy.DENY);
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(152).spell(157, 5).currentLife(5))
+            .addEnemy(builder -> builder.cell(167).currentLife(1000))
+            .addEnemy(builder -> builder.cell(137).currentLife(1000))
+            .addEnemy(builder -> builder.cell(138).currentLife(1000))
+            .addEnemy(builder -> builder.cell(166).currentLife(1000))
+        );
+
+        removeSpell(3);
+
+        assertDotNotGenerateAction();
+    }
+
+    @Test
+    void suicideStrategyIfKillEnemy() throws SQLException, NoSuchFieldException, IllegalAccessException {
+        dataSet.pushFunctionalSpells();
+        player.properties().experience().add(10000000000L);
+
+        action = new Attack(container.get(Simulator.class), Attack.SuicideStrategy.IF_KILL_ENEMY);
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(152).spell(157, 5).currentLife(5))
+            .addEnemy(builder -> builder.cell(167).currentLife(1000))
+            .addEnemy(builder -> builder.cell(137).currentLife(1000))
+            .addEnemy(builder -> builder.cell(138).currentLife(1000))
+            .addEnemy(builder -> builder.cell(166).currentLife(1000))
+        );
+
+        removeSpell(3);
+
+        assertDotNotGenerateAction();
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(152).spell(157, 5).currentLife(5))
+            .addEnemy(builder -> builder.cell(167).currentLife(5))
+            .addEnemy(builder -> builder.cell(137).currentLife(1000))
+            .addEnemy(builder -> builder.cell(138).currentLife(1000))
+            .addEnemy(builder -> builder.cell(166).currentLife(1000))
+        );
+
+        removeSpell(3);
+
+        assertCast(157, 137);
+    }
+
+    @Test
+    void shouldConsiderBoostOnSameDamage() throws SQLException, NoSuchFieldException, IllegalAccessException {
+        dataSet.pushFunctionalSpells();
+
+        configureFight(fb -> fb
+            // Divine Sword (145) and Bramble (183) cause same damage, but 145 will also add boost
+            .addSelf(builder -> builder.cell(152).spell(183, 5).spell(145, 5).charac(Characteristic.AGILITY, 0).charac(Characteristic.STRENGTH, 0))
+            .addEnemy(builder -> builder.cell(167))
+        );
+
+        removeSpell(3);
+
+        assertCast(145, 152);
+
+        configureFight(fb -> fb
+            // Bramble cause more damage than divide sword because of the strength
+            .addSelf(builder -> builder.cell(152).spell(183, 5).spell(145, 5)
+                .charac(Characteristic.AGILITY, 0)
+                .charac(Characteristic.STRENGTH, 50)
+            )
+            .addEnemy(builder -> builder.cell(167))
+        );
+
+        removeSpell(3);
+
+        assertCast(183, 167);
     }
 }

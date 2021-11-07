@@ -19,6 +19,9 @@
 
 package fr.quatrevieux.araknemu._test;
 
+import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
+import fr.quatrevieux.araknemu.core.event.Listener;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.core.network.exception.WritePacket;
 import org.junit.jupiter.api.function.Executable;
 
@@ -26,7 +29,11 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class TestCase {
     public void assertInstanceOf(Class type, Object object) {
@@ -115,5 +122,28 @@ public class TestCase {
         field.setAccessible(true);
 
         return (T) field.get(object);
+    }
+
+    public void assertDispatcherContainsListener(Class<? extends Listener> listenerClass, ListenerAggregate dispatcher) {
+        assertTrue(dispatcher.has(listenerClass), "Failing expecting that dispatcher contains listener " + listenerClass.getSimpleName());
+    }
+
+    public void assertDispatcherContainsListeners(ListenerAggregate dispatcher, Class<? extends Listener>... listenerClasses) {
+        for (Class<? extends Listener> listenerClass : listenerClasses) {
+            assertTrue(dispatcher.has(listenerClass), "Failing expecting that dispatcher contains listener " + listenerClass.getSimpleName());
+        }
+    }
+
+    public void assertSubscriberRegistered(EventsSubscriber subscriber, ListenerAggregate dispatcher) {
+        for (Listener listener : subscriber.listeners()) {
+            assertTrue(dispatcher.has(listener.getClass()), "Failing expecting that subscriber " + subscriber.getClass().getSimpleName() + " is registered into the dispatcher");
+            return;
+        }
+    }
+
+    public <T extends Throwable> void assertThrowsWithMessage(Class<T> expectedType, String expectedMessage, Executable executable) {
+        final T ex = assertThrows(expectedType, executable);
+
+        assertEquals(expectedMessage, ex.getMessage());
     }
 }

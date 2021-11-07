@@ -27,22 +27,25 @@ import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
  * Handle loading monsters
  */
-final public class MonsterService implements PreloadableService {
-    final private SpellService spellService;
-    final private MonsterRewardService rewardService;
-    final private MonsterTemplateRepository repository;
+public final class MonsterService implements PreloadableService {
+    private final SpellService spellService;
+    private final MonsterRewardService rewardService;
+    private final MonsterTemplateRepository repository;
 
     /**
      * Monster grade indexed by monster id
      */
-    final private ConcurrentMap<Integer, GradeSet> monsters = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, GradeSet> monsters = new ConcurrentHashMap<>();
 
     public MonsterService(SpellService spellService, MonsterRewardService rewardService, MonsterTemplateRepository repository) {
         this.spellService = spellService;
@@ -81,13 +84,13 @@ final public class MonsterService implements PreloadableService {
      * @param template The template to load
      */
     private GradeSet createMonsterGrades(MonsterTemplate template) {
-        List<Monster> monsterGrades = new ArrayList<>(template.grades().length);
+        final List<Monster> monsterGrades = new ArrayList<>(template.grades().length);
 
         for (int grade = 0; grade < template.grades().length; ++grade) {
             monsterGrades.add(createMonster(template, grade));
         }
 
-        GradeSet grades = new GradeSet(monsterGrades);
+        final GradeSet grades = new GradeSet(monsterGrades);
 
         monsters.put(template.id(), grades);
 
@@ -99,8 +102,7 @@ final public class MonsterService implements PreloadableService {
      */
     private Monster createMonster(MonsterTemplate template, int grade) {
         final MonsterTemplate.Grade gradeData = template.grades()[grade];
-
-        Map<Integer, Spell> spells = new HashMap<>(gradeData.spells().size());
+        final Map<Integer, Spell> spells = new HashMap<>(gradeData.spells().size());
 
         for (Map.Entry<Integer, Integer> entry : gradeData.spells().entrySet()) {
             spells.put(entry.getKey(), spellService.get(entry.getKey()).level(entry.getValue()));

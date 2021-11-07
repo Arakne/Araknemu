@@ -19,15 +19,19 @@
 
 package fr.quatrevieux.araknemu.game.monster.environment;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupPosition;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.activity.ActivityService;
+import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
+import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
+import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,7 +64,8 @@ class MoveMonstersTest extends GameBaseCase {
         task = new MoveMonsters(
             container.get(MonsterEnvironmentService.class),
             Duration.ofSeconds(10),
-            100
+            100,
+            5
         );
     }
 
@@ -81,7 +86,7 @@ class MoveMonstersTest extends GameBaseCase {
         dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, -1), 3));
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
 
-        explorationPlayer().join(map);
+        explorationPlayer().changeMap(map, 123);
         requestStack.clear();
 
         MonsterGroup group = container.get(MonsterEnvironmentService.class).byMap(10340).stream().findFirst().get().available().get(0);
@@ -90,7 +95,8 @@ class MoveMonstersTest extends GameBaseCase {
         task.execute(container.get(Logger.class));
 
         assertNotEquals(lastCell, group.cell());
-        requestStack.assertLast(new GameActionResponse("", ActionType.MOVE, group.id(), "ab-fbVha3"));
+        assertBetween(0, 5, group.cell().coordinate().distance(lastCell.coordinate()));
+        requestStack.assertLast(new GameActionResponse("", ActionType.MOVE, group.id(), "acRhcD"));
     }
 
     @Test
@@ -98,7 +104,7 @@ class MoveMonstersTest extends GameBaseCase {
         dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, 123), 3));
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
 
-        explorationPlayer().join(map);
+        explorationPlayer().changeMap(map, 123);
         requestStack.clear();
 
         MonsterGroup group = container.get(MonsterEnvironmentService.class).byMap(10340).stream().findFirst().get().available().get(0);
@@ -114,7 +120,7 @@ class MoveMonstersTest extends GameBaseCase {
         dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, -1), 2));
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
 
-        explorationPlayer().join(map);
+        explorationPlayer().changeMap(map, 123);
         requestStack.clear();
 
         LivingMonsterGroupPosition position = container.get(MonsterEnvironmentService.class).byMap(10340).stream().findFirst().get();
@@ -129,7 +135,7 @@ class MoveMonstersTest extends GameBaseCase {
 
     @Test
     void moveChance() throws SQLException {
-        task = new MoveMonsters(container.get(MonsterEnvironmentService.class), Duration.ofSeconds(10), 25);
+        task = new MoveMonsters(container.get(MonsterEnvironmentService.class), Duration.ofSeconds(10), 25, 5);
 
         dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, -1), 3));
         container.get(ExplorationMapService.class).load(10340);
@@ -146,8 +152,88 @@ class MoveMonstersTest extends GameBaseCase {
             if (!group.cell().equals(lastCell)) {
                 ++moveCount;
             }
+
+            assertBetween(0, 5, group.cell().coordinate().distance(lastCell.coordinate()));
         }
 
         assertBetween(15, 35, moveCount);
+    }
+
+    @Test
+    void moveDistance() throws SQLException {
+        task = new MoveMonsters(container.get(MonsterEnvironmentService.class), Duration.ofSeconds(10), 100, 20);
+
+        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, -1), 3));
+        container.get(ExplorationMapService.class).load(10340);
+
+        MonsterGroup group = container.get(MonsterEnvironmentService.class).byMap(10340).stream().findFirst().get().available().get(0);
+
+        int maxDistance = 0;
+
+        for (int i = 0; i < 100; ++i) {
+            ExplorationMapCell lastCell = group.cell();
+
+            task.execute(container.get(Logger.class));
+
+            int distance = group.cell().coordinate().distance(lastCell.coordinate());
+
+            if (distance > maxDistance) {
+                maxDistance = distance;
+            }
+        }
+
+        assertEquals(20, maxDistance);
+    }
+
+    @Test
+    void moveWithoutFreeCellShouldNotMove() throws SQLException {
+        task = new MoveMonsters(container.get(MonsterEnvironmentService.class), Duration.ofSeconds(10), 100, 5);
+
+        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, -1), 3));
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
+
+        MonsterGroup group = container.get(MonsterEnvironmentService.class).byMap(10340).stream().findFirst().get().available().get(0);
+
+        for (int cellId = 0; cellId < map.size(); ++cellId) {
+            map.add(new FakeCreature(map.get(cellId)));
+        }
+
+        ExplorationMapCell lastCell = group.cell();
+        task.execute(container.get(Logger.class));
+
+        assertEquals(lastCell, group.cell());
+    }
+
+    class FakeCreature implements ExplorationCreature {
+        final private ExplorationMapCell cell;
+
+        public FakeCreature(ExplorationMapCell cell) {
+            this.cell = cell;
+        }
+
+        @Override
+        public void apply(Operation operation) {
+
+        }
+
+        @Override
+        public Sprite sprite() {
+            return null;
+        }
+
+        @Override
+        public int id() {
+            return 1000 + cell.id();
+        }
+
+        @Override
+        public ExplorationMapCell cell() {
+            return cell;
+        }
+
+        @Override
+        public Direction orientation() {
+            return null;
+        }
     }
 }

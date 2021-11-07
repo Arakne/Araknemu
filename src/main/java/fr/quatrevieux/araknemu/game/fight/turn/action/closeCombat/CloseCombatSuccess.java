@@ -31,11 +31,11 @@ import java.util.List;
 /**
  * Result for successfully weapon cast
  */
-final public class CloseCombatSuccess implements ActionResult {
-    final private Fighter caster;
-    final private CastableWeapon weapon;
-    final private FightCell target;
-    final private boolean critical;
+public final class CloseCombatSuccess implements ActionResult {
+    private final Fighter caster;
+    private final CastableWeapon weapon;
+    private final FightCell target;
+    private final boolean critical;
 
     public CloseCombatSuccess(Fighter caster, CastableWeapon weapon, FightCell target, boolean critical) {
         this.caster = caster;

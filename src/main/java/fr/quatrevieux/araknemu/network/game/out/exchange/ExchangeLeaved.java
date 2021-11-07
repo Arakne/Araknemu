@@ -24,8 +24,8 @@ package fr.quatrevieux.araknemu.network.game.out.exchange;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L284
  */
-final public class ExchangeLeaved {
-    final private boolean accepted;
+public final class ExchangeLeaved {
+    private final boolean accepted;
 
     public ExchangeLeaved(boolean accepted) {
         this.accepted = accepted;
@@ -39,14 +39,14 @@ final public class ExchangeLeaved {
     /**
      * The exchange is cancelled
      */
-    static public ExchangeLeaved cancelled() {
+    public static ExchangeLeaved cancelled() {
         return new ExchangeLeaved(false);
     }
 
     /**
      * The exchange is accepted
      */
-    static public ExchangeLeaved accepted() {
+    public static ExchangeLeaved accepted() {
         return new ExchangeLeaved(true);
     }
 }

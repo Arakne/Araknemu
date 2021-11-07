@@ -34,6 +34,9 @@ import fr.quatrevieux.araknemu.game.exploration.event.ExplorationPlayerCreated;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.PlayerFighterCreated;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectAdded;
+import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectDeleted;
+import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectMoved;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterAccessories;
 import fr.quatrevieux.araknemu.game.listener.map.SendAccessories;
 import fr.quatrevieux.araknemu.game.listener.player.inventory.*;
@@ -98,23 +101,17 @@ class InventoryServiceTest extends GameBaseCase {
 
         dispatcher.dispatch(new PlayerLoaded(gamePlayer()));
 
-        assertTrue(gamePlayer().dispatcher().has(SendItemData.class));
-        assertTrue(gamePlayer().dispatcher().has(SendItemPosition.class));
-        assertTrue(gamePlayer().dispatcher().has(SendItemQuantity.class));
-        assertTrue(gamePlayer().dispatcher().has(SaveNewItem.class));
-        assertTrue(gamePlayer().dispatcher().has(SaveItemPosition.class));
-        assertTrue(gamePlayer().dispatcher().has(SaveItemQuantity.class));
-        assertTrue(gamePlayer().dispatcher().has(UpdateStuffStats.class));
-        assertTrue(gamePlayer().dispatcher().has(SaveDeletedItem.class));
-        assertTrue(gamePlayer().dispatcher().has(SendItemDeleted.class));
-        assertTrue(gamePlayer().dispatcher().has(SendItemSetChange.class));
-        assertTrue(gamePlayer().dispatcher().has(InitializeItemSets.class));
-        assertTrue(gamePlayer().dispatcher().has(ApplyItemSetSpecialEffects.class));
-        assertTrue(gamePlayer().dispatcher().has(SendKamas.class));
+        assertDispatcherContainsListeners(
+            gamePlayer().dispatcher(),
+            UpdateStuffStats.class,
+            SendItemSetChange.class,
+            InitializeItemSets.class,
+            ApplyItemSetSpecialEffects.class
+        );
 
-        for (Listener listener : new SendWeight(gamePlayer()).listeners()) {
-            assertTrue(gamePlayer().dispatcher().has(listener.getClass()));
-        }
+        assertSubscriberRegistered(new SendInventoryUpdate(gamePlayer()), gamePlayer().dispatcher());
+        assertSubscriberRegistered(new SaveInventoryChange(service), gamePlayer().dispatcher());
+        assertSubscriberRegistered(new SendWeight(gamePlayer()), gamePlayer().dispatcher());
     }
 
     @Test
@@ -137,5 +134,49 @@ class InventoryServiceTest extends GameBaseCase {
         dispatcher.dispatch(new PlayerFighterCreated(fighter));
 
         assertTrue(fighter.dispatcher().has(SendFighterAccessories.class));
+    }
+
+    @Test
+    void deleteItemEntry() {
+        InventoryEntry entry = new InventoryEntry(
+            null,
+            new PlayerItem(1, 1, 284, new ArrayList<>(), 5, -1),
+            null
+        );
+
+        container.get(PlayerItemRepository.class).add(entry.entity());
+
+        service.deleteItemEntry(entry);
+
+        assertFalse(container.get(PlayerItemRepository.class).has(entry.entity()));
+    }
+
+    @Test
+    void updateItemEntry() throws ContainerException {
+        InventoryEntry entry = new InventoryEntry(
+            null,
+            new PlayerItem(1, 1, 284, new ArrayList<>(), 5, -1),
+            null
+        );
+
+        container.get(PlayerItemRepository.class).add(entry.entity());
+        entry.entity().setPosition(1);
+
+        service.updateItemEntry(entry);
+
+        assertEquals(1, container.get(PlayerItemRepository.class).get(entry.entity()).position());
+    }
+
+    @Test
+    void saveItemEntry() throws ContainerException {
+        InventoryEntry entry = new InventoryEntry(
+            null,
+            new PlayerItem(1, 1, 284, new ArrayList<>(), 5, -1),
+            null
+        );
+
+        service.saveItemEntry(entry);
+
+        assertTrue(container.get(PlayerItemRepository.class).has(entry.entity()));
     }
 }

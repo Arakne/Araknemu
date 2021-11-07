@@ -67,6 +67,14 @@ class GameExceptionConfiguratorTest extends GameBaseCase {
     }
 
     @Test
+    void exceptionCaughtWritePacketWithCauseException() {
+        gameSession.exception(new ErrorPacket(new LoginTokenError(), new Exception("My error")));
+
+        requestStack.assertLast(new LoginTokenError());
+        Mockito.verify(logger).warn(MarkerManager.getMarker("ERROR_PACKET"), "[{}] Error packet caused by : {}", gameSession, "java.lang.Exception: My error");
+    }
+
+    @Test
     void exceptionCaughtWriteAndClose() {
         gameSession.exception(new CloseWithPacket(new LoginTokenError()));
 

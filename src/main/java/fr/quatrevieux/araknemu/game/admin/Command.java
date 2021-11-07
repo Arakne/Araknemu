@@ -21,28 +21,23 @@ package fr.quatrevieux.araknemu.game.admin;
 
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
+import fr.quatrevieux.araknemu.game.admin.help.CommandHelp;
 
-import java.util.List;
 import java.util.Set;
 
 /**
  * A console command
  */
-public interface Command {
+public interface Command<A> {
     /**
      * Get the command name
      */
     public String name();
 
     /**
-     * Get a simple description for the command
+     * Get the help formatter
      */
-    public String description();
-
-    /**
-     * Get the help message
-     */
-    public String help();
+    public CommandHelp help();
 
     /**
      * Execute the command
@@ -50,7 +45,14 @@ public interface Command {
      * @param performer The command performer
      * @param arguments The command arguments
      */
-    public void execute(AdminPerformer performer, CommandParser.Arguments arguments) throws AdminException;
+    public void execute(AdminPerformer performer, A arguments) throws AdminException;
+
+    /**
+     * Create the command arguments POJO or default value
+     */
+    public default A createArguments() {
+        return null;
+    }
 
     /**
      * Get list of required permissions

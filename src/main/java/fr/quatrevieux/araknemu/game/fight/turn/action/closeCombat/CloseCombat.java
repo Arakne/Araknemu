@@ -30,7 +30,6 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
-import fr.quatrevieux.araknemu.game.world.util.Sender;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 
@@ -39,12 +38,12 @@ import java.time.Duration;
 /**
  * Use weapon / close combat attack
  */
-final public class CloseCombat implements Action {
-    final private FightTurn turn;
-    final private Fighter caster;
-    final private FightCell target;
-    final private WeaponConstraintsValidator validator;
-    final private CriticalityStrategy criticalityStrategy;
+public final class CloseCombat implements Action {
+    private final FightTurn turn;
+    private final Fighter caster;
+    private final FightCell target;
+    private final WeaponConstraintsValidator validator;
+    private final CriticalityStrategy criticalityStrategy;
 
     private CloseCombatSuccess result;
 
@@ -62,7 +61,7 @@ final public class CloseCombat implements Action {
 
     @Override
     public boolean validate() {
-        Error error = validator.validate(turn, caster.weapon(), target);
+        final Error error = validator.validate(turn, caster.weapon(), target);
 
         if (error != null) {
             caster.apply(new SendPacket(error));
@@ -116,5 +115,10 @@ final public class CloseCombat implements Action {
     @Override
     public Duration duration() {
         return Duration.ofMillis(500);
+    }
+
+    @Override
+    public String toString() {
+        return "CloseCombat{target=" + target.id() + '}';
     }
 }

@@ -19,69 +19,97 @@
 
 package fr.quatrevieux.araknemu.game.admin.player;
 
+import fr.quatrevieux.araknemu.core.event.Listener;
+import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
+import fr.quatrevieux.araknemu.game.admin.account.AccountContextResolver;
+import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.ConfigurableContextResolver;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
-import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
-import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
+import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.function.Supplier;
 
 /**
  * Context resolver for player
  */
-final public class PlayerContextResolver implements ContextResolver {
-    final private PlayerService service;
-    final private ContextResolver accountContextResolver;
+public final class PlayerContextResolver implements ConfigurableContextResolver<PlayerContext> {
+    private final PlayerService service;
+    private final AccountContextResolver accountContextResolver;
 
-    final private List<ContextConfigurator<PlayerContext>> configurators = new ArrayList<>();
+    private final List<AbstractContextConfigurator<PlayerContext>> configurators = new ArrayList<>();
+    private final Map<GamePlayer, PlayerContext> contexts = new HashMap<>();
 
-    public PlayerContextResolver(PlayerService service, ContextResolver accountContextResolver) {
+    public PlayerContextResolver(PlayerService service, AccountContextResolver accountContextResolver) {
         this.service = service;
         this.accountContextResolver = accountContextResolver;
     }
 
     @Override
-    public Context resolve(Context globalContext, Object argument) throws ContextException {
-        if (argument instanceof GamePlayer) {
-            return resolve(globalContext, GamePlayer.class.cast(argument));
-        } else if (argument instanceof String) {
-            return resolve(globalContext, String.class.cast(argument));
-        }
+    public Context resolve(AdminPerformer performer, Supplier<String> argument) throws ContextException {
+        final String name = argument.get();
 
-        throw new ContextException("Invalid argument : " + argument);
+        try {
+            return resolve(service.get(name));
+        } catch (NoSuchElementException e) {
+            throw new ContextException("Cannot found the player " + name);
+        }
     }
 
     @Override
-    public String type() {
-        return "player";
+    public char prefix() {
+        return '@';
     }
 
-    /**
-     * Register a new configurator for the player context
-     */
-    public PlayerContextResolver register(ContextConfigurator<PlayerContext> configurator) {
+    @Override
+    public PlayerContextResolver register(AbstractContextConfigurator<PlayerContext> configurator) {
         configurators.add(configurator);
 
         return this;
     }
 
-    private PlayerContext resolve(Context globalContext, GamePlayer player) throws ContextException {
-        return new PlayerContext(
-            player,
-            accountContextResolver.resolve(globalContext, player.account()),
-            configurators
-        );
+    /**
+     * Create the context from the given player instance
+     *
+     * @param player The player instance
+     *
+     * @return The created context
+     */
+    public PlayerContext resolve(GamePlayer player) throws ContextException {
+        return contexts.computeIfAbsent(player, key -> {
+            final PlayerContext context = new PlayerContext(
+                player,
+                accountContextResolver.resolve(player.account()),
+                configurators
+            );
+
+            configurePlayerListener(player);
+
+            return context;
+        });
     }
 
-    private PlayerContext resolve(Context globalContext, String name) throws ContextException {
-        try {
-            return resolve(globalContext, service.get(name));
-        } catch (NoSuchElementException e) {
-            throw new ContextException("Cannot found the player " + name);
-        }
+    /**
+     * Register listener on player dispatch for free cached context on disconnect
+     */
+    private void configurePlayerListener(GamePlayer player) {
+        player.dispatcher().add(new Listener<Disconnected>() {
+            @Override
+            public void on(Disconnected event) {
+                contexts.remove(player);
+            }
+
+            @Override
+            public Class<Disconnected> event() {
+                return Disconnected.class;
+            }
+        });
     }
 }

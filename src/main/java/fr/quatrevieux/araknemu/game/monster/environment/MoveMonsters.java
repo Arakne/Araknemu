@@ -19,17 +19,21 @@
 
 package fr.quatrevieux.araknemu.game.monster.environment;
 
+import fr.arakne.utils.maps.CoordinateCell;
 import fr.arakne.utils.maps.path.Decoder;
-import fr.arakne.utils.maps.path.Path;
 import fr.arakne.utils.maps.path.PathException;
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.activity.ActivityService;
 import fr.quatrevieux.araknemu.game.activity.Task;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import org.apache.logging.log4j.Logger;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Task for random move monsters on exploration maps
@@ -37,12 +41,13 @@ import java.time.Duration;
  * At most one group move per map per execution.
  * The move is performed if its randomly selected with moveChange and if the path is not too complex
  */
-final public class MoveMonsters implements Task {
-    final private MonsterEnvironmentService service;
-    final private Duration delay;
-    final private int moveChance;
+public final class MoveMonsters implements Task {
+    private final MonsterEnvironmentService service;
+    private final Duration delay;
+    private final int moveChance;
+    private final int maxDistance;
 
-    final private RandomUtil random = new RandomUtil();
+    private final RandomUtil random = new RandomUtil();
 
     /**
      * Initialise the move task
@@ -50,17 +55,20 @@ final public class MoveMonsters implements Task {
      * @param service The environment server
      * @param delay  The period delay
      * @param moveChance Move chance for each groups, in percent
+     * @param maxDistance The maximum move distance in cell count
      */
-    public MoveMonsters(MonsterEnvironmentService service, Duration delay, int moveChance) {
+    public MoveMonsters(MonsterEnvironmentService service, Duration delay, int moveChance, int maxDistance) {
         this.service = service;
         this.delay = delay;
         this.moveChance = moveChance;
+        this.maxDistance = maxDistance;
     }
 
     @Override
     public void execute(Logger logger) {
         service.groups()
             .filter(position -> !position.available().isEmpty())
+            .filter(position -> !position.fixed())
             .filter(position -> random.bool(moveChance))
             .forEach(this::move)
         ;
@@ -86,23 +94,44 @@ final public class MoveMonsters implements Task {
      */
     private void move(LivingMonsterGroupPosition position) {
         final MonsterGroup group = random.of(position.available());
-        final ExplorationMapCell newCell = position.cell();
 
-        // Fixed group
-        if (newCell.equals(group.cell())) {
-            return;
+        targetCell(group.cell())
+            .map(target -> {
+                try {
+                    return new Decoder<>(target.map())
+                        .pathfinder()
+                        .exploredCellLimit(50)
+                        .findPath(group.cell(), target)
+                    ;
+                } catch (PathException e) {
+                    // Ignore exception
+                    return null;
+                }
+            })
+            .ifPresent(group::move)
+        ;
+    }
+
+    /**
+     * Get a random target cell
+     *
+     * @param currentCell The current group cell
+     *
+     * @return The target cell, if available
+     */
+    private Optional<ExplorationMapCell> targetCell(ExplorationMapCell currentCell) {
+        final CoordinateCell<ExplorationMapCell> currentCoordinates = currentCell.coordinate();
+        final List<ExplorationMapCell> cells = new ArrayList<>();
+        final ExplorationMap map = currentCell.map();
+
+        for (int id = 0; id < map.size(); ++id) {
+            final ExplorationMapCell cell = map.get(id);
+
+            if (cell.free() && currentCoordinates.distance(cell) <= maxDistance) {
+                cells.add(cell);
+            }
         }
 
-        try {
-            Path<ExplorationMapCell> path = new Decoder<>(newCell.map())
-                .pathfinder()
-                .exploredCellLimit(50)
-                .findPath(group.cell(), newCell)
-            ;
-
-            group.move(path);
-        } catch (PathException e) {
-            // Ignore exception
-        }
+        return cells.isEmpty() ? Optional.empty() : Optional.of(random.of(cells));
     }
 }

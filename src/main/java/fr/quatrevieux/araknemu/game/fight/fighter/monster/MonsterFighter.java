@@ -20,7 +20,10 @@
 package fr.quatrevieux.araknemu.game.fight.fighter.monster;
 
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
-import fr.quatrevieux.araknemu.game.fight.fighter.*;
+import fr.quatrevieux.araknemu.game.fight.fighter.AbstractFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.monster.Monster;
@@ -31,14 +34,14 @@ import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 /**
  * Fighter for a monster
  */
-final public class MonsterFighter extends AbstractFighter {
-    final private int id;
-    final private Monster monster;
+public final class MonsterFighter extends AbstractFighter {
+    private final int id;
+    private final Monster monster;
     final private FightTeam team;
 
-    final private BaseFighterLife life;
-    final private MonsterFighterCharacteristics characteristics;
-    final private MonsterFighterSprite sprite;
+    private final BaseFighterLife life;
+    private final MonsterFighterCharacteristics characteristics;
+    private final MonsterFighterSprite sprite;
 
     public MonsterFighter(int id, Monster monster, FightTeam team) {
         this.id = id;

@@ -27,8 +27,8 @@ import java.util.Optional;
 /**
  * Event rasied when an account has been banned
  */
-final public class AccountBanned<A extends LivingAccount> {
-    final private BanEntry<A> entry;
+public final class AccountBanned<A extends LivingAccount> {
+    private final BanEntry<A> entry;
 
     public AccountBanned(BanEntry<A> entry) {
         this.entry = entry;

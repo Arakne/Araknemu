@@ -34,10 +34,10 @@ import java.util.stream.Collectors;
 /**
  * Generate rewards for PvM fight
  */
-final public class PvmRewardsGenerator implements RewardsGenerator {
-    final private List<DropRewardAction> winnerActions;
-    final private List<DropRewardAction> looserActions;
-    final private List<DropRewardProvider> providers;
+public final class PvmRewardsGenerator implements RewardsGenerator {
+    private final List<DropRewardAction> winnerActions;
+    private final List<DropRewardAction> looserActions;
+    private final List<DropRewardProvider> providers;
 
     public PvmRewardsGenerator(List<DropRewardAction> winnerActions, List<DropRewardAction> looserActions, List<DropRewardProvider> providers) {
         this.winnerActions = winnerActions;
@@ -47,8 +47,7 @@ final public class PvmRewardsGenerator implements RewardsGenerator {
 
     @Override
     public FightRewardsSheet generate(EndFightResults results) {
-        List<DropReward> rewards = new ArrayList<>();
-
+        final List<DropReward> rewards = new ArrayList<>();
         final List<DropRewardProvider.Scope> providerScopes = providers.stream()
             .map(provider -> provider.initialize(results))
             .collect(Collectors.toList())
@@ -58,7 +57,7 @@ final public class PvmRewardsGenerator implements RewardsGenerator {
         results.winners().stream()
             .sorted((o1, o2) -> o2.characteristics().discernment() - o1.characteristics().discernment())
             .map(fighter -> {
-                DropReward reward = new DropReward(RewardType.WINNER, fighter, winnerActions);
+                final DropReward reward = new DropReward(RewardType.WINNER, fighter, winnerActions);
 
                 providerScopes.forEach(scope -> scope.provide(reward));
 

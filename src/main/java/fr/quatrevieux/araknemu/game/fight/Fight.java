@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight;
@@ -33,6 +33,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.monster.InvocationFighterFacto
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.module.FightModule;
+import fr.quatrevieux.araknemu.game.fight.spectator.Spectators;
 import fr.quatrevieux.araknemu.game.fight.state.FightState;
 import fr.quatrevieux.araknemu.game.fight.state.StatesFlow;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
@@ -47,47 +48,52 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 /**
  * Handle fight
  */
-final public class Fight implements Dispatcher, Sender {
-    final private int id;
-    final private FightType type;
-    final private FightMap map;
-    final private List<FightTeam> teams;
-    final private StatesFlow statesFlow;
-    final private Logger logger;
-    final private List<FightModule> modules = new ArrayList<>();
-    final private Map<Class, Object> attachments = new HashMap<>();
-    final private ListenerAggregate dispatcher;
+public final class Fight implements Dispatcher, Sender {
+    private final int id;
+    private final FightType type;
+    private final FightMap map;
+    private final List<FightTeam> teams;
+    private final StatesFlow statesFlow;
+    private final Logger logger;
+    private final List<FightModule> modules = new ArrayList<>();
+    private final Map<Class, Object> attachments = new HashMap<>();
+    private final ListenerAggregate dispatcher;
+    private final ScheduledExecutorService executor;
+    private final Spectators spectators;
 
-    final private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    final private FightTurnList turnList = new FightTurnList(this);
-    final private EffectsHandler effects = new EffectsHandler();
+    private final Lock executorLock = new ReentrantLock();
+    private final FightTurnList turnList = new FightTurnList(this);
+    private final EffectsHandler effects = new EffectsHandler();
 
-    final private StopWatch duration = new StopWatch();
+    private final StopWatch duration = new StopWatch();
+    private volatile boolean alive = true;
 
-    public Fight(int id, FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow, Logger logger) {
+    public Fight(int id, FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow, Logger logger, ScheduledExecutorService executor) {
         this.id = id;
         this.type = type;
         this.map = map;
         this.teams = teams;
         this.statesFlow = statesFlow;
         this.logger = logger;
+        this.executor = executor;
         this.dispatcher = new DefaultListenerAggregate(logger);
+        this.spectators = new Spectators(this);
     }
 
     /**
      * Register a module
      */
-    public void register(FightModule module)
-    {
+    public void register(FightModule module) {
         modules.add(module);
         dispatcher.register(module);
         module.effects(effects);
@@ -202,11 +208,13 @@ final public class Fight implements Dispatcher, Sender {
 
     @Override
     public void send(Object packet) {
-        String sPacket = packet.toString();
+        final String sPacket = packet.toString();
 
         for (FightTeam team : teams) {
             team.send(sPacket);
         }
+
+        spectators.send(sPacket);
     }
 
     @Override
@@ -215,23 +223,39 @@ final public class Fight implements Dispatcher, Sender {
     }
 
     /**
+     * Dispatch the event to all fighters and spectators
+     * This method should not raise any exceptions
+     *
+     * Note: this method will not call the Fight's dispatcher, but only fighters and spectators ones
+     *
+     * @param event Event to dispatch
+     *
+     * @see Fight#dispatch(Object) To dispatch on the Fight's listeners
+     */
+    public void dispatchToAll(Object event) {
+        for (FightTeam team : teams) {
+            for (Fighter fighter : team.fighters()) {
+                if (fighter.isOnFight()) {
+                    fighter.dispatch(event);
+                }
+            }
+        }
+
+        spectators.dispatch(event);
+    }
+
+    /**
      * Schedule an action to perform in fight with delay
      *
      * @param action Action to execute
      * @param delay The delay
      */
-    public ScheduledFuture schedule(Runnable action, Duration delay) {
-        return executor.schedule(
-            () -> {
-                try {
-                    action.run();
-                } catch (Throwable e) {
-                    logger.error("Error on fight executor : " + e.getMessage(), e);
-                }
-            },
-            delay.toMillis(),
-            TimeUnit.MILLISECONDS
-        );
+    public ScheduledFuture<?> schedule(Runnable action, Duration delay) {
+        if (!alive) {
+            throw new IllegalStateException("The fight is not alive");
+        }
+
+        return executor.schedule(new Task(action), delay.toMillis(), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -240,13 +264,11 @@ final public class Fight implements Dispatcher, Sender {
      * @param action Action to execute
      */
     public void execute(Runnable action) {
-        executor.execute(() -> {
-            try {
-                action.run();
-            } catch (Throwable e) {
-                logger.error("Error on fight executor : " + e.getMessage(), e);
-            }
-        });
+        if (!alive) {
+            throw new IllegalStateException("The fight is not alive");
+        }
+
+        executor.execute(new Task(action));
     }
 
     /**
@@ -309,9 +331,21 @@ final public class Fight implements Dispatcher, Sender {
 
     /**
      * Check if the fight is active
+     * The fight is active after the placement but before the end
+     * To check if the fight is not finished nor cancelled, use {@link Fight#alive()}
+     *
+     * @see Fight#alive()
      */
     public boolean active() {
         return duration.isStarted();
+    }
+
+    /**
+     * Check if the fight is not cancelled nor finished
+     * A "dead" fight cannot be used anymore
+     */
+    public boolean alive() {
+        return alive;
     }
 
     /**
@@ -330,13 +364,50 @@ final public class Fight implements Dispatcher, Sender {
     }
 
     /**
+     * Get the spectators handler
+     */
+    public Spectators spectators() {
+        return spectators;
+    }
+
+    /**
      * Destroy fight after terminated
      */
     public void destroy() {
-        executor.shutdownNow();
-
+        alive = false;
         teams.clear();
         map.destroy();
+        attachments.clear();
+        spectators.clear();
+    }
+
+    /**
+     * Wrap action to submit to executor to ensure that tasks are run sequentially (i.e. no task are run in parallel)
+     */
+    private final class Task implements Runnable {
+        private final Runnable action;
+
+        public Task(Runnable action) {
+            this.action = action;
+        }
+
+        @Override
+        public void run() {
+            try {
+                executorLock.lock();
+
+                if (!alive) {
+                    logger.warn("Cannot run task " + action.getClass().toString() + " on dead fight");
+                    return;
+                }
+
+                action.run();
+            } catch (Throwable e) {
+                logger.error("Error on fight executor : " + e.getMessage(), e);
+            } finally {
+                executorLock.unlock();
+            }
+        }
     }
 
     public Fighter addInvocation(InvocationFighterFactory factory, FightCell cell) {

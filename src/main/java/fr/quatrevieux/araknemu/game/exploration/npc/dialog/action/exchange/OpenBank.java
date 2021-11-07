@@ -31,26 +31,8 @@ import fr.quatrevieux.araknemu.network.out.ServerMessage;
 /**
  * Action for open the bank
  */
-final public class OpenBank implements Action {
-    final static public class Factory implements ActionFactory {
-        final private BankService service;
-
-        public Factory(BankService service) {
-            this.service = service;
-        }
-
-        @Override
-        public String type() {
-            return "BANK";
-        }
-
-        @Override
-        public Action create(ResponseAction entity) {
-            return new OpenBank(service);
-        }
-    }
-
-    final private BankService service;
+public final class OpenBank implements Action {
+    private final BankService service;
 
     public OpenBank(BankService service) {
         this.service = service;
@@ -64,7 +46,7 @@ final public class OpenBank implements Action {
 
     @Override
     public void apply(ExplorationPlayer player) {
-        Bank bank = service.load(player.account());
+        final Bank bank = service.load(player.account());
 
         if (payBankTax(player, bank)) {
             player.interactions().start(bank.exchange(player).dialog());
@@ -116,5 +98,23 @@ final public class OpenBank implements Action {
         player.send(Information.bankTaxPayed(payedByPlayer));
 
         return true;
+    }
+
+    public static final class Factory implements ActionFactory {
+        private final BankService service;
+
+        public Factory(BankService service) {
+            this.service = service;
+        }
+
+        @Override
+        public String type() {
+            return "BANK";
+        }
+
+        @Override
+        public Action create(ResponseAction entity) {
+            return new OpenBank(service);
+        }
     }
 }

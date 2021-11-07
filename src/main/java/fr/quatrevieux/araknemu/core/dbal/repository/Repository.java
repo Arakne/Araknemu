@@ -31,7 +31,6 @@ public interface Repository<E> {
 
     /**
      * Destroy the repository (drop)
-     * @throws RepositoryException
      */
     public void destroy() throws RepositoryException;
 

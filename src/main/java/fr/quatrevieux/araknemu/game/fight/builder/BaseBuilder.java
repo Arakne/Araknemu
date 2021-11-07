@@ -24,46 +24,44 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
-import fr.quatrevieux.araknemu.game.fight.state.*;
+import fr.quatrevieux.araknemu.game.fight.state.ActiveState;
+import fr.quatrevieux.araknemu.game.fight.state.FinishState;
+import fr.quatrevieux.araknemu.game.fight.state.InitialiseState;
+import fr.quatrevieux.araknemu.game.fight.state.NullState;
+import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
+import fr.quatrevieux.araknemu.game.fight.state.StatesFlow;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Base builder for fight
  */
-final public class BaseBuilder implements FightBuilder {
-    public interface TeamFactory {
-        /**
-         * Creates the fight team
-         *
-         * @param number The team number
-         * @param startPlaces The available start places
-         */
-        public FightTeam create(int number, List<Integer> startPlaces);
-    }
-
-    final private FightService service;
-    final private RandomUtil random;
-    final private FightType type;
-    final private Logger logger;
+public final class BaseBuilder implements FightBuilder {
+    private final FightService service;
+    private final RandomUtil random;
+    private final FightType type;
+    private final Logger logger;
+    private final ScheduledExecutorService executor;
 
     private FightMap map;
-    final private List<TeamFactory> teamFactories = new ArrayList<>();
+    private final List<TeamFactory> teamFactories = new ArrayList<>();
 
-    public BaseBuilder(FightService service, RandomUtil random, FightType type, Logger logger) {
+    public BaseBuilder(FightService service, RandomUtil random, FightType type, Logger logger, ScheduledExecutorService executor) {
         this.service = service;
         this.random = random;
         this.type = type;
         this.logger = logger;
+        this.executor = executor;
     }
 
     @Override
     public Fight build(int fightId) {
-        return new Fight(fightId, type, map, buildTeams(), statesFlow(), logger);
+        return new Fight(fightId, type, map, buildTeams(), statesFlow(), logger, executor);
     }
 
     /**
@@ -78,8 +76,8 @@ final public class BaseBuilder implements FightBuilder {
     }
 
     private List<FightTeam> buildTeams() {
-        List<TeamFactory> factories = random != null ? random.shuffle(teamFactories) : teamFactories;
-        List<FightTeam> teams = new ArrayList<>(factories.size());
+        final List<TeamFactory> factories = random != null ? random.shuffle(teamFactories) : teamFactories;
+        final List<FightTeam> teams = new ArrayList<>(factories.size());
 
         for (int number = 0; number < factories.size(); ++number) {
             teams.add(factories.get(number).create(number, map.startPlaces(number)));
@@ -96,5 +94,15 @@ final public class BaseBuilder implements FightBuilder {
             new ActiveState(),
             new FinishState()
         );
+    }
+
+    public interface TeamFactory {
+        /**
+         * Creates the fight team
+         *
+         * @param number The team number
+         * @param startPlaces The available start places
+         */
+        public FightTeam create(int number, List<Integer> startPlaces);
     }
 }

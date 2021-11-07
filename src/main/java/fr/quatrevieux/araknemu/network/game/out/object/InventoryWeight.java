@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Items.as#L222
  */
-final public class InventoryWeight {
-    final private GamePlayer player;
+public final class InventoryWeight {
+    private final GamePlayer player;
 
     public InventoryWeight(GamePlayer player) {
         this.player = player;

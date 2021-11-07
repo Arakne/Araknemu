@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 /**
  * Send to the map the sprite move
  */
-final public class SendCreatureMove implements Listener<CreatureMoving> {
-    final private ExplorationMap map;
+public final class SendCreatureMove implements Listener<CreatureMoving> {
+    private final ExplorationMap map;
 
     public SendCreatureMove(ExplorationMap map) {
         this.map = map;

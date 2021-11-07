@@ -29,9 +29,9 @@ import fr.quatrevieux.araknemu.game.world.creature.Creature;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L321
  */
-final public class ExchangeCreated {
-    final private ExchangeType type;
-    final private Creature target;
+public final class ExchangeCreated {
+    private final ExchangeType type;
+    private final Creature target;
 
     public ExchangeCreated(ExchangeType type) {
         this(type, null);

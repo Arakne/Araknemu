@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.handler.EnsurePlaying;
 import fr.quatrevieux.araknemu.network.game.in.account.AskBoost;
 import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 import fr.quatrevieux.araknemu.network.game.in.chat.SubscribeChannels;
+import fr.quatrevieux.araknemu.network.game.in.fight.LeaveFightRequest;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectDeleteRequest;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectMoveRequest;
@@ -58,5 +59,6 @@ class PlayingLoaderTest extends LoaderTestCase {
         assertHandlePacket(ObjectDeleteRequest.class, handlers);
         assertHandlePacket(SpellMove.class, handlers);
         assertHandlePacket(SpellUpgrade.class, handlers);
+        assertHandlePacket(LeaveFightRequest.class, handlers);
     }
 }

@@ -22,11 +22,14 @@ package fr.quatrevieux.araknemu.game;
 import fr.quatrevieux.araknemu.core.BootException;
 import fr.quatrevieux.araknemu.core.Service;
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
+import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
-import fr.quatrevieux.araknemu.game.connector.RealmConnector;
-import fr.quatrevieux.araknemu.game.event.GameStarted;
 import fr.quatrevieux.araknemu.core.network.Server;
+import fr.quatrevieux.araknemu.game.connector.RealmConnector;
+import fr.quatrevieux.araknemu.game.event.GameSaved;
+import fr.quatrevieux.araknemu.game.event.GameStarted;
 import fr.quatrevieux.araknemu.game.event.GameStopped;
+import fr.quatrevieux.araknemu.game.event.SavingGame;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.realm.host.GameHost;
 import org.apache.logging.log4j.Logger;
@@ -36,14 +39,14 @@ import java.util.Collection;
 /**
  * Service for game server
  */
-final public class GameService implements Service {
-    final private GameConfiguration configuration;
-    final private RealmConnector connector;
-    final private Server<GameSession> server;
-    final private Logger logger;
-    final private Collection<PreloadableService> preloadables;
-    final private ListenerAggregate dispatcher;
-    final private Collection<EventsSubscriber> subscribers;
+public final class GameService implements Service, EventsSubscriber {
+    private final GameConfiguration configuration;
+    private final RealmConnector connector;
+    private final Server<GameSession> server;
+    private final Logger logger;
+    private final Collection<PreloadableService> preloadables;
+    private final ListenerAggregate dispatcher;
+    private final Collection<EventsSubscriber> subscribers;
 
     public GameService(GameConfiguration configuration, RealmConnector connector, Server<GameSession> server, Logger logger, ListenerAggregate dispatcher, Collection<PreloadableService> preloadables, Collection<EventsSubscriber> subscribers) {
         this.configuration = configuration;
@@ -57,7 +60,8 @@ final public class GameService implements Service {
 
     @Override
     public void boot() throws BootException {
-        long startTime = System.currentTimeMillis();
+        final long startTime = System.currentTimeMillis();
+
         logger.info(
             "Starting game server {} at {}:{}",
             configuration.id(),
@@ -83,11 +87,7 @@ final public class GameService implements Service {
             configuration.ip()
         );
 
-        connector.updateState(
-            configuration.id(),
-            GameHost.State.ONLINE,
-            true
-        );
+        updateState(GameHost.State.ONLINE, true);
 
         dispatcher.dispatch(new GameStarted(this));
         logger.info("Game server {} started in {}ms", configuration.id(), System.currentTimeMillis() - startTime);
@@ -97,11 +97,7 @@ final public class GameService implements Service {
     public void shutdown() {
         logger.info("Stopping game server {}", configuration.id());
 
-        connector.updateState(
-            configuration.id(),
-            GameHost.State.OFFLINE,
-            false
-        );
+        updateState(GameHost.State.OFFLINE, false);
 
         dispatcher.dispatch(new GameStopped(this));
 
@@ -128,5 +124,44 @@ final public class GameService implements Service {
         for (EventsSubscriber subscriber : subscribers) {
             dispatcher.register(subscriber);
         }
+
+        dispatcher.register(this);
+    }
+
+    @Override
+    public Listener[] listeners() {
+        return new Listener[] {
+            new Listener<SavingGame>() {
+                @Override
+                public void on(SavingGame event) {
+                    updateState(GameHost.State.SAVING, false);
+                }
+
+                @Override
+                public Class<SavingGame> event() {
+                    return SavingGame.class;
+                }
+            },
+            new Listener<GameSaved>() {
+                @Override
+                public void on(GameSaved event) {
+                    updateState(GameHost.State.ONLINE, true);
+                }
+
+                @Override
+                public Class<GameSaved> event() {
+                    return GameSaved.class;
+                }
+            },
+        };
+    }
+
+    /**
+     * Update the current host state
+     *
+     * @see RealmConnector#updateState(int, GameHost.State, boolean)
+     */
+    private void updateState(GameHost.State state, boolean canLog) {
+        connector.updateState(configuration.id(), state, canLog);
     }
 }

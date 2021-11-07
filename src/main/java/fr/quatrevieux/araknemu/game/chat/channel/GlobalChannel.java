@@ -31,10 +31,10 @@ import java.util.function.Predicate;
 /**
  * Channels which send to all online players
  */
-final public class GlobalChannel implements Channel {
-    final private ChannelType channel;
-    final private Predicate<GamePlayer> filter;
-    final private PlayerService service;
+public final class GlobalChannel implements Channel {
+    private final ChannelType channel;
+    private final Predicate<GamePlayer> filter;
+    private final PlayerService service;
 
     public GlobalChannel(ChannelType channel, Predicate<GamePlayer> filter, PlayerService service) {
         this.channel = channel;
@@ -52,12 +52,13 @@ final public class GlobalChannel implements Channel {
     }
 
     @Override
-    public void send(GamePlayer from, Message message) throws ChatException {
-        if (!filter.test(from)) {
-            throw new ChatException(ChatException.Error.UNAUTHORIZED);
-        }
+    public boolean authorized(GamePlayer from) {
+        return filter.test(from);
+    }
 
-        BroadcastedMessage event = new BroadcastedMessage(
+    @Override
+    public void send(GamePlayer from, Message message) throws ChatException {
+        final BroadcastedMessage event = new BroadcastedMessage(
             type(),
             from,
             message.message(),

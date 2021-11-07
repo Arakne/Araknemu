@@ -55,7 +55,7 @@ class StartDialogTest extends GameBaseCase {
 
         map = container.get(ExplorationMapService.class).load(10340);
         player = explorationPlayer();
-        player.join(map);
+        player.changeMap(map, 123);
 
         handler = new StartDialog();
         requestStack.clear();
@@ -85,7 +85,7 @@ class StartDialogTest extends GameBaseCase {
     @Test
     void handleNotNpc() throws Exception {
         ExplorationPlayer other = makeOtherExplorationPlayer();
-        other.join(map);
+        other.changeMap(map, 123);
 
         assertThrows(IllegalArgumentException.class, () -> handler.handle(session, new CreateDialogRequest(other.id())));
         assertFalse(player.interactions().interacting());

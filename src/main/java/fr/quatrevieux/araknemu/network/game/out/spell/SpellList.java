@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Spells.as#L43
  */
-final public class SpellList {
-    final private SpellBook spells;
+public final class SpellList {
+    private final SpellBook spells;
 
     public SpellList(SpellBook spells) {
         this.spells = spells;

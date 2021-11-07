@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.game.handler;
 
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.in.AskQueuePosition;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Check the queue position (Af packet)
@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
  *
  * Empty class to not fail for not found handler
  */
-final public class CheckQueuePosition implements PacketHandler<GameSession, AskQueuePosition> {
+public final class CheckQueuePosition implements PacketHandler<GameSession, AskQueuePosition> {
     @Override
     public void handle(GameSession session, AskQueuePosition packet) {
     }

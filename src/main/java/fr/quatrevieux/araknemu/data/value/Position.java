@@ -22,9 +22,9 @@ package fr.quatrevieux.araknemu.data.value;
 /**
  * Position object into the world
  */
-final public class Position {
-    final private int map;
-    final private int cell;
+public final class Position {
+    private final int map;
+    private final int cell;
 
     public Position(int map, int cell) {
         this.map = map;

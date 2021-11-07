@@ -25,8 +25,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterLifeChanged;
 /**
  * Handle life points for fighters
  */
-final public class BaseFighterLife implements FighterLife {
-    final private Fighter fighter;
+public final class BaseFighterLife implements FighterLife {
+    private final Fighter fighter;
 
     private int max;
     private int current;

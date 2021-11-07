@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.builder;
@@ -31,35 +31,39 @@ import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import org.apache.logging.log4j.Logger;
 
+import java.util.concurrent.ScheduledExecutorService;
+
 /**
  * Builder for pvm fight
  *
  * @see PvmBuilder
  * @see PvmType
  */
-final public class PvmBuilder implements FightBuilder {
-    final private FightService service;
-    final private FighterFactory fighterFactory;
-    final private RandomUtil random;
-    final private PvmType type;
-    final private Logger logger;
+public final class PvmBuilder implements FightBuilder {
+    private final FightService service;
+    private final FighterFactory fighterFactory;
+    private final RandomUtil random;
+    private final PvmType type;
+    private final Logger logger;
+    private final ScheduledExecutorService executor;
 
     private ExplorationMap map;
     private GamePlayer initiator;
     private MonsterGroup group;
     private boolean randomize = true;
 
-    public PvmBuilder(FightService service, FighterFactory fighterFactory, RandomUtil random, PvmType type, Logger logger) {
+    public PvmBuilder(FightService service, FighterFactory fighterFactory, RandomUtil random, PvmType type, Logger logger, ScheduledExecutorService executor) {
         this.service = service;
         this.fighterFactory = fighterFactory;
         this.random = random;
         this.type = type;
         this.logger = logger;
+        this.executor = executor;
     }
 
     @Override
     public Fight build(int fightId) {
-        BaseBuilder builder = new BaseBuilder(service, randomize ? random : null, type, logger);
+        final BaseBuilder builder = new BaseBuilder(service, randomize ? random : null, type, logger, executor);
 
         builder.map(map);
         builder.addTeam((number, startPlaces) -> new SimpleTeam(

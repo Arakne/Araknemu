@@ -30,12 +30,12 @@ import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
 /**
  * Store the current player data
  */
-final public class PlayerData implements CharacterProperties {
-    final private PlayerCharacteristics characteristics;
-    final private PlayerLife life;
-    final private SpellBook spells;
-    final private GamePlayerExperience experience;
-    final private PlayerInventory inventory;
+public final class PlayerData implements CharacterProperties {
+    private final PlayerCharacteristics characteristics;
+    private final PlayerLife life;
+    private final SpellBook spells;
+    private final GamePlayerExperience experience;
+    private final PlayerInventory inventory;
 
     public PlayerData(Dispatcher dispatcher, GamePlayer player, Player entity, SpellBook spells, GamePlayerExperience experience) {
         this.spells = spells;

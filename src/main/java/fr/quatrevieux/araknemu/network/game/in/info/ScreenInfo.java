@@ -29,38 +29,16 @@ import org.apache.commons.lang3.StringUtils;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Infos.as#L23
  */
-final public class ScreenInfo implements Packet {
+public final class ScreenInfo implements Packet {
     public enum State {
         NORMAL,
         FULLSCREEN,
         OTHER
     }
 
-    final static public class Parser implements SinglePacketParser<ScreenInfo> {
-        @Override
-        public ScreenInfo parse(String input) throws ParsePacketException {
-            String[] parts = StringUtils.split(input, ";", 3);
-
-            if (parts.length != 3) {
-                throw new ParsePacketException("Ir"+input, "Screen info must be composed of 3 parts");
-            }
-
-            return new ScreenInfo(
-                Integer.parseInt(parts[0]),
-                Integer.parseInt(parts[1]),
-                State.values()[parts[2].charAt(0) - '0']
-            );
-        }
-
-        @Override
-        public String code() {
-            return "Ir";
-        }
-    }
-
-    final private int width;
-    final private int height;
-    final private State state;
+    private final int width;
+    private final int height;
+    private final State state;
 
     public ScreenInfo(int width, int height, State state) {
         this.width = width;
@@ -78,5 +56,27 @@ final public class ScreenInfo implements Packet {
 
     public State state() {
         return state;
+    }
+
+    public static final class Parser implements SinglePacketParser<ScreenInfo> {
+        @Override
+        public ScreenInfo parse(String input) throws ParsePacketException {
+            final String[] parts = StringUtils.split(input, ";", 3);
+
+            if (parts.length != 3) {
+                throw new ParsePacketException("Ir" + input, "Screen info must be composed of 3 parts");
+            }
+
+            return new ScreenInfo(
+                Integer.parseInt(parts[0]),
+                Integer.parseInt(parts[1]),
+                State.values()[parts[2].charAt(0) - '0']
+            );
+        }
+
+        @Override
+        public String code() {
+            return "Ir";
+        }
     }
 }

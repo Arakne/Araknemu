@@ -87,4 +87,27 @@ class OutputBuilderTest {
                 .toString()
         );
     }
+
+    @Test
+    void variables() {
+        OutputBuilder builder = new OutputBuilder();
+
+        builder.with("name", () -> "World").append("Hello {{name}} !");
+
+        assertEquals("Hello World !", builder.toString());
+
+        builder
+            .with("name", () -> "John")
+            .with("age", () -> "42")
+            .title("Presentation of {{name}}")
+            .indent("My name is {{name}}")
+            .line("I'm {{age}} y-o")
+        ;
+
+        assertEquals("Hello World !\n" +
+            "\n" +
+            "<b>Presentation of John</b>\n" +
+            "\tMy name is John\n" +
+            "I'm 42 y-o", builder.toString());
+    }
 }

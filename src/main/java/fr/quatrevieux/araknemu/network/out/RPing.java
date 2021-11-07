@@ -22,8 +22,8 @@ package fr.quatrevieux.araknemu.network.out;
 /**
  * Ping from server
  */
-final public class RPing {
-    final private String payload;
+public final class RPing {
+    private final String payload;
 
     public RPing(String payload) {
         this.payload = payload;

@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 /**
  * Load trigger cells
  */
-final public class TriggerLoader implements CellLoader {
-    final private MapTriggerService service;
+public final class TriggerLoader implements CellLoader {
+    private final MapTriggerService service;
 
     public TriggerLoader(MapTriggerService service) {
         this.service = service;

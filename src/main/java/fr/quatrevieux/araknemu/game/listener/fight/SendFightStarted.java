@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 /**
  * Send packet for start the fight
  */
-final public class SendFightStarted implements Listener<FightStarted> {
-    final private Fight fight;
+public final class SendFightStarted implements Listener<FightStarted> {
+    private final Fight fight;
 
     public SendFightStarted(Fight fight) {
         this.fight = fight;

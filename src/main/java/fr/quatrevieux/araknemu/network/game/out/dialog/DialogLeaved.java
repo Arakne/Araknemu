@@ -24,7 +24,7 @@ package fr.quatrevieux.araknemu.network.game.out.dialog;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Dialog.as#L74
  */
-final public class DialogLeaved {
+public final class DialogLeaved {
     @Override
     public String toString() {
         return "DV";

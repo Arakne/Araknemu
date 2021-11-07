@@ -23,20 +23,17 @@ import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
-import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.Restrictions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Change the player restrictions
  */
-final public class Restriction extends AbstractCommand {
-    final private GamePlayer player;
+public final class Restriction extends AbstractCommand<List<String>> {
+    private final GamePlayer player;
 
     public Restriction(GamePlayer player) {
         this.player = player;
@@ -45,23 +42,24 @@ final public class Restriction extends AbstractCommand {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Change the player restrictions")
             .help(
                 formatter -> formatter
-                    .synopsis("restriction [+/-][restriction]...")
+                    .description("Change the player restrictions")
+                    .synopsis("restriction [+/-]RESTRICTION...")
 
-                    .options("+restriction", "Active the restriction on the player")
-                    .options("-restriction", "Remove the restriction on the player")
+                    .option("+RESTRICTION", "Active the restriction on the player")
+                    .option("-RESTRICTION", "Remove the restriction on the player")
 
                     .line("AVAILABLE RESTRICTIONS :",
-                        "\t" + Arrays.stream(Restrictions.Restriction.values()).map(Enum::name).collect(Collectors.joining(", ")),
+                        "\t{{restriction.enum}}",
                         "\tNote: The name is case insensitive"
                     )
                     .line("WARNING : This is a debug feature, and can cause bugs if misused")
+                    .with("restriction.enum", Restrictions.Restriction.class)
 
                     .example("restriction +DENY_CHALLENGE", "The player will not be allowed perform challenges")
                     .example("restriction +DENY_CHAT -ALLOW_MOVE_ALL_DIRECTION", "Perform multiple changes")
-                    .example("${player:John} restriction +DENY_CHALLENGE", "Change John's restrictions")
+                    .example("@John restriction +DENY_CHALLENGE", "Change John's restrictions")
             )
             .requires(Permission.MANAGE_PLAYER)
             .requires(Permission.DEBUG)
@@ -75,13 +73,11 @@ final public class Restriction extends AbstractCommand {
 
     @Override
     public void execute(AdminPerformer performer, List<String> arguments) throws AdminException {
-        List<Restrictions.Restriction> toSet = new ArrayList<>();
-        List<Restrictions.Restriction> toUnset = new ArrayList<>();
+        final List<Restrictions.Restriction> toSet = new ArrayList<>();
+        final List<Restrictions.Restriction> toUnset = new ArrayList<>();
 
-        for (int i = 1; i < arguments.size(); ++i) {
-            String argument = arguments.get(i);
-
-            Restrictions.Restriction restriction = Restrictions.Restriction.valueOf(argument.substring(1).toUpperCase());
+        for (String argument : arguments) {
+            final Restrictions.Restriction restriction = Restrictions.Restriction.valueOf(argument.substring(1).toUpperCase());
 
             switch (argument.charAt(0)) {
                 case '+':
@@ -93,7 +89,7 @@ final public class Restriction extends AbstractCommand {
                     break;
 
                 default:
-                    throw new CommandException(arguments.get(0), "Invalid or missing operation on argument " + argument);
+                    error("Invalid or missing operation on argument " + argument);
             }
         }
 

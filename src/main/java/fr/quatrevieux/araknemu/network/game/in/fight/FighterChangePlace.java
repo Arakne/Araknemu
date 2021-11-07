@@ -28,8 +28,18 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L31
  */
-final public class FighterChangePlace implements Packet {
-    final static public class Parser implements SinglePacketParser<FighterChangePlace> {
+public final class FighterChangePlace implements Packet {
+    private final int cellId;
+
+    public FighterChangePlace(int cellId) {
+        this.cellId = cellId;
+    }
+
+    public int cellId() {
+        return cellId;
+    }
+
+    public static final class Parser implements SinglePacketParser<FighterChangePlace> {
         @Override
         public FighterChangePlace parse(String input) throws ParsePacketException {
             return new FighterChangePlace(Integer.parseUnsignedInt(input));
@@ -39,15 +49,5 @@ final public class FighterChangePlace implements Packet {
         public String code() {
             return "Gp";
         }
-    }
-
-    final private int cellId;
-
-    public FighterChangePlace(int cellId) {
-        this.cellId = cellId;
-    }
-
-    public int cellId() {
-        return cellId;
     }
 }

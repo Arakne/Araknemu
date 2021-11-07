@@ -24,23 +24,23 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 /**
  *
  */
-abstract public class AbstractTargetRequestDialog extends AbstractRequestDialog implements TargetRequestDialog {
+public abstract class AbstractTargetRequestDialog extends AbstractRequestDialog implements TargetRequestDialog {
     public AbstractTargetRequestDialog(Invitation invitation) {
         super(invitation);
     }
 
     @Override
-    final public void accept() {
+    public final void accept() {
         invitation.accept(this);
     }
 
     @Override
-    final public ExplorationPlayer self() {
+    public final ExplorationPlayer self() {
         return invitation.target();
     }
 
     @Override
-    final public ExplorationPlayer interlocutor() {
+    public final ExplorationPlayer interlocutor() {
         return invitation.initiator();
     }
 }

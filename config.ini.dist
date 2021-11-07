@@ -1,0 +1,244 @@
+; Base configuration file
+; To create a custom config, copy this file to "config.ini" file
+
+[realm]
+; Section for configure the authentication server
+
+; Server Configuration
+; --------------------
+; > The listened port for authentication server. Default 444
+server.port = 4444
+
+; Dofus client Configuration
+; --------------------------
+; > The required Dofus client version for logged in. Default "1.29.1"
+client.version = 1.29.1
+
+; Password
+; --------
+; > List of enabled hash algorithms. The algorithms are separated by a coma.
+; > Available algorithms : argon2, plain
+; > The first value will be the default hash algorithm
+; > Default value: "argon2, plain"
+;password.defaultHash = argon2
+; > The number of iterations. Default: 4
+;password.argon2.iterations = 4
+; > The memory, in kilobits. Default: 65536 (64Mo)
+;password.argon2.memory = 65536
+; > The parallelism parameter. Default: 8
+;password.argon2.parallelism = 4
+; > The argon2 algorithm type. Default: "argon2id"
+; > Available types : "argon2i", "argon2d", "argon2id"
+;password.argon2.type = argon2id
+
+; Ban IP system
+; -------------
+; > Get the refresh interval for the ban ip table
+; > Default: 30 seconds (30s)
+;banip.refresh = 30s
+
+; Antispam & other
+; ----------------
+; > The maximum inactivity time, as duration
+; > By default, 15min ("PT15M" or "15m")
+;inactivityTime = 15m
+; > Maximum number of received packets per seconds per clients
+; > When the limit is reached, the client session is closed
+; > Default: 100
+;packetRateLimit = 100
+
+[database]
+; Section for configure database connections
+
+; Configuration format
+; --------------------
+; > The connection host (useful for MySQL) Default: 127.0.0.1
+;connection_name.host = 127.0.0.1
+; > The username. Default: root
+;connection_name.user = root
+; > The user password. Default: ""
+;connection_name.password =
+; > Get the database name (by default, same as connection name)
+;connection_name.dbname = araknemu_database
+; > the database type name
+; > Can be "mysql" or "sqlite"
+; > Default: mysql
+;connection_name.type = mysql
+; > Is a memory connection (sqlite)
+;connection_name.memory = false
+; > Shared cache (sqlite)
+; > Useful for SQLite in-memory, for sharing data between connections
+;connection_name.shared = true
+; > The maximum pool size. Default: 16
+;connection_name.poolSize = 8
+; > Get the refresh pool interval in seconds
+; > If the value is lower than 1, the refresh will be disabled
+; > Default to 3600 (1 hour)
+;connection_name.refreshPoolInterval = 3600
+; > The database file path (sqlite)
+; > By default same as dbname with .db extension
+;connection_name.path = /var/db/araknemu/araknemu_database.db
+; > Auto-reconnect to the connection when query fail
+; > Default to true
+;connection_name.autoReconnect = true
+
+; Configure database for authentication server
+realm.host = 127.0.0.1
+realm.user = araknemu
+realm.dbname = araknemu
+
+; Configure database for game server
+game.host = 127.0.0.1
+game.user = araknemu
+game.dbname = araknemu
+
+[game]
+; Section for configure the game server
+
+; Server Configuration
+; --------------------
+; > The listened port for game server. Default 5555
+;server.port = 5555
+; > Get the server IP address. Default 127.0.0.1
+;server.port = 127.0.0.1
+
+
+; Antispam & other
+; ----------------
+; > The server ID. By default 1
+;id = 1
+; > The maximum inactivity time, as duration
+; > By default, 15min ("PT15M" or "15m")
+;inactivityTime = 15m
+; > Maximum number of received packets per seconds per clients
+; > When the limit is reached, the client session is closed
+; > Default: 100
+;packetRateLimit = 100
+; > Get the shutdown reminder delays, in minutes
+; > The values are integer separated by a comma ","
+; > Default value : "1,10,30,60,120"
+;shutdownReminderMinutes = 1,10,30,60,120
+
+; Ban IP system
+; -------------
+; > Get the refresh interval for the ban ip table
+; > Default: 30 seconds (30s)
+;banip.refresh = 30s
+
+; Player account & character
+; --------------------------
+; > The player name regex
+;player.name.regex = [A-Z][a-z]+(-[A-Z]?[a-z]+)?
+; > Minimal length of player name
+;player.name.minLength = 2
+; > Maximal length of player name
+;player.name.maxLength = 20
+; > Maximal length for generated name
+;player.name.generated.maxLength = 8
+; > Minimal length for generated name
+;player.name.generated.minLength = 4
+; > Maximum number for characters per account per server
+;player.max = 5
+; > Minimum level which needs secret answer for delete the character
+; > By default, value is set to 20
+; > To change this value, you should also change in lang.swf, the value `C.SECRET_ANSWER_SINCE_LEVEL`
+;player.deleteAnswerLevel = 20
+; > Get the level up spell points
+; > By default, value is set to 1
+;player.level.spellPoints = 1
+; > Get the level up characteristic points
+; > By default, value is set to 5
+;player.level.characteristicPoints = 5
+; > The life regeneration rate.
+; > This is the number of milliseconds required to regenerate 1 life point. Set to 0 to disable.
+; > By default 1000 (1 LP / sec)
+;player.lifeRegeneration.base = 1000
+; > Restore life points when player reach a new level
+; > By default true
+;player.restoreLifeOnLevelUp = true
+
+; Chat
+; ----
+; > Get the waiting time in seconds for global channel flood
+; > Set to -1 for deactivate
+;chat.flood.time = 30
+; > Get list of default channels to add on character creation
+;chat.channels.default = *#%!pi$:?
+; > Channels to add on admin characters
+;chat.channels.admin = @
+
+; Activity
+; --------
+; > Number of threads to use for the activity service
+;activity.threadsCount = 1
+; > Number of seconds for move monster groups
+; > By default 120s = 2min
+;activity.monsters.moveInterval = 120
+; > Percent of chance that a monster group on a map move
+; > The value must be an integer value between ]0, 100]
+; > By default 25%
+;activity.monsters.movePercent = 25
+; > The maximum move distance for monsters
+; > By default 5
+;activity.monsters.moveDistance = 5
+; > The delay divisor for respawn a monster group
+; > With a factor of 2, the respawn will be 2 times faster
+; > By default 1
+;activity.monsters.respawnSpeedFactor = 1
+
+; Economy
+; -------
+; > Get the selling item to an NPC price multiplier
+; > By default 0.1
+; > Should corresponds to "C.SELL_PRICE_MULTIPLICATOR" in lang_xx_xxx.swf
+;economy.npc.sellPriceMultiplier = 0.1
+; > The bank cost per item entries
+; > The value must be a positive double
+; > Default to 1
+; > Set to 0 to disable the bank cost
+;economy.bank.costPerEntry = 1
+
+; Fight
+; -----
+; > The threads count for run fight actions and AI
+; > This value should be greater than 2. A good value may be around 1 thread per 100 fights
+; > By default, 4
+;fight.threadsCount = 4
+; > The fight turn duration
+; > The value should be a duration string like 30s, 1m10s
+; > Default value : 30s
+;fight.turnDuration = 30s
+; > The placement duration for a PVM fight
+; > The value should be a duration string like 30s, 1m10s
+; > Default value : 45s
+;fight.pvm.placementDuration = 45s
+
+; Auto save
+; ---------
+; > The interval between two automatic save of connected players
+; > Note: Players are regularly saved apart of autosave, so it's not required to set a small value
+; > Default: 4 hours (4h)
+;autosave.interval = 4h
+; > Enable automatic saving of connected players
+; > Default: true
+;autosave.enabled = true
+
+[admin]
+; Section for configure admin commands
+
+; Scripts
+; -------
+; > Are scripts enabled
+; > If set to false, the scripts are not loaded
+; > Default value: true
+;account.scripts.enable = false
+;player.scripts.enable = false
+;debug.scripts.enable = false
+;server.scripts.enable = false
+; > Get the commands scripts path
+; > Should be a directory path
+; > Default: "scripts/commands/[context]"
+;account.scripts.path = scripts/commands/account
+;player.scripts.path = scripts/commands/player
+;debug.scripts.path = scripts/commands/debug
+;server.scripts.path = scripts/commands/server

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.chat.channel;
@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 public interface Channel {
     /**
      * Get the channel type
+     * Multiple channel with same type may exist. The discrimination will be performed using {@link Channel#authorized(GamePlayer)}
      */
     public ChannelType type();
 
@@ -40,4 +41,17 @@ public interface Channel {
      * @param message The message
      */
     public void send(GamePlayer from, Message message) throws ChatException;
+
+    /**
+     * Check if the given player is authorized to send a message to the given channel
+     * If this method return false, the next channel with the same type will be checked
+     *
+     * If no authorized channel can be found for a given {@link ChannelType},
+     * a {@link ChatException} with UNAUTHORIZED error will be thrown
+     *
+     * @param from The player to check
+     *
+     * @return true if authorized
+     */
+    public boolean authorized(GamePlayer from);
 }

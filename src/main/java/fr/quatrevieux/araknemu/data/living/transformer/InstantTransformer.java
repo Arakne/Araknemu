@@ -30,8 +30,8 @@ import java.time.format.DateTimeFormatter;
  * Transformer for parse an {@link Instant} value from database
  * Use the SQL standard format "yyyy-MM-dd HH:mm:ss"
  */
-final public class InstantTransformer implements Transformer<Instant> {
-    final private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneOffset.UTC);
+public final class InstantTransformer implements Transformer<Instant> {
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneOffset.UTC);
 
     @Override
     public String serialize(Instant value) {

@@ -38,12 +38,12 @@ import java.util.List;
  * This team is read only, and contains exactly all group monsters as {@link MonsterFighter}
  * This team has no leader
  */
-final public class MonsterGroupTeam implements FightTeam {
-    final private MonsterGroup monsterGroup;
-    final private int number;
-    final private List<Integer> startPlaces;
+public final class MonsterGroupTeam implements FightTeam {
+    private final MonsterGroup monsterGroup;
+    private final int number;
+    private final List<Integer> startPlaces;
 
-    final private List<Fighter> fighters;
+    private final List<Fighter> fighters;
 
     public MonsterGroupTeam(MonsterGroup monsterGroup, List<Integer> startPlaces, int number) {
         this.monsterGroup = monsterGroup;
@@ -133,7 +133,7 @@ final public class MonsterGroupTeam implements FightTeam {
      * Ids of monsters are negative integer sequence (starting at -1 for the first monster)
      */
     private List<Fighter> makeFighters() {
-        List<Fighter> fighters = new ArrayList<>(monsterGroup.monsters().size());
+        final List<Fighter> fighters = new ArrayList<>(monsterGroup.monsters().size());
 
         int id = 0;
 

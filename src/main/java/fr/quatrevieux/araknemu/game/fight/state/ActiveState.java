@@ -30,11 +30,17 @@ import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.fight.turn.order.FighterOrderStrategy;
 import fr.quatrevieux.araknemu.game.listener.fight.CheckFightTerminated;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightStarted;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.DispelDeadFighterBuff;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.RefreshBuffs;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.RemoveDeadFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterDie;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterLifeChanged;
-import fr.quatrevieux.araknemu.game.listener.fight.turn.*;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.SendFightTurnStarted;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.SendFightTurnStopped;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.SendFightersInformation;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.SendTurnList;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.SendUsedActionPoints;
+import fr.quatrevieux.araknemu.game.listener.fight.turn.SendUsedMovementPoints;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightAction;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightActionTerminated;
 
@@ -44,8 +50,8 @@ import java.util.Collections;
 /**
  * State for active fight
  */
-final public class ActiveState implements LeavableState, EventsSubscriber {
-    final private FighterOrderStrategy orderStrategy;
+public final class ActiveState implements LeavableState, EventsSubscriber {
+    private final FighterOrderStrategy orderStrategy;
 
     private Fight fight;
     private Listener[] listeners;
@@ -84,6 +90,7 @@ final public class ActiveState implements LeavableState, EventsSubscriber {
                 new SendFighterLifeChanged(fight),
                 new SendFighterDie(fight),
                 new RemoveDeadFighter(fight),
+                new DispelDeadFighterBuff(fight),
                 new CheckFightTerminated(fight),
                 new SendTurnList(fight),
                 new RefreshBuffs(),
@@ -99,7 +106,13 @@ final public class ActiveState implements LeavableState, EventsSubscriber {
     }
 
     @Override
-    public void leave(Fighter fighter) {
+    public synchronized void leave(Fighter fighter) {
+        // nextState is performed 1.5s after fight stop
+        // So leave can occurs on terminated fight
+        if (!fight.active()) {
+            return;
+        }
+
         fighter.life().kill(fighter);
 
         // Fight terminated
@@ -110,7 +123,7 @@ final public class ActiveState implements LeavableState, EventsSubscriber {
         fighter.team().kick(fighter);
         fight.turnList().remove(fighter);
 
-        FightRewardsSheet rewardsSheet = fight.type().rewards().generate(
+        final FightRewardsSheet rewardsSheet = fight.type().rewards().generate(
             new EndFightResults(
                 fight,
                 Collections.emptyList(),

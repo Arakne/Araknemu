@@ -75,6 +75,7 @@ class CloseCombatTest extends FightBaseCase {
 
         assertSame(fighter, action.performer());
         assertSame(ActionType.CLOSE_COMBAT, action.type());
+        assertEquals("CloseCombat{target=186}", action.toString());
     }
 
     @Test

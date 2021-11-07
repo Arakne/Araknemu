@@ -32,6 +32,8 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -54,8 +56,8 @@ class ShutdownTest extends CommandTestCase {
 
     @Test
     void executeInvalidAction() {
-        assertThrows(CommandException.class, () -> execute("shutdown", "invalid"));
-        assertThrows(CommandException.class, () -> execute("shutdown"));
+        assertThrowsWithMessage(CommandException.class, "\"invalid\" is not a valid value for \"TIME\"", () -> execute("shutdown", "invalid"));
+        assertThrowsWithMessage(CommandException.class, "Argument \"TIME\" is required", () -> execute("shutdown"));
     }
 
     @Test
@@ -76,7 +78,7 @@ class ShutdownTest extends CommandTestCase {
 
     @Test
     void executeInMissingDelay() {
-        assertThrows(CommandException.class, () -> execute("shutdown", "in"));
+        assertThrowsWithMessage(CommandException.class, "Argument \"DURATION\" is required", () -> execute("shutdown", "in"));
     }
 
     @Test
@@ -98,13 +100,13 @@ class ShutdownTest extends CommandTestCase {
 
         assertEquals(0, time.getHour());
         assertBetween(0, 1, time.getMinute());
-        assertEquals(LocalDateTime.now().getDayOfMonth() + 1, time.getDayOfMonth());
+        assertEquals(LocalDateTime.now().plus(1, ChronoUnit.DAYS).getDayOfMonth(), time.getDayOfMonth());
         performer.logs.get(0).message.startsWith("Shutdown scheduled at");
     }
 
     @Test
     void executeAtMissingTime() {
-        assertThrows(CommandException.class, () -> execute("shutdown", "at"));
+        assertThrowsWithMessage(CommandException.class, "Argument \"TIME\" is required", () -> execute("shutdown", "at"));
     }
 
     @Test
@@ -140,6 +142,22 @@ class ShutdownTest extends CommandTestCase {
 
     @Test
     void help() {
-        assertTrue(command.help().contains("shutdown [action] [parameter]"));
+        assertHelp(
+            "shutdown - Stop the server",
+            "========================================",
+            "SYNOPSIS",
+                "\tshutdown [now|in|at|show] ARGUMENTS",
+            "OPTIONS",
+                "\tnow : Shutdown the server immediately. Do not requires any parameters.",
+                "\tin DURATION : Shutdown the server in a given amount of time. Format is [hours]h[minutes]m[seconds]s. All parts are optional.",
+                "\tat TIME : Shutdown the server at a given time. Format is [hours]:[minutes]:[seconds]. Seconds are optional.",
+                "\tshow : Show the current scheduled shutdown.",
+            "EXAMPLES",
+                "\t*shutdown now      - Stop the server immediately.",
+                "\t*shutdown at 15:00 - Stop the server at 15:00:00.",
+                "\t*shutdown in 30m   - Stop the server in 30 minutes.",
+            "PERMISSIONS",
+                "\t[ACCESS, SUPER_ADMIN]"
+        );
     }
 }

@@ -25,9 +25,9 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 /**
  * The player has join the fight
  */
-final public class FightJoined {
-    final private Fight fight;
-    final private Fighter fighter;
+public final class FightJoined {
+    private final Fight fight;
+    private final Fighter fighter;
 
     public FightJoined(Fight fight, Fighter fighter) {
         this.fight = fight;

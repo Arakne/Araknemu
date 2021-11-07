@@ -30,8 +30,8 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
  * Buff effect for removing action points
  * If this effect is not used as buff, it will remove movement points to the current turn
  */
-final public class RemoveMovementPointsHandler extends RemoveCharacteristicHandler {
-    final private Fight fight;
+public final class RemoveMovementPointsHandler extends RemoveCharacteristicHandler {
+    private final Fight fight;
 
     public RemoveMovementPointsHandler(Fight fight) {
         super(fight, Characteristic.MOVEMENT_POINT);
@@ -42,8 +42,8 @@ final public class RemoveMovementPointsHandler extends RemoveCharacteristicHandl
     @Override
     public void handle(CastScope cast, CastScope.EffectScope effect) {
         fight.turnList().current().ifPresent(turn -> {
-            EffectValue value = new EffectValue(effect.effect());
-            int mp = turn.points().removeMovementPoints(value.value());
+            final EffectValue value = new EffectValue(effect.effect());
+            final int mp = turn.points().removeMovementPoints(value.value());
 
             fight.send(ActionEffect.removeMovementPoints(turn.fighter(), mp));
         });

@@ -14,20 +14,27 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.type;
 
-import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.ChallengeRewardsGenerator;
+import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardsGenerator;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.ChallengeRewardsGenerator;
 
 import java.time.Duration;
 
 /**
  * Fight type for challenge
  */
-final public class ChallengeType implements FightType {
+public final class ChallengeType implements FightType {
+    private final GameConfiguration.FightConfiguration configuration;
+
+    public ChallengeType(GameConfiguration.FightConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
     @Override
     public int id() {
         return 0;
@@ -44,13 +51,13 @@ final public class ChallengeType implements FightType {
     }
 
     @Override
-    public int placementTime() {
-        return 0;
+    public Duration placementDuration() {
+        return null;
     }
 
     @Override
     public Duration turnDuration() {
-        return Duration.ofSeconds(30); // @todo configuration
+        return configuration.turnDuration();
     }
 
     @Override

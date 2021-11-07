@@ -25,7 +25,11 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.FightRewardsSheet;
-import fr.quatrevieux.araknemu.game.fight.event.*;
+import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
+import fr.quatrevieux.araknemu.game.fight.event.FightLeaved;
+import fr.quatrevieux.araknemu.game.fight.event.FighterAdded;
+import fr.quatrevieux.araknemu.game.fight.event.FighterPlaceChanged;
+import fr.quatrevieux.araknemu.game.fight.event.FighterRemoved;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.exception.FightMapException;
 import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
@@ -41,22 +45,23 @@ import fr.quatrevieux.araknemu.game.listener.fight.StartFightWhenAllReady;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.ClearFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFighterRemoved;
 
-import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * Placement before start fight
  */
-final public class PlacementState implements LeavableState, EventsSubscriber {
+public final class PlacementState implements LeavableState, EventsSubscriber {
     private long startTime;
     private Fight fight;
     private Listener[] listeners;
     private Map<FightTeam, PlacementCellsGenerator> cellsGenerators;
+    private ScheduledFuture<?> timer;
 
-    final private boolean randomize;
+    private final boolean randomize;
 
     public PlacementState() {
         this(true);
@@ -85,7 +90,7 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
         addFighters(fight.fighters(false));
 
         if (fight.type().hasPlacementTimeLimit()) {
-            fight.schedule(this::startFight, Duration.ofMillis(remainingTime()));
+            timer = fight.schedule(this::innerStartFight, fight.type().placementDuration());
         }
     }
 
@@ -114,7 +119,11 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
      * Get the remaining placement time, in milliseconds
      */
     public long remainingTime() {
-        return (fight.type().placementTime() * 1000 + startTime) - System.currentTimeMillis();
+        if (!fight.type().hasPlacementTimeLimit()) {
+            throw new UnsupportedOperationException("The fight has no placement time limit");
+        }
+
+        return fight.type().placementDuration().toMillis() + startTime - System.currentTimeMillis();
     }
 
     /**
@@ -123,7 +132,11 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
      * @param fighter Fighter to move
      * @param cell The target cell
      */
-    synchronized public void changePlace(Fighter fighter, FightCell cell) {
+    public synchronized void changePlace(Fighter fighter, FightCell cell) {
+        if (invalidState()) {
+            return;
+        }
+
         if (fighter.ready()) {
             throw new FightException("The fighter is ready");
         }
@@ -148,8 +161,8 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
      *
      * @throws JoinFightException When cannot join the team
      */
-    synchronized public void joinTeam(Fighter fighter, FightTeam team) throws JoinFightException {
-        if (fight.state() != this) {
+    public synchronized void joinTeam(Fighter fighter, FightTeam team) throws JoinFightException {
+        if (invalidState()) {
             throw new JoinFightException(JoinFightError.CANT_DO_TOO_LATE);
         }
 
@@ -158,8 +171,8 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
     }
 
     @Override
-    synchronized public void leave(Fighter fighter) {
-        if (fight.state() != this) {
+    public synchronized void leave(Fighter fighter) {
+        if (invalidState()) {
             throw new InvalidFightStateException(getClass());
         }
 
@@ -173,10 +186,24 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
     }
 
     /**
+     * Manually start the fight
+     */
+    public synchronized void startFight() {
+        // Try to cancel the timer
+        if (timer != null) {
+            if (!timer.cancel(false)) {
+                return; // Should not occurs : the fight is already started by the timer
+            }
+        }
+
+        innerStartFight();
+    }
+
+    /**
      * Start the fight
      */
-    synchronized public void startFight() {
-        if (fight.state() != this) {
+    private void innerStartFight() {
+        if (invalidState()) {
             return;
         }
 
@@ -207,7 +234,7 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
      * Punish the deserter fighter
      */
     private void punishDeserter(Fighter fighter) {
-        FightRewardsSheet rewardsSheet = fight.type().rewards().generate(
+        final FightRewardsSheet rewardsSheet = fight.type().rewards().generate(
             new EndFightResults(
                 fight,
                 Collections.emptyList(),
@@ -244,8 +271,22 @@ final public class PlacementState implements LeavableState, EventsSubscriber {
      * Check if the fight is valid after fighter leaved
      */
     private void checkFightValid() {
-        if (fight.teams().stream().filter(FightTeam::alive).count() <= 1) {
-            fight.cancel();
+        if (fight.teams().stream().filter(FightTeam::alive).count() > 1) {
+            return;
         }
+
+        fight.cancel();
+
+        if (timer != null) {
+            timer.cancel(true);
+        }
+    }
+
+    /**
+     * Check if the fight state is not placement
+     * This method will return true is the state is active (or following), or if it's cancelled or finished
+     */
+    private boolean invalidState() {
+        return fight.state() != this || !fight.alive();
     }
 }

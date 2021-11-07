@@ -22,7 +22,9 @@ package fr.quatrevieux.araknemu.game.fight.fighter;
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
+import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
@@ -51,6 +53,13 @@ public interface Fighter extends Creature<FightCell>, Dispatcher, ActiveFighter 
     public CastableWeapon weapon();
 
     /**
+     * Get the current fighter turn
+     *
+     * @throws FightException If it's not the turn of the current fighter
+     */
+    public FightTurn turn();
+
+    /**
      * Attach an attribute to the fighter
      *
      * @param key The attachment key
@@ -67,7 +76,7 @@ public interface Fighter extends Creature<FightCell>, Dispatcher, ActiveFighter 
      *
      * @see Fighter#attachment(Class) For get the attachment
      */
-    default public void attach(Object value) {
+    public default void attach(Object value) {
         attach(value.getClass(), value);
     }
 
@@ -83,6 +92,9 @@ public interface Fighter extends Creature<FightCell>, Dispatcher, ActiveFighter 
 
     @Override
     public FightTeam team();
+
+    @Override
+    public BuffList buffs();
 
     /**
      * Join the fight
@@ -129,7 +141,7 @@ public interface Fighter extends Creature<FightCell>, Dispatcher, ActiveFighter 
     /**
      * Check if the fighter is the team leader
      */
-    default public boolean isTeamLeader() {
+    public default boolean isTeamLeader() {
         return equals(team().leader());
     }
 }

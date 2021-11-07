@@ -62,6 +62,8 @@ class GameConfigurationTest extends GameBaseCase {
         assertEquals(8, configuration.player().maxNameGeneratedLength());
         assertEquals(1, configuration.player().spellBoostPointsOnLevelUp());
         assertEquals(5, configuration.player().characteristicPointsOnLevelUp());
+        assertEquals(1000, configuration.player().baseLifeRegeneration());
+        assertTrue(configuration.player().restoreLifeOnLevelUp());
     }
 
     @Test
@@ -69,11 +71,43 @@ class GameConfigurationTest extends GameBaseCase {
         assertEquals(1, configuration.activity().threadsCount());
         assertEquals(120, configuration.activity().monsterMoveInterval());
         assertEquals(25, configuration.activity().monsterMovePercent());
+        assertEquals(1, configuration.activity().monsterRespawnSpeedFactor());
+        setConfigValue("activity.monsters.respawnSpeedFactor", "3");
+        assertEquals(5, configuration.activity().monsterMoveDistance());
+        setConfigValue("activity.monsters.moveDistance", "3");
+        assertEquals(3, configuration.activity().monsterMoveDistance());
     }
 
     @Test
     void economy() {
         assertEquals(0.1, configuration.economy().npcSellPriceMultiplier());
         assertEquals(1, configuration.economy().bankCostPerEntry());
+    }
+
+    @Test
+    void fight() {
+        assertEquals(4, configuration.fight().threadsCount());
+        setConfigValue("fight.threadsCount", "8");
+        assertEquals(8, configuration.fight().threadsCount());
+
+        assertEquals(Duration.ofSeconds(30), configuration.fight().turnDuration());
+        setConfigValue("fight.turnDuration", "1m30s");
+        assertEquals(Duration.ofSeconds(90), configuration.fight().turnDuration());
+
+        assertEquals(Duration.ofSeconds(45), configuration.fight().pvmPlacementDuration());
+        setConfigValue("fight.pvm.placementDuration", "1m30s");
+        assertEquals(Duration.ofSeconds(90), configuration.fight().pvmPlacementDuration());
+    }
+
+    @Test
+    void autosave() {
+        assertTrue(configuration.autosaveEnabled());
+        assertEquals(Duration.ofHours(4), configuration.autosaveInterval());
+
+        setConfigValue("autosave.enabled", "no");
+        setConfigValue("autosave.interval", "30s");
+
+        assertFalse(configuration.autosaveEnabled());
+        assertEquals(Duration.ofSeconds(30), configuration.autosaveInterval());
     }
 }

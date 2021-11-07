@@ -19,19 +19,19 @@
 
 package fr.quatrevieux.araknemu.game.handler.exchange;
 
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeFactory;
-import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.exchange.ExchangeRequest;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeRequestError;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Handle the exchange request
  */
-final public class AskExchange implements PacketHandler<GameSession, ExchangeRequest> {
-    final private ExchangeFactory factory;
+public final class AskExchange implements PacketHandler<GameSession, ExchangeRequest> {
+    private final ExchangeFactory factory;
 
     public AskExchange(ExchangeFactory factory) {
         this.factory = factory;

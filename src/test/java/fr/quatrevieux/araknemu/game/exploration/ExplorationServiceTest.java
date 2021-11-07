@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
@@ -47,6 +48,7 @@ class ExplorationServiceTest extends GameBaseCase {
 
         service = new ExplorationService(
             container.get(ExplorationMapService.class),
+            container.get(GameConfiguration.class).player(),
             container.get(Dispatcher.class)
         );
 

@@ -31,38 +31,7 @@ import java.time.Duration;
 /**
  * Configuration for realm
  */
-final public class RealmConfiguration implements ConfigurationModule {
-    final public class Argon2 {
-        /**
-         * Get the number of iterations. Default: 4
-         */
-        public int iterations() {
-            return pool.integer("password.argon2.iterations", 4);
-        }
-
-        /**
-         * Get the memory, in kilobits. Default: 65536 (64Mo)
-         */
-        public int memory() {
-            return pool.integer("password.argon2.memory", 64*1024);
-        }
-
-        /**
-         * Get the parallelism parameter. Default: 8
-         */
-        public int parallelism() {
-            return pool.integer("password.argon2.parallelism", 8);
-        }
-
-        /**
-         * Get the argon2 algorithm type. Default: "argon2id"
-         * Available types : "argon2i", "argon2d", "argon2id"
-         */
-        public Argon2Factory.Argon2Types type() {
-            return Argon2Hash.typeByName(pool.string("password.argon2.type", "argon2id").toUpperCase());
-        }
-    }
-
+public final class RealmConfiguration implements ConfigurationModule {
     private PoolUtils pool;
 
     @Override
@@ -76,7 +45,7 @@ final public class RealmConfiguration implements ConfigurationModule {
     }
 
     /**
-     * The listner port for server
+     * The listened port for authentication server
      */
     public int port() {
         return pool.integer("server.port", 444);
@@ -120,7 +89,7 @@ final public class RealmConfiguration implements ConfigurationModule {
      * Default value: "argon2, plain"
      */
     public String[] passwordHashAlgorithms() {
-        String[] algorithms = StringUtils.split(pool.string("password.defaultHash", "argon2, plain"), ",");
+        final String[] algorithms = StringUtils.split(pool.string("password.defaultHash", "argon2, plain"), ",");
 
         for (int i = 0; i < algorithms.length; ++i) {
             algorithms[i] = algorithms[i].toLowerCase().trim();
@@ -134,5 +103,36 @@ final public class RealmConfiguration implements ConfigurationModule {
      */
     public Argon2 argon2() {
         return new Argon2();
+    }
+
+    public final class Argon2 {
+        /**
+         * Get the number of iterations. Default: 4
+         */
+        public int iterations() {
+            return pool.integer("password.argon2.iterations", 4);
+        }
+
+        /**
+         * Get the memory, in kilobits. Default: 65536 (64Mo)
+         */
+        public int memory() {
+            return pool.integer("password.argon2.memory", 64 * 1024);
+        }
+
+        /**
+         * Get the parallelism parameter. Default: 8
+         */
+        public int parallelism() {
+            return pool.integer("password.argon2.parallelism", 8);
+        }
+
+        /**
+         * Get the argon2 algorithm type. Default: "argon2id"
+         * Available types : "argon2i", "argon2d", "argon2id"
+         */
+        public Argon2Factory.Argon2Types type() {
+            return Argon2Hash.typeByName(pool.string("password.argon2.type", "argon2id").toUpperCase());
+        }
     }
 }

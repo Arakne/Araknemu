@@ -22,9 +22,11 @@ package fr.quatrevieux.araknemu.game.exploration.map.cell.trigger;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.teleport.Teleport;
+import fr.quatrevieux.araknemu.network.game.out.game.MapData;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -76,12 +78,16 @@ class TriggerCellTest extends GameBaseCase {
 
     @Test
     void onStop() throws SQLException, ContainerException {
-        cell.onStop(explorationPlayer());
+        ExplorationPlayer player = explorationPlayer();
+        requestStack.clear();
+        cell.onStop(player);
 
-        assertTrue(explorationPlayer().interactions().busy());
+        assertEquals(321, player.cell().id());
+        assertEquals(10340, player.map().id());
 
-        requestStack.assertLast(
-            new GameActionResponse("1", ActionType.CHANGE_MAP, explorationPlayer().id(), "")
+        requestStack.assertAll(
+            new MapData(player.map()),
+            new GameActionResponse("", ActionType.CHANGE_MAP, player.id(), "")
         );
     }
 }

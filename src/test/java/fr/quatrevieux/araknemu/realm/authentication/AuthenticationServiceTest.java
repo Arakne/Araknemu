@@ -21,18 +21,23 @@ package fr.quatrevieux.araknemu.realm.authentication;
 
 import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.event.Dispatcher;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.account.Banishment;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
+import fr.quatrevieux.araknemu.network.realm.out.HostList;
 import fr.quatrevieux.araknemu.realm.RealmBaseCase;
 import fr.quatrevieux.araknemu.realm.authentication.password.PasswordManager;
 import fr.quatrevieux.araknemu.realm.authentication.password.PlainTextHash;
+import fr.quatrevieux.araknemu.realm.host.GameHost;
 import fr.quatrevieux.araknemu.realm.host.HostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -510,5 +515,24 @@ class AuthenticationServiceTest extends RealmBaseCase {
 
         assertEquals("success", response);
         assertEquals("pseudo", _account.pseudo());
+    }
+
+    @Test
+    void listenerOnHostUpdatedShouldSendToAuthenticatedAccountsHostsList() {
+        AuthenticationAccount account = new AuthenticationAccount(
+            new Account(1),
+            new PlainTextHash().parse("password"),
+            service
+        );
+        service.login(account);
+        account.attach(session);
+
+        container.get(ListenerAggregate.class).register(service);
+        container.get(HostService.class).declare(new GameHost(null, 2, 1234, "127.0.0.1"));
+
+        requestStack.assertLast("AH1;1;110;1|2;0;110;0");
+
+        container.get(HostService.class).updateHost(2, GameHost.State.ONLINE, true);
+        requestStack.assertLast("AH1;1;110;1|2;1;110;1");
     }
 }

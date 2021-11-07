@@ -31,11 +31,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * Fake server implementation
  *
- * @param <S>
+ * @param <S> The handled session type
  */
-final public class DummyServer<S extends Session> implements Server<S> {
-    final private SessionFactory<S> factory;
-    final private Collection<S> sessions = new CopyOnWriteArrayList<>();
+public final class DummyServer<S extends Session> implements Server<S> {
+    private final SessionFactory<S> factory;
+    private final Collection<S> sessions = new CopyOnWriteArrayList<>();
     private int lastId = 0;
 
     public DummyServer(SessionFactory<S> factory) {
@@ -68,11 +68,13 @@ final public class DummyServer<S extends Session> implements Server<S> {
      * Create a new session
      */
     public S createSession(String ipAddress) {
-        DummyChannel channel = new DummyChannel(ipAddress);
+        final DummyChannel channel = new DummyChannel(ipAddress);
+
         channel.setId(++lastId);
         channel.setServer(this);
 
-        S session = factory.create(channel);
+        final S session = factory.create(channel);
+
         sessions.add(session);
 
         return session;

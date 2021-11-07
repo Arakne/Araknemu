@@ -22,8 +22,8 @@ package fr.quatrevieux.araknemu.network.realm.out;
 /**
  * Send to client if it's a game master (allow open console)
  */
-final public class GMLevel {
-    final private boolean gm;
+public final class GMLevel {
+    private final boolean gm;
 
     public GMLevel(boolean gm) {
         this.gm = gm;

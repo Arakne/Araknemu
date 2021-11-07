@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.monster.environment;
@@ -30,8 +30,8 @@ import java.util.List;
 /**
  * Select a random cell from all free cells of the map
  */
-final public class RandomCellSelector implements SpawnCellSelector {
-    final static private RandomUtil RANDOM = RandomUtil.createShared();
+public final class RandomCellSelector implements SpawnCellSelector {
+    private static final RandomUtil RANDOM = RandomUtil.createShared();
 
     private ExplorationMap map;
     private int[] availableCells;
@@ -40,17 +40,21 @@ final public class RandomCellSelector implements SpawnCellSelector {
     public void setMap(ExplorationMap map) {
         this.map = map;
 
-        List<Integer> freeCells = new ArrayList<>();
+        final List<Integer> freeCells = new ArrayList<>();
 
-        for (int cellId = 0; cellId < map.size(); ++cellId) {
-            final ExplorationMapCell cell = map.get(cellId);
-
-            if (cell.free()) {
-                freeCells.add(cellId);
+        for (int team = 0; team < 2; ++team) {
+            for (ExplorationMapCell cell : map.fightPlaces(team)) {
+                if (cell.walkable()) {
+                    freeCells.add(cell.id());
+                }
             }
         }
 
         availableCells = ArrayUtils.toPrimitive(RANDOM.shuffle(freeCells).toArray(new Integer[0]));
+
+        if (availableCells.length == 0) {
+            throw new IllegalArgumentException("No spawn position available on map " + map.id());
+        }
     }
 
     @Override
@@ -58,7 +62,7 @@ final public class RandomCellSelector implements SpawnCellSelector {
         final int offset = RANDOM.nextInt(availableCells.length);
 
         for (int i = 0; i < availableCells.length; ++i) {
-            int cellId = availableCells[(i + offset) % availableCells.length];
+            final int cellId = availableCells[(i + offset) % availableCells.length];
 
             final ExplorationMapCell cell = map.get(cellId);
 

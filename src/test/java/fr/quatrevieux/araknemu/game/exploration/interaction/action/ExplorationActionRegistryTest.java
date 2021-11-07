@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.arakne.utils.maps.constant.Direction;
+import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -48,7 +49,7 @@ class ExplorationActionRegistryTest extends FightBaseCase {
         factory = new ExplorationActionRegistry(
             new MoveFactory(),
             new ChallengeActionsFactories(container.get(FightService.class)),
-            new FightActionsFactories(container.get(FightService.class), container.get(FighterFactory.class))
+            new FightActionsFactories(container.get(FightService.class), container.get(FighterFactory.class), container.get(SpectatorFactory.class))
         );
 
         dataSet.pushMaps().pushSubAreas().pushAreas();

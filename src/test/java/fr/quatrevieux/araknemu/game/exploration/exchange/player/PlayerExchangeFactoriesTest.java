@@ -42,7 +42,7 @@ class PlayerExchangeFactoriesTest extends GameBaseCase {
     @Test
     void createPlayerExchange() throws Exception {
         ExplorationPlayer target = makeOtherExplorationPlayer();
-        target.join(player.map());
+        target.changeMap(player.map(), 123);
 
         assertInstanceOf(PlayerExchangeRequest.class, factories.create(ExchangeType.PLAYER_EXCHANGE, player, target));
     }

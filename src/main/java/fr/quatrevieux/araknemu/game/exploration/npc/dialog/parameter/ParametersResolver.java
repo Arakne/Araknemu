@@ -28,9 +28,9 @@ import java.util.Map;
 /**
  * Resolve question parameters
  */
-final public class ParametersResolver {
-    final private Map<String, VariableResolver> resolvers = new HashMap<>();
-    final private Logger logger;
+public final class ParametersResolver {
+    private final Map<String, VariableResolver> resolvers = new HashMap<>();
+    private final Logger logger;
 
     public ParametersResolver(VariableResolver[] resolvers, Logger logger) {
         this.logger = logger;

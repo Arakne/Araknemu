@@ -23,6 +23,8 @@ import fr.arakne.utils.value.Colors;
 import fr.arakne.utils.value.constant.Gender;
 import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.event.Dispatcher;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
@@ -31,10 +33,12 @@ import fr.quatrevieux.araknemu.realm.RealmBaseCase;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
 import fr.quatrevieux.araknemu.realm.authentication.password.PlainTextHash;
+import fr.quatrevieux.araknemu.realm.host.event.HostsUpdated;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -52,7 +56,8 @@ class HostServiceTest extends RealmBaseCase {
         super.setUp();
 
         service = new HostService(
-            container.get(PlayerRepository.class)
+            container.get(PlayerRepository.class),
+            container.get(Dispatcher.class)
         );
 
         dataSet.use(Player.class);
@@ -60,6 +65,9 @@ class HostServiceTest extends RealmBaseCase {
 
     @Test
     void declare() {
+        AtomicReference<HostsUpdated> ref = new AtomicReference<>();
+        container.get(ListenerAggregate.class).add(HostsUpdated.class, ref::set);
+
         assertTrue(service.all().isEmpty());
 
         GameHost gh = new GameHost(new GameConnectorStub(), 1, 1234, "127.0.0.1");
@@ -68,10 +76,14 @@ class HostServiceTest extends RealmBaseCase {
 
         assertEquals(1, service.all().size());
         assertSame(gh, service.all().toArray()[0]);
+        assertEquals(service.all(), ref.get().hosts());
     }
 
     @Test
     void updateState() {
+        AtomicReference<HostsUpdated> ref = new AtomicReference<>();
+        container.get(ListenerAggregate.class).add(HostsUpdated.class, ref::set);
+
         GameHost gh = new GameHost(new GameConnectorStub(), 1, 1234, "127.0.0.1");
         gh.setCanLog(true);
         service.declare(gh);
@@ -80,6 +92,7 @@ class HostServiceTest extends RealmBaseCase {
 
         assertSame(GameHost.State.SAVING, gh.state());
         assertFalse(gh.canLog());
+        assertEquals(service.all(), ref.get().hosts());
     }
 
     @Test

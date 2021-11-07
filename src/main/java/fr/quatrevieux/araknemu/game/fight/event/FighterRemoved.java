@@ -25,9 +25,9 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 /**
  * A fighter is removed from the fight
  */
-final public class FighterRemoved {
-    final private Fighter fighter;
-    final private Fight fight;
+public final class FighterRemoved {
+    private final Fighter fighter;
+    private final Fight fight;
 
     public FighterRemoved(Fighter fighter, Fight fight) {
         this.fighter = fighter;

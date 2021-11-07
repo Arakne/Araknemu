@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 /**
  * Cell of exploration map
  */
-public interface ExplorationMapCell extends MapCell {
+public interface ExplorationMapCell extends MapCell<ExplorationMapCell> {
     @Override
     public ExplorationMap map();
 
@@ -42,7 +42,7 @@ public interface ExplorationMapCell extends MapCell {
      *
      * @see ExplorationCreature#apply(Operation)
      */
-    default public void apply(Operation operation)  {
+    public default void apply(Operation operation)  {
         // Optimisation : the cell is not walkable, no creatures can be located here
         if (!walkable()) {
             return;

@@ -37,11 +37,11 @@ import java.util.Optional;
  * Base class for implements a fighter
  * Provide commons attributes and methods
  */
-abstract public class AbstractFighter implements Fighter {
-    final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
-    final private BuffList buffs = new BuffList(this);
-    final private States states = new FighterStates(this);
-    final private Map<Object, Object> attachments = new HashMap<>();
+public abstract class AbstractFighter implements Fighter {
+    private final ListenerAggregate dispatcher = new DefaultListenerAggregate();
+    private final BuffList buffs = new BuffList(this);
+    private final States states = new FighterStates(this);
+    private final Map<Object, Object> attachments = new HashMap<>();
 
     // Mutable attributes
     private FightCell cell;
@@ -55,22 +55,22 @@ abstract public class AbstractFighter implements Fighter {
     }
 
     @Override
-    final public FightCell cell() {
+    public final FightCell cell() {
         return cell;
     }
 
     @Override
-    final public Direction orientation() {
+    public final Direction orientation() {
         return orientation;
     }
 
     @Override
-    final public void setOrientation(Direction orientation) {
+    public final void setOrientation(Direction orientation) {
         this.orientation = orientation;
     }
 
     @Override
-    final public void move(FightCell cell) {
+    public final void move(FightCell cell) {
         if (this.cell != null) {
             this.cell.removeFighter();
         }
@@ -87,27 +87,27 @@ abstract public class AbstractFighter implements Fighter {
         dispatcher.dispatch(event);
     }
 
-    final public ListenerAggregate dispatcher() {
+    public final ListenerAggregate dispatcher() {
         return dispatcher;
     }
 
     @Override
-    final public BuffList buffs() {
+    public final BuffList buffs() {
         return buffs;
     }
 
     @Override
-    final public States states() {
+    public final States states() {
         return states;
     }
 
     @Override
-    final public Fight fight() {
+    public final Fight fight() {
         return fight;
     }
 
     @Override
-    final public void joinFight(Fight fight, FightCell startCell) {
+    public final void joinFight(Fight fight, FightCell startCell) {
         if (this.fight != null) {
             throw new IllegalStateException("A fight is already defined");
         }
@@ -127,10 +127,8 @@ abstract public class AbstractFighter implements Fighter {
         turn = null;
     }
 
-    /**
-     * Get the current fighter turn
-     */
-    final public FightTurn turn() {
+    @Override
+    public final FightTurn turn() {
         if (turn == null) {
             throw new FightException("It's not your turn");
         }
@@ -139,40 +137,35 @@ abstract public class AbstractFighter implements Fighter {
     }
 
     @Override
-    final public void attach(Object key, Object value) {
+    public final void attach(Object key, Object value) {
         attachments.put(key, value);
     }
 
     @Override
-    final public Object attachment(Object key) {
+    public final Object attachment(Object key) {
         return attachments.get(key);
     }
 
     @Override
-    final public boolean isOnFight() {
+    public final boolean isOnFight() {
         return fight != null && cell != null;
     }
 
     @Override
-    final public boolean equals(Object obj) {
-        return obj != null && getClass().equals(obj.getClass()) && id() == ((Fighter) obj).id();
+    public final boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof PassiveFighter)) {
+            return false;
+        }
+
+        return id() == ((PassiveFighter) obj).id();
     }
 
     @Override
-    final public int hashCode() {
+    public final int hashCode() {
         return id();
-    }
-
-    /**
-     * Clear fighter data
-     */
-    public void destroy() {
-        this.fight = null;
-        this.attachments.clear();
-    }
-
-    @Override
-    public Optional<PassiveFighter> invoker() {
-        return Optional.empty();
     }
 }

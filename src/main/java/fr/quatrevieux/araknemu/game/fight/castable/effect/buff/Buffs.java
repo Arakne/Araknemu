@@ -21,23 +21,24 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
  * Handle and store buff list for a fighter
  */
-public interface Buffs {
+public interface Buffs extends Iterable<Buff> {
     /**
      * Add and start a buff
      */
     public void add(Buff buff);
 
     /**
-     * @see BuffHook#onCastTarget(Buff, CastScope);
+     * @see BuffHook#onCastTarget(Buff, CastScope)
      */
     public void onCastTarget(CastScope cast);
 
     /**
-     * @see BuffHook#onDamage(Buff, Damage);
+     * @see BuffHook#onDamage(Buff, Damage)
      */
     public void onDamage(Damage value);
 
@@ -55,4 +56,18 @@ public interface Buffs {
      * Refresh the buff list after turn end
      */
     public void refresh();
+
+    /**
+     * Remove all buffs than can be removed, and fire {@link BuffHook#onBuffTerminated(Buff)}
+     *
+     * @return true if there is at least one removed buff
+     */
+    public boolean removeAll();
+
+    /**
+     * Remove all buffs casted by the given fighter
+     *
+     * @return true if there is at least one removed buff
+     */
+    public boolean removeByCaster(PassiveFighter caster);
 }

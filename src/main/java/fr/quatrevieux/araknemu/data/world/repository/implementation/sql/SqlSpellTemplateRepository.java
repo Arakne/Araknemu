@@ -19,10 +19,10 @@
 
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository;
@@ -37,38 +37,10 @@ import java.util.Collection;
  * SQL implementation for spell template repository
  */
 final class SqlSpellTemplateRepository implements SpellTemplateRepository {
-    private class Loader implements RepositoryUtils.Loader<SpellTemplate> {
-        @Override
-        public SpellTemplate create(ResultSet rs) throws SQLException {
-            return new SpellTemplate(
-                rs.getInt("SPELL_ID"),
-                rs.getString("SPELL_NAME"),
-                rs.getInt("SPELL_SPRITE"),
-                rs.getString("SPELL_SPRITE_ARG"),
-                new SpellTemplate.Level[]{
-                    levelTransformer.unserialize(rs.getString("SPELL_LVL_1")),
-                    levelTransformer.unserialize(rs.getString("SPELL_LVL_2")),
-                    levelTransformer.unserialize(rs.getString("SPELL_LVL_3")),
-                    levelTransformer.unserialize(rs.getString("SPELL_LVL_4")),
-                    levelTransformer.unserialize(rs.getString("SPELL_LVL_5")),
-                    levelTransformer.unserialize(rs.getString("SPELL_LVL_6"))
-                },
-                Arrays.stream(StringUtils.split(rs.getString("SPELL_TARGET"), ";"))
-                    .mapToInt(Integer::parseInt)
-                    .toArray()
-            );
-        }
+    private final QueryExecutor executor;
+    private final RepositoryUtils<SpellTemplate> utils;
 
-        @Override
-        public SpellTemplate fillKeys(SpellTemplate entity, ResultSet keys) {
-            throw new RepositoryException("Read-only entity");
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<SpellTemplate> utils;
-
-    final private Transformer<SpellTemplate.Level> levelTransformer;
+    private final Transformer<SpellTemplate.Level> levelTransformer;
 
     public SqlSpellTemplateRepository(QueryExecutor executor, Transformer<SpellTemplate.Level> levelTransformer) {
         this.executor = executor;
@@ -136,5 +108,33 @@ final class SqlSpellTemplateRepository implements SpellTemplateRepository {
     @Override
     public Collection<SpellTemplate> load() {
         return utils.findAll("SELECT * FROM SPELL");
+    }
+
+    private class Loader implements RepositoryUtils.Loader<SpellTemplate> {
+        @Override
+        public SpellTemplate create(ResultSet rs) throws SQLException {
+            return new SpellTemplate(
+                rs.getInt("SPELL_ID"),
+                rs.getString("SPELL_NAME"),
+                rs.getInt("SPELL_SPRITE"),
+                rs.getString("SPELL_SPRITE_ARG"),
+                new SpellTemplate.Level[]{
+                    levelTransformer.unserialize(rs.getString("SPELL_LVL_1")),
+                    levelTransformer.unserialize(rs.getString("SPELL_LVL_2")),
+                    levelTransformer.unserialize(rs.getString("SPELL_LVL_3")),
+                    levelTransformer.unserialize(rs.getString("SPELL_LVL_4")),
+                    levelTransformer.unserialize(rs.getString("SPELL_LVL_5")),
+                    levelTransformer.unserialize(rs.getString("SPELL_LVL_6")),
+                },
+                Arrays.stream(StringUtils.split(rs.getString("SPELL_TARGET"), ";"))
+                    .mapToInt(Integer::parseInt)
+                    .toArray()
+            );
+        }
+
+        @Override
+        public SpellTemplate fillKeys(SpellTemplate entity, ResultSet keys) {
+            throw new RepositoryException("Read-only entity");
+        }
     }
 }

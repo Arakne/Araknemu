@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.event.TurnTerminated;
 /**
  * Refresh the buff list on turn terminated
  */
-final public class RefreshBuffs implements Listener<TurnTerminated> {
+public final class RefreshBuffs implements Listener<TurnTerminated> {
     @Override
     public void on(TurnTerminated event) {
         event.turn().fighter().buffs().refresh();

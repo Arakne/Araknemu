@@ -26,10 +26,10 @@ import fr.quatrevieux.araknemu.game.GameConfiguration;
 /**
  * Check the generated name to be available
  */
-final public class NameCheckerGenerator implements NameGenerator {
-    final private NameGenerator generator;
-    final private PlayerRepository repository;
-    final private GameConfiguration configuration;
+public final class NameCheckerGenerator implements NameGenerator {
+    private final NameGenerator generator;
+    private final PlayerRepository repository;
+    private final GameConfiguration configuration;
 
     public NameCheckerGenerator(NameGenerator generator, PlayerRepository repository, GameConfiguration configuration) {
         this.generator = generator;
@@ -40,7 +40,7 @@ final public class NameCheckerGenerator implements NameGenerator {
     @Override
     public String generate() throws NameGenerationException {
         for (int i = 0; i < 15; ++i) {
-            String generated = generator.generate();
+            final String generated = generator.generate();
 
             if (!repository.nameExists(Player.forCreation(0, configuration.id(), generated, null, null, null))) {
                 return generated;

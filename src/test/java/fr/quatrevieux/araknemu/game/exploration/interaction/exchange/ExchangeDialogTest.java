@@ -56,7 +56,7 @@ class ExchangeDialogTest extends GameBaseCase {
         player = explorationPlayer();
         other = makeOtherExplorationPlayer();
 
-        other.join(player.map());
+        other.changeMap(player.map(), 123);
 
         ExchangeParty[] parties = PlayerExchangeParty.make(player, other);
 

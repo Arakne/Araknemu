@@ -19,36 +19,29 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.factory.type;
 
-import fr.quatrevieux.araknemu.game.fight.ai.AI;
-import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
-import fr.quatrevieux.araknemu.game.fight.ai.action.*;
-import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
+import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.AbstractAiBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-
-import java.util.Optional;
 
 /**
  * AI for run away monsters (like Tofu)
  *
  * This AI use the smallest MP quantity for attack, and flees farthest from enemies
  */
-final public class Runaway implements AiFactory {
-    final private Simulator simulator;
+public final class Runaway extends AbstractAiBuilderFactory {
+    private final Simulator simulator;
 
     public Runaway(Simulator simulator) {
         this.simulator = simulator;
     }
 
     @Override
-    public Optional<AI> create(Fighter fighter) {
-        return Optional.of(
-            new FighterAI(fighter, fighter.fight(), new ActionGenerator[] {
-                new Attack(simulator),
-                new MoveToAttack(simulator),
-                new MoveFarEnemies(),
-                new Boost(simulator),
-            })
-        );
+    public void configure(GeneratorBuilder builder) {
+        builder
+            .boostSelf(simulator)
+            .attackFromNearestCell(simulator)
+            .boostAllies(simulator)
+            .moveFarEnemies()
+        ;
     }
 }

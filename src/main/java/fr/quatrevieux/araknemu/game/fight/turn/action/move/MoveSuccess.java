@@ -23,16 +23,20 @@ import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Path;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 
 /**
  * Successful move result
+ * A path can be truncated due to enemies on path, which will also result to a MoveSuccess result
  */
-final class MoveSuccess implements ActionResult {
-    final private Fighter performer;
-    final private Path<FightCell> path;
+public final class MoveSuccess implements MoveResult {
+    private final Fighter performer;
+    private final Path<FightCell> path;
 
+    /**
+     * @param performer The current fighter which perform the action
+     * @param path The new path
+     */
     public MoveSuccess(Fighter performer, Path<FightCell> path) {
         this.performer = performer;
         this.path = path;
@@ -41,6 +45,16 @@ final class MoveSuccess implements ActionResult {
     @Override
     public int action() {
         return ActionType.MOVE.id();
+    }
+
+    @Override
+    public boolean success() {
+        return true;
+    }
+
+    @Override
+    public int lostActionPoints() {
+        return 0;
     }
 
     @Override
@@ -54,19 +68,22 @@ final class MoveSuccess implements ActionResult {
     }
 
     @Override
-    public boolean success() {
-        return true;
-    }
-
     public FightCell target() {
         return path.target();
     }
 
+    @Override
     public Direction orientation() {
         return path.last().direction();
     }
 
-    public int steps() {
+    @Override
+    public int lostMovementPoints() {
         return path.size() - 1; // The path contains the current fighter's cell
+    }
+
+    @Override
+    public Path<FightCell> path() {
+        return path;
     }
 }

@@ -19,10 +19,10 @@
 
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
+import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
-import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
@@ -41,28 +41,9 @@ import java.util.stream.Collectors;
  * SQL implementation for {@link PlayerItem} repository
  */
 final class SqlPlayerItemRepository implements PlayerItemRepository {
-    private class Loader implements RepositoryUtils.Loader<PlayerItem> {
-        @Override
-        public PlayerItem create(ResultSet rs) throws SQLException {
-            return new PlayerItem(
-                rs.getInt("PLAYER_ID"),
-                rs.getInt("ITEM_ENTRY_ID"),
-                rs.getInt("ITEM_TEMPLATE_ID"),
-                effectsTransformer.unserialize(rs.getString("ITEM_EFFECTS")),
-                rs.getInt("QUANTITY"),
-                rs.getInt("POSITION")
-            );
-        }
-
-        @Override
-        public PlayerItem fillKeys(PlayerItem entity, ResultSet keys) throws SQLException {
-            throw new UnsupportedOperationException();
-        }
-    }
-
-    final private QueryExecutor executor;
-    final private RepositoryUtils<PlayerItem> utils;
-    final private Transformer<List<ItemTemplateEffectEntry>> effectsTransformer;
+    private final QueryExecutor executor;
+    private final RepositoryUtils<PlayerItem> utils;
+    private final Transformer<List<ItemTemplateEffectEntry>> effectsTransformer;
 
     public SqlPlayerItemRepository(QueryExecutor executor, Transformer<List<ItemTemplateEffectEntry>> effectsTransformer) {
         this.executor = executor;
@@ -108,7 +89,7 @@ final class SqlPlayerItemRepository implements PlayerItemRepository {
 
     @Override
     public void update(PlayerItem item) {
-        int count = utils.update(
+        final int count = utils.update(
             "UPDATE PLAYER_ITEM SET QUANTITY = ?, POSITION = ? WHERE PLAYER_ID = ? AND ITEM_ENTRY_ID = ?",
             stmt -> {
                 stmt.setInt(1, item.quantity());
@@ -125,7 +106,7 @@ final class SqlPlayerItemRepository implements PlayerItemRepository {
 
     @Override
     public void delete(PlayerItem item) {
-        int count = utils.update(
+        final int count = utils.update(
             "DELETE FROM PLAYER_ITEM WHERE PLAYER_ID = ? AND ITEM_ENTRY_ID = ?",
             stmt -> {
                 stmt.setInt(1, item.playerId());
@@ -198,5 +179,24 @@ final class SqlPlayerItemRepository implements PlayerItemRepository {
             .stream()
             .collect(Collectors.groupingBy(PlayerItem::playerId))
         ;
+    }
+
+    private class Loader implements RepositoryUtils.Loader<PlayerItem> {
+        @Override
+        public PlayerItem create(ResultSet rs) throws SQLException {
+            return new PlayerItem(
+                rs.getInt("PLAYER_ID"),
+                rs.getInt("ITEM_ENTRY_ID"),
+                rs.getInt("ITEM_TEMPLATE_ID"),
+                effectsTransformer.unserialize(rs.getString("ITEM_EFFECTS")),
+                rs.getInt("QUANTITY"),
+                rs.getInt("POSITION")
+            );
+        }
+
+        @Override
+        public PlayerItem fillKeys(PlayerItem entity, ResultSet keys) throws SQLException {
+            throw new UnsupportedOperationException();
+        }
     }
 }

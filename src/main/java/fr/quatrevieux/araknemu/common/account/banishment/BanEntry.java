@@ -30,10 +30,10 @@ import java.util.Optional;
  *
  * @param <A> The account type
  */
-final public class BanEntry<A extends LivingAccount> {
-    final private A account;
-    final private Banishment entity;
-    final private A banisher;
+public final class BanEntry<A extends LivingAccount> {
+    private final A account;
+    private final Banishment entity;
+    private final A banisher;
 
     public BanEntry(A account, Banishment entity) {
         this(account, entity, null);

@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 /**
  * Remove all life point of looser fighter
  */
-final public class SetDead implements DropRewardAction, FighterOperation {
+public final class SetDead implements DropRewardAction, FighterOperation {
     @Override
     public void apply(DropReward reward, Fighter fighter) {
         fighter.apply(this);

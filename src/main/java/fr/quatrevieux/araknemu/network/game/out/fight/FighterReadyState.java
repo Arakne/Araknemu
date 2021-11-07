@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L213
  */
-final public class FighterReadyState {
-    final private Fighter fighter;
+public final class FighterReadyState {
+    private final Fighter fighter;
 
     public FighterReadyState(Fighter fighter) {
         this.fighter = fighter;

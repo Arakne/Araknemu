@@ -20,7 +20,9 @@
 package fr.quatrevieux.araknemu.game.fight;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
+import fr.quatrevieux.araknemu.core.network.util.DummyChannel;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.event.FightCancelled;
@@ -30,22 +32,31 @@ import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.module.FightModule;
+import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
+import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
+import fr.quatrevieux.araknemu.game.fight.spectator.Spectators;
 import fr.quatrevieux.araknemu.game.fight.state.*;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
+import fr.quatrevieux.araknemu.network.game.GameSession;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.sql.SQLException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -55,6 +66,7 @@ class FightTest extends GameBaseCase {
     private FightMap map;
     private List<FightTeam> teams;
     private Logger logger;
+    private ScheduledExecutorService executor;
 
     private PlayerFighter fighter1, fighter2;
 
@@ -67,7 +79,7 @@ class FightTest extends GameBaseCase {
 
         fight = new Fight(
             5,
-            new ChallengeType(),
+            new ChallengeType(configuration.fight()),
             map = container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
             teams = new ArrayList<>(Arrays.asList(
                 new SimpleTeam(fighter1 = new PlayerFighter(gamePlayer(true)), Arrays.asList(123), 0),
@@ -80,8 +92,18 @@ class FightTest extends GameBaseCase {
                 new ActiveState(),
                 new FinishState()
             ),
-            logger = Mockito.mock(Logger.class)
+            logger = Mockito.mock(Logger.class),
+            executor = Executors.newSingleThreadScheduledExecutor()
         );
+    }
+
+    @Override
+    @AfterEach
+    public void tearDown() throws fr.quatrevieux.araknemu.core.di.ContainerException {
+        executor.shutdownNow();
+        fight.cancel(true);
+
+        super.tearDown();
     }
 
     @Test
@@ -94,6 +116,8 @@ class FightTest extends GameBaseCase {
         assertInstanceOf(ChallengeType.class, fight.type());
         assertInstanceOf(EffectsHandler.class, fight.effects());
         assertFalse(fight.active());
+        assertTrue(fight.alive());
+        assertInstanceOf(Spectators.class, fight.spectators());
     }
 
     @Test
@@ -131,6 +155,19 @@ class FightTest extends GameBaseCase {
         fight.send("test");
 
         requestStack.assertLast("test");
+    }
+
+    @Test
+    void sendWithSpectator() throws SQLException {
+        GameSession otherSession = makeSimpleExplorationSession(5);
+
+        Spectator spectator = container.get(SpectatorFactory.class).create(otherSession.player(), fight);
+
+        fight.spectators().add(spectator);
+        fight.send("test");
+
+        requestStack.assertLast("test");
+        new SendingRequestStack(DummyChannel.class.cast(otherSession.channel())).assertLast("test");
     }
 
     @RepeatedIfExceptionsTest
@@ -188,11 +225,43 @@ class FightTest extends GameBaseCase {
     }
 
     @Test
+    void executeOnDeadFightShouldBeIgnored() {
+        fight.cancel();
+
+        assertThrows(IllegalStateException.class, () -> fight.execute(() -> {}));
+        assertThrows(IllegalStateException.class, () -> fight.schedule(() -> {}, Duration.ZERO));
+    }
+
+    @Test
+    void scheduleOnFightDeadShouldBeIgnored() throws InterruptedException {
+        AtomicBoolean executed = new AtomicBoolean(false);
+        fight.schedule(() -> executed.set(true), Duration.ofMillis(10));
+        fight.cancel();
+
+        Thread.sleep(100);
+
+        Mockito.verify(logger).warn(Mockito.matches("Cannot run task .* on dead fight"));
+        assertFalse(executed.get());
+    }
+
+    @Test
     void destroy() {
         fight.destroy();
 
         assertCount(0, fight.teams());
         assertEquals(0, fight.map().size());
+        assertFalse(fight.alive());
+    }
+
+    @Test
+    void destroyShouldClearSpectators() throws SQLException {
+        Spectator spectator = new Spectator(gamePlayer(), fight);
+        fight.spectators().add(spectator);
+        requestStack.clear();
+
+        fight.destroy();
+        fight.spectators().send("foo");
+        requestStack.assertEmpty();
     }
 
     @RepeatedIfExceptionsTest
@@ -248,6 +317,7 @@ class FightTest extends GameBaseCase {
         fight.start();
 
         assertThrows(IllegalStateException.class, () -> fight.cancel());
+        assertTrue(fight.alive());
     }
 
     @Test
@@ -260,6 +330,7 @@ class FightTest extends GameBaseCase {
         assertSame(fight, ref.get().fight());
         assertCount(0, fight.teams());
         assertCount(0, fight.fighters());
+        assertFalse(fight.alive());
     }
 
     @Test
@@ -274,6 +345,7 @@ class FightTest extends GameBaseCase {
         assertSame(fight, ref.get().fight());
         assertCount(0, fight.teams());
         assertCount(0, fight.fighters());
+        assertFalse(fight.alive());
     }
 
     @Test
@@ -307,5 +379,24 @@ class FightTest extends GameBaseCase {
         fight.attach(attachment);
 
         assertSame(attachment, fight.attachment(Object.class));
+    }
+
+    @Test
+    void dispatchToAll() throws SQLException {
+        class Foo {}
+        AtomicInteger ai = new AtomicInteger();
+
+        Spectator spectator = new Spectator(makeSimpleGamePlayer(10), fight);
+        spectator.join();
+
+        new PlacementState().start(fight); // Init cell to ensure that Fighter#isOnFight() is true
+
+        fighter1.dispatcher().add(Foo.class, foo -> ai.incrementAndGet());
+        fighter2.dispatcher().add(Foo.class, foo -> ai.incrementAndGet());
+        spectator.dispatcher().add(Foo.class, foo -> ai.incrementAndGet());
+
+        fight.dispatchToAll(new Foo());
+
+        assertEquals(3, ai.get());
     }
 }

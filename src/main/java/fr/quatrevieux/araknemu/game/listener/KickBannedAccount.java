@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.network.out.ServerMessage;
 /**
  * Kick the banned account
  */
-final public class KickBannedAccount implements Listener<AccountBanned<GameAccount>> {
+public final class KickBannedAccount implements Listener<AccountBanned<GameAccount>> {
     @Override
     public void on(AccountBanned<GameAccount> event) {
         event.account().kick(
@@ -41,6 +41,6 @@ final public class KickBannedAccount implements Listener<AccountBanned<GameAccou
     @Override
     @SuppressWarnings("unchecked")
     public Class<AccountBanned<GameAccount>> event() {
-        return (Class<AccountBanned<GameAccount>>)(Class<?>) AccountBanned.class;
+        return (Class<AccountBanned<GameAccount>>) (Class<?>) AccountBanned.class;
     }
 }

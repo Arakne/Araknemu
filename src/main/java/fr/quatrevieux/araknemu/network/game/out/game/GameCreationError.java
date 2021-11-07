@@ -24,7 +24,7 @@ package fr.quatrevieux.araknemu.network.game.out.game;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L87
  */
-final public class GameCreationError {
+public final class GameCreationError {
     @Override
     public String toString() {
         return "GCE";

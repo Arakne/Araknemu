@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 /**
  * Null object for channel
  */
-final public class NullChannel implements Channel {
-    final private ChannelType type;
+public final class NullChannel implements Channel {
+    private final ChannelType type;
 
     public NullChannel(ChannelType type) {
         this.type = type;
@@ -38,6 +38,11 @@ final public class NullChannel implements Channel {
     @Override
     public ChannelType type() {
         return type;
+    }
+
+    @Override
+    public boolean authorized(GamePlayer from) {
+        return true;
     }
 
     @Override

@@ -55,7 +55,7 @@ class AskExchangeTest extends GameBaseCase {
         player = explorationPlayer();
         other = makeOtherExplorationPlayer();
 
-        other.join(player.map());
+        other.changeMap(player.map(), 123);
 
         handler = new AskExchange(container.get(ExchangeFactory.class));
     }

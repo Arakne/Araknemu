@@ -25,9 +25,9 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 /**
  * Event trigger when the player move is terminated
  */
-final public class PlayerMoveFinished {
-    final private ExplorationPlayer player;
-    final private ExplorationMapCell cell;
+public final class PlayerMoveFinished {
+    private final ExplorationPlayer player;
+    private final ExplorationMapCell cell;
 
     public PlayerMoveFinished(ExplorationPlayer player, ExplorationMapCell cell) {
         this.player = player;

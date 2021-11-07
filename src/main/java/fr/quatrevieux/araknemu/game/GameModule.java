@@ -30,14 +30,23 @@ import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.core.network.Server;
 import fr.quatrevieux.araknemu.core.network.netty.NettyServer;
-import fr.quatrevieux.araknemu.core.network.parser.*;
+import fr.quatrevieux.araknemu.core.network.parser.AggregatePacketParser;
+import fr.quatrevieux.araknemu.core.network.parser.AggregateParserLoader;
+import fr.quatrevieux.araknemu.core.network.parser.DefaultDispatcher;
+import fr.quatrevieux.araknemu.core.network.parser.Dispatcher;
+import fr.quatrevieux.araknemu.core.network.parser.PacketParser;
+import fr.quatrevieux.araknemu.core.network.parser.ParserLoader;
 import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
 import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import fr.quatrevieux.araknemu.core.network.session.extension.RateLimiter;
 import fr.quatrevieux.araknemu.core.network.session.extension.SessionLogger;
 import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.repository.BanIpRepository;
-import fr.quatrevieux.araknemu.data.living.repository.account.*;
+import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
+import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
+import fr.quatrevieux.araknemu.data.living.repository.account.BanishmentRepository;
+import fr.quatrevieux.araknemu.data.living.repository.account.BankItemRepository;
+import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
@@ -48,11 +57,19 @@ import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepo
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.area.AreaRepository;
 import fr.quatrevieux.araknemu.data.world.repository.environment.area.SubAreaRepository;
-import fr.quatrevieux.araknemu.data.world.repository.environment.npc.*;
+import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcExchangeRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcTemplateRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.npc.QuestionRepository;
+import fr.quatrevieux.araknemu.data.world.repository.environment.npc.ResponseActionRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
-import fr.quatrevieux.araknemu.data.world.repository.monster.*;
+import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
+import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupPositionRepository;
+import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterRewardItemRepository;
+import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterRewardRepository;
+import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterTemplateRepository;
 import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
 import fr.quatrevieux.araknemu.game.account.TokenService;
@@ -64,7 +81,15 @@ import fr.quatrevieux.araknemu.game.account.generator.SimpleNameGenerator;
 import fr.quatrevieux.araknemu.game.activity.ActivityService;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.chat.ChatService;
-import fr.quatrevieux.araknemu.game.chat.channel.*;
+import fr.quatrevieux.araknemu.game.chat.channel.Channel;
+import fr.quatrevieux.araknemu.game.chat.channel.FightChannel;
+import fr.quatrevieux.araknemu.game.chat.channel.FightSpectatorChannel;
+import fr.quatrevieux.araknemu.game.chat.channel.FightTeamChannel;
+import fr.quatrevieux.araknemu.game.chat.channel.FloodGuardChannel;
+import fr.quatrevieux.araknemu.game.chat.channel.GlobalChannel;
+import fr.quatrevieux.araknemu.game.chat.channel.MapChannel;
+import fr.quatrevieux.araknemu.game.chat.channel.NullChannel;
+import fr.quatrevieux.araknemu.game.chat.channel.PrivateChannel;
 import fr.quatrevieux.araknemu.game.connector.ConnectorService;
 import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
@@ -108,15 +133,24 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.MonsterAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Aggressive;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Fixed;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Runaway;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Support;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Tactical;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AlterCharacteristicSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.ArmorSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.DamageSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.StealLifeSimulator;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
-import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.*;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddExperience;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddItems;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddKamas;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.ReturnToSavePosition;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.SetDead;
+import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.SynchronizeLife;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.PvmRewardsGenerator;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider.PvmEndFightActionProvider;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider.PvmItemDropProvider;
@@ -124,13 +158,36 @@ import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider.PvmKam
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.pvm.provider.PvmXpProvider;
 import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
-import fr.quatrevieux.araknemu.game.fight.module.*;
+import fr.quatrevieux.araknemu.game.fight.module.AiModule;
+import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
+import fr.quatrevieux.araknemu.game.fight.module.LaunchedSpellsModule;
+import fr.quatrevieux.araknemu.game.fight.module.RaulebaqueModule;
+import fr.quatrevieux.araknemu.game.fight.module.StatesModule;
+import fr.quatrevieux.araknemu.game.fight.spectator.DefaultSpectatorFactory;
+import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
+import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
-import fr.quatrevieux.araknemu.game.handler.loader.*;
+import fr.quatrevieux.araknemu.game.handler.loader.AdminLoader;
+import fr.quatrevieux.araknemu.game.handler.loader.AggregateLoader;
+import fr.quatrevieux.araknemu.game.handler.loader.CommonLoader;
+import fr.quatrevieux.araknemu.game.handler.loader.ExploringLoader;
+import fr.quatrevieux.araknemu.game.handler.loader.ExploringOrFightingLoader;
+import fr.quatrevieux.araknemu.game.handler.loader.FightingLoader;
+import fr.quatrevieux.araknemu.game.handler.loader.LoggedLoader;
+import fr.quatrevieux.araknemu.game.handler.loader.PlayingLoader;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.SuperType;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.*;
-import fr.quatrevieux.araknemu.game.item.factory.*;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToCharacteristicMapping;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToUseMapping;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToWeaponMapping;
+import fr.quatrevieux.araknemu.game.item.factory.DefaultItemFactory;
+import fr.quatrevieux.araknemu.game.item.factory.ItemFactory;
+import fr.quatrevieux.araknemu.game.item.factory.ResourceFactory;
+import fr.quatrevieux.araknemu.game.item.factory.UsableFactory;
+import fr.quatrevieux.araknemu.game.item.factory.WeaponFactory;
+import fr.quatrevieux.araknemu.game.item.factory.WearableFactory;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
 import fr.quatrevieux.araknemu.game.monster.environment.MonsterEnvironmentService;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
@@ -158,8 +215,8 @@ import java.util.Arrays;
 /**
  * Module for game service
  */
-final public class GameModule implements ContainerModule {
-    final private Araknemu app;
+public final class GameModule implements ContainerModule {
+    private final Araknemu app;
 
     public GameModule(Araknemu app) {
         this.app = app;
@@ -201,7 +258,8 @@ final public class GameModule implements ContainerModule {
                     container.get(PlayerRaceService.class),
                     container.get(PlayerExperienceService.class),
 
-                    container.get(GameBanIpSynchronizer.class)
+                    container.get(GameBanIpSynchronizer.class),
+                    container.get(SavingService.class)
                 ),
 
                 // Subscribers
@@ -222,7 +280,8 @@ final public class GameModule implements ContainerModule {
                     container.get(PlayerService.class),
                     container.get(AccountService.class),
                     container.get(ShutdownService.class),
-                    container.get(GameBanIpSynchronizer.class)
+                    container.get(GameBanIpSynchronizer.class),
+                    container.get(SavingService.class)
                 )
             )
         );
@@ -275,7 +334,7 @@ final public class GameModule implements ContainerModule {
                 new AggregateParserLoader(
                     new ParserLoader[]{
                         new CommonParserLoader(),
-                        new GameParserLoader()
+                        new GameParserLoader(),
                     }
                 ).load()
             )
@@ -292,8 +351,7 @@ final public class GameModule implements ContainerModule {
         configureServices(configurator);
     }
 
-    private void configureServices(ContainerConfigurator configurator)
-    {
+    private void configureServices(ContainerConfigurator configurator) {
         configurator.persist(
             ConnectorService.class,
             container -> new ConnectorService(
@@ -343,6 +401,7 @@ final public class GameModule implements ContainerModule {
             ExplorationService.class,
             container -> new ExplorationService(
                 container.get(ExplorationMapService.class),
+                container.get(GameConfiguration.class).player(),
                 container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class)
             )
         );
@@ -371,7 +430,7 @@ final public class GameModule implements ContainerModule {
         configurator.persist(
             CellLoader.class,
             container -> new CellLoaderAggregate(new CellLoader[] {
-                new TriggerLoader(container.get(MapTriggerService.class))
+                new TriggerLoader(container.get(MapTriggerService.class)),
             })
         );
 
@@ -401,7 +460,8 @@ final public class GameModule implements ContainerModule {
                 new ChallengeActionsFactories(container.get(FightService.class)),
                 new FightActionsFactories(
                     container.get(FightService.class),
-                    container.get(FighterFactory.class)
+                    container.get(FighterFactory.class),
+                    container.get(SpectatorFactory.class)
                 )
             )
         );
@@ -412,22 +472,13 @@ final public class GameModule implements ContainerModule {
                 container.get(GameConfiguration.class).chat(),
                 new Channel[] {
                     new MapChannel(),
-                    new GlobalChannel(
-                        ChannelType.INCARNAM,
-                        container.get(PlayerService.class)
-                    ),
+                    new GlobalChannel(ChannelType.INCARNAM, container.get(PlayerService.class)),
                     new FloodGuardChannel(
-                        new GlobalChannel(
-                            ChannelType.TRADE,
-                            container.get(PlayerService.class)
-                        ),
+                        new GlobalChannel(ChannelType.TRADE, container.get(PlayerService.class)),
                         container.get(GameConfiguration.class).chat()
                     ),
                     new FloodGuardChannel(
-                        new GlobalChannel(
-                            ChannelType.RECRUITMENT,
-                            container.get(PlayerService.class)
-                        ),
+                        new GlobalChannel(ChannelType.RECRUITMENT, container.get(PlayerService.class)),
                         container.get(GameConfiguration.class).chat()
                     ),
                     new GlobalChannel(
@@ -436,10 +487,11 @@ final public class GameModule implements ContainerModule {
                         container.get(PlayerService.class)
                     ),
                     new NullChannel(ChannelType.MEETIC),
-                    new PrivateChannel(
-                        container.get(PlayerService.class)
-                    ),
-                    new FightTeamChannel()
+                    new PrivateChannel(container.get(PlayerService.class)),
+                    new FightChannel(),
+                    new FightTeamChannel(),
+                    new FightSpectatorChannel(ChannelType.FIGHT_TEAM),
+                    new FightSpectatorChannel(ChannelType.MESSAGES),
                 }
             )
         );
@@ -540,6 +592,7 @@ final public class GameModule implements ContainerModule {
                 Arrays.asList(
                     new ChallengeBuilderFactory(
                         container.get(FighterFactory.class),
+                        container.get(ChallengeType.class),
                         container.get(Logger.class) // @todo fight logger
                     ),
                     new PvmBuilderFactory(
@@ -555,7 +608,8 @@ final public class GameModule implements ContainerModule {
                     LaunchedSpellsModule::new,
                     fight -> new AiModule(container.get(AiFactory.class)),
                     fight -> new MonsterInvocationModule(container.get(MonsterService.class), fight)
-                )
+                ),
+                container.get(GameConfiguration.class).fight()
             )
         );
 
@@ -688,7 +742,7 @@ final public class GameModule implements ContainerModule {
             container -> new ParametersResolver(
                 new VariableResolver[] {
                     new GetterResolver("name", session -> session.player().name()),
-                    new BankCostResolver(container.get(BankService.class))
+                    new BankCostResolver(container.get(BankService.class)),
                 },
                 container.get(Logger.class)
             )
@@ -700,6 +754,8 @@ final public class GameModule implements ContainerModule {
                 container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class)
             )
         );
+
+        configurator.persist(SpectatorFactory.class, container -> new DefaultSpectatorFactory());
 
         configurator.persist(
             EffectMappers.class,
@@ -747,11 +803,19 @@ final public class GameModule implements ContainerModule {
             PvmType.class,
             container -> new PvmType(
                 new PvmRewardsGenerator(
-                    Arrays.asList(new AddExperience(), new SynchronizeLife(), new AddKamas(), new AddItems(container.get(ItemService.class))),
+                    // Issue #192 (https://github.com/Arakne/Araknemu/issues/192) : Perform SynchronizeLife before AddExperience
+                    // to ensure that level up (which trigger restore life) is performed after life synchronisation
+                    Arrays.asList(new SynchronizeLife(), new AddExperience(), new AddKamas(), new AddItems(container.get(ItemService.class))),
                     Arrays.asList(new SetDead(), new ReturnToSavePosition()),
                     Arrays.asList(new PvmXpProvider(), new PvmKamasProvider(), new PvmItemDropProvider(), new PvmEndFightActionProvider())
-                )
+                ),
+                container.get(GameConfiguration.class).fight()
             )
+        );
+
+        configurator.persist(
+            ChallengeType.class,
+            container -> new ChallengeType(container.get(GameConfiguration.class).fight())
         );
 
         configurator.persist(
@@ -813,18 +877,23 @@ final public class GameModule implements ContainerModule {
             simulator.register(179, new AlterCharacteristicSimulator(-8)); // -heal
             simulator.register(186, new AlterCharacteristicSimulator(-2)); // -percent damage
 
+            simulator.register(105, new ArmorSimulator());
+            simulator.register(265, new ArmorSimulator());
+
             return simulator;
         });
 
         configurator.persist(
             MonsterAiFactory.class,
             container -> {
-                MonsterAiFactory factory = new MonsterAiFactory();
+                final MonsterAiFactory factory = new MonsterAiFactory();
                 final Simulator simulator = container.get(Simulator.class);
 
                 factory.register("AGGRESSIVE", new Aggressive(simulator));
                 factory.register("RUNAWAY", new Runaway(simulator));
-                factory.register("SUPPORT", new Runaway(simulator));
+                factory.register("SUPPORT", new Support(simulator));
+                factory.register("TACTICAL", new Tactical(simulator));
+                factory.register("FIXED", new Fixed(simulator));
 
                 return factory;
             }
@@ -843,6 +912,12 @@ final public class GameModule implements ContainerModule {
 
         configurator.persist(SessionLogService.class, container -> new SessionLogService(
             container.get(ConnectionLogRepository.class)
+        ));
+
+        configurator.persist(SavingService.class, container -> new SavingService(
+            container.get(PlayerService.class),
+            container.get(GameConfiguration.class),
+            container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class)
         ));
     }
 }

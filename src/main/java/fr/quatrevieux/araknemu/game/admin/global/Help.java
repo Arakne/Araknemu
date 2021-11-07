@@ -24,20 +24,29 @@ import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
+import fr.quatrevieux.araknemu.game.admin.executor.argument.ArgumentsHydrator;
 import fr.quatrevieux.araknemu.game.admin.formatter.Link;
+import fr.quatrevieux.araknemu.game.admin.help.CommandHelp;
+import fr.quatrevieux.araknemu.game.admin.help.DefaultHelpRenderer;
 
 /**
  * Show help about the console usage
  */
-final public class Help extends AbstractCommand {
+public final class Help extends AbstractCommand<CommandParser.Arguments> {
+    private final ArgumentsHydrator hydrator;
+
+    public Help(ArgumentsHydrator hydrator) {
+        this.hydrator = hydrator;
+    }
+
     @Override
-    protected void build(AbstractCommand.Builder builder) {
+    protected void build(Builder builder) {
         builder
-            .description("Show help for use the console commands")
             .help(formatter -> formatter
-                    .synopsis("help [command name]")
-                    .example("help", "List all available commands")
-                    .example("help echo", "Show the help for the echo command")
+                .description("Show help for use the console commands")
+                .synopsis("help [COMMAND NAME]")
+                .example("help", "List all available commands")
+                .example("help echo", "Show the help for the echo command")
             )
         ;
     }
@@ -61,10 +70,11 @@ final public class Help extends AbstractCommand {
      * Show help for the given command
      */
     private void command(AdminPerformer performer, CommandParser.Arguments arguments, String commandName) throws AdminException {
-        Command command = arguments.context().command(commandName);
+        final Command command = arguments.context().command(commandName);
+        final CommandHelp help = hydrator.help(command, command.createArguments(), command.help());
 
         performer.success("<b>Help for {}</b>", command.name());
-        performer.info(command.help());
+        performer.info(help.render(new DefaultHelpRenderer()));
     }
 
     /**
@@ -78,22 +88,26 @@ final public class Help extends AbstractCommand {
             "Some commands needs a context to works. The context should be set in front of the command : [context] [command] [arguments...].\n" +
             "The context can define the target user or account. The contexts syntax are :\n" +
             "!                 - The current user\n" +
-            "$name             - A named context\n" +
-            "${account:[name]} - An account\n" +
-            "${player:[name]}  - A player\n" +
-            "${debug}          - Contains debug commands"
+            "@John             - The player 'John'\n" +
+            "#Foo              - The account 'Foo'\n" +
+            "*                 - The server context\n" +
+            ":                 - Contains debug commands"
         );
 
         performer.success("<b>List of available commands :</b>");
         performer.info("<i>(i) You can click on the command name for open its help page</i>");
 
         for (Command command : arguments.context().commands()) {
+            if (!performer.isGranted(command.permissions())) {
+                continue;
+            }
+
             performer.info(
                 "{} - {}",
                 new Link()
                     .text(command.name())
                     .execute((arguments.contextPath().isEmpty() ? "" : arguments.contextPath() + " ") + arguments.command() + " " + command.name()),
-                command.description()
+                command.help().description()
             );
         }
     }

@@ -30,9 +30,9 @@ import java.util.List;
 /**
  * Map for the fight
  */
-final public class FightMap implements BattlefieldMap {
-    final private MapTemplate template;
-    final private List<FightCell> cells;
+public final class FightMap implements BattlefieldMap {
+    private final MapTemplate template;
+    private final List<FightCell> cells;
 
     public FightMap(MapTemplate template) {
         this.template = template;
@@ -90,10 +90,10 @@ final public class FightMap implements BattlefieldMap {
     }
 
     private List<FightCell> makeCells(CellData[] template) {
-        List<FightCell> cells = new ArrayList<>(template.length);
+        final List<FightCell> cells = new ArrayList<>(template.length);
 
         for (int i = 0; i < template.length; ++i) {
-            CellData cell = template[i];
+            final CellData cell = template[i];
 
             if (!cell.active() || !cell.movement().walkable()) {
                 cells.add(new UnwalkableFightCell(this, template[i], i));

@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.world.creature.Creature;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Dialog.as#L46
  */
-final public class DialogCreated {
-    final private Creature interlocutor;
+public final class DialogCreated {
+    private final Creature interlocutor;
 
     public DialogCreated(Creature interlocutor) {
         this.interlocutor = interlocutor;

@@ -30,8 +30,8 @@ import java.util.Collections;
 /**
  * Remove the fighter from displayed fight team
  */
-final public class SendTeamFighterRemoved implements Listener<FighterRemoved> {
-    final private ExplorationMap map;
+public final class SendTeamFighterRemoved implements Listener<FighterRemoved> {
+    private final ExplorationMap map;
 
     public SendTeamFighterRemoved(ExplorationMap map) {
         this.map = map;

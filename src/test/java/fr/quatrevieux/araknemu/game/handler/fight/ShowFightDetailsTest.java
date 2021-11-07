@@ -46,7 +46,7 @@ class ShowFightDetailsTest extends FightBaseCase {
     @Test
     void handleSuccess() throws SQLException, ContainerException {
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
-        explorationPlayer().join(map);
+        explorationPlayer().changeMap(map, 123);
 
         Fight fight = createSimpleFight(map);
 

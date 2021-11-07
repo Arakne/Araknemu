@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.network.realm.RealmSession;
 /**
  * Handle rpong packet {@link RealmSession#isAlive()}
  */
-final public class PongResponse implements PacketHandler<RealmSession, PingResponse> {
+public final class PongResponse implements PacketHandler<RealmSession, PingResponse> {
     @Override
     public void handle(RealmSession session, PingResponse packet) {
         //session.onPingResponse(packet);

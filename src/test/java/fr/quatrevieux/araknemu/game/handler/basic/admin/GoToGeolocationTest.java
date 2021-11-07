@@ -43,9 +43,6 @@ class GoToGeolocationTest extends GameBaseCase {
 
         handlePacket(new AdminMove(new Geolocation(3, 6)));
 
-        assertTrue(player.interactions().busy());
-        player.interactions().end(1);
-
         assertEquals(10340, player.map().id());
         assertEquals(250, player.cell().id());
     }
@@ -56,9 +53,6 @@ class GoToGeolocationTest extends GameBaseCase {
         player.account().grant(Permission.ACCESS);
 
         handlePacket(new AdminMove(new Geolocation(3, 6)));
-
-        assertTrue(player.interactions().busy());
-        player.interactions().end(1);
 
         assertEquals(10340, player.map().id());
         assertEquals(15, player.cell().id());

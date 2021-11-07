@@ -27,17 +27,17 @@ import java.util.Optional;
 /**
  * Store the NPC template data
  */
-final public class NpcTemplate {
-    final private int id;
-    final private int gfxId;
-    final private int scaleX;
-    final private int scaleY;
-    final private Gender gender;
-    final private Colors colors;
-    final private String accessories;
-    final private int extraClip;
-    final private int customArtwork;
-    final private int[] storeItems;
+public final class NpcTemplate {
+    private final int id;
+    private final int gfxId;
+    private final int scaleX;
+    private final int scaleY;
+    private final Gender gender;
+    private final Colors colors;
+    private final String accessories;
+    private final int extraClip;
+    private final int customArtwork;
+    private final int[] storeItems;
 
     public NpcTemplate(int id, int gfxId, int scaleX, int scaleY, Gender gender, Colors colors, String accessories, int extraClip, int customArtwork, int[] storeItems) {
         this.id = id;

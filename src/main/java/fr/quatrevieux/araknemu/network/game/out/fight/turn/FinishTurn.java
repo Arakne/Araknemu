@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L304
  */
-final public class FinishTurn {
-    final private FightTurn turn;
+public final class FinishTurn {
+    private final FightTurn turn;
 
     public FinishTurn(FightTurn turn) {
         this.turn = turn;

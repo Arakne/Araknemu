@@ -21,9 +21,9 @@ package fr.quatrevieux.araknemu.game.listener.map;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.event.NewSpriteOnMap;
-import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 
 import java.util.Collections;
@@ -31,8 +31,8 @@ import java.util.Collections;
 /**
  * Send new sprites added on the current map
  */
-final public class SendNewSprite implements Listener<NewSpriteOnMap> {
-    final private ExplorationMap map;
+public final class SendNewSprite implements Listener<NewSpriteOnMap> {
+    private final ExplorationMap map;
 
     public SendNewSprite(ExplorationMap map) {
         this.map = map;
@@ -41,7 +41,7 @@ final public class SendNewSprite implements Listener<NewSpriteOnMap> {
     @Override
     public void on(NewSpriteOnMap event) {
         // Save the string value for optimisation
-        String packet = new AddSprites(Collections.singleton(event.sprite())).toString();
+        final String packet = new AddSprites(Collections.singleton(event.sprite())).toString();
 
         map.apply(new Operation() {
             @Override

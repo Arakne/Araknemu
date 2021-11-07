@@ -44,11 +44,15 @@ import org.mockito.Mockito;
 
 import java.sql.SQLException;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MonsterEnvironmentServiceTest extends GameBaseCase {
     private MonsterEnvironmentService service;
@@ -134,18 +138,71 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
             container.get(MonsterEnvironmentService.class),
             container.get(FightService.class),
             container.get(MonsterGroupDataRepository.class).get(3),
-            new RandomCellSelector()
+            new RandomCellSelector(), false
         );
 
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
         monsterGroupPosition.populate(map);
 
-        explorationPlayer().join(map);
+        explorationPlayer().changeMap(map, 123);
         requestStack.clear();
 
         service.respawn(monsterGroupPosition, Duration.ZERO);
 
         Thread.sleep(50);
+
+        MonsterGroup lastGroup = monsterGroupPosition.available().get(1);
+
+        requestStack.assertLast(new AddSprites(Collections.singleton(lastGroup.sprite())));
+    }
+
+    @RepeatedIfExceptionsTest
+    void respawnWithDelay() throws InterruptedException, SQLException {
+        LivingMonsterGroupPosition monsterGroupPosition = new LivingMonsterGroupPosition(
+            container.get(MonsterGroupFactory.class),
+            container.get(MonsterEnvironmentService.class),
+            container.get(FightService.class),
+            container.get(MonsterGroupDataRepository.class).get(3),
+            new RandomCellSelector(), false
+        );
+
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
+        monsterGroupPosition.populate(map);
+        int size = monsterGroupPosition.available().size();
+
+        explorationPlayer().changeMap(map, 123);
+        requestStack.clear();
+
+        service.respawn(monsterGroupPosition, Duration.ofMillis(50));
+        Thread.sleep(40);
+
+        assertEquals(size, monsterGroupPosition.available().size());
+        Thread.sleep(20);
+
+        MonsterGroup lastGroup = monsterGroupPosition.available().get(1);
+
+        requestStack.assertLast(new AddSprites(Collections.singleton(lastGroup.sprite())));
+    }
+
+    @RepeatedIfExceptionsTest
+    void respawnWithDelayAndRespawnSpeedFactor() throws InterruptedException, SQLException {
+        setConfigValue("activity.monsters.respawnSpeedFactor", "4");
+        LivingMonsterGroupPosition monsterGroupPosition = new LivingMonsterGroupPosition(
+            container.get(MonsterGroupFactory.class),
+            container.get(MonsterEnvironmentService.class),
+            container.get(FightService.class),
+            container.get(MonsterGroupDataRepository.class).get(3),
+            new RandomCellSelector(), false
+        );
+
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
+        monsterGroupPosition.populate(map);
+
+        explorationPlayer().changeMap(map, 123);
+        requestStack.clear();
+
+        service.respawn(monsterGroupPosition, Duration.ofMillis(50));
+        Thread.sleep(40);
 
         MonsterGroup lastGroup = monsterGroupPosition.available().get(1);
 
@@ -162,5 +219,9 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
 
         service.preload(container.get(Logger.class));
         assertEquals(3, service.groups().count());
+
+        assertFalse(service.groups().findFirst().get().fixed());
+        assertTrue(service.groups().skip(1).findFirst().get().fixed());
+        assertTrue(service.groups().skip(2).findFirst().get().fixed());
     }
 }

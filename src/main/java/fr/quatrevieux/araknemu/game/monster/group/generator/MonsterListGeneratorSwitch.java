@@ -27,9 +27,9 @@ import java.util.List;
 /**
  * Generate the monster list using randomized or fixed strategy depending of {@link MonsterGroupData#maxSize()} value
  */
-final public class MonsterListGeneratorSwitch implements MonsterListGenerator {
-    final private MonsterListGenerator randomizedGenerator;
-    final private MonsterListGenerator fixedGenerator;
+public final class MonsterListGeneratorSwitch implements MonsterListGenerator {
+    private final MonsterListGenerator randomizedGenerator;
+    private final MonsterListGenerator fixedGenerator;
 
     /**
      * @param randomizedGenerator Generator to used when maxSize > 0

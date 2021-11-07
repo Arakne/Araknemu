@@ -27,12 +27,23 @@ import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
-import fr.quatrevieux.araknemu.game.listener.player.*;
+import fr.quatrevieux.araknemu.game.listener.player.ComputeLifePoints;
+import fr.quatrevieux.araknemu.game.listener.player.InitializeRestrictions;
+import fr.quatrevieux.araknemu.game.listener.player.RestoreLifePointsOnLevelUp;
+import fr.quatrevieux.araknemu.game.listener.player.SavePlayer;
+import fr.quatrevieux.araknemu.game.listener.player.SendLifeChanged;
+import fr.quatrevieux.araknemu.game.listener.player.SendRestrictions;
+import fr.quatrevieux.araknemu.game.listener.player.SendSaveInProgress;
+import fr.quatrevieux.araknemu.game.listener.player.SendSaveTerminated;
+import fr.quatrevieux.araknemu.game.listener.player.SendShutdownScheduled;
+import fr.quatrevieux.araknemu.game.listener.player.SendStats;
+import fr.quatrevieux.araknemu.game.listener.player.StartTutorial;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
+import fr.quatrevieux.araknemu.game.world.util.Sender;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 import java.util.Collection;
@@ -45,21 +56,23 @@ import java.util.stream.Stream;
 /**
  * Service for handle {@link GamePlayer}
  */
-final public class PlayerService implements EventsSubscriber {
-    final private PlayerRepository repository;
-    final private GameConfiguration configuration;
-    final private Dispatcher dispatcher;
-    final private InventoryService inventoryService;
-    final private PlayerRaceService playerRaceService;
-    final private SpellBookService spellBookService;
-    final private PlayerExperienceService experienceService;
+public final class PlayerService implements EventsSubscriber, Sender {
+    private final PlayerRepository repository;
+    private final GameConfiguration configuration;
+    private final GameConfiguration.PlayerConfiguration playerConfiguration;
+    private final Dispatcher dispatcher;
+    private final InventoryService inventoryService;
+    private final PlayerRaceService playerRaceService;
+    private final SpellBookService spellBookService;
+    private final PlayerExperienceService experienceService;
 
-    final private ConcurrentMap<Integer, GamePlayer> onlinePlayers = new ConcurrentHashMap<>();
-    final private ConcurrentMap<String, GamePlayer> playersByName  = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, GamePlayer> onlinePlayers = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, GamePlayer> playersByName  = new ConcurrentHashMap<>();
 
     public PlayerService(PlayerRepository repository, GameConfiguration configuration, Dispatcher dispatcher, InventoryService inventoryService, PlayerRaceService playerRaceService, SpellBookService spellBookService, PlayerExperienceService experienceService) {
         this.repository = repository;
         this.configuration = configuration;
+        this.playerConfiguration = configuration.player();
         this.dispatcher = dispatcher;
         this.inventoryService = inventoryService;
         this.playerRaceService = playerRaceService;
@@ -71,7 +84,7 @@ final public class PlayerService implements EventsSubscriber {
      * Load the player for entering game
      *
      * @param session The current session
-     * @param id The player race
+     * @param id The player id
      *
      * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException When cannot found player on server
      * @throws RepositoryException For any other repository errors
@@ -81,7 +94,7 @@ final public class PlayerService implements EventsSubscriber {
             throw new IllegalStateException("The player is already loaded");
         }
 
-        Player player = repository.getForGame(
+        final Player player = repository.getForGame(
             Player.forGame(
                 id,
                 session.account().id(),
@@ -89,7 +102,7 @@ final public class PlayerService implements EventsSubscriber {
             )
         );
 
-        GamePlayer gamePlayer = new GamePlayer(
+        final GamePlayer gamePlayer = new GamePlayer(
             session.account(),
             player,
             playerRaceService.get(player.race()),
@@ -107,6 +120,11 @@ final public class PlayerService implements EventsSubscriber {
         gamePlayer.dispatcher().add(new SendRestrictions(gamePlayer));
         gamePlayer.dispatcher().add(new InitializeRestrictions(gamePlayer));
         gamePlayer.dispatcher().add(new StartTutorial(gamePlayer)); // @todo Move to "tutorial" package when implemented
+
+        if (playerConfiguration.restoreLifeOnLevelUp()) {
+            gamePlayer.dispatcher().add(new RestoreLifePointsOnLevelUp(gamePlayer));
+        }
+
         this.dispatcher.dispatch(new PlayerLoaded(gamePlayer));
         gamePlayer.dispatcher().add(new SavePlayer(gamePlayer)); // After all events
 
@@ -132,6 +150,16 @@ final public class PlayerService implements EventsSubscriber {
             .stream()
             .filter(predicate)
         ;
+    }
+
+    /**
+     * Send a packet to all connected players
+     *
+     * @param packet The packet to send
+     */
+    @Override
+    public void send(Object packet) {
+        onlinePlayers.forEach((id, player) -> player.send(packet));
     }
 
     /**
@@ -171,6 +199,8 @@ final public class PlayerService implements EventsSubscriber {
     public Listener[] listeners() {
         return new Listener[] {
             new SendShutdownScheduled(this),
+            new SendSaveInProgress(this),
+            new SendSaveTerminated(this),
         };
     }
 

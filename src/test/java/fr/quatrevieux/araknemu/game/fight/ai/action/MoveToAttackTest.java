@@ -19,116 +19,178 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
-import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
-import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
-import fr.quatrevieux.araknemu.game.fight.module.AiModule;
-import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
-import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
-import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
-import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
+import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class MoveToAttackTest extends FightBaseCase {
-    private Fighter fighter;
-    private Fight fight;
-
-    private Fighter enemy;
-    private Fighter otherEnemy;
-
-    private MoveToAttack action;
-    private FighterAI ai;
-
-    private FightTurn turn;
-
+class MoveToAttackTest extends AiBaseCase {
     @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
-        fight = createFight();
-        fight.register(new AiModule(new ChainAiFactory()));
-        fight.register(new CommonEffectsModule(fight));
-
-        fighter = player.fighter();
-        enemy = other.fighter();
-
-        otherEnemy = new PlayerFighter(makeSimpleGamePlayer(10));
-
-        fight.state(PlacementState.class).joinTeam(otherEnemy, enemy.team());
-        fight.nextState();
-
-        fight.turnList().start();
-
-        action = new MoveToAttack(container.get(Simulator.class));
-
-        ai = new FighterAI(fighter, fight, new ActionGenerator[] { new DummyGenerator() });
-        ai.start(turn = fight.turnList().current().get());
-        action.initialize(ai);
+        action = MoveToAttack.nearest(container.get(Simulator.class));
     }
 
     @Test
     void success() {
-        fighter.move(fight.map().get(150));
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(150))
+            .addEnemy(builder -> builder.cell(125))
+            .addEnemy(builder -> builder.cell(126))
+        );
 
-        Optional<Action> result = action.generate(ai);
-
-        assertTrue(result.isPresent());
-        assertInstanceOf(Move.class, result.get());
-
-        turn.perform(result.get());
-        turn.terminate();
+        generateAndPerformMove();
 
         assertEquals(122, fighter.cell().id());
     }
 
     @Test
     void alreadyOnValidCell() {
-        Optional<Action> result = action.generate(ai);
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122))
+            .addEnemy(builder -> builder.cell(125))
+            .addEnemy(builder -> builder.cell(126))
+        );
 
-        assertFalse(result.isPresent());
+        assertDotNotGenerateAction();
     }
 
     @Test
     void noMP() {
-        fighter.move(fight.map().get(150));
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(150))
+            .addEnemy(builder -> builder.cell(125))
+            .addEnemy(builder -> builder.cell(126))
+        );
 
-        turn.points().useMovementPoints(3);
+        removeAllMP();
 
-        Optional<Action> result = action.generate(ai);
-
-        assertFalse(result.isPresent());
+        assertDotNotGenerateAction();
     }
 
     @Test
     void noAP() {
-        fighter.move(fight.map().get(150));
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(150))
+            .addEnemy(builder -> builder.cell(125))
+            .addEnemy(builder -> builder.cell(126))
+        );
 
-        turn.points().useActionPoints(6);
+        removeAllAP();
 
-        Optional<Action> result = action.generate(ai);
-
-        assertFalse(result.isPresent());
+        assertDotNotGenerateAction();
     }
 
     @Test
     void noEnoughAP() {
-        fighter.move(fight.map().get(150));
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(150))
+            .addEnemy(builder -> builder.cell(125))
+            .addEnemy(builder -> builder.cell(126))
+        );
 
-        turn.points().useActionPoints(3);
+        setAP(3);
 
-        Optional<Action> result = action.generate(ai);
+        assertDotNotGenerateAction();
+    }
 
-        assertFalse(result.isPresent());
+    @Test
+    void bestTarget() throws SQLException {
+        dataSet.pushFunctionalSpells();
+        action = MoveToAttack.bestTarget(container.get(Simulator.class));
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(180).spell(145, 5))
+            .addEnemy(builder -> builder.cell(210).currentLife(15))
+            .addEnemy(builder -> builder.cell(150))
+        );
+
+        generateAndPerformMove();
+
+        assertEquals(195, fighter.cell().id());
+        // @todo check selected action
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(180).spell(168, 5))
+            .addEnemy(builder -> builder.cell(210))
+            .addEnemy(builder -> builder.cell(150))
+        );
+
+        generateAndPerformMove();
+
+        assertEquals(165, fighter.cell().id());
+    }
+
+    @Test
+    void shouldNotMoveIfBlockedByOtherFighters() throws SQLException, NoSuchFieldException, IllegalAccessException {
+        dataSet.pushFunctionalSpells();
+        action = MoveToAttack.bestTarget(container.get(Simulator.class));
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(210))
+            .addEnemy(builder -> builder.cell(195))
+            .addEnemy(builder -> builder.cell(196))
+        );
+
+        removeSpell(3);
+
+        assertDotNotGenerateAction();
+    }
+
+    @Test
+    void shouldNotMoveIfCanAttackButWithEnemyOnAdjacentCell() throws SQLException, NoSuchFieldException, IllegalAccessException {
+        dataSet.pushFunctionalSpells();
+        action = MoveToAttack.bestTarget(container.get(Simulator.class));
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(210).spell(145))
+            .addEnemy(builder -> builder.cell(195)) // Adjacent
+            .addEnemy(builder -> builder.cell(180).currentLife(5)) // => better target with divide sword
+        );
+
+        removeSpell(3);
+
+        assertDotNotGenerateAction();
+    }
+
+    @Test
+    void shouldMoveIfCanAttackDespiteEnemyOnAdjacentCell() throws SQLException, NoSuchFieldException, IllegalAccessException {
+        dataSet.pushFunctionalSpells();
+        action = MoveToAttack.bestTarget(container.get(Simulator.class));
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(210).spell(164).charac(Characteristic.AGILITY, 100))
+            .addEnemy(builder -> builder.cell(195)) // Adjacent
+        );
+
+        removeSpell(3);
+
+        generateAndPerformMove();
+
+        assertEquals(196, fighter.cell().id());
+    }
+
+    @Test
+    void nearestShouldSelectBestTargetIfInSameDistance() throws SQLException, NoSuchFieldException, IllegalAccessException {
+        dataSet.pushFunctionalSpells();
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(180).spell(145, 5))
+            .addEnemy(builder -> builder.cell(210).currentLife(15))
+            .addEnemy(builder -> builder.cell(150))
+        );
+
+        removeSpell(3);
+
+        generateAndPerformMove();
+
+        assertEquals(195, fighter.cell().id());
     }
 }

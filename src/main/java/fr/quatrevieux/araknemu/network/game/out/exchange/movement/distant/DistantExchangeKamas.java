@@ -24,8 +24,8 @@ package fr.quatrevieux.araknemu.network.game.out.exchange.movement.distant;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L761
  */
-final public class DistantExchangeKamas {
-    final private long quantity;
+public final class DistantExchangeKamas {
+    private final long quantity;
 
     public DistantExchangeKamas(long quantity) {
         this.quantity = quantity;

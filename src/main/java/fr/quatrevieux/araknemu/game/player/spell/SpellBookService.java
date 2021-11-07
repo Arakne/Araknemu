@@ -25,7 +25,15 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
-import fr.quatrevieux.araknemu.game.listener.player.spell.*;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SaveLearnedSpell;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SaveSpellPosition;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SaveUpgradedSpell;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SendAllSpellBoosts;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SendLearnedSpell;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SendSpellBoost;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SendSpellList;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SendUpgradedSpell;
+import fr.quatrevieux.araknemu.game.listener.player.spell.SetDefaultPositionSpellBook;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
@@ -37,10 +45,10 @@ import java.util.stream.Collectors;
 /**
  * Service for handle player spells
  */
-final public class SpellBookService implements EventsSubscriber {
-    final private PlayerSpellRepository repository;
-    final private SpellService service;
-    final private PlayerRaceService playerRaceService;
+public final class SpellBookService implements EventsSubscriber {
+    private final PlayerSpellRepository repository;
+    private final SpellService service;
+    private final PlayerRaceService playerRaceService;
 
     public SpellBookService(PlayerSpellRepository repository, SpellService service, PlayerRaceService playerRaceService) {
         this.repository = repository;
@@ -70,7 +78,7 @@ final public class SpellBookService implements EventsSubscriber {
                     return PlayerLoaded.class;
                 }
             },
-            new SetDefaultPositionSpellBook(playerRaceService, repository)
+            new SetDefaultPositionSpellBook(playerRaceService, repository),
         };
     }
 
@@ -78,7 +86,7 @@ final public class SpellBookService implements EventsSubscriber {
      * Load the spell book
      */
     public SpellBook load(Dispatcher dispatcher, Player player) {
-        Map<Integer, SpellBookEntry> entries = repository.byPlayer(player)
+        final Map<Integer, SpellBookEntry> entries = repository.byPlayer(player)
             .stream()
             .map(entity -> new SpellBookEntry(entity, service.get(entity.spellId())))
             .collect(

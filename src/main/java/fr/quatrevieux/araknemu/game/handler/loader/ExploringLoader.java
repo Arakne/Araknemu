@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeFactory;
 import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
@@ -43,12 +44,11 @@ import fr.quatrevieux.araknemu.game.handler.fight.ShowFightDetails;
 import fr.quatrevieux.araknemu.game.handler.game.CancelGameAction;
 import fr.quatrevieux.araknemu.game.handler.game.LoadExtraInfo;
 import fr.quatrevieux.araknemu.network.game.GameSession;
-import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 
 /**
  * Loader for exploration packets
  */
-final public class ExploringLoader extends AbstractLoader {
+public final class ExploringLoader extends AbstractLoader {
     public ExploringLoader() {
         super(EnsureExploring::new);
     }

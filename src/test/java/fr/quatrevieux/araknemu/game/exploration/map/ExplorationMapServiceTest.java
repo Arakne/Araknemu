@@ -131,7 +131,7 @@ class ExplorationMapServiceTest extends FightBaseCase {
     @Test
     void fightListeners() throws Exception {
         ExplorationMap map = service.load(10340);
-        explorationPlayer().join(map);
+        explorationPlayer().changeMap(map, 123);
 
         ListenerAggregate dispatcher = new DefaultListenerAggregate();
         dispatcher.register(service);

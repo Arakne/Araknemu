@@ -21,14 +21,15 @@ package fr.quatrevieux.araknemu.realm.authentication;
 
 import fr.quatrevieux.araknemu.common.account.AbstractLivingAccount;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.game.world.util.Sender;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.realm.authentication.password.Password;
 
 /**
  * AuthenticationAccount entity for realm
  */
-final public class AuthenticationAccount extends AbstractLivingAccount<RealmSession> {
-    final private AuthenticationService service;
+public final class AuthenticationAccount extends AbstractLivingAccount<RealmSession> implements Sender {
+    private final AuthenticationService service;
     private Password password;
 
     public AuthenticationAccount(Account account, Password password, AuthenticationService service) {
@@ -86,11 +87,23 @@ final public class AuthenticationAccount extends AbstractLivingAccount<RealmSess
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public void send(Object packet) {
+        if (session != null) {
+            session.send(packet);
+        }
+    }
 
-        AuthenticationAccount that = (AuthenticationAccount) o;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final AuthenticationAccount that = (AuthenticationAccount) o;
 
         return account.id() == that.account.id();
     }

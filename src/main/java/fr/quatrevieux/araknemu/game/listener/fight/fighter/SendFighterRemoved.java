@@ -27,8 +27,8 @@ import fr.quatrevieux.araknemu.network.game.out.game.RemoveSprite;
 /**
  * Send to fight the removed fighter
  */
-final public class SendFighterRemoved implements Listener<FighterRemoved> {
-    final private Fight fight;
+public final class SendFighterRemoved implements Listener<FighterRemoved> {
+    private final Fight fight;
 
     public SendFighterRemoved(Fight fight) {
         this.fight = fight;

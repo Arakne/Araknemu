@@ -31,10 +31,10 @@ import java.util.List;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Exchange.as#L1072
  */
-final public class StorageObject {
-    final static private Transformer<List<ItemTemplateEffectEntry>> effectsTransformer = new ItemEffectsTransformer();
+public final class StorageObject {
+    private static final Transformer<List<ItemTemplateEffectEntry>> effectsTransformer = new ItemEffectsTransformer();
 
-    final private ItemEntry entry;
+    private final ItemEntry entry;
 
     public StorageObject(ItemEntry entry) {
         this.entry = entry;

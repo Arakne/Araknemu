@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.request.Invitation;
 /**
  * Dialog for the exchange request
  */
-final public class InitiatorExchangeRequestDialog extends AbstractInitiatorRequestDialog implements ExchangeInteraction {
+public final class InitiatorExchangeRequestDialog extends AbstractInitiatorRequestDialog implements ExchangeInteraction {
     public InitiatorExchangeRequestDialog(Invitation invitation) {
         super(invitation);
     }

@@ -28,12 +28,17 @@ import java.util.List;
  * Parser for console command line
  */
 public interface CommandParser {
-    final public class Arguments {
-        final private String line;
-        final private String contextPath;
-        final private String command;
-        final private List<String> arguments;
-        final private Context context;
+    /**
+     * Parse a command line
+     */
+    public Arguments parse(AdminPerformer performer, String line) throws AdminException;
+
+    public static final class Arguments {
+        private final String line;
+        private final String contextPath;
+        private final String command;
+        private final List<String> arguments;
+        private final Context context;
 
         public Arguments(String line, String contextPath, String command, List<String> arguments, Context context) {
             this.line = line;
@@ -79,9 +84,4 @@ public interface CommandParser {
             return context;
         }
     }
-
-    /**
-     * Parse a command line
-     */
-    public Arguments parse(String line) throws AdminException;
 }

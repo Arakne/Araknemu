@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +41,7 @@ class FightActionsFactoriesTest extends FightBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        factory = new ExplorationActionRegistry(new FightActionsFactories(container.get(FightService.class), container.get(FighterFactory.class)));
+        factory = new ExplorationActionRegistry(new FightActionsFactories(container.get(FightService.class), container.get(FighterFactory.class), container.get(SpectatorFactory.class)));
 
         dataSet.pushMaps().pushSubAreas().pushAreas();
     }
@@ -50,12 +51,27 @@ class FightActionsFactoriesTest extends FightBaseCase {
         ExplorationPlayer player = explorationPlayer();
 
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
-        player.join(map);
+        player.changeMap(map, 123);
 
         Fight fight = createSimpleFight(map);
 
         Action action = factory.create(player, ActionType.JOIN_FIGHT, new String[] {fight.id() + "", fight.team(0).id() + ""});
 
         assertInstanceOf(JoinFight.class, action);
+    }
+
+    @Test
+    void joinFightAsSpectator() throws Exception {
+        ExplorationPlayer player = explorationPlayer();
+
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
+        player.changeMap(map, 123);
+
+        Fight fight = createSimpleFight(map);
+        fight.start();
+
+        Action action = factory.create(player, ActionType.JOIN_FIGHT, new String[] {fight.id() + ""});
+
+        assertInstanceOf(JoinFightAsSpectator.class, action);
     }
 }

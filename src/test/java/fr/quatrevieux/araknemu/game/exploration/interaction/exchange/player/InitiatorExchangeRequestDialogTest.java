@@ -44,7 +44,7 @@ class InitiatorExchangeRequestDialogTest extends GameBaseCase {
         player = explorationPlayer();
         other = makeOtherExplorationPlayer();
 
-        other.join(player.map());
+        other.changeMap(player.map(), 123);
 
         PlayerExchangeRequest request = new PlayerExchangeRequest(player, other);
 

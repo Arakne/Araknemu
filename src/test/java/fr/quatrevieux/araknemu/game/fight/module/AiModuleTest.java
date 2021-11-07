@@ -78,9 +78,9 @@ class AiModuleTest extends FightBaseCase {
         FightTurn turn = fight.turnList().current().get();
 
         assertTrue(turn.active());
-        Thread.sleep(100);
+        Thread.sleep(200);
 
         // Move action started
-        requestStack.assertOne("GA0;1;-2;ab-fbGdbU");
+        requestStack.assertOne("GA0;1;-2;ab-fbG");
     }
 }

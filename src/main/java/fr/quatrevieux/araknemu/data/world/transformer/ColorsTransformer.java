@@ -32,7 +32,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * Ex: ffebcd,-1,ffebcd
  */
-final public class ColorsTransformer implements Transformer<Colors> {
+public final class ColorsTransformer implements Transformer<Colors> {
     @Override
     public String serialize(Colors value) {
         return value.toHexString(",");
@@ -40,11 +40,11 @@ final public class ColorsTransformer implements Transformer<Colors> {
 
     @Override
     public Colors unserialize(String serialize) throws TransformerException {
-        if (serialize.equals("-1,-1,-1")) {
+        if ("-1,-1,-1".equals(serialize)) {
             return Colors.DEFAULT;
         }
 
-        String[] parts = StringUtils.split(serialize, ",", 3);
+        final String[] parts = StringUtils.split(serialize, ",", 3);
 
         if (parts.length != 3) {
             throw new TransformerException("Invalid color expression '" + serialize + "'");

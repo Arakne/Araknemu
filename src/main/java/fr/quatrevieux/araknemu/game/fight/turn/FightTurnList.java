@@ -33,14 +33,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Handle fight turns
  */
-final public class FightTurnList {
-    final private Fight fight;
+public final class FightTurnList {
+    private final Fight fight;
 
     private List<Fighter> fighters;
     private int index;
     private Fighter current;
     private FightTurn turn;
-    final private AtomicBoolean active = new AtomicBoolean(false);
+    private final AtomicBoolean active = new AtomicBoolean(false);
 
     public FightTurnList(Fight fight) {
         this.fight = fight;
@@ -55,6 +55,11 @@ final public class FightTurnList {
         }
 
         fighters = orderStrategy.compute(fight.teams());
+
+        if (fighters.isEmpty()) {
+            throw new IllegalStateException("Cannot initialise turn list without fighters");
+        }
+
         current = fighters.get(0); // Always init the first fighter
     }
 

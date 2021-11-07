@@ -38,5 +38,5 @@ public interface AccountBankRepository extends MutableRepository<AccountBank> {
      * @throws RepositoryException When a DBAL error occurs
      */
     @Override
-    AccountBank get(AccountBank entity) throws RepositoryException;
+    public AccountBank get(AccountBank entity) throws RepositoryException;
 }

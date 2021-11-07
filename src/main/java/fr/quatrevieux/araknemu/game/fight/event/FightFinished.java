@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.fight.ending.reward.FightReward;
 /**
  * The fight is terminated
  */
-final public class FightFinished {
-    final private FightReward reward;
+public final class FightFinished {
+    private final FightReward reward;
 
     public FightFinished(FightReward reward) {
         this.reward = reward;

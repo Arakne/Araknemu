@@ -83,7 +83,7 @@ class CreateGameTest extends GameBaseCase {
             new GameCreated(CreateGameRequest.Type.EXPLORATION),
             new Stats(gamePlayer().properties()),
             new MapData(explorationPlayer().map()),
-            new StartLifeTimer(LifeRegeneration.STANDARD_LIFE_REGENERATION)
+            new StartLifeTimer(1000)
         );
     }
 }

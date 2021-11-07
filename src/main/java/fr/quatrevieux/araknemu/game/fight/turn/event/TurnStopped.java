@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 /**
  * The fighter turn is stopped
  */
-final public class TurnStopped {
-    final private FightTurn turn;
+public final class TurnStopped {
+    private final FightTurn turn;
 
     public TurnStopped(FightTurn turn) {
         this.turn = turn;

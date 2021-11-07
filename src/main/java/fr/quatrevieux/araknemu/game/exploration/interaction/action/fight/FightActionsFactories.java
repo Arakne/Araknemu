@@ -20,23 +20,27 @@
 package fr.quatrevieux.araknemu.game.exploration.interaction.action.fight;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ExplorationActionRegistry;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 
 /**
  * Register fight actions
  */
-final public class FightActionsFactories implements ExplorationActionRegistry.SelfRegisterable {
-    final private FightService fightService;
-    final private FighterFactory fighterFactory;
+public final class FightActionsFactories implements ExplorationActionRegistry.SelfRegisterable {
+    private final FightService fightService;
+    private final FighterFactory fighterFactory;
+    private final SpectatorFactory spectatorFactory;
 
-    public FightActionsFactories(FightService fightService, FighterFactory fighterFactory) {
+    public FightActionsFactories(FightService fightService, FighterFactory fighterFactory, SpectatorFactory spectatorFactory) {
         this.fightService = fightService;
         this.fighterFactory = fighterFactory;
+        this.spectatorFactory = spectatorFactory;
     }
 
     @Override
@@ -44,15 +48,22 @@ final public class FightActionsFactories implements ExplorationActionRegistry.Se
         factory.register(ActionType.JOIN_FIGHT, this::join);
     }
 
-    private JoinFight join(ExplorationPlayer player, ActionType action, String[] arguments) {
-        Fight fight = fightService.getFromMap(player.map().id(), Integer.parseInt(arguments[0]));
+    private Action join(ExplorationPlayer player, ActionType action, String[] arguments) {
+        final Fight fight = fightService.getFromMap(player.map().id(), Integer.parseInt(arguments[0]));
 
-        return new JoinFight(
-            player,
-            fight,
-            findTeamById(fight, Integer.parseInt(arguments[1])),
-            fighterFactory
-        );
+        if (arguments.length == 1) {
+            return joinAsSpectator(player, fight);
+        }
+
+        return joinFightTeam(player, fight, Integer.parseInt(arguments[1]));
+    }
+
+    private JoinFight joinFightTeam(ExplorationPlayer player, Fight fight, int teamId) {
+        return new JoinFight(player, fight, findTeamById(fight, teamId), fighterFactory);
+    }
+
+    private JoinFightAsSpectator joinAsSpectator(ExplorationPlayer player, Fight fight) {
+        return new JoinFightAsSpectator(spectatorFactory, player, fight);
     }
 
     private FightTeam findTeamById(Fight fight, int id) {

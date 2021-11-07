@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.handler.loader;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.network.game.in.chat.UseSmiley;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectUseRequest;
@@ -45,5 +46,6 @@ class ExploringOrFightingLoaderTest extends LoaderTestCase {
         assertHandlePacket(GameActionRequest.class, handlers);
         assertHandlePacket(GameActionAcknowledge.class, handlers);
         assertHandlePacket(ObjectUseRequest.class, handlers);
+        assertHandlePacket(UseSmiley.class, handlers);
     }
 }

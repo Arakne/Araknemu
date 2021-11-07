@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.account.AccountService;
-import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.context.NullContext;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +42,7 @@ class AccountContextTest extends GameBaseCase {
         context = new AccountContext(
             new NullContext(),
             container.get(AccountService.class).load(dataSet.push(new Account(-1, "aaa", "aaa", "aaa"))),
-            Collections.singletonList(new ContextConfigurator<AccountContext>() {
+            Collections.singletonList(new AbstractContextConfigurator<AccountContext>() {
                 @Override
                 public void configure(AccountContext context) {
                     add(new Info(context.account(), container.get(AccountRepository.class)));
@@ -54,7 +54,11 @@ class AccountContextTest extends GameBaseCase {
     @Test
     void commands() throws CommandNotFoundException {
         assertInstanceOf(Info.class, context.command("info"));
+        assertInstanceOf(Grant.class, context.command("grant"));
+        assertInstanceOf(Revoke.class, context.command("revoke"));
 
         assertContainsType(Info.class, context.commands());
+        assertContainsType(Grant.class, context.commands());
+        assertContainsType(Revoke.class, context.commands());
     }
 }

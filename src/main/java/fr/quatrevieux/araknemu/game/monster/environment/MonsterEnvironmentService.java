@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.monster.environment;
@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.game.activity.ActivityService;
 import fr.quatrevieux.araknemu.game.activity.SimpleTask;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.event.MapLoaded;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.listener.map.monster.LaunchMonsterFight;
@@ -49,25 +50,24 @@ import java.util.stream.Stream;
 /**
  * Handle environment interactions with monsters
  */
-final public class MonsterEnvironmentService implements EventsSubscriber, PreloadableService {
-    final private ActivityService activityService;
-    final private FightService fightService;
-    final private MonsterGroupFactory factory;
-    final private MonsterGroupPositionRepository positionRepository;
-    final private MonsterGroupDataRepository dataRepository;
-    final private GameConfiguration.ActivityConfiguration configuration;
+public final class MonsterEnvironmentService implements EventsSubscriber, PreloadableService {
+    private final ActivityService activityService;
+    private final FightService fightService;
+    private final MonsterGroupFactory factory;
+    private final MonsterGroupPositionRepository positionRepository;
+    private final MonsterGroupDataRepository dataRepository;
+    private final GameConfiguration.ActivityConfiguration configuration;
 
     /**
      * Groups indexed by map id
      */
-    final private ConcurrentMap<Integer, Collection<LivingMonsterGroupPosition>> groupsByMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, Collection<LivingMonsterGroupPosition>> groupsByMap = new ConcurrentHashMap<>();
 
     /**
      * Groups are preloaded ?
      * If true, consider that all data are loaded, so loading maps without loaded groups do not execute a query
      */
     private boolean preloaded = false;
-
 
     public MonsterEnvironmentService(ActivityService activityService, FightService fightService, MonsterGroupFactory factory, MonsterGroupPositionRepository positionRepository, MonsterGroupDataRepository dataRepository, GameConfiguration.ActivityConfiguration configuration) {
         this.activityService = activityService;
@@ -93,13 +93,7 @@ final public class MonsterEnvironmentService implements EventsSubscriber, Preloa
         for (MonsterGroupPosition position : positionRepository.all()) {
             groupsByMap
                 .computeIfAbsent(position.position().map(), mapId -> new ArrayList<>())
-                .add(new LivingMonsterGroupPosition(
-                    factory,
-                    this,
-                    fightService,
-                    groupsData.get(position.groupId()),
-                    SpawnCellSelector.forPosition(position.position())
-                ))
+                .add(createByPosition(position))
             ;
         }
 
@@ -111,7 +105,8 @@ final public class MonsterEnvironmentService implements EventsSubscriber, Preloa
             new MoveMonsters(
                 this,
                 Duration.ofSeconds(configuration.monsterMoveInterval()),
-                configuration.monsterMovePercent()
+                configuration.monsterMovePercent(),
+                configuration.monsterMoveDistance()
             )
         );
     }
@@ -122,15 +117,17 @@ final public class MonsterEnvironmentService implements EventsSubscriber, Preloa
             new Listener<MapLoaded>() {
                 @Override
                 public void on(MapLoaded event) {
-                    byMap(event.map().id()).forEach(group -> group.populate(event.map()));
-                    event.map().dispatcher().add(new LaunchMonsterFight());
+                    final ExplorationMap map = event.map();
+
+                    byMap(map.id()).forEach(group -> group.populate(map));
+                    map.dispatcher().add(new LaunchMonsterFight());
                 }
 
                 @Override
                 public Class<MapLoaded> event() {
                     return MapLoaded.class;
                 }
-            }
+            },
         };
     }
 
@@ -148,16 +145,10 @@ final public class MonsterEnvironmentService implements EventsSubscriber, Preloa
             return Collections.emptyList();
         }
 
-        Collection<LivingMonsterGroupPosition> groups = new ArrayList<>();
+        final Collection<LivingMonsterGroupPosition> groups = new ArrayList<>();
 
         for (MonsterGroupPosition position : positionRepository.byMap(mapId)) {
-            groups.add(new LivingMonsterGroupPosition(
-                factory,
-                this,
-                fightService,
-                dataRepository.get(position.groupId()),
-                SpawnCellSelector.forPosition(position.position())
-            ));
+            groups.add(createByPosition(position));
         }
 
         groupsByMap.put(mapId, groups);
@@ -171,7 +162,7 @@ final public class MonsterEnvironmentService implements EventsSubscriber, Preloa
     void respawn(LivingMonsterGroupPosition position, Duration delay) {
         activityService.execute(
             new SimpleTask(logger -> position.spawn())
-                .setDelay(delay)
+                .setDelay(delay.dividedBy(configuration.monsterRespawnSpeedFactor()))
                 .setMaxTries(2)
                 .setName("Respawn")
         );
@@ -182,5 +173,16 @@ final public class MonsterEnvironmentService implements EventsSubscriber, Preloa
      */
     Stream<LivingMonsterGroupPosition> groups() {
         return groupsByMap.values().stream().flatMap(Collection::stream);
+    }
+
+    private LivingMonsterGroupPosition createByPosition(MonsterGroupPosition position) {
+        return new LivingMonsterGroupPosition(
+            factory,
+            this,
+            fightService,
+            dataRepository.get(position.groupId()),
+            SpawnCellSelector.forPosition(position.position()),
+            position.position().cell() != -1
+        );
     }
 }

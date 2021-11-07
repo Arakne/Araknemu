@@ -25,9 +25,10 @@ package fr.quatrevieux.araknemu.core.config;
 public interface Configuration {
     /**
      * Get the configuration module from its class
-     * @param moduleClass
-     * @param <M>
-     * @return
+     *
+     * @param moduleClass The module type to get
+     *
+     * @return The module instance
      */
     public <M extends ConfigurationModule> M module(Class<M> moduleClass);
 }

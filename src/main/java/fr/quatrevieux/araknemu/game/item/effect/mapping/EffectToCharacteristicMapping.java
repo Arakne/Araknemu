@@ -25,28 +25,22 @@ import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.item.effect.CharacteristicEffect;
 
-import java.util.*;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 /**
  * Map item effect to characteristic
  */
-final public class EffectToCharacteristicMapping implements EffectMapper<CharacteristicEffect> {
-    static private class MappedCharacteristic {
-        final private int multiplier;
-        final private Characteristic characteristic;
+public final class EffectToCharacteristicMapping implements EffectMapper<CharacteristicEffect> {
+    private final Map<Effect, MappedCharacteristic> map = new EnumMap<>(Effect.class);
 
-        public MappedCharacteristic(int multiplier, Characteristic characteristic) {
-            this.multiplier = multiplier;
-            this.characteristic = characteristic;
-        }
-    }
-
-    final private Map<Effect, MappedCharacteristic> map = new EnumMap<>(Effect.class);
-
-    final private RandomUtil random = new RandomUtil();
+    private final RandomUtil random = new RandomUtil();
 
     public EffectToCharacteristicMapping() {
+        // @todo refactor
         set(Effect.ADD_COUNTER_DAMAGE,   +1, Characteristic.COUNTER_DAMAGE);
         set(Effect.ADD_ACTION_POINTS,    +1, Characteristic.ACTION_POINT);
         set(Effect.ADD_DAMAGE,           +1, Characteristic.FIXED_DAMAGE);
@@ -162,7 +156,7 @@ final public class EffectToCharacteristicMapping implements EffectMapper<Charact
      * @throws NoSuchElementException When effect is not registered
      */
     public CharacteristicEffect create(Effect effect, int value) {
-        MappedCharacteristic mapped = get(effect);
+        final MappedCharacteristic mapped = get(effect);
 
         return new CharacteristicEffect(effect, value, mapped.multiplier, mapped.characteristic);
     }
@@ -184,7 +178,7 @@ final public class EffectToCharacteristicMapping implements EffectMapper<Charact
      * Create new characteristic effect with maximal value
      */
     public CharacteristicEffect createMaximize(ItemTemplateEffectEntry entry) {
-        int value;
+        final int value;
 
         if (isNegative(entry.effect())) {
             value = entry.min();
@@ -205,5 +199,15 @@ final public class EffectToCharacteristicMapping implements EffectMapper<Charact
         }
 
         return map.get(effect);
+    }
+
+    private static class MappedCharacteristic {
+        private final int multiplier;
+        private final Characteristic characteristic;
+
+        public MappedCharacteristic(int multiplier, Characteristic characteristic) {
+            this.multiplier = multiplier;
+            this.characteristic = characteristic;
+        }
     }
 }

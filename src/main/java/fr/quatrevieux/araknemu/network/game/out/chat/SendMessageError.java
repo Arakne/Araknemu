@@ -26,9 +26,9 @@ import fr.quatrevieux.araknemu.game.chat.ChatException;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Chat.as#L227
  */
-final public class SendMessageError {
-    final private ChatException.Error error;
-    final private String target;
+public final class SendMessageError {
+    private final ChatException.Error error;
+    private final String target;
 
     public SendMessageError(ChatException.Error error, String target) {
         this.error = error;

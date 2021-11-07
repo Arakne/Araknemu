@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
+import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
@@ -46,6 +47,7 @@ import org.mockito.Mockito;
 
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 
@@ -66,7 +68,7 @@ class FightHandlerTest extends GameBaseCase {
     void withChallengeFight() throws ContainerException {
         FightHandler<ChallengeBuilder> handler = new FightHandler<>(
             container.get(FightService.class),
-            new ChallengeBuilder(container.get(FightService.class), container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class))
+            new ChallengeBuilder(container.get(FightService.class), container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), Executors.newSingleThreadScheduledExecutor(), new ChallengeType(configuration.fight()))
         );
 
         Fight fight = handler.start(
@@ -93,12 +95,12 @@ class FightHandlerTest extends GameBaseCase {
     void displayOnMap() throws SQLException, ContainerException {
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
 
-        explorationPlayer().join(map);
+        explorationPlayer().changeMap(map, 123);
         requestStack.clear();
 
         FightHandler<ChallengeBuilder> handler = new FightHandler<>(
             service,
-            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class))
+            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), Executors.newSingleThreadScheduledExecutor(), new ChallengeType(configuration.fight()))
         );
 
         Fight fight = handler.start(
@@ -141,7 +143,7 @@ class FightHandlerTest extends GameBaseCase {
 
         FightHandler<ChallengeBuilder> handler = new FightHandler<>(
             service,
-            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class))
+            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), Executors.newSingleThreadScheduledExecutor(), new ChallengeType(configuration.fight()))
         );
 
         Fight fight = handler.start(
@@ -174,13 +176,14 @@ class FightHandlerTest extends GameBaseCase {
                 container.get(MapTemplateRepository.class),
                 dispatcher,
                 Arrays.asList(
-                    new ChallengeBuilderFactory(container.get(FighterFactory.class), container.get(Logger.class))
+                    new ChallengeBuilderFactory(container.get(FighterFactory.class), new ChallengeType(configuration.fight()), container.get(Logger.class))
                 ),
                 Arrays.asList(
                     (fight) -> module
-                )
+                ),
+                container.get(GameConfiguration.class).fight()
             ),
-            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class))
+            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), Executors.newSingleThreadScheduledExecutor(), new ChallengeType(configuration.fight()))
         );
 
         Fight fight = handler.start(

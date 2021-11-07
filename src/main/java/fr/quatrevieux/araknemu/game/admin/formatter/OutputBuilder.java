@@ -21,14 +21,67 @@ package fr.quatrevieux.araknemu.game.admin.formatter;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Build and format the console output
  */
-final public class OutputBuilder {
-    final private StringBuilder builder;
+public final class OutputBuilder {
+    private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\{\\{([a-z0-9_.-]+?)\\}\\}", Pattern.CASE_INSENSITIVE);
+
+    private final StringBuilder builder;
+    private final Map<String, Supplier<String>> variables = new HashMap<>();
 
     public OutputBuilder() {
         this.builder = new StringBuilder();
+    }
+
+    /**
+     * Register a new variable for the output
+     *
+     * Variable are used with {{varname}} format
+     *
+     * Note: Variable are processed by the append method, not on the toString method
+     *       So change the variable value after calling append will not change the generated value
+     *
+     * Usage:
+     * <pre>{@code
+     * builder
+     *     .with("name", () -> "John")
+     *     .append("Hello {{name}} !")
+     *     .toString() // "Hello John !"
+     * ;
+     * }</pre>
+     *
+     * @param varName The variable name. Should be alpha num + "_" "-" and "."
+     * @param variable The value generator
+     *
+     * @return this
+     */
+    public OutputBuilder with(String varName, Supplier<String> variable) {
+        variables.put(varName, variable);
+
+        return this;
+    }
+
+    /**
+     * Declare multiple variable
+     *
+     * @param variables Map of variable, with name as key and supplier as value
+     *
+     * @return this
+     *
+     * @see OutputBuilder#with(String, Supplier) For variable usage
+     */
+    public OutputBuilder withAll(Map<String, Supplier<String>> variables) {
+        this.variables.putAll(variables);
+
+        return this;
     }
 
     /**
@@ -44,7 +97,7 @@ final public class OutputBuilder {
      * Append a text
      */
     public OutputBuilder append(String text) {
-        builder.append(text);
+        builder.append(processVariables(text));
 
         return this;
     }
@@ -54,7 +107,7 @@ final public class OutputBuilder {
      */
     public OutputBuilder append(String... text) {
         for (String s : text) {
-            builder.append(s);
+            builder.append(processVariables(s));
         }
 
         return this;
@@ -64,7 +117,7 @@ final public class OutputBuilder {
      * Render a new line
      */
     public OutputBuilder line(String line) {
-        builder.append('\n').append(line);
+        builder.append('\n').append(processVariables(line));
 
         return this;
     }
@@ -73,7 +126,7 @@ final public class OutputBuilder {
      * Render a section title
      */
     public OutputBuilder title(String title) {
-        builder.append("\n\n<b>").append(title).append("</b>");
+        builder.append("\n\n<b>").append(processVariables(title)).append("</b>");
 
         return this;
     }
@@ -98,7 +151,7 @@ final public class OutputBuilder {
     public OutputBuilder indent(String text, int count) {
         final String indent = "\n" + StringUtils.repeat('\t', count);
 
-        builder.append(indent).append(text.replace("\n", indent));
+        builder.append(indent).append(processVariables(text).replace("\n", indent));
 
         return this;
     }
@@ -106,5 +159,29 @@ final public class OutputBuilder {
     @Override
     public String toString() {
         return builder.toString();
+    }
+
+    private String processVariables(String str) {
+        if (variables.isEmpty()) {
+            return str;
+        }
+
+        final StringBuffer out = new StringBuffer();
+        final Matcher matcher = VARIABLE_PATTERN.matcher(str);
+
+        while (matcher.find()) {
+            final MatchResult result = matcher.toMatchResult();
+            final String varName = result.group(1);
+
+            if (!variables.containsKey(varName)) {
+                continue;
+            }
+
+            matcher.appendReplacement(out, variables.get(varName).get());
+        }
+
+        matcher.appendTail(out);
+
+        return out.toString();
     }
 }

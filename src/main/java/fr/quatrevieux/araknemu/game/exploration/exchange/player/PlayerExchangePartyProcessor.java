@@ -30,9 +30,9 @@ import java.util.Map;
 /**
  * Exchange processor for a player party
  */
-final public class PlayerExchangePartyProcessor implements ExchangePartyProcessor {
-    final private ExplorationPlayer player;
-    final private PlayerExchangeStorage storage;
+public final class PlayerExchangePartyProcessor implements ExchangePartyProcessor {
+    private final ExplorationPlayer player;
+    private final PlayerExchangeStorage storage;
 
     public PlayerExchangePartyProcessor(ExplorationPlayer player, PlayerExchangeStorage storage) {
         this.player = player;

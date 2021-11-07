@@ -60,7 +60,7 @@ class JoinFightTest extends FightBaseCase {
         super.setUp();
 
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
-        explorationPlayer().join(map);
+        explorationPlayer().changeMap(map, 123);
 
         fight = createSimpleFight(map);
         action = new JoinFight(explorationPlayer(), fight, fight.team(0), container.get(FighterFactory.class));
@@ -93,7 +93,7 @@ class JoinFightTest extends FightBaseCase {
 
     @Test
     void badMap() throws SQLException, ContainerException {
-        explorationPlayer().join(container.get(ExplorationMapService.class).load(10540));
+        explorationPlayer().changeMap(container.get(ExplorationMapService.class).load(10540), 123);
 
         action.start(new ActionQueue());
 

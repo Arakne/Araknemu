@@ -29,13 +29,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Creates monster groups
  */
-final public class MonsterGroupFactory {
-    final private MonsterListGenerator generator;
+public final class MonsterGroupFactory {
+    private final MonsterListGenerator generator;
 
     /**
      * Last group id for generate id sequence
      */
-    final private AtomicInteger lastGroupId = new AtomicInteger();
+    private final AtomicInteger lastGroupId = new AtomicInteger();
 
     public MonsterGroupFactory(MonsterListGenerator generator) {
         this.generator = generator;

@@ -33,9 +33,9 @@ import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 /**
  * Move the player
  */
-final public class Move implements BlockingAction {
-    final private ExplorationPlayer player;
-    final private PathValidator[] validators;
+public final class Move implements BlockingAction {
+    private final ExplorationPlayer player;
+    private final PathValidator[] validators;
     private Path<ExplorationMapCell> path;
 
     private int id;
@@ -50,6 +50,10 @@ final public class Move implements BlockingAction {
     public void start(ActionQueue queue) {
         if (path.isEmpty()) {
             throw new IllegalArgumentException("Empty path");
+        }
+
+        if (!path.get(0).cell().equals(performer().cell())) {
+            throw new IllegalArgumentException("Start cell do not match with player cell");
         }
 
         try {
@@ -77,7 +81,7 @@ final public class Move implements BlockingAction {
             return;
         }
 
-        int cellId = Integer.parseInt(argument);
+        final int cellId = Integer.parseInt(argument);
 
         for (PathStep<ExplorationMapCell> step : path) {
             if (step.cell().id() == cellId) {

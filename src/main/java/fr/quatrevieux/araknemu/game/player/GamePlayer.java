@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.chat.ChannelSet;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
 import fr.quatrevieux.araknemu.game.player.experience.GamePlayerExperience;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.game.player.race.GamePlayerRace;
@@ -42,19 +43,19 @@ import java.util.Set;
  * GamePlayer object
  * A player is a logged character, with associated game session
  */
-final public class GamePlayer implements PlayerSessionScope {
-    final private GameAccount account;
-    final private Player entity;
-    final private PlayerService service;
-    final private GameSession session;
-    final private GamePlayerRace race;
-    final private Set<ChannelType> channels;
-    final private PlayerInventory inventory;
-    final private SpriteInfo spriteInfo;
-    final private PlayerData data;
-    final private Restrictions restrictions;
+public final class GamePlayer implements PlayerSessionScope {
+    private final GameAccount account;
+    private final Player entity;
+    private final PlayerService service;
+    private final GameSession session;
+    private final GamePlayerRace race;
+    private final Set<ChannelType> channels;
+    private final PlayerInventory inventory;
+    private final SpriteInfo spriteInfo;
+    private final PlayerData data;
+    private final Restrictions restrictions;
 
-    final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
+    private final ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
     private PlayerSessionScope scope = this;
 
@@ -230,6 +231,24 @@ final public class GamePlayer implements PlayerSessionScope {
      */
     public boolean isFighting() {
         return session.fighter() != null;
+    }
+
+    /**
+     * Get the attached spectator
+     */
+    public Spectator spectator() {
+        if (!isSpectator()) {
+            throw new IllegalStateException("The current player is not a spectator");
+        }
+
+        return session.spectator();
+    }
+
+    /**
+     * Check if the current player is a spectator
+     */
+    public boolean isSpectator() {
+        return session.spectator() != null;
     }
 
     /**

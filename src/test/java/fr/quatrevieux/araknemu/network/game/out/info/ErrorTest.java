@@ -28,11 +28,13 @@ class ErrorTest {
     @Test
     void welcome() {
         assertEquals("Im189;", Error.welcome().toString());
+        assertSame(Error.welcome(), Error.welcome());
     }
 
     @Test
     void cantDoOnServer() {
         assertEquals("Im1226;", Error.cantDoOnServer().toString());
+        assertSame(Error.cantDoOnServer(), Error.cantDoOnServer());
     }
 
     @Test
@@ -43,21 +45,25 @@ class ErrorTest {
     @Test
     void cantCastNotFound() {
         assertEquals("Im1169;", Error.cantCastNotFound().toString());
+        assertSame(Error.cantCastNotFound(), Error.cantCastNotFound());
     }
 
     @Test
     void cantCastInvalidCell() {
         assertEquals("Im1193;", Error.cantCastInvalidCell().toString());
+        assertSame(Error.cantCastInvalidCell(), Error.cantCastInvalidCell());
     }
 
     @Test
     void cantCastCellNotAvailable() {
         assertEquals("Im1172;", Error.cantCastCellNotAvailable().toString());
+        assertSame(Error.cantCastCellNotAvailable(), Error.cantCastCellNotAvailable());
     }
 
     @Test
     void cantCastLineLaunch() {
         assertEquals("Im1173;", Error.cantCastLineLaunch().toString());
+        assertSame(Error.cantCastLineLaunch(), Error.cantCastLineLaunch());
     }
 
     @Test
@@ -68,12 +74,14 @@ class ErrorTest {
     @Test
     void cantCastBadState() {
         assertEquals("Im1116;", Error.cantCastBadState().toString());
+        assertSame(Error.cantCastBadState(), Error.cantCastBadState());
     }
 
 
     @Test
     void cantDoOnCurrentState() {
         assertEquals("Im1116;", Error.cantDoOnCurrentState().toString());
+        assertSame(Error.cantDoOnCurrentState(), Error.cantDoOnCurrentState());
     }
 
     @Test
@@ -84,25 +92,46 @@ class ErrorTest {
     @Test
     void cantCast() {
         assertEquals("Im1175;", Error.cantCast().toString());
+        assertSame(Error.cantCast(), Error.cantCast());
     }
 
     @Test
     void cantCastSightBlocked() {
         assertEquals("Im1174;", Error.cantCastSightBlocked().toString());
+        assertSame(Error.cantCastSightBlocked(), Error.cantCastSightBlocked());
     }
 
     @Test
     void cantDoDuringFight() {
         assertEquals("Im191;", Error.cantDoDuringFight().toString());
+        assertSame(Error.cantDoDuringFight(), Error.cantDoDuringFight());
     }
 
     @Test
     void cantMoveOverweight() {
         assertEquals("Im112;", Error.cantMoveOverweight().toString());
+        assertSame(Error.cantMoveOverweight(), Error.cantMoveOverweight());
     }
 
     @Test
     void shutdownScheduled() {
         assertEquals("Im115;10min", Error.shutdownScheduled("10min").toString());
+    }
+
+    @Test
+    void saveInProgress() {
+        assertEquals("Im1164;", Error.saveInProgress().toString());
+        assertSame(Error.saveInProgress(), Error.saveInProgress());
+    }
+
+    @Test
+    void saveTerminated() {
+        assertEquals("Im1165;", Error.saveTerminated().toString());
+        assertSame(Error.saveTerminated(), Error.saveTerminated());
+    }
+
+    @Test
+    void cantJoinFightAsSpectator() {
+        assertEquals("Im157;", Error.cantJoinFightAsSpectator().toString());
     }
 }

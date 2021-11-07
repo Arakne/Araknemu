@@ -21,11 +21,15 @@ package fr.quatrevieux.araknemu.realm.authentication;
 
 import fr.quatrevieux.araknemu.common.account.banishment.BanishmentService;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
+import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.realm.authentication.password.PasswordManager;
 import fr.quatrevieux.araknemu.realm.host.HostService;
+import fr.quatrevieux.araknemu.realm.listener.SendUpdatedHostList;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,23 +39,23 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Service for handle authentication
  */
-final public class AuthenticationService {
-    final private AccountRepository repository;
-    final private HostService hosts;
-    final private PasswordManager passwordManager;
-    final private BanishmentService<AuthenticationAccount> banishmentService;
+public final class AuthenticationService implements EventsSubscriber {
+    private final AccountRepository repository;
+    private final HostService hosts;
+    private final PasswordManager passwordManager;
+    private final BanishmentService<AuthenticationAccount> banishmentService;
 
     /**
      * Set of accounts which wait for authentication process
      * There are loaded, but not yet authenticated
      */
-    final private Set<AuthenticationAccount> pending = Collections.synchronizedSet(new HashSet<>());
+    private final Set<AuthenticationAccount> pending = Collections.synchronizedSet(new HashSet<>());
 
     /**
      * Map of authenticated accounts
      * There are linked to a session
      */
-    final private ConcurrentMap<Integer, AuthenticationAccount> authenticated = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, AuthenticationAccount> authenticated = new ConcurrentHashMap<>();
 
     public AuthenticationService(AccountRepository repository, HostService hosts, PasswordManager passwordManager, BanishmentService<AuthenticationAccount> banishmentService) {
         this.repository = repository;
@@ -66,8 +70,8 @@ final public class AuthenticationService {
      * This method is synchronized to ensure that two account are not requested login
      * in the same time
      */
-    synchronized public void authenticate(AuthenticationRequest request) {
-        AuthenticationAccount account;
+    public synchronized void authenticate(AuthenticationRequest request) {
+        final AuthenticationAccount account;
 
         try {
             account = getAccount(request.username());
@@ -118,6 +122,20 @@ final public class AuthenticationService {
         }
 
         return authenticated.get(account.id()).isLogged();
+    }
+
+    /**
+     * Get list of all authenticated accounts
+     */
+    public Collection<AuthenticationAccount> authenticatedAccounts() {
+        return authenticated.values();
+    }
+
+    @Override
+    public Listener[] listeners() {
+        return new Listener[] {
+            new SendUpdatedHostList(this),
+        };
     }
 
     /**

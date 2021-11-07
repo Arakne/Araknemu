@@ -21,19 +21,19 @@ package fr.quatrevieux.araknemu.game.listener.player.inventory;
 
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.game.player.GamePlayer;
-import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsChanged;
-import fr.quatrevieux.araknemu.game.player.event.GameJoined;
 import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectAdded;
 import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectDeleted;
 import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectQuantityChanged;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsChanged;
+import fr.quatrevieux.araknemu.game.player.event.GameJoined;
 import fr.quatrevieux.araknemu.network.game.out.object.InventoryWeight;
 
 /**
  * Send inventory weight when inventory operations or characteristics changes occurs
  */
-final public class SendWeight implements EventsSubscriber {
-    final private GamePlayer player;
+public final class SendWeight implements EventsSubscriber {
+    private final GamePlayer player;
 
     public SendWeight(GamePlayer player) {
         this.player = player;

@@ -28,16 +28,18 @@ import fr.quatrevieux.araknemu.data.value.Geolocation;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.game.exploration.area.ExplorationSubArea;
 import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
+import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
+import fr.quatrevieux.araknemu.game.exploration.creature.operation.SendPacket;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.BasicCell;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.CellLoader;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.exploration.map.event.NewSpriteOnMap;
 import fr.quatrevieux.araknemu.game.exploration.map.event.SpriteRemoveFromMap;
-import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
-import fr.quatrevieux.araknemu.game.exploration.creature.operation.SendPacket;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,14 +50,14 @@ import java.util.stream.Collectors;
 /**
  * Map object for exploration
  */
-final public class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispatcher {
-    final private MapTemplate template;
-    final private ExplorationSubArea subArea;
+public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispatcher {
+    private final MapTemplate template;
+    private final ExplorationSubArea subArea;
 
-    final private Map<Integer, ExplorationMapCell> cells;
-    final private ConcurrentMap<Integer, ExplorationCreature> creatures = new ConcurrentHashMap<>();
+    private final Map<Integer, ExplorationMapCell> cells;
+    private final ConcurrentMap<Integer, ExplorationCreature> creatures = new ConcurrentHashMap<>();
 
-    final private ListenerAggregate dispatcher = new DefaultListenerAggregate();
+    private final ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
     public ExplorationMap(MapTemplate template, CellLoader loader, ExplorationSubArea subArea) {
         this.template = template;
@@ -209,6 +211,21 @@ final public class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispa
      */
     public boolean canLaunchFight() {
         return template.fightPlaces().length >= 2;
+    }
+
+    /**
+     * Get the available fight places for the given team
+     *
+     * @param team The team number. Starts at 0
+     *
+     * @return List of placement cells, or empty list if there is not place for the given team
+     */
+    public List<ExplorationMapCell> fightPlaces(int team) {
+        if (team >= template.fightPlaces().length) {
+            return Collections.emptyList();
+        }
+
+        return template.fightPlaces()[team].stream().map(this::get).collect(Collectors.toList());
     }
 
     /**

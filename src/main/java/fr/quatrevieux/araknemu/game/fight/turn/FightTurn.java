@@ -36,19 +36,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Handle a fighter turn
  */
-final public class FightTurn implements Turn {
-    final private AtomicBoolean active = new AtomicBoolean(false);
+public final class FightTurn implements Turn {
+    private final AtomicBoolean active = new AtomicBoolean(false);
 
-    final private Fighter fighter;
-    final private Fight fight;
-    final private Duration duration;
+    private final Fighter fighter;
+    private final Fight fight;
+    private final Duration duration;
 
-    final private ActionHandler actionHandler;
-    final private TurnActionsFactory actionFactory;
+    private final ActionHandler actionHandler;
+    private final TurnActionsFactory actionFactory;
 
     private ScheduledFuture timer;
     private FighterTurnPoints points;
-
 
     public FightTurn(Fighter fighter, Fight fight, Duration duration) {
         this.fighter = fighter;

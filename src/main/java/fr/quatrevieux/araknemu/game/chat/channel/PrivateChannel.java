@@ -29,8 +29,8 @@ import fr.quatrevieux.araknemu.network.game.in.chat.Message;
 /**
  * Channel for private messages
  */
-final public class PrivateChannel implements Channel {
-    final private PlayerService service;
+public final class PrivateChannel implements Channel {
+    private final PlayerService service;
 
     public PrivateChannel(PlayerService service) {
         this.service = service;
@@ -42,13 +42,18 @@ final public class PrivateChannel implements Channel {
     }
 
     @Override
+    public boolean authorized(GamePlayer from) {
+        return true;
+    }
+
+    @Override
     public void send(GamePlayer from, Message message) throws ChatException {
         if (!service.isOnline(message.target())) {
             throw new ChatException(ChatException.Error.USER_NOT_CONNECTED);
         }
 
-        GamePlayer to = service.get(message.target());
-        ConcealedMessage event = new ConcealedMessage(
+        final GamePlayer to = service.get(message.target());
+        final ConcealedMessage event = new ConcealedMessage(
             from,
             to,
             message.message(),

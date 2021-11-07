@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.network.game;
@@ -31,8 +31,8 @@ import org.apache.logging.log4j.MarkerManager;
 /**
  * Configure base exception for a game session
  */
-final public class GameExceptionConfigurator implements SessionConfigurator.Configurator<GameSession> {
-    final private Logger logger;
+public final class GameExceptionConfigurator implements SessionConfigurator.Configurator<GameSession> {
+    private final Logger logger;
 
     public GameExceptionConfigurator(Logger logger) {
         this.logger = logger;
@@ -42,6 +42,14 @@ final public class GameExceptionConfigurator implements SessionConfigurator.Conf
     public void configure(ConfigurableSession inner, GameSession session) {
         inner.addExceptionHandler(WritePacket.class, cause -> {
             session.send(cause.packet());
+
+            if (cause instanceof Exception) {
+                final Exception ex = (Exception) cause;
+
+                if (ex.getCause() != null) {
+                    logger.warn(MarkerManager.getMarker("ERROR_PACKET"), "[{}] Error packet caused by : {}", session, ex.getCause().toString());
+                }
+            }
 
             return true;
         });

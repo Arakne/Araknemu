@@ -32,12 +32,12 @@ import java.util.Set;
  *
  * @fixme Use ConcurrentHashMap instead of HashMap ?
  */
-final public class DefaultListenerAggregate implements ListenerAggregate {
-    final private Logger logger;
-    final private Map<Class<? extends Listener>, Listener> listeners = new HashMap<>();
-    final private Map<Class, Set<Class<? extends Listener>>> events = new HashMap<>();
+public final class DefaultListenerAggregate implements ListenerAggregate {
+    private static final Logger defaultLogger = LogManager.getLogger(DefaultListenerAggregate.class);
 
-    final static private Logger defaultLogger = LogManager.getLogger(DefaultListenerAggregate.class);
+    private final Logger logger;
+    private final Map<Class<? extends Listener>, Listener> listeners = new HashMap<>();
+    private final Map<Class, Set<Class<? extends Listener>>> events = new HashMap<>();
 
     public DefaultListenerAggregate() {
         this(defaultLogger);
@@ -83,7 +83,8 @@ final public class DefaultListenerAggregate implements ListenerAggregate {
             return;
         }
 
-        Listener listener = listeners.remove(listenerClass);
+        final Listener listener = listeners.remove(listenerClass);
+
         events.get(listener.event()).remove(listenerClass);
     }
 

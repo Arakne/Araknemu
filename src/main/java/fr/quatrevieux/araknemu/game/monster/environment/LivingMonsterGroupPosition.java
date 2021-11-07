@@ -38,22 +38,24 @@ import java.util.stream.Stream;
 /**
  * Handle a monster group configuration on map and cell
  */
-final public class LivingMonsterGroupPosition {
-    final private MonsterGroupFactory factory;
-    final private FightService fightService;
-    final private MonsterEnvironmentService environmentService;
+public final class LivingMonsterGroupPosition {
+    private final MonsterGroupFactory factory;
+    private final FightService fightService;
+    private final MonsterEnvironmentService environmentService;
+    private final boolean fixed;
 
-    final private MonsterGroupData data;
-    final private SpawnCellSelector cellSelector;
+    private final MonsterGroupData data;
+    private final SpawnCellSelector cellSelector;
 
     private ExplorationMap map;
 
-    public LivingMonsterGroupPosition(MonsterGroupFactory factory, MonsterEnvironmentService environmentService, FightService fightService, MonsterGroupData data, SpawnCellSelector cellSelector) {
+    public LivingMonsterGroupPosition(MonsterGroupFactory factory, MonsterEnvironmentService environmentService, FightService fightService, MonsterGroupData data, SpawnCellSelector cellSelector, boolean fixed) {
         this.factory = factory;
         this.fightService = fightService;
         this.environmentService = environmentService;
         this.data = data;
         this.cellSelector = cellSelector;
+        this.fixed = fixed;
     }
 
     /**
@@ -102,6 +104,14 @@ final public class LivingMonsterGroupPosition {
      */
     public ExplorationMapCell cell() {
         return cellSelector.cell();
+    }
+
+    /**
+     * Does the current monster group is fixed ?
+     * If true, the group cannot move
+     */
+    public boolean fixed() {
+        return fixed;
     }
 
     /**

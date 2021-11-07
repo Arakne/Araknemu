@@ -22,5 +22,5 @@ package fr.quatrevieux.araknemu.realm.event;
 /**
  * Event triggered when auth server is stopped
  */
-final public class AuthStopped {
+public final class AuthStopped {
 }

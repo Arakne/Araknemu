@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.player.inventory.slot;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
-import fr.quatrevieux.araknemu.game.item.type.Equipment;
+import fr.quatrevieux.araknemu.game.item.type.AbstractEquipment;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.player.inventory.event.EquipmentChanged;
 
@@ -31,9 +31,9 @@ import java.util.Optional;
 /**
  * Base slot class for equipments
  */
-abstract public class AbstractEquipmentSlot implements InventorySlot {
-    final private Dispatcher dispatcher;
-    final private InventorySlot slot;
+public abstract class AbstractEquipmentSlot implements InventorySlot {
+    private final Dispatcher dispatcher;
+    private final InventorySlot slot;
 
     public AbstractEquipmentSlot(Dispatcher dispatcher, InventorySlot slot) {
         this.dispatcher = dispatcher;
@@ -52,7 +52,7 @@ abstract public class AbstractEquipmentSlot implements InventorySlot {
 
     @Override
     public InventoryEntry set(InventoryEntry entry) throws InventoryException {
-        InventoryEntry newEntry = slot.set(entry);
+        final InventoryEntry newEntry = slot.set(entry);
 
         dispatcher.dispatch(new EquipmentChanged(entry, id(), true));
 
@@ -61,7 +61,7 @@ abstract public class AbstractEquipmentSlot implements InventorySlot {
 
     @Override
     public InventoryEntry set(Item item, int quantity) throws InventoryException {
-        InventoryEntry entry = slot.set(item, quantity);
+        final InventoryEntry entry = slot.set(item, quantity);
 
         dispatcher.dispatch(new EquipmentChanged(entry, id(), true));
 
@@ -89,7 +89,7 @@ abstract public class AbstractEquipmentSlot implements InventorySlot {
     /**
      * Get the current equipment
      */
-    public Optional<Equipment> equipment() {
-        return entry().map(InventoryEntry::item).map(Equipment.class::cast);
+    public Optional<AbstractEquipment> equipment() {
+        return entry().map(InventoryEntry::item).map(AbstractEquipment.class::cast);
     }
 }

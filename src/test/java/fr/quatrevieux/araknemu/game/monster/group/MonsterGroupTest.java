@@ -79,7 +79,7 @@ class MonsterGroupTest extends GameBaseCase {
                 container.get(MonsterEnvironmentService.class),
                 container.get(FightService.class),
                 new MonsterGroupData(3, Duration.ofMillis(60000), 4, 3, Arrays.asList(new MonsterGroupData.Monster(31, new Interval(1, 100), 1), new MonsterGroupData.Monster(34, new Interval(1, 100), 1), new MonsterGroupData.Monster(36, new Interval(1, 100), 1)), "", new Position(0, 0), false),
-                new RandomCellSelector()
+                new RandomCellSelector(), false
             ),
             5,
             Arrays.asList(
@@ -130,7 +130,7 @@ class MonsterGroupTest extends GameBaseCase {
     @Test
     void startFight() throws SQLException {
         ExplorationPlayer player = explorationPlayer();
-        player.join(map);
+        player.changeMap(map, 123);
 
         Fight fight = group.startFight(player);
 

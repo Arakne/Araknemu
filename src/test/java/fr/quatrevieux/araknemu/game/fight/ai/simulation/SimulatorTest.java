@@ -73,7 +73,7 @@ class SimulatorTest extends FightBaseCase {
         CastSimulation simulation = simulator.simulate(fighter.spells().get(3), fighter, other.fighter().cell());
 
         assertEquals(0, simulation.alliesLife());
-        assertEquals(-10, simulation.enemiesLife());
+        assertEquals(-10.2, simulation.enemiesLife(), 0.1);
         assertEquals(0, simulation.selfLife());
         assertEquals(0, simulation.alliesBoost());
         assertEquals(0, simulation.enemiesBoost());
@@ -98,7 +98,7 @@ class SimulatorTest extends FightBaseCase {
         assertEquals(0, simulation.selfLife());
         assertEquals(0, simulation.alliesBoost());
         assertEquals(0, simulation.enemiesBoost());
-        assertEquals(76, simulation.selfBoost());
+        assertEquals(79, simulation.selfBoost(), .1);
     }
 
     @Test
@@ -106,7 +106,7 @@ class SimulatorTest extends FightBaseCase {
         CastSimulation simulation = simulator.simulate(getSpell(109, 5), fighter, other.fighter().cell());
 
         assertEquals(0, simulation.alliesLife());
-        assertEquals(-22, simulation.enemiesLife());
+        assertEquals(-23.5, simulation.enemiesLife(), 0.1);
         assertEquals(0, simulation.selfLife());
         assertEquals(0, simulation.alliesBoost());
         assertEquals(0, simulation.enemiesBoost());
@@ -115,10 +115,10 @@ class SimulatorTest extends FightBaseCase {
 
     @Test
     void simulateShouldHandleCriticality() {
-        assertEquals(-22, simulator.simulate(getSpell(109, 5), fighter, other.fighter().cell()).enemiesLife());
+        assertEquals(-23.5, simulator.simulate(getSpell(109, 5), fighter, other.fighter().cell()).enemiesLife(), 0.1);
 
         fighter.characteristics().alter(Characteristic.CRITICAL_BONUS, 100);
-        assertEquals(-36, simulator.simulate(getSpell(109, 5), fighter, other.fighter().cell()).enemiesLife());
+        assertEquals(-36.5, simulator.simulate(getSpell(109, 5), fighter, other.fighter().cell()).enemiesLife(), 0.1);
     }
 
     @Test
@@ -126,8 +126,8 @@ class SimulatorTest extends FightBaseCase {
         CastSimulation simulation = simulator.simulate(getSpell(181, 5), fighter, other.fighter().cell());
 
         assertEquals(0, simulation.alliesLife());
-        assertEquals(-36, simulation.enemiesLife());
-        assertEquals(-36, simulation.selfLife());
+        assertEquals(-36.03, simulation.enemiesLife(), 0.1);
+        assertEquals(-36.8, simulation.selfLife(), 0.1);
         assertEquals(0, simulation.alliesBoost());
         assertEquals(0, simulation.enemiesBoost());
         assertEquals(0, simulation.selfBoost());

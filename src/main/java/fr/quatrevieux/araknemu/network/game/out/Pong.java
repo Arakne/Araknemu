@@ -24,7 +24,7 @@ package fr.quatrevieux.araknemu.network.game.out;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/DataProcessor.as#L55
  */
-final public class Pong {
+public final class Pong {
     @Override
     public String toString() {
         return "pong";

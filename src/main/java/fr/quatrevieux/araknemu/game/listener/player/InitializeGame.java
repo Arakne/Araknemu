@@ -28,9 +28,9 @@ import fr.quatrevieux.araknemu.network.game.out.account.Stats;
 /**
  * Initialize game for the player
  */
-final public class InitializeGame implements Listener<StartExploration> {
-    final private ExplorationPlayer player;
-    final private ExplorationMapService mapService;
+public final class InitializeGame implements Listener<StartExploration> {
+    private final ExplorationPlayer player;
+    private final ExplorationMapService mapService;
 
     public InitializeGame(ExplorationPlayer player, ExplorationMapService mapService) {
         this.player = player;

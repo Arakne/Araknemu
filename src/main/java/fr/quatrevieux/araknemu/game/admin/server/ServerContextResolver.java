@@ -19,33 +19,44 @@
 
 package fr.quatrevieux.araknemu.game.admin.server;
 
+import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
+import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
+import fr.quatrevieux.araknemu.game.admin.context.ConfigurableContextResolver;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
-import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
-import fr.quatrevieux.araknemu.game.admin.context.ContextResolver;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Resolve the server context
  */
-final public class ServerContextResolver implements ContextResolver {
-    final private List<ContextConfigurator<ServerContext>> configurators = new ArrayList<>();
+public final class ServerContextResolver implements ConfigurableContextResolver<ServerContext> {
+    private final Context parentContext;
 
-    @Override
-    public Context resolve(Context globalContext, Object argument) {
-        return new ServerContext(globalContext, configurators);
+    private final List<AbstractContextConfigurator<ServerContext>> configurators = new ArrayList<>();
+    private ServerContext context;
+
+    public ServerContextResolver(Context parentContext) {
+        this.parentContext = parentContext;
     }
 
     @Override
-    public String type() {
-        return "server";
+    public Context resolve(AdminPerformer performer, Supplier<String> argument) {
+        if (context != null) {
+            return context;
+        }
+
+        return context = new ServerContext(parentContext, configurators);
     }
 
-    /**
-     * Register a new configurator for the server context
-     */
-    public ServerContextResolver register(ContextConfigurator<ServerContext> configurator) {
+    @Override
+    public char prefix() {
+        return '*';
+    }
+
+    @Override
+    public ServerContextResolver register(AbstractContextConfigurator<ServerContext> configurator) {
         configurators.add(configurator);
 
         return this;

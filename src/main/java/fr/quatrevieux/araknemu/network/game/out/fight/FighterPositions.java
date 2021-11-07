@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L193
  */
-final public class FighterPositions {
-    final private Collection<Fighter> fighters;
+public final class FighterPositions {
+    private final Collection<Fighter> fighters;
 
     public FighterPositions(Collection<Fighter> fighters) {
         this.fighters = fighters;

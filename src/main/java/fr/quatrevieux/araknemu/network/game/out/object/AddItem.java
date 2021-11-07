@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Items.as#L107
  */
-final public class AddItem {
-    final private ItemEntry entry;
+public final class AddItem {
+    private final ItemEntry entry;
 
     public AddItem(ItemEntry entry) {
         this.entry = entry;

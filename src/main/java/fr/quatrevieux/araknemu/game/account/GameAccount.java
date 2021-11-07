@@ -22,20 +22,24 @@ package fr.quatrevieux.araknemu.game.account;
 import fr.quatrevieux.araknemu.common.account.AbstractLivingAccount;
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
+import fr.quatrevieux.araknemu.game.account.event.AccountPermissionsUpdated;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.out.ServerMessage;
 import fr.quatrevieux.araknemu.network.realm.out.ServerList;
 
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.Optional;
 import java.util.Set;
 
 /**
  * Account for game
  */
-final public class GameAccount extends AbstractLivingAccount<GameSession> {
-    final private AccountService service;
-    final private int serverId;
+public final class GameAccount extends AbstractLivingAccount<GameSession> {
+    private final AccountService service;
+    private final int serverId;
+
+    private final EnumSet<Permission> temporaryPermissions = EnumSet.noneOf(Permission.class);
 
     public GameAccount(Account account, AccountService service, int serverId) {
         super(account);
@@ -91,25 +95,66 @@ final public class GameAccount extends AbstractLivingAccount<GameSession> {
         return serverId;
     }
 
+    @Override
+    public boolean isMaster() {
+        return super.isMaster() || !temporaryPermissions.isEmpty();
+    }
+
     /**
      * Check if the account has the asked permission
      */
     public boolean isGranted(Permission permission) {
-        return account.permissions().contains(permission);
+        return temporaryPermissions.contains(permission) || account.permissions().contains(permission);
     }
 
     /**
      * Check if the account has the asked permissions
      */
     public boolean isGranted(Set<Permission> permissions) {
-        return account.permissions().containsAll(permissions);
+        return temporaryPermissions.containsAll(permissions) || account.permissions().containsAll(permissions);
     }
 
     /**
-     * Grant list of permissions
+     * Grant list of temporary permissions
+     * This methode will trigger an {@link AccountPermissionsUpdated} event on the session
+     *
+     * @param permissions The permissions to add
      */
-    public void grant(Permission ...permission) {
-        Collections.addAll(account.permissions(), permission);
+    public void grant(Permission... permissions) {
+        grant(permissions, null);
+    }
+
+    /**
+     * Grant list of temporary permissions
+     * This methode will trigger an {@link AccountPermissionsUpdated} event on the session
+     *
+     * @param permissions The permissions to add
+     * @param performer The admin account which grants those permissions. Can be null.
+     */
+    public void grant(Permission[] permissions, GameAccount performer) {
+        temporaryPermissions.addAll(Arrays.asList(permissions));
+
+        if (session != null) {
+            session.dispatch(new AccountPermissionsUpdated(performer, this));
+        }
+    }
+
+    /**
+     * Revoke all temporary permissions
+     * This methode will trigger an {@link AccountPermissionsUpdated} event on the session
+     *
+     * @param performer The admin account which revoke permissions. Can be null.
+     */
+    public void revoke(GameAccount performer) {
+        if (temporaryPermissions.isEmpty()) {
+            return;
+        }
+
+        temporaryPermissions.clear();
+
+        if (session != null) {
+            session.dispatch(new AccountPermissionsUpdated(performer, this));
+        }
     }
 
     /**

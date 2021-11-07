@@ -27,10 +27,10 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.CellActi
 /**
  * Cell which trigger an action
  */
-final public class TriggerCell implements ExplorationMapCell {
-    final private int id;
-    final private CellAction action;
-    final private ExplorationMap map;
+public final class TriggerCell implements ExplorationMapCell {
+    private final int id;
+    private final CellAction action;
+    private final ExplorationMap map;
 
     public TriggerCell(int id, CellAction action, ExplorationMap map) {
         this.id = id;
@@ -68,7 +68,7 @@ final public class TriggerCell implements ExplorationMapCell {
             return false;
         }
 
-        TriggerCell that = (TriggerCell) o;
+        final TriggerCell that = (TriggerCell) o;
 
         return id == that.id && map == that.map;
     }

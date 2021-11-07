@@ -70,7 +70,7 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
             container.get(MonsterEnvironmentService.class),
             container.get(FightService.class),
             container.get(MonsterGroupDataRepository.class).get(1),
-            new RandomCellSelector()
+            new RandomCellSelector(), false
         );
     }
 
@@ -114,11 +114,12 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
                 new MonsterGroupData.Monster(36, new Interval(5, 5), 1),
                 new MonsterGroupData.Monster(31, new Interval(2, 2), 1)
             ), "", new Position(0, 0), false),
-            new FixedCellSelector(new Position(10340, 123))
+            new FixedCellSelector(new Position(10340, 123)), true
         );
 
         monsterGroupPosition.populate(map);
 
+        assertTrue(monsterGroupPosition.fixed());
         assertEquals(map.get(123), monsterGroupPosition.cell());
 
         assertCount(1, monsterGroupPosition.available());
@@ -144,7 +145,7 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
         monsterGroupPosition.populate(map);
 
         ExplorationPlayer player = explorationPlayer();
-        player.join(map);
+        player.changeMap(map, 123);
 
         MonsterGroup group = monsterGroupPosition.available().get(0);
         Fight fight = monsterGroupPosition.startFight(group, player);
@@ -165,13 +166,13 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
             container.get(MonsterEnvironmentService.class),
             container.get(FightService.class),
             container.get(MonsterGroupDataRepository.class).get(2),
-            new RandomCellSelector()
+            new RandomCellSelector(), false
         );
 
         monsterGroupPosition.populate(map);
 
         ExplorationPlayer player = explorationPlayer();
-        player.join(map);
+        player.changeMap(map, 123);
 
         MonsterGroup group = monsterGroupPosition.available().get(0);
         Fight fight = monsterGroupPosition.startFight(group, player);
@@ -187,14 +188,14 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
             container.get(MonsterEnvironmentService.class),
             container.get(FightService.class),
             container.get(MonsterGroupDataRepository.class).get(3),
-            new RandomCellSelector()
+            new RandomCellSelector(), false
         );
 
         monsterGroupPosition.populate(map);
 
 
         ExplorationPlayer player = explorationPlayer();
-        player.join(map);
+        player.changeMap(map, 123);
 
         MonsterGroup group = monsterGroupPosition.available().get(0);
         monsterGroupPosition.startFight(group, player);

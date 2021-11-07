@@ -24,16 +24,16 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 /**
  * The state has changed
  */
-final public class FighterStateChanged {
+public final class FighterStateChanged {
     public enum Type {
         ADD,
         REMOVE,
         UPDATE
     }
 
-    final private Fighter fighter;
-    final private int state;
-    final private Type type;
+    private final Fighter fighter;
+    private final int state;
+    private final Type type;
 
     public FighterStateChanged(Fighter fighter, int state, Type type) {
         this.fighter = fighter;

@@ -24,8 +24,8 @@ import org.ini4j.Ini;
 /**
  * Driver implementation using ini files
  */
-final public class IniDriver implements Driver {
-    final private Ini ini;
+public final class IniDriver implements Driver {
+    private final Ini ini;
 
     public IniDriver(Ini ini) {
         this.ini = ini;

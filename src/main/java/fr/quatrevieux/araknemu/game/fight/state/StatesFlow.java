@@ -24,8 +24,8 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 /**
  * Handle fight states flow
  */
-final public class StatesFlow {
-    final private FightState[] states;
+public final class StatesFlow {
+    private final FightState[] states;
     private int current = 0;
 
     public StatesFlow(FightState... states) {

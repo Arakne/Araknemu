@@ -30,9 +30,9 @@ import java.util.stream.Collectors;
 /**
  * Spell with modifiers
  */
-final public class BoostedSpell implements Spell {
-    final private Spell spell;
-    final private SpellModifiers modifiers;
+public final class BoostedSpell implements Spell {
+    private final Spell spell;
+    private final SpellModifiers modifiers;
 
     public BoostedSpell(Spell spell, SpellModifiers modifiers) {
         this.spell = spell;

@@ -25,6 +25,8 @@ import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.listener.KickBannedAccount;
+import fr.quatrevieux.araknemu.game.listener.account.SendAdminAccess;
+import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -36,14 +38,14 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Service for game accounts
  */
-final public class AccountService implements EventsSubscriber {
-    final private AccountRepository repository;
-    final private GameConfiguration configuration;
+public final class AccountService implements EventsSubscriber {
+    private final AccountRepository repository;
+    private final GameConfiguration configuration;
 
     /**
      * Accounts indexed by race
      */
-    final private ConcurrentMap<Integer, GameAccount> accounts = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, GameAccount> accounts = new ConcurrentHashMap<>();
 
     public AccountService(AccountRepository repository, GameConfiguration configuration) {
         this.repository = repository;
@@ -82,9 +84,8 @@ final public class AccountService implements EventsSubscriber {
      * @return The loaded accounts, indexed by account id
      */
     public Map<Integer, GameAccount> getByIds(int[] ids) {
-        Map<Integer, GameAccount> loadedAccounts = new HashMap<>();
-
-        int[] toLoad = Arrays.stream(ids)
+        final Map<Integer, GameAccount> loadedAccounts = new HashMap<>();
+        final int[] toLoad = Arrays.stream(ids)
             .filter(id -> {
                 if (accounts.containsKey(id)) {
                     loadedAccounts.put(id, accounts.get(id));
@@ -113,7 +114,7 @@ final public class AccountService implements EventsSubscriber {
      */
     public Optional<GameAccount> findByPseudo(String pseudo) {
         // @todo need index ? actually only used by admin command
-        Optional<GameAccount> loggedAccount = accounts.values().stream()
+        final Optional<GameAccount> loggedAccount = accounts.values().stream()
             .filter(gameAccount -> gameAccount.pseudo().equalsIgnoreCase(pseudo))
             .findFirst()
         ;
@@ -129,6 +130,17 @@ final public class AccountService implements EventsSubscriber {
     public Listener[] listeners() {
         return new Listener[] {
             new KickBannedAccount(),
+            new Listener<PlayerLoaded>() {
+                @Override
+                public void on(PlayerLoaded event) {
+                    event.player().dispatcher().add(new SendAdminAccess());
+                }
+
+                @Override
+                public Class<PlayerLoaded> event() {
+                    return PlayerLoaded.class;
+                }
+            },
         };
     }
 

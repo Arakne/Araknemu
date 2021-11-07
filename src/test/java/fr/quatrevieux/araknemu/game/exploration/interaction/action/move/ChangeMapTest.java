@@ -24,7 +24,6 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.ChangeMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.network.game.out.game.MapData;
@@ -53,9 +52,7 @@ class ChangeMapTest extends GameBaseCase {
     @Test
     void dataNoCinematic() throws Exception {
         ChangeMap changeMap = new ChangeMap(player, map, 123);
-        changeMap.setId(2);
 
-        assertEquals(2, changeMap.id());
         assertSame(player, changeMap.performer());
         Assertions.assertEquals(ActionType.CHANGE_MAP, changeMap.type());
         assertArrayEquals(new Object[] {""}, changeMap.arguments());
@@ -64,9 +61,7 @@ class ChangeMapTest extends GameBaseCase {
     @Test
     void dataCinematic() throws Exception {
         ChangeMap changeMap = new ChangeMap(player, map, 123, 6);
-        changeMap.setId(2);
 
-        assertEquals(2, changeMap.id());
         assertSame(player, changeMap.performer());
         assertEquals(ActionType.CHANGE_MAP, changeMap.type());
         assertArrayEquals(new Object[] {6}, changeMap.arguments());
@@ -74,6 +69,8 @@ class ChangeMapTest extends GameBaseCase {
 
     @Test
     void startWithoutCinematic() throws Exception {
+        requestStack.clear();
+
         ExplorationMap lastMap = player.map();
         ActionQueue queue = new ActionQueue();
 
@@ -82,14 +79,21 @@ class ChangeMapTest extends GameBaseCase {
         changeMap.start(queue);
 
         assertFalse(lastMap.creatures().contains(player));
-        assertTrue(queue.isBusy());
-        requestStack.assertLast(
+        assertFalse(queue.isBusy());
+
+        assertSame(map, player.map());
+        assertEquals(new Position(10540, 123), player.position());
+
+        requestStack.assertAll(
+            new MapData(map),
             new GameActionResponse(changeMap)
         );
     }
 
     @Test
     void startWithCinematic() throws Exception {
+        requestStack.clear();
+
         ExplorationMap lastMap = player.map();
         ActionQueue queue = new ActionQueue();
 
@@ -98,44 +102,14 @@ class ChangeMapTest extends GameBaseCase {
         changeMap.start(queue);
 
         assertFalse(lastMap.creatures().contains(player));
-        assertTrue(queue.isBusy());
-        requestStack.assertLast(
-            new GameActionResponse("1", ActionType.CHANGE_MAP, player.id(), "5")
-        );
-    }
-
-    @Test
-    void startWillNotChangePosition() throws Exception {
-        Position lastPosition = player.position();
-        ActionQueue queue = new ActionQueue();
-
-        ChangeMap changeMap = new ChangeMap(player, map, 123, 5);
-
-        changeMap.start(queue);
-
-        assertNull(player.map());
-        assertEquals(lastPosition, player.position());
-        assertTrue(queue.isBusy());
-    }
-
-    @Test
-    void end() throws Exception {
-        ChangeMap changeMap = new ChangeMap(player, map, 123, 5);
-        changeMap.end();
+        assertFalse(queue.isBusy());
 
         assertSame(map, player.map());
         assertEquals(new Position(10540, 123), player.position());
 
-        requestStack.assertLast(
-            new MapData(map)
+        requestStack.assertAll(
+            new MapData(map),
+            new GameActionResponse("", ActionType.CHANGE_MAP, player.id(), "5")
         );
-    }
-
-    @Test
-    void cancel() {
-        ChangeMap changeMap = new ChangeMap(player, map, 123, 5);
-
-        assertThrows(UnsupportedOperationException.class, () -> changeMap.cancel(""));
-        changeMap.cancel(null);
     }
 }

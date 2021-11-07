@@ -23,8 +23,8 @@ package fr.quatrevieux.araknemu.game.account.generator;
  * Camelize generated name
  * Set to upper the first letter, and letter following an hyphen
  */
-final public class CamelizeName implements NameGenerator {
-    final private NameGenerator generator;
+public final class CamelizeName implements NameGenerator {
+    private final NameGenerator generator;
 
     public CamelizeName(NameGenerator generator) {
         this.generator = generator;
@@ -32,9 +32,8 @@ final public class CamelizeName implements NameGenerator {
 
     @Override
     public String generate() throws NameGenerationException {
-        String generated = generator.generate();
-
-        StringBuilder sb = new StringBuilder(generated.length());
+        final String generated = generator.generate();
+        final StringBuilder sb = new StringBuilder(generated.length());
 
         for (int i = 0; i < generated.length(); ++i) {
             char c = generated.charAt(i);

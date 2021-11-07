@@ -37,7 +37,9 @@ import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerLife;
 import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryService;
@@ -167,6 +169,18 @@ class GamePlayerTest extends GameBaseCase {
         player.start(new PlayerFighter(player));
 
         assertTrue(player.isFighting());
+    }
+
+    @Test
+    void spectator() {
+        assertFalse(player.isSpectator());
+
+        Spectator spectator = new Spectator(player, new Fight(0, null, null, null, null, null, null));
+
+        player.start(spectator);
+
+        assertTrue(player.isSpectator());
+        assertSame(spectator, player.spectator());
     }
 
     @Test

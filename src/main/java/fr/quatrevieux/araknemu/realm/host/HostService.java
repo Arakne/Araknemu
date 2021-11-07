@@ -19,24 +19,32 @@
 
 package fr.quatrevieux.araknemu.realm.host;
 
+import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.data.value.ServerCharacters;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
+import fr.quatrevieux.araknemu.realm.host.event.HostsUpdated;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
  * Handle game server hosts
  */
-final public class HostService {
-    final private PlayerRepository playerRepository;
-    final private ConcurrentMap<Integer, GameHost> hosts = new ConcurrentHashMap<>();
+public final class HostService {
+    private final PlayerRepository playerRepository;
+    private final Dispatcher dispatcher;
 
+    private final ConcurrentMap<Integer, GameHost> hosts = new ConcurrentHashMap<>();
 
-    public HostService(PlayerRepository playerRepository) {
+    public HostService(PlayerRepository playerRepository, Dispatcher dispatcher) {
         this.playerRepository = playerRepository;
+        this.dispatcher = dispatcher;
     }
 
     /**
@@ -51,6 +59,7 @@ final public class HostService {
      */
     public void declare(GameHost host) {
         hosts.put(host.id(), host);
+        dispatcher.dispatch(new HostsUpdated(hosts.values()));
     }
 
     /**
@@ -61,10 +70,11 @@ final public class HostService {
      * @param canLog Can log into server
      */
     public void updateHost(int id, GameHost.State state, boolean canLog) {
-        GameHost host = hosts.get(id);
+        final GameHost host = hosts.get(id);
 
         host.setState(state);
         host.setCanLog(canLog);
+        dispatcher.dispatch(new HostsUpdated(hosts.values()));
     }
 
     /**
@@ -96,7 +106,7 @@ final public class HostService {
         }
 
         new Runnable() {
-            final private Set<GameHost> pending = Collections.synchronizedSet(new HashSet<>(all()));
+            private final Set<GameHost> pending = Collections.synchronizedSet(new HashSet<>(all()));
             private boolean result = false;
 
             @Override

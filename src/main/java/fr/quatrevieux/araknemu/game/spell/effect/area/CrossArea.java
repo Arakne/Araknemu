@@ -29,16 +29,16 @@ import java.util.Set;
 /**
  * Resolver for cross area
  */
-final public class CrossArea implements SpellEffectArea {
-    final private EffectArea area;
+public final class CrossArea implements SpellEffectArea {
+    private final EffectArea area;
 
     public CrossArea(EffectArea area) {
         this.area = area;
     }
 
     @Override
-    public <C extends MapCell> Set<C> resolve(C target, C source) {
-        Set<C> cells = new HashSet<>(area.size() * 4 + 1);
+    public <C extends MapCell<C>> Set<C> resolve(C target, C source) {
+        final Set<C> cells = new HashSet<>(area.size() * 4 + 1);
 
         cells.add(target);
 

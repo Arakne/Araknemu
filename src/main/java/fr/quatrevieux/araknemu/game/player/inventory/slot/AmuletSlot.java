@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 /**
  * Slot for amulets
  */
-final public class AmuletSlot extends AbstractWearableSlot {
-    final static public int SLOT_ID = 0;
+public final class AmuletSlot extends AbstractWearableSlot {
+    public static final int SLOT_ID = 0;
 
     public AmuletSlot(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage, GamePlayer owner) {
         super(dispatcher, storage, owner, SLOT_ID, SuperType.AMULET);

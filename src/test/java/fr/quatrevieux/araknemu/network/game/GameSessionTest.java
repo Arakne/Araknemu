@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.account.AccountService;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsChanged;
 import org.junit.jupiter.api.Test;
@@ -94,6 +95,18 @@ class GameSessionTest extends GameBaseCase {
     }
 
     @Test
+    void spectator() throws SQLException, ContainerException {
+        GameSession session = new GameSession(new ConfigurableSession(new DummyChannel()));
+
+        assertNull(session.spectator());
+
+        Spectator spectator = new Spectator(gamePlayer(), null);
+        session.setSpectator(spectator);
+
+        assertSame(spectator, session.spectator());
+    }
+
+    @Test
     void log() throws ContainerException {
         login();
         GameSession session = new GameSession(new ConfigurableSession(new DummyChannel()));
@@ -144,6 +157,28 @@ class GameSessionTest extends GameBaseCase {
     }
 
     @Test
+    void dispatchWithSpectator() throws ContainerException, SQLException {
+        GameSession session = new GameSession(new ConfigurableSession(new DummyChannel()));
+        GamePlayer player = makeSimpleGamePlayer(10);
+        session.setPlayer(player);
+
+        Spectator spectator = new Spectator(player, null);
+        session.setSpectator(spectator);
+
+        AtomicReference<CharacteristicsChanged> ref = new AtomicReference<>();
+        player.dispatcher().add(CharacteristicsChanged.class, ref::set);
+
+        AtomicReference<CharacteristicsChanged> ref2 = new AtomicReference<>();
+        spectator.dispatcher().add(CharacteristicsChanged.class, ref2::set);
+
+        CharacteristicsChanged event = new CharacteristicsChanged();
+        session.dispatch(event);
+
+        assertSame(event, ref.get());
+        assertSame(event, ref2.get());
+    }
+
+    @Test
     void string() throws SQLException {
         GameSession session = new GameSession(new ConfigurableSession(new DummyChannel()));
 
@@ -152,20 +187,25 @@ class GameSessionTest extends GameBaseCase {
         GamePlayer player = makeSimpleGamePlayer(10);
 
         session.attach(player.account());
-        assertEquals("ip=127.0.0.1; account=10", session.toString());
+        assertEquals("ip=127.0.0.1; account=10010", session.toString());
 
         session.setPlayer(player);
 
-        assertEquals("ip=127.0.0.1; account=10; player=10; position=(10540, 210)", session.toString());
+        assertEquals("ip=127.0.0.1; account=10010; player=10; position=(10540, 210)", session.toString());
 
         ExplorationPlayer exploration = explorationPlayer();
         session.setExploration(exploration);
 
-        assertEquals("ip=127.0.0.1; account=10; player=10; position=(10540, 210); state=exploring", session.toString());
+        assertEquals("ip=127.0.0.1; account=10010; player=10; position=(10540, 210); state=exploring", session.toString());
 
         session.setExploration(null);
         session.setFighter(new PlayerFighter(player));
 
-        assertEquals("ip=127.0.0.1; account=10; player=10; position=(10540, 210); state=fighting", session.toString());
+        assertEquals("ip=127.0.0.1; account=10010; player=10; position=(10540, 210); state=fighting", session.toString());
+
+        session.setFighter(null);
+        session.setSpectator(new Spectator(player, null));
+
+        assertEquals("ip=127.0.0.1; account=10010; player=10; position=(10540, 210); state=spectator", session.toString());
     }
 }

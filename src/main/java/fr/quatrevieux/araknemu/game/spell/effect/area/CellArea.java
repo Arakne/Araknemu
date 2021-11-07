@@ -28,11 +28,11 @@ import java.util.Set;
 /**
  * Resolve single cell
  */
-final public class CellArea implements SpellEffectArea {
-    final static public CellArea INSTANCE = new CellArea();
+public final class CellArea implements SpellEffectArea {
+    public static final CellArea INSTANCE = new CellArea();
 
     @Override
-    public <C extends MapCell> Set<C> resolve(C target, C source) {
+    public <C extends MapCell<C>> Set<C> resolve(C target, C source) {
         return Collections.singleton(target);
     }
 

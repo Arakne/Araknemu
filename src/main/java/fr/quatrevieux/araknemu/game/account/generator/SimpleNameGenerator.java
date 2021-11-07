@@ -25,12 +25,12 @@ import fr.quatrevieux.araknemu.game.GameConfiguration;
 /**
  * Simple generator for character names switching between consonants and vowels
  */
-final public class SimpleNameGenerator implements NameGenerator {
-    final static private char[] CONSONANTS = new char[] {'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z'};
-    final static private char[] VOWELS     = new char[] {'a', 'e', 'i', 'o', 'u', 'y'};
+public final class SimpleNameGenerator implements NameGenerator {
+    private static final char[] CONSONANTS = new char[] {'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z'};
+    private static final char[] VOWELS     = new char[] {'a', 'e', 'i', 'o', 'u', 'y'};
 
-    final private GameConfiguration.PlayerConfiguration configuration;
-    final private RandomUtil random;
+    private final GameConfiguration.PlayerConfiguration configuration;
+    private final RandomUtil random;
 
     public SimpleNameGenerator(GameConfiguration.PlayerConfiguration configuration) {
         this.configuration = configuration;
@@ -39,9 +39,8 @@ final public class SimpleNameGenerator implements NameGenerator {
 
     @Override
     public String generate() {
-        int length = random.rand(configuration.minNameGeneratedLength(), configuration.maxNameGeneratedLength());
-
-        StringBuilder sb = new StringBuilder(length);
+        final int length = random.rand(configuration.minNameGeneratedLength(), configuration.maxNameGeneratedLength());
+        final StringBuilder sb = new StringBuilder(length);
 
         boolean isVowel = random.bool();
 

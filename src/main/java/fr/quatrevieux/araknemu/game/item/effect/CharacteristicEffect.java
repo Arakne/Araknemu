@@ -26,11 +26,11 @@ import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 /**
  * Item effect for characteristics
  */
-final public class CharacteristicEffect implements ItemEffect {
-    final private Effect effect;
-    final private int value;
-    final private int multiplier;
-    final private Characteristic characteristic;
+public final class CharacteristicEffect implements ItemEffect {
+    private final Effect effect;
+    private final int value;
+    private final int multiplier;
+    private final Characteristic characteristic;
 
     public CharacteristicEffect(Effect effect, int value, int multiplier, Characteristic characteristic) {
         this.effect = effect;
@@ -46,7 +46,7 @@ final public class CharacteristicEffect implements ItemEffect {
 
     @Override
     public ItemTemplateEffectEntry toTemplate() {
-        return new ItemTemplateEffectEntry(effect, value, 0, 0, "0d0+"+value);
+        return new ItemTemplateEffectEntry(effect, value, 0, 0, "0d0+" + value);
     }
 
     /**
@@ -84,7 +84,7 @@ final public class CharacteristicEffect implements ItemEffect {
             return false;
         }
 
-        CharacteristicEffect that = (CharacteristicEffect) o;
+        final CharacteristicEffect that = (CharacteristicEffect) o;
 
         return value == that.value
             && effect == that.effect

@@ -64,4 +64,20 @@ class AddXpTest extends CommandTestCase {
 
         assertEquals(10005481459L, gamePlayer().properties().experience().current());
     }
+
+    @Test
+    void help() {
+        assertHelp(
+            "addxp - Add experience to player",
+            "========================================",
+            "SYNOPSIS",
+                "\taddxp QUANTITY",
+            "OPTIONS",
+                "\tQUANTITY : The experience quantity to add. Must be an unsigned number.",
+            "EXAMPLES",
+                "\t@John addxp 1000000 - Add 1 million xp to John",
+            "PERMISSIONS",
+                "\t[ACCESS, MANAGE_PLAYER]"
+        );
+    }
 }

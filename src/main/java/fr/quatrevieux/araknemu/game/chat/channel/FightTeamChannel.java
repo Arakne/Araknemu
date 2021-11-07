@@ -29,29 +29,25 @@ import fr.quatrevieux.araknemu.network.game.out.info.Information;
 /**
  * The fight team chat : send to all teammates fighters
  */
-final public class FightTeamChannel implements Channel {
+public final class FightTeamChannel implements Channel {
     @Override
     public ChannelType type() {
         return ChannelType.FIGHT_TEAM;
     }
 
     @Override
-    public void send(GamePlayer from, Message message) throws ChatException {
-        if (!from.isFighting()) {
-            throw new ChatException(ChatException.Error.UNAUTHORIZED);
-        }
+    public boolean authorized(GamePlayer from) {
+        return from.isFighting();
+    }
 
+    @Override
+    public void send(GamePlayer from, Message message) throws ChatException {
         if (!message.items().isEmpty()) {
             from.send(Information.cannotPostItemOnChannel());
             return;
         }
 
-        BroadcastedMessage event = new BroadcastedMessage(
-            type(),
-            from,
-            message.message(),
-            ""
-        );
+        final BroadcastedMessage event = new BroadcastedMessage(type(), from, message.message(), "");
 
         from
             .fighter()

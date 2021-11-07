@@ -30,8 +30,8 @@ import java.util.stream.StreamSupport;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L764
  */
-final public class CharacterSelected {
-    final private GamePlayer character;
+public final class CharacterSelected {
+    private final GamePlayer character;
 
     public CharacterSelected(GamePlayer character) {
         this.character = character;

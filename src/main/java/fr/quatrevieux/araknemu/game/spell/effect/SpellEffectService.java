@@ -21,17 +21,28 @@ package fr.quatrevieux.araknemu.game.spell.effect;
 
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.data.value.SpellTemplateEffect;
-import fr.quatrevieux.araknemu.game.spell.effect.area.*;
+import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
+import fr.quatrevieux.araknemu.game.spell.effect.area.CheckboardArea;
+import fr.quatrevieux.araknemu.game.spell.effect.area.CircleArea;
+import fr.quatrevieux.araknemu.game.spell.effect.area.CrossArea;
+import fr.quatrevieux.araknemu.game.spell.effect.area.LineArea;
+import fr.quatrevieux.araknemu.game.spell.effect.area.PerpendicularLineArea;
+import fr.quatrevieux.araknemu.game.spell.effect.area.RingArea;
+import fr.quatrevieux.araknemu.game.spell.effect.area.SpellEffectArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.function.Function;
 
 /**
  * Handle spell effects
  */
-final public class SpellEffectService {
-    final private Map<EffectArea.Type, Function<EffectArea, SpellEffectArea>> areaFactories;
+public final class SpellEffectService {
+    private final Map<EffectArea.Type, Function<EffectArea, SpellEffectArea>> areaFactories;
 
     public SpellEffectService() {
         this(new EnumMap<>(EffectArea.Type.class));
@@ -68,7 +79,7 @@ final public class SpellEffectService {
      * @param targets The effects targets
      */
     public List<SpellEffect> makeAll(List<SpellTemplateEffect> templates, List<EffectArea> areas, int[] targets) {
-        List<SpellEffect> effects = new ArrayList<>(templates.size());
+        final List<SpellEffect> effects = new ArrayList<>(templates.size());
 
         for (int i = 0; i < templates.size(); ++i) {
             effects.add(make(templates.get(i), areas.get(i), targets.length > i ? new SpellEffectTarget(targets[i]) : SpellEffectTarget.DEFAULT));

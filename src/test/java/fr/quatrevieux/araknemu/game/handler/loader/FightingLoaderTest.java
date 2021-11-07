@@ -49,6 +49,5 @@ class FightingLoaderTest extends LoaderTestCase {
         assertHandlePacket(FighterChangePlace.class, handlers);
         assertHandlePacket(FighterReady.class, handlers);
         assertHandlePacket(TurnEnd.class, handlers);
-        assertHandlePacket(LeaveFightRequest.class, handlers);
     }
 }

@@ -36,6 +36,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PrivateChannelTest extends GameBaseCase {
     private PrivateChannel channel;
@@ -54,6 +55,11 @@ class PrivateChannelTest extends GameBaseCase {
         );
 
         other = makeOtherPlayer();
+    }
+
+    @Test
+    void authorized() throws SQLException {
+        assertTrue(channel.authorized(gamePlayer()));
     }
 
     @Test

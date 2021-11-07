@@ -35,8 +35,8 @@ import java.util.Map;
  *
  * This spell will reset all fighters position to the initial one
  */
-final public class RaulebaqueModule implements FightModule {
-    final private Fight fight;
+public final class RaulebaqueModule implements FightModule {
+    private final Fight fight;
 
     private Map<Fighter, FightCell> startPositions;
 
@@ -66,7 +66,7 @@ final public class RaulebaqueModule implements FightModule {
                 public Class<FightStarted> event() {
                     return FightStarted.class;
                 }
-            }
+            },
         };
     }
 

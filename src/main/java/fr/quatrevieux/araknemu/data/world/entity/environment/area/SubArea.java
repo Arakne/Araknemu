@@ -24,12 +24,12 @@ import fr.quatrevieux.araknemu.data.constant.Alignment;
 /**
  * Map subareas. Contains alignment
  */
-final public class SubArea {
-    final private int id;
-    final private int area;
-    final private String name;
-    final private boolean conquestable;
-    final private Alignment alignment;
+public final class SubArea {
+    private final int id;
+    private final int area;
+    private final String name;
+    private final boolean conquestable;
+    private final Alignment alignment;
 
     public SubArea(int id, int area, String name, boolean conquestable, Alignment alignment) {
         this.id = id;

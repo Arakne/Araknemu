@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.game.player.Restrictions;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Account.as#L1109
  */
-final public class AlterRestrictions {
-    final private Restrictions restrictions;
+public final class AlterRestrictions {
+    private final Restrictions restrictions;
 
     public AlterRestrictions(Restrictions restrictions) {
         this.restrictions = restrictions;

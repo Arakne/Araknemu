@@ -32,6 +32,8 @@ import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Collections;
+
 class BuffListTest extends FightBaseCase {
     private BuffList list;
 
@@ -230,5 +232,71 @@ class BuffListTest extends FightBaseCase {
         assertArrayEquals(new Buff[] {buff2, buff3}, list.stream().toArray());
 
         Mockito.verify(hook1).onBuffTerminated(buff1);
+    }
+
+    @Test
+    void addMultipleAndRemoveThoseThatCanBeRemoved(){
+        BuffHook hook1, hook2, hook3; 
+        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class), false);
+        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class), true);
+
+        list.add(buff1);
+        list.add(buff2);
+        list.add(buff3);
+
+        assertTrue(list.removeAll());
+
+        assertIterableEquals(Collections.singletonList(buff2), list);
+
+        Mockito.verify(hook1).onBuffTerminated(buff1);
+        Mockito.verify(hook2, Mockito.never()).onBuffTerminated(buff2);
+        Mockito.verify(hook3).onBuffTerminated(buff3);
+
+        assertFalse(list.removeAll());
+    }
+
+    @Test
+    void removeAllWithoutUndispellableBuff(){
+        BuffHook hook1, hook2, hook3;
+        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+
+        list.add(buff1);
+        list.add(buff2);
+        list.add(buff3);
+
+        assertTrue(list.removeAll());
+
+        assertIterableEquals(Collections.emptyList(), list);
+
+        Mockito.verify(hook1).onBuffTerminated(buff1);
+        Mockito.verify(hook2).onBuffTerminated(buff2);
+        Mockito.verify(hook3).onBuffTerminated(buff3);
+
+        assertFalse(list.removeAll());
+    }
+
+    @Test
+    void removeByCaster(){
+        BuffHook hook1, hook2, hook3;
+        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), player.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class), false);
+        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class), true);
+
+        list.add(buff1);
+        list.add(buff2);
+        list.add(buff3);
+
+        assertTrue(list.removeByCaster(other.fighter()));
+
+        assertIterableEquals(Collections.singletonList(buff2), list);
+
+        Mockito.verify(hook1).onBuffTerminated(buff1);
+        Mockito.verify(hook2, Mockito.never()).onBuffTerminated(buff2);
+        Mockito.verify(hook3).onBuffTerminated(buff3);
+
+        assertFalse(list.removeByCaster(other.fighter()));
     }
 }

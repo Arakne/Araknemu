@@ -27,15 +27,15 @@ import java.util.Set;
 /**
  * Resolve ring area (circle border)
  */
-final public class RingArea implements SpellEffectArea {
-    final private CircularArea area;
+public final class RingArea implements SpellEffectArea {
+    private final CircularArea area;
 
     public RingArea(EffectArea area) {
         this.area = new CircularArea(area, distance -> distance == area.size());
     }
 
     @Override
-    public <C extends MapCell> Set<C> resolve(C target, C source) {
+    public <C extends MapCell<C>> Set<C> resolve(C target, C source) {
         return area.resolve(target, source);
     }
 

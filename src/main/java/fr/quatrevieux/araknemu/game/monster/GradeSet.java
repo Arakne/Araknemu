@@ -29,10 +29,10 @@ import java.util.stream.Collectors;
 /**
  * Set of grades for a monster template
  */
-final public class GradeSet {
-    final static private RandomUtil RANDOM = RandomUtil.createShared();
+public final class GradeSet {
+    private static final RandomUtil RANDOM = RandomUtil.createShared();
 
-    final private List<Monster> grades;
+    private final List<Monster> grades;
 
     GradeSet(List<Monster> grades) {
         this.grades = grades;

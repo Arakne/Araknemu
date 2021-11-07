@@ -30,10 +30,10 @@ import java.util.concurrent.ScheduledFuture;
 /**
  * Handle fight action
  */
-final public class ActionHandler {
-    final private Fight fight;
+public final class ActionHandler {
+    private final Fight fight;
 
-    final private Collection<Runnable> termination = new ArrayList<>();
+    private final Collection<Runnable> termination = new ArrayList<>();
 
     private Action current;
     private ScheduledFuture future;
@@ -58,7 +58,7 @@ final public class ActionHandler {
             return false;
         }
 
-        ActionResult result = action.start();
+        final ActionResult result = action.start();
 
         if (result.success()) {
             current = action;
@@ -84,7 +84,12 @@ final public class ActionHandler {
 
         future.cancel(false);
 
-        Action action = current;
+        // The fight is stopped (caused by a leave) during an action
+        if (!fight.active()) {
+            return;
+        }
+
+        final Action action = current;
 
         try {
             action.end();

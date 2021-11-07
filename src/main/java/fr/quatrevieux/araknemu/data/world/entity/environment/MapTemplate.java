@@ -28,16 +28,16 @@ import java.util.List;
 /**
  * Entity for Dofus map
  */
-final public class MapTemplate {
-    final private int id;
-    final private String date;
-    final private Dimensions dimensions;
-    final private String key;
-    final private CellData[] cells;
-    final private List<Integer>[] fightPlaces;
-    final private Geolocation geolocation;
-    final private int subAreaId;
-    final private boolean indoor;
+public final class MapTemplate {
+    private final int id;
+    private final String date;
+    private final Dimensions dimensions;
+    private final String key;
+    private final CellData[] cells;
+    private final List<Integer>[] fightPlaces;
+    private final Geolocation geolocation;
+    private final int subAreaId;
+    private final boolean indoor;
 
     public MapTemplate(int id, String date, Dimensions dimensions, String key, CellData[] cells, List<Integer>[] fightPlaces, Geolocation geolocation, int subAreaId, boolean indoor) {
         this.id = id;

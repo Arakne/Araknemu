@@ -50,9 +50,9 @@ import java.util.function.Consumer;
  * SelectServer     ------>     [check for server and declare connection]
  * [close]          <------     SelectServerXX
  */
-final public class RealmPacketParserMiddleware implements ConfigurableSession.ReceivePacketMiddleware {
-    final private PacketParser[] loginPackets;
-    final private PacketParser parser;
+public final class RealmPacketParserMiddleware implements ConfigurableSession.ReceivePacketMiddleware {
+    private final PacketParser[] loginPackets;
+    private final PacketParser parser;
 
     private int packetCount = 0;
 

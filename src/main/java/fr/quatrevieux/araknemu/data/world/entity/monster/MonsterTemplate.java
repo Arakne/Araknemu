@@ -28,67 +28,13 @@ import java.util.Map;
  * Template for monster
  * Store characteristics for create real monsters
  */
-final public class MonsterTemplate {
-    final static public class Grade {
-        final private int level;
-        final private int life;
-        final private int initiative;
-        final private Characteristics characteristics;
-        final private Map<Integer, Integer> spells;
-
-        public Grade(int level, int life, int initiative, Characteristics characteristics, Map<Integer, Integer> spells) {
-            this.level = level;
-            this.life = life;
-            this.initiative = initiative;
-            this.characteristics = characteristics;
-            this.spells = spells;
-        }
-
-        /**
-         * The monster level
-         * Will be displayed on the sprite (information for the player), but has no more effects
-         */
-        public int level() {
-            return level;
-        }
-
-        /**
-         * The monster max life
-         */
-        public int life() {
-            return life;
-        }
-
-        /**
-         * The monster initiative
-         * Unlike characters, only this value is considered for initiative (i.e. not changed by other stats, or life)
-         */
-        public int initiative() {
-            return initiative;
-        }
-
-        /**
-         * Get the monster characteristics (including resistances, action and movement points)
-         */
-        public Characteristics characteristics() {
-            return characteristics;
-        }
-
-        /**
-         * Get the monster spells
-         * The response is a map with spell id as key and spell level as value
-         */
-        public Map<Integer, Integer> spells() {
-            return spells;
-        }
-    }
-
-    final private int id;
-    final private String name;
-    final private int gfxId;
-    final private Colors colors;
-    final private String ai;
-    final private Grade[] grades;
+public final class MonsterTemplate {
+    private final int id;
+    private final String name;
+    private final int gfxId;
+    private final Colors colors;
+    private final String ai;
+    private final Grade[] grades;
 
     public MonsterTemplate(int id, String name, int gfxId, Colors colors, String ai, Grade[] grades) {
         this.id = id;
@@ -142,5 +88,59 @@ final public class MonsterTemplate {
      */
     public Grade[] grades() {
         return grades;
+    }
+
+    public static final class Grade {
+        private final int level;
+        private final int life;
+        private final int initiative;
+        private final Characteristics characteristics;
+        private final Map<Integer, Integer> spells;
+
+        public Grade(int level, int life, int initiative, Characteristics characteristics, Map<Integer, Integer> spells) {
+            this.level = level;
+            this.life = life;
+            this.initiative = initiative;
+            this.characteristics = characteristics;
+            this.spells = spells;
+        }
+
+        /**
+         * The monster level
+         * Will be displayed on the sprite (information for the player), but has no more effects
+         */
+        public int level() {
+            return level;
+        }
+
+        /**
+         * The monster max life
+         */
+        public int life() {
+            return life;
+        }
+
+        /**
+         * The monster initiative
+         * Unlike characters, only this value is considered for initiative (i.e. not changed by other stats, or life)
+         */
+        public int initiative() {
+            return initiative;
+        }
+
+        /**
+         * Get the monster characteristics (including resistances, action and movement points)
+         */
+        public Characteristics characteristics() {
+            return characteristics;
+        }
+
+        /**
+         * Get the monster spells
+         * The response is a map with spell id as key and spell level as value
+         */
+        public Map<Integer, Integer> spells() {
+            return spells;
+        }
     }
 }

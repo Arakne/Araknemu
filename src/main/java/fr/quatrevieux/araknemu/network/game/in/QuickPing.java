@@ -28,8 +28,8 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Aks.as#L342
  */
-final public class QuickPing implements Packet {
-    final static public class Parser implements SinglePacketParser<QuickPing> {
+public final class QuickPing implements Packet {
+    public static final class Parser implements SinglePacketParser<QuickPing> {
         @Override
         public QuickPing parse(String input) throws ParsePacketException {
             return new QuickPing();

@@ -21,10 +21,15 @@ package fr.quatrevieux.araknemu.network.game.out.info;
 
 import fr.arakne.utils.value.Interval;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Error message
  */
-final public class Error extends InformationMessage {
+public final class Error extends AbstractInformationMessage {
+    private static final Map<Integer, Error> simpleErrorsByCode = new HashMap<>();
+
     public Error(Entry... entries) {
         super(Type.ERROR, entries);
     }
@@ -36,25 +41,26 @@ final public class Error extends InformationMessage {
     public Error(int id, Object... arguments) {
         this(new Entry(id, arguments));
     }
+
     /**
      * Get the welcome message
      */
-    static public Error welcome() {
-        return new Error(89);
+    public static Error welcome() {
+        return forCode(89);
     }
 
     /**
      * Cannot do the action on this server
      */
-    static public Error cantDoOnServer() {
-        return new Error(226);
+    public static Error cantDoOnServer() {
+        return forCode(226);
     }
 
     /**
      * Cannot do the action on the current state
      */
-    static public Error cantDoOnCurrentState() {
-        return new Error(116);
+    public static Error cantDoOnCurrentState() {
+        return forCode(116);
     }
 
     /**
@@ -62,15 +68,15 @@ final public class Error extends InformationMessage {
      *
      * @param spellId The spell
      */
-    static public Error cantLearnSpell(int spellId) {
+    public static Error cantLearnSpell(int spellId) {
         return new Error(7, spellId);
     }
 
     /**
      * Cannot cast the spell : not in the spell list
      */
-    static public Error cantCastNotFound() {
-        return new Error(169);
+    public static Error cantCastNotFound() {
+        return forCode(169);
     }
 
     /**
@@ -79,43 +85,43 @@ final public class Error extends InformationMessage {
      * @param available The available action points
      * @param required The required action points for cast the spell
      */
-    static public Error cantCastNotEnoughActionPoints(int available, int required) {
+    public static Error cantCastNotEnoughActionPoints(int available, int required) {
         return new Error(170, available, required);
     }
 
     /**
      * Cannot cast the spell : The target cell is invalid
      */
-    static public Error cantCastInvalidCell() {
-        return new Error(193);
+    public static Error cantCastInvalidCell() {
+        return forCode(193);
     }
 
     /**
      * Cannot cast the spell : The target cell is not available
      */
-    static public Error cantCastCellNotAvailable() {
-        return new Error(172);
+    public static Error cantCastCellNotAvailable() {
+        return forCode(172);
     }
 
     /**
      * Cannot cast the spell : The target cell is not in line
      */
-    static public Error cantCastLineLaunch() {
-        return new Error(173);
+    public static Error cantCastLineLaunch() {
+        return forCode(173);
     }
 
     /**
      * Cannot cast the spell : The sight is blocked
      */
-    static public Error cantCastSightBlocked() {
-        return new Error(174);
+    public static Error cantCastSightBlocked() {
+        return forCode(174);
     }
 
     /**
      * Cannot cast the spell : The cast is in invalid state
      */
-    static public Error cantCastBadState() {
-        return new Error(116);
+    public static Error cantCastBadState() {
+        return forCode(116);
     }
 
     /**
@@ -131,22 +137,22 @@ final public class Error extends InformationMessage {
     /**
      * Cannot cast the spell
      */
-    static public Error cantCast() {
-        return new Error(175);
+    public static Error cantCast() {
+        return forCode(175);
     }
 
     /**
      * Cannot perform the action during fight
      */
-    static public Error cantDoDuringFight() {
-        return new Error(91);
+    public static Error cantDoDuringFight() {
+        return forCode(91);
     }
 
     /**
      * Cannot move : the player is overweight
      */
-    static public Error cantMoveOverweight() {
-        return new Error(12);
+    public static Error cantMoveOverweight() {
+        return forCode(12);
     }
 
     /**
@@ -154,7 +160,39 @@ final public class Error extends InformationMessage {
      *
      * @param delay The delay string. The value is not translated.
      */
-    static public Error shutdownScheduled(String delay) {
+    public static Error shutdownScheduled(String delay) {
         return new Error(15, delay);
+    }
+
+    /**
+     * A game server save is in progress
+     */
+    public static Error saveInProgress() {
+        return forCode(164);
+    }
+
+    /**
+     * The current game server save is terminated
+     */
+    public static Error saveTerminated() {
+        return forCode(165);
+    }
+
+    /**
+     * The player cannot join the fight as spectator
+     */
+    public static Error cantJoinFightAsSpectator() {
+        return forCode(57);
+    }
+
+    /**
+     * Create and cache a simple Error with a code
+     *
+     * @param code The error code
+     *
+     * @return The Error instance
+     */
+    private static Error forCode(int code) {
+        return simpleErrorsByCode.computeIfAbsent(code, Error::new);
     }
 }

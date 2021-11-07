@@ -27,10 +27,10 @@ import fr.quatrevieux.araknemu.game.admin.LogType;
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Basics.as#L125
  */
-final public class ChangeConsoleLine {
-    final private int line;
-    final private LogType type;
-    final private String message;
+public final class ChangeConsoleLine {
+    private final int line;
+    private final LogType type;
+    private final String message;
 
     public ChangeConsoleLine(int line, LogType type, String message) {
         this.line = line;

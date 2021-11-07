@@ -34,9 +34,9 @@ import fr.quatrevieux.araknemu.network.game.out.exchange.movement.storage.Storag
 /**
  * Exchange party for store items into the bank
  */
-final public class BankExchangeParty implements ExchangeParty {
-    final private ExplorationPlayer player;
-    final private Bank bank;
+public final class BankExchangeParty implements ExchangeParty {
+    private final ExplorationPlayer player;
+    private final Bank bank;
 
     public BankExchangeParty(ExplorationPlayer player, Bank bank) {
         this.player = player;

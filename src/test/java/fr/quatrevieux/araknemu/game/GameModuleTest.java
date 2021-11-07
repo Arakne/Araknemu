@@ -72,6 +72,9 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.MonsterAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import fr.quatrevieux.araknemu.game.fight.spectator.DefaultSpectatorFactory;
+import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
+import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
@@ -144,6 +147,7 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(MonsterEnvironmentService.class, container.get(MonsterEnvironmentService.class));
         assertInstanceOf(MonsterRewardService.class, container.get(MonsterRewardService.class));
         assertInstanceOf(PvmType.class, container.get(PvmType.class));
+        assertInstanceOf(ChallengeType.class, container.get(ChallengeType.class));
         assertInstanceOf(ChainAiFactory.class, container.get(AiFactory.class));
         assertInstanceOf(MonsterAiFactory.class, container.get(MonsterAiFactory.class));
         assertInstanceOf(ActivityService.class, container.get(ActivityService.class));
@@ -158,6 +162,8 @@ class GameModuleTest extends GameBaseCase {
         assertInstanceOf(BanIpService.class, container.get(BanIpService.class));
         assertInstanceOf(GameBanIpSynchronizer.class, container.get(GameBanIpSynchronizer.class));
         assertInstanceOf(Simulator.class, container.get(Simulator.class));
+        assertInstanceOf(SavingService.class, container.get(SavingService.class));
+        assertInstanceOf(DefaultSpectatorFactory.class, container.get(SpectatorFactory.class));
 
         assertSame(
             container.get(ListenerAggregate.class),

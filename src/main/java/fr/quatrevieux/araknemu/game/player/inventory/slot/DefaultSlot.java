@@ -33,8 +33,8 @@ import java.util.Optional;
  *
  * This slot will handle item stacking
  */
-final public class DefaultSlot implements InventorySlot {
-    final private StackableItemStorage<InventoryEntry> storage;
+public final class DefaultSlot implements InventorySlot {
+    private final StackableItemStorage<InventoryEntry> storage;
 
     public DefaultSlot(ItemStorage<InventoryEntry> storage) {
         this.storage = new StackableItemStorage<>(storage, id());

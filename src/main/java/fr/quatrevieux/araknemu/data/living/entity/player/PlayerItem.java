@@ -27,11 +27,11 @@ import java.util.List;
 /**
  * Inventory entry entity
  */
-final public class PlayerItem implements Item {
-    final private int playerId;
-    final private int entryId;
-    final private int itemTemplateId;
-    final private List<ItemTemplateEffectEntry> effects;
+public final class PlayerItem implements Item {
+    private final int playerId;
+    private final int entryId;
+    private final int itemTemplateId;
+    private final List<ItemTemplateEffectEntry> effects;
     private int quantity;
     private int position;
 

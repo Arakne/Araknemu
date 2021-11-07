@@ -19,7 +19,10 @@
 
 package fr.quatrevieux.araknemu.game.admin.context;
 
+import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextException;
+
+import java.util.function.Supplier;
 
 /**
  * Resolver for console context
@@ -28,13 +31,13 @@ public interface ContextResolver {
     /**
      * Resolve the context
      *
-     * @param globalContext The global context
+     * @param performer The command performer
      * @param argument The resolver argument
      */
-    public Context resolve(Context globalContext, Object argument) throws ContextException;
+    public Context resolve(AdminPerformer performer, Supplier<String> argument) throws ContextException;
 
     /**
-     * Get the resolver type
+     * Get the context prefix character
      */
-    public String type();
+    public char prefix();
 }

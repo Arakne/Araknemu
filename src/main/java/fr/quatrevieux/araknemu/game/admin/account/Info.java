@@ -26,14 +26,12 @@ import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 
-import java.util.List;
-
 /**
  * Info command for account
  */
-final public class Info extends AbstractCommand {
-    final private GameAccount account;
-    final private AccountRepository repository;
+public final class Info extends AbstractCommand<Void> {
+    private final GameAccount account;
+    private final AccountRepository repository;
 
     public Info(GameAccount account, AccountRepository repository) {
         this.account = account;
@@ -43,14 +41,14 @@ final public class Info extends AbstractCommand {
     @Override
     protected void build(Builder builder) {
         builder
-            .description("Display info about the account")
             .help(
                 formatter -> formatter
+                    .description("Display info about the account")
                     .synopsis("[context] info")
                     .line("<i>Note: this command takes no arguments, the account is only resolved by the context</i>")
 
-                    .example("${account:John} info", "Display information about the 'John' account")
-                    .example("${player:Alan} > account info", "Display information about the account of the 'Alan' player")
+                    .example("#John info", "Display information about the 'John' account")
+                    .example("@Alan > account info", "Display information about the account of the 'Alan' player")
                     .example("> account info", "Display self account information")
             )
             .requires(Permission.MANAGE_ACCOUNT)
@@ -63,8 +61,8 @@ final public class Info extends AbstractCommand {
     }
 
     @Override
-    public void execute(AdminPerformer performer, List<String> arguments) {
-        Account entity = repository.get(new Account(account.id()));
+    public void execute(AdminPerformer performer, Void arguments) {
+        final Account entity = repository.get(new Account(account.id()));
 
         performer.success("Account info : {}", entity.name());
         performer.success("=================================");

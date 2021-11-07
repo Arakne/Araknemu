@@ -70,7 +70,7 @@ public interface InvitationHandler {
      * @param initiator The invitation initiator
      * @param target The invitation target
      */
-    default public Invitation invitation(ExplorationPlayer initiator, ExplorationPlayer target) {
+    public default Invitation invitation(ExplorationPlayer initiator, ExplorationPlayer target) {
         return new SimpleInvitation(this, initiator, target);
     }
 }

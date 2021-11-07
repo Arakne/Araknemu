@@ -26,7 +26,7 @@ import fr.quatrevieux.araknemu.network.game.in.account.ClientUid;
 /**
  * Save the client Uid into connection log
  */
-final public class SaveClientUid implements PacketHandler<GameSession, ClientUid> {
+public final class SaveClientUid implements PacketHandler<GameSession, ClientUid> {
     @Override
     public void handle(GameSession session, ClientUid packet) {
         session.log().setClientUid(packet.uid());

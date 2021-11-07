@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.cast;
 
-import fr.arakne.utils.maps.CoordinateCell;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
@@ -42,13 +41,13 @@ import java.time.Duration;
 /**
  * Cast a spell
  */
-final public class Cast implements Action {
-    final private FightTurn turn;
-    final private Fighter caster;
-    final private Spell spell;
-    final private FightCell target;
-    final private CastConstraintValidator<Spell> validator;
-    final private CriticalityStrategy criticalityStrategy;
+public final class Cast implements Action {
+    private final FightTurn turn;
+    private final Fighter caster;
+    private final Spell spell;
+    private final FightCell target;
+    private final CastConstraintValidator<Spell> validator;
+    private final CriticalityStrategy criticalityStrategy;
 
     private CastSuccess result;
 
@@ -67,7 +66,7 @@ final public class Cast implements Action {
 
     @Override
     public boolean validate() {
-        Error error = spell == null
+        final Error error = spell == null
             ? Error.cantCastNotFound()
             : validator.validate(turn, spell, target)
         ;
@@ -84,10 +83,7 @@ final public class Cast implements Action {
     @Override
     public ActionResult start() {
         if (!target.equals(caster.cell())) {
-            caster.setOrientation(
-                new CoordinateCell<>(caster.cell())
-                    .directionTo(new CoordinateCell<>(target))
-            );
+            caster.setOrientation(caster.cell().coordinate().directionTo(target));
         }
 
         if (criticalityStrategy.failed(spell.criticalFailure())) {
@@ -148,5 +144,10 @@ final public class Cast implements Action {
 
     public FightCell target() {
         return target;
+    }
+
+    @Override
+    public String toString() {
+        return "Cast{spell=" + spell.id() + ", target=" + target.id() + '}';
     }
 }

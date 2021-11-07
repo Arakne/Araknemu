@@ -21,11 +21,8 @@ package fr.quatrevieux.araknemu.game.admin.global;
 
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
-import fr.quatrevieux.araknemu.game.admin.context.Context;
-import fr.quatrevieux.araknemu.game.admin.context.ContextConfigurator;
-import fr.quatrevieux.araknemu.game.admin.context.NullContext;
+import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
-import fr.quatrevieux.araknemu.game.admin.player.PlayerContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -46,10 +43,7 @@ class GlobalContextTest extends CommandTestCase {
     @Test
     void commands() throws CommandNotFoundException {
         assertInstanceOf(Echo.class, context.command("echo"));
-        assertInstanceOf(Help.class, context.command("help"));
-
         assertContainsType(Echo.class, context.commands());
-        assertContainsType(Help.class, context.commands());
     }
 
     @Test
@@ -57,7 +51,7 @@ class GlobalContextTest extends CommandTestCase {
         Command command = Mockito.mock(Command.class);
         Mockito.when(command.name()).thenReturn("mocked");
 
-        context.register(new ContextConfigurator<GlobalContext>() {
+        context.register(new AbstractContextConfigurator<GlobalContext>() {
             @Override
             public void configure(GlobalContext context) {
                 add(command);

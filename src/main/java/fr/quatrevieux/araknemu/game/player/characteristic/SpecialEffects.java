@@ -25,14 +25,14 @@ import java.util.Map;
 /**
  * Handle special effects
  */
-final public class SpecialEffects {
+public final class SpecialEffects {
     public enum Type {
         PODS,
         INITIATIVE,
         DISCERNMENT
     }
 
-    final private Map<Type, Integer> map = new EnumMap<>(Type.class);
+    private final Map<Type, Integer> map = new EnumMap<>(Type.class);
 
     /**
      * Add effect value to the map

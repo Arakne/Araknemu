@@ -61,28 +61,26 @@ class TeleportTest extends GameBaseCase {
     @Test
     void apply() {
         factory.create(new ResponseAction(1, "", "10340,128")).apply(player);
-        player.interactions().end(1);
 
         assertEquals(10340, player.map().id());
         assertEquals(128, player.cell().id());
 
         requestStack.assertAll(
-            new GameActionResponse("1", ActionType.CHANGE_MAP, player.id(), ""),
-            new MapData(player.map())
+            new MapData(player.map()),
+            new GameActionResponse("", ActionType.CHANGE_MAP, player.id(), "")
         );
     }
 
     @Test
     void applyWithCinematic() {
         factory.create(new ResponseAction(1, "", "10340,128,5")).apply(player);
-        player.interactions().end(1);
 
         assertEquals(10340, player.map().id());
         assertEquals(128, player.cell().id());
 
         requestStack.assertAll(
-            new GameActionResponse("1", ActionType.CHANGE_MAP, player.id(), "5"),
-            new MapData(player.map())
+            new MapData(player.map()),
+            new GameActionResponse("", ActionType.CHANGE_MAP, player.id(), "5")
         );
     }
 }

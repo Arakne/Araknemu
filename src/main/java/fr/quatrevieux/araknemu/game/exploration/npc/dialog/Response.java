@@ -29,9 +29,9 @@ import java.util.List;
  * Dialog response
  * The response will perform actions on the interlocutor
  */
-final public class Response {
-    final private int id;
-    final private List<Action> actions;
+public final class Response {
+    private final int id;
+    private final List<Action> actions;
 
     public Response(int id, List<Action> actions) {
         this.id = id;

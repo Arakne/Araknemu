@@ -26,8 +26,8 @@ import fr.quatrevieux.araknemu.util.BitSet;
 /**
  * Handle current player restrictions
  */
-final public class Restrictions {
-    static public enum Restriction {
+public final class Restrictions {
+    public static enum Restriction {
         /** value: 1 */
         DENY_ASSAULT,
         /** value: 2 */
@@ -60,8 +60,8 @@ final public class Restrictions {
         DENY_INTERACT_PRISM,
     }
 
-    final private Dispatcher dispatcher;
-    final private BitSet<Restriction> set;
+    private final Dispatcher dispatcher;
+    private final BitSet<Restriction> set;
 
     public Restrictions(Dispatcher dispatcher) {
         this.dispatcher = dispatcher;

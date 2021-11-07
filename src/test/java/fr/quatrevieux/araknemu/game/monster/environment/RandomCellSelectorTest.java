@@ -30,6 +30,9 @@ import fr.arakne.utils.maps.constant.Direction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class RandomCellSelectorTest extends GameBaseCase {
@@ -50,6 +53,10 @@ class RandomCellSelectorTest extends GameBaseCase {
     void cell() {
         assertNotEquals(selector.cell(), selector.cell());
         assertTrue(selector.cell().free());
+
+        List<ExplorationMapCell> cells = new ArrayList<>(map.fightPlaces(0));
+        cells.addAll(map.fightPlaces(1));
+        assertTrue(cells.contains(selector.cell()));
     }
 
     @Test

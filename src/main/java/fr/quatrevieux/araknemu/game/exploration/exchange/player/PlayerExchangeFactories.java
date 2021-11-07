@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player.Play
 /**
  * Factories for player exchanges
  */
-final public class PlayerExchangeFactories extends ExchangeFactoryAggregate<ExplorationPlayer> {
+public final class PlayerExchangeFactories extends ExchangeFactoryAggregate<ExplorationPlayer> {
     @SafeVarargs
     public PlayerExchangeFactories(ExchangeTypeFactory<ExplorationPlayer>... factories) {
         super(factories);

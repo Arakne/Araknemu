@@ -24,7 +24,6 @@ import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.InvocationFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 
@@ -36,11 +35,11 @@ import java.util.List;
 /**
  * Simple fight team for player fighters
  */
-final public class SimpleTeam implements FightTeam {
-    final private PlayerFighter leader;
-    final private List<Fighter> fighters;
-    final private List<Integer> startPlaces;
-    final private int number;
+public final class SimpleTeam implements FightTeam {
+    private final PlayerFighter leader;
+    private final List<Fighter> fighters;
+    private final List<Integer> startPlaces;
+    private final int number;
 
     public SimpleTeam(PlayerFighter leader, List<Integer> startPlaces, int number) {
         this.leader = leader;
