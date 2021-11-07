@@ -207,6 +207,7 @@ import fr.quatrevieux.araknemu.network.game.GamePacketConfigurator;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.GameParserLoader;
 import fr.quatrevieux.araknemu.network.in.CommonParserLoader;
+import fr.quatrevieux.araknemu.game.fight.module.MonsterInvocationModule;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

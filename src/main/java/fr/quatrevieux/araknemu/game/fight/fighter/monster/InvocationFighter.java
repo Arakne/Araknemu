@@ -24,7 +24,7 @@ import java.util.Optional;
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -185,11 +185,6 @@ final public class InvocationFighter implements Fighter {
     }
 
     @Override
-    public Buffs buffs() {
-        return fighter.buffs();
-    }
-
-    @Override
     public void move(FightCell cell) {
         fighter.move(cell);
     }
@@ -197,5 +192,15 @@ final public class InvocationFighter implements Fighter {
     @Override
     public States states() {
         return fighter.states();
+    }
+
+    @Override
+    public FightTurn turn() {
+        return fighter.turn();
+    }
+
+    @Override
+    public BuffList buffs() {
+        return fighter.buffs();
     }
 }
