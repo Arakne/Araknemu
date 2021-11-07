@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.proxy;
 
+import java.util.Optional;
+
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
@@ -109,5 +111,10 @@ public final class ProxyPassiveFighter implements PassiveFighter {
     @Override
     public int hashCode() {
         return fighter.hashCode();
+    }
+
+    @Override
+    public Optional<PassiveFighter> invoker() {
+        return fighter.invoker();
     }
 }
