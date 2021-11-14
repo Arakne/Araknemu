@@ -86,6 +86,8 @@ public final class Fight implements Dispatcher, Sender {
         this.executor = executor;
         this.dispatcher = new DefaultListenerAggregate(logger);
         this.spectators = new Spectators(this);
+
+        teams.forEach(team -> team.setFight(this));
     }
 
     /**

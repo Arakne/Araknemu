@@ -28,11 +28,10 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
-import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.team.ConfigurableTeamOptions;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
@@ -40,10 +39,8 @@ import fr.quatrevieux.araknemu.network.game.out.info.StopLifeTimer;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -133,6 +130,18 @@ class JoinFightTest extends FightBaseCase {
             new AddSprites(fight.fighters().stream().map(Fighter::sprite).collect(Collectors.toList())),
             new FightStartPositions(new List[] { fight.team(0).startPlaces(), fight.team(1).startPlaces() }, 0),
             new AddSprites(Collections.singleton(player.fighter().sprite()))
+        );
+    }
+
+    @RepeatedIfExceptionsTest
+    void locked() throws InterruptedException {
+        ConfigurableTeamOptions.class.cast(fight.team(0).options()).toggleAllowJoinTeam();
+
+        action.start(new ActionQueue());
+        Thread.sleep(100);
+
+        requestStack.assertLast(
+            new GameActionResponse("", ActionType.JOIN_FIGHT, player.id(), "f")
         );
     }
 

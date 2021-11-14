@@ -24,6 +24,9 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.spectator.event.SpectatorJoined;
 import fr.quatrevieux.araknemu.game.fight.spectator.event.SpectatorLeaved;
+import fr.quatrevieux.araknemu.game.fight.team.ConfigurableTeamOptions;
+import fr.quatrevieux.araknemu.game.fight.team.event.AllowSpectatorChanged;
+import fr.quatrevieux.araknemu.game.listener.fight.SendBlockSpectatorsOptionChangedMessage;
 import fr.quatrevieux.araknemu.game.listener.fight.spectator.SendSpectatorHasJoined;
 import fr.quatrevieux.araknemu.network.game.out.fight.CancelFight;
 import org.junit.jupiter.api.Test;
@@ -39,6 +42,7 @@ class SpectatorsTest extends FightBaseCase {
         Fight fight = createSimpleFight(container.get(ExplorationMapService.class).load(10340));
 
         assertTrue(fight.dispatcher().has(SendSpectatorHasJoined.class));
+        assertTrue(fight.dispatcher().has(SendBlockSpectatorsOptionChangedMessage.class));
     }
 
     @Test
@@ -174,5 +178,56 @@ class SpectatorsTest extends FightBaseCase {
         spectators.dispatch(evt);
 
         assertSame(evt, ref.get());
+    }
+
+    @Test
+    void canJoin() throws Exception {
+        Fight fight = createFight();
+        Spectators spectators = new Spectators(fight);
+
+        assertFalse(spectators.canJoin());
+        fight.start();
+
+        assertTrue(spectators.canJoin());
+
+        ConfigurableTeamOptions.class.cast(fight.team(0).options()).toggleAllowSpectators();
+        assertFalse(spectators.canJoin());
+        ConfigurableTeamOptions.class.cast(fight.team(1).options()).toggleAllowSpectators();
+        assertFalse(spectators.canJoin());
+
+        ConfigurableTeamOptions.class.cast(fight.team(0).options()).toggleAllowSpectators();
+        ConfigurableTeamOptions.class.cast(fight.team(1).options()).toggleAllowSpectators();
+        assertTrue(spectators.canJoin());
+
+        fight.stop();
+        assertFalse(spectators.canJoin());
+    }
+
+    @Test
+    void shouldKickWhenSpectatorsHasBeenBlocked() throws SQLException {
+        Fight fight = createSimpleFight(container.get(ExplorationMapService.class).load(10340));
+        fight.nextState();
+
+        Spectator spectator = container.get(SpectatorFactory.class).create(gamePlayer(), fight);
+        spectator.join();
+
+        ConfigurableTeamOptions.class.cast(fight.team(0).options()).toggleAllowSpectators();
+
+        assertFalse(gamePlayer().isSpectator());
+        requestStack.assertLast(new CancelFight());
+    }
+
+    @Test
+    void kickAll() throws SQLException {
+        Fight fight = createSimpleFight(container.get(ExplorationMapService.class).load(10340));
+        fight.nextState();
+
+        Spectator spectator = container.get(SpectatorFactory.class).create(gamePlayer(), fight);
+        spectator.join();
+
+        fight.spectators().kickAll();
+
+        assertFalse(gamePlayer().isSpectator());
+        requestStack.assertLast(new CancelFight());
     }
 }

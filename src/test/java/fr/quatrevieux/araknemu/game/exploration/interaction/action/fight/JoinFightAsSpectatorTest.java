@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
+import fr.quatrevieux.araknemu.game.fight.team.ConfigurableTeamOptions;
 import fr.quatrevieux.araknemu.network.game.out.fight.BeginFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
@@ -120,6 +121,20 @@ class JoinFightAsSpectatorTest extends FightBaseCase {
             new FighterTurnOrder(fight.turnList()),
             new StartTurn(fight.turnList().current().get())
         );
+    }
+
+    @Test
+    void spectatorsNotAllowed() throws InterruptedException, SQLException {
+        fight.nextState();
+        fight.turnList().start();
+        ConfigurableTeamOptions.class.cast(fight.team(0).options()).toggleAllowSpectators();
+        requestStack.clear();
+
+        action.start(new ActionQueue());
+        Thread.sleep(100);
+
+        assertFalse(explorationPlayer().player().isSpectator());
+        requestStack.assertLast(Error.cantJoinFightAsSpectator());
     }
 
     public static class MyBlockingAction implements BlockingAction {

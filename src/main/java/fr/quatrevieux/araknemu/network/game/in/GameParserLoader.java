@@ -55,6 +55,9 @@ import fr.quatrevieux.araknemu.network.game.in.fight.FighterReady;
 import fr.quatrevieux.araknemu.network.game.in.fight.LeaveFightRequest;
 import fr.quatrevieux.araknemu.network.game.in.fight.ListFightsRequest;
 import fr.quatrevieux.araknemu.network.game.in.fight.TurnEnd;
+import fr.quatrevieux.araknemu.network.game.in.fight.option.BlockSpectatorRequest;
+import fr.quatrevieux.araknemu.network.game.in.fight.option.LockTeamRequest;
+import fr.quatrevieux.araknemu.network.game.in.fight.option.NeedHelpRequest;
 import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
 import fr.quatrevieux.araknemu.network.game.in.game.CreateGameRequest;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
@@ -123,7 +126,10 @@ public final class GameParserLoader implements ParserLoader {
             new ExchangeReady.Parser(),
             new BuyRequest.Parser(),
             new SellRequest.Parser(),
-            new AdminMove.Parser()
+            new AdminMove.Parser(),
+            new BlockSpectatorRequest.Parser(),
+            new LockTeamRequest.Parser(),
+            new NeedHelpRequest.Parser()
         );
     }
 }

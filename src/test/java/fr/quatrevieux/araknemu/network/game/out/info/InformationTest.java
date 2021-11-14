@@ -107,4 +107,14 @@ class InformationTest {
     void spectatorHasJoinFight() {
         assertEquals("Im036;Bob", Information.spectatorHasJoinFight("Bob").toString());
     }
+
+    @Test
+    void teamOptions() {
+        assertEquals("Im0103;", Information.helpRequested().toString());
+        assertEquals("Im0104;", Information.helpRequestStopped().toString());
+        assertEquals("Im095;", Information.joinTeamLocked().toString());
+        assertEquals("Im096;", Information.joinTeamReleased().toString());
+        assertEquals("Im040;", Information.spectatorsBlocked().toString());
+        assertEquals("Im039;", Information.spectatorsAllowed().toString());
+    }
 }

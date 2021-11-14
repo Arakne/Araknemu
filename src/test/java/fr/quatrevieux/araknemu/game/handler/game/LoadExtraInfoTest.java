@@ -28,9 +28,11 @@ import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.team.ConfigurableTeamOptions;
 import fr.quatrevieux.araknemu.game.monster.environment.MonsterEnvironmentService;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
+import fr.quatrevieux.araknemu.network.game.out.fight.FightOption;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.AddTeamFighters;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightsCount;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.ShowFight;
@@ -107,6 +109,38 @@ class LoadExtraInfoTest extends FightBaseCase {
             new AddTeamFighters(fights.get(2).team(1)),
 
             new FightsCount(3),
+            new MapReady()
+        );
+    }
+
+    @Test
+    void handleWithTeamOptions() throws Exception {
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
+
+        Fight fight = createSimpleFight(map);
+        ConfigurableTeamOptions options = (ConfigurableTeamOptions) fight.team(0).options();
+        options.toggleNeedHelp();
+        options.toggleAllowSpectators();
+        options.toggleAllowJoinTeam();
+
+        ExplorationPlayer player = explorationPlayer();
+        player.changeMap(map, 123);
+
+        requestStack.clear();
+
+        handler.handle(session, new AskExtraInfo());
+
+        requestStack.assertAll(
+            new AddSprites(player.map().sprites()),
+
+            new ShowFight(fight),
+            new AddTeamFighters(fight.team(0)),
+            new FightOption(fight.team(0).id(), FightOption.Type.BLOCK_JOINER, true),
+            new FightOption(fight.team(0).id(), FightOption.Type.BLOCK_SPECTATOR, true),
+            new FightOption(fight.team(0).id(), FightOption.Type.NEED_HELP, true),
+            new AddTeamFighters(fight.team(1)),
+
+            new FightsCount(1),
             new MapReady()
         );
     }

@@ -31,6 +31,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.*;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
+import fr.quatrevieux.araknemu.game.fight.team.TeamOptions;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
@@ -98,6 +99,16 @@ class AlternateTeamFighterOrderTest extends TestCase {
 
         @Override
         public boolean alive() { return true; }
+
+        @Override
+        public TeamOptions options() {
+            return null;
+        }
+
+        @Override
+        public void setFight(Fight fight) {
+
+        }
 
         @Override
         public void join(Fighter fighter) throws JoinFightException {

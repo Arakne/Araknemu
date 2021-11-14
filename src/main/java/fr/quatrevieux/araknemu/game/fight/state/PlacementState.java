@@ -40,6 +40,8 @@ import fr.quatrevieux.araknemu.game.fight.map.util.PlacementCellsGenerator;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFighterPositions;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFighterReadyState;
+import fr.quatrevieux.araknemu.game.listener.fight.SendJoinTeamOptionChangedMessage;
+import fr.quatrevieux.araknemu.game.listener.fight.SendNeedHelpOptionChangedMessage;
 import fr.quatrevieux.araknemu.game.listener.fight.SendNewFighter;
 import fr.quatrevieux.araknemu.game.listener.fight.StartFightWhenAllReady;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.ClearFighter;
@@ -112,6 +114,8 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
             new SendNewFighter(fight),
             new ClearFighter(),
             new SendFighterRemoved(fight),
+            new SendJoinTeamOptionChangedMessage(),
+            new SendNeedHelpOptionChangedMessage(),
         };
     }
 

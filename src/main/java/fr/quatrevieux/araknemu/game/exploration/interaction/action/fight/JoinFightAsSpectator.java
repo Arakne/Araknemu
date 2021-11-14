@@ -64,7 +64,7 @@ public final class JoinFightAsSpectator implements Action {
         final Spectator spectator = spectatorFactory.create(player.player(), fight);
 
         fight.execute(() -> {
-            if (!fight.active()) {
+            if (!fight.spectators().canJoin()) {
                 player.send(Error.cantJoinFightAsSpectator());
                 return;
             }
