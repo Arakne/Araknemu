@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.exploration.map;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
@@ -36,6 +37,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.event.FightCreated;
+import fr.quatrevieux.araknemu.game.listener.fight.SendJoinTeamOptionChangedMessage;
 import fr.quatrevieux.araknemu.game.listener.map.*;
 import fr.quatrevieux.araknemu.game.listener.map.fight.*;
 import fr.quatrevieux.araknemu.game.listener.player.SendMapData;
@@ -146,6 +148,9 @@ class ExplorationMapServiceTest extends FightBaseCase {
         assertTrue(fight.dispatcher().has(SendCancelledFight.class));
         assertTrue(fight.dispatcher().has(SendTeamFighterRemoved.class));
         assertTrue(fight.dispatcher().has(SendTeamFighterAdded.class));
+        for (Listener l : new SendTeamOptionChanged(map).listeners()) {
+            assertTrue(fight.dispatcher().has(l.getClass()));
+        }
 
         requestStack.assertAll(
             new ShowFight(fight),

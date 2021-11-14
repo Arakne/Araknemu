@@ -26,8 +26,10 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
+import fr.quatrevieux.araknemu.game.fight.team.TeamOptions;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.game.AskExtraInfo;
+import fr.quatrevieux.araknemu.network.game.out.fight.FightOption;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.AddTeamFighters;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightsCount;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.ShowFight;
@@ -38,6 +40,8 @@ import java.util.Collection;
 
 /**
  * Load map extra info for join the map
+ *
+ * @todo refactor with extract info provider
  */
 public final class LoadExtraInfo implements PacketHandler<GameSession, AskExtraInfo> {
     private final FightService fightService;
@@ -66,11 +70,25 @@ public final class LoadExtraInfo implements PacketHandler<GameSession, AskExtraI
             session.send(new ShowFight(fight));
 
             for (FightTeam team : fight.teams()) {
-                map.send(new AddTeamFighters(team));
+                session.send(new AddTeamFighters(team));
+
+                final TeamOptions options = team.options();
+
+                if (options.allowJoinTeamHasBeenUpdated()) {
+                    session.send(FightOption.blockJoiner(options));
+                }
+
+                if (options.allowSpectatorHasBeenUpdated()) {
+                    session.send(FightOption.blockSpectators(options));
+                }
+
+                if (options.needHelpHasBeenUpdated()) {
+                    session.send(FightOption.needHelp(options));
+                }
             }
         }
 
-        map.send(new FightsCount(fights.size()));
+        session.send(new FightsCount(fights.size()));
 
         session.send(new MapReady());
     }

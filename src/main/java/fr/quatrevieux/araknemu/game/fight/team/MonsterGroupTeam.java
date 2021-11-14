@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.team;
 
 import fr.quatrevieux.araknemu.data.constant.Alignment;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -44,6 +45,7 @@ public final class MonsterGroupTeam implements FightTeam {
     private final List<Integer> startPlaces;
 
     private final List<MonsterFighter> fighters;
+    private final TeamOptions options;
 
     public MonsterGroupTeam(MonsterGroup monsterGroup, List<Integer> startPlaces, int number) {
         this.monsterGroup = monsterGroup;
@@ -51,6 +53,7 @@ public final class MonsterGroupTeam implements FightTeam {
         this.startPlaces = startPlaces;
 
         this.fighters = makeFighters();
+        this.options = new DefaultTeamOptions(this);
     }
 
     @Override
@@ -104,6 +107,11 @@ public final class MonsterGroupTeam implements FightTeam {
     }
 
     @Override
+    public TeamOptions options() {
+        return options;
+    }
+
+    @Override
     public void join(Fighter fighter) throws JoinFightException {
         throw new JoinFightException(JoinFightError.TEAM_CLOSED);
     }
@@ -111,6 +119,11 @@ public final class MonsterGroupTeam implements FightTeam {
     @Override
     public void kick(Fighter fighter) {
         throw new UnsupportedOperationException("Read-only team");
+    }
+
+    @Override
+    public void setFight(Fight fight) {
+        // No-op
     }
 
     /**

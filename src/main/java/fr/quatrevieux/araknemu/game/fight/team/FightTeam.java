@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.team;
 
 import fr.quatrevieux.araknemu.data.constant.Alignment;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
@@ -77,6 +78,11 @@ public interface FightTeam extends Sender, Team<Fighter> {
     public boolean alive();
 
     /**
+     * Get the options of the current team
+     */
+    public TeamOptions options();
+
+    /**
      * Add a new fighter to the team
      * When the fighter join the team it must be linked to the team (Fighter.team() must return the joined team)
      *
@@ -92,4 +98,10 @@ public interface FightTeam extends Sender, Team<Fighter> {
      * @param fighter Fighter to remove
      */
     public void kick(Fighter fighter);
+
+    /**
+     * Define the related fight instance
+     * Note: this method is internal and should only be called by {@link Fight}
+     */
+    public void setFight(Fight fight);
 }

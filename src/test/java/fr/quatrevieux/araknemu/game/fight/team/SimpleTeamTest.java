@@ -31,8 +31,6 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -68,6 +66,10 @@ class SimpleTeamTest extends FightBaseCase {
         assertEquals(player.position().cell(), team.cell());
 
         assertSame(team, fighter.team());
+        assertInstanceOf(ConfigurableTeamOptions.class, team.options());
+        assertTrue(team.options().allowJoinTeam());
+        assertTrue(team.options().allowSpectators());
+        assertFalse(team.options().needHelp());
     }
 
     @Test
@@ -125,6 +127,21 @@ class SimpleTeamTest extends FightBaseCase {
         assertCount(2, team.fighters());
         assertContains(fighter, team.fighters());
         assertSame(team, fighter.team());
+    }
+
+    @Test
+    void joinLocked() throws Exception {
+        team.setFight(createFight());
+        team.options().toggleAllowJoinTeam();
+        PlayerFighter fighter = new PlayerFighter(makeSimpleGamePlayer(10));
+
+        try {
+            team.join(fighter);
+
+            fail("JoinFightException expected");
+        } catch (JoinFightException e) {
+            assertEquals(JoinFightError.TEAM_CLOSED, e.error());
+        }
     }
 
     @Test

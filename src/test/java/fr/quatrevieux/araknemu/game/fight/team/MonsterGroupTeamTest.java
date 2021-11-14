@@ -95,6 +95,11 @@ class MonsterGroupTeamTest extends FightBaseCase {
         assertEquals(1, team.number());
         assertTrue(team.alive());
         assertSame(group, team.group());
+
+        assertInstanceOf(DefaultTeamOptions.class, team.options());
+        assertTrue(team.options().allowJoinTeam());
+        assertTrue(team.options().allowSpectators());
+        assertFalse(team.options().needHelp());
     }
 
     @Test

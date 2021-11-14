@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.team;
 
 import fr.quatrevieux.araknemu.data.constant.Alignment;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -40,12 +41,15 @@ public final class SimpleTeam implements FightTeam {
     private final List<Integer> startPlaces;
     private final int number;
 
+    private final ConfigurableTeamOptions options;
+
     public SimpleTeam(PlayerFighter leader, List<Integer> startPlaces, int number) {
         this.leader = leader;
         this.fighters = new ArrayList<>();
         this.fighters.add(leader);
         this.startPlaces = startPlaces;
         this.number = number;
+        this.options = new ConfigurableTeamOptions(this);
 
         leader.setTeam(this);
     }
@@ -101,7 +105,16 @@ public final class SimpleTeam implements FightTeam {
     }
 
     @Override
+    public ConfigurableTeamOptions options() {
+        return options;
+    }
+
+    @Override
     public void join(Fighter fighter) throws JoinFightException {
+        if (!options.allowJoinTeam()) {
+            throw new JoinFightException(JoinFightError.TEAM_CLOSED);
+        }
+
         fighter.apply(new FighterOperation() {
             @Override
             public void onPlayer(PlayerFighter fighter) {
@@ -123,5 +136,10 @@ public final class SimpleTeam implements FightTeam {
     @Override
     public void kick(Fighter fighter) {
         fighters.remove(fighter);
+    }
+
+    @Override
+    public void setFight(Fight fight) {
+        options.setFight(fight);
     }
 }
