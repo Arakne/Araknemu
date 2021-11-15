@@ -112,6 +112,7 @@ class GameParserLoaderTest {
         assertContainsInstance(BlockSpectatorRequest.Parser.class, parsers);
         assertContainsInstance(LockTeamRequest.Parser.class, parsers);
         assertContainsInstance(NeedHelpRequest.Parser.class, parsers);
+        assertContainsInstance(ShowCellRequest.Parser.class, parsers);
     }
 
     public void assertContainsInstance(Class type, Collection collection) {

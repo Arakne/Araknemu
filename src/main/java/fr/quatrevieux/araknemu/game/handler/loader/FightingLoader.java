@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.handler.EnsureFighting;
 import fr.quatrevieux.araknemu.game.handler.fight.ChangeFighterReadyState;
 import fr.quatrevieux.araknemu.game.handler.fight.ChangeFighterStartPlace;
 import fr.quatrevieux.araknemu.game.handler.fight.EndFighterTurn;
+import fr.quatrevieux.araknemu.game.handler.fight.ShowCell;
 import fr.quatrevieux.araknemu.game.handler.fight.option.ToggleBlockSpectator;
 import fr.quatrevieux.araknemu.game.handler.fight.option.ToggleLockTeam;
 import fr.quatrevieux.araknemu.game.handler.fight.option.ToggleNeedHelp;
@@ -45,6 +46,7 @@ public final class FightingLoader extends AbstractLoader {
             new ChangeFighterStartPlace(),
             new ChangeFighterReadyState(),
             new EndFighterTurn(),
+            new ShowCell(),
 
             new ToggleBlockSpectator(),
             new ToggleLockTeam(),
