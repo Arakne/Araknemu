@@ -14,20 +14,31 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.network.game.in.fight;
 
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
+import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 
 /**
- * Leave the current fight
- *
- * Note: the packet is the same as {@link KickFighterRequest} but without fighter id
+ * Parse packet for leave or kick fighter
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L27
  */
-public final class LeaveFightRequest implements Packet {
+public final class KickOrLeaveRequestParser implements SinglePacketParser<Packet> {
+    @Override
+    public Packet parse(String input) throws ParsePacketException {
+        return input.isEmpty()
+            ? new LeaveFightRequest()
+            : new KickFighterRequest(Integer.parseInt(input))
+        ;
+    }
 
+    @Override
+    public String code() {
+        return "GQ";
+    }
 }

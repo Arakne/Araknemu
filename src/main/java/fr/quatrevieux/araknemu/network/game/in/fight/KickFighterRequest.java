@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.network.game.in.fight;
@@ -22,12 +22,23 @@ package fr.quatrevieux.araknemu.network.game.in.fight;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 
 /**
- * Leave the current fight
+ * Kick another fighter of the team
  *
- * Note: the packet is the same as {@link KickFighterRequest} but without fighter id
+ * Note: the packet is same as {@link LeaveFightRequest} but with a fighter id
  *
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L27
  */
-public final class LeaveFightRequest implements Packet {
+public final class KickFighterRequest implements Packet {
+    private final int fighterId;
 
+    public KickFighterRequest(int fighterId) {
+        this.fighterId = fighterId;
+    }
+
+    /**
+     * The fighter sprite ID to kick
+     */
+    public int fighterId() {
+        return fighterId;
+    }
 }

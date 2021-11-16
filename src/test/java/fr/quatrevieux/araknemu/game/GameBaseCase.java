@@ -87,6 +87,7 @@ import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.event.StartExploration;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
@@ -199,6 +200,7 @@ public class GameBaseCase extends DatabaseTestCase {
     protected SendingRequestStack requestStack;
     protected Araknemu app;
     protected GameDataSet dataSet;
+    protected Accessors accessors;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -274,6 +276,7 @@ public class GameBaseCase extends DatabaseTestCase {
         session = server.createSession();
         channel = (DummyChannel) session.channel();
         requestStack = new SendingRequestStack(channel);
+        accessors = new Accessors();
 
         container.get(GameService.class).subscribe();
     }
