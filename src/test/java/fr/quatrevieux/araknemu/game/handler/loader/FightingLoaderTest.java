@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.handler.EnsureFighting;
 import fr.quatrevieux.araknemu.network.game.in.fight.FighterChangePlace;
 import fr.quatrevieux.araknemu.network.game.in.fight.FighterReady;
+import fr.quatrevieux.araknemu.network.game.in.fight.ShowCellRequest;
 import fr.quatrevieux.araknemu.network.game.in.fight.KickFighterRequest;
 import fr.quatrevieux.araknemu.network.game.in.fight.TurnEnd;
 import fr.quatrevieux.araknemu.network.game.in.fight.option.BlockSpectatorRequest;
@@ -55,6 +56,7 @@ class FightingLoaderTest extends LoaderTestCase {
         assertHandlePacket(BlockSpectatorRequest.class, handlers);
         assertHandlePacket(LockTeamRequest.class, handlers);
         assertHandlePacket(NeedHelpRequest.class, handlers);
+        assertHandlePacket(ShowCellRequest.class, handlers);
         assertHandlePacket(KickFighterRequest.class, handlers);
     }
 }

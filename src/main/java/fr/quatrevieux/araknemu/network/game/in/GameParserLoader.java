@@ -55,6 +55,7 @@ import fr.quatrevieux.araknemu.network.game.in.fight.FighterReady;
 import fr.quatrevieux.araknemu.network.game.in.fight.KickOrLeaveRequestParser;
 import fr.quatrevieux.araknemu.network.game.in.fight.LeaveFightRequest;
 import fr.quatrevieux.araknemu.network.game.in.fight.ListFightsRequest;
+import fr.quatrevieux.araknemu.network.game.in.fight.ShowCellRequest;
 import fr.quatrevieux.araknemu.network.game.in.fight.TurnEnd;
 import fr.quatrevieux.araknemu.network.game.in.fight.option.BlockSpectatorRequest;
 import fr.quatrevieux.araknemu.network.game.in.fight.option.LockTeamRequest;
@@ -130,7 +131,8 @@ public final class GameParserLoader implements ParserLoader {
             new AdminMove.Parser(),
             new BlockSpectatorRequest.Parser(),
             new LockTeamRequest.Parser(),
-            new NeedHelpRequest.Parser()
+            new NeedHelpRequest.Parser(),
+            new ShowCellRequest.Parser()
         );
     }
 }
