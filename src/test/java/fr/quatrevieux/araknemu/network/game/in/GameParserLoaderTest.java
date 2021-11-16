@@ -94,7 +94,7 @@ class GameParserLoaderTest {
         assertContainsInstance(QuickPing.Parser.class, parsers);
         assertContainsInstance(ListFightsRequest.Parser.class, parsers);
         assertContainsInstance(AskFightDetails.Parser.class, parsers);
-        assertContainsInstance(LeaveFightRequest.Parser.class, parsers);
+        assertContainsInstance(KickOrLeaveRequestParser.class, parsers);
         assertContainsInstance(SetOrientationRequest.Parser.class, parsers);
         assertContainsInstance(CreateDialogRequest.Parser.class, parsers);
         assertContainsInstance(LeaveDialogRequest.Parser.class, parsers);

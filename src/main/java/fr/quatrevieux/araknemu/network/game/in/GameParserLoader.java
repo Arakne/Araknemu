@@ -52,6 +52,7 @@ import fr.quatrevieux.araknemu.network.game.in.exchange.store.SellRequest;
 import fr.quatrevieux.araknemu.network.game.in.fight.AskFightDetails;
 import fr.quatrevieux.araknemu.network.game.in.fight.FighterChangePlace;
 import fr.quatrevieux.araknemu.network.game.in.fight.FighterReady;
+import fr.quatrevieux.araknemu.network.game.in.fight.KickOrLeaveRequestParser;
 import fr.quatrevieux.araknemu.network.game.in.fight.LeaveFightRequest;
 import fr.quatrevieux.araknemu.network.game.in.fight.ListFightsRequest;
 import fr.quatrevieux.araknemu.network.game.in.fight.TurnEnd;
@@ -113,7 +114,7 @@ public final class GameParserLoader implements ParserLoader {
             new QuickPing.Parser(),
             new ListFightsRequest.Parser(),
             new AskFightDetails.Parser(),
-            new LeaveFightRequest.Parser(),
+            new KickOrLeaveRequestParser(),
             new SetOrientationRequest.Parser(),
             new CreateDialogRequest.Parser(),
             new LeaveDialogRequest.Parser(),
