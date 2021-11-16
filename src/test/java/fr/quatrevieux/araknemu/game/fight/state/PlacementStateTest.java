@@ -432,4 +432,48 @@ class PlacementStateTest extends FightBaseCase {
 
         assertEquals(0, player.properties().life().current());
     }
+
+    @Test
+    void kickBadState() throws SQLException, ContainerException, JoinFightException {
+        PlayerFighter newFighter = makePlayerFighter(makeSimpleGamePlayer(5));
+
+        fight.nextState();
+        state.joinTeam(newFighter, fight.team(0));
+
+        state.startFight();
+
+        AtomicReference<FighterRemoved> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterRemoved.class, ref::set);
+
+        assertThrows(InvalidFightStateException.class, () -> state.kick(newFighter));
+        assertNull(ref.get());
+        assertContains(newFighter, fight.fighters());
+    }
+
+    @Test
+    void kickNotLeavableShouldNotPunishDeserter() throws Exception {
+        fight = createPvmFight();
+        fight.state(PlacementState.class).kick(player.fighter());
+
+        assertEquals(player.properties().life().max(), player.properties().life().current());
+    }
+
+    @Test
+    void kickSuccess() throws SQLException, ContainerException, JoinFightException {
+        PlayerFighter newFighter = makePlayerFighter(makeSimpleGamePlayer(5));
+
+        fight.nextState();
+        state.joinTeam(newFighter, fight.team(0));
+        requestStack.clear();
+
+        AtomicReference<FighterRemoved> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterRemoved.class, ref::set);
+
+        state.kick(newFighter);
+        assertSame(newFighter, ref.get().fighter());
+        assertFalse(fight.fighters().contains(newFighter));
+        assertFalse(newFighter.cell().fighter().isPresent());
+
+        requestStack.assertLast(new RemoveSprite(newFighter.sprite()));
+    }
 }

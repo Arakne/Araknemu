@@ -190,6 +190,23 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
     }
 
     /**
+     * Kick a fighter during placement
+     * Unlike leave, this method will not punish the fighter
+     *
+     * @param fighter Fighter to kick
+     *
+     * @throws InvalidFightStateException When the session state has changed
+     */
+    public synchronized void kick(Fighter fighter) {
+        if (invalidState()) {
+            throw new InvalidFightStateException(getClass());
+        }
+
+        // Remove fighter
+        leaveFromFight(fighter);
+    }
+
+    /**
      * Manually start the fight
      */
     public synchronized void startFight() {

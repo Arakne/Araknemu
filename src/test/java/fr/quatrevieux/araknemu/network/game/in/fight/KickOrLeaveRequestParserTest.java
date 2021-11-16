@@ -14,20 +14,28 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.network.game.in.fight;
 
+import fr.quatrevieux.araknemu._test.TestCase;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import org.junit.jupiter.api.Test;
 
-/**
- * Leave the current fight
- *
- * Note: the packet is the same as {@link KickFighterRequest} but without fighter id
- *
- * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L27
- */
-public final class LeaveFightRequest implements Packet {
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+class KickOrLeaveRequestParserTest extends TestCase {
+    @Test
+    void kick() {
+        Packet p = new KickOrLeaveRequestParser().parse("123");
+
+        assertInstanceOf(KickFighterRequest.class, p);
+        assertEquals(123, ((KickFighterRequest) p).fighterId());
+    }
+
+    @Test
+    void leave() {
+        assertInstanceOf(LeaveFightRequest.class, new KickOrLeaveRequestParser().parse(""));
+    }
 }
