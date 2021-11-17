@@ -35,6 +35,9 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.RemoveMovementPointsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.StealLifeHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.FixedHealHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.HealHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.HealOnDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.DispelHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.PushStateHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.RemoveStateHandler;
@@ -68,6 +71,10 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(98,  new DamageHandler(Element.AIR, fight));
         handler.register(99,  new DamageHandler(Element.FIRE, fight));
         handler.register(100, new DamageHandler(Element.NEUTRAL, fight));
+
+        handler.register(81, new HealOnDamageHandler());
+        handler.register(108, new HealHandler());
+        handler.register(143, new FixedHealHandler());
 
         handler.register(140, new SkipTurnHandler(fight));
         handler.register(950, new PushStateHandler(fight));

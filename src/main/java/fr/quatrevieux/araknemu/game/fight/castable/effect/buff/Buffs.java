@@ -43,6 +43,11 @@ public interface Buffs extends Iterable<Buff> {
     public void onDamage(Damage value);
 
     /**
+     * @see BuffHook#onLifeAltered(Buff, int)
+     */
+    public void onLifeAltered(int value);
+
+    /**
      * @see BuffHook#onStartTurn(Buff)
      */
     public boolean onStartTurn();

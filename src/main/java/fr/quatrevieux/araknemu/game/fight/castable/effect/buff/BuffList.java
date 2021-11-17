@@ -105,6 +105,13 @@ public final class BuffList implements Iterable<Buff>, Buffs {
     }
 
     @Override
+    public void onLifeAltered(int value) {
+        for (Buff buff : buffs) {
+            buff.hook().onLifeAltered(buff, value);
+        }
+    }
+
+    @Override
     public void refresh() {
         removeIf(buff -> {
             buff.decrementRemainingTurns();

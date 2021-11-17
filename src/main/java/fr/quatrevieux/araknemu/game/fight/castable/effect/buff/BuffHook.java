@@ -29,7 +29,7 @@ public interface BuffHook {
     /**
      * Apply effect when fighter turn is started
      *
-     * @return False the the fighter cannot start the turn
+     * @return False if the fighter cannot start the turn
      */
     public default boolean onStartTurn(Buff buff) {
         return true;
@@ -59,4 +59,16 @@ public interface BuffHook {
      * The fighter will take damages
      */
     public default void onDamage(Buff buff, Damage value) {}
+
+    /**
+     * The fighter life has been altered
+     *
+     * Unlike {@link BuffHook#onDamage(Buff, Damage)}, the effects has already been applied
+     *
+     * @param buff The active buff
+     * @param value Altered life value. Negative for a damage, positive for a heal
+     *
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#alter(fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter, int)
+     */
+    public default void onLifeAltered(Buff buff, int value) {}
 }

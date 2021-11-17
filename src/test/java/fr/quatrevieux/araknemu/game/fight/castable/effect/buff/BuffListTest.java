@@ -208,6 +208,25 @@ class BuffListTest extends FightBaseCase {
     }
 
     @Test
+    void onLifeAltered() {
+        BuffHook hook1, hook2, hook3;
+
+        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+
+        list.add(buff1);
+        list.add(buff2);
+        list.add(buff3);
+
+        list.onLifeAltered(10);
+
+        Mockito.verify(hook1).onLifeAltered(buff1, 10);
+        Mockito.verify(hook2).onLifeAltered(buff2, 10);
+        Mockito.verify(hook3).onLifeAltered(buff3, 10);
+    }
+
+    @Test
     void refreshWillDecrementRemaingTurnsAndRemoveExpiredBuffs() {
         BuffHook hook1, hook2, hook3;
 

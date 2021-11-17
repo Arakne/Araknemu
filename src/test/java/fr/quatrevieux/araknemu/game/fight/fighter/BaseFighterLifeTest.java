@@ -26,6 +26,8 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterLifeChanged;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
@@ -37,6 +39,8 @@ import fr.quatrevieux.araknemu.game.monster.environment.RandomCellSelector;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
 import fr.arakne.utils.maps.constant.Direction;
+import fr.quatrevieux.araknemu.game.spell.Spell;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -212,6 +216,30 @@ class BaseFighterLifeTest extends FightBaseCase {
         assertSame(caster, ref.get().caster());
         assertSame(fighter, ref.get().fighter());
         assertTrue(life.dead());
+    }
+
+    @Test
+    void alterShouldCallOnLifeAlteredBuffs() {
+        life.alter(fighter, -50);
+
+        BuffHook hook = Mockito.mock(BuffHook.class);
+        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), fighter, fighter, hook);
+        fighter.buffs().add(buff);
+
+        life.alter(fighter, 10);
+
+        Mockito.verify(hook).onLifeAltered(buff, 10);
+    }
+
+    @Test
+    void alterShouldNotCallOnLifeAlteredBuffsWhenDie() {
+        BuffHook hook = Mockito.mock(BuffHook.class);
+        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), fighter, fighter, hook);
+        fighter.buffs().add(buff);
+
+        life.alter(fighter, -1000);
+
+        Mockito.verify(hook, Mockito.never()).onLifeAltered(Mockito.any(), Mockito.anyInt());
     }
 
     @Test
