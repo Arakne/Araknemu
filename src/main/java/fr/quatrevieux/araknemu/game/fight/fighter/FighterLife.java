@@ -33,6 +33,8 @@ public interface FighterLife extends Life {
     /**
      * Change fighter life
      *
+     * This method will trigger buffs {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onLifeAltered(int)}
+     *
      * @param caster The caster
      * @param value The modified value. Positive for heal, negative for damage
      */

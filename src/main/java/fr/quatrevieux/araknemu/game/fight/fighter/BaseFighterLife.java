@@ -76,6 +76,8 @@ public final class BaseFighterLife implements FighterLife {
         if (current == 0) {
             dead = true;
             fighter.fight().dispatch(new FighterDie(fighter, caster));
+        } else {
+            fighter.buffs().onLifeAltered(value);
         }
 
         return value;

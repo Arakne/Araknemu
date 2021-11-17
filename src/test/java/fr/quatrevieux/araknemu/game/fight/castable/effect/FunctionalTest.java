@@ -338,6 +338,47 @@ public class FunctionalTest extends FightBaseCase {
         assertIterableEquals(Collections.EMPTY_LIST, fighter1.buffs());
     }
 
+    @Test
+    void heal() {
+        fighter1.life().alter(fighter1, -50);
+
+        castNormal(121, fighter1.cell()); // Mot curatif
+
+        int heal = 50 + fighter1.life().current() - fighter1.life().max();
+        assertBetween(32, 47, heal);
+
+        requestStack.assertOne(ActionEffect.alterLifePoints(fighter1, fighter1, heal));
+    }
+
+    @Test
+    void healAsBuff() {
+        fighter1.life().alter(fighter1, -50);
+
+        castNormal(131, fighter1.cell()); // Mot de Régénération
+
+        int heal = 50 + fighter1.life().current() - fighter1.life().max();
+        assertEquals(0, heal);
+
+        passTurns(1);
+
+        heal = 50 + fighter1.life().current() - fighter1.life().max();
+        assertBetween(2, 10, heal);
+
+        requestStack.assertOne(ActionEffect.alterLifePoints(fighter1, fighter1, heal));
+    }
+
+    @Test
+    void healOnDamage() {
+        castNormal(1556, fighter1.cell()); // Fourberie
+
+        fighter1.life().alter(fighter1, -50);
+
+        int heal = 50 + fighter1.life().current() - fighter1.life().max();
+        assertEquals(37, heal);
+
+        requestStack.assertOne(ActionEffect.alterLifePoints(fighter1, fighter1, heal));
+    }
+
     private void passTurns(int number) {
         for (; number > 0; --number) {
             fighter1.turn().stop();
