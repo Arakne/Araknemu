@@ -109,6 +109,13 @@ public final class CastScope {
     }
 
     /**
+     * Remove a target of the cast
+     */
+    public void removeTarget(PassiveFighter target) {
+        targetMapping.remove(target);
+    }
+
+    /**
      * Get list of effects to apply
      */
     public List<EffectScope> effects() {
@@ -218,7 +225,7 @@ public final class CastScope {
         public Collection<PassiveFighter> targets() {
             return targets.stream()
                 .map(targetMapping::get)
-                .filter(fighter -> !fighter.dead())
+                .filter(fighter -> fighter != null && !fighter.dead())
                 .collect(Collectors.toList())
             ;
         }

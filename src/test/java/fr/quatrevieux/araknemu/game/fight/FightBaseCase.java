@@ -38,6 +38,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.module.StatesModule;
 import fr.quatrevieux.araknemu.game.fight.state.*;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
@@ -356,6 +357,7 @@ public class FightBaseCase extends GameBaseCase {
             );
 
             fight.register(new StatesModule(fight));
+            fight.register(new CommonEffectsModule(fight));
             fight.dispatcher().add(new Listener<FightStarted>() {
                 @Override
                 public void on(FightStarted event) {

@@ -88,6 +88,11 @@ public final class ProxyActiveFighter implements ActiveFighter {
     }
 
     @Override
+    public int level() {
+        return fighter.level();
+    }
+
+    @Override
     public Buffs buffs() {
         return fighter.buffs();
     }

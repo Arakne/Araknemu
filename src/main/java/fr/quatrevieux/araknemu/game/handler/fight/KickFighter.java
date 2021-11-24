@@ -31,7 +31,7 @@ import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
  * Kick a fighter during placement state
  *
  * Unlike leave, the kicked fighter will not be punished.
- * Only the team leader can kick a fighter, expect himself.
+ * Only the team leader can kick a fighter, except himself.
  *
  * @see PlacementState#kick(Fighter)
  */

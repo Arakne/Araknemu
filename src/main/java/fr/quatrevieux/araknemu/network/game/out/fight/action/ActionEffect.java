@@ -223,4 +223,15 @@ public final class ActionEffect {
     public static ActionEffect dispelBuffs(PassiveFighter caster, PassiveFighter target) {
         return new ActionEffect(132, caster, target.id());
     }
+
+    /**
+     * The fighter has been slided (i.e. move back or front) by the caster
+     *
+     * @param caster The spell caster
+     * @param target The target (which has moved)
+     * @param destination The destination cell
+     */
+    public static ActionEffect slide(PassiveFighter caster, PassiveFighter target, FightCell destination) {
+        return new ActionEffect(5, caster, target.id(), destination.id());
+    }
 }

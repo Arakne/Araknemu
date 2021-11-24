@@ -385,6 +385,31 @@ class CastScopeTest extends FightBaseCase {
     }
 
     @Test
+    void removeTarget() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 10)));
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        CastScope scope = new CastScope(spell, caster, target.cell());
+
+        scope.withEffects(Collections.singletonList(effect));
+        scope.removeTarget(target);
+
+        assertContainsAll(scope.targets(), caster);
+        assertContainsAll(scope.effects().get(0).targets(), caster);
+
+        scope.removeTarget(caster);
+
+        assertTrue(scope.targets().isEmpty());
+        assertTrue(scope.effects().get(0).targets().isEmpty());
+    }
+
+    @Test
     void effectTargetsFilter() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);

@@ -42,6 +42,10 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.DispelHan
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.PushStateHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.RemoveStateHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.SkipTurnHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.AvoidDamageByMovingBackHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.MoveBackHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.MoveFrontHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.MoveToTargetCellHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.TeleportHandler;
 
 /**
@@ -57,6 +61,10 @@ public final class CommonEffectsModule implements FightModule {
     @Override
     public void effects(EffectsHandler handler) {
         handler.register(4, new TeleportHandler(fight));
+        handler.register(5, new MoveBackHandler(fight));
+        handler.register(6, new MoveFrontHandler(fight));
+        handler.register(9, new AvoidDamageByMovingBackHandler(fight));
+        handler.register(783, new MoveToTargetCellHandler(fight));
 
         handler.register(132, new DispelHandler(fight));
 
