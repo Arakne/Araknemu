@@ -77,6 +77,11 @@ public final class ProxyPassiveFighter implements PassiveFighter {
     }
 
     @Override
+    public int level() {
+        return fighter.level();
+    }
+
+    @Override
     public FighterCharacteristics characteristics() {
         return fighter.characteristics();
     }

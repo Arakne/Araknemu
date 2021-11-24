@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 
 /**
  * Hook action for apply buff effects
@@ -59,6 +60,24 @@ public interface BuffHook {
      * The fighter will take damages
      */
     public default void onDamage(Buff buff, Damage value) {}
+
+    /**
+     * The fighter will take damages
+     */
+    public default void onDirectDamage(Buff buff, ActiveFighter caster, Damage value) {
+        onDamage(buff, value);
+    }
+
+    /**
+     * The fighter will take damages by a buff (i.e. poison)
+     *
+     * @param buff The current buff
+     * @param poison The poison buff
+     * @param value The damage to apply
+     */
+    public default void onBuffDamage(Buff buff, Buff poison, Damage value) {
+        onDamage(buff, value);
+    }
 
     /**
      * The fighter life has been altered

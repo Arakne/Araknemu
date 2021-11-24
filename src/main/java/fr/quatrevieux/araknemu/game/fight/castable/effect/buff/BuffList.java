@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
@@ -98,9 +99,16 @@ public final class BuffList implements Iterable<Buff>, Buffs {
     }
 
     @Override
-    public void onDamage(Damage value) {
+    public void onDirectDamage(ActiveFighter caster, Damage value) {
         for (Buff buff : buffs) {
-            buff.hook().onDamage(buff, value);
+            buff.hook().onDirectDamage(buff, caster, value);
+        }
+    }
+
+    @Override
+    public void onBuffDamage(Buff poison, Damage value) {
+        for (Buff buff : buffs) {
+            buff.hook().onBuffDamage(buff, poison, value);
         }
     }
 

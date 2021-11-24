@@ -23,7 +23,6 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -35,13 +34,10 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastSuccess;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
-import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.FightAction;
-import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -377,6 +373,54 @@ public class FunctionalTest extends FightBaseCase {
         assertEquals(37, heal);
 
         requestStack.assertOne(ActionEffect.alterLifePoints(fighter1, fighter1, heal));
+    }
+
+    @Test
+    void avoidDamageByMovingBack() {
+        fighter1.move(fight.map().get(150));
+        fighter2.move(fight.map().get(165));
+
+        castNormal(444, fighter1.cell()); // Dérobade
+        fighter1.turn().stop();
+
+        castNormal(183, fighter1.cell()); // Simple attack
+
+        assertEquals(fighter1.life().max(), fighter1.life().max());
+        assertEquals(135, fighter1.cell().id());
+        requestStack.assertOne(ActionEffect.slide(fighter2, fighter1, fight.map().get(135)));
+    }
+
+    @Test
+    void moveBack() {
+        fighter1.move(fight.map().get(150));
+        fighter2.move(fight.map().get(165));
+
+        castNormal(128, fighter2.cell()); // Mot de Frayeur
+
+        assertEquals(180, fighter2.cell().id());
+        requestStack.assertOne(ActionEffect.slide(fighter1, fighter2, fight.map().get(180)));
+    }
+
+    @Test
+    void moveToTargetCell() {
+        fighter1.move(fight.map().get(291));
+        fighter2.move(fight.map().get(277));
+
+        castNormal(67, fight.map().get(235)); // Peur
+
+        assertEquals(235, fighter2.cell().id());
+        requestStack.assertOne(ActionEffect.slide(fighter1, fighter2, fight.map().get(235)));
+    }
+
+    @Test
+    void moveFront() {
+        fighter1.move(fight.map().get(305));
+        fighter2.move(fight.map().get(193));
+
+        castNormal(434, fight.map().get(193)); // Attirance
+
+        assertEquals(277, fighter2.cell().id());
+        requestStack.assertOne(ActionEffect.slide(fighter1, fighter2, fight.map().get(277)));
     }
 
     private void passTurns(int number) {

@@ -230,4 +230,17 @@ class ActionEffectTest {
         
         assertEquals("GA;132;456;460", ActionEffect.dispelBuffs(fighter, fighter2).toString());
     }
+
+    @Test
+    void slide() {
+        Fighter fighter = Mockito.mock(Fighter.class);
+        Fighter fighter2 = Mockito.mock(Fighter.class);
+        FightCell cell = Mockito.mock(FightCell.class);
+
+        Mockito.when(fighter.id()).thenReturn(456);
+        Mockito.when(fighter2.id()).thenReturn(460);
+        Mockito.when(cell.id()).thenReturn(123);
+
+        assertEquals("GA;5;456;460,123", ActionEffect.slide(fighter, fighter2, cell).toString());
+    }
 }

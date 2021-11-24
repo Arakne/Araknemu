@@ -43,6 +43,11 @@ public interface PassiveFighter {
     public void move(FightCell cell);
 
     /**
+     * Get the fighter level
+     */
+    public int level();
+
+    /**
      * Get the fighter life
      */
     public FighterLife life();

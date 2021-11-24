@@ -81,11 +81,6 @@ public interface Fighter extends Creature<FightCell>, Dispatcher, ActiveFighter 
     }
 
     /**
-     * Get the fighter level
-     */
-    public int level();
-
-    /**
      * Get the fight
      */
     public Fight fight();
