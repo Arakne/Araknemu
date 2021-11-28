@@ -385,7 +385,7 @@ public class FunctionalTest extends FightBaseCase {
 
         castNormal(183, fighter1.cell()); // Simple attack
 
-        assertEquals(fighter1.life().max(), fighter1.life().max());
+        assertEquals(fighter1.life().max(), fighter1.life().current());
         assertEquals(135, fighter1.cell().id());
         requestStack.assertOne(ActionEffect.slide(fighter2, fighter1, fight.map().get(135)));
     }
@@ -421,6 +421,54 @@ public class FunctionalTest extends FightBaseCase {
 
         assertEquals(277, fighter2.cell().id());
         requestStack.assertOne(ActionEffect.slide(fighter1, fighter2, fight.map().get(277)));
+    }
+
+    @Test
+    void switchPosition() {
+        fighter1.move(fight.map().get(305));
+        fighter2.move(fight.map().get(193));
+
+        castNormal(445, fight.map().get(193)); // Coopération
+
+        assertEquals(193, fighter1.cell().id());
+        assertEquals(305, fighter2.cell().id());
+
+        requestStack.assertOne(ActionEffect.teleport(fighter1, fighter1, fight.map().get(193)));
+        requestStack.assertOne(ActionEffect.teleport(fighter1, fighter2, fight.map().get(305)));
+    }
+
+    @Test
+    void switchOnAttack() {
+        fight.cancel(true);
+
+        fight = fightBuilder()
+            .addSelf(fb -> fb.cell(165))
+            .addAlly(fb -> fb.player(other).cell(150))
+            .addEnemy(fb -> fb.cell(192))
+            .build(true)
+        ;
+
+        fight.state(PlacementState.class).startFight();
+        fight.turnList().start();
+
+        fighter1 = player.fighter();
+        fighter2 = other.fighter();
+
+        requestStack.clear();
+
+        castNormal(440, fighter2.cell()); // Sacrifice
+        fighter1.turn().stop();
+
+        castNormal(183, fighter2.cell()); // Simple attack
+
+        assertEquals(fighter2.life().max(), fighter2.life().current());
+        assertBetween(15, 25, fighter1.life().max() - fighter1.life().current());
+
+        assertEquals(150, fighter1.cell().id());
+        assertEquals(165, fighter2.cell().id());
+
+        requestStack.assertOne(ActionEffect.teleport(fighter1, fighter2, fight.map().get(165)));
+        requestStack.assertOne(ActionEffect.teleport(fighter1, fighter1, fight.map().get(150)));
     }
 
     private void passTurns(int number) {
