@@ -92,10 +92,14 @@ public final class BuffList implements Iterable<Buff>, Buffs {
     }
 
     @Override
-    public void onCastTarget(CastScope cast) {
+    public boolean onCastTarget(CastScope cast) {
         for (Buff buff : buffs) {
-            buff.hook().onCastTarget(buff, cast);
+            if (!buff.hook().onCastTarget(buff, cast)) {
+                return false;
+            }
         }
+
+        return true;
     }
 
     @Override

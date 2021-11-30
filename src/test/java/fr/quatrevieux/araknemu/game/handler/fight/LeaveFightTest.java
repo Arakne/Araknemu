@@ -34,6 +34,7 @@ import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.network.game.in.fight.LeaveFightRequest;
 import fr.quatrevieux.araknemu.network.game.out.fight.CancelFight;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -119,7 +120,7 @@ class LeaveFightTest extends FightBaseCase {
         assertEquals(new Position(10540, 123), dataSet.refresh(new Player(gamePlayer().id())).position());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void leaveFightActiveStateOnCurrentTurnWillStopTheTurn() throws Exception {
         Fight fight = createFight();
 

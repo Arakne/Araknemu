@@ -57,17 +57,19 @@ public final class AvoidDamageByMovingBackHandler implements EffectHandler, Buff
     }
 
     @Override
-    public void onCastTarget(Buff buff, CastScope cast) {
+    public boolean onCastTarget(Buff buff, CastScope cast) {
         if (!isDamageCast(cast) || buff.target().cell().coordinate().distance(cast.caster().cell()) != 1) {
-            return;
+            return true;
         }
 
         if (!random.bool(buff.effect().min())) {
-            return;
+            return true;
         }
 
         applier.apply(cast.caster(), buff.target(), buff.effect().max());
         cast.removeTarget(buff.target());
+
+        return false;
     }
 
     /**

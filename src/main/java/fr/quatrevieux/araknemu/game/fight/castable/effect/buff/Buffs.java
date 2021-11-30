@@ -34,9 +34,16 @@ public interface Buffs extends Iterable<Buff> {
     public void add(Buff buff);
 
     /**
+     * Apply buffs when the fighter is a target of a cast
+     *
+     * If false is returned, the scope targets should be reloaded to call this hook on new targets,
+     * and following hooks will be ignored.
+     *
+     * @return true to continue, or false if the target has changed (or is removed)
+     *
      * @see BuffHook#onCastTarget(Buff, CastScope)
      */
-    public void onCastTarget(CastScope cast);
+    public boolean onCastTarget(CastScope cast);
 
     /**
      * @see BuffHook#onDirectDamage(Buff, ActiveFighter, Damage)

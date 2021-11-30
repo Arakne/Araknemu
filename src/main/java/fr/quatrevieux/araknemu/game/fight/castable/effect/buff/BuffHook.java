@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
  * Hook action for apply buff effects
@@ -53,8 +54,59 @@ public interface BuffHook {
 
     /**
      * The fighter is a target of a cast
+     *
+     * To get the spell caster, use {@code cast.caster()}, and to get the target, use {@code buff.target()}.
+     *
+     * If the target is changed or removed, this method must return false.
+     * Retuning false permit to notify that the spell targets has changed to ensure that new
+     * target will also be taken in account, but also stop applying other "onCastTarget" hooks
+     * on the current fighter.
+     *
+     * This method will be called on direct and indirect (like spell returned) targets.
+     *
+     * Implementation:
+     * <pre>{@code
+     * class MyEffectHandler implements EffectHandler, BuffHook {
+     *     public void handle(CastScope cast, CastScope.EffectScope effect) {
+     *         // ...
+     *     }
+     *
+     *     // Add the buff to targets
+     *     public void buff(CastScope cast, CastScope.EffectScope effect) {
+     *         for (PassiveFighter target : effect.targets()) {
+     *             target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
+     *         }
+     *     }
+     *
+     *     // Implements the buff hook
+     *     public void onCastTarget(Buff buff, CastScope cast) {
+     *         if (!checkCast(cast)) {
+     *             return true; // ignore the hook for this cast : return true to continue on this target
+     *         }
+     *
+     *         // Apply buff effect...
+     *         // ...
+     *
+     *         // Change the target
+     *         // buff.target() is cast target / fighter who has the given buff applied
+     *         cast.replaceTarget(buff.target(), getNewTarget(cast));
+     *
+     *         // You can also remove the current fighter from spell targets
+     *         cast.removeTarget(buff.target());
+     *
+     *         return false; // The target has been changed (or removed)
+     *     }
+     * }
+     * }</pre>
+     *
+     * @return true to continue, or false if the cast target has changed (removed or replaced)
+     *
+     * @see CastScope#removeTarget(PassiveFighter)
+     * @see CastScope#replaceTarget(PassiveFighter, PassiveFighter)
      */
-    public default void onCastTarget(Buff buff, CastScope cast) {}
+    public default boolean onCastTarget(Buff buff, CastScope cast) {
+        return true;
+    }
 
     /**
      * The fighter will take damages

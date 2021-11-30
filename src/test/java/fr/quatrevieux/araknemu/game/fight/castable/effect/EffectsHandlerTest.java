@@ -185,4 +185,36 @@ class EffectsHandlerTest extends FightBaseCase {
 
         Mockito.verify(hook).onCastTarget(buff, cast);
     }
+
+    @Test
+    void applyWithCastTargetChangedShouldCallOnCastTargetOnNewTarget() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        BuffHook hook = Mockito.mock(BuffHook.class);
+        Buff buff = new Buff(effect, spell, player.fighter(), other.fighter(), hook);
+        other.fighter().buffs().add(buff);
+
+        BuffHook hook2 = Mockito.mock(BuffHook.class);
+        Buff buff2 = new Buff(effect, spell, player.fighter(), player.fighter(), hook2);
+        player.fighter().buffs().add(buff2);
+
+        CastScope cast = makeCastScope(player.fighter(), spell, effect, other.fighter().cell());
+
+        Mockito.when(hook.onCastTarget(buff, cast)).then((params) -> {
+            params.getArgument(1, CastScope.class).replaceTarget(other.fighter(), player.fighter());
+            return false;
+        });
+
+        handler.apply(cast);
+
+        Mockito.verify(hook).onCastTarget(buff, cast);
+        Mockito.verify(hook2).onCastTarget(buff2, cast);
+    }
 }

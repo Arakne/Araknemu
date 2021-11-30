@@ -180,11 +180,40 @@ class BuffListTest extends FightBaseCase {
 
         CastScope cast = new CastScope(Mockito.mock(Spell.class), player.fighter(), null);
 
-        list.onCastTarget(cast);
+        Mockito.when(hook1.onCastTarget(buff1, cast)).thenReturn(true);
+        Mockito.when(hook2.onCastTarget(buff2, cast)).thenReturn(true);
+        Mockito.when(hook3.onCastTarget(buff3, cast)).thenReturn(true);
+
+        assertTrue(list.onCastTarget(cast));
 
         Mockito.verify(hook1).onCastTarget(buff1, cast);
         Mockito.verify(hook2).onCastTarget(buff2, cast);
         Mockito.verify(hook3).onCastTarget(buff3, cast);
+    }
+
+    @Test
+    void onCastTargetWithReturnFalseShouldStopNextHooks() {
+        BuffHook hook1, hook2, hook3;
+
+        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+
+        list.add(buff1);
+        list.add(buff2);
+        list.add(buff3);
+
+        CastScope cast = new CastScope(Mockito.mock(Spell.class), player.fighter(), null);
+
+        Mockito.when(hook1.onCastTarget(buff1, cast)).thenReturn(true);
+        Mockito.when(hook2.onCastTarget(buff2, cast)).thenReturn(false);
+        Mockito.when(hook3.onCastTarget(buff3, cast)).thenReturn(true);
+
+        assertFalse(list.onCastTarget(cast));
+
+        Mockito.verify(hook1).onCastTarget(buff1, cast);
+        Mockito.verify(hook2).onCastTarget(buff2, cast);
+        Mockito.verify(hook3, Mockito.never()).onCastTarget(buff3, cast);
     }
 
     @Test

@@ -48,7 +48,7 @@ public final class DispelHandler implements EffectHandler {
 
     @Override
     public void handle(CastScope cast, EffectScope effect) {
-        for (PassiveFighter fighter : cast.targets()) {
+        for (PassiveFighter fighter : effect.targets()) {
             fighter.buffs().removeAll();
             fight.send(ActionEffect.dispelBuffs(cast.caster(), fighter));
 

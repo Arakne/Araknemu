@@ -58,9 +58,9 @@ public final class SwitchPositionOnAttackHandler implements EffectHandler, BuffH
     }
 
     @Override
-    public void onCastTarget(Buff buff, CastScope cast) {
+    public boolean onCastTarget(Buff buff, CastScope cast) {
         if (!isDamageCast(cast)) {
-            return;
+            return true;
         }
 
         final ActiveFighter buffCaster = buff.caster();
@@ -68,6 +68,8 @@ public final class SwitchPositionOnAttackHandler implements EffectHandler, BuffH
 
         applier.apply(buffCaster, target);
         cast.replaceTarget(target, buffCaster);
+
+        return false;
     }
 
     /**

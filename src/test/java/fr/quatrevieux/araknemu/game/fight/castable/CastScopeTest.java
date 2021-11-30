@@ -37,6 +37,7 @@ import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -339,8 +340,8 @@ class CastScopeTest extends FightBaseCase {
 
         scope.withEffects(Collections.singletonList(effect));
 
-        assertContainsAll(scope.targets(), target, caster);
-        assertContainsAll(scope.effects().get(0).targets(), target, caster);
+        assertCollectionEquals(scope.targets(), target, caster);
+        assertCollectionEquals(scope.effects().get(0).targets(), target, caster);
     }
 
     @Test
@@ -361,7 +362,7 @@ class CastScopeTest extends FightBaseCase {
         target.init();
         target.life().kill(caster);
 
-        assertContainsAll(scope.effects().get(0).targets(), caster);
+        assertCollectionEquals(scope.effects().get(0).targets(), caster);
     }
 
     @Test
@@ -380,8 +381,143 @@ class CastScopeTest extends FightBaseCase {
         scope.withEffects(Collections.singletonList(effect));
         scope.replaceTarget(target, caster);
 
-        assertContainsAll(scope.targets(), caster);
-        assertContainsAll(scope.effects().get(0).targets(), caster);
+        assertCollectionEquals(scope.targets(), caster, target);
+        assertCollectionEquals(scope.effects().get(0).targets(), caster, caster);
+    }
+
+    @Test
+    void replaceTargetChaining() {
+        Fight fight = fightBuilder()
+            .addSelf(fb -> fb.cell(277))
+            .addEnemy(fb -> fb.cell(263))
+            .addEnemy(fb -> fb.cell(249))
+            .addEnemy(fb -> fb.cell(234))
+            .build(true)
+        ;
+
+        fight.nextState();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        List<Fighter> fighters = fight.fighters();
+
+        CastScope scope = new CastScope(spell, fighters.get(0), fight.map().get(263));
+
+        scope.withEffects(Collections.singletonList(effect));
+        scope.replaceTarget(fighters.get(1), fighters.get(2));
+        scope.replaceTarget(fighters.get(2), fighters.get(3));
+
+        assertCollectionEquals(scope.targets(), fighters.get(1), fighters.get(2), fighters.get(3));
+        assertCollectionEquals(scope.effects().get(0).targets(), fighters.get(3));
+    }
+
+    @Test
+    void replaceTargetChainingWithRecursionOnFirstTarget() {
+        Fight fight = fightBuilder()
+            .addSelf(fb -> fb.cell(277))
+            .addEnemy(fb -> fb.cell(263))
+            .addEnemy(fb -> fb.cell(249))
+            .addEnemy(fb -> fb.cell(234))
+            .build(true)
+        ;
+
+        fight.nextState();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        List<Fighter> fighters = fight.fighters();
+
+        CastScope scope = new CastScope(spell, fighters.get(0), fight.map().get(263));
+
+        scope.withEffects(Collections.singletonList(effect));
+        scope.replaceTarget(fighters.get(1), fighters.get(2));
+        scope.replaceTarget(fighters.get(2), fighters.get(3));
+        scope.replaceTarget(fighters.get(3), fighters.get(1));
+
+        assertCollectionEquals(scope.targets(), fighters.get(1), fighters.get(2), fighters.get(3));
+        assertCollectionEquals(scope.effects().get(0).targets(), fighters.get(1));
+    }
+
+    @Test
+    void replaceTargetChainingWithRecursionOnMiddleTarget() {
+        Fight fight = fightBuilder()
+            .addSelf(fb -> fb.cell(277))
+            .addEnemy(fb -> fb.cell(263))
+            .addEnemy(fb -> fb.cell(249))
+            .addEnemy(fb -> fb.cell(234))
+            .build(true)
+        ;
+
+        fight.nextState();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        List<Fighter> fighters = fight.fighters();
+
+        CastScope scope = new CastScope(spell, fighters.get(0), fight.map().get(263));
+
+        scope.withEffects(Collections.singletonList(effect));
+        scope.replaceTarget(fighters.get(1), fighters.get(2));
+        scope.replaceTarget(fighters.get(2), fighters.get(3));
+        scope.replaceTarget(fighters.get(3), fighters.get(2));
+
+        assertCollectionEquals(scope.targets(), fighters.get(1), fighters.get(2), fighters.get(3));
+        assertCollectionEquals(scope.effects().get(0).targets(), fighters.get(2));
+    }
+
+    @Test
+    void removeTargetWithReplaceTargetChain() {
+        Fight fight = fightBuilder()
+            .addSelf(fb -> fb.cell(277))
+            .addEnemy(fb -> fb.cell(263))
+            .addEnemy(fb -> fb.cell(249))
+            .addEnemy(fb -> fb.cell(234))
+            .build(true)
+        ;
+
+        fight.nextState();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        List<Fighter> fighters = fight.fighters();
+
+        CastScope scope = new CastScope(spell, fighters.get(0), fight.map().get(263));
+
+        scope.withEffects(Collections.singletonList(effect));
+        scope.replaceTarget(fighters.get(1), fighters.get(2));
+        scope.replaceTarget(fighters.get(2), fighters.get(3));
+        scope.removeTarget(fighters.get(3));
+
+        assertCollectionEquals(scope.targets(), fighters.get(1), fighters.get(2), fighters.get(3));
+        assertTrue(scope.effects().get(0).targets().isEmpty());
     }
 
     @Test
@@ -400,12 +536,12 @@ class CastScopeTest extends FightBaseCase {
         scope.withEffects(Collections.singletonList(effect));
         scope.removeTarget(target);
 
-        assertContainsAll(scope.targets(), caster);
-        assertContainsAll(scope.effects().get(0).targets(), caster);
+        assertCollectionEquals(scope.targets(), caster, target);
+        assertCollectionEquals(scope.effects().get(0).targets(), caster);
 
         scope.removeTarget(caster);
 
-        assertTrue(scope.targets().isEmpty());
+        assertCollectionEquals(scope.targets(), caster, target);
         assertTrue(scope.effects().get(0).targets().isEmpty());
     }
 
@@ -424,7 +560,7 @@ class CastScopeTest extends FightBaseCase {
 
         scope.withEffects(Collections.singletonList(effect));
 
-        assertContainsAll(scope.effects().get(0).targets(), target);
+        assertCollectionEquals(scope.effects().get(0).targets(), target);
     }
 
     @Test
