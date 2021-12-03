@@ -93,9 +93,16 @@ public final class CastScope {
 
     /**
      * Get the cast targets
+     *
+     * This method will not resolve target mapping, nor effect target mapping
+     * It will return all targets, before the mapping is resolved
+     * So if {@link CastScope#replaceTarget(PassiveFighter, PassiveFighter)} is called,
+     * the new target will be added on this set
+     *
+     * Note: a new instance is returned to ensure that concurrent modification will not occur
      */
     public Set<PassiveFighter> targets() {
-        return new HashSet<>(targetMapping.values());
+        return new HashSet<>(targetMapping.keySet());
     }
 
     /**
@@ -106,13 +113,23 @@ public final class CastScope {
      */
     public void replaceTarget(PassiveFighter originalTarget, PassiveFighter newTarget) {
         targetMapping.put(originalTarget, newTarget);
+
+        // Add new target as target if not yet defined
+        if (!targetMapping.containsKey(newTarget)) {
+            targetMapping.put(newTarget, newTarget);
+        }
     }
 
     /**
      * Remove a target of the cast
+     *
+     * Note: this method will definitively remove the target,
+     * even if {@link CastScope#replaceTarget(PassiveFighter, PassiveFighter)} is called
      */
     public void removeTarget(PassiveFighter target) {
-        targetMapping.remove(target);
+        // Set target to null without remove the key to ensure that it will effectively remove
+        // even if a replaceTarget() point to it
+        targetMapping.put(target, null);
     }
 
     /**
@@ -203,6 +220,40 @@ public final class CastScope {
         ;
     }
 
+    /**
+     * Resolve the target mapping
+     *
+     * @param baseTarget The base target of the effect
+     *
+     * @return Resolved target. Null if the target is removed
+     */
+    private PassiveFighter resolveTarget(PassiveFighter baseTarget) {
+        PassiveFighter target = targetMapping.get(baseTarget);
+
+        // Target is removed, or it's the original one : do not resolve chaining
+        if (target == null || target.equals(baseTarget)) {
+            return target;
+        }
+
+        // Keep list of visited mapping to break recursion
+        final Set<PassiveFighter> resolved = new HashSet<>();
+
+        resolved.add(baseTarget);
+        resolved.add(target);
+
+        // Resolve chaining
+        for (;;) {
+            target = targetMapping.get(target);
+
+            // The target is removed, or already visited (can be itself)
+            if (target == null || resolved.contains(target)) {
+                return target;
+            }
+
+            resolved.add(target);
+        }
+    }
+
     public final class EffectScope {
         private final SpellEffect effect;
         private final Collection<PassiveFighter> targets;
@@ -224,7 +275,7 @@ public final class CastScope {
          */
         public Collection<PassiveFighter> targets() {
             return targets.stream()
-                .map(targetMapping::get)
+                .map(CastScope.this::resolveTarget)
                 .filter(fighter -> fighter != null && !fighter.dead())
                 .collect(Collectors.toList())
             ;

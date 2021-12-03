@@ -46,6 +46,8 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.Avoid
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.MoveBackHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.MoveFrontHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.MoveToTargetCellHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.SwitchPositionHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.SwitchPositionOnAttackHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.TeleportHandler;
 
 /**
@@ -63,7 +65,9 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(4, new TeleportHandler(fight));
         handler.register(5, new MoveBackHandler(fight));
         handler.register(6, new MoveFrontHandler(fight));
+        handler.register(8, new SwitchPositionHandler(fight));
         handler.register(9, new AvoidDamageByMovingBackHandler(fight));
+        handler.register(765, new SwitchPositionOnAttackHandler(fight));
         handler.register(783, new MoveToTargetCellHandler(fight));
 
         handler.register(132, new DispelHandler(fight));

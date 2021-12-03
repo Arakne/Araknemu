@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
@@ -40,7 +41,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -385,7 +388,7 @@ public class FunctionalTest extends FightBaseCase {
 
         castNormal(183, fighter1.cell()); // Simple attack
 
-        assertEquals(fighter1.life().max(), fighter1.life().max());
+        assertEquals(fighter1.life().max(), fighter1.life().current());
         assertEquals(135, fighter1.cell().id());
         requestStack.assertOne(ActionEffect.slide(fighter2, fighter1, fight.map().get(135)));
     }
@@ -421,6 +424,161 @@ public class FunctionalTest extends FightBaseCase {
 
         assertEquals(277, fighter2.cell().id());
         requestStack.assertOne(ActionEffect.slide(fighter1, fighter2, fight.map().get(277)));
+    }
+
+    @Test
+    void switchPosition() {
+        fighter1.move(fight.map().get(305));
+        fighter2.move(fight.map().get(193));
+
+        castNormal(445, fight.map().get(193)); // Coopération
+
+        assertEquals(193, fighter1.cell().id());
+        assertEquals(305, fighter2.cell().id());
+
+        requestStack.assertOne(ActionEffect.teleport(fighter1, fighter1, fight.map().get(193)));
+        requestStack.assertOne(ActionEffect.teleport(fighter1, fighter2, fight.map().get(305)));
+    }
+
+    @Test
+    void switchOnAttack() {
+        fight.cancel(true);
+
+        fight = fightBuilder()
+            .addSelf(fb -> fb.cell(165))
+            .addAlly(fb -> fb.player(other).cell(150))
+            .addEnemy(fb -> fb.cell(192))
+            .build(true)
+        ;
+
+        fight.state(PlacementState.class).startFight();
+        fight.turnList().start();
+
+        fighter1 = player.fighter();
+        fighter2 = other.fighter();
+
+        requestStack.clear();
+
+        castNormal(440, fighter2.cell()); // Sacrifice
+        fighter1.turn().stop();
+
+        castNormal(183, fighter2.cell()); // Simple attack
+
+        assertEquals(fighter2.life().max(), fighter2.life().current());
+        assertBetween(15, 25, fighter1.life().max() - fighter1.life().current());
+
+        assertEquals(150, fighter1.cell().id());
+        assertEquals(165, fighter2.cell().id());
+
+        requestStack.assertOne(ActionEffect.teleport(fighter1, fighter2, fight.map().get(165)));
+        requestStack.assertOne(ActionEffect.teleport(fighter1, fighter1, fight.map().get(150)));
+    }
+
+    @Test
+    void switchOnAttackWithChaining() {
+        fight.cancel(true);
+
+        fight = fightBuilder()
+            .addSelf(fb -> fb.cell(328).charac(Characteristic.LUCK, 100))
+            .addAlly(fb -> fb.cell(271).charac(Characteristic.LUCK, 50))
+            .addAlly(fb -> fb.cell(211))
+            .addEnemy(fb -> fb.cell(325))
+            .build(true)
+        ;
+
+        List<Fighter> fighters = fight.fighters();
+
+        fight.state(PlacementState.class).startFight();
+        fight.turnList().start();
+
+        castNormal(440, fight.map().get(271)); // Sacrifice
+        fighters.get(0).turn().stop();
+        fighters.get(3).turn().stop();
+
+        castNormal(440, fight.map().get(211)); // Sacrifice
+        fighters.get(1).turn().stop();
+        fighters.get(2).turn().stop();
+        fighters.get(0).turn().stop();
+
+        castNormal(183, fight.map().get(211)); // Simple attack
+
+        assertEquals(fighters.get(2).life().max(), fighters.get(2).life().current());
+        assertEquals(fighters.get(1).life().max(), fighters.get(1).life().current());
+        assertBetween(10, 17, fighters.get(0).life().max() - fighters.get(0).life().current());
+
+        assertEquals(211, fighters.get(0).cell().id());
+        assertEquals(328, fighters.get(1).cell().id());
+        assertEquals(271, fighters.get(2).cell().id());
+
+        requestStack.assertOne(ActionEffect.teleport(fighters.get(1), fighters.get(2), fight.map().get(271)));
+        requestStack.assertOne(ActionEffect.teleport(fighters.get(1), fighters.get(1), fight.map().get(211)));
+        requestStack.assertOne(ActionEffect.teleport(fighters.get(0), fighters.get(1), fight.map().get(328)));
+        requestStack.assertOne(ActionEffect.teleport(fighters.get(0), fighters.get(0), fight.map().get(211)));
+    }
+
+    @Test
+    void switchOnAttackWithSpellReturn() {
+        fight.cancel(true);
+
+        fight = fightBuilder()
+            .addSelf(fb -> fb.cell(328).charac(Characteristic.LUCK, 100).charac(Characteristic.ACTION_POINT, 1))
+            .addAlly(fb -> fb.cell(271).charac(Characteristic.LUCK, 50))
+            .addEnemy(fb -> fb.cell(325))
+            .build(true)
+        ;
+
+        List<Fighter> fighters = fight.fighters();
+
+        fight.state(PlacementState.class).startFight();
+        fight.turnList().start();
+
+        castNormal(440, fight.map().get(271)); // Sacrifice
+        castNormal(4, fight.map().get(328)); // Renvoi de Sort
+        fighters.get(0).turn().stop();
+
+        castNormal(183, fight.map().get(271)); // Simple attack
+
+        assertEquals(fighters.get(0).life().max(), fighters.get(0).life().current());
+        assertEquals(fighters.get(1).life().max(), fighters.get(1).life().current());
+        assertBetween(10, 17, fighters.get(2).life().max() - fighters.get(2).life().current());
+
+        assertEquals(271, fighters.get(0).cell().id());
+        assertEquals(328, fighters.get(1).cell().id());
+
+        requestStack.assertOne(ActionEffect.teleport(fighters.get(0), fighters.get(1), fight.map().get(328)));
+        requestStack.assertOne(ActionEffect.teleport(fighters.get(0), fighters.get(0), fight.map().get(271)));
+        requestStack.assertOne(ActionEffect.returnSpell(fighters.get(0), true));
+    }
+
+    /**
+     * See: https://github.com/Arakne/Araknemu/pull/206#issuecomment-984841521
+     */
+    @Test
+    void switchThenAttack() {
+        fight.cancel(true);
+
+        fight = fightBuilder()
+            .addSelf(fb -> fb.cell(185))
+            .addEnemy(fb -> fb.player(other).cell(170).maxLife(150).currentLife(150))
+            .build(true)
+        ;
+
+        fighter1 = player.fighter();
+        fighter2 = other.fighter();
+
+        fight.state(PlacementState.class).startFight();
+        fight.turnList().start();
+
+        castNormal(577, fighter2.cell()); // Bambou Musical
+
+        assertEquals(170, fighter1.cell().id());
+        assertEquals(185, fighter2.cell().id());
+
+        assertEquals(fighter1.life().max(), fighter1.life().current());
+        assertBetween(71, 100, fighter2.life().max() - fighter2.life().current());
+
+        requestStack.assertOne(ActionEffect.teleport(fighter1, fighter2, fight.map().get(185)));
+        requestStack.assertOne(ActionEffect.teleport(fighter1, fighter1, fight.map().get(170)));
     }
 
     private void passTurns(int number) {

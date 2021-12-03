@@ -19,55 +19,55 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting;
 
-import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsUtils;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
- * Buff effect which permit to "cancel" a damage effect by moving back
+ * Buff effect for switch position between buff caster and target when the target will take damage
+ * This effect will also replace the cast target
  *
- * This effect is hooked before cast the spell, and remove the target if the effect is a damage,
- * and it's launch in close combat (i.e. distance = 1)
- *
- * Note: this effect is only applied on direct damage
+ * @see CastScope#replaceTarget(PassiveFighter, PassiveFighter)
  */
-public final class AvoidDamageByMovingBackHandler implements EffectHandler, BuffHook {
-    private final MoveBackApplier applier;
-    private final RandomUtil random = new RandomUtil();
+public final class SwitchPositionOnAttackHandler implements EffectHandler, BuffHook {
+    private final SwitchPositionApplier applier;
 
-    public AvoidDamageByMovingBackHandler(Fight fight) {
-        applier = new MoveBackApplier(fight);
+    public SwitchPositionOnAttackHandler(Fight fight) {
+        this.applier = new SwitchPositionApplier(fight);
     }
 
     @Override
     public void handle(CastScope cast, CastScope.EffectScope effect) {
-        throw new UnsupportedOperationException("Avoid damage by moving back is a buff effect");
+        throw new UnsupportedOperationException("Switch position on damage is a buff effect");
     }
 
     @Override
     public void buff(CastScope cast, CastScope.EffectScope effect) {
+        final ActiveFighter caster = cast.caster();
+
         for (PassiveFighter target : effect.targets()) {
-            target.buffs().add(new Buff(effect.effect(), cast.action(), cast.caster(), target, this));
+            if (!target.equals(caster)) {
+                target.buffs().add(new Buff(effect.effect(), cast.action(), caster, target, this));
+            }
         }
     }
 
     @Override
     public boolean onCastTarget(Buff buff, CastScope cast) {
-        if (!isDamageCast(cast) || buff.target().cell().coordinate().distance(cast.caster().cell()) != 1) {
+        if (!isDamageCast(cast)) {
             return true;
         }
 
-        if (!random.bool(buff.effect().min())) {
-            return true;
-        }
+        final ActiveFighter buffCaster = buff.caster();
+        final PassiveFighter target = buff.target();
 
-        applier.apply(cast.caster(), buff.target(), buff.effect().max());
-        cast.removeTarget(buff.target());
+        applier.apply(buffCaster, target);
+        cast.replaceTarget(target, buffCaster);
 
         return false;
     }

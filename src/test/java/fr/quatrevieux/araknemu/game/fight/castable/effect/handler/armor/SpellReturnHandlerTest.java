@@ -122,7 +122,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
 
         Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
 
-        handler.onCastTarget(buff, scope);
+        assertTrue(handler.onCastTarget(buff, scope));
 
         requestStack.assertEmpty();
         assertContains(caster, scope.targets());
@@ -147,7 +147,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
 
         Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
 
-        handler.onCastTarget(buff, scope);
+        assertTrue(handler.onCastTarget(buff, scope));
 
         requestStack.assertEmpty();
         assertContains(target, scope.targets());
@@ -172,7 +172,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
 
         Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
 
-        handler.onCastTarget(buff, scope);
+        assertTrue(handler.onCastTarget(buff, scope));
 
         requestStack.assertEmpty();
         assertContains(target, scope.targets());
@@ -199,7 +199,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
 
         Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
 
-        handler.onCastTarget(buff, scope);
+        assertTrue(handler.onCastTarget(buff, scope));
 
         requestStack.assertLast(ActionEffect.returnSpell(target, false));
         assertCollectionEquals(scope.targets(), target);
@@ -226,7 +226,7 @@ class SpellReturnHandlerTest extends FightBaseCase {
 
         Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
 
-        handler.onCastTarget(buff, scope);
+        assertTrue(handler.onCastTarget(buff, scope));
 
         requestStack.assertLast(ActionEffect.returnSpell(target, false));
         assertCollectionEquals(scope.targets(), target);
@@ -253,10 +253,10 @@ class SpellReturnHandlerTest extends FightBaseCase {
 
         Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
 
-        handler.onCastTarget(buff, scope);
+        assertFalse(handler.onCastTarget(buff, scope));
 
         requestStack.assertLast(ActionEffect.returnSpell(target, true));
-        assertCollectionEquals(scope.targets(), caster);
+        assertCollectionEquals(scope.effects().get(0).targets(), caster);
     }
 
     @Test
@@ -281,9 +281,9 @@ class SpellReturnHandlerTest extends FightBaseCase {
 
         Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), target, target, handler);
 
-        handler.onCastTarget(buff, scope);
+        assertFalse(handler.onCastTarget(buff, scope));
 
         requestStack.assertLast(ActionEffect.returnSpell(target, true));
-        assertCollectionEquals(scope.targets(), caster);
+        assertCollectionEquals(scope.effects().get(0).targets(), caster);
     }
 }

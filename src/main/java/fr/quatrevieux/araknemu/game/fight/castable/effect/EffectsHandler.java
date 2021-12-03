@@ -23,8 +23,10 @@ import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Handle fight effects
@@ -40,9 +42,7 @@ public final class EffectsHandler {
      * Apply a cast to the fight
      */
     public void apply(CastScope cast) {
-        for (PassiveFighter target : cast.targets()) {
-            target.buffs().onCastTarget(cast);
-        }
+        applyCastTarget(cast);
 
         for (CastScope.EffectScope effect : cast.effects()) {
             // @todo Warning if handler is not found
@@ -55,6 +55,42 @@ public final class EffectsHandler {
                     handler.buff(cast, effect);
                 }
             }
+        }
+    }
+
+    /**
+     * Call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onCastTarget(CastScope)}
+     * on each target.
+     *
+     * If a target is changed (by calling {@link CastScope#replaceTarget(PassiveFighter, PassiveFighter)}),
+     * new targets will also be called
+     */
+    private void applyCastTarget(CastScope cast) {
+        Set<PassiveFighter> visitedTargets = Collections.emptySet();
+
+        for (;;) {
+            final Set<PassiveFighter> currentTargets = cast.targets();
+
+            boolean hasChanged = false;
+
+            for (PassiveFighter target : currentTargets) {
+                // Ignore already called targets
+                if (!visitedTargets.contains(target)) {
+                    if (!target.buffs().onCastTarget(cast)) {
+                        // The hook notify a target change
+                        hasChanged = true;
+                    }
+                }
+            }
+
+            // There is no new targets, we can stop here
+            if (!hasChanged) {
+                return;
+            }
+
+            // cast#targets() always contains all resolved targets, including removed ones
+            // so simple change visitedTargets by this value is enough to keep track of all already called fighters
+            visitedTargets = currentTargets;
         }
     }
 }
