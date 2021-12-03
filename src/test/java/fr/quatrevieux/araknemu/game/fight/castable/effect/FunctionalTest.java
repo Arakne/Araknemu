@@ -550,6 +550,37 @@ public class FunctionalTest extends FightBaseCase {
         requestStack.assertOne(ActionEffect.returnSpell(fighters.get(0), true));
     }
 
+    /**
+     * See: https://github.com/Arakne/Araknemu/pull/206#issuecomment-984841521
+     */
+    @Test
+    void switchThenAttack() {
+        fight.cancel(true);
+
+        fight = fightBuilder()
+            .addSelf(fb -> fb.cell(185))
+            .addEnemy(fb -> fb.player(other).cell(170).maxLife(150).currentLife(150))
+            .build(true)
+        ;
+
+        fighter1 = player.fighter();
+        fighter2 = other.fighter();
+
+        fight.state(PlacementState.class).startFight();
+        fight.turnList().start();
+
+        castNormal(577, fighter2.cell()); // Bambou Musical
+
+        assertEquals(170, fighter1.cell().id());
+        assertEquals(185, fighter2.cell().id());
+
+        assertEquals(fighter1.life().max(), fighter1.life().current());
+        assertBetween(71, 100, fighter2.life().max() - fighter2.life().current());
+
+        requestStack.assertOne(ActionEffect.teleport(fighter1, fighter2, fight.map().get(185)));
+        requestStack.assertOne(ActionEffect.teleport(fighter1, fighter1, fight.map().get(170)));
+    }
+
     private void passTurns(int number) {
         for (; number > 0; --number) {
             fighter1.turn().stop();
