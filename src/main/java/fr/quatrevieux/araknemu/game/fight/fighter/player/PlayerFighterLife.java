@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.world.creature.Life;
 
 /**
@@ -57,7 +58,7 @@ public final class PlayerFighterLife implements FighterLife {
     }
 
     @Override
-    public int alter(ActiveFighter caster, int value) {
+    public int alter(PassiveFighter caster, int value) {
         if (delegate == null) {
             throw new IllegalStateException("PlayerFighterLife must be initialized");
         }

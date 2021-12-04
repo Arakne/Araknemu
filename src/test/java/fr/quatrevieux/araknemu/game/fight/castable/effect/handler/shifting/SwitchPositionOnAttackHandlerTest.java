@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting;
 
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
@@ -245,6 +246,58 @@ class SwitchPositionOnAttackHandlerTest extends FightBaseCase {
 
         requestStack.assertOne(ActionEffect.teleport(caster, target, fight.map().get(165)));
         requestStack.assertOne(ActionEffect.teleport(caster, caster, fight.map().get(150)));
+    }
+
+    @Test
+    void buffWithReflectedDamage() {
+        configureFight(fb -> fb
+            .addSelf(b -> b.cell(165).charac(Characteristic.COUNTER_DAMAGE, 5))
+            .addEnemy(b -> b.player(other).cell(150))
+        );
+
+        PlayerFighter caster = player.fighter();
+        PlayerFighter target = other.fighter();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.min()).thenReturn(100);
+        Mockito.when(effect.max()).thenReturn(2);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(effect.duration()).thenReturn(5);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        handler.buff(scope, scope.effects().get(0));
+
+        requestStack.clear();
+
+        SpellEffect damageEffect = Mockito.mock(SpellEffect.class);
+        Mockito.when(damageEffect.effect()).thenReturn(100);
+        Mockito.when(damageEffect.min()).thenReturn(10);
+        Mockito.when(damageEffect.area()).thenReturn(new CellArea());
+        Mockito.when(damageEffect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+
+        CastScope damageScope = makeCastScope(target, spell, damageEffect, caster.cell());
+        fight.effects().apply(damageScope);
+
+        assertEquals(target.life().max(), target.life().current());
+        assertEquals(15, caster.life().max() - caster.life().current());
+
+        assertEquals(165, target.cell().id());
+        assertEquals(150, caster.cell().id());
+
+        assertEquals(caster, fight.map().get(150).fighter().get());
+        assertEquals(target, fight.map().get(165).fighter().get());
+
+        requestStack.assertOne(ActionEffect.teleport(caster, target, fight.map().get(165)));
+        requestStack.assertOne(ActionEffect.teleport(caster, caster, fight.map().get(150)));
+
+        requestStack.assertOne(ActionEffect.reflectedDamage(caster, 5));
+        requestStack.assertOne(ActionEffect.alterLifePoints(caster, caster, -5));
     }
 
     private void configureFight(Consumer<FightBuilder> configurator) {

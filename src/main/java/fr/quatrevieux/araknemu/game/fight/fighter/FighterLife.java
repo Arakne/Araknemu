@@ -38,7 +38,7 @@ public interface FighterLife extends Life {
      * @param caster The caster
      * @param value The modified value. Positive for heal, negative for damage
      */
-    public int alter(ActiveFighter caster, int value);
+    public int alter(PassiveFighter caster, int value);
 
     /**
      * Kill the fighter

@@ -58,7 +58,7 @@ public final class BaseFighterLife implements FighterLife {
     }
 
     @Override
-    public int alter(ActiveFighter caster, int value) {
+    public int alter(PassiveFighter caster, int value) {
         if (dead) {
             return 0;
         }

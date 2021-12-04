@@ -581,6 +581,74 @@ public class FunctionalTest extends FightBaseCase {
         requestStack.assertOne(ActionEffect.teleport(fighter1, fighter1, fight.map().get(170)));
     }
 
+    @Test
+    void reflectDamageSpell() {
+        castNormal(82, fighter1.cell()); // Contre
+        fighter1.turn().stop();
+
+        castNormal(183, fighter1.cell()); // Simple attack
+        assertEquals(7, fighter2.life().max() - fighter2.life().current());
+
+        requestStack.assertOne(ActionEffect.reflectedDamage(fighter1, 7));
+        requestStack.assertOne(ActionEffect.alterLifePoints(fighter1, fighter2, -7));
+    }
+
+    @Test
+    void reflectDamageCharacteristic() {
+        fighter2.characteristics().alter(Characteristic.COUNTER_DAMAGE, 5);
+
+        castNormal(183, fighter2.cell()); // Simple attack
+        assertEquals(5, fighter1.life().max() - fighter1.life().current());
+
+        requestStack.assertOne(ActionEffect.reflectedDamage(fighter2, 5));
+        requestStack.assertOne(ActionEffect.alterLifePoints(fighter2, fighter1, -5));
+    }
+
+    @Test
+    void switchOnAttackAndReflectDamage() {
+        fight.cancel(true);
+
+        fight = fightBuilder()
+            .addSelf(fb -> fb.cell(328).charac(Characteristic.LUCK, 100).charac(Characteristic.COUNTER_DAMAGE, 1))
+            .addAlly(fb -> fb.cell(271).charac(Characteristic.LUCK, 50))
+            .addAlly(fb -> fb.cell(256))
+            .addEnemy(fb -> fb.cell(325))
+            .build(true)
+        ;
+
+        List<Fighter> fighters = fight.fighters();
+
+        fight.state(PlacementState.class).startFight();
+        fight.turnList().start();
+
+        castNormal(440, fight.map().get(271)); // Sacrifice
+        fighters.get(0).turn().stop();
+        fighters.get(3).turn().stop();
+
+        castNormal(183, fight.map().get(256)); // Simple attack
+
+        assertTrue(fighters.get(1).life().isFull());
+        assertTrue(fighters.get(2).life().isFull());
+
+        int damage = fighters.get(0).life().max() - fighters.get(0).life().current();
+        assertBetween(16, 18, damage);
+
+        assertEquals(256, fighters.get(1).cell().id());
+        assertEquals(328, fighters.get(2).cell().id());
+        assertEquals(271, fighters.get(0).cell().id());
+
+        // Damage reflected to himself
+        requestStack.assertOne(ActionEffect.reflectedDamage(fighters.get(0), 1));
+        requestStack.assertOne(ActionEffect.alterLifePoints(fighters.get(1), fighters.get(0), -damage + 1));
+        requestStack.assertOne(ActionEffect.alterLifePoints(fighters.get(0), fighters.get(0), -1));
+
+        // Position switches
+        requestStack.assertOne(ActionEffect.teleport(fighters.get(0), fighters.get(2), fight.map().get(328)));
+        requestStack.assertOne(ActionEffect.teleport(fighters.get(0), fighters.get(0), fight.map().get(256)));
+        requestStack.assertOne(ActionEffect.teleport(fighters.get(0), fighters.get(1), fight.map().get(256)));
+        requestStack.assertOne(ActionEffect.teleport(fighters.get(0), fighters.get(0), fight.map().get(271)));
+    }
+
     private void passTurns(int number) {
         for (; number > 0; --number) {
             fighter1.turn().stop();
