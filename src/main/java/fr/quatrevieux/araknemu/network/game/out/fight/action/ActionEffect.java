@@ -234,4 +234,14 @@ public final class ActionEffect {
     public static ActionEffect slide(PassiveFighter caster, PassiveFighter target, FightCell destination) {
         return new ActionEffect(5, caster, target.id(), destination.id());
     }
+
+    /**
+     * Damage as been reflected by the target
+     *
+     * @param castTarget The original cast target
+     * @param value Reflected value
+     */
+    public static ActionEffect reflectedDamage(PassiveFighter castTarget, int value) {
+        return new ActionEffect(107, castTarget, castTarget.id(), value);
+    }
 }

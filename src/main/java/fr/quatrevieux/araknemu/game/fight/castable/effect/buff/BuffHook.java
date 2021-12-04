@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
@@ -139,7 +140,18 @@ public interface BuffHook {
      * @param buff The active buff
      * @param value Altered life value. Negative for a damage, positive for a heal
      *
-     * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#alter(fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter, int)
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.FighterLife#alter(fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter, int)
      */
     public default void onLifeAltered(Buff buff, int value) {}
+
+    /**
+     * Damage has been reflected by the cast target
+     *
+     * The target can be changed using {@link ReflectedDamage#changeTarget(PassiveFighter)}
+     * Or modified using {@link ReflectedDamage#multiply(int)}
+     *
+     * @param buff The active buff
+     * @param damage The reflected damage
+     */
+    public default void onReflectedDamage(Buff buff, ReflectedDamage damage) {}
 }

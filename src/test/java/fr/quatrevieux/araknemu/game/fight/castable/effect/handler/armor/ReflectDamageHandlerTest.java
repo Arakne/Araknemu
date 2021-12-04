@@ -14,18 +14,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor;
 
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -38,15 +38,13 @@ import org.mockito.Mockito;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-class HealOrMultiplyDamageHandlerTest extends FightBaseCase {
+class ReflectDamageHandlerTest extends FightBaseCase {
     private Fight fight;
     private PlayerFighter caster;
     private PlayerFighter target;
-    private HealOrMultiplyDamageHandler handler;
+    private ReflectDamageHandler handler;
 
     @Override
     @BeforeEach
@@ -61,7 +59,7 @@ class HealOrMultiplyDamageHandlerTest extends FightBaseCase {
 
         target.move(fight.map().get(123));
 
-        handler = new HealOrMultiplyDamageHandler();
+        handler = new ReflectDamageHandler();
 
         requestStack.clear();
     }
@@ -109,99 +107,68 @@ class HealOrMultiplyDamageHandlerTest extends FightBaseCase {
     }
 
     @Test
-    void onDamageWithMultiplyEffect() {
+    void onDirectDamageWillAddReflected() {
         SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
 
-        Mockito.when(returnEffect.min()).thenReturn(2);
-        Mockito.when(returnEffect.max()).thenReturn(1);
-        Mockito.when(returnEffect.special()).thenReturn(0);
+        Mockito.when(returnEffect.min()).thenReturn(7);
 
         Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
 
         Damage damage = new Damage(20, Element.NEUTRAL);
 
-        handler.onDirectDamage(buff, caster, damage);
+        handler.onDirectDamage(buff, target, damage);
 
-        assertEquals(40, damage.value());
-    }
-
-    @Test
-    void onDamageWithHealEffect() {
-        SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
-
-        Mockito.when(returnEffect.min()).thenReturn(2);
-        Mockito.when(returnEffect.max()).thenReturn(1);
-        Mockito.when(returnEffect.special()).thenReturn(100);
-
-        Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
-
-        Damage damage = new Damage(20, Element.NEUTRAL);
-
-        handler.onDirectDamage(buff, caster, damage);
-
-        assertEquals(-20, damage.value());
-    }
-
-    @Test
-    void onReflectedDamageWithMultiplyEffect() {
-        SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
-
-        Mockito.when(returnEffect.min()).thenReturn(2);
-        Mockito.when(returnEffect.max()).thenReturn(1);
-        Mockito.when(returnEffect.special()).thenReturn(0);
-
-        Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
-
-        ReflectedDamage damage = new ReflectedDamage(new Damage(20, Element.NEUTRAL).reflect(10), caster);
-
-        handler.onReflectedDamage(buff, damage);
-
+        assertEquals(7, damage.reflectedDamage());
         assertEquals(20, damage.value());
     }
 
     @Test
-    void onReflectedDamageWithHealEffect() {
+    void onDirectDamageShouldIgnoreSelfDamage() {
         SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
 
-        Mockito.when(returnEffect.min()).thenReturn(2);
-        Mockito.when(returnEffect.max()).thenReturn(1);
-        Mockito.when(returnEffect.special()).thenReturn(100);
+        Mockito.when(returnEffect.min()).thenReturn(7);
 
         Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
 
-        ReflectedDamage damage = new ReflectedDamage(new Damage(20, Element.NEUTRAL).reflect(10), caster);
+        Damage damage = new Damage(20, Element.NEUTRAL);
 
-        handler.onReflectedDamage(buff, damage);
+        handler.onDirectDamage(buff, caster, damage);
 
-        assertEquals(-10, damage.value());
+        assertEquals(0, damage.reflectedDamage());
+        assertEquals(20, damage.value());
     }
 
     @Test
-    void onDamageWithRandom() {
+    void ignoreOnDamage() {
         SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
 
-        Mockito.when(returnEffect.min()).thenReturn(2);
-        Mockito.when(returnEffect.max()).thenReturn(1);
-        Mockito.when(returnEffect.special()).thenReturn(20);
+        Mockito.when(returnEffect.min()).thenReturn(7);
 
         Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
 
-        int healCount = 0;
-        int damageCount = 0;
+        Damage damage = new Damage(20, Element.NEUTRAL);
 
-        for (int i = 0; i < 1000; ++i) {
-            Damage damage = new Damage(20, Element.NEUTRAL);
-            handler.onDirectDamage(buff, caster, damage);
+        handler.onDamage(buff, damage);
 
-            if (damage.value() == 40) {
-                ++damageCount;
-            } else if (damage.value() == -20) {
-                ++healCount;
-            }
-        }
+        assertEquals(0, damage.reflectedDamage());
+        assertEquals(20, damage.value());
+    }
 
-        assertEquals(1000, healCount + damageCount);
-        assertBetween(150, 250, healCount);
-        assertBetween(750, 850, damageCount);
+    @Test
+    void onDirectDamageShouldBeBoostedByWisdom() {
+        caster.characteristics().alter(Characteristic.WISDOM, 50);
+
+        SpellEffect returnEffect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(returnEffect.min()).thenReturn(7);
+
+        Buff buff = new Buff(returnEffect, Mockito.mock(Spell.class), caster, caster, handler);
+
+        Damage damage = new Damage(20, Element.NEUTRAL);
+
+        handler.onDirectDamage(buff, target, damage);
+
+        assertEquals(10, damage.reflectedDamage());
+        assertEquals(20, damage.value());
     }
 }

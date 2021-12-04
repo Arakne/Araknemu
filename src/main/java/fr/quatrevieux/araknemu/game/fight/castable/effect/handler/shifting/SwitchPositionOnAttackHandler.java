@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsUtils;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
@@ -70,6 +71,15 @@ public final class SwitchPositionOnAttackHandler implements EffectHandler, BuffH
         cast.replaceTarget(target, buffCaster);
 
         return false;
+    }
+
+    @Override
+    public void onReflectedDamage(Buff buff, ReflectedDamage damage) {
+        final ActiveFighter buffCaster = buff.caster();
+        final PassiveFighter target = buff.target();
+
+        applier.apply(buffCaster, target);
+        damage.changeTarget(buffCaster);
     }
 
     /**

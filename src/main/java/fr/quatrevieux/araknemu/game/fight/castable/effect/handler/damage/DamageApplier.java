@@ -62,7 +62,12 @@ public final class DamageApplier {
      */
     public int apply(ActiveFighter caster, SpellEffect effect, PassiveFighter target) {
         final Damage damage = computeDamage(caster, effect, target);
+
         target.buffs().onDirectDamage(caster, damage);
+
+        if (!caster.equals(target)) {
+            damage.reflect(target.characteristics().get(Characteristic.COUNTER_DAMAGE));
+        }
 
         return applyDamage(caster, damage, target);
     }
@@ -112,8 +117,32 @@ public final class DamageApplier {
             fight.send(ActionEffect.reducedDamage(target, damage.reducedDamage()));
         }
 
-        // @todo returned damage
+        final int lifeChange = target.life().alter(caster, -damage.value());
 
-        return target.life().alter(caster, -damage.value());
+        if (lifeChange < 0 && !target.equals(caster) && damage.reflectedDamage() > 0) {
+            applyReflectedDamage(target, caster, damage);
+        }
+
+        return lifeChange;
+    }
+
+    /**
+     * Apply returned damage on the original caster
+     *
+     * Notes:
+     * - do not handle target change chain
+     * - use resistance on returned damage ?
+     *
+     * @param caster The original spell caster
+     * @param damage The applied damage
+     */
+    private void applyReflectedDamage(PassiveFighter castTarget, ActiveFighter caster, Damage damage) {
+        final ReflectedDamage returnedDamage = new ReflectedDamage(damage, caster);
+        caster.buffs().onReflectedDamage(returnedDamage);
+
+        if (returnedDamage.baseValue() > 0) {
+            fight.send(ActionEffect.reflectedDamage(castTarget, returnedDamage.baseValue()));
+            returnedDamage.target().life().alter(castTarget, -returnedDamage.value());
+        }
     }
 }

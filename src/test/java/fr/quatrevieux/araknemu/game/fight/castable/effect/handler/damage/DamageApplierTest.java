@@ -34,6 +34,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -244,5 +246,199 @@ class DamageApplierTest extends FightBaseCase {
         assertSame(buff, calledBuff.get());
         assertSame(toApply, calledPoison.get());
         assertEquals(10, calledDamage.get().value());
+    }
+
+    @Test
+    void applyWithCounterDamageCharacteristic() {
+        target.characteristics().alter(Characteristic.COUNTER_DAMAGE, 5);
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        AtomicReference<Buff> calledBuff = new AtomicReference<>();
+        AtomicReference<ReflectedDamage> calledReflectedDamage = new AtomicReference<>();
+
+        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
+            @Override
+            public void onReflectedDamage(Buff buff, ReflectedDamage damage) {
+                calledBuff.set(buff);
+                calledReflectedDamage.set(damage);
+            }
+        });
+
+        caster.buffs().add(buff);
+
+        Mockito.when(effect.min()).thenReturn(10);
+
+        DamageApplier applier = new DamageApplier(Element.AIR, fight);
+        requestStack.clear();
+
+        assertEquals(-10, applier.apply(caster, effect, target));
+        assertEquals(-10, target.life().current() - target.life().max());
+        assertEquals(-5, caster.life().current() - caster.life().max());
+
+        assertSame(buff, calledBuff.get());
+        assertEquals(5, calledReflectedDamage.get().value());
+        assertSame(caster, calledReflectedDamage.get().target());
+
+        requestStack.assertAll(
+            ActionEffect.alterLifePoints(caster, target, -10),
+            ActionEffect.reflectedDamage(target, 5),
+            ActionEffect.alterLifePoints(target, caster, -5)
+        );
+    }
+
+    @Test
+    void applyWithCounterDamageShouldNotExceedHalfOfDamage() {
+        target.characteristics().alter(Characteristic.COUNTER_DAMAGE, 10);
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(10);
+
+        DamageApplier applier = new DamageApplier(Element.AIR, fight);
+        requestStack.clear();
+
+        assertEquals(-10, applier.apply(caster, effect, target));
+        assertEquals(-10, target.life().current() - target.life().max());
+        assertEquals(-5, caster.life().current() - caster.life().max());
+
+        requestStack.assertAll(
+            ActionEffect.alterLifePoints(caster, target, -10),
+            ActionEffect.reflectedDamage(target, 5),
+            ActionEffect.alterLifePoints(target, caster, -5)
+        );
+    }
+
+    @Test
+    void applyWithCounterDamageShouldTakeResistanceInAccount() {
+        target.characteristics().alter(Characteristic.COUNTER_DAMAGE, 10);
+        caster.characteristics().alter(Characteristic.RESISTANCE_AIR, 2);
+        caster.characteristics().alter(Characteristic.RESISTANCE_PERCENT_AIR, 10);
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(20);
+
+        DamageApplier applier = new DamageApplier(Element.AIR, fight);
+        requestStack.clear();
+
+        assertEquals(-20, applier.apply(caster, effect, target));
+        assertEquals(-20, target.life().current() - target.life().max());
+        assertEquals(-7, caster.life().current() - caster.life().max());
+
+        requestStack.assertAll(
+            ActionEffect.alterLifePoints(caster, target, -20),
+            ActionEffect.reflectedDamage(target, 7),
+            ActionEffect.alterLifePoints(target, caster, -7)
+        );
+    }
+
+    @Test
+    void applyWithCounterDamageChangeTarget() throws SQLException {
+        PlayerFighter newTarget = makePlayerFighter(makeSimpleGamePlayer(11));
+        fight.team(0).join(newTarget);
+        newTarget.joinFight(fight, fight.map().get(150));
+        newTarget.init();
+
+        target.characteristics().alter(Characteristic.COUNTER_DAMAGE, 5);
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, caster, new BuffHook() {
+            @Override
+            public void onReflectedDamage(Buff buff, ReflectedDamage damage) {
+                damage.changeTarget(newTarget);
+            }
+        });
+
+        caster.buffs().add(buff);
+
+        Mockito.when(effect.min()).thenReturn(10);
+
+        DamageApplier applier = new DamageApplier(Element.AIR, fight);
+        requestStack.clear();
+
+        assertEquals(-10, applier.apply(caster, effect, target));
+        assertEquals(-10, target.life().current() - target.life().max());
+        assertEquals(caster.life().current(), caster.life().max());
+        assertEquals(-5, newTarget.life().current() - newTarget.life().max());
+
+        requestStack.assertAll(
+            ActionEffect.alterLifePoints(caster, target, -10),
+            ActionEffect.reflectedDamage(target, 5),
+            ActionEffect.alterLifePoints(target, newTarget, -5)
+        );
+    }
+
+    @Test
+    void applyWithCounterDamageShouldIgnoreSelfTarget() {
+        caster.characteristics().alter(Characteristic.COUNTER_DAMAGE, 10);
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(10);
+
+        DamageApplier applier = new DamageApplier(Element.AIR, fight);
+        requestStack.clear();
+
+        assertEquals(-10, applier.apply(caster, effect, caster));
+        assertEquals(-10, caster.life().current() - caster.life().max());
+
+        requestStack.assertAll(
+            ActionEffect.alterLifePoints(caster, caster, -10)
+        );
+    }
+
+    @Test
+    void applyWithCounterDamageNoDamageShouldBeIgnored() {
+        target.characteristics().alter(Characteristic.COUNTER_DAMAGE, 5);
+        target.characteristics().alter(Characteristic.RESISTANCE_AIR, 10);
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        BuffHook hook = Mockito.mock(BuffHook.class);
+        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, hook);
+
+        caster.buffs().add(buff);
+
+        Mockito.when(effect.min()).thenReturn(10);
+
+        DamageApplier applier = new DamageApplier(Element.AIR, fight);
+        requestStack.clear();
+
+        assertEquals(0, applier.apply(caster, effect, target));
+        assertEquals(0, target.life().current() - target.life().max());
+        assertEquals(0, caster.life().current() - caster.life().max());
+
+        Mockito.verify(hook, Mockito.never()).onReflectedDamage(Mockito.any(), Mockito.any());
+
+        requestStack.assertAll(
+            ActionEffect.alterLifePoints(caster, target, 0)
+        );
+    }
+
+    @Test
+    void applyWithCounterDamageAndNegativeMultiplierShouldHealTarget() {
+        target.characteristics().alter(Characteristic.COUNTER_DAMAGE, 5);
+        caster.life().alter(caster, -10);
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
+            @Override
+            public void onReflectedDamage(Buff buff, ReflectedDamage damage) {
+                damage.multiply(-1);
+            }
+        });
+
+        caster.buffs().add(buff);
+
+        Mockito.when(effect.min()).thenReturn(10);
+
+        DamageApplier applier = new DamageApplier(Element.AIR, fight);
+        requestStack.clear();
+
+        assertEquals(-10, applier.apply(caster, effect, target));
+        assertEquals(-10, target.life().current() - target.life().max());
+        assertEquals(-5, caster.life().current() - caster.life().max());
+
+        requestStack.assertAll(
+            ActionEffect.alterLifePoints(caster, target, -10),
+            ActionEffect.reflectedDamage(target, 5),
+            ActionEffect.alterLifePoints(target, caster, 5)
+        );
     }
 }

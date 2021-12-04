@@ -14,33 +14,33 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2020 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor;
 
-import fr.arakne.utils.value.helper.RandomUtil;
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.MultipliableDamage;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
- * Suffered damage will be healed, or multiplied
+ * Reflect suffered damage
+ * Unlike item effect, this one is modified by wisdom
  *
- * Note: this buff is only applied on direct damage (see: https://forums.jeuxonline.info/sujet/969716/chance-d-ecaflip)
+ * Reflected damage cannot exceed half of cast damage, and is lowered by resistance
+ *
+ * @see fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage For the formula
  */
-public final class HealOrMultiplyDamageHandler implements EffectHandler, BuffHook {
-    private final RandomUtil random = new RandomUtil();
-
+public final class ReflectDamageHandler implements EffectHandler, BuffHook {
     @Override
     public void handle(CastScope cast, CastScope.EffectScope effect) {
-        throw new UnsupportedOperationException("HealOrMultiplyDamageHandler can only be used as buff");
+        throw new UnsupportedOperationException("ReflectDamageHandler can only be used as buff");
     }
 
     @Override
@@ -52,24 +52,13 @@ public final class HealOrMultiplyDamageHandler implements EffectHandler, BuffHoo
 
     @Override
     public void onDirectDamage(Buff buff, ActiveFighter caster, Damage value) {
-        apply(buff, value);
-    }
-
-    @Override
-    public void onReflectedDamage(Buff buff, ReflectedDamage damage) {
-        apply(buff, damage);
-    }
-
-    /**
-     * Modify the damage multiplier depending on the chance
-     */
-    private void apply(Buff buff, MultipliableDamage damage) {
-        final boolean heal = random.bool(buff.effect().special());
-
-        if (heal) {
-            damage.multiply(-buff.effect().max());
-        } else {
-            damage.multiply(buff.effect().min());
+        // Ignore self damage
+        if (!caster.equals(buff.target())) {
+            value.reflect(
+                new EffectValue(buff.effect())
+                    .percent(buff.target().characteristics().get(Characteristic.WISDOM))
+                    .value()
+            );
         }
     }
 }

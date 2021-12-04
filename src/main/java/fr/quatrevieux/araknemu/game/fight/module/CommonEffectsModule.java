@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.HealOrMultiplyDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.ReduceDamageHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.ReflectDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.SpellReturnHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddActionPointsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddCharacteristicHandler;
@@ -95,6 +96,7 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(79,  new HealOrMultiplyDamageHandler());
         handler.register(105, new ReduceDamageHandler());
         handler.register(106, new SpellReturnHandler(fight));
+        handler.register(107, new ReflectDamageHandler());
         handler.register(265, new ReduceDamageHandler());
 
         handler.register(111, new AddActionPointsHandler(fight));
@@ -117,6 +119,7 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(138, new AddCharacteristicHandler(fight, Characteristic.PERCENT_DAMAGE));
         handler.register(178, new AddCharacteristicHandler(fight, Characteristic.HEALTH_BOOST));
         handler.register(182, new AddCharacteristicHandler(fight, Characteristic.MAX_SUMMONED_CREATURES));
+        handler.register(220, new AddCharacteristicHandler(fight, Characteristic.COUNTER_DAMAGE));
 
         handler.register(116, new RemoveCharacteristicHandler(fight, Characteristic.SIGHT_BOOST));
         handler.register(145, new RemoveCharacteristicHandler(fight, Characteristic.FIXED_DAMAGE));

@@ -243,4 +243,13 @@ class ActionEffectTest {
 
         assertEquals("GA;5;456;460,123", ActionEffect.slide(fighter, fighter2, cell).toString());
     }
+
+    @Test
+    void reflectedDamage() {
+        Fighter fighter = Mockito.mock(Fighter.class);
+
+        Mockito.when(fighter.id()).thenReturn(456);
+
+        assertEquals("GA;107;456;456,15", ActionEffect.reflectedDamage(fighter, 15).toString());
+    }
 }
