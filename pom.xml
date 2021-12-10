@@ -32,17 +32,17 @@
 
     <groupId>fr.quatrevieux.araknemu</groupId>
     <artifactId>araknemu</artifactId>
-    <version>0.9-SNAPSHOT</version>
+    <version>0.9-alpha</version>
     <dependencies>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.65.Final</version>
+            <version>4.1.70.Final</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.9</version>
+            <version>3.12.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -72,7 +72,7 @@
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
-            <version>3.36.0</version>
+            <version>3.36.0.2</version>
         </dependency>
         <dependency>
             <groupId>fr.arakne</groupId>
@@ -82,7 +82,7 @@
         <dependency>
             <groupId>de.mkammerer</groupId>
             <artifactId>argon2-jvm</artifactId>
-            <version>2.10.1</version>
+            <version>2.11</version>
         </dependency>
         <dependency>
             <groupId>com.github.seancfoley</groupId>
@@ -98,19 +98,19 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.7.2</version>
+            <version>5.8.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.7.2</version>
+            <version>5.8.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>3.11.2</version>
+            <version>4.1.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
