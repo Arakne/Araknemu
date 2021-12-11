@@ -23,11 +23,13 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
 import fr.quatrevieux.araknemu.game.fight.spectator.event.StartWatchFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.BeginFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
+import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,7 +61,8 @@ class SendFightStateToSpectatorTest extends FightBaseCase {
             new fr.quatrevieux.araknemu.network.game.out.fight.JoinFightAsSpectator(fight),
             new AddSprites(fight.fighters().stream().map(Fighter::sprite).collect(Collectors.toList())),
             new BeginFight(),
-            new FighterTurnOrder(fight.turnList())
+            new FighterTurnOrder(fight.turnList()),
+            new TurnMiddle(fight.fighters())
         );
     }
 
@@ -78,6 +81,34 @@ class SendFightStateToSpectatorTest extends FightBaseCase {
             new AddSprites(fight.fighters().stream().map(Fighter::sprite).collect(Collectors.toList())),
             new BeginFight(),
             new FighterTurnOrder(fight.turnList()),
+            new TurnMiddle(fight.fighters()),
+            new StartTurn(fight.turnList().current().get())
+        );
+    }
+
+    @Test
+    void onStartWatchFightWithDeadFighter() throws SQLException {
+        PlayerFighter deadFighter = makePlayerFighter(makeSimpleGamePlayer(15));
+
+        fight.team(0).join(deadFighter);
+        deadFighter.joinFight(fight, fight.map().get(150));
+
+        SendFightStateToSpectator listener = new SendFightStateToSpectator(new Spectator(gamePlayer(), fight));
+        requestStack.clear();
+
+        fight.nextState();
+        fight.turnList().start();
+
+        deadFighter.life().kill(deadFighter);
+
+        listener.on(new StartWatchFight());
+
+        requestStack.assertAll(
+            new fr.quatrevieux.araknemu.network.game.out.fight.JoinFightAsSpectator(fight),
+            new AddSprites(fight.fighters().stream().map(Fighter::sprite).collect(Collectors.toList())),
+            new BeginFight(),
+            new FighterTurnOrder(fight.turnList()),
+            new TurnMiddle(fight.fighters()),
             new StartTurn(fight.turnList().current().get())
         );
     }
