@@ -34,6 +34,7 @@ import fr.quatrevieux.araknemu.game.fight.team.ConfigurableTeamOptions;
 import fr.quatrevieux.araknemu.network.game.out.fight.BeginFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
+import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
@@ -119,6 +120,7 @@ class JoinFightAsSpectatorTest extends FightBaseCase {
             new AddSprites(fight.fighters().stream().map(Fighter::sprite).collect(Collectors.toList())),
             new BeginFight(),
             new FighterTurnOrder(fight.turnList()),
+            new TurnMiddle(fight.fighters()),
             new StartTurn(fight.turnList().current().get())
         );
     }

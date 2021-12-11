@@ -47,7 +47,7 @@ public final class MonsterFighterSprite implements Sprite {
 
     @Override
     public int cell() {
-        return fighter.cell().id();
+        return fighter.dead() ? -1 : fighter.cell().id();
     }
 
     @Override
