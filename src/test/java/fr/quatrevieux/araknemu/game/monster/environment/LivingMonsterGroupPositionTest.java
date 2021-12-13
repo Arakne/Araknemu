@@ -105,6 +105,19 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
     }
 
     @Test
+    void respawn() {
+        monsterGroupPosition.populate(map);
+        map.remove(monsterGroupPosition.available().get(0));
+        assertCount(1, monsterGroupPosition.available());
+
+        monsterGroupPosition.respawn();
+        assertCount(2, monsterGroupPosition.available());
+
+        monsterGroupPosition.respawn();
+        assertCount(2, monsterGroupPosition.available());
+    }
+
+    @Test
     void fixedGroup() {
         monsterGroupPosition = new LivingMonsterGroupPosition(
             container.get(MonsterGroupFactory.class),
