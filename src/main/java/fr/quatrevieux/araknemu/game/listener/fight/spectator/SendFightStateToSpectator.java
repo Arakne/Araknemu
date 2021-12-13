@@ -21,9 +21,12 @@ package fr.quatrevieux.araknemu.game.listener.fight.spectator;
 
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
 import fr.quatrevieux.araknemu.game.fight.spectator.event.StartWatchFight;
+import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
 import fr.quatrevieux.araknemu.network.game.out.fight.BeginFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.JoinFightAsSpectator;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
@@ -62,11 +65,22 @@ public final class SendFightStateToSpectator implements Listener<StartWatchFight
         spectator.send(new BeginFight());
         spectator.send(new FighterTurnOrder(fight.turnList()));
         spectator.send(new TurnMiddle(fighters));
+
         fight.turnList().current().map(StartTurn::new).ifPresent(spectator::send);
+        fighters.forEach(fighter -> sendBuffs(fighter.buffs()));
     }
 
     @Override
     public Class<StartWatchFight> event() {
         return StartWatchFight.class;
+    }
+
+    /**
+     * Send all buffs of a fighter to the spectator
+     */
+    private void sendBuffs(Buffs buffs) {
+        for (Buff buff : buffs) {
+            spectator.send(new AddBuff(buff));
+        }
     }
 }
