@@ -22,10 +22,15 @@ package fr.quatrevieux.araknemu.game.listener.fight.spectator;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
 import fr.quatrevieux.araknemu.game.fight.spectator.event.StartWatchFight;
+import fr.quatrevieux.araknemu.game.spell.Spell;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
 import fr.quatrevieux.araknemu.network.game.out.fight.BeginFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
@@ -33,6 +38,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.sql.SQLException;
 import java.util.stream.Collectors;
@@ -110,6 +116,44 @@ class SendFightStateToSpectatorTest extends FightBaseCase {
             new FighterTurnOrder(fight.turnList()),
             new TurnMiddle(fight.fighters()),
             new StartTurn(fight.turnList().current().get())
+        );
+    }
+
+    @Test
+    void onStartWatchFightWithBuffs() throws SQLException {
+        SendFightStateToSpectator listener = new SendFightStateToSpectator(new Spectator(gamePlayer(), fight));
+
+        fight.nextState();
+        fight.turnList().start();
+
+        SpellEffect effect1 = Mockito.mock(SpellEffect.class);
+        Mockito.when(effect1.effect()).thenReturn(15);
+        Mockito.when(effect1.min()).thenReturn(3);
+        Mockito.when(effect1.duration()).thenReturn(5);
+
+        SpellEffect effect2 = Mockito.mock(SpellEffect.class);
+        Mockito.when(effect2.effect()).thenReturn(8);
+        Mockito.when(effect2.min()).thenReturn(80);
+        Mockito.when(effect2.duration()).thenReturn(10);
+
+        Buff buff1 = new Buff(effect1, Mockito.mock(Spell.class), fight.fighters().get(0), fight.fighters().get(0), Mockito.mock(BuffHook.class));
+        Buff buff2 = new Buff(effect2, Mockito.mock(Spell.class), fight.fighters().get(0), fight.fighters().get(0), Mockito.mock(BuffHook.class));
+
+        fight.fighters().get(0).buffs().add(buff1);
+        fight.fighters().get(0).buffs().add(buff2);
+        requestStack.clear();
+
+        listener.on(new StartWatchFight());
+
+        requestStack.assertAll(
+            new fr.quatrevieux.araknemu.network.game.out.fight.JoinFightAsSpectator(fight),
+            new AddSprites(fight.fighters().stream().map(Fighter::sprite).collect(Collectors.toList())),
+            new BeginFight(),
+            new FighterTurnOrder(fight.turnList()),
+            new TurnMiddle(fight.fighters()),
+            new StartTurn(fight.turnList().current().get()),
+            new AddBuff(buff1),
+            new AddBuff(buff2)
         );
     }
 }
