@@ -256,15 +256,23 @@ class MonsterFighterTest extends FightBaseCase {
         Fight fight = createFight();
         fighter.joinFight(fight, fight.map().get(123));
 
-        FightTurn turn = new FightTurn(fighter, fight, Duration.ZERO);
+        FightTurn turn = new FightTurn(fighter, fight, Duration.ofSeconds(10));
         turn.start();
 
+        AtomicReference<FightTurn> ref = new AtomicReference<>();
         fighter.play(turn);
 
         assertSame(turn, fighter.turn());
 
+        fighter.perform(ref::set);
+        assertSame(turn, ref.get());
+
+        ref.set(null);
         fighter.stop();
 
+        fighter.perform(ref::set);
+
+        assertNull(ref.get());
         assertThrows(FightException.class, () -> fighter.turn());
     }
 

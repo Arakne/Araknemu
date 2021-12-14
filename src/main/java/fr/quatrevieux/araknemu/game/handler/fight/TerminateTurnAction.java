@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.handler.fight;
 
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
 
@@ -29,7 +30,7 @@ import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge
 public final class TerminateTurnAction implements PacketHandler<GameSession, GameActionAcknowledge> {
     @Override
     public void handle(GameSession session, GameActionAcknowledge packet) {
-        session.fighter().turn().terminate();
+        session.fighter().perform(FightTurn::terminate);
     }
 
     @Override

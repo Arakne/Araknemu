@@ -33,11 +33,13 @@ import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TerminateTurnActionTest extends FightBaseCase {
     private Fight fight;
@@ -89,5 +91,12 @@ class TerminateTurnActionTest extends FightBaseCase {
         );
         assertEquals(198, fighter.cell().id());
         assertEquals(0, turn.points().movementPoints());
+    }
+
+    @Test
+    void notActiveTurnShouldNotNothing() {
+        requestStack.clear();
+        handler.handle(session, new GameActionAcknowledge(0));
+        requestStack.assertEmpty();
     }
 }
