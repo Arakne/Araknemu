@@ -53,7 +53,7 @@ public class SpellTemplateLevelTransformer implements Transformer<SpellTemplate.
     public static final int EFFECT_AREAS = 15;
     public static final int REQUIRED_STATES = 16;
     public static final int FORBIDDEN_STATES = 17;
-    public static final int MIN_PLAYE_LEVEL = 18;
+    public static final int MIN_PLAYER_LEVEL = 18;
     public static final int ENDS_TURN_ON_FAILURE = 19;
 
     private final Transformer<EffectArea> areaTransformer;
@@ -95,7 +95,7 @@ public class SpellTemplateLevelTransformer implements Transformer<SpellTemplate.
                     areas(parts[EFFECT_AREAS]),
                     states(parts[REQUIRED_STATES]),
                     states(parts[FORBIDDEN_STATES]),
-                    integer(parts[MIN_PLAYE_LEVEL]),
+                    integer(parts[MIN_PLAYER_LEVEL]),
                     bool(parts[ENDS_TURN_ON_FAILURE])
                 )
             );
