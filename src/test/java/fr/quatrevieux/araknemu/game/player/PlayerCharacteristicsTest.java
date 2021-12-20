@@ -31,24 +31,25 @@ import fr.quatrevieux.araknemu.game.player.characteristic.ComputedCharacteristic
 import fr.quatrevieux.araknemu.game.player.characteristic.MutableComputedCharacteristics;
 import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsChanged;
 import fr.quatrevieux.araknemu.game.item.ItemService;
-import fr.quatrevieux.araknemu.game.player.characteristic.BaseCharacteristics;
+import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.player.characteristic.PlayerCharacteristics;
 import fr.quatrevieux.araknemu.game.player.characteristic.SpecialEffects;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.BeltSlot;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.BootsSlot;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
-import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PlayerCharacteristicsTest extends GameBaseCase {
     private PlayerCharacteristics characteristics;
@@ -189,7 +190,7 @@ class PlayerCharacteristicsTest extends GameBaseCase {
         AtomicReference<CharacteristicsChanged> ref = new AtomicReference<>();
         dispatcher.add(CharacteristicsChanged.class, ref::set);
 
-        assertThrows(IllegalArgumentException.class, () -> characteristics.boostCharacteristic(Characteristic.STRENGTH));
+        assertThrows(IllegalStateException.class, () -> characteristics.boostCharacteristic(Characteristic.STRENGTH));
 
         assertNull(ref.get());
         assertEquals(50, characteristics.base().get(Characteristic.STRENGTH));

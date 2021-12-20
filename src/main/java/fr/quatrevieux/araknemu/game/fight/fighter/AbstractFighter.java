@@ -31,6 +31,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Base class for implements a fighter
@@ -133,6 +134,15 @@ public abstract class AbstractFighter implements Fighter {
         }
 
         return turn;
+    }
+
+    @Override
+    public final void perform(Consumer<FightTurn> action) {
+        final FightTurn turn = this.turn;
+
+        if (turn != null) {
+            action.accept(turn);
+        }
     }
 
     @Override

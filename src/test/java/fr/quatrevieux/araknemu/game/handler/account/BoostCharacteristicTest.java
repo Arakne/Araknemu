@@ -20,12 +20,14 @@
 package fr.quatrevieux.araknemu.game.handler.account;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.network.game.in.account.AskBoost;
 import fr.quatrevieux.araknemu.network.game.out.account.Stats;
+import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import fr.quatrevieux.araknemu.network.game.out.object.InventoryWeight;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,12 +69,11 @@ class BoostCharacteristicTest extends FightBaseCase {
     }
 
     @Test
-    void handleError() throws SQLException, ContainerException, NoSuchFieldException, IllegalAccessException {
+    void handleError() throws Exception {
         this.<Player>readField(gamePlayer(), "entity").setBoostPoints(0);
+        requestStack.clear();
 
-        assertThrows(IllegalArgumentException.class, () -> handler.handle(session, new AskBoost(Characteristic.INTELLIGENCE)));
-
-        requestStack.assertEmpty();
+        assertThrows(ErrorPacket.class, () -> handler.handle(session, new AskBoost(Characteristic.INTELLIGENCE)));
     }
 
     @Test

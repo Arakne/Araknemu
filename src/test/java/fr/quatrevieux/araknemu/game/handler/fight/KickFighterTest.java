@@ -33,6 +33,7 @@ import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 import fr.quatrevieux.araknemu.network.game.out.fight.CancelFight;
 import fr.quatrevieux.araknemu.network.game.out.game.RemoveSprite;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -45,7 +46,7 @@ class KickFighterTest extends FightBaseCase {
         assertThrows(CloseImmediately.class, () -> handlePacket(new KickFighterRequest(12)));
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void notInPlacementState() throws Exception {
         Fight fight = createFight();
         Fighter teammate = makePlayerFighter(makeSimpleGamePlayer(10));
@@ -60,7 +61,7 @@ class KickFighterTest extends FightBaseCase {
         requestStack.assertLast(Error.cantDoDuringFight());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void notTeammate() throws Exception {
         Fight fight = createFight();
         Fighter enemy = makePlayerFighter(makeSimpleGamePlayer(10));
@@ -73,7 +74,7 @@ class KickFighterTest extends FightBaseCase {
         requestStack.assertLast(new Noop());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void fighterNotFound() throws Exception {
         Fight fight = createFight();
 
@@ -83,7 +84,7 @@ class KickFighterTest extends FightBaseCase {
         requestStack.assertLast(new Noop());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void notLeader() throws Exception {
         Fight fight = createSimpleFight(container.get(ExplorationMapService.class).load(10340));
         Fighter me = makePlayerFighter(gamePlayer());
@@ -97,7 +98,7 @@ class KickFighterTest extends FightBaseCase {
         assertTrue(fight.fighters().contains(me));
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void success() throws Exception {
         Fight fight = createFight();
         Fighter teammate = makePlayerFighter(makeSimpleGamePlayer(10));

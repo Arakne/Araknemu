@@ -32,7 +32,7 @@
 
     <groupId>fr.quatrevieux.araknemu</groupId>
     <artifactId>araknemu</artifactId>
-    <version>0.9-alpha</version>
+    <version>0.9.1-alpha</version>
     <dependencies>
         <dependency>
             <groupId>io.netty</groupId>
@@ -57,7 +57,7 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>2.16.0</version>
+            <version>2.17.0</version>
         </dependency>
         <dependency>
             <groupId>org.ini4j</groupId>

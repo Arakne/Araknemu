@@ -42,6 +42,7 @@ import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -237,7 +238,7 @@ class StopSessionTest extends FightBaseCase {
         assertFalse(map.creatures().contains(player));
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void saveCorrectLifeWhenSessionClosed() throws Exception{
         ExplorationPlayer explorationPlayer = explorationPlayer();
         explorationPlayer.player().properties().life().set(5);

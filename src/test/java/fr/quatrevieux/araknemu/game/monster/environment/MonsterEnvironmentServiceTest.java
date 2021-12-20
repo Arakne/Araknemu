@@ -144,6 +144,8 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
         monsterGroupPosition.populate(map);
 
+        map.remove(monsterGroupPosition.available().get(0));
+
         explorationPlayer().changeMap(map, 123);
         requestStack.clear();
 
@@ -151,9 +153,32 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
 
         Thread.sleep(50);
 
-        MonsterGroup lastGroup = monsterGroupPosition.available().get(1);
+        MonsterGroup lastGroup = monsterGroupPosition.available().get(0);
 
         requestStack.assertLast(new AddSprites(Collections.singleton(lastGroup.sprite())));
+    }
+
+    @Test
+    void cantRespawnIfAlreadyFull() throws InterruptedException, SQLException {
+        LivingMonsterGroupPosition monsterGroupPosition = new LivingMonsterGroupPosition(
+            container.get(MonsterGroupFactory.class),
+            container.get(MonsterEnvironmentService.class),
+            container.get(FightService.class),
+            container.get(MonsterGroupDataRepository.class).get(3),
+            new RandomCellSelector(), false
+        );
+
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
+        monsterGroupPosition.populate(map);
+
+        explorationPlayer().changeMap(map, 123);
+        requestStack.clear();
+
+        service.respawn(monsterGroupPosition, Duration.ZERO);
+        Thread.sleep(50);
+
+        assertEquals(1, monsterGroupPosition.available().size());
+        requestStack.assertEmpty();
     }
 
     @RepeatedIfExceptionsTest
@@ -168,6 +193,8 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
 
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
         monsterGroupPosition.populate(map);
+        map.remove(monsterGroupPosition.available().get(0));
+
         int size = monsterGroupPosition.available().size();
 
         explorationPlayer().changeMap(map, 123);
@@ -179,7 +206,7 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
         assertEquals(size, monsterGroupPosition.available().size());
         Thread.sleep(20);
 
-        MonsterGroup lastGroup = monsterGroupPosition.available().get(1);
+        MonsterGroup lastGroup = monsterGroupPosition.available().get(0);
 
         requestStack.assertLast(new AddSprites(Collections.singleton(lastGroup.sprite())));
     }
@@ -198,13 +225,15 @@ class MonsterEnvironmentServiceTest extends GameBaseCase {
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
         monsterGroupPosition.populate(map);
 
+        map.remove(monsterGroupPosition.available().get(0));
+
         explorationPlayer().changeMap(map, 123);
         requestStack.clear();
 
         service.respawn(monsterGroupPosition, Duration.ofMillis(50));
         Thread.sleep(40);
 
-        MonsterGroup lastGroup = monsterGroupPosition.available().get(1);
+        MonsterGroup lastGroup = monsterGroupPosition.available().get(0);
 
         requestStack.assertLast(new AddSprites(Collections.singleton(lastGroup.sprite())));
     }
