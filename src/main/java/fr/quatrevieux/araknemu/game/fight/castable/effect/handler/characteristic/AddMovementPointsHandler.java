@@ -19,22 +19,21 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic;
 
-import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.point.AlterPointHook;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
 /**
  * Buff effect for adding movement points
  * If this effect is not used as buff, it will add movement points to the current turn
  */
-public final class AddMovementPointsHandler extends AddCharacteristicHandler {
+public final class AddMovementPointsHandler extends AbstractAlterCharacteristicHandler {
     private final Fight fight;
 
     public AddMovementPointsHandler(Fight fight) {
-        super(fight, Characteristic.MOVEMENT_POINT);
+        super(AlterPointHook.addMovementPoint(fight));
 
         this.fight = fight;
     }
@@ -48,15 +47,5 @@ public final class AddMovementPointsHandler extends AddCharacteristicHandler {
             turn.points().addMovementPoints(mp);
             fight.send(ActionEffect.addMovementPoints(turn.fighter(), mp));
         });
-    }
-
-    @Override
-    public void onBuffStarted(Buff buff) {
-        super.onBuffStarted(buff);
-
-        fight.turnList().current()
-            .filter(turn -> turn.fighter().equals(buff.target()))
-            .ifPresent(turn -> turn.points().addMovementPoints(value(buff)))
-        ;
     }
 }

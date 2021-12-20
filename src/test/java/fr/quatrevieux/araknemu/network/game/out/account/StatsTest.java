@@ -20,7 +20,11 @@
 package fr.quatrevieux.araknemu.network.game.out.account;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
+import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
+import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.ItemService;
@@ -28,6 +32,7 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -117,6 +122,35 @@ class StatsTest extends GameBaseCase {
         assertEquals(
             "As5481459,5350000,5860000|15225|0|0||295,295|10000,10000|273|100|6,0,0,0|3,0,0,0|50,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|150,0,0,0|0,0,0,0|1,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|",
             new Stats(fighter.properties()).toString()
+        );
+    }
+
+    @Test
+    void generateWithPointResistance() throws Exception {
+        dataSet.pushRaces();
+        dataSet.pushItemTemplates();
+        dataSet.pushItemSets();
+
+        dataSet
+            .pushItemTemplate(new ItemTemplate(10001, 1, "test point resistance", 1, Arrays.asList(
+                new ItemTemplateEffectEntry(Effect.ADD_WISDOM, 40, 0, 0, ""),
+                new ItemTemplateEffectEntry(Effect.ADD_DODGE_AP, 10, 0, 0, "")
+            ), 0, "", 0, "", 0
+            ))
+        ;
+
+        GamePlayer player = makeOtherPlayer(10);
+
+        player.properties().characteristics().base().set(Characteristic.WISDOM, 12);
+
+        player.inventory().add(container.get(ItemService.class).create(10001, true), 1, 0);
+        player.properties().characteristics().rebuildSpecialEffects();
+        player.properties().characteristics().rebuildStuffStats();
+        player.properties().life().rebuild();
+
+        assertEquals(
+            "As0,19200,25200|0|0|0||95,95|10000,10000|23|100|6,0,0,0|3,0,0,0|0,0,0,0|0,0,0,0|12,40,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|1,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|3,20,0,0|3,10,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|0,0,0,0|",
+            new Stats(player.properties()).toString()
         );
     }
 }

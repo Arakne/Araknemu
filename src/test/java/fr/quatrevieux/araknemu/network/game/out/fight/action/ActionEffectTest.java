@@ -252,4 +252,26 @@ class ActionEffectTest {
 
         assertEquals("GA;107;456;456,15", ActionEffect.reflectedDamage(fighter, 15).toString());
     }
+
+    @Test
+    void dodgeActionPointLost() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Fighter target = Mockito.mock(Fighter.class);
+
+        Mockito.when(caster.id()).thenReturn(456);
+        Mockito.when(target.id()).thenReturn(123);
+
+        assertEquals("GA;308;456;123,2", ActionEffect.dodgeActionPointLost(caster, target, 2).toString());
+    }
+
+    @Test
+    void dodgeMovementPointLost() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Fighter target = Mockito.mock(Fighter.class);
+
+        Mockito.when(caster.id()).thenReturn(456);
+        Mockito.when(target.id()).thenReturn(123);
+
+        assertEquals("GA;309;456;123,2", ActionEffect.dodgeMovementPointLost(caster, target, 2).toString());
+    }
 }

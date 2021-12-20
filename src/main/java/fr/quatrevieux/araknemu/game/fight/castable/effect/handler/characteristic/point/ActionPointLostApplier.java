@@ -14,19 +14,26 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic;
+package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.point;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
 /**
- * Buff effect for removing characteristic points
+ * Apply dodgeable action point removal effect
  */
-public class RemoveCharacteristicHandler extends AbstractAlterCharacteristicHandler {
-    public RemoveCharacteristicHandler(Fight fight, Characteristic characteristic) {
-        super(AlterCharacteristicHook.remove(fight, characteristic));
+public final class ActionPointLostApplier extends AbstractPointLostApplier {
+    public ActionPointLostApplier(Fight fight) {
+        super(fight, AlterPointHook.removeActionPoint(fight), Characteristic.ACTION_POINT, Characteristic.RESISTANCE_ACTION_POINT);
+    }
+
+    @Override
+    protected ActionEffect dodgeMessage(PassiveFighter caster, PassiveFighter target, int value) {
+        return ActionEffect.dodgeActionPointLost(caster, target, value);
     }
 }

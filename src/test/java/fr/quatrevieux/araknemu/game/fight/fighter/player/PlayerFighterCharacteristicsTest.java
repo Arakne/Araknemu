@@ -91,4 +91,9 @@ class PlayerFighterCharacteristicsTest extends FightBaseCase {
         assertEquals(Characteristic.STRENGTH, ref.get().characteristic());
         assertEquals(-10, ref.get().value());
     }
+
+    @Test
+    void initial() {
+        assertSame(baseCharacteristics, fighterCharacteristics.initial());
+    }
 }

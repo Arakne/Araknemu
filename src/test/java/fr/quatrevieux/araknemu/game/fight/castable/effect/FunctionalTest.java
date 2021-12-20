@@ -649,6 +649,42 @@ public class FunctionalTest extends FightBaseCase {
         requestStack.assertOne(ActionEffect.teleport(fighters.get(0), fighters.get(0), fight.map().get(271)));
     }
 
+    @Test
+    void actionPointLost() {
+        fighter2.move(fight.map().get(211));
+        fighter1.characteristics().alter(Characteristic.WISDOM, 100);
+
+        castNormal(81, fighter2.cell()); // Ralentissement
+
+        Buff buff = fighter2.buffs().stream().filter(b -> b.effect().effect() == 101).findFirst().get();
+        assertEquals(4, fighter2.characteristics().get(Characteristic.ACTION_POINT));
+        requestStack.assertOne(ActionEffect.buff(buff, -2));
+
+        fighter1.turn().stop();
+        assertEquals(4, fighter2.turn().points().actionPoints());
+
+        fighter2.turn().stop();
+        assertEquals(6, fighter2.characteristics().get(Characteristic.ACTION_POINT));
+    }
+
+    @Test
+    void movementPointLost() {
+        fighter2.move(fight.map().get(211));
+        fighter1.characteristics().alter(Characteristic.WISDOM, 100);
+
+        castNormal(50, fighter2.cell()); // Maladresse
+
+        Buff buff = fighter2.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst().get();
+        assertEquals(1, fighter2.characteristics().get(Characteristic.MOVEMENT_POINT));
+        requestStack.assertOne(ActionEffect.buff(buff, -2));
+
+        fighter1.turn().stop();
+        assertEquals(1, fighter2.turn().points().movementPoints());
+
+        fighter2.turn().stop();
+        assertEquals(3, fighter2.characteristics().get(Characteristic.MOVEMENT_POINT));
+    }
+
     private void passTurns(int number) {
         for (; number > 0; --number) {
             fighter1.turn().stop();

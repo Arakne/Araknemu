@@ -244,4 +244,26 @@ public final class ActionEffect {
     public static ActionEffect reflectedDamage(PassiveFighter castTarget, int value) {
         return new ActionEffect(107, castTarget, castTarget.id(), value);
     }
+
+    /**
+     * The target has dodged the lost of action points
+     *
+     * @param caster The spell caster
+     * @param target The target (which has dodged point lost)
+     * @param value The dodged point list value
+     */
+    public static ActionEffect dodgeActionPointLost(PassiveFighter caster, PassiveFighter target, int value) {
+        return new ActionEffect(308, caster, target.id(), value);
+    }
+
+    /**
+     * The target has dodged the lost of movement points
+     *
+     * @param caster The spell caster
+     * @param target The target (which has dodged point lost)
+     * @param value The dodged point list value
+     */
+    public static ActionEffect dodgeMovementPointLost(PassiveFighter caster, PassiveFighter target, int value) {
+        return new ActionEffect(309, caster, target.id(), value);
+    }
 }

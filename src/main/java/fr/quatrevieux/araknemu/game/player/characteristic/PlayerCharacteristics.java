@@ -52,7 +52,7 @@ public final class PlayerCharacteristics implements CharacterCharacteristics {
         this.player = player;
         this.entity = entity;
         this.race = player.race();
-        this.base = new BaseCharacteristics(dispatcher, race, entity);
+        this.base = new MutableComputedCharacteristics(new BaseCharacteristics(dispatcher, race, entity));
 
         this.stuff = computeStuffStats();
     }
@@ -74,11 +74,13 @@ public final class PlayerCharacteristics implements CharacterCharacteristics {
 
     @Override
     public Characteristics feats() {
+        // @todo #218
         return new DefaultCharacteristics();
     }
 
     @Override
     public Characteristics boost() {
+        // @todo #218
         return new DefaultCharacteristics();
     }
 
@@ -182,6 +184,6 @@ public final class PlayerCharacteristics implements CharacterCharacteristics {
 
         player.inventory().itemSets().apply(characteristics);
 
-        return characteristics;
+        return new ComputedCharacteristics<>(characteristics);
     }
 }

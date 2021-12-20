@@ -14,19 +14,29 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2021 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic;
+package fr.quatrevieux.araknemu.game.player.characteristic;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
-import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 
 /**
- * Buff effect for removing characteristic points
+ * Apply computed characteristics over a {@link MutableCharacteristics}
  */
-public class RemoveCharacteristicHandler extends AbstractAlterCharacteristicHandler {
-    public RemoveCharacteristicHandler(Fight fight, Characteristic characteristic) {
-        super(AlterCharacteristicHook.remove(fight, characteristic));
+public final class MutableComputedCharacteristics extends ComputedCharacteristics<MutableCharacteristics> implements MutableCharacteristics {
+    public MutableComputedCharacteristics(MutableCharacteristics inner) {
+        super(inner);
+    }
+
+    @Override
+    public void set(Characteristic characteristic, int value) {
+        inner.set(characteristic, value);
+    }
+
+    @Override
+    public void add(Characteristic characteristic, int value) {
+        inner.add(characteristic, value);
     }
 }

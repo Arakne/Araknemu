@@ -43,4 +43,10 @@ public interface FighterCharacteristics extends Characteristics {
      * @param value The value of the effect. Positive valuer for add the characteristic, or negative to remove
      */
     public void alter(Characteristic characteristic, int value);
+
+    /**
+     * Get initial characteristic of the fighter
+     * Those characteristics ignore fight buffs, and corresponds to characteristics of the fighter before start the fight
+     */
+    public Characteristics initial();
 }

@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.fighter.player;
 
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
@@ -62,6 +63,16 @@ class PlayerFighterSpriteTest extends FightBaseCase {
     void generate() {
         assertEquals(
             "222;1;0;1;Bob;1;10^100x100;0;50;0,0,0,0;7b;1c8;315;,,,,;295;6;3;0;0;0;0;0;0;0;0;;",
+            sprite.toString()
+        );
+    }
+
+    @Test
+    void generateWithPointsResistance() {
+        fighter.player().properties().characteristics().base().set(Characteristic.WISDOM, 100);
+
+        assertEquals(
+            "222;1;0;1;Bob;1;10^100x100;0;50;0,0,0,0;7b;1c8;315;,,,,;295;6;3;0;0;0;0;0;25;25;0;;",
             sprite.toString()
         );
     }
