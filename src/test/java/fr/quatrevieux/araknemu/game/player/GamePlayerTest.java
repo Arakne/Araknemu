@@ -47,6 +47,7 @@ import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
+import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -229,7 +230,7 @@ class GamePlayerTest extends GameBaseCase {
         assertNull(session.player());
     }
 
-    @Test
+    @RepeatedIfExceptionsTest
     void save() throws Exception {
         player.setPosition(
             new Position(7894, 12)

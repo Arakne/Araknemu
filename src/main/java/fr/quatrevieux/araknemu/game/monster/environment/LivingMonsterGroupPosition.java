@@ -83,6 +83,18 @@ public final class LivingMonsterGroupPosition {
     }
 
     /**
+     * Respawn a group on the map
+     *
+     * Unlike {@link LivingMonsterGroupPosition#spawn()} the maximum number of groups is checked,
+     * and this method will do nothing if the map is already full
+     */
+    public void respawn() {
+        if (groupStream().count() < data.maxCount()) {
+            map.add(factory.create(data, this));
+        }
+    }
+
+    /**
      * Get list of available monster groups on the map
      */
     public List<MonsterGroup> available() {

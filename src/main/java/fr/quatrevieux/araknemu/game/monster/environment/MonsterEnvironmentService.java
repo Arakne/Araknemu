@@ -161,7 +161,7 @@ public final class MonsterEnvironmentService implements EventsSubscriber, Preloa
      */
     void respawn(LivingMonsterGroupPosition position, Duration delay) {
         activityService.execute(
-            new SimpleTask(logger -> position.spawn())
+            new SimpleTask(logger -> position.respawn())
                 .setDelay(delay.dividedBy(configuration.monsterRespawnSpeedFactor()))
                 .setMaxTries(2)
                 .setName("Respawn")
