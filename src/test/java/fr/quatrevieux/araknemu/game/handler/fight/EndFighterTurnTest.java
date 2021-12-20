@@ -49,7 +49,9 @@ class EndFighterTurnTest extends FightBaseCase {
 
     @Test
     void notActiveTurn() {
-        assertThrows(FightException.class, () -> handler.handle(session, new TurnEnd()));
+        requestStack.clear();
+        handler.handle(session, new TurnEnd());
+        requestStack.assertEmpty();
     }
 
     @Test

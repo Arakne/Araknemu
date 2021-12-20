@@ -91,6 +91,8 @@ public final class PlayerCharacteristics implements CharacterCharacteristics {
 
     /**
      * Boost a characteristic
+     *
+     * @throws IllegalStateException When the character has no enough points for boost the required characteristic
      */
     public void boostCharacteristic(Characteristic characteristic) {
         final BoostStatsData.Interval interval = race.boost(
@@ -101,7 +103,7 @@ public final class PlayerCharacteristics implements CharacterCharacteristics {
         final int points = entity.boostPoints() - interval.cost();
 
         if (points < 0) {
-            throw new IllegalArgumentException("Not enough points for boost stats");
+            throw new IllegalStateException("Not enough points for boost stats");
         }
 
         entity.setBoostPoints(points);

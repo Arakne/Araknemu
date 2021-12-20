@@ -41,6 +41,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -173,6 +174,9 @@ class AlternateTeamFighterOrderTest extends TestCase {
         public FightTurn turn() {
             return null;
         }
+
+        @Override
+        public void perform(Consumer<FightTurn> action) {}
 
         @Override
         public boolean dead() {

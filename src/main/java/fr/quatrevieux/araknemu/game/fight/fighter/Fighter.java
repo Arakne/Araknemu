@@ -31,6 +31,8 @@ import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
 
+import java.util.function.Consumer;
+
 /**
  * Base fighter
  */
@@ -56,8 +58,20 @@ public interface Fighter extends Creature<FightCell>, Dispatcher, ActiveFighter 
      * Get the current fighter turn
      *
      * @throws FightException If it's not the turn of the current fighter
+     *
+     * @see Fighter#perform(Consumer) For perform action on fighter in a safe way (no exception)
      */
     public FightTurn turn();
+
+    /**
+     * Perform an action on the current active turn
+     * The action will take as parameter the current turn
+     *
+     * If it's not the turn of the fighter, this method will not call the action
+     *
+     * @param action Action to perform
+     */
+    public void perform(Consumer<FightTurn> action);
 
     /**
      * Attach an attribute to the fighter
