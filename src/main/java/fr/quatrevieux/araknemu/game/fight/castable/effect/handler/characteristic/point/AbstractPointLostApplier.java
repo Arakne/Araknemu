@@ -41,18 +41,22 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
  * See: https://forums.jeuxonline.info/sujet/801243/les-formules-de-calcul-dans-dofus#titre_7
  */
 public abstract class AbstractPointLostApplier {
+    public static final int USE_SPELL_EFFECT = 0;
+
     private final Fight fight;
     private final AlterPointHook hook;
     private final Characteristic characteristic;
     private final Characteristic resistance;
+    private final int removalPointEffect;
 
     private final RandomUtil random = new RandomUtil();
 
-    protected AbstractPointLostApplier(Fight fight, AlterPointHook hook, Characteristic characteristic, Characteristic resistance) {
+    protected AbstractPointLostApplier(Fight fight, AlterPointHook hook, Characteristic characteristic, Characteristic resistance, int removalPointEffect) {
         this.fight = fight;
         this.hook = hook;
         this.characteristic = characteristic;
         this.resistance = resistance;
+        this.removalPointEffect = removalPointEffect;
     }
 
     /**
@@ -79,7 +83,7 @@ public abstract class AbstractPointLostApplier {
         }
 
         if (lost > 0) {
-            target.buffs().add(new Buff(new BuffEffect(effect, lost), cast.action(), caster, target, hook));
+            target.buffs().add(new Buff(buffEffect(effect, lost), cast.action(), caster, target, hook));
         }
 
         return lost;
@@ -89,6 +93,16 @@ public abstract class AbstractPointLostApplier {
      * The packet to send when the target dodge the point lost
      */
     protected abstract ActionEffect dodgeMessage(PassiveFighter caster, PassiveFighter target, int value);
+
+    /**
+     * Create the buff effect for the given point lost
+     */
+    private SpellEffect buffEffect(SpellEffect baseEffect, int pointLost) {
+        return removalPointEffect == USE_SPELL_EFFECT
+            ? BuffEffect.fixed(baseEffect, pointLost)
+            : BuffEffect.withCustomEffect(baseEffect, removalPointEffect, pointLost)
+        ;
+    }
 
     /**
      * Compute how many points will be loose

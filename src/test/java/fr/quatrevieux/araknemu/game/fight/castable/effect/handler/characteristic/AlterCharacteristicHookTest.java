@@ -67,7 +67,7 @@ class AlterCharacteristicHookTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(5);
         Mockito.when(effect.duration()).thenReturn(1);
 
-        Buff buff = new Buff(new BuffEffect(effect, 50), spell, caster, target, hook);
+        Buff buff = new Buff(BuffEffect.fixed(effect, 50), spell, caster, target, hook);
         target.buffs().add(buff);
 
         assertEquals(50, target.characteristics().get(Characteristic.STRENGTH));
@@ -89,7 +89,7 @@ class AlterCharacteristicHookTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(5);
         Mockito.when(effect.duration()).thenReturn(1);
 
-        Buff buff = new Buff(new BuffEffect(effect, 50), spell, caster, target, hook);
+        Buff buff = new Buff(BuffEffect.fixed(effect, 50), spell, caster, target, hook);
         target.buffs().add(buff);
 
         assertEquals(-50, target.characteristics().get(Characteristic.STRENGTH));

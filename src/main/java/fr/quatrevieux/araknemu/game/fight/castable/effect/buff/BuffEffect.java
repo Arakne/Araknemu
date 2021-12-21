@@ -29,49 +29,33 @@ import fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget;
 public final class BuffEffect implements SpellEffect {
     private final SpellEffect baseEffect;
 
-    private final int min;
-    private final int max;
-    private final int special;
-    private final String text;
+    private final int effect;
+    private final int value;
 
-    public BuffEffect(SpellEffect baseEffect, int min) {
-        this(baseEffect, min, 0, 0);
-    }
-
-    public BuffEffect(SpellEffect baseEffect, int min, int max) {
-        this(baseEffect, min, max, 0);
-    }
-
-    public BuffEffect(SpellEffect baseEffect, int min, int max, int special) {
-        this(baseEffect, min, max, special, null);
-    }
-
-    public BuffEffect(SpellEffect baseEffect, int min, int max, int special, String text) {
+    private BuffEffect(SpellEffect baseEffect, int effect, int value) {
         this.baseEffect = baseEffect;
-        this.min = min;
-        this.max = max;
-        this.special = special;
-        this.text = text;
+        this.effect = effect;
+        this.value = value;
     }
 
     @Override
     public int effect() {
-        return baseEffect.effect();
+        return effect;
     }
 
     @Override
     public int min() {
-        return min;
+        return value;
     }
 
     @Override
     public int max() {
-        return max;
+        return 0;
     }
 
     @Override
     public int special() {
-        return special;
+        return 0;
     }
 
     @Override
@@ -86,7 +70,7 @@ public final class BuffEffect implements SpellEffect {
 
     @Override
     public String text() {
-        return text;
+        return null;
     }
 
     @Override
@@ -97,5 +81,26 @@ public final class BuffEffect implements SpellEffect {
     @Override
     public EffectTarget target() {
         return baseEffect.target();
+    }
+
+    /**
+     * Set a fixed effect value
+     *
+     * @param baseEffect The spell effect
+     * @param value The applied value
+     */
+    public static BuffEffect fixed(SpellEffect baseEffect, int value) {
+        return new BuffEffect(baseEffect, baseEffect.effect(), value);
+    }
+
+    /**
+     * Define an effect with custom effect id and a fixed value
+     *
+     * @param baseEffect The spell effect
+     * @param effect The overridden effect id
+     * @param value The applied value
+     */
+    public static BuffEffect withCustomEffect(SpellEffect baseEffect, int effect, int value) {
+        return new BuffEffect(baseEffect, effect, value);
     }
 }

@@ -68,6 +68,6 @@ public abstract class AbstractAlterCharacteristicHandler implements EffectHandle
     private SpellEffect computeBuffEffect(CastScope cast, SpellEffect effect) {
         final EffectValue value = new EffectValue(effect);
 
-        return new BuffEffect(effect, value.value());
+        return BuffEffect.fixed(effect, value.value());
     }
 }

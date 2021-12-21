@@ -67,7 +67,7 @@ class AlterPointHookTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(5);
         Mockito.when(effect.duration()).thenReturn(1);
 
-        Buff buff = new Buff(new BuffEffect(effect, 2), spell, caster, caster, hook);
+        Buff buff = new Buff(BuffEffect.fixed(effect, 2), spell, caster, caster, hook);
         caster.buffs().add(buff);
 
         assertEquals(8, caster.characteristics().get(Characteristic.ACTION_POINT));
@@ -91,7 +91,7 @@ class AlterPointHookTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(5);
         Mockito.when(effect.duration()).thenReturn(1);
 
-        Buff buff = new Buff(new BuffEffect(effect, 2), spell, caster, caster, hook);
+        Buff buff = new Buff(BuffEffect.fixed(effect, 2), spell, caster, caster, hook);
         caster.buffs().add(buff);
 
         assertEquals(4, caster.characteristics().get(Characteristic.ACTION_POINT));
@@ -115,7 +115,7 @@ class AlterPointHookTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(5);
         Mockito.when(effect.duration()).thenReturn(1);
 
-        Buff buff = new Buff(new BuffEffect(effect, 2), spell, caster, caster, hook);
+        Buff buff = new Buff(BuffEffect.fixed(effect, 2), spell, caster, caster, hook);
         caster.buffs().add(buff);
 
         assertEquals(5, caster.characteristics().get(Characteristic.MOVEMENT_POINT));
@@ -139,7 +139,7 @@ class AlterPointHookTest extends FightBaseCase {
         Mockito.when(effect.min()).thenReturn(5);
         Mockito.when(effect.duration()).thenReturn(1);
 
-        Buff buff = new Buff(new BuffEffect(effect, 2), spell, caster, caster, hook);
+        Buff buff = new Buff(BuffEffect.fixed(effect, 2), spell, caster, caster, hook);
         caster.buffs().add(buff);
 
         assertEquals(1, caster.characteristics().get(Characteristic.MOVEMENT_POINT));

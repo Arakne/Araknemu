@@ -29,7 +29,21 @@ import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
  */
 public final class ActionPointLostApplier extends AbstractPointLostApplier {
     public ActionPointLostApplier(Fight fight) {
-        super(fight, AlterPointHook.removeActionPoint(fight), Characteristic.ACTION_POINT, Characteristic.RESISTANCE_ACTION_POINT);
+        this(fight, USE_SPELL_EFFECT);
+    }
+
+    /**
+     * @param fight The fight where the effect should be applied
+     * @param removalPointEffect Overrides the spell effect used by the buff
+     */
+    public ActionPointLostApplier(Fight fight, int removalPointEffect) {
+        super(
+            fight,
+            AlterPointHook.removeActionPoint(fight),
+            Characteristic.ACTION_POINT,
+            Characteristic.RESISTANCE_ACTION_POINT,
+            removalPointEffect
+        );
     }
 
     @Override

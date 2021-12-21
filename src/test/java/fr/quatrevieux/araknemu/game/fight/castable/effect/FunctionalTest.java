@@ -685,6 +685,57 @@ public class FunctionalTest extends FightBaseCase {
         assertEquals(3, fighter2.characteristics().get(Characteristic.MOVEMENT_POINT));
     }
 
+    @Test
+    void stealActionPoints() {
+        fighter2.move(fight.map().get(241));
+        fighter1.characteristics().alter(Characteristic.WISDOM, 100);
+
+        castNormal(98, fighter2.cell()); // Vol du Temps
+
+        Buff buffT = fighter2.buffs().stream().filter(b -> b.effect().effect() == 101).findFirst().get();
+        Buff buffC = fighter1.buffs().stream().filter(b -> b.effect().effect() == 111).findFirst().get();
+
+        assertEquals(8, fighter1.characteristics().get(Characteristic.ACTION_POINT));
+        assertEquals(4, fighter1.turn().points().actionPoints());
+        assertEquals(4, fighter2.characteristics().get(Characteristic.ACTION_POINT));
+
+        requestStack.assertOne(ActionEffect.buff(buffT, -2));
+        requestStack.assertOne(ActionEffect.buff(buffC, 2));
+
+        fighter1.turn().stop();
+        assertEquals(4, fighter2.turn().points().actionPoints());
+
+        fighter2.turn().stop();
+        assertEquals(6, fighter2.characteristics().get(Characteristic.ACTION_POINT));
+        assertEquals(8, fighter1.characteristics().get(Characteristic.ACTION_POINT));
+
+        fighter1.turn().stop();
+        assertEquals(6, fighter1.characteristics().get(Characteristic.ACTION_POINT));
+        assertEquals(6, fighter2.characteristics().get(Characteristic.ACTION_POINT));
+    }
+
+    @Test
+    void stealMovementPoints() {
+        fighter2.move(fight.map().get(241));
+        fighter1.characteristics().alter(Characteristic.WISDOM, 100);
+
+        castNormal(170, fighter2.cell()); // Flèche Immobilisation
+
+        Buff buffT = fighter2.buffs().stream().filter(b -> b.effect().effect() == 127).findFirst().get();
+
+        assertEquals(4, fighter1.turn().points().movementPoints());
+        assertEquals(2, fighter2.characteristics().get(Characteristic.MOVEMENT_POINT));
+
+        requestStack.assertOne(ActionEffect.buff(buffT, -1));
+        requestStack.assertOne(ActionEffect.addMovementPoints(fighter1, 1));
+
+        fighter1.turn().stop();
+        assertEquals(2, fighter2.turn().points().movementPoints());
+
+        fighter2.turn().stop();
+        assertEquals(3, fighter2.characteristics().get(Characteristic.MOVEMENT_POINT));
+    }
+
     private void passTurns(int number) {
         for (; number > 0; --number) {
             fighter1.turn().stop();
