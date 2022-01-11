@@ -123,4 +123,12 @@ class MonsterFighterCharacteristicsTest extends FightBaseCase {
         assertEquals(Characteristic.STRENGTH, ref.get().characteristic());
         assertEquals(-10, ref.get().value());
     }
+
+    @Test
+    void initial() {
+        assertEquals(90, characteristics.initial().get(Characteristic.STRENGTH));
+
+        characteristics.alter(Characteristic.STRENGTH, 10);
+        assertEquals(90, characteristics.initial().get(Characteristic.STRENGTH));
+    }
 }

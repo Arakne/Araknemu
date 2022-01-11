@@ -92,4 +92,9 @@ public final class PlayerFighterCharacteristics implements FighterCharacteristic
         buffs.add(characteristic, value);
         fighter.dispatch(new FighterCharacteristicChanged(characteristic, value));
     }
+
+    @Override
+    public Characteristics initial() {
+        return baseCharacteristics;
+    }
 }

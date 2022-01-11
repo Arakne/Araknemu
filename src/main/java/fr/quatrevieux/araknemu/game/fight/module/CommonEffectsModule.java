@@ -28,12 +28,16 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.HealOrMu
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.ReduceDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.ReflectDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.SpellReturnHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.point.ActionPointLostHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddActionPointsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddCharacteristicHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddMovementPointsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.RemoveActionPointsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.RemoveCharacteristicHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.RemoveMovementPointsHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.point.MovementPointLostHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.point.StealActionPointHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.point.StealMovementPointHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.StealLifeHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.FixedHealHandler;
@@ -106,6 +110,11 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(78,  new AddMovementPointsHandler(fight));
         handler.register(128, new AddMovementPointsHandler(fight));
         handler.register(169, new RemoveMovementPointsHandler(fight));
+
+        handler.register(77, new StealMovementPointHandler(fight, 127, 128));
+        handler.register(84, new StealActionPointHandler(fight, 101, 111));
+        handler.register(101, new ActionPointLostHandler(fight));
+        handler.register(127, new MovementPointLostHandler(fight));
 
         handler.register(112, new AddCharacteristicHandler(fight, Characteristic.FIXED_DAMAGE));
         handler.register(115, new AddCharacteristicHandler(fight, Characteristic.CRITICAL_BONUS));

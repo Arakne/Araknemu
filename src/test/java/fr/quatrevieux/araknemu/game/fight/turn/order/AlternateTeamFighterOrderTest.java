@@ -36,6 +36,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.arakne.utils.maps.constant.Direction;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -214,6 +215,11 @@ class AlternateTeamFighterOrderTest extends TestCase {
                 @Override
                 public void alter(Characteristic characteristic, int value) {
 
+                }
+
+                @Override
+                public Characteristics initial() {
+                    return null;
                 }
             };
         }
