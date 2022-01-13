@@ -63,13 +63,33 @@ public final class DamageApplier {
     public int apply(ActiveFighter caster, SpellEffect effect, PassiveFighter target) {
         final Damage damage = computeDamage(caster, effect, target);
 
-        target.buffs().onDirectDamage(caster, damage);
+        return applyDirectDamage(caster, damage, target);
+    }
 
-        if (!caster.equals(target)) {
-            damage.reflect(target.characteristics().get(Characteristic.COUNTER_DAMAGE));
-        }
+    /**
+     * Apply a fixed (i.e. precomputed) amount of damage on the target
+     *
+     * Like {@link DamageApplier#apply(ActiveFighter, SpellEffect, PassiveFighter)} :
+     * - resistance are applied
+     * - direct damage buff are called
+     * - returned damage are applied
+     *
+     * @param caster The spell caster
+     * @param value The damage value. Must be positive. Can be 0 for no damage.
+     * @param target The cast target
+     *
+     * @return The applied damage value. Negative for damage, or positive for heal.
+     *
+     * @see DamageApplier#applyFixed(Buff, int) For apply a precomputed damage buff
+     * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamage(ActiveFighter, Damage) The called buff hook
+     */
+    public int applyFixed(ActiveFighter caster, int value, PassiveFighter target) {
+        final Damage damage = new Damage(value, element)
+            .percent(target.characteristics().get(element.percentResistance()))
+            .fixed(target.characteristics().get(element.fixedResistance()))
+        ;
 
-        return applyDamage(caster, damage, target);
+        return applyDirectDamage(caster, damage, target);
     }
 
     /**
@@ -86,9 +106,32 @@ public final class DamageApplier {
         final ActiveFighter caster = buff.caster();
 
         final Damage damage = computeDamage(caster, buff.effect(), target);
-        target.buffs().onBuffDamage(buff, damage);
 
-        return applyDamage(caster, damage, target);
+        return applyBuffDamage(buff, damage, target);
+    }
+
+    /**
+     * Apply a fixed (i.e. precomputed) amount of damage on the target from a buff
+     *
+     * Like {@link DamageApplier#apply(Buff)} :
+     * - resistance are applied
+     * - buff damage buff are called
+     *
+     * @param buff Buff to apply
+     * @param value The damage value. Must be positive. Can be 0 for no damage.
+     *
+     * @return The applied damage value. Negative for damage, or positive for heal.
+     *
+     * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onBuffDamage(Buff, Damage) The called buff hook
+     */
+    public int applyFixed(Buff buff, int value) {
+        final PassiveFighter target = buff.target();
+        final Damage damage = new Damage(value, element)
+            .percent(target.characteristics().get(element.percentResistance()))
+            .fixed(target.characteristics().get(element.fixedResistance()))
+        ;
+
+        return applyBuffDamage(buff, damage, target);
     }
 
     /**
@@ -105,6 +148,36 @@ public final class DamageApplier {
             .percent(target.characteristics().get(element.percentResistance()))
             .fixed(target.characteristics().get(element.fixedResistance()))
         ;
+    }
+
+    /**
+     * Apply damage to the target for direct damage
+     *
+     * This method will call direct damage buff and apply returned damage
+     *
+     * @return The life change value. Negative for damage, positive for heal.
+     */
+    private int applyDirectDamage(ActiveFighter caster, Damage damage, PassiveFighter target) {
+        target.buffs().onDirectDamage(caster, damage);
+
+        if (!caster.equals(target)) {
+            damage.reflect(target.characteristics().get(Characteristic.COUNTER_DAMAGE));
+        }
+
+        return applyDamage(caster, damage, target);
+    }
+
+    /**
+     * Apply damage to the target for buff damage
+     *
+     * This method will call buff damage buff
+     *
+     * @return The life change value. Negative for damage, positive for heal.
+     */
+    private int applyBuffDamage(Buff buff, Damage damage, PassiveFighter target) {
+        target.buffs().onBuffDamage(buff, damage);
+
+        return applyDamage(buff.caster(), damage, target);
     }
 
     /**

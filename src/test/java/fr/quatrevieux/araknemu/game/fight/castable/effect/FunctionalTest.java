@@ -43,6 +43,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -734,6 +735,91 @@ public class FunctionalTest extends FightBaseCase {
 
         fighter2.turn().stop();
         assertEquals(3, fighter2.characteristics().get(Characteristic.MOVEMENT_POINT));
+    }
+
+    @Test
+    void casterFixedDamage() {
+        castNormal(135, fighter2.cell()); // Mot de Sacrifice
+
+        int damage = fighter1.life().max() - fighter1.life().current();
+
+        assertBetween(31, 40, damage);
+        assertTrue(fighter2.life().isFull());
+    }
+
+    @Test
+    void fixedDamage() {
+        castNormal(536, fighter1.cell()); // Banzai
+
+        int damage = fighter1.life().max() - fighter1.life().current();
+
+        assertEquals(5, damage);
+    }
+
+    @Test
+    void fixedStealLife() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(207).charac(Characteristic.LUCK, 100).currentLife(500).maxLife(1000))
+            .addAlly(fb -> fb.cell(221).currentLife(1000).maxLife(1000))
+            .addEnemy(fb -> fb.cell(325))
+        );
+
+        castNormal(450, fighters.get(1).cell()); // Folie sanguinaire
+
+        int damage = fighters.get(1).life().max() - fighters.get(1).life().current();
+
+        assertEquals(300, damage);
+        assertEquals(800, fighters.get(0).life().current());
+    }
+
+    @Test
+    void percentLifeDamage() {
+        castNormal(951, fighter2.cell()); // Rocaille
+
+        int damage = fighter2.life().max() - fighter2.life().current();
+
+        assertEquals(44, damage);
+    }
+
+    @Test
+    void percentLifeLostDamage() {
+        fighter1.life().alter(fighter1, -100);
+        castNormal(1708, fighter2.cell()); // Correction Bwork
+
+        int damage = fighter2.life().max() - fighter2.life().current();
+
+        assertEquals(30, damage);
+    }
+
+    @Test
+    void punishment() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(207).charac(Characteristic.LUCK, 100).currentLife(200).maxLife(500))
+            .addEnemy(fb -> fb.cell(221).currentLife(500).maxLife(500))
+        );
+
+        castNormal(446, fighters.get(1).cell()); // Punition
+
+        int damage = fighters.get(1).life().max() - fighters.get(1).life().current();
+
+        assertEquals(122, damage);
+    }
+
+    private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
+        fight.cancel(true);
+
+        FightBuilder builder = fightBuilder();
+
+        configurator.accept(builder);
+
+        fight = builder.build(true);
+
+        List<Fighter> fighters = fight.fighters();
+
+        fight.state(PlacementState.class).startFight();
+        fight.turnList().start();
+
+        return fighters;
     }
 
     private void passTurns(int number) {
