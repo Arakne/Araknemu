@@ -39,6 +39,12 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.point.StealActionPointHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.point.StealMovementPointHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.FixedCasterDamageHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.FixedDamageHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.FixedStealLifeHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.PercentLifeDamageHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.PercentLifeLostDamageHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.PunishmentHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.StealLifeHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.FixedHealHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.HealHandler;
@@ -88,6 +94,20 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(98,  new DamageHandler(Element.AIR, fight));
         handler.register(99,  new DamageHandler(Element.FIRE, fight));
         handler.register(100, new DamageHandler(Element.NEUTRAL, fight));
+
+        handler.register(85, new PercentLifeDamageHandler(Element.WATER, fight));
+        handler.register(86, new PercentLifeDamageHandler(Element.EARTH, fight));
+        handler.register(87, new PercentLifeDamageHandler(Element.AIR, fight));
+        handler.register(88, new PercentLifeDamageHandler(Element.FIRE, fight));
+        handler.register(89, new PercentLifeDamageHandler(Element.NEUTRAL, fight));
+
+        handler.register(276, new PercentLifeLostDamageHandler(Element.EARTH, fight));
+        handler.register(279, new PercentLifeLostDamageHandler(Element.NEUTRAL, fight));
+
+        handler.register(82, new FixedStealLifeHandler());
+        handler.register(109, new FixedCasterDamageHandler());
+        handler.register(144, new FixedDamageHandler());
+        handler.register(672, new PunishmentHandler(fight));
 
         handler.register(81, new HealOnDamageHandler());
         handler.register(108, new HealHandler());
