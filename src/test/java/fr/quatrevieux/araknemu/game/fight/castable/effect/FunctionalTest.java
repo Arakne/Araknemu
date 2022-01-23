@@ -805,6 +805,23 @@ public class FunctionalTest extends FightBaseCase {
         assertEquals(122, damage);
     }
 
+    @Test
+    void givePercentLife() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(185).charac(Characteristic.LUCK, 100).currentLife(200).maxLife(200))
+            .addAlly(fb -> fb.cell(199).currentLife(100).maxLife(200))
+            .addEnemy(fb -> fb.cell(221))
+        );
+
+        castNormal(435, fighters.get(0).cell());
+
+        assertEquals(120, fighters.get(1).life().current());
+        assertEquals(180, fighters.get(0).life().current());
+
+        requestStack.assertOne(ActionEffect.alterLifePoints(fighters.get(0), fighters.get(0), -20));
+        requestStack.assertOne(ActionEffect.alterLifePoints(fighters.get(0), fighters.get(1), 20));
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 
