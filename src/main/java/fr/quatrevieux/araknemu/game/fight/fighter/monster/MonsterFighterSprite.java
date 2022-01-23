@@ -61,6 +61,11 @@ public final class MonsterFighterSprite implements Sprite {
     }
 
     @Override
+    public int gfxId() {
+        return monster.gfxId();
+    }
+
+    @Override
     public String name() {
         return Integer.toString(monster.id());
     }
@@ -74,7 +79,7 @@ public final class MonsterFighterSprite implements Sprite {
             id() + ";" +
             name() + ";" +
             type().id() + ";" +
-            monster.gfxId() + "^100;" + // @todo size
+            gfxId() + "^100;" + // @todo size
             monster.gradeNumber() + ";" +
             monster.colors().toHexString(";") + ";" +
             "0,0,0,0;" + // @todo accessories

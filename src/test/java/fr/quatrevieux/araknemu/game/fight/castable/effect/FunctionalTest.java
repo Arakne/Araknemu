@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
+import fr.quatrevieux.araknemu.game.fight.module.IndirectSpellApplyEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
@@ -66,6 +67,7 @@ public class FunctionalTest extends FightBaseCase {
 
         fight = createFight();
         fight.register(new CommonEffectsModule(fight));
+        fight.register(new IndirectSpellApplyEffectsModule(fight, container.get(SpellService.class)));
 
         fighter1 = player.fighter();
         fighter2 = other.fighter();
@@ -265,6 +267,13 @@ public class FunctionalTest extends FightBaseCase {
 
         assertBetween(3, 7, damage);
         requestStack.assertOne(ActionEffect.alterLifePoints(fighter2, fighter1, -damage));
+
+        castNormal(181, fighter2.cell()); // Tremblement
+        requestStack.clear();
+        fighter2.turn().stop();
+
+        requestStack.assertOne(ActionEffect.alterLifePoints(fighter2, fighter1, -5));
+        requestStack.assertNotContainsPrefix("GA;105");
     }
 
     @Test
@@ -803,6 +812,29 @@ public class FunctionalTest extends FightBaseCase {
         int damage = fighters.get(1).life().max() - fighters.get(1).life().current();
 
         assertEquals(122, damage);
+    }
+
+    @Test
+    void motlotov() {
+        fighter1.life().alter(fighter1, -195); // Set life to 100LP
+        castNormal(427, fighter1.cell()); // Mot Lotof
+
+        requestStack.assertOne(ActionEffect.changeAppearance(fighter1, fighter1, 7032, 2));
+
+        fighter1.turn().stop();
+        fighter2.turn().stop();
+
+        requestStack.assertOne(ActionEffect.launchVisualEffect(
+            fighter1,
+            fighter1.cell(),
+            container.get(SpellService.class).get(1679).level(5)
+        ));
+        requestStack.assertOne(ActionEffect.alterLifePoints(fighter1, fighter1, -33));
+        requestStack.assertOne(ActionEffect.alterLifePoints(fighter1, fighter2, -33));
+        requestStack.assertOne(ActionEffect.resetAppearance(fighter1, fighter1));
+
+        assertEquals(67, fighter1.life().current());
+        assertEquals(17, fighter2.life().current());
     }
 
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {

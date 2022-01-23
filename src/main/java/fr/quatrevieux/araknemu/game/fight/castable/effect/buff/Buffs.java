@@ -52,6 +52,11 @@ public interface Buffs extends Iterable<Buff> {
     public void onDirectDamage(ActiveFighter caster, Damage value);
 
     /**
+     * @see BuffHook#onIndirectDamage(Buff, ActiveFighter, Damage)
+     */
+    public void onIndirectDamage(ActiveFighter caster, Damage value);
+
+    /**
      * @see BuffHook#onBuffDamage(Buff, Buff, Damage)
      */
     public void onBuffDamage(Buff poison, Damage value);

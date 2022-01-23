@@ -55,6 +55,11 @@ public final class NpcSprite implements Sprite {
     }
 
     @Override
+    public int gfxId() {
+        return npc.template().gfxId();
+    }
+
+    @Override
     public String name() {
         return Integer.toString(npc.template().id());
     }
@@ -68,7 +73,7 @@ public final class NpcSprite implements Sprite {
             id() + ";" +
             name() + ";" +
             type().id() + ";" +
-            npc.template().gfxId() + "^" + npc.template().scaleX() + "x" + npc.template().scaleY() + ";" +
+            gfxId() + "^" + npc.template().scaleX() + "x" + npc.template().scaleY() + ";" +
             npc.template().gender().ordinal() + ";" +
             npc.template().colors().toHexString(";") + ";" +
             npc.template().accessories() + ";" +

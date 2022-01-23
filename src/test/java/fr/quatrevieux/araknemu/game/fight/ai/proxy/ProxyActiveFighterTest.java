@@ -47,6 +47,8 @@ class ProxyActiveFighterTest extends AiBaseCase {
         assertSame(ai.fighter().buffs(), fighter.buffs());
         assertSame(ai.fighter().states(), fighter.states());
         assertSame(ai.fighter().team(), fighter.team());
+        assertSame(ai.fighter().sprite(), fighter.sprite());
+        assertSame(ai.fighter().orientation(), fighter.orientation());
 
         assertEquals(ai.fighter().id(), fighter.id());
         assertEquals(ai.fighter().dead(), fighter.dead());

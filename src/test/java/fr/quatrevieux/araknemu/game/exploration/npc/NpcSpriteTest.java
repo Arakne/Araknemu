@@ -44,6 +44,7 @@ class NpcSpriteTest extends GameBaseCase {
         ));
 
         assertEquals("82;1;0;-47204;878;-4;40^100x100;0;7c7cb5;d0b461;38332d;0,20f9,2a5,1d5e,1b9e;;0", sprite.toString());
+        assertEquals(40, sprite.gfxId());
     }
 
     @Test
@@ -56,5 +57,6 @@ class NpcSpriteTest extends GameBaseCase {
         ));
 
         assertEquals("82;1;0;-47204;878;-4;40^100x100;0;7c7cb5;d0b461;38332d;0,20f9,2a5,1d5e,1b9e;4;9092", sprite.toString());
+        assertEquals(40, sprite.gfxId());
     }
 }

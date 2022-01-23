@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.proxy;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
@@ -28,6 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
+import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 
 /**
  * Proxy class for override properties of the active fighter (i.e. the fighter handled by the AI)
@@ -75,6 +77,16 @@ public final class ProxyActiveFighter implements ActiveFighter {
         }
 
         return fighter.cell();
+    }
+
+    @Override
+    public Sprite sprite() {
+        return fighter.sprite();
+    }
+
+    @Override
+    public Direction orientation() {
+        return fighter.orientation();
     }
 
     @Override

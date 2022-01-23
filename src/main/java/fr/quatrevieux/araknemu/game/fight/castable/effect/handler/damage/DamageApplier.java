@@ -93,6 +93,35 @@ public final class DamageApplier {
     }
 
     /**
+     * Apply a fixed (i.e. precomputed) amount of damage on the target, but as indirect
+     *
+     * So, unlike {@link DamageApplier#applyFixed(ActiveFighter, int, PassiveFighter)} :
+     * - indirect damage buff are called instead of direct one
+     * - returned damage are not applied
+     *
+     * But resistance are applied
+     *
+     * @param caster The spell caster
+     * @param value The damage value. Must be positive. Can be 0 for no damage.
+     * @param target The cast target
+     *
+     * @return The applied damage value. Negative for damage, or positive for heal.
+     *
+     * @see DamageApplier#applyFixed(Buff, int) Apply damage with the same way
+     * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onIndirectDamage(ActiveFighter, Damage) The called buff hook
+     */
+    public int applyIndirectFixed(ActiveFighter caster, int value, PassiveFighter target) {
+        final Damage damage = new Damage(value, element)
+            .percent(target.characteristics().get(element.percentResistance()))
+            .fixed(target.characteristics().get(element.fixedResistance()))
+        ;
+
+        target.buffs().onIndirectDamage(caster, damage);
+
+        return applyDamage(caster, damage, target);
+    }
+
+    /**
      * Apply a damage buff effect
      *
      * @param buff Buff to apply

@@ -170,6 +170,14 @@ public class GameBaseCase extends DatabaseTestCase {
             }
         }
 
+        public void assertNotContainsPrefix(String prefix) {
+            for (Object message : channel.getMessages()) {
+                if (message.toString().startsWith(prefix)) {
+                    Assertions.fail("Packet '" + message + "' is not expected");
+                }
+            }
+        }
+
         public void assertOne(Object packet) {
             for (Object message : channel.getMessages()) {
                 if (message.toString().equals(packet.toString())) {

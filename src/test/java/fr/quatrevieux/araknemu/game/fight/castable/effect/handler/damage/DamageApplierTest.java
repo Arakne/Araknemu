@@ -545,6 +545,96 @@ class DamageApplierTest extends FightBaseCase {
     }
 
     @Test
+    void applyIndirectFixedBase() {
+        DamageApplier applier = new DamageApplier(Element.EARTH, fight);
+
+        AtomicReference<Buff> calledBuff = new AtomicReference<>();
+        AtomicReference<ActiveFighter> calledCaster = new AtomicReference<>();
+        AtomicReference<Damage> calledDamage = new AtomicReference<>();
+
+        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
+            @Override
+            public void onIndirectDamage(Buff buff, ActiveFighter caster, Damage value) {
+                calledBuff.set(buff);
+                calledCaster.set(caster);
+                calledDamage.set(value);
+            }
+        });
+
+        target.buffs().add(buff);
+        requestStack.clear();
+
+        assertEquals(-10, applier.applyIndirectFixed(caster, 10, target));
+        assertEquals(-10, target.life().current() - target.life().max());
+
+        requestStack.assertAll(
+            ActionEffect.alterLifePoints(caster, target, -10)
+        );
+
+        assertSame(buff, calledBuff.get());
+        assertSame(caster, calledCaster.get());
+        assertEquals(10, calledDamage.get().value());
+    }
+
+    @Test
+    void applyIndirectFixedShouldIgnoreBoost() {
+        caster.characteristics().alter(Characteristic.STRENGTH, 100);
+        caster.characteristics().alter(Characteristic.FIXED_DAMAGE, 100);
+
+        DamageApplier applier = new DamageApplier(Element.EARTH, fight);
+        requestStack.clear();
+
+        assertEquals(-10, applier.applyIndirectFixed(caster, 10, target));
+        assertEquals(-10, target.life().current() - target.life().max());
+
+        requestStack.assertAll(
+            ActionEffect.alterLifePoints(caster, target, -10)
+        );
+    }
+
+    @Test
+    void applyIndirectFixedWithCounterDamageCharacteristicShouldBeIgnored() {
+        target.characteristics().alter(Characteristic.COUNTER_DAMAGE, 5);
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        BuffHook hook = Mockito.mock(BuffHook.class);
+        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, hook);
+
+        caster.buffs().add(buff);
+
+        Mockito.when(effect.min()).thenReturn(10);
+
+        DamageApplier applier = new DamageApplier(Element.AIR, fight);
+        requestStack.clear();
+
+        assertEquals(-10, applier.applyIndirectFixed(caster, 10, target));
+        assertEquals(-10, target.life().current() - target.life().max());
+        assertEquals(caster.life().current(), caster.life().max());
+
+        Mockito.verify(hook, Mockito.never()).onReflectedDamage(Mockito.any(), Mockito.any());
+
+        requestStack.assertAll(
+            ActionEffect.alterLifePoints(caster, target, -10)
+        );
+    }
+
+    @Test
+    void applyIndirectFixedWithResistance() {
+        target.characteristics().alter(Characteristic.RESISTANCE_EARTH, 3);
+        target.characteristics().alter(Characteristic.RESISTANCE_PERCENT_EARTH, 10);
+
+        DamageApplier applier = new DamageApplier(Element.EARTH, fight);
+        requestStack.clear();
+
+        assertEquals(-6, applier.applyIndirectFixed(caster, 10, target));
+        assertEquals(-6, target.life().current() - target.life().max());
+
+        requestStack.assertAll(
+            ActionEffect.alterLifePoints(caster, target, -6)
+        );
+    }
+
+    @Test
     void applyFixedBuffDamage() {
         DamageApplier applier = new DamageApplier(Element.AIR, fight);
 

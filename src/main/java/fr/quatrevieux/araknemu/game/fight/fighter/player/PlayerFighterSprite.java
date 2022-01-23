@@ -66,6 +66,11 @@ public final class PlayerFighterSprite implements Sprite {
     }
 
     @Override
+    public int gfxId() {
+        return spriteInfo.gfxId();
+    }
+
+    @Override
     public String toString() {
         return
             cell() + ";" +

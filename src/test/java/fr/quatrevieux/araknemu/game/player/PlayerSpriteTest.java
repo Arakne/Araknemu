@@ -58,6 +58,7 @@ class PlayerSpriteTest extends GameBaseCase {
         assertEquals("Bob", sprite.name());
         assertEquals(Direction.SOUTH_EAST, sprite.orientation());
         assertEquals(Sprite.Type.PLAYER, sprite.type());
+        assertEquals(10, sprite.gfxId());
     }
 
     @Test

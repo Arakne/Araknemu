@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 
@@ -46,7 +47,7 @@ public final class ReduceDamageHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public void onDamage(Buff buff, Damage value) {
+    public void onDirectDamage(Buff buff, ActiveFighter caster, Damage value) {
         if (!supportsElement(buff, value.element())) {
             return;
         }
