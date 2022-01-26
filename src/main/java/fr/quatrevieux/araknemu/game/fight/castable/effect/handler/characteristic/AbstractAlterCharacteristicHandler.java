@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffEffect;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 /**
@@ -45,11 +45,21 @@ public abstract class AbstractAlterCharacteristicHandler implements EffectHandle
 
     @Override
     public void buff(CastScope cast, CastScope.EffectScope effect) {
-        final SpellEffect buffEffect = computeBuffEffect(cast, effect.effect());
+        final SpellEffect spellEffect = effect.effect();
+        final ActiveFighter caster = cast.caster();
 
-        for (PassiveFighter target : effect.targets()) {
-            target.buffs().add(new Buff(buffEffect, cast.action(), cast.caster(), target, this));
-        }
+        EffectValue.forEachTargets(
+            spellEffect,
+            caster,
+            effect.targets(),
+            (target, effectValue) -> target.buffs().add(new Buff(
+                BuffEffect.fixed(spellEffect, effectValue.value()),
+                cast.action(),
+                caster,
+                target,
+                this
+            ))
+        );
     }
 
     @Override
@@ -60,14 +70,5 @@ public abstract class AbstractAlterCharacteristicHandler implements EffectHandle
     @Override
     public void onBuffTerminated(Buff buff) {
         hook.onBuffTerminated(buff);
-    }
-
-    /**
-     * Compute the buff value
-     */
-    private SpellEffect computeBuffEffect(CastScope cast, SpellEffect effect) {
-        final EffectValue value = new EffectValue(effect);
-
-        return BuffEffect.fixed(effect, value.value());
     }
 }

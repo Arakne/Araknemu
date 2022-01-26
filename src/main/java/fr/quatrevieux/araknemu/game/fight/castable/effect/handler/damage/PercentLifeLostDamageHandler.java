@@ -26,7 +26,6 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
  * Handle damage based on the lost caster life
@@ -46,12 +45,11 @@ public final class PercentLifeLostDamageHandler implements EffectHandler {
     public void handle(CastScope cast, CastScope.EffectScope effect) {
         final ActiveFighter caster = cast.caster();
         final FighterLife casterLife = caster.life();
+        final int lostLife = casterLife.max() - casterLife.current();
 
-        final int damage = (casterLife.max() - casterLife.current()) * (new EffectValue(effect.effect())).value() / 100;
-
-        for (PassiveFighter target : effect.targets()) {
-            applier.applyFixed(caster, damage, target);
-        }
+        EffectValue.forEachTargets(effect.effect(), caster, effect.targets(), (target, effectValue) -> {
+            applier.applyFixed(caster, lostLife * effectValue.value() / 100, target);
+        });
     }
 
     @Override

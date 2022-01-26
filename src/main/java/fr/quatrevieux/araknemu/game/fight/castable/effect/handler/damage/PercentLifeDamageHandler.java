@@ -44,11 +44,11 @@ public final class PercentLifeDamageHandler implements EffectHandler, BuffHook {
     @Override
     public void handle(CastScope cast, CastScope.EffectScope effect) {
         final ActiveFighter caster = cast.caster();
-        final int damage = caster.life().current() * (new EffectValue(effect.effect())).value() / 100;
+        final int currentLife = caster.life().current();
 
-        for (PassiveFighter target : effect.targets()) {
-            applier.applyFixed(caster, damage, target);
-        }
+        EffectValue.forEachTargets(effect.effect(), caster, effect.targets(), (target, effectValue) -> {
+            applier.applyFixed(caster, currentLife * effectValue.value() / 100, target);
+        });
     }
 
     @Override
@@ -60,10 +60,12 @@ public final class PercentLifeDamageHandler implements EffectHandler, BuffHook {
 
     @Override
     public boolean onStartTurn(Buff buff) {
-        final int damage = buff.caster().life().current() * (new EffectValue(buff.effect())).value() / 100;
+        final ActiveFighter caster = buff.caster();
+        final PassiveFighter target = buff.target();
+        final int damage = caster.life().current() * (EffectValue.create(buff.effect(), caster, target)).value() / 100;
 
         applier.applyFixed(buff, damage);
 
-        return !buff.target().dead();
+        return !target.dead();
     }
 }

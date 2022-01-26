@@ -32,7 +32,7 @@ public final class GivePercentLifeHandler implements EffectHandler {
     @Override
     public void handle(CastScope cast, CastScope.EffectScope effect) {
         final ActiveFighter caster = cast.caster();
-        final int heal = new EffectValue(effect.effect()).value() * caster.life().current() / 100;
+        final int heal = EffectValue.create(effect.effect(), caster, caster).value() * caster.life().current() / 100;
 
         caster.life().alter(caster, -heal);
 

@@ -54,6 +54,6 @@ public final class FixedHealHandler implements EffectHandler, BuffHook {
     }
 
     private void apply(ActiveFighter caster, SpellEffect effect, PassiveFighter target) {
-        target.life().alter(caster, new EffectValue(effect).value());
+        target.life().alter(caster, EffectValue.create(effect, caster, target).value());
     }
 }

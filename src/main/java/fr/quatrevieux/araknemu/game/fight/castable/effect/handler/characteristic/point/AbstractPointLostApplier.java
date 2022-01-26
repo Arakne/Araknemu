@@ -74,7 +74,7 @@ public abstract class AbstractPointLostApplier {
     public final int apply(CastScope cast, PassiveFighter target, SpellEffect effect)  {
         final ActiveFighter caster = cast.caster();
 
-        final int baseValue = new EffectValue(effect).value();
+        final int baseValue = EffectValue.create(effect, caster, target).value();
         final int lost = computePointLost(caster, target, baseValue);
         final int dodge = baseValue - lost;
 
