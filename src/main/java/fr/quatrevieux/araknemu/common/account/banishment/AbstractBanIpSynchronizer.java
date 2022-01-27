@@ -24,11 +24,11 @@ import fr.quatrevieux.araknemu.common.account.banishment.event.IpBanned;
 import fr.quatrevieux.araknemu.common.account.banishment.listener.KickBannedIpSession;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.core.network.session.Session;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import org.apache.logging.log4j.Logger;
 
 import java.time.Duration;
 import java.util.Collection;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -42,7 +42,7 @@ public abstract class AbstractBanIpSynchronizer {
     private final Logger logger;
     private final Duration refreshDelay;
 
-    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService executor = ExecutorFactory.createSingleThread();
 
     public AbstractBanIpSynchronizer(BanIpService<? extends LivingAccount> service, Supplier<Collection<? extends Session>> sessionsSupplier, Logger logger, Duration refreshDelay) {
         this.service = service;

@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,7 +61,7 @@ class InitialiseStateTest extends GameBaseCase {
                 nextState = new NullState()
             ),
             container.get(Logger.class),
-            Executors.newSingleThreadScheduledExecutor()
+            ExecutorFactory.createSingleThread()
         );
     }
 

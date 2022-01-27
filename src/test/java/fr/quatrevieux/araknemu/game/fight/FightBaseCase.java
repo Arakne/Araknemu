@@ -66,6 +66,7 @@ import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -80,7 +81,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -102,7 +102,7 @@ public class FightBaseCase extends GameBaseCase {
 
         player = gamePlayer(true);
         other  = makeOtherPlayer();
-        executor = Executors.newSingleThreadScheduledExecutor();
+        executor = ExecutorFactory.createSingleThread();
     }
 
     @Override

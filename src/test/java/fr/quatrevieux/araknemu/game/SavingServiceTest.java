@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import fr.quatrevieux.araknemu.realm.host.GameHost;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
@@ -63,6 +64,7 @@ class SavingServiceTest extends GameBaseCase {
 
     @Test
     void executeShouldReturnFalseOnSaving() throws Exception {
+        ExecutorFactory.disableDirectExecution();
         gamePlayer(true);
         makeOtherPlayer(1);
         SavingService service = container.get(SavingService.class);
