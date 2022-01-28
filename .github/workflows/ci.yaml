@@ -8,6 +8,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: "Europe/Paris"
+
+      - uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: '5.7'
+          mysql database: 'araknemu'
+          mysql user: 'araknemu'
+
       - name: Set up JDK 8
         uses: actions/setup-java@v2
         with:
