@@ -27,7 +27,7 @@ jobs:
           sleep 15
 
           cat <<EOF | mysql -h 127.0.0.1 -u root --password=root
-            ALTER USER 'araknemu'@'localhost' IDENTIFIED BY null;
+            UPDATE mysql.user SET authentication_string = null WHERE user = 'araknemu';
             FLUSH PRIVILEGES;
           EOF
 
