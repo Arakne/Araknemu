@@ -18,6 +18,7 @@ jobs:
           mysql database: 'araknemu'
           mysql user: 'araknemu'
           mysql password: 'araknemu'
+          mysql root password: 'root'
 
       - name: Reset mysql password
         run: |
@@ -25,8 +26,8 @@ jobs:
           # See: https://github.com/mirromutth/mysql-action/issues/16
           sleep 15
 
-          cat <<EOF | mysql -h 127.0.0.1 -u araknemu --password=araknemu
-            UPDATE mysql.user SET authentication_string = null WHERE user = 'araknemu';
+          cat <<EOF | mysql -h 127.0.0.1 -u root --password=root
+            ALTER USER 'araknemu'@'localhost' IDENTIFIED BY null;
             FLUSH PRIVILEGES;
           EOF
 
