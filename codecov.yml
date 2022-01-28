@@ -1,0 +1,14 @@
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
+    patch:
+      default:
+        # basic
+        target: 95%
+
+  require_ci_to_pass: false
+  notify:
+    wait_for_ci: false
