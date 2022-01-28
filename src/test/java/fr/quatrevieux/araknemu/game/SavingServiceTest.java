@@ -50,7 +50,6 @@ class SavingServiceTest extends GameBaseCase {
         requestStack.clear();
 
         assertTrue(service.execute());
-        Thread.sleep(100);
 
         requestStack.assertAll(
             Error.saveInProgress(),

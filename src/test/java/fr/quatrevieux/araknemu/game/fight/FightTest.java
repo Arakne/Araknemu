@@ -210,8 +210,6 @@ class FightTest extends GameBaseCase {
 
         fight.execute(() -> { throw raisedException; });
 
-        Thread.sleep(10);
-
         Mockito.verify(logger).error("Error on fight executor : my error", raisedException);
     }
 

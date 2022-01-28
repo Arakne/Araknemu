@@ -68,20 +68,16 @@ class AiModuleTest extends FightBaseCase {
 
     @RepeatedIfExceptionsTest
     void turnStartedWithAi() throws Exception {
-        ExecutorFactory.disableDirectExecution();
-
         Fight fight = createPvmFight();
         fight.register(new AiModule(container.get(AiFactory.class)));
         fight.nextState();
         fight.turnList().start();
-        fight.turnList().current().get().stop();
-
         requestStack.clear();
+        fight.turnList().current().get().stop();
 
         FightTurn turn = fight.turnList().current().get();
 
         assertTrue(turn.active());
-        Thread.sleep(200);
 
         // Move action started
         requestStack.assertOne("GA0;1;-2;ab-fbG");

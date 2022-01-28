@@ -39,7 +39,6 @@ class ShowCellTest extends FightBaseCase {
         Fight fight = createFight();
 
         handlePacket(new ShowCellRequest(123));
-        Thread.sleep(50);
 
         requestStack.assertLast(new CellShown(gamePlayer().fighter(), 123));
     }
@@ -50,7 +49,6 @@ class ShowCellTest extends FightBaseCase {
         fight.nextState();
 
         handlePacket(new ShowCellRequest(123));
-        Thread.sleep(50);
 
         requestStack.assertLast(new CellShown(gamePlayer().fighter(), 123));
     }

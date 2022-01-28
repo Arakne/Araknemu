@@ -48,7 +48,6 @@ class SaveTest extends CommandTestCase {
         player.setPosition(new Position(123, 45));
 
         execute("save");
-        Thread.sleep(100);
 
         assertOutput("Start save");
         assertEquals(new Position(123, 45), dataSet.refresh(new Player(player.id())).position());

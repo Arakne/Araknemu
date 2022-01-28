@@ -87,8 +87,6 @@ class FighterAITest extends FightBaseCase {
         FighterAI ai = new FighterAI(fighter, fight, NullGenerator.INSTANCE);
         ai.start(turn);
 
-        Thread.sleep(20);
-
         assertFalse(turn.active());
     }
 
@@ -108,8 +106,6 @@ class FighterAITest extends FightBaseCase {
 
         Mockito.verify(generator1).initialize(ai);
         Mockito.verify(generator2).initialize(ai);
-
-        Thread.sleep(20);
 
         Mockito.verify(generator1).generate(ai);
         Mockito.verify(generator2, Mockito.never()).generate(ai);
@@ -136,8 +132,6 @@ class FighterAITest extends FightBaseCase {
         Mockito.verify(generator1).initialize(ai);
         Mockito.verify(generator2).initialize(ai);
 
-        Thread.sleep(20);
-
         Mockito.verify(generator1).generate(ai);
         Mockito.verify(generator2).generate(ai);
 
@@ -159,8 +153,6 @@ class FighterAITest extends FightBaseCase {
 
         Mockito.verify(generator1).initialize(ai);
         Mockito.verify(generator2).initialize(ai);
-
-        Thread.sleep(20);
 
         Mockito.verify(generator1, Mockito.never()).generate(ai);
         Mockito.verify(generator2, Mockito.never()).generate(ai);

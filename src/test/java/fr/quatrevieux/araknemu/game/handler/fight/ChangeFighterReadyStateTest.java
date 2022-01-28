@@ -89,7 +89,6 @@ class ChangeFighterReadyStateTest extends GameBaseCase {
         other.fighter().setReady(true);
 
         handler.handle(session, new FighterReady(true));
-        Thread.sleep(210);
 
         requestStack.assertOne(new BeginFight());
         assertInstanceOf(ActiveState.class, fight.state());
