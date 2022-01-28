@@ -41,6 +41,11 @@ public final class ExecutorFactory {
     private static final List<TestingExecutor> testingExecutors = new ArrayList<>();
 
     /**
+     * Disable constructor
+     */
+    private ExecutorFactory() { }
+
+    /**
      * Create a single thread executor service
      * If testing mode is enabled, a TestingExecutor is returned
      *
@@ -151,7 +156,7 @@ public final class ExecutorFactory {
     }
 
     private static ScheduledExecutorService createTestingExecutor() {
-        TestingExecutor executor = new TestingExecutor();
+        final TestingExecutor executor = new TestingExecutor();
 
         testingExecutors.add(executor);
 
@@ -164,31 +169,30 @@ public final class ExecutorFactory {
      */
     private static class TestingExecutor extends AbstractExecutorService implements ScheduledExecutorService {
         private final ScheduledExecutorService inner = Executors.newSingleThreadScheduledExecutor((r) -> {
-            Thread t = new Thread(r);
+            final Thread thread = new Thread(r);
+            thread.setName("Testing");
 
-            t.setName("Testing");
-
-            return t;
+            return thread;
         });
 
         @Override
-        public ScheduledFuture<?> schedule(Runnable runnable, long l, TimeUnit timeUnit) {
-            return inner.schedule(runnable, l, timeUnit);
+        public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) {
+            return inner.schedule(command, delay, unit);
         }
 
         @Override
-        public <V> ScheduledFuture<V> schedule(Callable<V> callable, long l, TimeUnit timeUnit) {
-            return inner.schedule(callable, l, timeUnit);
+        public <V> ScheduledFuture<V> schedule(Callable<V> callable, long delay, TimeUnit unit) {
+            return inner.schedule(callable, delay, unit);
         }
 
         @Override
-        public ScheduledFuture<?> scheduleAtFixedRate(Runnable runnable, long l, long l1, TimeUnit timeUnit) {
-            return inner.scheduleAtFixedRate(runnable, l, l1, timeUnit);
+        public ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
+            return inner.scheduleAtFixedRate(command, initialDelay, period, unit);
         }
 
         @Override
-        public ScheduledFuture<?> scheduleWithFixedDelay(Runnable runnable, long l, long l1, TimeUnit timeUnit) {
-            return inner.scheduleWithFixedDelay(runnable, l, l1, timeUnit);
+        public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
+            return inner.scheduleWithFixedDelay(command, initialDelay, delay, unit);
         }
 
         @Override
@@ -212,8 +216,8 @@ public final class ExecutorFactory {
         }
 
         @Override
-        public boolean awaitTermination(long l, TimeUnit timeUnit) throws InterruptedException {
-            return inner.awaitTermination(l, timeUnit);
+        public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
+            return inner.awaitTermination(timeout, unit);
         }
 
         @Override
