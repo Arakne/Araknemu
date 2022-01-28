@@ -22,9 +22,11 @@ jobs:
 
       - name: Reset mysql password
         run: |
-          # To prevent "ERROR 2013 (HY000): Lost connection to MySQL server at 'reading initial communication packet', system error: 0"
-          # See: https://github.com/mirromutth/mysql-action/issues/16
-          sleep 15
+          while :
+          do
+            sleep 1
+            mysql -h 127.0.0.1 -u root --password=root -e 'select version()' && break
+          done
 
           cat <<EOF | mysql -h 127.0.0.1 -u root --password=root
             CREATE USER 'araknemu'@'%';
