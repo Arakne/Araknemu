@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -55,7 +56,7 @@ class StatesFlowTest extends GameBaseCase {
             new ArrayList<>(),
             new StatesFlow(),
             container.get(Logger.class),
-            Executors.newSingleThreadScheduledExecutor()
+            ExecutorFactory.createSingleThread()
         );
 
         flow.next(fight);

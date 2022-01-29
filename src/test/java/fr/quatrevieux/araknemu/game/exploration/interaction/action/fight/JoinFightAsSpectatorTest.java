@@ -107,7 +107,6 @@ class JoinFightAsSpectatorTest extends FightBaseCase {
         requestStack.clear();
 
         action.start(new ActionQueue());
-        Thread.sleep(100);
 
         assertTrue(gamePlayer().isSpectator());
         assertFalse(gamePlayer().isExploring());
@@ -133,7 +132,6 @@ class JoinFightAsSpectatorTest extends FightBaseCase {
         requestStack.clear();
 
         action.start(new ActionQueue());
-        Thread.sleep(100);
 
         assertFalse(explorationPlayer().player().isSpectator());
         requestStack.assertLast(Error.cantJoinFightAsSpectator());

@@ -41,6 +41,7 @@ import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
@@ -93,7 +94,7 @@ class FightTest extends GameBaseCase {
                 new FinishState()
             ),
             logger = Mockito.mock(Logger.class),
-            executor = Executors.newSingleThreadScheduledExecutor()
+            executor = ExecutorFactory.createSingleThread()
         );
     }
 
@@ -184,6 +185,7 @@ class FightTest extends GameBaseCase {
 
     @RepeatedIfExceptionsTest
     void execute() throws InterruptedException {
+        ExecutorFactory.disableDirectExecution();
         AtomicBoolean ab = new AtomicBoolean(false);
 
         fight.execute(() -> {
@@ -207,8 +209,6 @@ class FightTest extends GameBaseCase {
         RuntimeException raisedException = new RuntimeException("my error");
 
         fight.execute(() -> { throw raisedException; });
-
-        Thread.sleep(10);
 
         Mockito.verify(logger).error("Error on fight executor : my error", raisedException);
     }

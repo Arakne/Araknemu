@@ -47,12 +47,10 @@ class ToggleNeedHelpTest extends FightBaseCase {
         Fight fight = createFight();
 
         handlePacket(new NeedHelpRequest());
-        Thread.sleep(50);
         requestStack.assertLast(Information.helpRequested());
         assertTrue(fight.team(0).options().needHelp());
 
         handlePacket(new NeedHelpRequest());
-        Thread.sleep(50);
         requestStack.assertLast(Information.helpRequestStopped());
         assertFalse(fight.team(0).options().needHelp());
     }
@@ -63,7 +61,7 @@ class ToggleNeedHelpTest extends FightBaseCase {
         fight.state(PlacementState.class).joinTeam(makePlayerFighter(gamePlayer()), fight.team(0));
 
         handlePacket(new NeedHelpRequest());
-        Thread.sleep(50);
+
         requestStack.assertLast(new Noop());
         assertFalse(fight.team(0).options().needHelp());
     }
@@ -74,7 +72,7 @@ class ToggleNeedHelpTest extends FightBaseCase {
         fight.nextState();
 
         handlePacket(new NeedHelpRequest());
-        Thread.sleep(50);
+
         requestStack.assertLast(new Noop());
         assertFalse(fight.team(0).options().needHelp());
     }

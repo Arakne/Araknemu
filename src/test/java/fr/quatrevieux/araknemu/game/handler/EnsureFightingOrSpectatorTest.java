@@ -56,7 +56,6 @@ class EnsureFightingOrSpectatorTest extends FightBaseCase {
         Packet packet = new AskCharacterList(false);
 
         handler.handle(session, packet);
-        Thread.sleep(100);
 
         Mockito.verify(fig).handle(session, packet);
         Mockito.verify(spe, Mockito.never()).handle(session, packet);
@@ -73,7 +72,6 @@ class EnsureFightingOrSpectatorTest extends FightBaseCase {
         gamePlayer().start(new Spectator(gamePlayer(), createSimpleFight(container.get(ExplorationMapService.class).load(10340))));
 
         handler.handle(session, packet);
-        Thread.sleep(100);
 
         Mockito.verify(spe).handle(session, packet);
         Mockito.verify(fig, Mockito.never()).handle(session, packet);

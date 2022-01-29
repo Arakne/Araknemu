@@ -30,7 +30,6 @@ import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.config.Configuration;
 import fr.quatrevieux.araknemu.core.config.DefaultConfiguration;
 import fr.quatrevieux.araknemu.core.config.IniDriver;
-import fr.quatrevieux.araknemu.core.config.PoolUtils;
 import fr.quatrevieux.araknemu.core.dbal.DatabaseConfiguration;
 import fr.quatrevieux.araknemu.core.dbal.DefaultDatabaseHandler;
 import fr.quatrevieux.araknemu.core.dbal.executor.ConnectionPoolExecutor;
@@ -87,7 +86,6 @@ import fr.quatrevieux.araknemu.game.connector.RealmConnector;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationService;
 import fr.quatrevieux.araknemu.game.exploration.event.StartExploration;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.game.player.experience.PlayerExperienceService;
@@ -97,10 +95,10 @@ import fr.quatrevieux.araknemu.game.player.spell.SpellBookService;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ini4j.Ini;
-import org.ini4j.Profile;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -111,11 +109,7 @@ import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class GameBaseCase extends DatabaseTestCase {
     static public class SendingRequestStack {
@@ -207,6 +201,7 @@ public class GameBaseCase extends DatabaseTestCase {
         super.setUp();
 
         RandomUtil.enableTestingMode();
+        ExecutorFactory.enableTestingMode();
 
         Configuration conf = new DefaultConfiguration(
             new IniDriver(initConfig = new Ini(new File("src/test/test_config.ini")))
@@ -283,6 +278,7 @@ public class GameBaseCase extends DatabaseTestCase {
 
     @AfterEach
     public void tearDown() throws ContainerException {
+        ExecutorFactory.resetTestingExecutor();
         dataSet.destroy();
         app.database().stop();
     }

@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,6 @@ class ChallengeBuilderFactoryTest extends GameBaseCase {
 
     @Test
     void create() throws ContainerException {
-        assertNotNull(factory.create(container.get(FightService.class), Executors.newSingleThreadScheduledExecutor()));
+        assertNotNull(factory.create(container.get(FightService.class), ExecutorFactory.createSingleThread()));
     }
 }
