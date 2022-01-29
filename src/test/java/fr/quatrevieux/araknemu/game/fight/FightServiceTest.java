@@ -207,7 +207,7 @@ class FightServiceTest extends FightBaseCase {
 
     @Test
     void modules() throws ContainerException {
-        BaseBuilder builder = new BaseBuilder(service, new RandomUtil(), new ChallengeType(configuration.fight()), container.get(Logger.class), Executors.newSingleThreadScheduledExecutor());
+        BaseBuilder builder = new BaseBuilder(service, new RandomUtil(), new ChallengeType(configuration.fight()), container.get(Logger.class), executor);
         builder.map(container.get(ExplorationMapService.class).load(10340));
         Fight fight = builder.build(1);
 

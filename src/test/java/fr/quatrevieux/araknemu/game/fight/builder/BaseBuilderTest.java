@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +51,7 @@ class BaseBuilderTest extends GameBaseCase {
         dataSet.pushMaps().pushSubAreas().pushAreas();
 
         type = Mockito.mock(FightType.class);
-        builder = new BaseBuilder(container.get(FightService.class), new RandomUtil(), type, container.get(Logger.class), Executors.newSingleThreadScheduledExecutor());
+        builder = new BaseBuilder(container.get(FightService.class), new RandomUtil(), type, container.get(Logger.class), ExecutorFactory.createSingleThread());
     }
 
     @Test
@@ -111,7 +112,7 @@ class BaseBuilderTest extends GameBaseCase {
 
     @Test
     void buildWithoutRandomizeTeam() throws Exception {
-        builder = new BaseBuilder(container.get(FightService.class), null, type, container.get(Logger.class), Executors.newSingleThreadScheduledExecutor());
+        builder = new BaseBuilder(container.get(FightService.class), null, type, container.get(Logger.class), ExecutorFactory.createSingleThread());
 
         PlayerFighter fighter = new PlayerFighter(gamePlayer());
         PlayerFighter other = new PlayerFighter(makeOtherPlayer());

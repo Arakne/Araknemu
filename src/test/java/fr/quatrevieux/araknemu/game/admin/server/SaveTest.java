@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.SavingService;
 import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -47,7 +48,6 @@ class SaveTest extends CommandTestCase {
         player.setPosition(new Position(123, 45));
 
         execute("save");
-        Thread.sleep(100);
 
         assertOutput("Start save");
         assertEquals(new Position(123, 45), dataSet.refresh(new Player(player.id())).position());
@@ -55,6 +55,7 @@ class SaveTest extends CommandTestCase {
 
     @Test
     void executeAlreadyInProgress() throws Exception {
+        ExecutorFactory.disableDirectExecution();
         gamePlayer(true);
         makeOtherPlayer(1);
 

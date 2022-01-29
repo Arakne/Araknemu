@@ -88,7 +88,6 @@ class ChangeFighterStartPlaceTest extends FightBaseCase {
         fighter = player.fighter();
 
         handlePacket(new FighterChangePlace(123));
-        Thread.sleep(5);
 
         assertEquals(123, fighter.cell().id());
     }

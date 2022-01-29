@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +49,7 @@ class ChallengeBuilderTest extends GameBaseCase {
 
         dataSet.pushMaps().pushSubAreas().pushAreas();
 
-        builder = new ChallengeBuilder(container.get(FightService.class), container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), Executors.newSingleThreadScheduledExecutor(), new ChallengeType(configuration.fight()));
+        builder = new ChallengeBuilder(container.get(FightService.class), container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), ExecutorFactory.createSingleThread(), new ChallengeType(configuration.fight()));
     }
 
     @Test

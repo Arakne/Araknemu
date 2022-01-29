@@ -54,12 +54,10 @@ class ToggleBlockSpectatorsTest extends FightBaseCase {
         Fight fight = createFight();
 
         handlePacket(new BlockSpectatorRequest());
-        Thread.sleep(50);
         requestStack.assertLast(Information.spectatorsBlocked());
         assertFalse(fight.team(0).options().allowSpectators());
 
         handlePacket(new BlockSpectatorRequest());
-        Thread.sleep(50);
         requestStack.assertLast(Information.spectatorsAllowed());
         assertTrue(fight.team(0).options().allowSpectators());
     }
@@ -70,7 +68,7 @@ class ToggleBlockSpectatorsTest extends FightBaseCase {
         fight.state(PlacementState.class).joinTeam(makePlayerFighter(gamePlayer()), fight.team(0));
 
         handlePacket(new BlockSpectatorRequest());
-        Thread.sleep(50);
+
         requestStack.assertLast(new Noop());
         assertTrue(fight.team(0).options().allowSpectators());
     }

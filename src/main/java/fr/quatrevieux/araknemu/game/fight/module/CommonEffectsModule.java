@@ -48,6 +48,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Percent
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.PunishmentHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.StealLifeHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.FixedHealHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.GivePercentLifeHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.HealHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.HealOnDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.ChangeAppearanceHandler;
@@ -114,6 +115,7 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(672, new PunishmentHandler(fight));
 
         handler.register(81, new HealOnDamageHandler());
+        handler.register(90, new GivePercentLifeHandler());
         handler.register(108, new HealHandler());
         handler.register(143, new FixedHealHandler());
 

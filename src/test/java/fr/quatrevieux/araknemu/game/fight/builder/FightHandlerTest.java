@@ -40,6 +40,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.exploration.AddTeamFighter
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightsCount;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.HideFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.ShowFight;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -68,7 +69,7 @@ class FightHandlerTest extends GameBaseCase {
     void withChallengeFight() throws ContainerException {
         FightHandler<ChallengeBuilder> handler = new FightHandler<>(
             container.get(FightService.class),
-            new ChallengeBuilder(container.get(FightService.class), container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), Executors.newSingleThreadScheduledExecutor(), new ChallengeType(configuration.fight()))
+            new ChallengeBuilder(container.get(FightService.class), container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), ExecutorFactory.createSingleThread(), new ChallengeType(configuration.fight()))
         );
 
         Fight fight = handler.start(
@@ -100,7 +101,7 @@ class FightHandlerTest extends GameBaseCase {
 
         FightHandler<ChallengeBuilder> handler = new FightHandler<>(
             service,
-            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), Executors.newSingleThreadScheduledExecutor(), new ChallengeType(configuration.fight()))
+            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), ExecutorFactory.createSingleThread(), new ChallengeType(configuration.fight()))
         );
 
         Fight fight = handler.start(
@@ -143,7 +144,7 @@ class FightHandlerTest extends GameBaseCase {
 
         FightHandler<ChallengeBuilder> handler = new FightHandler<>(
             service,
-            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), Executors.newSingleThreadScheduledExecutor(), new ChallengeType(configuration.fight()))
+            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), ExecutorFactory.createSingleThread(), new ChallengeType(configuration.fight()))
         );
 
         Fight fight = handler.start(
@@ -183,7 +184,7 @@ class FightHandlerTest extends GameBaseCase {
                 ),
                 container.get(GameConfiguration.class).fight()
             ),
-            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), Executors.newSingleThreadScheduledExecutor(), new ChallengeType(configuration.fight()))
+            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), ExecutorFactory.createSingleThread(), new ChallengeType(configuration.fight()))
         );
 
         Fight fight = handler.start(

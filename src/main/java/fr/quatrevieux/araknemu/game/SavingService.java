@@ -27,10 +27,10 @@ import fr.quatrevieux.araknemu.game.event.GameStopped;
 import fr.quatrevieux.araknemu.game.event.SavingGame;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import org.apache.logging.log4j.Logger;
 
 import java.time.Duration;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -44,7 +44,7 @@ public final class SavingService implements EventsSubscriber, PreloadableService
     private final Dispatcher dispatcher;
 
     private final AtomicBoolean inProgress = new AtomicBoolean(false);
-    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService executor = ExecutorFactory.createSingleThread();
 
     public SavingService(PlayerService playerService, GameConfiguration configuration, Dispatcher dispatcher) {
         this.playerService = playerService;

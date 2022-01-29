@@ -38,6 +38,7 @@ import fr.quatrevieux.araknemu.game.monster.environment.RandomCellSelector;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
 import fr.arakne.utils.maps.constant.Direction;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -72,7 +73,7 @@ class PvmBuilderTest extends GameBaseCase {
             new RandomUtil(),
             container.get(PvmType.class),
             container.get(Logger.class),
-            Executors.newSingleThreadScheduledExecutor()
+            ExecutorFactory.createSingleThread()
         );
 
         MonsterService service = container.get(MonsterService.class);
@@ -128,7 +129,7 @@ class PvmBuilderTest extends GameBaseCase {
                 random,
                 container.get(PvmType.class),
                 container.get(Logger.class),
-                Executors.newSingleThreadScheduledExecutor()
+                ExecutorFactory.createSingleThread()
             );
 
             Fight fight = builder
@@ -154,7 +155,7 @@ class PvmBuilderTest extends GameBaseCase {
             null,
             container.get(PvmType.class),
             container.get(Logger.class),
-            Executors.newSingleThreadScheduledExecutor()
+            ExecutorFactory.createSingleThread()
         );
 
         for (int i = 0; i < 100; ++i) {

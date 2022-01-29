@@ -63,7 +63,6 @@ class ShutdownTest extends CommandTestCase {
     @Test
     void executeNow() throws SQLException, AdminException, InterruptedException {
         execute("shutdown", "now");
-        Thread.sleep(10);
 
         assertFalse(app.started());
     }

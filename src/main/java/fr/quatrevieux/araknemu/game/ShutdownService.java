@@ -26,10 +26,10 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.event.GameStopped;
 import fr.quatrevieux.araknemu.game.event.ShutdownScheduled;
 import fr.quatrevieux.araknemu.game.listener.KickAllOnShutdown;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 
 import java.time.Duration;
 import java.util.Optional;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -41,7 +41,7 @@ public final class ShutdownService implements EventsSubscriber {
     private final Araknemu app;
     private final Dispatcher dispatcher;
     private final GameConfiguration configuration;
-    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService executor = ExecutorFactory.createSingleThread();
 
     private ScheduledFuture<?> scheduledShutdown;
     private ScheduledFuture<?> shutdownReminder;

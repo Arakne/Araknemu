@@ -23,9 +23,9 @@ import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.event.GameStopped;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import org.apache.logging.log4j.Logger;
 
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -38,7 +38,7 @@ public final class ActivityService implements EventsSubscriber {
 
     public ActivityService(GameConfiguration.ActivityConfiguration configuration, Logger logger) {
         this.logger = logger;
-        this.executor = Executors.newScheduledThreadPool(configuration.threadsCount());
+        this.executor = ExecutorFactory.create(configuration.threadsCount());
     }
 
     /**

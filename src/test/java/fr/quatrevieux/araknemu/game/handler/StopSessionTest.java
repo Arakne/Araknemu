@@ -144,7 +144,6 @@ class StopSessionTest extends FightBaseCase {
         handler.handle(session, new SessionClosed());
 
         assertNull(session.fighter());
-        Thread.sleep(100);
         assertFalse(fight.fighters().contains(fighter));
     }
 
@@ -158,7 +157,6 @@ class StopSessionTest extends FightBaseCase {
         handler.handle(session, new SessionClosed());
 
         assertNull(session.fighter());
-        Thread.sleep(100);
         assertFalse(fight.active());
         assertTrue(fighter.dead());
     }
@@ -175,7 +173,6 @@ class StopSessionTest extends FightBaseCase {
         handler.handle(session, new SessionClosed());
 
         assertNull(session.fighter());
-        Thread.sleep(100);
 
         assertTrue(fighter.dead());
         assertEquals(0, player.properties().life().current());
@@ -193,7 +190,6 @@ class StopSessionTest extends FightBaseCase {
         handler.handle(session, new SessionClosed());
 
         assertNull(session.fighter());
-        Thread.sleep(100);
 
         assertEquals(0, player.properties().life().current());
         assertEquals(player.savedPosition(), player.position());

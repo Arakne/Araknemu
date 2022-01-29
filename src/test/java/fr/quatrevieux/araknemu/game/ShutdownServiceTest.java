@@ -66,7 +66,6 @@ class ShutdownServiceTest extends GameBaseCase {
     @Test
     void now() throws InterruptedException {
         service.now();
-        Thread.sleep(10);
 
         assertFalse(app.started());
     }
@@ -114,7 +113,6 @@ class ShutdownServiceTest extends GameBaseCase {
     void shutdownShouldSendShutdownMessageAndCloseSessions() throws SQLException, InterruptedException {
         gamePlayer(true);
         service.now();
-        Thread.sleep(100);
 
         requestStack.assertOne(ServerMessage.shutdown());
         assertFalse(session.isAlive());

@@ -49,6 +49,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.CancelFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.FighterPositions;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.RemoveSprite;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
@@ -92,7 +93,7 @@ class PlacementStateTest extends FightBaseCase {
                 new ActiveState()
             ),
             container.get(Logger.class),
-            Executors.newSingleThreadScheduledExecutor()
+            ExecutorFactory.createSingleThread()
         );
     }
 
@@ -163,7 +164,7 @@ class PlacementStateTest extends FightBaseCase {
                 new ActiveState()
             ),
             container.get(Logger.class),
-            Executors.newSingleThreadScheduledExecutor()
+            ExecutorFactory.createSingleThread()
         );
 
         state.start(fight);
@@ -192,7 +193,7 @@ class PlacementStateTest extends FightBaseCase {
                 new ActiveState()
             ),
             container.get(Logger.class),
-            Executors.newSingleThreadScheduledExecutor()
+            ExecutorFactory.createSingleThread()
         );
 
         state.start(fight);
@@ -226,7 +227,7 @@ class PlacementStateTest extends FightBaseCase {
                 new ActiveState()
             ),
             container.get(Logger.class),
-            Executors.newSingleThreadScheduledExecutor()
+            ExecutorFactory.createSingleThread()
         );
 
         state.start(fight);

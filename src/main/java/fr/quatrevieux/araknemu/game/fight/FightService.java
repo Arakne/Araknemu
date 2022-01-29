@@ -35,13 +35,13 @@ import fr.quatrevieux.araknemu.game.fight.module.FightModule;
 import fr.quatrevieux.araknemu.game.listener.player.exploration.LeaveExplorationForFight;
 import fr.quatrevieux.araknemu.game.listener.player.fight.AttachFighter;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -66,7 +66,7 @@ public final class FightService implements EventsSubscriber {
         this.dispatcher = dispatcher;
         this.moduleFactories = moduleFactories;
         this.configuration = configuration;
-        this.executor = Executors.newScheduledThreadPool(configuration.threadsCount());
+        this.executor = ExecutorFactory.create(configuration.threadsCount());
 
         this.builderFactories = factories.stream().collect(
             Collectors.toMap(
