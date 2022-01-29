@@ -108,6 +108,8 @@ class GameModuleTest extends GameBaseCase {
         container.register(new GameModule(app));
         container.register(new AdminModule(app)); // @todo should be removed
 
+        assertInstanceOf(NotCoveredService.class, container.get(NotCoveredService.class));
+
         assertInstanceOf(GameService.class, container.get(GameService.class));
         assertInstanceOf(SessionConfigurator.class, container.get(SessionFactory.class));
         assertInstanceOf(NettyServer.class, container.get(Server.class));

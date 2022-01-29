@@ -229,6 +229,8 @@ public final class GameModule implements ContainerModule {
             container -> LogManager.getLogger(GameService.class)
         );
 
+        configurator.persist(NotCoveredService.class, container -> new NotCoveredService());
+
         configurator.persist(
             GameService.class,
             container -> new GameService(
