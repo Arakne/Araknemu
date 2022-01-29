@@ -49,3 +49,47 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: target/site/jacoco/jacoco.xml
+
+  java_compatibility:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java_version: [8, 11, 14, 17]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: "Europe/Paris"
+
+      - uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: '5.7'
+          mysql database: 'araknemu'
+          mysql user: 'araknemu'
+          mysql password: 'araknemu'
+          mysql root password: 'root'
+
+      - name: Reset mysql password
+        run: |
+          while :
+          do
+            sleep 1
+            mysql -h 127.0.0.1 -u root --password=root -e 'select version()' && break
+          done
+
+          cat <<EOF | mysql -h 127.0.0.1 -u root --password=root
+            CREATE USER 'araknemu'@'%';
+            GRANT ALL PRIVILEGES ON *.* TO 'araknemu'@'%';
+            UPDATE mysql.user SET authentication_string = null WHERE user = 'araknemu';
+            FLUSH PRIVILEGES;
+          EOF
+
+      - name: Set up JDK ${{ matrix.java_version }}
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java_version }}
+          distribution: 'adopt'
+
+      - name: Run tests
+        run: mvn --batch-mode -Djacoco.skip=true test
