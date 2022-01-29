@@ -19,9 +19,9 @@
 
 package fr.quatrevieux.araknemu.game;
 
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,7 +36,7 @@ class NotCoveredServiceTest {
     void display() {
         PrintStream last = System.out;
 
-        ByteOutputStream stream = new ByteOutputStream();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(stream));
 
         new NotCoveredService().display();
