@@ -29,10 +29,15 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
  */
 public final class ApCostValidator implements CastConstraintValidator {
     @Override
+    public boolean check(Turn turn, Castable castable, FightCell target) {
+        return castable.apCost() <= turn.points().actionPoints();
+    }
+
+    @Override
     public Error validate(Turn turn, Castable castable, FightCell target) {
-        return castable.apCost() > turn.points().actionPoints()
-            ? Error.cantCastNotEnoughActionPoints(turn.points().actionPoints(), castable.apCost())
-            : null
+        return check(turn, castable, target)
+            ? null
+            : Error.cantCastNotEnoughActionPoints(turn.points().actionPoints(), castable.apCost())
         ;
     }
 }

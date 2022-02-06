@@ -68,6 +68,7 @@ class SpellLaunchValidatorTest extends FightBaseCase {
         Mockito.when(constraints.launchPerTarget()).thenReturn(1);
         Mockito.when(constraints.launchDelay()).thenReturn(1);
 
+        assertTrue(validator.check(turn, spell, fighter.cell()));
         assertNull(validator.validate(turn, spell, fighter.cell()));
     }
 
@@ -85,6 +86,7 @@ class SpellLaunchValidatorTest extends FightBaseCase {
         fighter.attach(new LaunchedSpells());
         fighter.attachment(LaunchedSpells.class).push(spell, fighter.cell());
 
+        assertTrue(validator.check(turn, spell, fighter.cell()));
         assertNull(validator.validate(turn, spell, fighter.cell()));
     }
 
@@ -102,6 +104,7 @@ class SpellLaunchValidatorTest extends FightBaseCase {
         fighter.attach(new LaunchedSpells());
         fighter.attachment(LaunchedSpells.class).push(spell, fighter.cell());
 
+        assertFalse(validator.check(turn, spell, fighter.cell()));
         assertEquals(
             Error.cantCast().toString(),
             validator.validate(turn, spell, fighter.cell()).toString()

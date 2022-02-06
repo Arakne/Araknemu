@@ -52,6 +52,11 @@ public final class WeaponConstraintsValidator implements CastConstraintValidator
     }
 
     @Override
+    public boolean check(Turn turn, CastableWeapon castable, FightCell target) {
+        return validator.check(turn, castable, target);
+    }
+
+    @Override
     public Error validate(Turn turn, CastableWeapon weapon, FightCell target) {
         return validator.validate(turn, weapon, target);
     }

@@ -198,6 +198,9 @@ class ProxyBattlefieldTest extends AiBaseCase {
             assertEquals(cell.sightBlocking(), ai.map().get(cell.id()).sightBlocking());
             assertEquals(cell.id(), ai.map().get(cell.id()).id());
             assertEquals(cell.walkable(), ai.map().get(cell.id()).walkable());
+            assertEquals(cell.coordinate().x(), ai.map().get(cell.id()).coordinate().x());
+            assertEquals(cell.coordinate().y(), ai.map().get(cell.id()).coordinate().y());
+            assertSame(cell.coordinate(), cell.coordinate());
         }
     }
 }

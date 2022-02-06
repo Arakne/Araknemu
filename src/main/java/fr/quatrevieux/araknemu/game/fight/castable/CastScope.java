@@ -209,15 +209,44 @@ public final class CastScope {
             return Collections.emptyList();
         }
 
-        return effect.area()
-            .resolve(target, caster.cell())
-            .stream()
-            .map(FightCell::fighter)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .filter(fighter -> effect.target().test(caster, fighter))
-            .collect(Collectors.toList())
-        ;
+        // Use lazy instantiation and do not use stream API to optimise memory allocations
+        PassiveFighter firstTarget = null;
+        Collection<PassiveFighter> targets = null;
+
+        for (FightCell cell : effect.area().resolve(target, caster.cell())) {
+            final Optional<PassiveFighter> resolvedTarget = cell.fighter().filter(fighter -> effect.target().test(caster, fighter));
+
+            if (!resolvedTarget.isPresent()) {
+                continue;
+            }
+
+            // Found the first target
+            if (firstTarget == null) {
+                firstTarget = resolvedTarget.get();
+                continue;
+            }
+
+            // Multiple targets are found : instantiate the collection
+            if (targets == null) {
+                targets = new ArrayList<>();
+                targets.add(firstTarget);
+            }
+
+            targets.add(resolvedTarget.get());
+        }
+
+        // There is multiple targets
+        if (targets != null) {
+            return targets;
+        }
+
+        // There is only one target : create a singleton
+        if (firstTarget != null) {
+            return Collections.singleton(firstTarget);
+        }
+
+        // No targets are resolved
+        return Collections.emptyList();
     }
 
     /**

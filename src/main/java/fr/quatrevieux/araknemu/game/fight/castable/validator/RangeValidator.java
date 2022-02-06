@@ -31,6 +31,19 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
  */
 public final class RangeValidator implements CastConstraintValidator {
     @Override
+    public boolean check(Turn turn, Castable castable, FightCell target) {
+        final int distance = turn.fighter().cell().coordinate().distance(target);
+
+        Interval range = castable.constraints().range();
+
+        if (castable.modifiableRange()) {
+            range = range.modify(turn.fighter().characteristics().get(Characteristic.SIGHT_BOOST));
+        }
+
+        return range.contains(distance);
+    }
+
+    @Override
     public Error validate(Turn turn, Castable castable, FightCell target) {
         final int distance = turn.fighter().cell().coordinate().distance(target);
 

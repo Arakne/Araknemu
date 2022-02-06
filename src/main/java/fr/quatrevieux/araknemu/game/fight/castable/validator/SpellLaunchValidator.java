@@ -30,13 +30,14 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
  */
 public class SpellLaunchValidator implements CastConstraintValidator<Spell> {
     @Override
-    public Error validate(Turn turn, Spell castable, FightCell target) {
+    public boolean check(Turn turn, Spell castable, FightCell target) {
         final LaunchedSpells history = turn.fighter().attachment(LaunchedSpells.class);
 
-        if (history != null && !history.valid(castable, target)) {
-            return Error.cantCast();
-        }
+        return history == null || history.valid(castable, target);
+    }
 
-        return null;
+    @Override
+    public Error validate(Turn turn, Spell castable, FightCell target) {
+        return check(turn, castable, target) ? null : Error.cantCast();
     }
 }

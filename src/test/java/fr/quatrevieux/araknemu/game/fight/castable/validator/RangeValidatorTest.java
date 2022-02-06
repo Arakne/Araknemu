@@ -65,6 +65,7 @@ class RangeValidatorTest  extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.range()).thenReturn(new Interval(1, 10));
 
+        assertTrue(validator.check(turn, spell, fight.map().get(186)));
         assertNull(validator.validate(turn, spell, fight.map().get(186)));
     }
 
@@ -76,6 +77,7 @@ class RangeValidatorTest  extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.range()).thenReturn(new Interval(1, 10));
 
+        assertFalse(validator.check(turn, spell, fight.map().get(102)));
         assertEquals(
             Error.cantCastBadRange(new Interval(1, 10), 21).toString(),
             validator.validate(turn, spell, fight.map().get(102)).toString()
@@ -90,6 +92,7 @@ class RangeValidatorTest  extends FightBaseCase {
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.range()).thenReturn(new Interval(1, 10));
 
+        assertFalse(validator.check(turn, spell, fight.map().get(185)));
         assertEquals(
             Error.cantCastBadRange(new Interval(1, 10), 0).toString(),
             validator.validate(turn, spell, fight.map().get(185)).toString()
@@ -107,6 +110,7 @@ class RangeValidatorTest  extends FightBaseCase {
 
         fighter.characteristics().alter(Characteristic.SIGHT_BOOST, 15);
 
+        assertTrue(validator.check(turn, spell, fight.map().get(102)));
         assertNull(validator.validate(turn, spell, fight.map().get(102)));
     }
 
@@ -121,6 +125,7 @@ class RangeValidatorTest  extends FightBaseCase {
 
         fighter.characteristics().alter(Characteristic.SIGHT_BOOST, -5);
 
+        assertFalse(validator.check(turn, spell, fight.map().get(195)));
         assertEquals(
             Error.cantCastBadRange(new Interval(1, 5), 9).toString(),
             validator.validate(turn, spell, fight.map().get(195)).toString()

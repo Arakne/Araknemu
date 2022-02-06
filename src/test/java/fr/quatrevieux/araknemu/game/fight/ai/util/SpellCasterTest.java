@@ -59,6 +59,7 @@ class SpellCasterTest extends FightBaseCase {
         Spell spell = fighter.spells().get(3);
 
         assertFalse(caster.validate(spell, fight.map().get(5)));
+        assertFalse(caster.validate(spell, fight.map().get(30)));
         assertTrue(caster.validate(spell, fight.map().get(210)));
     }
 

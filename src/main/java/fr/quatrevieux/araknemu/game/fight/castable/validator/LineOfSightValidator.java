@@ -29,15 +29,12 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
  */
 public final class LineOfSightValidator implements CastConstraintValidator {
     @Override
+    public boolean check(Turn turn, Castable castable, FightCell target) {
+        return !castable.constraints().lineOfSight() || turn.fighter().cell().sight().isFree(target);
+    }
+
+    @Override
     public Error validate(Turn turn, Castable castable, FightCell target) {
-        if (!castable.constraints().lineOfSight()) {
-            return null;
-        }
-
-        if (turn.fighter().cell().sight().isFree(target)) {
-            return null;
-        }
-
-        return Error.cantCastSightBlocked();
+        return check(turn, castable, target) ? null : Error.cantCastSightBlocked();
     }
 }

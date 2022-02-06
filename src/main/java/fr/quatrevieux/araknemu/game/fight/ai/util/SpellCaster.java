@@ -40,10 +40,15 @@ public final class SpellCaster {
      * Validate the cast action
      */
     public boolean validate(Spell spell, FightCell target) {
+        // A non-walkable cell can't be a valid target
+        if (!target.walkableIgnoreFighter()) {
+            return false;
+        }
+
         final Turn turn = ai.turn();
         final CastConstraintValidator<Spell> validator = turn.actions().cast().validator();
 
-        return validator.validate(turn, spell, target) == null;
+        return validator.check(turn, spell, target);
     }
 
     /**
