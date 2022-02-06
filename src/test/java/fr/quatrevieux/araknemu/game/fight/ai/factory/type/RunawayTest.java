@@ -34,10 +34,7 @@ class RunawayTest extends AiBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        GeneratorBuilder builder = new GeneratorBuilder();
-        new Runaway(container.get(Simulator.class)).configure(builder);
-        action = builder.build();
-
+        actionFactory = new Runaway(container.get(Simulator.class));
         dataSet.pushFunctionalSpells();
     }
 

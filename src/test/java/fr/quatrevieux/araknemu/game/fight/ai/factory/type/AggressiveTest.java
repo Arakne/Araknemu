@@ -178,6 +178,23 @@ class AggressiveTest extends AiBaseCase {
         assertCast(145, 277);
     }
 
+    @Test
+    void withoutDistanceSpellsButWithAreaShouldBeConsideredAsDistanceSpell() throws NoSuchFieldException, IllegalAccessException {
+        SpellBook spells = player.properties().spells();
+        Field field = spells.getClass().getDeclaredField("entries");
+        field.setAccessible(true);
+
+        ((Map) field.get(spells)).clear();
+
+        configureFight(b -> b
+            .addSelf(fb -> fb.cell(192).spell(181, 5))
+            .addEnemy(fb -> fb.cell(221))
+            .addEnemy(fb -> fb.cell(263))
+        );
+
+        assertCast(181, 192);
+    }
+
     private int distance(Fighter other) {
         return fighter.cell().coordinate().distance(other.cell());
     }

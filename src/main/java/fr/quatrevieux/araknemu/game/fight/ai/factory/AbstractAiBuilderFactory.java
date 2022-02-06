@@ -33,7 +33,7 @@ public abstract class AbstractAiBuilderFactory implements AiFactory {
     /**
      * Configure the AI generator
      */
-    public void configure(GeneratorBuilder builder) {
+    protected void configure(GeneratorBuilder builder) {
         // To implements if configure(GeneratorBuilder, Fighter) is not implemented
     }
 
