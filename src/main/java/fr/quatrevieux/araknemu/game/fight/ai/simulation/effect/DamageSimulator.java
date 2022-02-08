@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
@@ -42,15 +43,19 @@ public final class DamageSimulator implements EffectSimulator {
 
     @Override
     public void simulate(CastSimulation simulation, CastScope.EffectScope effect) {
-        // @todo apply caster and target buff
-        final Interval value = new EffectValue(effect.effect())
-            .percent(simulation.caster().characteristics().get(element.boost()))
-            .percent(simulation.caster().characteristics().get(Characteristic.PERCENT_DAMAGE))
-            .fixed(simulation.caster().characteristics().get(Characteristic.FIXED_DAMAGE))
-            .interval()
-        ;
+        final ActiveFighter caster = simulation.caster();
+        final int boost = caster.characteristics().get(element.boost());
+        final int percent = caster.characteristics().get(Characteristic.PERCENT_DAMAGE);
+        final int fixed = caster.characteristics().get(Characteristic.FIXED_DAMAGE);
 
         for (PassiveFighter target : effect.targets()) {
+            final Interval value = EffectValue.create(effect.effect(), simulation.caster(), target)
+                .percent(boost)
+                .percent(percent)
+                .fixed(fixed)
+                .interval()
+            ;
+
             final Interval damage = value.map(base -> computeDamage(base, target));
 
             if (effect.effect().duration() < 1) {

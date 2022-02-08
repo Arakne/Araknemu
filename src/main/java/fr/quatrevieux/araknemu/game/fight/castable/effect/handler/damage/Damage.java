@@ -84,7 +84,7 @@ public final class Damage implements MultipliableDamage {
 
     @Override
     public Damage multiply(int factor) {
-        this.multiply = factor;
+        this.multiply *= factor;
 
         return this;
     }

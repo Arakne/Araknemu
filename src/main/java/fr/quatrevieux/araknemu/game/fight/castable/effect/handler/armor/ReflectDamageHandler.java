@@ -55,7 +55,7 @@ public final class ReflectDamageHandler implements EffectHandler, BuffHook {
         // Ignore self damage
         if (!caster.equals(buff.target())) {
             value.reflect(
-                new EffectValue(buff.effect())
+                EffectValue.create(buff.effect(), buff.target(), caster)
                     .percent(buff.target().characteristics().get(Characteristic.WISDOM))
                     .value()
             );

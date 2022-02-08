@@ -57,7 +57,7 @@ public final class HealHandler implements EffectHandler, BuffHook {
     }
 
     private void apply(ActiveFighter caster, SpellEffect effect, PassiveFighter target) {
-        final EffectValue value = new EffectValue(effect)
+        final EffectValue value = EffectValue.create(effect, caster, target)
             .percent(caster.characteristics().get(Characteristic.INTELLIGENCE))
             .fixed(caster.characteristics().get(Characteristic.HEALTH_BOOST))
         ;

@@ -14,20 +14,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2022 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic;
+package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier;
 
-import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageApplier;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -35,7 +33,6 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CircleArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
-import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -46,11 +43,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class AddCharacteristicHandlerTest extends FightBaseCase {
+class MaximizeTargetEffectsHandlerTest extends FightBaseCase {
     private Fight fight;
     private PlayerFighter caster;
     private PlayerFighter target;
-    private AddCharacteristicHandler handler;
+    private MaximizeTargetEffectsHandler handler;
 
     @Override
     @BeforeEach
@@ -66,7 +63,7 @@ class AddCharacteristicHandlerTest extends FightBaseCase {
 
         target.move(fight.map().get(123));
 
-        handler = new AddCharacteristicHandler(fight, Characteristic.LUCK);
+        handler = new MaximizeTargetEffectsHandler();
 
         requestStack.clear();
     }
@@ -109,62 +106,29 @@ class AddCharacteristicHandlerTest extends FightBaseCase {
 
         assertTrue(buff1.isPresent());
         assertTrue(buff2.isPresent());
-
-        assertBetween(50, 60, buff1.get().effect().min());
-        assertEquals(buff1.get().effect().min(), buff2.get().effect().min());
     }
 
     @Test
-    void buffWithOneTargetMaximized() {
-        target.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
-            @Override
-            public void onEffectValueTarget(Buff buff, EffectValue value, PassiveFighter caster) {
-                value.maximize();
-            }
-        }));
-
+    void functional() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.effect()).thenReturn(123);
-        Mockito.when(effect.min()).thenReturn(0);
-        Mockito.when(effect.max()).thenReturn(10000);
         Mockito.when(effect.duration()).thenReturn(5);
-        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 10)));
+        Mockito.when(effect.area()).thenReturn(new CellArea());
         Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(target, spell, effect, caster.cell());
+        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
-        Optional<Buff> buff2 = target.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        SpellEffect damageEffect = Mockito.mock(SpellEffect.class);
+        Mockito.when(damageEffect.min()).thenReturn(5);
+        Mockito.when(damageEffect.max()).thenReturn(10);
 
-        assertTrue(buff1.isPresent());
-        assertTrue(buff2.isPresent());
-
-        assertBetween(0, 9999, buff1.get().effect().min());
-        assertEquals(10000, buff2.get().effect().min());
-    }
-
-    @Test
-    void onBuffStartedAndTerminated() {
-        SpellEffect effect = Mockito.mock(SpellEffect.class);
-
-        Mockito.when(effect.effect()).thenReturn(123);
-        Mockito.when(effect.min()).thenReturn(50);
-        Mockito.when(effect.duration()).thenReturn(5);
-
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), caster, target, handler);
-
-        handler.onBuffStarted(buff);
-
-        requestStack.assertLast(ActionEffect.buff(buff, 50));
-        assertEquals(50, target.characteristics().get(Characteristic.LUCK));
-
-        handler.onBuffTerminated(buff);
-        assertEquals(0, target.characteristics().get(Characteristic.LUCK));
+        assertEquals(-10, new DamageApplier(Element.AIR, fight).apply(caster, damageEffect, target));
+        assertEquals(10, target.life().max() - target.life().current());
     }
 }

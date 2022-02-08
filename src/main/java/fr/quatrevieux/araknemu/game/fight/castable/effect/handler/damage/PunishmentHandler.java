@@ -61,7 +61,7 @@ public final class PunishmentHandler implements EffectHandler {
         final double factor = base * base / 4 * casterLife.max();
 
         for (PassiveFighter target : effect.targets()) {
-            final double percent = new EffectValue(effect.effect()).value() / 100d;
+            final double percent = EffectValue.create(effect.effect(), caster, target).value() / 100d;
             final int value = (int) (factor * percent);
 
             applier.applyFixed(caster, value, target);

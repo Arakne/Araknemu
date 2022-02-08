@@ -14,33 +14,29 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2021 Vincent Quatrevieux
+ * Copyright (c) 2017-2022 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage;
+package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier;
 
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
- * Handle fixed damage, which cannot be boosted nor reduced
- * This effect has no related element, and do not call buffs
+ * Multiply casted damage
+ *
+ * Note: This effect is not randomized, "min" value is always used
+ *
+ * @see Damage#multiply(int) The called modifier
  */
-public final class FixedDamageHandler implements EffectHandler, BuffHook {
+public final class MultiplyDamageHandler implements EffectHandler, BuffHook {
     @Override
     public void handle(CastScope cast, CastScope.EffectScope effect) {
-        final ActiveFighter caster = cast.caster();
-
-        // This is a fixed effect, without any elements
-        // So it does not call any buff hooks
-        for (PassiveFighter target : effect.targets()) {
-            target.life().alter(caster, -EffectValue.create(effect.effect(), caster, target).value());
-        }
+        throw new UnsupportedOperationException("Multiply damage can only be used as buff");
     }
 
     @Override
@@ -51,9 +47,7 @@ public final class FixedDamageHandler implements EffectHandler, BuffHook {
     }
 
     @Override
-    public boolean onStartTurn(Buff buff) {
-        buff.target().life().alter(buff.caster(), -EffectValue.create(buff.effect(), buff.caster(), buff.target()).value());
-
-        return !buff.target().dead();
+    public void onCastDamage(Buff buff, Damage damage, PassiveFighter target) {
+        damage.multiply(buff.effect().min());
     }
 }
