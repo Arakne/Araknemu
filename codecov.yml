@@ -1,3 +1,8 @@
+codecov:
+  require_ci_to_pass: false
+  notify:
+    wait_for_ci: false
+
 coverage:
   status:
     project:
@@ -8,7 +13,3 @@ coverage:
       default:
         # basic
         target: 95%
-
-  require_ci_to_pass: false
-  notify:
-    wait_for_ci: false
