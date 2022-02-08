@@ -51,7 +51,6 @@ class LeaveSpectatorFightTest extends FightBaseCase {
         requestStack.clear();
 
         handlePacket(new LeaveFightRequest());
-        Thread.sleep(100);
 
         requestStack.assertLast(new CancelFight());
         assertFalse(gamePlayer().isSpectator());

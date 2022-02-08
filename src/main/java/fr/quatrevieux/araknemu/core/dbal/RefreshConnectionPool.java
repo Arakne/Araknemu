@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.core.dbal;
 
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
@@ -26,7 +27,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -38,7 +38,7 @@ public final class RefreshConnectionPool implements ConnectionPool {
     private final long interval;
     private final Logger logger;
 
-    private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService executorService = ExecutorFactory.createSingleThread();
 
     public RefreshConnectionPool(ConnectionPool pool, long interval, Logger logger) {
         this.pool = pool;

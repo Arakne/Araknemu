@@ -48,12 +48,10 @@ class ToggleLockTeamTest extends FightBaseCase {
         Fight fight = createFight();
 
         handlePacket(new LockTeamRequest());
-        Thread.sleep(50);
         requestStack.assertLast(Information.joinTeamLocked());
         assertFalse(fight.team(0).options().allowJoinTeam());
 
         handlePacket(new LockTeamRequest());
-        Thread.sleep(50);
         requestStack.assertLast(Information.joinTeamReleased());
         assertTrue(fight.team(0).options().allowJoinTeam());
     }
@@ -64,7 +62,7 @@ class ToggleLockTeamTest extends FightBaseCase {
         fight.state(PlacementState.class).joinTeam(makePlayerFighter(gamePlayer()), fight.team(0));
 
         handlePacket(new LockTeamRequest());
-        Thread.sleep(50);
+
         requestStack.assertLast(new Noop());
         assertTrue(fight.team(0).options().allowJoinTeam());
     }
@@ -75,7 +73,7 @@ class ToggleLockTeamTest extends FightBaseCase {
         fight.nextState();
 
         handlePacket(new LockTeamRequest());
-        Thread.sleep(50);
+
         requestStack.assertLast(new Noop());
         assertTrue(fight.team(0).options().allowJoinTeam());
     }

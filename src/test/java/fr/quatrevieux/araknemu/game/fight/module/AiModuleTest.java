@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.FighterAI;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
+import fr.quatrevieux.araknemu.util.ExecutorFactory;
 import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -71,14 +72,12 @@ class AiModuleTest extends FightBaseCase {
         fight.register(new AiModule(container.get(AiFactory.class)));
         fight.nextState();
         fight.turnList().start();
-        fight.turnList().current().get().stop();
-
         requestStack.clear();
+        fight.turnList().current().get().stop();
 
         FightTurn turn = fight.turnList().current().get();
 
         assertTrue(turn.active());
-        Thread.sleep(200);
 
         // Move action started
         requestStack.assertOne("GA0;1;-2;ab-fbG");

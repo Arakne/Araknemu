@@ -1,4 +1,4 @@
-# Araknemu [![Build Status](https://scrutinizer-ci.com/g/Arakne/Araknemu/badges/build.png?b=master)](https://scrutinizer-ci.com/g/Arakne/Araknemu/build-status/master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Arakne/Araknemu/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Arakne/Araknemu/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/Arakne/Araknemu/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Arakne/Araknemu/?branch=master)
+# Araknemu [![Java CI](https://github.com/Arakne/Araknemu/actions/workflows/ci.yaml/badge.svg)](https://github.com/Arakne/Araknemu/actions/workflows/ci.yaml) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Arakne/Araknemu/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Arakne/Araknemu/?branch=master) [![codecov](https://codecov.io/gh/Arakne/Araknemu/branch/master/graph/badge.svg?token=PFK2YM1T6W)](https://codecov.io/gh/Arakne/Araknemu)
 
 A simple open source Dofus 1.29 server emulator, implementing only base features, with high quality standard.
 
