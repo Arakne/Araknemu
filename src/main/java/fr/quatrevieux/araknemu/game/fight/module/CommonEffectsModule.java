@@ -56,6 +56,9 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.DispelHan
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.PushStateHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.RemoveStateHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.SkipTurnHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier.MaximizeTargetEffectsHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier.MinimizeCastedEffectsHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier.MultiplyDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.AvoidDamageByMovingBackHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.MoveBackHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.MoveFrontHandler;
@@ -129,6 +132,10 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(106, new SpellReturnHandler(fight));
         handler.register(107, new ReflectDamageHandler());
         handler.register(265, new ReduceDamageHandler());
+
+        handler.register(114, new MultiplyDamageHandler());
+        handler.register(781, new MinimizeCastedEffectsHandler());
+        handler.register(782, new MaximizeTargetEffectsHandler());
 
         handler.register(111, new AddActionPointsHandler(fight));
         handler.register(120, new AddActionPointsHandler(fight));

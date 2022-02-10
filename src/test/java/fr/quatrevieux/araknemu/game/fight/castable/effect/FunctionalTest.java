@@ -854,6 +854,37 @@ public class FunctionalTest extends FightBaseCase {
         requestStack.assertOne(ActionEffect.alterLifePoints(fighters.get(0), fighters.get(1), 20));
     }
 
+    @Test
+    void maximizeTargetEffects() {
+        castNormal(410, fighter2.cell()); // Brokle
+        passTurns(1);
+        castNormal(109, fighter2.cell()); // Bluff
+
+        assertEquals(45, fighter2.life().max() - fighter2.life().current());
+        requestStack.assertOne(ActionEffect.alterLifePoints(fighter1, fighter2, -45));
+    }
+
+    @Test
+    void minimizeCastedEffects() {
+        castNormal(416, fighter2.cell()); // Poisse
+        fighter1.turn().stop();
+
+        castNormal(109, fighter1.cell()); // Bluff
+
+        assertEquals(1, fighter1.life().max() - fighter1.life().current());
+        requestStack.assertOne(ActionEffect.alterLifePoints(fighter2, fighter1, -1));
+    }
+
+    @Test
+    void multiplyDamage() {
+        castNormal(2115, fighter1.cell()); // Tir Puissant du Dopeul
+        passTurns(1);
+        castNormal(183, fighter2.cell()); // Ronce
+
+        int damage = fighter2.life().max() - fighter2.life().current();
+        assertBetween(20, 34, damage);
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 

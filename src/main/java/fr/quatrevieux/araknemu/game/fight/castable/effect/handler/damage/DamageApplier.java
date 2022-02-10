@@ -84,10 +84,7 @@ public final class DamageApplier {
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamage(ActiveFighter, Damage) The called buff hook
      */
     public int applyFixed(ActiveFighter caster, int value, PassiveFighter target) {
-        final Damage damage = new Damage(value, element)
-            .percent(target.characteristics().get(element.percentResistance()))
-            .fixed(target.characteristics().get(element.fixedResistance()))
-        ;
+        final Damage damage = createDamage(caster, target, value);
 
         return applyDirectDamage(caster, damage, target);
     }
@@ -155,10 +152,7 @@ public final class DamageApplier {
      */
     public int applyFixed(Buff buff, int value) {
         final PassiveFighter target = buff.target();
-        final Damage damage = new Damage(value, element)
-            .percent(target.characteristics().get(element.percentResistance()))
-            .fixed(target.characteristics().get(element.fixedResistance()))
-        ;
+        final Damage damage = createDamage(buff.caster(), target, value);
 
         return applyBuffDamage(buff, damage, target);
     }
@@ -167,16 +161,13 @@ public final class DamageApplier {
      * Create the damage object
      */
     private Damage computeDamage(ActiveFighter caster, SpellEffect effect, PassiveFighter target) {
-        final EffectValue value = new EffectValue(effect)
+        final EffectValue value = EffectValue.create(effect, caster, target)
             .percent(caster.characteristics().get(element.boost()))
             .percent(caster.characteristics().get(Characteristic.PERCENT_DAMAGE))
             .fixed(caster.characteristics().get(Characteristic.FIXED_DAMAGE))
         ;
 
-        return new Damage(value.value(), element)
-            .percent(target.characteristics().get(element.percentResistance()))
-            .fixed(target.characteristics().get(element.fixedResistance()))
-        ;
+        return createDamage(caster, target, value.value());
     }
 
     /**
@@ -246,5 +237,25 @@ public final class DamageApplier {
             fight.send(ActionEffect.reflectedDamage(castTarget, returnedDamage.baseValue()));
             returnedDamage.target().life().alter(castTarget, -returnedDamage.value());
         }
+    }
+
+    /**
+     * Create the damage object, and call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onCastDamage(Damage, PassiveFighter)}
+     *
+     * @param caster The spell caster
+     * @param target The effect target
+     * @param value Raw damage value
+     *
+     * @return The damage object to apply
+     */
+    private Damage createDamage(ActiveFighter caster, PassiveFighter target, int value) {
+        final Damage damage = new Damage(value, element)
+            .percent(target.characteristics().get(element.percentResistance()))
+            .fixed(target.characteristics().get(element.fixedResistance()))
+        ;
+
+        caster.buffs().onCastDamage(damage, target);
+
+        return damage;
     }
 }

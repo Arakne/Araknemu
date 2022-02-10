@@ -677,4 +677,78 @@ class DamageApplierTest extends FightBaseCase {
         assertEquals(-2, value);
         assertEquals(-2, target.life().current() - target.life().max());
     }
+
+    @Test
+    void applyShouldCallOnCastDamageOnCaster() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(effect.min()).thenReturn(10);
+
+        DamageApplier applier = new DamageApplier(Element.AIR, fight);
+
+        BuffHook hook = Mockito.mock(BuffHook.class);
+        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, hook);
+
+        caster.buffs().add(buff);
+
+        int value = applier.apply(caster, effect, target);
+
+        assertEquals(-10, value);
+
+        Mockito.verify(hook, Mockito.times(1)).onCastDamage(Mockito.eq(buff), Mockito.argThat(damage -> damage.value() == 10), Mockito.eq(target));
+    }
+
+    @Test
+    void applyFixedShouldCallOnCastDamageOnCaster() {
+        DamageApplier applier = new DamageApplier(Element.AIR, fight);
+
+        BuffHook hook = Mockito.mock(BuffHook.class);
+        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, hook);
+
+        caster.buffs().add(buff);
+
+        int value = applier.applyFixed(caster, 10, target);
+
+        assertEquals(-10, value);
+
+        Mockito.verify(hook, Mockito.times(1)).onCastDamage(Mockito.eq(buff), Mockito.argThat(damage -> damage.value() == 10), Mockito.eq(target));
+    }
+
+    @Test
+    void applyBuffShouldCallOnCastDamageOnCaster() {
+        DamageApplier applier = new DamageApplier(Element.AIR, fight);
+
+        BuffHook hook = Mockito.mock(BuffHook.class);
+        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, hook);
+
+        caster.buffs().add(buff);
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Mockito.when(effect.min()).thenReturn(10);
+        Buff toApply = new Buff(effect, Mockito.mock(Spell.class), caster, target, Mockito.mock(BuffHook.class));
+
+        int value = applier.apply(toApply);
+
+        assertEquals(-10, value);
+
+        Mockito.verify(hook, Mockito.times(1)).onCastDamage(Mockito.eq(buff), Mockito.argThat(damage -> damage.value() == 10), Mockito.eq(target));
+    }
+
+    @Test
+    void applyFixedBuffShouldCallOnCastDamageOnCaster() {
+        DamageApplier applier = new DamageApplier(Element.AIR, fight);
+
+        BuffHook hook = Mockito.mock(BuffHook.class);
+        Buff buff = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, hook);
+
+        caster.buffs().add(buff);
+
+        Buff toApply = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), caster, target, Mockito.mock(BuffHook.class));
+
+        int value = applier.applyFixed(toApply, 10);
+
+        assertEquals(-10, value);
+
+        Mockito.verify(hook, Mockito.times(1)).onCastDamage(Mockito.eq(buff), Mockito.argThat(damage -> damage.value() == 10), Mockito.eq(target));
+    }
 }

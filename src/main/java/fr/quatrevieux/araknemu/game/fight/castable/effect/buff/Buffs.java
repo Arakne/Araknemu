@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
@@ -80,6 +81,21 @@ public interface Buffs extends Iterable<Buff> {
      * @see BuffHook#onEndTurn(Buff)
      */
     public void onEndTurn();
+
+    /**
+     * @see BuffHook#onCastDamage(Buff, Damage, PassiveFighter)
+     */
+    public void onCastDamage(Damage damage, PassiveFighter target);
+
+    /**
+     * @see BuffHook#onEffectValueCast(Buff, EffectValue)
+     */
+    public void onEffectValueCast(EffectValue value);
+
+    /**
+     * @see BuffHook#onEffectValueTarget(Buff, EffectValue, PassiveFighter)
+     */
+    public void onEffectValueTarget(EffectValue value, PassiveFighter caster);
 
     /**
      * Refresh the buff list after turn end

@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
@@ -321,6 +322,69 @@ class BuffListTest extends FightBaseCase {
         Mockito.verify(hook1).onReflectedDamage(buff1, damage);
         Mockito.verify(hook2).onReflectedDamage(buff2, damage);
         Mockito.verify(hook3).onReflectedDamage(buff3, damage);
+    }
+
+    @Test
+    void onCastDamage() {
+        BuffHook hook1, hook2, hook3;
+
+        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+
+        list.add(buff1);
+        list.add(buff2);
+        list.add(buff3);
+
+        Damage damage = new Damage(10, Element.NEUTRAL);
+
+        list.onCastDamage(damage, other.fighter());
+
+        Mockito.verify(hook1).onCastDamage(buff1, damage, other.fighter());
+        Mockito.verify(hook2).onCastDamage(buff2, damage, other.fighter());
+        Mockito.verify(hook3).onCastDamage(buff3, damage, other.fighter());
+    }
+
+    @Test
+    void onEffectValueCast() {
+        BuffHook hook1, hook2, hook3;
+
+        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+
+        list.add(buff1);
+        list.add(buff2);
+        list.add(buff3);
+
+        EffectValue ev = EffectValue.create(Mockito.mock(SpellEffect.class), other.fighter(), other.fighter());
+
+        list.onEffectValueCast(ev);
+
+        Mockito.verify(hook1).onEffectValueCast(buff1, ev);
+        Mockito.verify(hook2).onEffectValueCast(buff2, ev);
+        Mockito.verify(hook3).onEffectValueCast(buff3, ev);
+    }
+
+    @Test
+    void onEffectValueTarget() {
+        BuffHook hook1, hook2, hook3;
+
+        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+
+        list.add(buff1);
+        list.add(buff2);
+        list.add(buff3);
+
+        EffectValue ev = EffectValue.create(Mockito.mock(SpellEffect.class), other.fighter(), other.fighter());
+
+        list.onEffectValueTarget(ev, player.fighter());
+
+        Mockito.verify(hook1).onEffectValueTarget(buff1, ev, player.fighter());
+        Mockito.verify(hook2).onEffectValueTarget(buff2, ev, player.fighter());
+        Mockito.verify(hook3).onEffectValueTarget(buff3, ev, player.fighter());
     }
 
     @Test
