@@ -266,4 +266,36 @@ public final class ActionEffect {
     public static ActionEffect dodgeMovementPointLost(PassiveFighter caster, PassiveFighter target, int value) {
         return new ActionEffect(309, caster, target.id(), value);
     }
+
+    /**
+     * Change the appearance of the target
+     *
+     * @param caster The spell caster
+     * @param target The effect target
+     * @param newAppearance The new appearance id (can be found in `clips/sprites/[id].swf)
+     * @param duration The effect duration
+     */
+    public static ActionEffect changeAppearance(PassiveFighter caster, PassiveFighter target, int newAppearance, int duration) {
+        return new ActionEffect(149, caster, target.id(), target.sprite().gfxId(), newAppearance, duration);
+    }
+
+    /**
+     * Reset the appearance of the target
+     */
+    public static ActionEffect resetAppearance(PassiveFighter caster, PassiveFighter target) {
+        final int baseGfxId = target.sprite().gfxId();
+
+        return new ActionEffect(149, caster, target.id(), baseGfxId, baseGfxId, 0);
+    }
+
+    /**
+     * Launch visual effect of a spell
+     *
+     * @param caster The visual effect caster
+     * @param targetCell The target cell
+     * @param spell Spell which contains sprite arguments
+     */
+    public static ActionEffect launchVisualEffect(PassiveFighter caster, FightCell targetCell, Spell spell) {
+        return new ActionEffect(208, caster, targetCell.id(), spell.spriteId(), spell.spriteArgs(), spell.level());
+    }
 }

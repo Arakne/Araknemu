@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -273,5 +274,50 @@ class ActionEffectTest {
         Mockito.when(target.id()).thenReturn(123);
 
         assertEquals("GA;309;456;123,2", ActionEffect.dodgeMovementPointLost(caster, target, 2).toString());
+    }
+
+    @Test
+    void changeAppearance() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Fighter target = Mockito.mock(Fighter.class);
+
+        Sprite sprite = Mockito.mock(Sprite.class);
+
+        Mockito.when(caster.id()).thenReturn(456);
+        Mockito.when(target.id()).thenReturn(123);
+        Mockito.when(target.sprite()).thenReturn(sprite);
+        Mockito.when(sprite.gfxId()).thenReturn(10);
+
+        assertEquals("GA;149;456;123,10,147,5", ActionEffect.changeAppearance(caster, target, 147, 5).toString());
+    }
+
+    @Test
+    void resetAppearance() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Fighter target = Mockito.mock(Fighter.class);
+
+        Sprite sprite = Mockito.mock(Sprite.class);
+
+        Mockito.when(caster.id()).thenReturn(456);
+        Mockito.when(target.id()).thenReturn(123);
+        Mockito.when(target.sprite()).thenReturn(sprite);
+        Mockito.when(sprite.gfxId()).thenReturn(10);
+
+        assertEquals("GA;149;456;123,10,10,0", ActionEffect.resetAppearance(caster, target).toString());
+    }
+
+    @Test
+    void launchVisualEffect() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Spell spell = Mockito.mock(Spell.class);
+        FightCell cell = Mockito.mock(FightCell.class);
+
+        Mockito.when(caster.id()).thenReturn(456);
+        Mockito.when(spell.spriteId()).thenReturn(12);
+        Mockito.when(spell.spriteArgs()).thenReturn("11,0,1");
+        Mockito.when(spell.level()).thenReturn(3);
+        Mockito.when(cell.id()).thenReturn(325);
+
+        assertEquals("GA;208;456;325,12,11,0,1,3", ActionEffect.launchVisualEffect(caster, cell, spell).toString());
     }
 }

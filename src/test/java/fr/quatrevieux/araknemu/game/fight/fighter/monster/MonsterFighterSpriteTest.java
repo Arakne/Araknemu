@@ -104,5 +104,6 @@ class MonsterFighterSpriteTest extends FightBaseCase {
         assertEquals(Direction.SOUTH_EAST, sprite.orientation());
         assertEquals(Sprite.Type.MONSTER, sprite.type());
         assertEquals("31", sprite.name());
+        assertEquals(1563, sprite.gfxId());
     }
 }

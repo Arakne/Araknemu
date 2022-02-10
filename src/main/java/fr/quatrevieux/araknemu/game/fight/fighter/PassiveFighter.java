@@ -22,11 +22,12 @@ package fr.quatrevieux.araknemu.game.fight.fighter;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
+import fr.quatrevieux.araknemu.game.world.creature.Creature;
 
 /**
  * Fighter type which can be a target of spells or other actions
  */
-public interface PassiveFighter {
+public interface PassiveFighter extends Creature<FightCell> {
     /**
      * Get the fighter id
      */

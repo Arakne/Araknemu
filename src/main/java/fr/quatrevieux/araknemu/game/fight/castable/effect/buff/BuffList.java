@@ -112,6 +112,13 @@ public final class BuffList implements Iterable<Buff>, Buffs {
     }
 
     @Override
+    public void onIndirectDamage(ActiveFighter caster, Damage value) {
+        for (Buff buff : buffs) {
+            buff.hook().onIndirectDamage(buff, caster, value);
+        }
+    }
+
+    @Override
     public void onBuffDamage(Buff poison, Damage value) {
         for (Buff buff : buffs) {
             buff.hook().onBuffDamage(buff, poison, value);

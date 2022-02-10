@@ -160,6 +160,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.DefaultFighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.module.AiModule;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
+import fr.quatrevieux.araknemu.game.fight.module.IndirectSpellApplyEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.module.LaunchedSpellsModule;
 import fr.quatrevieux.araknemu.game.fight.module.RaulebaqueModule;
 import fr.quatrevieux.araknemu.game.fight.module.StatesModule;
@@ -603,6 +604,7 @@ public final class GameModule implements ContainerModule {
                 ),
                 Arrays.asList(
                     CommonEffectsModule::new,
+                    fight -> new IndirectSpellApplyEffectsModule(fight, container.get(SpellService.class)),
                     StatesModule::new,
                     RaulebaqueModule::new,
                     LaunchedSpellsModule::new,

@@ -28,13 +28,13 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.HealOrMu
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.ReduceDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.ReflectDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.SpellReturnHandler;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.point.ActionPointLostHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddActionPointsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddCharacteristicHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddMovementPointsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.RemoveActionPointsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.RemoveCharacteristicHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.RemoveMovementPointsHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.point.ActionPointLostHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.point.MovementPointLostHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.point.StealActionPointHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.point.StealMovementPointHandler;
@@ -42,6 +42,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageH
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.FixedCasterDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.FixedDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.FixedStealLifeHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.IndirectPercentLifeDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.PercentLifeDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.PercentLifeLostDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.PunishmentHandler;
@@ -50,6 +51,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.FixedHeal
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.GivePercentLifeHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.HealHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.HealOnDamageHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.ChangeAppearanceHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.DispelHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.PushStateHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.RemoveStateHandler;
@@ -105,6 +107,8 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(88, new PercentLifeDamageHandler(Element.FIRE, fight));
         handler.register(89, new PercentLifeDamageHandler(Element.NEUTRAL, fight));
 
+        handler.register(671, new IndirectPercentLifeDamageHandler(Element.NEUTRAL, fight));
+
         handler.register(276, new PercentLifeLostDamageHandler(Element.EARTH, fight));
         handler.register(279, new PercentLifeLostDamageHandler(Element.NEUTRAL, fight));
 
@@ -119,6 +123,7 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(143, new FixedHealHandler());
 
         handler.register(140, new SkipTurnHandler(fight));
+        handler.register(149, new ChangeAppearanceHandler(fight));
         handler.register(950, new PushStateHandler(fight));
         handler.register(951, new RemoveStateHandler());
 

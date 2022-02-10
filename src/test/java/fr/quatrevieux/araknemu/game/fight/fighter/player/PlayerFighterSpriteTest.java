@@ -97,5 +97,6 @@ class PlayerFighterSpriteTest extends FightBaseCase {
         assertEquals(Sprite.Type.PLAYER, sprite.type());
         assertEquals("Bob", sprite.name());
         assertEquals(Direction.SOUTH_EAST, sprite.orientation());
+        assertEquals(10, sprite.gfxId());
     }
 }

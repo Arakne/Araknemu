@@ -123,6 +123,13 @@ public interface BuffHook {
     }
 
     /**
+     * The fighter will take damages indirectly (like poison)
+     */
+    public default void onIndirectDamage(Buff buff, ActiveFighter caster, Damage value) {
+        onDamage(buff, value);
+    }
+
+    /**
      * The fighter will take damages by a buff (i.e. poison)
      *
      * @param buff The current buff
@@ -130,7 +137,7 @@ public interface BuffHook {
      * @param value The damage to apply
      */
     public default void onBuffDamage(Buff buff, Buff poison, Damage value) {
-        onDamage(buff, value);
+        onIndirectDamage(buff, buff.caster(), value);
     }
 
     /**

@@ -241,6 +241,28 @@ class BuffListTest extends FightBaseCase {
     }
 
     @Test
+    void onIndirectDamage() {
+        BuffHook hook1, hook2, hook3;
+
+        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+
+        list.add(buff1);
+        list.add(buff2);
+        list.add(buff3);
+
+        Damage damage = new Damage(10, Element.NEUTRAL);
+        ActiveFighter fighter = Mockito.mock(ActiveFighter.class);
+
+        list.onIndirectDamage(fighter, damage);
+
+        Mockito.verify(hook1).onIndirectDamage(buff1, fighter, damage);
+        Mockito.verify(hook2).onIndirectDamage(buff2, fighter, damage);
+        Mockito.verify(hook3).onIndirectDamage(buff3, fighter, damage);
+    }
+
+    @Test
     void onBuffDamage() {
         BuffHook hook1, hook2, hook3;
 
