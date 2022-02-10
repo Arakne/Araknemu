@@ -25,7 +25,6 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
  * Handle damage based on the current caster life
@@ -45,11 +44,11 @@ public final class IndirectPercentLifeDamageHandler implements EffectHandler {
     @Override
     public void handle(CastScope cast, CastScope.EffectScope effect) {
         final ActiveFighter caster = cast.caster();
-        final int damage = caster.life().current() * (new EffectValue(effect.effect())).value() / 100;
+        final int currentLife = caster.life().current();
 
-        for (PassiveFighter target : effect.targets()) {
-            applier.applyIndirectFixed(caster, damage, target);
-        }
+        EffectValue.forEachTargets(effect.effect(), caster, effect.targets(), (target, effectValue) -> {
+            applier.applyIndirectFixed(caster, currentLife * effectValue.value() / 100, target);
+        });
     }
 
     @Override

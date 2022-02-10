@@ -108,10 +108,7 @@ public final class DamageApplier {
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onIndirectDamage(ActiveFighter, Damage) The called buff hook
      */
     public int applyIndirectFixed(ActiveFighter caster, int value, PassiveFighter target) {
-        final Damage damage = new Damage(value, element)
-            .percent(target.characteristics().get(element.percentResistance()))
-            .fixed(target.characteristics().get(element.fixedResistance()))
-        ;
+        final Damage damage = createDamage(caster, target, value);
 
         target.buffs().onIndirectDamage(caster, damage);
 
