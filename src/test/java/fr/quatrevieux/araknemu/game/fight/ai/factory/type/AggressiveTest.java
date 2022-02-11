@@ -23,8 +23,12 @@ import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Field;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -34,10 +38,7 @@ class AggressiveTest extends AiBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        GeneratorBuilder builder = new GeneratorBuilder();
-        new Aggressive(container.get(Simulator.class)).configure(builder);
-        action = builder.build();
-
+        actionFactory = new Aggressive(container.get(Simulator.class));
         dataSet.pushFunctionalSpells();
     }
 
@@ -141,6 +142,57 @@ class AggressiveTest extends AiBaseCase {
         removeSpell(6);
 
         assertDotNotGenerateAction();
+    }
+
+    @Test
+    void withoutDistanceSpellsShouldMoveNearEnemy() throws NoSuchFieldException, IllegalAccessException {
+        SpellBook spells = player.properties().spells();
+        Field field = spells.getClass().getDeclaredField("entries");
+        field.setAccessible(true);
+
+        ((Map) field.get(spells)).clear();
+
+        configureFight(b -> b
+            .addSelf(fb -> fb.cell(250).spell(145, 5))
+            .addEnemy(fb -> fb.cell(292))
+        );
+
+        assertEquals(3, distance(getEnemy(0)));
+        generateAndPerformMove();
+        assertEquals(2, distance(getEnemy(0)));
+    }
+
+    @Test
+    void withoutDistanceSpellsShouldAttack() throws NoSuchFieldException, IllegalAccessException {
+        SpellBook spells = player.properties().spells();
+        Field field = spells.getClass().getDeclaredField("entries");
+        field.setAccessible(true);
+
+        ((Map) field.get(spells)).clear();
+
+        configureFight(b -> b
+            .addSelf(fb -> fb.cell(277).spell(145, 5))
+            .addEnemy(fb -> fb.cell(292))
+        );
+
+        assertCast(145, 277);
+    }
+
+    @Test
+    void withoutDistanceSpellsButWithAreaShouldBeConsideredAsDistanceSpell() throws NoSuchFieldException, IllegalAccessException {
+        SpellBook spells = player.properties().spells();
+        Field field = spells.getClass().getDeclaredField("entries");
+        field.setAccessible(true);
+
+        ((Map) field.get(spells)).clear();
+
+        configureFight(b -> b
+            .addSelf(fb -> fb.cell(192).spell(181, 5))
+            .addEnemy(fb -> fb.cell(221))
+            .addEnemy(fb -> fb.cell(263))
+        );
+
+        assertCast(181, 192);
     }
 
     private int distance(Fighter other) {

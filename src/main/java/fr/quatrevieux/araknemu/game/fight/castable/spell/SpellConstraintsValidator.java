@@ -57,6 +57,11 @@ public final class SpellConstraintsValidator implements CastConstraintValidator<
     }
 
     @Override
+    public boolean check(Turn turn, Spell castable, FightCell target) {
+        return validator.check(turn, castable, target);
+    }
+
+    @Override
     public Error validate(Turn turn, Spell spell, FightCell target) {
         return validator.validate(turn, spell, target);
     }

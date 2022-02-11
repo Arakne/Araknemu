@@ -33,13 +33,22 @@ public abstract class AbstractAiBuilderFactory implements AiFactory {
     /**
      * Configure the AI generator
      */
-    public abstract void configure(GeneratorBuilder builder);
+    protected void configure(GeneratorBuilder builder) {
+        // To implements if configure(GeneratorBuilder, Fighter) is not implemented
+    }
+
+    /**
+     * Configure the AI generator
+     */
+    public void configure(GeneratorBuilder builder, Fighter fighter) {
+        configure(builder);
+    }
 
     @Override
     public final Optional<AI> create(Fighter fighter) {
         final GeneratorBuilder builder = new GeneratorBuilder();
 
-        configure(builder);
+        configure(builder, fighter);
 
         return Optional.of(new FighterAI(fighter, fighter.fight(), builder.build()));
     }

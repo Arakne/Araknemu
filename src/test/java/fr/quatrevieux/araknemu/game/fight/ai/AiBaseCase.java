@@ -23,7 +23,11 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.DummyGenerator;
+import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.AbstractAiBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
+import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Aggressive;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.module.AiModule;
@@ -52,6 +56,7 @@ public class AiBaseCase extends FightBaseCase {
     protected Fighter fighter;
     protected Fight fight;
 
+    protected AbstractAiBuilderFactory actionFactory;
     protected ActionGenerator action;
     protected FighterAI ai;
 
@@ -81,6 +86,12 @@ public class AiBaseCase extends FightBaseCase {
 
         ai = new FighterAI(fighter, fight, new DummyGenerator());
         ai.start(turn = fight.turnList().current().get());
+
+        if (action == null && actionFactory != null) {
+            GeneratorBuilder aiBuilder = new GeneratorBuilder();
+            actionFactory.configure(aiBuilder, fighter);
+            action = aiBuilder.build();
+        }
 
         if (action != null) {
             action.initialize(ai);

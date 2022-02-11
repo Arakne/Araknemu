@@ -17,62 +17,73 @@
  * Copyright (c) 2017-2019 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.castable.validator;
+package fr.quatrevieux.araknemu.game.fight.castable.weapon;
 
+import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
-import fr.quatrevieux.araknemu.game.spell.Spell;
+import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.time.Duration;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ApCostValidatorTest extends FightBaseCase {
+class WeaponConstraintsValidatorTest extends FightBaseCase {
     private Fight fight;
     private Fighter fighter;
     private FightTurn turn;
-    private ApCostValidator validator;
+    private WeaponConstraintsValidator validator;
 
     @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
+        dataSet
+            .pushItemTemplates()
+            .pushWeaponTemplates()
+            .pushItemSets()
+        ;
+
         fight = createFight();
         fighter = player.fighter();
         turn = new FightTurn(fighter, fight, Duration.ofSeconds(30));
         turn.start();
 
-        validator = new ApCostValidator();
-    }
+        fighter.move(fight.map().get(235));
 
-    @Test
-    void notEnoughAp() {
-        Spell spell = Mockito.mock(Spell.class);
-
-        Mockito.when(spell.apCost()).thenReturn(10);
-
-        assertFalse(validator.check(turn, spell, fight.map().get(123)));
-        assertEquals(
-            Error.cantCastNotEnoughActionPoints(6, 10).toString(),
-            validator.validate(turn, spell, fight.map().get(123)).toString()
-        );
+        validator = new WeaponConstraintsValidator();
     }
 
     @Test
     void success() {
-        Spell spell = Mockito.mock(Spell.class);
+        CastableWeapon weapon = weapon(40);
 
-        Mockito.when(spell.apCost()).thenReturn(5);
+        assertTrue(validator.check(turn, weapon, fight.map().get(221)));
+        assertNull(validator.validate(turn, weapon, fight.map().get(221)));
+    }
 
-        assertTrue(validator.check(turn, spell, fight.map().get(123)));
-        assertNull(validator.validate(turn, spell, fight.map().get(123)));
+    @Test
+    void error() {
+        CastableWeapon weapon = weapon(40);
+
+        assertFalse(validator.check(turn, weapon, fight.map().get(186)));
+        assertEquals(
+            Error.cantCastBadRange(new Interval(1, 1), 18).toString(),
+            validator.validate(turn, weapon, fight.map().get(186)).toString()
+        );
+    }
+
+    private CastableWeapon weapon(int id) {
+        return new CastableWeapon((Weapon) container.get(ItemService.class).create(id));
     }
 }

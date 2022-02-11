@@ -35,6 +35,17 @@ public final class ConstraintsAggregateValidator<T extends Castable> implements 
     }
 
     @Override
+    public boolean check(Turn turn, T castable, FightCell target) {
+        for (CastConstraintValidator<? super T> validator : validators) {
+            if (!validator.check(turn, castable, target)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
     public Error validate(Turn turn, T action, FightCell target) {
         for (CastConstraintValidator<? super T> validator : validators) {
             final Error error = validator.validate(turn, action, target);

@@ -34,10 +34,7 @@ class SupportTest extends AiBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        GeneratorBuilder builder = new GeneratorBuilder();
-        new Support(container.get(Simulator.class)).configure(builder);
-        action = builder.build();
-
+        actionFactory = new Support(container.get(Simulator.class));
         dataSet.pushFunctionalSpells();
     }
 

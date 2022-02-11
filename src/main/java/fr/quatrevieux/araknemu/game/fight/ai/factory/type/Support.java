@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AbstractAiBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.ai.util.Predicates;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 
 /**
  * AI for support allies on fight
@@ -44,7 +45,7 @@ public final class Support extends AbstractAiBuilderFactory {
     }
 
     @Override
-    public void configure(GeneratorBuilder builder) {
+    public void configure(GeneratorBuilder builder, Fighter fighter) {
         builder.when(Predicates.hasAllies(), cb -> cb
             .success(sb -> sb
                 .boostAllies(simulator)
@@ -52,7 +53,7 @@ public final class Support extends AbstractAiBuilderFactory {
                 // @todo move to boost
                 .moveNearAllies()
             )
-            .otherwise(aloneAi::configure)
+            .otherwise(sb -> aloneAi.configure(sb, fighter))
         );
     }
 }

@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.proxy;
 
+import fr.arakne.utils.maps.CoordinateCell;
 import fr.arakne.utils.value.Dimensions;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
@@ -109,6 +110,7 @@ public final class ProxyBattlefield implements BattlefieldMap {
         private final FightCell cell;
         private boolean free = false;
         private PassiveFighter fighter = null;
+        private CoordinateCell<FightCell> coordinates = null;
 
         private ProxyCell(FightCell cell) {
             this.cell = cell;
@@ -182,6 +184,15 @@ public final class ProxyBattlefield implements BattlefieldMap {
             }
 
             return cell.walkable();
+        }
+
+        @Override
+        public CoordinateCell<FightCell> coordinate() {
+            if (coordinates == null) {
+                coordinates = new CoordinateCell<>(this);
+            }
+
+            return coordinates;
         }
     }
 

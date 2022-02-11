@@ -31,12 +31,21 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 public final class LineLaunchValidator implements CastConstraintValidator {
     @Override
     public Error validate(Turn turn, Castable castable, FightCell target) {
-        if (!castable.constraints().lineLaunch()) {
+        if (check(turn, castable, target)) {
             return null;
         }
 
+        return Error.cantCastLineLaunch();
+    }
+
+    @Override
+    public boolean check(Turn turn, Castable castable, FightCell target) {
+        if (!castable.constraints().lineLaunch()) {
+            return true;
+        }
+
         if (castable.constraints().range().max() < 2 || target.equals(turn.fighter().cell())) {
-            return null;
+            return true;
         }
 
         final int mapWidth = target.map().dimensions().width();
@@ -51,10 +60,10 @@ public final class LineLaunchValidator implements CastConstraintValidator {
 
             // cell ids diff is multiple of inc => cells are in same line
             if (diff / inc < (mapWidth * 2 + 1) && diff % inc == 0) {
-                return null;
+                return true;
             }
         }
 
-        return Error.cantCastLineLaunch();
+        return false;
     }
 }
