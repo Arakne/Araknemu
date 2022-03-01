@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.core.network.util;
 
 import fr.quatrevieux.araknemu.core.network.Channel;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.net.InetSocketAddress;

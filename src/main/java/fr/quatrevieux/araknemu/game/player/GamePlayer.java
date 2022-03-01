@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.player;
 
-import fr.quatrevieux.araknemu.common.session.SessionLog;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
@@ -38,7 +37,6 @@ import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
 import fr.quatrevieux.araknemu.game.player.sprite.GamePlayerSpriteInfo;
 import fr.quatrevieux.araknemu.game.player.sprite.SpriteInfo;
 import fr.quatrevieux.araknemu.network.game.GameSession;
-import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.dataflow.qual.Pure;
 
 import java.util.Set;

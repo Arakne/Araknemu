@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.core.config;
 
-import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.ini4j.Profile;
 

@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.game.fight.fighter;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterStateChanged;
-import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.ArrayList;

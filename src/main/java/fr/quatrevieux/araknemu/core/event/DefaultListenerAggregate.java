@@ -92,7 +92,7 @@ public final class DefaultListenerAggregate implements ListenerAggregate {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "cast.unsafe"})
     public <E extends Listener> @Nullable E get(Class<E> listenerClass) {
         return (E) listeners.get(listenerClass);
     }

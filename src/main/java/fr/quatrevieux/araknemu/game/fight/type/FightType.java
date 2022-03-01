@@ -20,8 +20,6 @@
 package fr.quatrevieux.araknemu.game.fight.type;
 
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardsGenerator;
-import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Deterministic;
 import org.checkerframework.dataflow.qual.Pure;
 
