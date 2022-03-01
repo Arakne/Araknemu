@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.spell.LaunchedSpells;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
 import fr.quatrevieux.araknemu.game.fight.turn.action.event.SpellCasted;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnTerminated;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Fight module for handle launch spell validation (cooldown, launch per turn, per target)
@@ -52,7 +53,7 @@ public final class LaunchedSpellsModule implements FightModule {
             new Listener<SpellCasted>() {
                 @Override
                 public void on(SpellCasted event) {
-                    event.caster().attachment(LaunchedSpells.class).push(
+                    NullnessUtil.castNonNull(event.caster().attachment(LaunchedSpells.class)).push(
                         event.spell(),
                         event.target()
                     );
@@ -66,7 +67,7 @@ public final class LaunchedSpellsModule implements FightModule {
             new Listener<TurnTerminated>() {
                 @Override
                 public void on(TurnTerminated event) {
-                    event.turn().fighter().attachment(LaunchedSpells.class).refresh();
+                    NullnessUtil.castNonNull(event.turn().fighter().attachment(LaunchedSpells.class)).refresh();
                 }
 
                 @Override

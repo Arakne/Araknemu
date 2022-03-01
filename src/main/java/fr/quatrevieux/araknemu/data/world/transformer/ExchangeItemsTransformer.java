@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.data.world.transformer;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.transformer.TransformerException;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,12 +34,16 @@ import java.util.Map;
  */
 public final class ExchangeItemsTransformer implements Transformer<Map<Integer, Integer>> {
     @Override
-    public String serialize(Map<Integer, Integer> value) {
+    public @PolyNull String serialize(@PolyNull Map<Integer, Integer> value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Map<Integer, Integer> unserialize(String serialize) throws TransformerException {
+    public @PolyNull Map<Integer, Integer> unserialize(@PolyNull String serialize) throws TransformerException {
+        if (serialize == null) {
+            return null;
+        }
+
         final Map<Integer, Integer> items = new HashMap<>();
 
         for (String itemData : StringUtils.split(serialize, ";")) {

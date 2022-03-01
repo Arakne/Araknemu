@@ -26,11 +26,13 @@ import fr.quatrevieux.araknemu.data.living.entity.BanIp;
 import fr.quatrevieux.araknemu.data.living.repository.BanIpRepository;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import inet.ipaddr.IPAddressString;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * SQL Implementation for {@link BanIpRepository}
@@ -148,10 +150,10 @@ final class SqlBanIpRepository implements BanIpRepository {
         public BanIp create(ResultSet rs) throws SQLException {
             return new BanIp(
                 rs.getInt("BANIP_ID"),
-                ipAddressTransformer.unserialize(rs.getString("IP_ADDRESS")),
-                instantTransformer.unserialize(rs.getString("UPDATED_AT")),
-                instantTransformer.unserialize(rs.getString("EXPIRES_AT")),
-                rs.getString("CAUSE"),
+                ipAddressTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("IP_ADDRESS"))),
+                instantTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("UPDATED_AT"))),
+                Optional.ofNullable(rs.getString("EXPIRES_AT")).map(instantTransformer::unserialize).orElse(null),
+                NullnessUtil.castNonNull(rs.getString("CAUSE")),
                 rs.getInt("BANISHER_ID")
             );
         }

@@ -20,17 +20,28 @@
 package fr.quatrevieux.araknemu.game.fight.turn.action;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
+import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 
 import java.time.Duration;
 
 /**
  * Action for a fight turn
+ *
+ * Lifecycle :
+ * - Check if the action can be proceeded using {@link Action#validate(Turn)}
+ * - If valid, call {@link Action#start()} and get the result
+ * - If the result is not successful, directly call {@link ActionResult#apply(FightTurn)} and stop the process
+ * - If successful, wait for termination (i.e. {@link FightTurn#terminate()}
+ * - On termination, call {@link ActionResult#apply(FightTurn)}
  */
 public interface Action {
     /**
      * Validate the action before start
+     *
+     * @param turn The active fighter turn
      */
-    public boolean validate();
+    public boolean validate(Turn turn);
 
     /**
      * Start to perform the action
@@ -46,16 +57,6 @@ public interface Action {
      * Get the action type
      */
     public ActionType type();
-
-    /**
-     * The action is failed
-     */
-    public void failed();
-
-    /**
-     * End the action normally (i.e. the action is successfully done)
-     */
-    public void end();
 
     /**
      * Get the maximum action duration (will invoke end when this duration is reached)

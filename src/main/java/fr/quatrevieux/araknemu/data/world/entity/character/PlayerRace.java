@@ -29,6 +29,7 @@ import java.util.SortedMap;
 /**
  * Entity for player race
  */
+@SuppressWarnings("argument") // @todo remove when PK system is changed
 public final class PlayerRace {
     private final Race race;
     private final String name;

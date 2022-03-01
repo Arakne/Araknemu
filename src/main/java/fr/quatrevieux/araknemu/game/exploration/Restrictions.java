@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.exploration;
 
 import fr.quatrevieux.araknemu.game.exploration.event.RestrictionsChanged;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.util.BitSet;
 
 /**
@@ -121,6 +122,7 @@ public final class Restrictions {
      */
     public void refresh() {
         final fr.quatrevieux.araknemu.game.player.Restrictions localRestrictions = player.player().restrictions();
+        final ExplorationMap map = player.map();
 
         boolean hasChanged = false;
 
@@ -132,8 +134,8 @@ public final class Restrictions {
             }
         }
 
-        if (hasChanged && player.map() != null) {
-            player.map().dispatch(new RestrictionsChanged(player, this));
+        if (hasChanged && map != null) {
+            map.dispatch(new RestrictionsChanged(player, this));
         }
     }
 

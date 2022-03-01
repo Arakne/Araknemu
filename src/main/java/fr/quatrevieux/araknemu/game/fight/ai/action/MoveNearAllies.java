@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,8 +37,9 @@ import java.util.stream.Collectors;
 public final class MoveNearAllies implements ActionGenerator {
     private final Movement movement;
 
-    private List<CoordinateCell<FightCell>> alliesCells;
+    private List<CoordinateCell<FightCell>> alliesCells = Collections.emptyList();
 
+    @SuppressWarnings("methodref.receiver.bound")
     public MoveNearAllies() {
         this.movement = new Movement(this::score, scoredCell -> true);
     }
@@ -66,13 +68,13 @@ public final class MoveNearAllies implements ActionGenerator {
      * Select the lowest distance from one ally + lowest average distance
      */
     private double score(CoordinateCell<FightCell> cell) {
-        final Iterable<Double> distances = () -> alliesCells.stream().mapToDouble(cell::distance).iterator();
-
         double min = Double.MAX_VALUE;
         double total = 0;
         int count = 0;
 
-        for (double distance : distances) {
+        for (CoordinateCell<FightCell> allyCell : alliesCells) {
+            final double distance = cell.distance(allyCell);
+
             min = Math.min(min, distance);
             total += distance;
             ++count;

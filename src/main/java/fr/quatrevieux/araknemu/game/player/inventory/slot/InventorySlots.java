@@ -40,20 +40,12 @@ public final class InventorySlots {
     private final InventorySlot defaultSlot;
     private final InventorySlot[] slots = new InventorySlot[58];
 
-    public InventorySlots(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage) {
+    public InventorySlots(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage, GamePlayer owner) {
         this.dispatcher  = dispatcher;
         this.storage     = storage;
         this.defaultSlot = new DefaultSlot(storage);
-    }
 
-    /**
-     * Init all slots the the owner
-     *
-     * @param owner The inventory owner
-     */
-    public void init(GamePlayer owner) {
-        initSlots(owner);
-        fillSlots();
+        init(owner);
     }
 
     /**
@@ -86,6 +78,16 @@ public final class InventorySlots {
 
     private void add(InventorySlot slot) {
         slots[slot.id()] = slot;
+    }
+
+    /**
+     * Init all slots of the owner
+     *
+     * @param owner The inventory owner
+     */
+    private void init(GamePlayer owner) {
+        initSlots(owner);
+        fillSlots();
     }
 
     private void initSlots(GamePlayer owner) {

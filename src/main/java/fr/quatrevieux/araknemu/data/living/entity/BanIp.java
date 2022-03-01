@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.living.entity;
 
 import inet.ipaddr.IPAddressString;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -31,15 +32,15 @@ public final class BanIp {
     private final int id;
     private final IPAddressString ipAddress;
     private final Instant updatedAt;
-    private final Instant expiresAt;
+    private final @Nullable Instant expiresAt;
     private final String cause;
     private final int banisherId;
 
-    public BanIp(IPAddressString ipAddress, Instant updatedAt, Instant expiresAt, String cause, int banisherId) {
+    public BanIp(IPAddressString ipAddress, Instant updatedAt, @Nullable Instant expiresAt, String cause, int banisherId) {
         this(-1, ipAddress, updatedAt, expiresAt, cause, banisherId);
     }
 
-    public BanIp(int id, IPAddressString ipAddress, Instant updatedAt, Instant expiresAt, String cause, int banisherId) {
+    public BanIp(int id, IPAddressString ipAddress, Instant updatedAt, @Nullable Instant expiresAt, String cause, int banisherId) {
         this.id = id;
         this.ipAddress = ipAddress;
         this.updatedAt = updatedAt;

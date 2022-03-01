@@ -25,6 +25,8 @@ import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.data.living.entity.BanIp;
 import fr.quatrevieux.araknemu.data.living.repository.BanIpRepository;
 import inet.ipaddr.IPAddressString;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -134,8 +136,10 @@ public final class BanIpService<A extends LivingAccount> {
 
         repository.updated(lastUpdate).forEach(banIp -> {
             if (banIp.active()) {
+                final BanIp oldEntry = refreshed.get(banIp.id());
+
                 // A new IP is banned
-                if (!refreshed.containsKey(banIp.id()) || !refreshed.get(banIp.id()).active()) {
+                if (oldEntry == null || !oldEntry.active()) {
                     added.add(banIp);
                 }
 
@@ -182,8 +186,8 @@ public final class BanIpService<A extends LivingAccount> {
     public final class RuleBuilder {
         private final IPAddressString ipAddress;
         private String cause = "";
-        private Duration duration = null;
-        private A banisher = null;
+        private @MonotonicNonNull Duration duration = null;
+        private @MonotonicNonNull A banisher = null;
 
         private RuleBuilder(IPAddressString ipAddress) {
             this.ipAddress = ipAddress;

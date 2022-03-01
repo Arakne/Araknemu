@@ -19,11 +19,11 @@
 
 package fr.quatrevieux.araknemu.game.player.spell;
 
+import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.player.spell.event.SpellMoved;
 import fr.quatrevieux.araknemu.game.player.spell.event.SpellUpgraded;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
@@ -31,11 +31,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SpellBookEntryTest extends GameBaseCase {
     private SpellService service;
@@ -54,21 +56,17 @@ class SpellBookEntryTest extends GameBaseCase {
 
         service = container.get(SpellService.class);
 
-        entry = new SpellBookEntry(
-            new PlayerSpell(1, 3, true, 5, 63),
-            service.get(3)
-        );
-
         book = new SpellBook(
             dispatcher = new DefaultListenerAggregate(),
-            dataSet.createPlayer(1),
-            Arrays.asList(
-                entry,
-                new SpellBookEntry(
-                    new PlayerSpell(1, 6, true, 5, 5),
-                    service.get(6)
-                )
-            )
+            dataSet.createPlayer(1)
+        );
+
+        book.addEntry(new PlayerSpell(1, 6, true, 5, 5), service.get(6));
+
+        entry = new SpellBookEntry(
+            book,
+            new PlayerSpell(1, 3, true, 5, 63),
+            service.get(3)
         );
     }
 
@@ -142,11 +140,6 @@ class SpellBookEntryTest extends GameBaseCase {
     }
 
     @Test
-    void attachAlreadyAttached() {
-        assertThrows(IllegalStateException.class, () -> entry.attach(new SpellBook(null, null, new ArrayList<>())));
-    }
-
-    @Test
     void upgradeTooLowLevel() throws NoSuchFieldException, IllegalAccessException {
         this.<Player>readField(book, "player").setSpellPoints(100);
 
@@ -156,9 +149,10 @@ class SpellBookEntryTest extends GameBaseCase {
     @Test
     void upgradeMaxLevel() {
         entry = new SpellBookEntry(
+            book,
             new PlayerSpell(1, 202, false, 5, 63),
             service.get(202)
-        ).attach(book);
+        );
 
         assertThrows(IllegalStateException.class, () -> entry.upgrade(), "Maximum spell level reached");
     }
@@ -168,9 +162,10 @@ class SpellBookEntryTest extends GameBaseCase {
         this.<Player>readField(book, "player").setSpellPoints(0);
 
         entry = new SpellBookEntry(
+            book,
             new PlayerSpell(1, 202, false),
             service.get(202)
-        ).attach(book);
+        );
 
         assertThrows(IllegalStateException.class, () -> entry.upgrade(), "Cannot upgrade spell");
     }
@@ -183,9 +178,10 @@ class SpellBookEntryTest extends GameBaseCase {
         dispatcher.add(SpellUpgraded.class, ref::set);
 
         entry = new SpellBookEntry(
+            book,
             new PlayerSpell(1, 202, false),
             service.get(202)
-        ).attach(book);
+        );
 
         entry.upgrade();
 
@@ -197,9 +193,10 @@ class SpellBookEntryTest extends GameBaseCase {
         this.<Player>readField(book, "player").setSpellPoints(10);
 
         entry = new SpellBookEntry(
+            book,
             new PlayerSpell(1, 202, false, 1, 63),
             service.get(202)
-        ).attach(book);
+        );
 
         entry.upgrade();
 
@@ -212,9 +209,10 @@ class SpellBookEntryTest extends GameBaseCase {
         this.<Player>readField(book, "player").setSpellPoints(10);
 
         entry = new SpellBookEntry(
+            book,
             new PlayerSpell(1, 202, false, 2, 63),
             service.get(202)
-        ).attach(book);
+        );
 
         entry.upgrade();
 
@@ -227,9 +225,10 @@ class SpellBookEntryTest extends GameBaseCase {
         this.<Player>readField(book, "player").setSpellPoints(10);
 
         entry = new SpellBookEntry(
+            book,
             new PlayerSpell(1, 202, false, 3, 63),
             service.get(202)
-        ).attach(book);
+        );
 
         entry.upgrade();
 
@@ -242,9 +241,10 @@ class SpellBookEntryTest extends GameBaseCase {
         this.<Player>readField(book, "player").setSpellPoints(10);
 
         entry = new SpellBookEntry(
+            book,
             new PlayerSpell(1, 202, false, 4, 63),
             service.get(202)
-        ).attach(book);
+        );
 
         entry.upgrade();
 

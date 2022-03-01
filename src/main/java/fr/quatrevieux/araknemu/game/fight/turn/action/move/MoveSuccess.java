@@ -23,6 +23,7 @@ import fr.arakne.utils.maps.constant.Direction;
 import fr.arakne.utils.maps.path.Path;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 
 /**
@@ -85,5 +86,12 @@ public final class MoveSuccess implements MoveResult {
     @Override
     public Path<FightCell> path() {
         return path;
+    }
+
+    @Override
+    public void apply(FightTurn turn) {
+        turn.points().useMovementPoints(path.size() - 1);
+        performer.move(path.target());
+        performer.setOrientation(path.last().direction());
     }
 }

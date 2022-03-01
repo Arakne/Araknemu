@@ -117,11 +117,12 @@ public final class ContextCommandParser implements CommandParser {
      */
     private Context parseContext(State state) throws AdminException {
         final char prefix = state.current();
+        final ContextResolver resolver = resolvers.get(prefix);
         final Context context;
 
-        if (resolvers.containsKey(prefix)) {
+        if (resolver != null) {
             state.next();
-            context = resolvers.get(prefix).resolve(state.performer, () -> state.skipBlank().nextWord());
+            context = resolver.resolve(state.performer, () -> state.skipBlank().nextWord());
         } else {
             context = defaultContextFactory.apply(state.performer);
         }

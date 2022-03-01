@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Wrap packet handler for ensure that as admin access
@@ -38,7 +39,7 @@ public final class EnsureAdmin<P extends Packet> implements PacketHandler<GameSe
 
     @Override
     public void handle(GameSession session, P packet) throws Exception {
-        if (session.player() == null || !session.account().isMaster()) {
+        if (session.player() == null || !NullnessUtil.castNonNull(session.account()).isMaster()) {
             throw new CloseImmediately("Admin account required");
         }
 

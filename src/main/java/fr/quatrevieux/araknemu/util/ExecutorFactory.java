@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.util;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.AbstractExecutorService;
@@ -176,22 +178,23 @@ public final class ExecutorFactory {
         });
 
         @Override
-        public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) {
+        public ScheduledFuture<@Nullable ?> schedule(Runnable command, long delay, TimeUnit unit) {
             return inner.schedule(command, delay, unit);
         }
 
         @Override
+        @SuppressWarnings({"override.return", "override.param"})
         public <V> ScheduledFuture<V> schedule(Callable<V> callable, long delay, TimeUnit unit) {
             return inner.schedule(callable, delay, unit);
         }
 
         @Override
-        public ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
+        public ScheduledFuture<@Nullable ?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
             return inner.scheduleAtFixedRate(command, initialDelay, period, unit);
         }
 
         @Override
-        public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
+        public ScheduledFuture<@Nullable ?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
             return inner.scheduleWithFixedDelay(command, initialDelay, delay, unit);
         }
 

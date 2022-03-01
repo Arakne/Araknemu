@@ -41,8 +41,7 @@ class ConfigurableTeamOptionsTest extends FightBaseCase {
         super.setUp();
 
         fight = createFight();
-        options = new ConfigurableTeamOptions(fight.team(0));
-        options.setFight(fight);
+        options = new ConfigurableTeamOptions(fight.team(0), fight);
     }
 
     @Test

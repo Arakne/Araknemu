@@ -30,17 +30,23 @@ import java.util.Arrays;
 /**
  * Configuration class for game server
  */
-public final class GameConfiguration implements ConfigurationModule {
-    private PoolUtils pool;
+public final class GameConfiguration {
+    public static final ConfigurationModule<GameConfiguration> MODULE = new ConfigurationModule<GameConfiguration>() {
+        @Override
+        public GameConfiguration create(Pool pool) {
+            return new GameConfiguration(pool);
+        }
 
-    @Override
-    public void setPool(Pool pool) {
+        @Override
+        public String name() {
+            return "game";
+        }
+    };
+
+    private final PoolUtils pool;
+
+    public GameConfiguration(Pool pool) {
         this.pool = new PoolUtils(pool);
-    }
-
-    @Override
-    public String name() {
-        return "game";
     }
 
     /**

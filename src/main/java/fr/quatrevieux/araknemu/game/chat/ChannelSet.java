@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.game.chat;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.chat.event.ChannelSubscriptionAdded;
 import fr.quatrevieux.araknemu.game.chat.event.ChannelSubscriptionRemoved;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -67,7 +69,8 @@ public final class ChannelSet implements Set<ChannelType> {
     }
 
     @Override
-    public <T> T[] toArray(T[] ts) {
+    @SuppressWarnings({"toarray.nullable.elements.not.newarray", "override.param", "return"})
+    public <T> T @NonNull[] toArray(T @NonNull[] ts) {
         return set.toArray(ts);
     }
 
@@ -128,7 +131,7 @@ public final class ChannelSet implements Set<ChannelType> {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         return set.equals(obj);
     }
 }

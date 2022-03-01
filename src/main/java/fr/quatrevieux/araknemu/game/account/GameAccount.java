@@ -26,6 +26,9 @@ import fr.quatrevieux.araknemu.game.account.event.AccountPermissionsUpdated;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.out.ServerMessage;
 import fr.quatrevieux.araknemu.network.realm.out.ServerList;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Deterministic;
 
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -54,6 +57,8 @@ public final class GameAccount extends AbstractLivingAccount<GameSession> {
      * @param session Session to attach
      */
     @Override
+    @Deterministic
+    @EnsuresNonNull("#1.account()")
     public void attach(GameSession session) {
         super.attach(session);
 
@@ -66,7 +71,7 @@ public final class GameAccount extends AbstractLivingAccount<GameSession> {
      */
     @Override
     public void detach() {
-        session.detach();
+        session().ifPresent(GameSession::detach);
         service.logout(this);
 
         super.detach();
@@ -131,7 +136,7 @@ public final class GameAccount extends AbstractLivingAccount<GameSession> {
      * @param permissions The permissions to add
      * @param performer The admin account which grants those permissions. Can be null.
      */
-    public void grant(Permission[] permissions, GameAccount performer) {
+    public void grant(Permission[] permissions, @Nullable GameAccount performer) {
         temporaryPermissions.addAll(Arrays.asList(permissions));
 
         if (session != null) {
@@ -145,7 +150,7 @@ public final class GameAccount extends AbstractLivingAccount<GameSession> {
      *
      * @param performer The admin account which revoke permissions. Can be null.
      */
-    public void revoke(GameAccount performer) {
+    public void revoke(@Nullable GameAccount performer) {
         if (temporaryPermissions.isEmpty()) {
             return;
         }

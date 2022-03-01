@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,8 +34,8 @@ import java.util.stream.Collectors;
 public final class CastableWeapon implements Castable {
     private final Weapon weapon;
 
-    private List<SpellEffect> effects;
-    private List<SpellEffect> criticalEffects;
+    private @MonotonicNonNull List<SpellEffect> effects;
+    private @MonotonicNonNull List<SpellEffect> criticalEffects;
 
     public CastableWeapon(Weapon weapon) {
         this.weapon = weapon;

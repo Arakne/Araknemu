@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.turn.action.cast;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 
@@ -53,5 +54,14 @@ public final class CastFailed implements ActionResult {
     @Override
     public boolean success() {
         return false;
+    }
+
+    @Override
+    public void apply(FightTurn turn) {
+        turn.points().useActionPoints(spell.apCost());
+
+        if (spell.endsTurnOnFailure()) {
+            turn.stop();
+        }
     }
 }

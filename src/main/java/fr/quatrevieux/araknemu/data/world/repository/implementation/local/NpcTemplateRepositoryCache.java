@@ -41,11 +41,7 @@ public final class NpcTemplateRepositoryCache implements NpcTemplateRepository {
 
     @Override
     public NpcTemplate get(int id) {
-        if (!cacheById.containsKey(id)) {
-            cacheById.put(id, repository.get(id));
-        }
-
-        return cacheById.get(id);
+        return cacheById.computeIfAbsent(id, repository::get);
     }
 
     @Override

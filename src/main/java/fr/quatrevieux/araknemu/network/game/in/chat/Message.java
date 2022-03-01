@@ -24,6 +24,8 @@ import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * Message sent to chat
@@ -32,11 +34,11 @@ import org.apache.commons.lang3.StringUtils;
  */
 public final class Message implements Packet {
     private final ChannelType channel;
-    private final String target;
+    private final @Nullable String target;
     private final String message;
     private final String items;
 
-    public Message(ChannelType channel, String target, String message, String items) {
+    public Message(ChannelType channel, @Nullable String target, String message, String items) {
         this.channel = channel;
         this.target = target;
         this.message = message;
@@ -50,7 +52,8 @@ public final class Message implements Packet {
     /**
      * The target is null when send to a global chat
      */
-    public String target() {
+    @Pure
+    public @Nullable String target() {
         return target;
     }
 

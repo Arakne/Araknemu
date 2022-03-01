@@ -52,14 +52,22 @@ public final class DefaultDatabaseHandler implements DatabaseHandler {
 
     @Override
     public ConnectionPool get(String name) throws SQLException {
-        if (connections.containsKey(name)) {
-            return connections.get(name);
+        ConnectionPool pool = connections.get(name);
+
+        if (pool != null) {
+            return pool;
         }
 
         final DatabaseConfiguration.Connection config = configuration.connection(name);
 
-        ConnectionPool pool = new SimpleConnectionPool(
-            factories.get(config.type()).create(config),
+        final Driver.Factory factory = factories.get(config.type());
+
+        if (factory == null) {
+            throw new IllegalArgumentException("Invalid database driver " + config.type());
+        }
+
+        pool = new SimpleConnectionPool(
+            factory.create(config),
             config.maxPoolSize(),
             logger
         );

@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.item.inventory.exception.MoveException;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectMoveRequest;
 import fr.quatrevieux.araknemu.network.game.out.object.AddItemError;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Move an object from the repository
@@ -33,7 +34,7 @@ public final class MoveObject implements PacketHandler<GameSession, ObjectMoveRe
     @Override
     public void handle(GameSession session, ObjectMoveRequest packet) throws Exception {
         try {
-            session.player()
+            NullnessUtil.castNonNull(session.player())
                 .inventory()
                 .get(packet.id())
                 .move(

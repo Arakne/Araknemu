@@ -27,7 +27,9 @@ import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.SuperType;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToCharacteristicMapping;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToWeaponMapping;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +37,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class WeaponFactoryTest extends GameBaseCase {
     private WeaponFactory factory;
@@ -46,8 +51,10 @@ class WeaponFactoryTest extends GameBaseCase {
         super.setUp();
 
         factory = new WeaponFactory(
-            container.get(EffectMappers.class),
-            container.get(SpellEffectService.class)
+            container.get(SpellEffectService.class),
+            container.get(EffectToWeaponMapping.class),
+            container.get(EffectToCharacteristicMapping.class),
+            container.get(EffectToSpecialMapping.class)
         );
     }
 

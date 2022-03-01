@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.type.AbstractEquipment;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.player.inventory.event.EquipmentChanged;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Optional;
 
@@ -77,7 +78,7 @@ public abstract class AbstractEquipmentSlot implements InventorySlot {
     }
 
     @Override
-    public void uncheckedSet(InventoryEntry entry) {
+    public void uncheckedSet(@Nullable InventoryEntry entry) {
         slot.uncheckedSet(entry);
     }
 

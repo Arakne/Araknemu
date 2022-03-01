@@ -21,6 +21,8 @@ package fr.quatrevieux.araknemu.data.transformer;
 
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
  * Adapter for transform mutable characteristics
@@ -29,12 +31,12 @@ public final class MutableCharacteristicsTransformer implements Transformer<Muta
     private final CharacteristicsTransformer inner = new CharacteristicsTransformer();
 
     @Override
-    public String serialize(MutableCharacteristics value) {
+    public @PolyNull String serialize(@PolyNull MutableCharacteristics value) {
         return inner.serialize(value);
     }
 
     @Override
-    public MutableCharacteristics unserialize(String serialize) {
+    public @NonNull MutableCharacteristics unserialize(@PolyNull String serialize) {
         final MutableCharacteristics characteristics = inner.unserialize(serialize);
 
         if (characteristics == null) {

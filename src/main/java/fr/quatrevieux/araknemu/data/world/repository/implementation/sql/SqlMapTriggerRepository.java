@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTrigger;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTriggerRepository;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -112,8 +113,8 @@ final class SqlMapTriggerRepository implements MapTriggerRepository {
                 rs.getInt("MAP_ID"),
                 rs.getInt("CELL_ID"),
                 rs.getInt("ACTION"),
-                rs.getString("ARGUMENTS"),
-                rs.getString("CONDITIONS")
+                NullnessUtil.castNonNull(rs.getString("ARGUMENTS")),
+                NullnessUtil.castNonNull(rs.getString("CONDITIONS"))
             );
         }
 

@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.game.exploration.interaction.action;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Blocking action
  * This action will waiting for end or error packet for process other actions
@@ -32,7 +34,7 @@ public interface BlockingAction extends Action {
      *
      * @param argument The cancel argument. Null if called by {@link ActionQueue#stop()}
      */
-    public void cancel(String argument);
+    public void cancel(@Nullable String argument);
 
     /**
      * End the action normally (i.e. the action is successfully done)

@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.handler.account;
 
+import fr.quatrevieux.araknemu.common.session.SessionLog;
 import fr.quatrevieux.araknemu.common.session.SessionLogService;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
@@ -49,6 +50,7 @@ public final class Login implements PacketHandler<GameSession, LoginToken> {
     }
 
     @Override
+    @SuppressWarnings("contracts.precondition") // checker cannot infer non null from generics...
     public void handle(GameSession session, LoginToken packet) {
         if (session.isLogged()) {
             throw new CloseImmediately("Account already attached");
@@ -63,8 +65,12 @@ public final class Login implements PacketHandler<GameSession, LoginToken> {
         }
 
         account.attach(session);
-        session.setLog(logService.load(session));
-        session.log().setServerId(account.serverId());
+
+        final SessionLog log = logService.load(session);
+
+        session.setLog(log);
+        log.setServerId(account.serverId());
+
         session.send(new LoginTokenSuccess()); // @todo cipher key
     }
 

@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.world.creature.accessory;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -60,7 +61,13 @@ public enum AccessoryType {
      * @return The accessory type or null if no accessory is related to the slot
      */
     public static AccessoryType bySlot(int slot) {
-        return typesBySlot.get(slot);
+        final AccessoryType type = typesBySlot.get(slot);
+
+        if (type != null) {
+            return type;
+        }
+
+        throw new NoSuchElementException("Invalid slot " + slot + " for accessory");
     }
 
     /**

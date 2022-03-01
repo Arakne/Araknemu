@@ -19,28 +19,31 @@
 
 package fr.quatrevieux.araknemu.data.living.constraint;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 /**
  * Check for entire entity value
  *
  * @param <T> Entity type
  * @param <E> Error type
  */
-public final class EntityCheck<T, E> implements EntityConstraint<T, E> {
-    private final E error;
+public final class EntityCheck<T, @NonNull E> implements EntityConstraint<T, E> {
+    private final @NonNull E error;
     private final Checker<T> checker;
 
-    public EntityCheck(E error, Checker<T> checker) {
+    public EntityCheck(@NonNull E error, Checker<T> checker) {
         this.error = error;
         this.checker = checker;
     }
 
     @Override
+    @SuppressWarnings("contracts.conditional.postcondition")
     public boolean check(T entity) {
         return checker.check(entity);
     }
 
     @Override
-    public E error() {
+    public @NonNull E error() {
         return error;
     }
 

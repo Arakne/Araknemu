@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.admin;
 import fr.quatrevieux.araknemu.common.account.Permission;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.help.CommandHelp;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Set;
 
@@ -50,7 +51,7 @@ public interface Command<A> {
     /**
      * Create the command arguments POJO or default value
      */
-    public default A createArguments() {
+    public default @Nullable A createArguments() {
         return null;
     }
 

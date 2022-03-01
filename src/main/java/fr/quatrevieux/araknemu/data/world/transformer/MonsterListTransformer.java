@@ -24,6 +24,8 @@ import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.transformer.TransformerException;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,12 +52,16 @@ import java.util.List;
  */
 public final class MonsterListTransformer implements Transformer<List<MonsterGroupData.Monster>> {
     @Override
-    public String serialize(List<MonsterGroupData.Monster> value) {
+    public @PolyNull String serialize(@PolyNull List<MonsterGroupData.Monster> value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<MonsterGroupData.Monster> unserialize(String serialize) throws TransformerException {
+    public @NonNull List<MonsterGroupData.Monster> unserialize(@PolyNull String serialize) throws TransformerException {
+        if (serialize == null || serialize.isEmpty()) {
+            throw new IllegalArgumentException("Monster list cannot be empty");
+        }
+
         final String[] monstersStr = StringUtils.split(serialize, "|");
 
         final List<MonsterGroupData.Monster> monsters = new ArrayList<>(monstersStr.length);

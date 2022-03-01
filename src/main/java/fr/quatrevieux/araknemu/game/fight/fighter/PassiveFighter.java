@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Fighter type which can be a target of spells or other actions
@@ -41,7 +42,7 @@ public interface PassiveFighter extends Creature<FightCell> {
     /**
      * Go to the given cell
      */
-    public void move(FightCell cell);
+    public void move(@Nullable FightCell cell);
 
     /**
      * Get the fighter level

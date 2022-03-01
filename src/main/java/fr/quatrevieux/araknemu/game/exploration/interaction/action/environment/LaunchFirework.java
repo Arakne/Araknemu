@@ -23,7 +23,9 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Launch a firework to the map
@@ -46,13 +48,17 @@ public final class LaunchFirework implements BlockingAction {
 
     @Override
     public void start(ActionQueue queue) {
-        queue.setPending(this);
+        final ExplorationMap map = player.map();
 
-        player.map().send(new GameActionResponse(this));
+        // Because actions are delayed, we cannot ensure that the player is still on map
+        if (map != null) {
+            queue.setPending(this);
+            map.send(new GameActionResponse(this));
+        }
     }
 
     @Override
-    public void cancel(String argument) {
+    public void cancel(@Nullable String argument) {
         // No-op method : nothing is done at end of firework
         // Because cancel is called when stopping actions, no exception should be thrown
     }

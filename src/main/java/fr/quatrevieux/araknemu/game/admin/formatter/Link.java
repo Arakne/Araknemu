@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.game.admin.formatter;
 
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+
 /**
  * Build a link for the console output
  *
@@ -67,8 +69,8 @@ public final class Link {
         protected abstract void configure(Link link, String target);
     }
 
-    private String text;
-    private String[] arguments;
+    private @MonotonicNonNull String text;
+    private String @MonotonicNonNull[] arguments;
 
     /**
      * Define the link text
@@ -128,6 +130,10 @@ public final class Link {
 
     @Override
     public String toString() {
+        if (arguments == null || text == null) {
+            throw new IllegalStateException("Missing text or arguments");
+        }
+
         final StringBuilder sb = new StringBuilder("<u><a href='asfunction:onHref");
 
         for (String argument : arguments) {

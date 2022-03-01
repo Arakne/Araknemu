@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.item.type.UsableItem;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.ItemClassConstraint;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SlotConstraint;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Optional;
 
@@ -74,7 +75,7 @@ public final class UsableSlot implements InventorySlot {
     }
 
     @Override
-    public void uncheckedSet(InventoryEntry entry) {
+    public void uncheckedSet(@Nullable InventoryEntry entry) {
         slot.uncheckedSet(entry);
     }
 }

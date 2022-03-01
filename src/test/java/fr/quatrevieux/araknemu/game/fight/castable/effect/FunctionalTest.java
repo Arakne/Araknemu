@@ -158,7 +158,7 @@ public class FunctionalTest extends FightBaseCase {
 
         requestStack.assertAll(
             "GAS1",
-            new FightAction(new CastSuccess(fighter1, spell, fighter2.cell(), false)),
+            new FightAction(new CastSuccess(new Cast(null, null, null), fighter1, spell, fighter2.cell(), false)),
             ActionEffect.usedActionPoints(fighter1, 4),
             ActionEffect.alterLifePoints(fighter1, fighter2, -damage),
             "GAF0|1"
@@ -914,7 +914,6 @@ public class FunctionalTest extends FightBaseCase {
         Spell spell = service.get(spellId).level(5);
 
         currentTurn.perform(new Cast(
-            currentTurn,
             currentTurn.fighter(),
             spell,
             target,
@@ -939,7 +938,6 @@ public class FunctionalTest extends FightBaseCase {
         Spell spell = service.get(spellId).level(5);
 
         currentTurn.perform(new Cast(
-            currentTurn,
             currentTurn.fighter(),
             spell,
             target,

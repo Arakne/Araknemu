@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.chat;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * List of channel types
@@ -66,6 +67,12 @@ public enum ChannelType {
      * Get a channel by its character
      */
     public static ChannelType byChar(char c) {
-        return channels.get(c);
+        final ChannelType type =  channels.get(c);
+
+        if (type == null) {
+            throw new NoSuchElementException("The channel " + c + " does not exists");
+        }
+
+        return type;
     }
 }

@@ -52,7 +52,7 @@ class ConfigurationLoaderTest extends TestCase {
         Files.copy(basePath.resolve("test_config.ini"), basePath.resolve("config.ini"));
 
         Configuration config = loader.load();
-        DatabaseConfiguration dbConfig = config.module(DatabaseConfiguration.class);
+        DatabaseConfiguration dbConfig = config.module(DatabaseConfiguration.MODULE);
 
         assertEquals("sqlite", dbConfig.connection("realm").type());
         assertEquals("localhost", dbConfig.connection("test_mysql").host());
@@ -64,7 +64,7 @@ class ConfigurationLoaderTest extends TestCase {
         Files.copy(basePath.resolve("test_config.ini"), basePath.resolve("config.ini.dist"));
 
         Configuration config = loader.load();
-        DatabaseConfiguration dbConfig = config.module(DatabaseConfiguration.class);
+        DatabaseConfiguration dbConfig = config.module(DatabaseConfiguration.MODULE);
 
         assertEquals("sqlite", dbConfig.connection("realm").type());
         assertEquals("localhost", dbConfig.connection("test_mysql").host());
@@ -74,7 +74,7 @@ class ConfigurationLoaderTest extends TestCase {
     @Test
     void loadWithConfigurationFileName() throws IOException {
         Configuration config = loader.configFileName("test_config.ini").load();
-        DatabaseConfiguration dbConfig = config.module(DatabaseConfiguration.class);
+        DatabaseConfiguration dbConfig = config.module(DatabaseConfiguration.MODULE);
 
         assertEquals("sqlite", dbConfig.connection("realm").type());
         assertEquals("localhost", dbConfig.connection("test_mysql").host());
@@ -84,7 +84,7 @@ class ConfigurationLoaderTest extends TestCase {
     @Test
     void loadWithConfigurationFilePath() throws IOException {
         Configuration config = loader.configFile(basePath.resolve("test_config.ini").toAbsolutePath()).load();
-        DatabaseConfiguration dbConfig = config.module(DatabaseConfiguration.class);
+        DatabaseConfiguration dbConfig = config.module(DatabaseConfiguration.MODULE);
 
         assertEquals("sqlite", dbConfig.connection("realm").type());
         assertEquals("localhost", dbConfig.connection("test_mysql").host());

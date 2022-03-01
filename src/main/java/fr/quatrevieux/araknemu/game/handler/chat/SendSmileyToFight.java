@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.chat.UseSmiley;
 import fr.quatrevieux.araknemu.network.game.out.chat.Smiley;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Send the player smiley to the fight
@@ -31,7 +32,7 @@ import fr.quatrevieux.araknemu.network.game.out.chat.Smiley;
 public final class SendSmileyToFight implements PacketHandler<GameSession, UseSmiley> {
     @Override
     public void handle(GameSession session, UseSmiley packet) throws Exception {
-        final PlayerFighter fighter = session.fighter();
+        final PlayerFighter fighter = NullnessUtil.castNonNull(session.fighter());
 
         fighter.fight().send(new Smiley(fighter, packet.smiley()));
     }

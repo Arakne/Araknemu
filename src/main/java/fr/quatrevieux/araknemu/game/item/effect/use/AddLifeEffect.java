@@ -23,6 +23,8 @@ import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Add life to the use target
@@ -38,8 +40,8 @@ public final class AddLifeEffect implements UseEffectHandler {
     }
 
     @Override
-    public void applyToTarget(UseEffect effect, ExplorationPlayer caster, ExplorationPlayer target, int cell) {
-        apply(effect, target);
+    public void applyToTarget(UseEffect effect, ExplorationPlayer caster, @Nullable ExplorationPlayer target, int cell) {
+        apply(effect, NullnessUtil.castNonNull(target)); // target must be checked before using checkTarget()
     }
 
     @Override
@@ -48,7 +50,7 @@ public final class AddLifeEffect implements UseEffectHandler {
     }
 
     @Override
-    public boolean checkTarget(UseEffect effect, ExplorationPlayer caster, ExplorationPlayer target, int cell) {
+    public boolean checkTarget(UseEffect effect, ExplorationPlayer caster, @Nullable ExplorationPlayer target, int cell) {
         return target != null;
     }
 

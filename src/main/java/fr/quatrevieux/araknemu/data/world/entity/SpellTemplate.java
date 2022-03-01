@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.data.world.entity;
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.data.value.SpellTemplateEffect;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 
@@ -33,10 +34,10 @@ public final class SpellTemplate {
     private final String name;
     private final int sprite;
     private final String spriteArgs;
-    private final Level[] levels;
+    private final @Nullable Level[] levels;
     private final int[] targets;
 
-    public SpellTemplate(int id, String name, int sprite, String spriteArgs, Level[] levels, int[] targets) {
+    public SpellTemplate(int id, String name, int sprite, String spriteArgs, @Nullable Level[] levels, int[] targets) {
         this.id = id;
         this.name = name;
         this.sprite = sprite;
@@ -61,7 +62,7 @@ public final class SpellTemplate {
         return spriteArgs;
     }
 
-    public Level[] levels() {
+    public @Nullable Level[] levels() {
         return levels;
     }
 

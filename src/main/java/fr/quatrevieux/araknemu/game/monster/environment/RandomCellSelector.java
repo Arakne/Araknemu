@@ -23,6 +23,7 @@ import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import org.apache.commons.lang3.ArrayUtils;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +34,8 @@ import java.util.List;
 public final class RandomCellSelector implements SpawnCellSelector {
     private static final RandomUtil RANDOM = RandomUtil.createShared();
 
-    private ExplorationMap map;
-    private int[] availableCells;
+    private @MonotonicNonNull ExplorationMap map;
+    private int @MonotonicNonNull[] availableCells;
 
     @Override
     public void setMap(ExplorationMap map) {
@@ -59,6 +60,13 @@ public final class RandomCellSelector implements SpawnCellSelector {
 
     @Override
     public ExplorationMapCell cell() {
+        final ExplorationMap map = this.map;
+        final int[] availableCells = this.availableCells;
+
+        if (map == null || availableCells == null) {
+            throw new IllegalStateException("Map must be loaded before");
+        }
+
         final int offset = RANDOM.nextInt(availableCells.length);
 
         for (int i = 0; i < availableCells.length; ++i) {

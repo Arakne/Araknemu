@@ -23,6 +23,8 @@ import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +34,7 @@ import java.util.List;
  */
 public final class ItemEffectsTransformer implements Transformer<List<ItemTemplateEffectEntry>> {
     @Override
-    public String serialize(List<ItemTemplateEffectEntry> value) {
+    public @NonNull String serialize(@PolyNull List<ItemTemplateEffectEntry> value) {
         if (value == null || value.isEmpty()) {
             return "";
         }
@@ -57,7 +59,7 @@ public final class ItemEffectsTransformer implements Transformer<List<ItemTempla
     }
 
     @Override
-    public List<ItemTemplateEffectEntry> unserialize(String serialize) {
+    public @NonNull List<ItemTemplateEffectEntry> unserialize(@PolyNull String serialize) {
         if (serialize == null || serialize.isEmpty()) {
             return new ArrayList<>();
         }

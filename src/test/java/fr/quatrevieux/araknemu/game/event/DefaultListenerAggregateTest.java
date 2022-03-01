@@ -140,7 +140,7 @@ class DefaultListenerAggregateTest {
         dispatcher.dispatch(a);
 
         assertSame(a, l2.a);
-        Mockito.verify(logger).error("my error", error);
+        Mockito.verify(logger).error("Error during execution of listener fr.quatrevieux.araknemu.game.event.DefaultListenerAggregateTest$1", error);
     }
 
     @Test

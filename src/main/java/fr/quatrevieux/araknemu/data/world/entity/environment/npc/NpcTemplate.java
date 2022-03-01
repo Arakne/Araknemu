@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.data.world.entity.environment.npc;
 
 import fr.arakne.utils.value.Colors;
 import fr.arakne.utils.value.constant.Gender;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Optional;
 
@@ -37,9 +38,9 @@ public final class NpcTemplate {
     private final String accessories;
     private final int extraClip;
     private final int customArtwork;
-    private final int[] storeItems;
+    private final int @Nullable[] storeItems;
 
-    public NpcTemplate(int id, int gfxId, int scaleX, int scaleY, Gender gender, Colors colors, String accessories, int extraClip, int customArtwork, int[] storeItems) {
+    public NpcTemplate(int id, int gfxId, int scaleX, int scaleY, Gender gender, Colors colors, String accessories, int extraClip, int customArtwork, int @Nullable[] storeItems) {
         this.id = id;
         this.gfxId = gfxId;
         this.scaleX = scaleX;

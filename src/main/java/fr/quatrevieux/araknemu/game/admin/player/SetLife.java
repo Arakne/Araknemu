@@ -70,6 +70,7 @@ public final class SetLife extends AbstractCommand<SetLife.Arguments> {
         }
     }
 
+    @SuppressWarnings("initialization.field.uninitialized")
     public static final class Arguments {
         @Argument(required = true, metaVar = "number|max")
         private String value;

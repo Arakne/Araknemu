@@ -78,6 +78,7 @@ public final class Authenticate implements PacketHandler<RealmSession, Credentia
         }
 
         @Override
+        @SuppressWarnings("contracts.precondition") // checker cannot infer non null from generics...
         public void success(AuthenticationAccount account) {
             account.attach(session);
             logService.create(session);

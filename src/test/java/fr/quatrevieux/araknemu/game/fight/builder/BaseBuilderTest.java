@@ -74,15 +74,15 @@ class BaseBuilderTest extends GameBaseCase {
     }
 
     @Test
-    void buildEmpty() {
+    void buildWithoutTeam() {
         builder.map(container.get(ExplorationMapService.class).load(10340));
 
-        Fight fight = builder.build(1);
+        assertThrows(IllegalStateException.class, () -> builder.build(1));
+    }
 
-        assertSame(type, fight.type());
-        assertCount(0, fight.teams());
-        assertCount(0, fight.fighters(false));
-        assertEquals(1, fight.id());
+    @Test
+    void buildWithoutMap() {
+        assertThrows(IllegalStateException.class, () -> builder.build(1));
     }
 
     @Test
@@ -98,6 +98,11 @@ class BaseBuilderTest extends GameBaseCase {
 
         for (int i = 0; i < 100; ++i) {
             Fight fight = builder.build(1);
+
+            assertSame(type, fight.type());
+            assertCount(2, fight.teams());
+            assertCount(2, fight.fighters(false));
+            assertEquals(1, fight.id());
 
             Fighter firstFighter = new ArrayList<>(fight.team(0).fighters()).get(0);
 
@@ -123,6 +128,11 @@ class BaseBuilderTest extends GameBaseCase {
 
         for (int i = 0; i < 100; ++i) {
             Fight fight = builder.build(1);
+
+            assertSame(type, fight.type());
+            assertCount(2, fight.teams());
+            assertCount(2, fight.fighters(false));
+            assertEquals(1, fight.id());
 
             Fighter firstFighter = new ArrayList<>(fight.team(0).fighters()).get(0);
 

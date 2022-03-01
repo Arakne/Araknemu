@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,11 +45,17 @@ public final class MonsterAiFactory implements AiFactory {
     }
 
     class ResolveAi implements FighterOperation {
-        private AI ai;
+        private @MonotonicNonNull AI ai;
 
         @Override
         public void onMonster(MonsterFighter fighter) {
-            factories.get(fighter.monster().ai())
+            final AiFactory factory = factories.get(fighter.monster().ai());
+
+            if (factory == null) {
+                throw new IllegalArgumentException("Unsupported AI type " + fighter.monster().ai());
+            }
+
+            factory
                 .create(fighter)
                 .ifPresent(ai -> this.ai = ai)
             ;

@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 import fr.quatrevieux.araknemu.game.item.effect.WeaponEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.SpellEffectArea;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public final class Weapon extends AbstractEquipment {
     private final WeaponInfo info;
     private final SpellEffectArea area;
 
-    public Weapon(ItemTemplate template, ItemType type, GameItemSet set, List<WeaponEffect> weaponEffects, List<CharacteristicEffect> characteristics, List<SpecialEffect> specials, WeaponInfo info, SpellEffectArea area) {
+    public Weapon(ItemTemplate template, ItemType type, @Nullable GameItemSet set, List<WeaponEffect> weaponEffects, List<CharacteristicEffect> characteristics, List<SpecialEffect> specials, WeaponInfo info, SpellEffectArea area) {
         super(template, type, set, characteristics, specials);
 
         this.weaponEffects = weaponEffects;
@@ -76,7 +77,7 @@ public final class Weapon extends AbstractEquipment {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (!super.equals(obj)) {
             return false;
         }

@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.map;
 import fr.arakne.utils.maps.serializer.CellData;
 import fr.arakne.utils.value.Dimensions;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
+import org.checkerframework.checker.initialization.qual.UnderInitialization;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -89,7 +90,8 @@ public final class FightMap implements BattlefieldMap {
         cells.clear();
     }
 
-    private List<FightCell> makeCells(CellData[] template) {
+    @SuppressWarnings("argument")
+    private List<FightCell> makeCells(@UnderInitialization FightMap this, CellData[] template) {
         final List<FightCell> cells = new ArrayList<>(template.length);
 
         for (int i = 0; i < template.length; ++i) {

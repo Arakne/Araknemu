@@ -19,15 +19,17 @@
 
 package fr.quatrevieux.araknemu.data.living.constraint;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 /**
  * Factory for constraint builder
  *
  * @param <T> The entity type
  * @param <E> The error type
  */
-public interface BuilderFactory<T, E> {
+public interface BuilderFactory<T, @NonNull E> {
     /**
      * Build the builder
      */
-    public void build(ConstraintBuilder<T, E> builder);
+    public void build(ConstraintBuilder<T, @NonNull E> builder);
 }

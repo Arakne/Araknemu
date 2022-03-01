@@ -157,7 +157,7 @@ class ActionPointLostHandlerTest extends FightBaseCase {
         assertEquals(5, caster.turn().points().actionPoints());
 
         requestStack.assertOne(ActionEffect.buff(buff.get(), -1));
-        requestStack.assertOne("GIE101;1;1;;0;null;2;0");
+        requestStack.assertOne("GIE101;1;1;;0;;2;0");
     }
 
     @Test

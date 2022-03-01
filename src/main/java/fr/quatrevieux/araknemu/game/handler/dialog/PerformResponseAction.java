@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.dialog.NpcDialog;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.dialog.ChosenResponse;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Perform actions for the given dialog response
@@ -31,7 +32,7 @@ import fr.quatrevieux.araknemu.network.game.in.dialog.ChosenResponse;
 public final class PerformResponseAction implements PacketHandler<GameSession, ChosenResponse> {
     @Override
     public void handle(GameSession session, ChosenResponse packet) {
-        final ExplorationPlayer player = session.exploration();
+        final ExplorationPlayer player = NullnessUtil.castNonNull(session.exploration());
 
         player.interactions().get(NpcDialog.class)
             .forQuestion(packet.question())

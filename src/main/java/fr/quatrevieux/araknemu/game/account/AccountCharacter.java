@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.player.sprite.SpriteInfo;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.Accessories;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.EmptyAccessories;
 import fr.quatrevieux.araknemu.network.game.in.account.AddCharacterRequest;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * Character for game account
@@ -46,6 +47,7 @@ public final class AccountCharacter {
     /**
      * Get the layer account
      */
+    @Pure
     public GameAccount account() {
         return account;
     }
@@ -53,6 +55,7 @@ public final class AccountCharacter {
     /**
      * Get the player id
      */
+    @Pure
     public int id() {
         return entity.id();
     }
@@ -60,6 +63,7 @@ public final class AccountCharacter {
     /**
      * Get the character entity
      */
+    @Pure
     public Player character() {
         return entity;
     }
@@ -67,6 +71,7 @@ public final class AccountCharacter {
     /**
      * Get the character level
      */
+    @Pure
     public int level() {
         return entity.level();
     }
@@ -81,6 +86,7 @@ public final class AccountCharacter {
     /**
      * Get the player server ID
      */
+    @Pure
     public int serverId() {
         return entity.serverId();
     }

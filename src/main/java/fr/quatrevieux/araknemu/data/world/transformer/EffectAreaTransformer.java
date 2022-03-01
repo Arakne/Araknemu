@@ -22,13 +22,14 @@ package fr.quatrevieux.araknemu.data.world.transformer;
 import fr.arakne.utils.encoding.Base64;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
  * Transform spell / weapon effect area string
  */
 public final class EffectAreaTransformer implements Transformer<EffectArea> {
     @Override
-    public String serialize(EffectArea value) {
+    public @PolyNull String serialize(@PolyNull EffectArea value) {
         if (value == null) {
             return null;
         }
@@ -37,7 +38,7 @@ public final class EffectAreaTransformer implements Transformer<EffectArea> {
     }
 
     @Override
-    public EffectArea unserialize(String serialize) {
+    public @PolyNull EffectArea unserialize(@PolyNull String serialize) {
         if (serialize == null) {
             return null;
         }

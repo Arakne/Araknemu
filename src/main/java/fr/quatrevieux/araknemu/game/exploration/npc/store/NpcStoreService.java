@@ -53,8 +53,10 @@ public final class NpcStoreService implements ExchangeProvider {
 
     @Override
     public Optional<NpcStore> load(NpcTemplate template) {
-        if (stores.containsKey(template.id())) {
-            return Optional.of(stores.get(template.id()));
+        final NpcStore cachedStore = stores.get(template.id());
+
+        if (cachedStore != null) {
+            return Optional.of(cachedStore);
         }
 
         return template.storeItems()

@@ -74,11 +74,13 @@ public final class ExplorationMapService implements PreloadableService, EventsSu
      * Load the exploration map
      */
     public ExplorationMap load(int mapId) throws EntityNotFoundException {
-        if (!maps.containsKey(mapId)) {
+        final ExplorationMap loadedMap = maps.get(mapId);
+
+        if (loadedMap == null) {
             return createMap(repository.get(mapId));
         }
 
-        return maps.get(mapId);
+        return loadedMap;
     }
 
     @Override
@@ -135,11 +137,13 @@ public final class ExplorationMapService implements PreloadableService, EventsSu
      * Load the exploration map
      */
     public ExplorationMap load(MapTemplate template) {
-        if (maps.containsKey(template.id())) {
-            return maps.get(template.id());
+        final ExplorationMap loadedMap = maps.get(template.id());
+
+        if (loadedMap == null) {
+            return createMap(template);
         }
 
-        return createMap(template);
+        return loadedMap;
     }
 
     private ExplorationMap createMap(MapTemplate template) {

@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.type.AbstractEquipment;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Optional;
 
@@ -65,7 +66,7 @@ public interface InventorySlot {
     /**
      * Set the entry to the slot without do any checks
      */
-    public void uncheckedSet(InventoryEntry entry);
+    public void uncheckedSet(@Nullable InventoryEntry entry);
 
     /**
      * Remove the current entry

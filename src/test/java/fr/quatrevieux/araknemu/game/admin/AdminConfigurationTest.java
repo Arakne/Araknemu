@@ -35,7 +35,7 @@ class AdminConfigurationTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        configuration = app.configuration().module(AdminConfiguration.class);
+        configuration = app.configuration().module(AdminConfiguration.MODULE);
     }
 
     @Test

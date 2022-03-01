@@ -57,7 +57,6 @@ class LaunchedSpellsModuleTest extends FightBaseCase {
         FightTurn currentTurn = fight.turnList().current().get();
 
         currentTurn.perform(new Cast(
-            currentTurn,
             currentTurn.fighter(),
             currentTurn.fighter().spells().get(6),
             player.fighter().cell(),

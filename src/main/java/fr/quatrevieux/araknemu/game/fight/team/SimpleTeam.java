@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,15 +42,15 @@ public final class SimpleTeam implements FightTeam {
     private final List<Integer> startPlaces;
     private final int number;
 
-    private final ConfigurableTeamOptions options;
+    private @MonotonicNonNull ConfigurableTeamOptions options;
 
+    @SuppressWarnings({"argument", "assignment"})
     public SimpleTeam(PlayerFighter leader, List<Integer> startPlaces, int number) {
         this.leader = leader;
         this.fighters = new ArrayList<>();
         this.fighters.add(leader);
         this.startPlaces = startPlaces;
         this.number = number;
-        this.options = new ConfigurableTeamOptions(this);
 
         leader.setTeam(this);
     }
@@ -106,12 +107,16 @@ public final class SimpleTeam implements FightTeam {
 
     @Override
     public ConfigurableTeamOptions options() {
+        if (options == null) {
+            throw new IllegalStateException("FightTeam#setFight() must be called before use the FightTeam instance");
+        }
+
         return options;
     }
 
     @Override
     public void join(Fighter fighter) throws JoinFightException {
-        if (!options.allowJoinTeam()) {
+        if (options != null && !options.allowJoinTeam()) {
             throw new JoinFightException(JoinFightError.TEAM_CLOSED);
         }
 
@@ -140,6 +145,6 @@ public final class SimpleTeam implements FightTeam {
 
     @Override
     public void setFight(Fight fight) {
-        options.setFight(fight);
+        options = new ConfigurableTeamOptions(this, fight);
     }
 }

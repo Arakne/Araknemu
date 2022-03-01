@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.item.effect.CharacteristicEffect;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +40,11 @@ import java.util.Optional;
 public abstract class AbstractEquipment implements Item {
     private final ItemTemplate template;
     private final ItemType type;
-    private final GameItemSet set;
+    private final @Nullable GameItemSet set;
     private final List<CharacteristicEffect> characteristics;
     private final List<SpecialEffect> specials;
 
-    public AbstractEquipment(ItemTemplate template, ItemType type, GameItemSet set, List<CharacteristicEffect> characteristics, List<SpecialEffect> specials) {
+    public AbstractEquipment(ItemTemplate template, ItemType type, @Nullable GameItemSet set, List<CharacteristicEffect> characteristics, List<SpecialEffect> specials) {
         this.template = template;
         this.type = type;
         this.set = set;
@@ -97,7 +98,7 @@ public abstract class AbstractEquipment implements Item {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }

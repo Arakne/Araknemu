@@ -23,6 +23,7 @@ import fr.arakne.utils.maps.CoordinateCell;
 import fr.arakne.utils.maps.serializer.CellData;
 import fr.quatrevieux.araknemu.game.fight.exception.FightMapException;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Optional;
 
@@ -35,6 +36,7 @@ public final class UnwalkableFightCell implements FightCell {
     private final int id;
     private final CoordinateCell<FightCell> coordinate;
 
+    @SuppressWarnings({"assignment", "argument"})
     public UnwalkableFightCell(FightMap map, CellData template, int id) {
         this.map = map;
         this.template = template;
@@ -93,7 +95,7 @@ public final class UnwalkableFightCell implements FightCell {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

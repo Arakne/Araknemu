@@ -45,11 +45,9 @@ public final class CharacterAccessories extends AbstractAccessories {
 
     @Override
     public Accessory get(AccessoryType type) {
-        if (!accessories.containsKey(type)) {
-            return new NullAccessory(type);
-        }
+        final Accessory accessory = accessories.get(type);
 
-        return accessories.get(type);
+        return accessory != null ? accessory : new NullAccessory(type);
     }
 
     private void set(Accessory accessory) {

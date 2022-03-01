@@ -20,6 +20,8 @@
 package fr.quatrevieux.araknemu.game.fight.fighter;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterStateChanged;
+import org.checkerframework.checker.nullness.qual.KeyFor;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,9 +41,9 @@ public final class FighterStates implements States {
 
     @Override
     public void push(int state, int duration) {
-        final boolean defined = states.containsKey(state);
+        final Integer currentStateDuration = states.get(state);
 
-        if (defined && !higherDuration(states.get(state), duration)) {
+        if (currentStateDuration != null && !higherDuration(currentStateDuration, duration)) {
             return;
         }
 
@@ -51,7 +53,7 @@ public final class FighterStates implements States {
             new FighterStateChanged(
                 fighter,
                 state,
-                defined ? FighterStateChanged.Type.UPDATE : FighterStateChanged.Type.ADD
+                currentStateDuration != null ? FighterStateChanged.Type.UPDATE : FighterStateChanged.Type.ADD
             )
         );
     }
@@ -93,7 +95,7 @@ public final class FighterStates implements States {
     @Override
     public void refresh() {
         for (int state : new ArrayList<>(states.keySet())) {
-            final int turns = states.get(state);
+            final int turns = NullnessUtil.castNonNull(states.get(state));
 
             switch (turns) {
                 case -1:

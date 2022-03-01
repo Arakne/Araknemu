@@ -62,11 +62,7 @@ public final class SpellService implements PreloadableService {
      * @param spellId The spell id
      */
     public SpellLevels get(int spellId) {
-        if (!spells.containsKey(spellId)) {
-            spells.put(spellId, load(repository.get(spellId)));
-        }
-
-        return spells.get(spellId);
+        return spells.computeIfAbsent(spellId, id -> load(repository.get(id)));
     }
 
     /**

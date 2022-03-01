@@ -45,10 +45,9 @@ public final class EffectsHandler {
         applyCastTarget(cast);
 
         for (CastScope.EffectScope effect : cast.effects()) {
+            final EffectHandler handler = handlers.get(effect.effect().effect());
             // @todo Warning if handler is not found
-            if (handlers.containsKey(effect.effect().effect())) {
-                final EffectHandler handler = handlers.get(effect.effect().effect());
-
+            if (handler != null) {
                 if (effect.effect().duration() == 0) {
                     handler.handle(cast, effect);
                 } else {

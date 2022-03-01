@@ -21,13 +21,14 @@ package fr.quatrevieux.araknemu.game.admin.executor.argument;
 
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Simply forward {@link CommandParser.Arguments} to command
  */
 public final class ParsedArgumentsHydrator extends AbstractTypedArgumentsHydrator<CommandParser.Arguments> {
     @Override
-    protected CommandParser.Arguments typedHydrate(Command<CommandParser.Arguments> command, CommandParser.Arguments commandArguments, CommandParser.Arguments parsedArguments) throws Exception {
+    protected CommandParser.Arguments typedHydrate(Command<CommandParser.Arguments> command, CommandParser.@Nullable Arguments commandArguments, CommandParser.Arguments parsedArguments) throws Exception {
         return parsedArguments;
     }
 

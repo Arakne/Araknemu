@@ -46,6 +46,7 @@ import java.util.stream.Collectors;
  * Inventory for player
  */
 public final class PlayerInventory implements Inventory<InventoryEntry>, Dispatcher {
+    private final GamePlayer owner;
     private final Player player;
     private final ItemStorage<InventoryEntry> storage;
     private final Wallet wallet;
@@ -53,10 +54,11 @@ public final class PlayerInventory implements Inventory<InventoryEntry>, Dispatc
     private final Accessories accessories;
     private final ItemSets itemSets;
 
-    private GamePlayer owner;
     private int weight;
 
-    public PlayerInventory(Player player, Collection<InventoryService.LoadedItem> items) {
+    @SuppressWarnings({"assignment", "argument", "return"})
+    public PlayerInventory(GamePlayer owner, Player player, Collection<InventoryService.LoadedItem> items) {
+        this.owner = owner;
         this.player = player;
         this.storage = new SimpleItemStorage<>(
             this,
@@ -68,7 +70,7 @@ public final class PlayerInventory implements Inventory<InventoryEntry>, Dispatc
         );
 
         wallet = new SimpleWallet(player, this);
-        slots = new InventorySlots(this, storage);
+        slots = new InventorySlots(this, storage, owner);
         accessories = new InventoryAccessories(slots);
         itemSets = new ItemSets(this);
     }
@@ -111,20 +113,6 @@ public final class PlayerInventory implements Inventory<InventoryEntry>, Dispatc
      */
     public GamePlayer owner() {
         return owner;
-    }
-
-    /**
-     * Attach the inventory to its owner
-     */
-    public PlayerInventory attach(GamePlayer owner) {
-        if (this.owner != null) {
-            throw new IllegalStateException("Owner already set");
-        }
-
-        this.owner = owner;
-        slots.init(owner);
-
-        return this;
     }
 
     /**

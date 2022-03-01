@@ -60,11 +60,11 @@ public final class TokenService {
      * @throws NoSuchElementException When the token cannot be found or is expired
      */
     public Account get(String token) {
-        if (!accounts.containsKey(token)) {
+        final ExpirableAccount account = accounts.remove(token);
+
+        if (account == null) {
             throw new NoSuchElementException();
         }
-
-        final ExpirableAccount account = accounts.remove(token);
 
         if (System.currentTimeMillis() > account.expiration) {
             throw new NoSuchElementException();

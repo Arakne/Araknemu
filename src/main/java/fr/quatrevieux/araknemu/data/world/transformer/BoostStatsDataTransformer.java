@@ -23,6 +23,8 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.BoostStatsData;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -35,12 +37,16 @@ import java.util.Map;
  */
 public final class BoostStatsDataTransformer implements Transformer<BoostStatsData> {
     @Override
-    public String serialize(BoostStatsData value) {
-        return null;
+    public @PolyNull String serialize(@PolyNull BoostStatsData value) {
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    public BoostStatsData unserialize(String serialize) {
+    public @NonNull BoostStatsData unserialize(@PolyNull String serialize) {
+        if (serialize == null || serialize.isEmpty()) {
+            throw new IllegalArgumentException("Boost stats cannot be empty");
+        }
+
         final Map<Characteristic, List<BoostStatsData.Interval>> data = new EnumMap<>(Characteristic.class);
 
         for (String characteristicData : StringUtils.split(serialize, ";")) {

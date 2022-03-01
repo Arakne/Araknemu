@@ -20,6 +20,10 @@
 package fr.quatrevieux.araknemu.game.fight.type;
 
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardsGenerator;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Deterministic;
+import org.checkerframework.dataflow.qual.Pure;
 
 import java.time.Duration;
 
@@ -32,11 +36,13 @@ public interface FightType {
      *
      * https://github.com/Emudofus/Dofus/blob/1.29/dofus/managers/GameManager.as#L1255
      */
+    @Pure
     public int id();
 
     /**
      * Can cancel the fight without penalties
      */
+    @Pure
     public boolean canCancel();
 
     /**
@@ -44,23 +50,27 @@ public interface FightType {
      *
      * @see FightType#placementDuration() For get the placement time limit
      */
+    @Pure
     public boolean hasPlacementTimeLimit();
 
     /**
      * Get the fight placement duration
-     * This value must be used only, and only if hasPlacementTimeLimit is set to true
+     * This value must be used only if hasPlacementTimeLimit is set to true
      *
      * @see FightType#hasPlacementTimeLimit()
      */
+    @Pure
     public Duration placementDuration();
 
     /**
      * Get the maximum duration of a turn
      */
+    @Pure
     public Duration turnDuration();
 
     /**
      * Get the rewards generator
      */
+    @Deterministic
     public RewardsGenerator rewards();
 }

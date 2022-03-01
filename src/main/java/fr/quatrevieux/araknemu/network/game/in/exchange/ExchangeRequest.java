@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Optional;
 
@@ -34,10 +35,10 @@ import java.util.Optional;
  */
 public final class ExchangeRequest implements Packet {
     private final ExchangeType type;
-    private final Integer id;
-    private final Integer cell;
+    private final @Nullable Integer id;
+    private final @Nullable Integer cell;
 
-    public ExchangeRequest(ExchangeType type, Integer id, Integer cell) {
+    public ExchangeRequest(ExchangeType type, @Nullable Integer id, @Nullable Integer cell) {
         this.type = type;
         this.id = id;
         this.cell = cell;

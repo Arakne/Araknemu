@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -120,7 +121,7 @@ final class SqlNpcRepository implements NpcRepository {
                     rs.getInt("CELL_ID")
                 ),
                 Direction.values()[rs.getInt("ORIENTATION")],
-                Arrays.stream(StringUtils.split(rs.getString("QUESTIONS"), ';'))
+                Arrays.stream(StringUtils.split(NullnessUtil.castNonNull(rs.getString("QUESTIONS")), ';'))
                     .mapToInt(Integer::parseInt)
                     .toArray()
             );

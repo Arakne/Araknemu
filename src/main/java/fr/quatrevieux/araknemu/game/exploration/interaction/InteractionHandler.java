@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.exploration.interaction;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionQueue;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Handle exploration player interactions
@@ -29,7 +30,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingActio
 public final class InteractionHandler {
     private final ActionQueue gameActions = new ActionQueue();
 
-    private Interaction current;
+    private @Nullable Interaction current;
 
     /**
      * Check if the player is interacting

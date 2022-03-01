@@ -59,6 +59,7 @@ public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispa
 
     private final ListenerAggregate dispatcher = new DefaultListenerAggregate();
 
+    @SuppressWarnings({"argument"})
     public ExplorationMap(MapTemplate template, CellLoader loader, ExplorationSubArea subArea) {
         this.template = template;
         this.subArea = subArea;
@@ -114,8 +115,10 @@ public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispa
 
     @Override
     public ExplorationMapCell get(int id) {
-        if (cells.containsKey(id)) {
-            return cells.get(id);
+        final ExplorationMapCell cell = cells.get(id);
+
+        if (cell != null) {
+            return cell;
         }
 
         return new BasicCell(id, template.cells()[id], this);
@@ -169,11 +172,13 @@ public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispa
      * @param id The creature id
      */
     public ExplorationCreature creature(int id) {
-        if (!creatures.containsKey(id)) {
-            throw new NoSuchElementException("The creature " + id + " cannot be found");
+        final ExplorationCreature creature = creatures.get(id);
+
+        if (creature != null) {
+            return creature;
         }
 
-        return creatures.get(id);
+        throw new NoSuchElementException("The creature " + id + " cannot be found");
     }
 
     /**

@@ -44,6 +44,7 @@ public final class Attack implements ActionGenerator, CastSpell.SimulationSelect
         this(simulator, SuicideStrategy.IF_KILL_ENEMY);
     }
 
+    @SuppressWarnings({"assignment", "argument"})
     public Attack(Simulator simulator, SuicideStrategy suicideStrategy) {
         this.generator = new CastSpell(simulator, this);
         this.suicideStrategy = suicideStrategy;

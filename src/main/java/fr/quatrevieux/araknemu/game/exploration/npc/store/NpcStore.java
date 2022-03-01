@@ -28,6 +28,11 @@ import fr.quatrevieux.araknemu.game.exploration.npc.ExchangeProvider;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import org.checkerframework.checker.nullness.qual.EnsuresKeyForIf;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.KeyFor;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+import org.checkerframework.dataflow.qual.Pure;
 
 import java.util.Collection;
 import java.util.Map;
@@ -63,6 +68,7 @@ public final class NpcStore implements ExchangeProvider.Factory {
     /**
      * Get all available item templates
      */
+    @Pure
     public Collection<ItemTemplate> available() {
         return itemTemplates.values();
     }
@@ -74,6 +80,10 @@ public final class NpcStore implements ExchangeProvider.Factory {
      *
      * @return true if available
      */
+    @Pure
+    @EnsuresNonNullIf(expression = "itemTemplates.get(#1)", result = true)
+    @EnsuresKeyForIf(expression = "#1", map = "itemTemplates", result = true)
+    @SuppressWarnings("contracts.conditional.postcondition") // checker can't infer from containsKey()...
     public boolean has(int id) {
         return itemTemplates.containsKey(id);
     }
@@ -88,8 +98,15 @@ public final class NpcStore implements ExchangeProvider.Factory {
      *
      * @return Map of generated item, associated with quantity
      */
-    public Map<Item, Integer> get(int id, int quantity) {
+    @RequiresNonNull("itemTemplates.get(#1)")
+    public Map<Item, Integer> get(@KeyFor("itemTemplates") int id, int quantity) {
         return itemService.createBulk(itemTemplates.get(id), quantity);
+    }
+
+    @Pure
+    @RequiresNonNull("itemTemplates.get(#1)")
+    public Sell buy(@KeyFor("itemTemplates") int id, int quantity) {
+        return new Sell(itemTemplates.get(id), quantity);
     }
 
     /**
@@ -100,8 +117,10 @@ public final class NpcStore implements ExchangeProvider.Factory {
      *
      * @return The price
      */
-    public long price(int id, int quantity) {
-        return itemTemplates.get(id).price() * quantity;
+    @Pure
+    @RequiresNonNull("itemTemplates.get(#1)")
+    public long price(@KeyFor("itemTemplates") int id, int quantity) {
+        return (long) itemTemplates.get(id).price() * quantity;
     }
 
     /**
@@ -112,9 +131,30 @@ public final class NpcStore implements ExchangeProvider.Factory {
      *
      * @return The cost in kamas
      */
+    @Pure
     public long sellPrice(Item item, int quantity) {
         final long basePrice = (long) (configuration.npcSellPriceMultiplier() * item.template().price());
 
         return basePrice * quantity;
+    }
+
+    public final class Sell {
+        private final ItemTemplate template;
+        private final int quantity;
+
+        @Pure
+        public Sell(ItemTemplate template, int quantity) {
+            this.template = template;
+            this.quantity = quantity;
+        }
+
+        @Pure
+        public int price() {
+            return template.price() * quantity;
+        }
+
+        public Map<Item, Integer> items() {
+            return itemService.createBulk(template, quantity);
+        }
     }
 }

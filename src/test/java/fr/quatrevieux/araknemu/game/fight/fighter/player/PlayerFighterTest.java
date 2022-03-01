@@ -136,7 +136,7 @@ class PlayerFighterTest extends FightBaseCase {
         fighter.move(map.get(123));
         fighter.move(null);
 
-        assertNull(fighter.cell());
+        assertThrows(IllegalStateException.class, fighter::cell);
         assertFalse(map.get(123).fighter().isPresent());
     }
 

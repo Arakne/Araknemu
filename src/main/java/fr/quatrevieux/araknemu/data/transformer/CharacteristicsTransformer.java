@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristi
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
  * Transform characteristics string
@@ -34,7 +35,7 @@ public final class CharacteristicsTransformer implements Transformer<Characteris
     private static final String STATS_SEPARATOR = ";";
 
     @Override
-    public String serialize(Characteristics characteristics) {
+    public @PolyNull String serialize(@PolyNull Characteristics characteristics) {
         if (characteristics == null) {
             return null;
         }
@@ -60,7 +61,7 @@ public final class CharacteristicsTransformer implements Transformer<Characteris
     }
 
     @Override
-    public MutableCharacteristics unserialize(String serialized) {
+    public @PolyNull MutableCharacteristics unserialize(@PolyNull String serialized) {
         if (serialized == null) {
             return null;
         }

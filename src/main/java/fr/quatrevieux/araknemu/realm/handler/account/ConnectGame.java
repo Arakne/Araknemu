@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.network.realm.out.SelectServerError;
 import fr.quatrevieux.araknemu.network.realm.out.SelectServerPlain;
 import fr.quatrevieux.araknemu.realm.host.GameHost;
 import fr.quatrevieux.araknemu.realm.host.HostService;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Connect the client to choose game server
@@ -52,7 +53,7 @@ public final class ConnectGame implements PacketHandler<RealmSession, ChooseServ
         final GameHost host = service.get(packet.id());
 
         host.connector().token(
-            session.account(),
+            NullnessUtil.castNonNull(session.account()),
             token -> {
                 session.send(new SelectServerPlain(host.ip(), host.port(), token));
                 session.close();

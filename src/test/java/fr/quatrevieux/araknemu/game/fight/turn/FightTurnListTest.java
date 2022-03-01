@@ -37,7 +37,12 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FightTurnListTest extends FightBaseCase {
     private Fight fight;
@@ -171,6 +176,9 @@ class FightTurnListTest extends FightBaseCase {
 
     @Test
     void stop() {
+        // @todo to remove : because turn is linked to fight and not to turn list, calling turn.stop() will stop the incorrect turnlist
+        // so it will be not initialized
+        turnList = fight.turnList();
         turnList.init(new AlternateTeamFighterOrder());
         turnList.start();
 

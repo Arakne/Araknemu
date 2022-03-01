@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterRewardData;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterRewardRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -111,7 +112,7 @@ final class SqlMonsterRewardRepository implements MonsterRewardRepository {
                     rs.getInt("MIN_KAMAS"),
                     rs.getInt("MAX_KAMAS")
                 ),
-                Arrays.stream(StringUtils.split(rs.getString("EXPERIENCES"), "|"))
+                Arrays.stream(StringUtils.split(NullnessUtil.castNonNull(rs.getString("EXPERIENCES")), "|"))
                     .mapToLong(Long::parseLong)
                     .toArray()
             );

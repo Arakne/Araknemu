@@ -23,6 +23,7 @@ import fr.arakne.utils.value.Colors;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.transformer.TransformerException;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
  * Transform {@link Colors} database data
@@ -34,12 +35,16 @@ import org.apache.commons.lang3.StringUtils;
  */
 public final class ColorsTransformer implements Transformer<Colors> {
     @Override
-    public String serialize(Colors value) {
-        return value.toHexString(",");
+    public @PolyNull String serialize(@PolyNull Colors value) {
+        return value == null ? null : value.toHexString(",");
     }
 
     @Override
-    public Colors unserialize(String serialize) throws TransformerException {
+    public @PolyNull Colors unserialize(@PolyNull String serialize) throws TransformerException {
+        if (serialize == null) {
+            return null;
+        }
+
         if ("-1,-1,-1".equals(serialize)) {
             return Colors.DEFAULT;
         }

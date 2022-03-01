@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.core.config;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Pool of configuration items
  */
@@ -34,5 +36,5 @@ public interface Pool {
      * @param key The config item key
      * @return Configuration value
      */
-    public String get(String key);
+    public @Nullable String get(String key);
 }

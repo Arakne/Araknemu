@@ -53,11 +53,11 @@ class InventoryEntryTest extends GameBaseCase {
         dataSet.pushItemTemplates();
 
         inventory = new PlayerInventory(
+            gamePlayer(true),
             dataSet.refresh(new Player(gamePlayer().id())),
             Collections.emptyList()
         );
 
-        inventory.attach(gamePlayer(true));
         dispatcher = gamePlayer().dispatcher();
     }
 

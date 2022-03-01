@@ -37,6 +37,7 @@ import fr.quatrevieux.araknemu.game.item.inventory.StackableItemStorage;
 import fr.quatrevieux.araknemu.game.item.inventory.Wallet;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.util.Iterator;
 import java.util.stream.Collectors;
@@ -50,7 +51,7 @@ public final class Bank implements Inventory<BankEntry>, Dispatcher {
     private final ListenerAggregate dispatcher = new DefaultListenerAggregate();
     private final Wallet wallet;
 
-    private ItemStorage<BankEntry> storage;
+    private @MonotonicNonNull ItemStorage<BankEntry> storage;
 
     public Bank(BankService service, AccountBank entity) {
         this.service = service;

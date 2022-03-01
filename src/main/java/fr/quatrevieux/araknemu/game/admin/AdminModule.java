@@ -103,7 +103,7 @@ public final class AdminModule implements ContainerModule {
 
         configurator.factory(
             AdminConfiguration.class,
-            container -> app.configuration().module(AdminConfiguration.class)
+            container -> app.configuration().module(AdminConfiguration.MODULE)
         );
 
         configurator.persist(

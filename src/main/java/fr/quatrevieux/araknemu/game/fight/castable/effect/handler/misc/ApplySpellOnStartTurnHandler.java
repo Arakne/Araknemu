@@ -66,10 +66,10 @@ public final class ApplySpellOnStartTurnHandler implements EffectHandler, BuffHo
         final PassiveFighter target = buff.target();
         final Spell spell = spellService.get(buff.effect().min()).level(buff.effect().max());
 
-        final CastScope castScope = new CastScope(spell, (ActiveFighter) target, target.cell());
+        final CastScope castScope = CastScope.probable(spell, (ActiveFighter) target, target.cell(), spell.effects());
 
         fight.send(ActionEffect.launchVisualEffect(target, target.cell(), spell));
-        fight.effects().apply(castScope.withRandomEffects(spell.effects()));
+        fight.effects().apply(castScope);
 
         return !target.dead();
     }

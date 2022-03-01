@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.network.game.out.info;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -81,7 +82,7 @@ public final class Information extends AbstractInformationMessage {
      * @param characteristic The boosted characteristic
      * @param value The boost value
      */
-    public static Information characteristicBoosted(Characteristic characteristic, int value) {
+    public static @Nullable Information characteristicBoosted(Characteristic characteristic, int value) {
         switch (characteristic) {
             case WISDOM:
                 return new Information(9, value);

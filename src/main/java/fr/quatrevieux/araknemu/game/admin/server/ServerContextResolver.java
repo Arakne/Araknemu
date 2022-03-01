@@ -23,6 +23,8 @@ import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.context.ConfigurableContextResolver;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,14 +37,14 @@ public final class ServerContextResolver implements ConfigurableContextResolver<
     private final Context parentContext;
 
     private final List<AbstractContextConfigurator<ServerContext>> configurators = new ArrayList<>();
-    private ServerContext context;
+    private @MonotonicNonNull ServerContext context;
 
     public ServerContextResolver(Context parentContext) {
         this.parentContext = parentContext;
     }
 
     @Override
-    public Context resolve(AdminPerformer performer, Supplier<String> argument) {
+    public Context resolve(AdminPerformer performer, @Nullable Supplier<String> argument) {
         if (context != null) {
             return context;
         }

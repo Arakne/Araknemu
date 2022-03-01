@@ -180,7 +180,7 @@ class BuffListTest extends FightBaseCase {
         list.add(buff2);
         list.add(buff3);
 
-        CastScope cast = new CastScope(Mockito.mock(Spell.class), player.fighter(), null);
+        CastScope cast = CastScope.simple(Mockito.mock(Spell.class), player.fighter(), null, Collections.emptyList());
 
         Mockito.when(hook1.onCastTarget(buff1, cast)).thenReturn(true);
         Mockito.when(hook2.onCastTarget(buff2, cast)).thenReturn(true);
@@ -205,7 +205,7 @@ class BuffListTest extends FightBaseCase {
         list.add(buff2);
         list.add(buff3);
 
-        CastScope cast = new CastScope(Mockito.mock(Spell.class), player.fighter(), null);
+        CastScope cast = CastScope.simple(Mockito.mock(Spell.class), player.fighter(), null, Collections.emptyList());
 
         Mockito.when(hook1.onCastTarget(buff1, cast)).thenReturn(true);
         Mockito.when(hook2.onCastTarget(buff2, cast)).thenReturn(false);

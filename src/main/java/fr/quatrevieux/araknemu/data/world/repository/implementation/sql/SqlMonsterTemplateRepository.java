@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterTemplateRepository;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -120,15 +121,15 @@ final class SqlMonsterTemplateRepository implements MonsterTemplateRepository {
         public MonsterTemplate create(ResultSet rs) throws SQLException {
             return new MonsterTemplate(
                 rs.getInt("MONSTER_ID"),
-                rs.getString("MONSTER_NAME"),
+                NullnessUtil.castNonNull(rs.getString("MONSTER_NAME")),
                 rs.getInt("GFXID"),
-                colorsTransformer.unserialize(rs.getString("COLORS")),
-                rs.getString("AI"),
+                colorsTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("COLORS"))),
+                NullnessUtil.castNonNull(rs.getString("AI")),
                 parseGrades(
-                    StringUtils.splitPreserveAllTokens(rs.getString("CHARACTERISTICS"), "|"),
-                    StringUtils.splitPreserveAllTokens(rs.getString("LIFE_POINTS"), "|"),
-                    StringUtils.splitPreserveAllTokens(rs.getString("INITIATIVES"), "|"),
-                    StringUtils.splitPreserveAllTokens(rs.getString("SPELLS"), "|")
+                    StringUtils.splitPreserveAllTokens(NullnessUtil.castNonNull(rs.getString("CHARACTERISTICS")), "|"),
+                    StringUtils.splitPreserveAllTokens(NullnessUtil.castNonNull(rs.getString("LIFE_POINTS")), "|"),
+                    StringUtils.splitPreserveAllTokens(NullnessUtil.castNonNull(rs.getString("INITIATIVES")), "|"),
+                    StringUtils.splitPreserveAllTokens(NullnessUtil.castNonNull(rs.getString("SPELLS")), "|")
                 )
             );
         }

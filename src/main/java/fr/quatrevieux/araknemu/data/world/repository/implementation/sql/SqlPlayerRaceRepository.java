@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -119,13 +120,13 @@ final class SqlPlayerRaceRepository implements PlayerRaceRepository {
         public PlayerRace create(ResultSet rs) throws SQLException {
             return new PlayerRace(
                 Race.byId(rs.getInt("RACE_ID")),
-                rs.getString("RACE_NAME"),
-                characteristicsTransformer.unserialize(rs.getString("RACE_STATS")),
+                NullnessUtil.castNonNull(rs.getString("RACE_NAME")),
+                characteristicsTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("RACE_STATS"))),
                 rs.getInt("START_DISCERNMENT"),
                 rs.getInt("START_PODS"),
                 rs.getInt("START_LIFE"),
                 rs.getInt("PER_LEVEL_LIFE"),
-                boostStatsDataTransformer.unserialize(rs.getString("STATS_BOOST")),
+                boostStatsDataTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("STATS_BOOST"))),
                 new Position(
                     rs.getInt("MAP_ID"),
                     rs.getInt("CELL_ID")
@@ -134,7 +135,7 @@ final class SqlPlayerRaceRepository implements PlayerRaceRepository {
                     rs.getInt("ASTRUB_MAP_ID"),
                     rs.getInt("ASTRUB_CELL_ID")
                 ),
-                Arrays.stream(StringUtils.split(rs.getString("RACE_SPELLS"), "|"))
+                Arrays.stream(StringUtils.split(NullnessUtil.castNonNull(rs.getString("RACE_SPELLS")), "|"))
                     .mapToInt(Integer::parseInt)
                     .toArray()
             );

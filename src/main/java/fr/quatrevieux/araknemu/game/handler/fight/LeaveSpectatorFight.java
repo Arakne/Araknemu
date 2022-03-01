@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.handler.fight;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.fight.LeaveFightRequest;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Leave the fight if we are a spectator
@@ -29,7 +30,7 @@ import fr.quatrevieux.araknemu.network.game.in.fight.LeaveFightRequest;
 public final class LeaveSpectatorFight implements PacketHandler<GameSession, LeaveFightRequest> {
     @Override
     public void handle(GameSession session, LeaveFightRequest packet) {
-        session.spectator().leave();
+        NullnessUtil.castNonNull(session.spectator()).leave();
     }
 
     @Override

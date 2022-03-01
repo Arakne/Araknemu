@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.network.game.out.fight.action;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -55,6 +56,11 @@ class FightActionTest {
                     public boolean success() {
                         return true;
                     }
+
+                    @Override
+                    public void apply(FightTurn turn) {
+
+                    }
                 }
             ).toString()
         );
@@ -87,6 +93,11 @@ class FightActionTest {
                     @Override
                     public boolean success() {
                         return false;
+                    }
+
+                    @Override
+                    public void apply(FightTurn turn) {
+
                     }
                 }
             ).toString()

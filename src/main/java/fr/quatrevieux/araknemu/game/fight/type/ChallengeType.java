@@ -52,7 +52,7 @@ public final class ChallengeType implements FightType {
 
     @Override
     public Duration placementDuration() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override

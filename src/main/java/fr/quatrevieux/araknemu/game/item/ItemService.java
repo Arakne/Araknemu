@@ -28,7 +28,7 @@ import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.game.item.effect.CharacteristicEffect;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMapper;
 import fr.quatrevieux.araknemu.game.item.factory.ItemFactory;
 import org.apache.logging.log4j.Logger;
 
@@ -47,16 +47,18 @@ public final class ItemService implements PreloadableService {
     private final ItemFactory factory;
     private final ItemSetRepository itemSetRepository;
     private final ItemTypeRepository itemTypeRepository;
-    private final EffectMappers mappers;
+    private final EffectMapper<CharacteristicEffect> characteristicEffectEffectMapper;
+    private final EffectMapper<SpecialEffect> specialEffectEffectMapper;
 
     private final ConcurrentMap<Integer, GameItemSet> itemSetsById = new ConcurrentHashMap<>();
 
-    public ItemService(ItemTemplateRepository repository, ItemFactory factory, ItemSetRepository itemSetRepository, ItemTypeRepository itemTypeRepository, EffectMappers mappers) {
+    public ItemService(ItemTemplateRepository repository, ItemFactory factory, ItemSetRepository itemSetRepository, ItemTypeRepository itemTypeRepository, EffectMapper<CharacteristicEffect> characteristicEffectEffectMapper, EffectMapper<SpecialEffect> specialEffectEffectMapper) {
         this.repository = repository;
         this.factory = factory;
         this.itemSetRepository = itemSetRepository;
         this.itemTypeRepository = itemTypeRepository;
-        this.mappers = mappers;
+        this.characteristicEffectEffectMapper = characteristicEffectEffectMapper;
+        this.specialEffectEffectMapper = specialEffectEffectMapper;
     }
 
     @Override
@@ -158,11 +160,7 @@ public final class ItemService implements PreloadableService {
      * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException When the item set do not exists
      */
     public GameItemSet itemSet(int id) {
-        if (!itemSetsById.containsKey(id)) {
-            itemSetsById.put(id, createItemSet(itemSetRepository.get(id)));
-        }
-
-        return itemSetsById.get(id);
+        return itemSetsById.computeIfAbsent(id, mid -> createItemSet(itemSetRepository.get(id)));
     }
 
     private GameItemSet createItemSet(ItemSet entity) {
@@ -172,8 +170,8 @@ public final class ItemService implements PreloadableService {
             bonuses.add(
                 new GameItemSet.Bonus(
                     effects,
-                    mappers.get(CharacteristicEffect.class).create(effects),
-                    mappers.get(SpecialEffect.class).create(effects)
+                    characteristicEffectEffectMapper.create(effects),
+                    specialEffectEffectMapper.create(effects)
                 )
             );
         }

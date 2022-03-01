@@ -26,17 +26,23 @@ import fr.quatrevieux.araknemu.core.config.PoolUtils;
 /**
  * Configuration for admin system
  */
-public final class AdminConfiguration implements ConfigurationModule {
-    private PoolUtils pool;
+public final class AdminConfiguration {
+    public static final ConfigurationModule<AdminConfiguration> MODULE = new ConfigurationModule<AdminConfiguration>() {
+        @Override
+        public AdminConfiguration create(Pool pool) {
+            return new AdminConfiguration(pool);
+        }
 
-    @Override
-    public void setPool(Pool pool) {
+        @Override
+        public String name() {
+            return "admin";
+        }
+    };
+
+    private final PoolUtils pool;
+
+    public AdminConfiguration(Pool pool) {
         this.pool = new PoolUtils(pool);
-    }
-
-    @Override
-    public String name() {
-        return "admin";
     }
 
     /**

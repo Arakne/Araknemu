@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.data.world.entity.monster;
 
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.value.Position;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.time.Duration;
 import java.util.List;
@@ -34,13 +35,13 @@ public final class MonsterGroupData {
     private final int maxSize;
     private final int maxCount;
     private final List<Monster> monsters;
-    private final String comment;
+    private final @Nullable String comment;
     private final Position winFightTeleport;
     private final boolean fixedTeamNumber;
 
     private final int totalRate;
 
-    public MonsterGroupData(int id, Duration respawnTime, int maxSize, int maxCount, List<Monster> monsters, String comment, Position winFightTeleport, boolean fixedTeamNumber) {
+    public MonsterGroupData(int id, Duration respawnTime, int maxSize, int maxCount, List<Monster> monsters, @Nullable String comment, Position winFightTeleport, boolean fixedTeamNumber) {
         this.id = id;
         this.respawnTime = respawnTime;
         this.maxSize = maxSize;
@@ -82,7 +83,7 @@ public final class MonsterGroupData {
      * Human readable comment for the group data
      * Not used by the server
      */
-    public String comment() {
+    public @Nullable String comment() {
         return comment;
     }
 

@@ -218,7 +218,7 @@ public class GameBaseCase extends DatabaseTestCase {
         app = new Araknemu(
             conf,
             new DefaultDatabaseHandler(
-                conf.module(DatabaseConfiguration.class),
+                conf.module(DatabaseConfiguration.MODULE),
                 LogManager.getLogger()
             )
         );

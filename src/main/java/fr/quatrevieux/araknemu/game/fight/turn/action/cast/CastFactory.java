@@ -54,10 +54,11 @@ public final class CastFactory implements CastActionFactory {
     public Action create(String[] arguments) {
         final int spellId = Integer.parseInt(arguments[0]);
 
-        return create(
-            fighter.spells().has(spellId) ? fighter.spells().get(spellId) : null,
-            turn.fight().map().get(Integer.parseInt(arguments[1]))
-        );
+        if (!fighter.spells().has(spellId)) {
+            return new SpellNotFound(fighter);
+        }
+
+        return create(fighter.spells().get(spellId), turn.fight().map().get(Integer.parseInt(arguments[1])));
     }
 
     @Override
@@ -67,7 +68,7 @@ public final class CastFactory implements CastActionFactory {
 
     @Override
     public Cast create(Spell spell, FightCell target) {
-        return new Cast(turn, fighter, spell, target, validator, criticalityStrategy);
+        return new Cast(fighter, spell, target, validator, criticalityStrategy);
     }
 
     @Override

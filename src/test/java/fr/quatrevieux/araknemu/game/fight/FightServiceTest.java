@@ -37,8 +37,10 @@ import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.event.FightCreated;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.module.FightModule;
 import fr.quatrevieux.araknemu.game.fight.module.RaulebaqueModule;
+import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.listener.player.exploration.LeaveExplorationForFight;
 import fr.quatrevieux.araknemu.game.listener.player.fight.AttachFighter;
@@ -206,9 +208,14 @@ class FightServiceTest extends FightBaseCase {
     }
 
     @Test
-    void modules() throws ContainerException {
+    void modules() throws Exception {
+        PlayerFighter fighter1 = makePlayerFighter(gamePlayer());
+        PlayerFighter fighter2 = makePlayerFighter(other);
+
         BaseBuilder builder = new BaseBuilder(service, new RandomUtil(), new ChallengeType(configuration.fight()), container.get(Logger.class), executor);
         builder.map(container.get(ExplorationMapService.class).load(10340));
+        builder.addTeam((number, startPlaces) -> new SimpleTeam(fighter1, startPlaces, number));
+        builder.addTeam((number, startPlaces) -> new SimpleTeam(fighter2, startPlaces, number));
         Fight fight = builder.build(1);
 
         Collection<FightModule> modules = service.modules(fight);

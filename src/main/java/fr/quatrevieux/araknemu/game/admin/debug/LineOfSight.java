@@ -109,6 +109,7 @@ public final class LineOfSight extends AbstractCommand<LineOfSight.Arguments> {
         return new Arguments();
     }
 
+    @SuppressWarnings("initialization.field.uninitialized")
     public static final class Arguments {
         @Argument(metaVar = "target cell id")
         private Integer cellId;

@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Validate the cast range
@@ -44,7 +45,7 @@ public final class RangeValidator implements CastConstraintValidator {
     }
 
     @Override
-    public Error validate(Turn turn, Castable castable, FightCell target) {
+    public @Nullable Error validate(Turn turn, Castable castable, FightCell target) {
         final int distance = turn.fighter().cell().coordinate().distance(target);
 
         Interval range = castable.constraints().range();

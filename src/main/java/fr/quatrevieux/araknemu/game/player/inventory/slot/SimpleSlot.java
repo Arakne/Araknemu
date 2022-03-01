@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SlotConstraint;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Optional;
 
@@ -35,7 +36,7 @@ public final class SimpleSlot implements InventorySlot {
     private final SlotConstraint[] constraints;
     private final ItemStorage<InventoryEntry> storage;
 
-    private InventoryEntry entry;
+    private @Nullable InventoryEntry entry;
 
     public SimpleSlot(int id, SlotConstraint[] constraints, ItemStorage<InventoryEntry> storage) {
         this.id = id;
@@ -81,7 +82,7 @@ public final class SimpleSlot implements InventorySlot {
     }
 
     @Override
-    public void uncheckedSet(InventoryEntry entry) {
+    public void uncheckedSet(@Nullable InventoryEntry entry) {
         this.entry = entry;
     }
 }

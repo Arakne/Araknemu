@@ -32,6 +32,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
 import fr.quatrevieux.araknemu.core.network.exception.CloseWithPacket;
+import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.network.game.in.account.ChoosePlayingCharacter;
 import fr.quatrevieux.araknemu.network.game.out.chat.ChannelSubscribed;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
@@ -79,7 +80,7 @@ class SelectCharacterTest extends GameBaseCase {
 
     @Test
     void handleSuccess() {
-        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, null)).id();
+        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, new DefaultCharacteristics())).id();
 
         handler.handle(session, new ChoosePlayingCharacter(id));
 
@@ -93,7 +94,7 @@ class SelectCharacterTest extends GameBaseCase {
 
     @Test
     void handleWillSendChatChannels() throws Exception {
-        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, null, new Position(10300, 123), EnumSet.of(ChannelType.INFO, ChannelType.PRIVATE), 0, 0, -1, 0, new Position(10540, 210), 0)).id();
+        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, new DefaultCharacteristics(), new Position(10300, 123), EnumSet.of(ChannelType.INFO, ChannelType.PRIVATE), 0, 0, -1, 0, new Position(10540, 210), 0)).id();
 
         handler.handle(session, new ChoosePlayingCharacter(id));
 
@@ -102,7 +103,7 @@ class SelectCharacterTest extends GameBaseCase {
 
     @Test
     void cannotReselectCharacter() throws Exception {
-        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, null)).id();
+        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, new DefaultCharacteristics())).id();
 
         handlePacket(new ChoosePlayingCharacter(id));
         assertThrows(CloseWithPacket.class, () -> handlePacket(new ChoosePlayingCharacter(id)));
@@ -110,7 +111,7 @@ class SelectCharacterTest extends GameBaseCase {
 
     @Test
     void handleWillSendLastSession() {
-        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, null)).id();
+        int id = dataSet.push(new Player(-1, 1, 2, "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 23, new DefaultCharacteristics())).id();
         ConnectionLog log = dataSet.push(new ConnectionLog(session.account().id(), Instant.parse("2020-05-10T15:25:00.00Z"), "145.0.23.65"));
         log.setEndDate(Instant.parse("2020-05-10T18:25:00.00Z"));
         container.get(ConnectionLogRepository.class).save(log);

@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.CellAction;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Cell which trigger an action
@@ -59,7 +60,7 @@ public final class TriggerCell implements ExplorationMapCell {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

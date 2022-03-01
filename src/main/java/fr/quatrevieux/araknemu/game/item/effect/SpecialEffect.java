@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.item.effect.special.SpecialEffectHandler;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Arrays;
 
@@ -81,12 +82,12 @@ public final class SpecialEffect implements ItemEffect {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
 
-        if (getClass() != o.getClass()) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
 

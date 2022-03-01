@@ -34,7 +34,7 @@ class GameConfigurationTest extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        configuration = app.configuration().module(GameConfiguration.class);
+        configuration = app.configuration().module(GameConfiguration.MODULE);
     }
 
     @Test

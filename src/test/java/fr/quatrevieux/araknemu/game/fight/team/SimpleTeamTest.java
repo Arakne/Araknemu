@@ -52,10 +52,12 @@ class SimpleTeamTest extends FightBaseCase {
             Arrays.asList(123, 456),
             1
         );
+
+        team.setFight(createFight());
     }
 
     @Test
-    void getters() {
+    void getters() throws Exception {
         assertSame(fighter, team.leader());
         assertEquals(Arrays.asList(fighter), new ArrayList<>(team.fighters())); // Make list copy for equality
         assertEquals(Arrays.asList(123, 456), team.startPlaces());

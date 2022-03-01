@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.network.SessionClosed;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.realm.RealmSession;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationService;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Handle session closed
@@ -37,7 +38,7 @@ public final class StopSession implements PacketHandler<RealmSession, SessionClo
     @Override
     public void handle(RealmSession session, SessionClosed packet) {
         if (session.isLogged()) {
-            session.account().detach();
+            NullnessUtil.castNonNull(session.account()).detach();
         }
     }
 

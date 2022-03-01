@@ -26,9 +26,10 @@ import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
-import fr.quatrevieux.araknemu.game.item.factory.ItemFactory;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToCharacteristicMapping;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
+import fr.quatrevieux.araknemu.game.item.factory.ItemFactory;
 import fr.quatrevieux.araknemu.game.item.type.Wearable;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +39,11 @@ import org.mockito.Mockito;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ItemServiceTest extends GameBaseCase {
     private ItemService service;
@@ -58,7 +63,8 @@ class ItemServiceTest extends GameBaseCase {
             container.get(ItemFactory.class),
             container.get(ItemSetRepository.class),
             container.get(ItemTypeRepository.class),
-            container.get(EffectMappers.class)
+            container.get(EffectToCharacteristicMapping.class),
+            container.get(EffectToSpecialMapping.class)
         );
     }
 

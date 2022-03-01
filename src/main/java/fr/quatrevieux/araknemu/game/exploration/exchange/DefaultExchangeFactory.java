@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeInteraction;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.util.Optional;
 
@@ -55,7 +56,7 @@ public final class DefaultExchangeFactory implements ExchangeFactory<Exploration
         private final ExchangeType type;
         private final ExplorationPlayer initiator;
 
-        private ExchangeInteraction exchange;
+        private @MonotonicNonNull ExchangeInteraction exchange;
 
         public CreateExchange(ExchangeType type, ExplorationPlayer initiator) {
             this.type = type;

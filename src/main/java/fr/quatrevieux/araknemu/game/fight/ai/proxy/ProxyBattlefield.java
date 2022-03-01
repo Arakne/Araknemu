@@ -24,6 +24,9 @@ import fr.arakne.utils.value.Dimensions;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -37,13 +40,14 @@ import java.util.function.Consumer;
  */
 public final class ProxyBattlefield implements BattlefieldMap {
     private final BattlefieldMap map;
-    private final ProxyCell[] cells;
+    private final ProxyCell @Nullable[] cells;
 
     public ProxyBattlefield(BattlefieldMap map) {
         this.map = map;
         this.cells = null;
     }
 
+    @EnsuresNonNull("cells")
     private ProxyBattlefield(ProxyBattlefield other) {
         this.map = other.map;
         this.cells = new ProxyCell[other.map.size()];
@@ -109,8 +113,8 @@ public final class ProxyBattlefield implements BattlefieldMap {
     private final class ProxyCell implements FightCell {
         private final FightCell cell;
         private boolean free = false;
-        private PassiveFighter fighter = null;
-        private CoordinateCell<FightCell> coordinates = null;
+        private @Nullable PassiveFighter fighter = null;
+        private @MonotonicNonNull CoordinateCell<FightCell> coordinates = null;
 
         private ProxyCell(FightCell cell) {
             this.cell = cell;
@@ -199,6 +203,7 @@ public final class ProxyBattlefield implements BattlefieldMap {
     /**
      * Builder class for modifying a proxy map
      */
+    @SuppressWarnings("accessing.nullable") // map.cells is never null, but no way to tell this to checker
     public static class Modifier {
         private final ProxyBattlefield map;
 

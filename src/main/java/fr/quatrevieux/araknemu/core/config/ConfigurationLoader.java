@@ -19,6 +19,10 @@
 
 package fr.quatrevieux.araknemu.core.config;
 
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,7 +40,7 @@ public final class ConfigurationLoader {
     private final List<FileLoader> loaders = new ArrayList<>();
     private final Path baseDirectory;
 
-    private Path configFile;
+    private @MonotonicNonNull Path configFile;
 
     public ConfigurationLoader(Path baseDirectory, FileLoader[] loaders) {
         this.baseDirectory = baseDirectory;
@@ -85,7 +89,8 @@ public final class ConfigurationLoader {
      *
      * @param loader The file loader
      */
-    public void register(FileLoader loader) {
+    @RequiresNonNull("loaders")
+    public void register(@UnknownInitialization ConfigurationLoader this, FileLoader loader) {
         loaders.add(loader);
     }
 

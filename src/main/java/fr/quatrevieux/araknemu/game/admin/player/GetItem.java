@@ -32,6 +32,9 @@ import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -119,7 +122,7 @@ public final class GetItem extends AbstractCommand<GetItem.Arguments> {
                 "This option is not compatible with --max option.\n" +
                 "If a range value is set for a characteristic effect, a random value will be generated"
         )
-        private List<ItemTemplateEffectEntry> effects = null;
+        private @Nullable List<ItemTemplateEffectEntry> effects = null;
 
         @Argument(
             required = true, index = 0, metaVar = "ITEM_ID",
@@ -133,6 +136,7 @@ public final class GetItem extends AbstractCommand<GetItem.Arguments> {
         )
         private int quantity = 1;
 
+        @Pure
         public boolean max() {
             return max;
         }
@@ -141,6 +145,7 @@ public final class GetItem extends AbstractCommand<GetItem.Arguments> {
             this.max = max;
         }
 
+        @Pure
         public boolean each() {
             return each;
         }
@@ -149,22 +154,28 @@ public final class GetItem extends AbstractCommand<GetItem.Arguments> {
             this.each = each;
         }
 
-        public List<ItemTemplateEffectEntry> effects() {
+        @Pure
+        public @Nullable List<ItemTemplateEffectEntry> effects() {
             return effects;
         }
 
+        @EnsuresNonNullIf(expression = "effects()", result = true)
+        @SuppressWarnings("contracts.conditional.postcondition")
         public boolean hasCustomEffects() {
             return effects != null;
         }
 
+        @Pure
         public int itemId() {
             return itemId;
         }
 
+        @Pure
         public int times() {
             return each ? quantity : 1;
         }
 
+        @Pure
         public int quantity() {
             return each ? 1 : quantity;
         }

@@ -24,6 +24,8 @@ import fr.quatrevieux.araknemu.data.value.Geolocation;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.exploration.area.AreaService;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Comparator;
 
@@ -73,7 +75,7 @@ public final class GeolocationService {
         private static final int NONE = 0;
 
         private int superArea = 0;
-        private Integer subArea;
+        private @MonotonicNonNull Integer subArea;
         private boolean indoor = false;
 
         /**
@@ -112,7 +114,7 @@ public final class GeolocationService {
             return comparator
                 .thenComparing(this::compareIndoor)
                 .thenComparing(this::compareSize)
-                ;
+            ;
         }
 
         /**

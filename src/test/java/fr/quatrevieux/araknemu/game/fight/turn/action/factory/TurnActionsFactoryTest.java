@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastFactory;
+import fr.quatrevieux.araknemu.game.fight.turn.action.cast.SpellNotFound;
 import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombat;
 import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombatFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
@@ -70,7 +71,7 @@ class TurnActionsFactoryTest extends FightBaseCase {
 
     @Test
     void createCastSpellNotFound() throws Exception {
-        assertInstanceOf(Cast.class, factory.create(ActionType.CAST, new String[] {"7458", "123"}));
+        assertInstanceOf(SpellNotFound.class, factory.create(ActionType.CAST, new String[] {"7458", "123"}));
     }
 
     @Test

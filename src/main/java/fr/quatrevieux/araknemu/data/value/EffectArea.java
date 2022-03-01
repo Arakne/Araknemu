@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.data.value;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -60,11 +62,13 @@ public final class EffectArea {
          * Get the effect area type by char id
          */
         public static Type byChar(char c) {
-            if (!typeByC.containsKey(c)) {
-                throw new NoSuchElementException("Invalid effect area " + c);
+            final Type type = typeByC.get(c);
+
+            if (type != null) {
+                return type;
             }
 
-            return typeByC.get(c);
+            throw new NoSuchElementException("Invalid effect area " + c);
         }
     }
 
@@ -90,7 +94,7 @@ public final class EffectArea {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

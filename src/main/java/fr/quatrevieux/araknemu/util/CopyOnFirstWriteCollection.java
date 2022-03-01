@@ -19,6 +19,9 @@
 
 package fr.quatrevieux.araknemu.util;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -35,7 +38,7 @@ import java.util.function.Function;
  */
 public final class CopyOnFirstWriteCollection<E> implements Collection<E> {
     private Collection<E> inner;
-    private Function<Collection<E>, Collection<E>> copyFactory;
+    private @Nullable Function<Collection<E>, Collection<E>> copyFactory;
 
     public CopyOnFirstWriteCollection(Collection<E> inner, Function<Collection<E>, Collection<E>> copyFactory) {
         this.inner = inner;
@@ -84,12 +87,14 @@ public final class CopyOnFirstWriteCollection<E> implements Collection<E> {
     }
 
     @Override
+    @SuppressWarnings("return")
     public Object[] toArray() {
         return inner.toArray();
     }
 
     @Override
-    public <T> T[] toArray(T[] a) {
+    @SuppressWarnings({"override.param", "return"})
+    public <T> T @NonNull[] toArray(T @NonNull[] a) {
         return inner.toArray(a);
     }
 

@@ -89,8 +89,10 @@ public final class NpcExchangeService implements PreloadableService, EventsSubsc
 
     @Override
     public Optional<GameNpcExchange> load(NpcTemplate template) {
-        if (exchangeByTemplateId.containsKey(template.id())) {
-            return Optional.of(exchangeByTemplateId.get(template.id()));
+        final GameNpcExchange loadedExchange = exchangeByTemplateId.get(template.id());
+
+        if (loadedExchange != null) {
+            return Optional.of(loadedExchange);
         }
 
         // All exchanges are preloaded, but not found for the given npc

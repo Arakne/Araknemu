@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.effect.use.UseEffectHandler;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Arrays;
 
@@ -62,12 +63,12 @@ public final class UseEffect implements ItemEffect {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
 
-        if (getClass() != o.getClass()) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
 
@@ -88,7 +89,7 @@ public final class UseEffect implements ItemEffect {
     /**
      * Check if the player can use the effect to the target
      */
-    public boolean checkTarget(ExplorationPlayer caster, ExplorationPlayer target, int cell) {
+    public boolean checkTarget(ExplorationPlayer caster, @Nullable ExplorationPlayer target, int cell) {
         return handler.checkTarget(this, caster, target, cell);
     }
 
@@ -109,7 +110,7 @@ public final class UseEffect implements ItemEffect {
     /**
      * Apply the effect to the target
      */
-    public void applyToTarget(ExplorationPlayer caster, ExplorationPlayer target, int cell) {
+    public void applyToTarget(ExplorationPlayer caster, @Nullable ExplorationPlayer target, int cell) {
         handler.applyToTarget(this, caster, target, cell);
     }
 

@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepositor
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -188,7 +189,7 @@ final class SqlPlayerItemRepository implements PlayerItemRepository {
                 rs.getInt("PLAYER_ID"),
                 rs.getInt("ITEM_ENTRY_ID"),
                 rs.getInt("ITEM_TEMPLATE_ID"),
-                effectsTransformer.unserialize(rs.getString("ITEM_EFFECTS")),
+                effectsTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("ITEM_EFFECTS"))),
                 rs.getInt("QUANTITY"),
                 rs.getInt("POSITION")
             );

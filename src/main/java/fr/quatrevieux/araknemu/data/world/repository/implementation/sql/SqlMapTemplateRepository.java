@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.Geolocation;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -125,14 +126,14 @@ final class SqlMapTemplateRepository implements MapTemplateRepository {
         public MapTemplate create(ResultSet rs) throws SQLException {
             return new MapTemplate(
                 rs.getInt("id"),
-                rs.getString("date"),
+                NullnessUtil.castNonNull(rs.getString("date")),
                 new Dimensions(
                     rs.getInt("width"),
                     rs.getInt("height")
                 ),
-                rs.getString("key"),
-                cellsTransformer.unserialize(rs.getString("mapData")),
-                fightPlacesTransformer.unserialize(rs.getString("places")),
+                NullnessUtil.castNonNull(rs.getString("key")),
+                cellsTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("mapData"))),
+                fightPlacesTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("places"))),
                 new Geolocation(
                     rs.getInt("MAP_X"),
                     rs.getInt("MAP_Y")

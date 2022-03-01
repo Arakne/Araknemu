@@ -49,10 +49,9 @@ class InventorySlotsTest extends GameBaseCase {
                 new DefaultListenerAggregate(),
                 null,
                 Collections.emptyList()
-            )
+            ),
+            gamePlayer()
         );
-
-        slots.init(gamePlayer());
     }
 
     @Test

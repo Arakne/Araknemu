@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.data.value;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Position object into the world
  */
@@ -51,14 +53,14 @@ public final class Position {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         return
             this == o
             || (o instanceof Position && equals((Position) o))
         ;
     }
 
-    public boolean equals(Position other) {
+    public boolean equals(@Nullable Position other) {
         return other != null && other.cell == cell && other.map == map;
     }
 

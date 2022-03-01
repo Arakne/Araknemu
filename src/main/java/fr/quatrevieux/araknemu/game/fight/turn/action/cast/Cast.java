@@ -19,21 +19,19 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.cast;
 
-import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.SendPacket;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
+import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
-import fr.quatrevieux.araknemu.game.fight.turn.action.event.SpellCasted;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.spell.Spell;
-import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 
 import java.time.Duration;
@@ -42,21 +40,17 @@ import java.time.Duration;
  * Cast a spell
  */
 public final class Cast implements Action {
-    private final FightTurn turn;
     private final Fighter caster;
     private final Spell spell;
     private final FightCell target;
     private final CastConstraintValidator<Spell> validator;
     private final CriticalityStrategy criticalityStrategy;
 
-    private CastSuccess result;
-
-    public Cast(FightTurn turn, Fighter caster, Spell spell, FightCell target) {
-        this(turn, caster, spell, target, new SpellConstraintsValidator(), new BaseCriticalityStrategy(caster));
+    public Cast(Fighter caster, Spell spell, FightCell target) {
+        this(caster, spell, target, new SpellConstraintsValidator(), new BaseCriticalityStrategy(caster));
     }
 
-    public Cast(FightTurn turn, Fighter caster, Spell spell, FightCell target, CastConstraintValidator<Spell> validator, CriticalityStrategy criticalityStrategy) {
-        this.turn = turn;
+    public Cast(Fighter caster, Spell spell, FightCell target, CastConstraintValidator<Spell> validator, CriticalityStrategy criticalityStrategy) {
         this.caster = caster;
         this.spell = spell;
         this.target = target;
@@ -65,11 +59,8 @@ public final class Cast implements Action {
     }
 
     @Override
-    public boolean validate() {
-        final Error error = spell == null
-            ? Error.cantCastNotFound()
-            : validator.validate(turn, spell, target)
-        ;
+    public boolean validate(Turn turn) {
+        final Error error = validator.validate(turn, spell, target);
 
         if (error != null) {
             caster.apply(new SendPacket(error));
@@ -90,7 +81,8 @@ public final class Cast implements Action {
             return new CastFailed(caster, spell);
         }
 
-        return result = new CastSuccess(
+        return new CastSuccess(
+            this,
             caster,
             spell,
             target,
@@ -106,27 +98,6 @@ public final class Cast implements Action {
     @Override
     public ActionType type() {
         return ActionType.CAST;
-    }
-
-    @Override
-    public void end() {
-        if (result.critical()) {
-            caster.fight().send(ActionEffect.criticalHitSpell(caster, spell));
-        }
-
-        turn.points().useActionPoints(spell.apCost());
-        turn.fight().effects().apply(new CastScope(spell, caster, target).withRandomEffects(result.effects()));
-
-        turn.fight().dispatch(new SpellCasted(this));
-    }
-
-    @Override
-    public void failed() {
-        turn.points().useActionPoints(spell.apCost());
-
-        if (spell.endsTurnOnFailure()) {
-            turn.stop();
-        }
     }
 
     @Override

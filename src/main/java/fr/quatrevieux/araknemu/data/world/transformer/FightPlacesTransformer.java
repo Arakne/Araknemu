@@ -23,6 +23,8 @@ import fr.arakne.utils.encoding.Base64;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.transformer.TransformerException;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,12 +35,16 @@ import java.util.List;
  */
 public final class FightPlacesTransformer implements Transformer<List<Integer>[]> {
     @Override
-    public String serialize(List<Integer>[] value) {
+    public @PolyNull String serialize(List @PolyNull[] value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<Integer>[] unserialize(String serialize) {
+    public List @NonNull[] unserialize(@PolyNull String serialize) {
+        if (serialize == null) {
+            return new List[0];
+        }
+
         try {
             return Arrays.stream(StringUtils.split(serialize, "|", 2))
                 .map(this::parseTeamPlaces)

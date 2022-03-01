@@ -28,6 +28,8 @@ import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +51,7 @@ public final class Movement implements ActionGenerator {
     private final ToDoubleFunction<CoordinateCell<FightCell>> scoreFunction;
     private final Predicate<ScoredCell> filter;
 
-    private Pathfinder<FightCell> pathfinder;
+    private @MonotonicNonNull Pathfinder<FightCell> pathfinder;
 
     /**
      * Creates the Movement action generator
@@ -69,6 +71,7 @@ public final class Movement implements ActionGenerator {
 
     @Override
     public Optional<Action> generate(AI ai) {
+        final Pathfinder<FightCell> pathfinder = NullnessUtil.castNonNull(this.pathfinder);
         final int movementPoints = ai.turn().points().movementPoints();
         final List<ScoredCell> selectedCells = selectCells(ai, movementPoints);
 

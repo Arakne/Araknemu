@@ -32,14 +32,15 @@ import fr.quatrevieux.araknemu.game.fight.team.event.NeedHelpChanged;
  */
 public final class ConfigurableTeamOptions implements TeamOptions {
     private final FightTeam team;
-    private Fight fight;
+    private final Fight fight;
 
     private boolean allowSpectators = ALLOW_SPECTATOR_DEFAULT;
     private boolean allowJoinTeam = ALLOW_JOIN_DEFAULT;
     private boolean needHelp = NEED_HELP_DEFAULT;
 
-    public ConfigurableTeamOptions(FightTeam team) {
+    public ConfigurableTeamOptions(FightTeam team, Fight fight) {
         this.team = team;
+        this.fight = fight;
     }
 
     @Override
@@ -97,12 +98,5 @@ public final class ConfigurableTeamOptions implements TeamOptions {
     public void toggleNeedHelp() {
         needHelp = !needHelp;
         fight.dispatch(new NeedHelpChanged(this, needHelp));
-    }
-
-    /**
-     * Internal: define the Fight instance to allow dispatch events
-     */
-    void setFight(Fight fight) {
-        this.fight = fight;
     }
 }

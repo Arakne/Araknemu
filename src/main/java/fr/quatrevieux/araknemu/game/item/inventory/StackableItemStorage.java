@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.game.item.inventory;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -125,7 +127,8 @@ public final class StackableItemStorage<E extends ItemEntry> implements ItemStor
      *
      * Issue #73 : Quantity must be checked, the entry may be deleted without remove from index
      */
-    private boolean checkStackedEntry(E entry) {
+    @EnsuresNonNullIf(expression = "#1", result = true)
+    private boolean checkStackedEntry(@Nullable E entry) {
         return entry != null && entry.position() == stackPosition && entry.quantity() > 0;
     }
 }

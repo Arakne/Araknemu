@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.game.account.generator;
 
-import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerRepository;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 
@@ -42,7 +41,7 @@ public final class NameCheckerGenerator implements NameGenerator {
         for (int i = 0; i < 15; ++i) {
             final String generated = generator.generate();
 
-            if (!repository.nameExists(Player.forCreation(0, configuration.id(), generated, null, null, null))) {
+            if (!repository.nameExists(configuration.id(), generated)) {
                 return generated;
             }
         }

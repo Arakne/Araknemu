@@ -19,11 +19,13 @@
 
 package fr.quatrevieux.araknemu.game.exploration.interaction.challenge;
 
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.request.Invitation;
 import fr.quatrevieux.araknemu.game.exploration.interaction.request.InvitationHandler;
 import fr.quatrevieux.araknemu.game.exploration.interaction.request.RequestDialog;
 import fr.quatrevieux.araknemu.game.exploration.interaction.request.TargetRequestDialog;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.FightHandler;
 import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
@@ -49,11 +51,13 @@ public final class ChallengeInvitationHandler implements InvitationHandler {
             return error(invitation, JoinFightError.CANT_YOU_OPPONENT_BUSY);
         }
 
-        if (invitation.initiator().map() != invitation.target().map()) {
+        final ExplorationMap map = invitation.initiator().map();
+
+        if (map == null || map != invitation.target().map()) {
             return error(invitation, JoinFightError.CANT_BECAUSE_MAP);
         }
 
-        if (!invitation.initiator().map().canLaunchFight()) {
+        if (!map.canLaunchFight()) {
             return error(invitation, JoinFightError.CANT_BECAUSE_MAP);
         }
 
@@ -66,9 +70,16 @@ public final class ChallengeInvitationHandler implements InvitationHandler {
 
     @Override
     public void acknowledge(Invitation invitation) {
-        invitation.initiator().map().send(
-            new GameActionResponse("", ActionType.CHALLENGE, invitation.initiator().id(), invitation.target().id())
-        );
+        final ExplorationPlayer initiator = invitation.initiator();
+        final ExplorationMap map = initiator.map();
+
+        if (map != null) {
+            map.send(new GameActionResponse("", ActionType.CHALLENGE, initiator.id(), invitation.target().id()));
+        } else {
+            // Should not occur : the action has been validated, and started, but the initiator is not on a map
+            // So, send the game action with invalid parameters which cause the client to cancel the fight
+            initiator.send(new GameActionResponse("", ActionType.CHALLENGE));
+        }
     }
 
     @Override
@@ -85,6 +96,15 @@ public final class ChallengeInvitationHandler implements InvitationHandler {
 
     @Override
     public void accept(Invitation invitation, TargetRequestDialog dialog) {
+        final ExplorationPlayer initiator = invitation.initiator();
+        final ExplorationMap map = initiator.map();
+
+        // Initiator has leaved map (theoretically impossible)
+        if (map == null) {
+            refuse(invitation, dialog);
+            return;
+        }
+
         invitation.send(
             new GameActionResponse(
                 "",
@@ -96,8 +116,8 @@ public final class ChallengeInvitationHandler implements InvitationHandler {
 
         fightHandler.start(
             builder -> builder
-                .map(invitation.initiator().map())
-                .fighter(invitation.initiator().player())
+                .map(map)
+                .fighter(initiator.player())
                 .fighter(invitation.target().player())
         );
     }

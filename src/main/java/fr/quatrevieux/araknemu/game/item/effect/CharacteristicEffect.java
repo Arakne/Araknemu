@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.item.effect;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Item effect for characteristics
@@ -75,12 +76,12 @@ public final class CharacteristicEffect implements ItemEffect {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
 
-        if (getClass() != o.getClass()) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
 

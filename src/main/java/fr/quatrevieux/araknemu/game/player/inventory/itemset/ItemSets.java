@@ -65,13 +65,10 @@ public final class ItemSets {
         final Map<Integer, PlayerItemSet> sets = new HashMap<>();
 
         for (AbstractEquipment equipment : inventory.equipments()) {
-            equipment.set().ifPresent(set -> {
-                if (!sets.containsKey(set.id())) {
-                    sets.put(set.id(), new PlayerItemSet(set));
-                }
-
-                sets.get(set.id()).add(equipment.template());
-            });
+            equipment.set().ifPresent(set -> sets
+                .computeIfAbsent(set.id(), id -> new PlayerItemSet(set))
+                .add(equipment.template())
+            );
         }
 
         return sets.values();

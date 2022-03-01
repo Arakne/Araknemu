@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.admin.player.teleport;
 
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerService;
@@ -46,9 +47,10 @@ public final class PlayerResolver implements LocationResolver {
     public void resolve(String argument, Target target) {
         try {
             final GamePlayer player = playerService.get(argument);
+            final ExplorationMap map = player.isExploring() ? player.exploration().map() : null;
 
-            if (player.isExploring() && player.exploration().map() != null) {
-                target.setMap(player.exploration().map());
+            if (map != null) {
+                target.setMap(map);
             } else {
                 target.setMap(mapService.load(player.position().map()));
             }

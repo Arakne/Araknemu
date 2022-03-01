@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -84,7 +85,7 @@ final class NpcExchangeItemEntry implements ItemEntry {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

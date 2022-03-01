@@ -90,8 +90,10 @@ public final class NpcService implements EventsSubscriber, PreloadableService {
      * @param id The entity ID. /!\ Not same as sprite id
      */
     public GameNpc get(int id) {
-        if (npcByEntityId.containsKey(id)) {
-            return npcByEntityId.get(id);
+        final GameNpc alreadyLoaded = npcByEntityId.get(id);
+
+        if (alreadyLoaded != null) {
+            return alreadyLoaded;
         }
 
         return createByEntity(npcRepository.get(id));
@@ -103,8 +105,10 @@ public final class NpcService implements EventsSubscriber, PreloadableService {
      * @param entity The NPC entity to create
      */
     private GameNpc createByEntity(Npc entity) {
-        if (npcByEntityId.containsKey(entity.id())) {
-            return npcByEntityId.get(entity.id());
+        final GameNpc alreadyLoaded = npcByEntityId.get(entity.id());
+
+        if (alreadyLoaded != null) {
+            return alreadyLoaded;
         }
 
         final NpcTemplate template = templateRepository.get(entity.templateId());

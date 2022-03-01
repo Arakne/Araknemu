@@ -51,7 +51,7 @@ class SaveSpellPositionTest extends GameBaseCase {
 
         listener.on(
             new SpellMoved(
-                new SpellBookEntry(entity, null)
+                new SpellBookEntry(null, entity, null)
             )
         );
 

@@ -48,7 +48,6 @@ public final class CloseCombatFactory implements FightActionFactory {
     @Override
     public Action create(String[] arguments) {
         return new CloseCombat(
-            turn,
             turn.fighter(),
             turn.fight().map().get(Integer.parseInt(arguments[0])),
             validator,

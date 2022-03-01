@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.world.entity.item;
 
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 
@@ -35,10 +36,10 @@ public final class ItemTemplate {
     private final int weight;
     private final String condition;
     private final int itemSet;
-    private final String weaponInfo;
+    private final @Nullable String weaponInfo;
     private final int price;
 
-    public ItemTemplate(int id, int type, String name, int level, List<ItemTemplateEffectEntry> effects, int weight, String condition, int itemSet, String weaponInfo, int price) {
+    public ItemTemplate(int id, int type, String name, int level, List<ItemTemplateEffectEntry> effects, int weight, String condition, int itemSet, @Nullable String weaponInfo, int price) {
         this.id = id;
         this.type = type;
         this.name = name;
@@ -83,7 +84,10 @@ public final class ItemTemplate {
         return itemSet;
     }
 
-    public String weaponInfo() {
+    /**
+     * Get weapon characteristics, like AP cost, range...
+     */
+    public @Nullable String weaponInfo() {
         return weaponInfo;
     }
 
@@ -92,7 +96,7 @@ public final class ItemTemplate {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

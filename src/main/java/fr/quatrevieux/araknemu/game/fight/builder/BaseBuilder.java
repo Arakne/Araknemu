@@ -33,6 +33,11 @@ import fr.quatrevieux.araknemu.game.fight.state.StatesFlow;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.builder.qual.CalledMethods;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,15 +48,15 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public final class BaseBuilder implements FightBuilder {
     private final FightService service;
-    private final RandomUtil random;
+    private final @Nullable RandomUtil random;
     private final FightType type;
     private final Logger logger;
     private final ScheduledExecutorService executor;
 
-    private FightMap map;
+    private @MonotonicNonNull FightMap map;
     private final List<TeamFactory> teamFactories = new ArrayList<>();
 
-    public BaseBuilder(FightService service, RandomUtil random, FightType type, Logger logger, ScheduledExecutorService executor) {
+    public BaseBuilder(FightService service, @Nullable RandomUtil random, FightType type, Logger logger, ScheduledExecutorService executor) {
         this.service = service;
         this.random = random;
         this.type = type;
@@ -61,6 +66,10 @@ public final class BaseBuilder implements FightBuilder {
 
     @Override
     public Fight build(int fightId) {
+        if (map == null || teamFactories.size() < 2) {
+            throw new IllegalStateException("Missing map or teams");
+        }
+
         return new Fight(fightId, type, map, buildTeams(), statesFlow(), logger, executor);
     }
 
@@ -75,6 +84,7 @@ public final class BaseBuilder implements FightBuilder {
         teamFactories.add(factory);
     }
 
+    @RequiresNonNull("map")
     private List<FightTeam> buildTeams() {
         final List<TeamFactory> factories = random != null ? random.shuffle(teamFactories) : teamFactories;
         final List<FightTeam> teams = new ArrayList<>(factories.size());

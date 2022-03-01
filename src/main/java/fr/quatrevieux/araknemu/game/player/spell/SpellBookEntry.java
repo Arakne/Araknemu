@@ -29,12 +29,12 @@ import fr.quatrevieux.araknemu.game.spell.SpellLevels;
  * Entry for the spell book
  */
 public final class SpellBookEntry {
+    private final SpellBook spellBook;
     private final PlayerSpell entity;
     private final SpellLevels spell;
 
-    private SpellBook spellBook;
-
-    public SpellBookEntry(PlayerSpell entity, SpellLevels spell) {
+    public SpellBookEntry(SpellBook spellBook, PlayerSpell entity, SpellLevels spell) {
+        this.spellBook = spellBook;
         this.entity = entity;
         this.spell = spell;
     }
@@ -105,20 +105,5 @@ public final class SpellBookEntry {
      */
     public PlayerSpell entity() {
         return entity;
-    }
-
-    /**
-     * Attach the spell book to the entry
-     *
-     * @param spellBook SpellBook to attach
-     */
-    SpellBookEntry attach(SpellBook spellBook) {
-        if (this.spellBook != null) {
-            throw new IllegalStateException("SpellBook is already set");
-        }
-
-        this.spellBook = spellBook;
-
-        return this;
     }
 }

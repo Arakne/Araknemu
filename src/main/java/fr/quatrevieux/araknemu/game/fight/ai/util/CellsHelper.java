@@ -24,6 +24,7 @@ import fr.arakne.utils.maps.path.Decoder;
 import fr.arakne.utils.maps.path.Pathfinder;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -38,7 +39,7 @@ import java.util.stream.StreamSupport;
 public final class CellsHelper {
     private final AI ai;
 
-    private Decoder<FightCell> decoder;
+    private @MonotonicNonNull Decoder<FightCell> decoder;
 
     CellsHelper(AI ai) {
         this.ai = ai;

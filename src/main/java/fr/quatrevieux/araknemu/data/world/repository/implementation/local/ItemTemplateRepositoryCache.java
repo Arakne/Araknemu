@@ -41,11 +41,7 @@ public final class ItemTemplateRepositoryCache implements ItemTemplateRepository
 
     @Override
     public ItemTemplate get(int id) {
-        if (!cacheById.containsKey(id)) {
-            cacheById.put(id, repository.get(id));
-        }
-
-        return cacheById.get(id);
+        return cacheById.computeIfAbsent(id, repository::get);
     }
 
     @Override

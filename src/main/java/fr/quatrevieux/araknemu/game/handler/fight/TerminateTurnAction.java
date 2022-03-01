@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Fight game action acknowledge
@@ -30,7 +31,7 @@ import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge
 public final class TerminateTurnAction implements PacketHandler<GameSession, GameActionAcknowledge> {
     @Override
     public void handle(GameSession session, GameActionAcknowledge packet) {
-        session.fighter().perform(FightTurn::terminate);
+        NullnessUtil.castNonNull(session.fighter()).perform(FightTurn::terminate);
     }
 
     @Override

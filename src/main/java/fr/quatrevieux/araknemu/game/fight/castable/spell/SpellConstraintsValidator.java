@@ -32,6 +32,7 @@ import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Validate spell constraints
@@ -62,7 +63,7 @@ public final class SpellConstraintsValidator implements CastConstraintValidator<
     }
 
     @Override
-    public Error validate(Turn turn, Spell spell, FightCell target) {
+    public @Nullable Error validate(Turn turn, Spell spell, FightCell target) {
         return validator.validate(turn, spell, target);
     }
 }

@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.player.TargetExchangeRequestDialog;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.exchange.AcceptExchangeRequest;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Accept the exchange request and start the exchange
@@ -30,7 +31,7 @@ import fr.quatrevieux.araknemu.network.game.in.exchange.AcceptExchangeRequest;
 public final class StartExchange implements PacketHandler<GameSession, AcceptExchangeRequest> {
     @Override
     public void handle(GameSession session, AcceptExchangeRequest packet) {
-        session.exploration().interactions().get(TargetExchangeRequestDialog.class).accept();
+        NullnessUtil.castNonNull(session.exploration()).interactions().get(TargetExchangeRequestDialog.class).accept();
     }
 
     @Override

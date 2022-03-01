@@ -36,7 +36,7 @@ class DatabaseConfigurationTest {
     @BeforeEach
     void setUp() throws IOException {
         configuration = new DefaultConfiguration(new IniDriver(new Ini(new File("src/test/test_config.ini"))))
-                .module(DatabaseConfiguration.class)
+                .module(DatabaseConfiguration.MODULE)
         ;
     }
 

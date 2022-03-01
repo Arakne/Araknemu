@@ -137,8 +137,10 @@ public final class MonsterEnvironmentService implements EventsSubscriber, Preloa
      * @param mapId The map id to load
      */
     public Collection<LivingMonsterGroupPosition> byMap(int mapId) {
-        if (groupsByMap.containsKey(mapId)) {
-            return groupsByMap.get(mapId);
+        final Collection<LivingMonsterGroupPosition> loadedGroups = groupsByMap.get(mapId);
+
+        if (loadedGroups != null) {
+            return loadedGroups;
         }
 
         if (preloaded) {

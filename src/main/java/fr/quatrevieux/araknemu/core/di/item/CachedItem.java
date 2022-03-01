@@ -21,14 +21,16 @@ package fr.quatrevieux.araknemu.core.di.item;
 
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Decorate a container item to cache its value (useful for persistent values)
  * @param <T> Item type
  */
-public final class CachedItem<T> implements ContainerItem<T> {
+public final class CachedItem<T extends @NonNull Object> implements ContainerItem<T> {
     private final ContainerItem<T> inner;
-    private T value;
+    private @MonotonicNonNull T value;
 
     public CachedItem(ContainerItem<T> inner) {
         this.inner = inner;
@@ -40,7 +42,7 @@ public final class CachedItem<T> implements ContainerItem<T> {
     }
 
     @Override
-    public T value(Container container) throws ContainerException {
+    public @NonNull T value(Container container) throws ContainerException {
         if (value == null) {
             value = inner.value(container);
         }

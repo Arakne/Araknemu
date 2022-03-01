@@ -70,7 +70,7 @@ public final class BuffEffect implements SpellEffect {
 
     @Override
     public String text() {
-        return null;
+        return "";
     }
 
     @Override

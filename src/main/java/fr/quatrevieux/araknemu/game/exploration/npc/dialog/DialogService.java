@@ -32,6 +32,7 @@ import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.dialog.NextQue
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersResolver;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +40,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -120,11 +120,13 @@ public final class DialogService implements PreloadableService {
         final Collection<NpcQuestion> questions = new ArrayList<>(ids.length);
 
         for (int id : ids) {
-            if (!this.questions.containsKey(id)) {
+            final NpcQuestion cachedQuestion = this.questions.get(id);
+
+            if (cachedQuestion == null) {
                 return Optional.empty();
             }
 
-            questions.add(this.questions.get(id));
+            questions.add(cachedQuestion);
         }
 
         return Optional.of(questions);
@@ -164,20 +166,37 @@ public final class DialogService implements PreloadableService {
     private Collection<Response> responsesByQuestion(Question question, boolean fromDatabase) {
         // Disallow loading from database : only retrieve loaded questions
         if (!fromDatabase) {
-            return Arrays.stream(question.responseIds())
-                .filter(responses::containsKey)
-                .mapToObj(responses::get)
-                .collect(Collectors.toList())
-            ;
+            return responsesFromIds(question.responseIds());
         }
 
         // Check if all responses are already loaded
         if (responses.keySet().containsAll(Arrays.asList(ArrayUtils.toObject(question.responseIds())))) {
-            return Arrays.stream(question.responseIds()).mapToObj(responses::get).collect(Collectors.toList());
+            return responsesFromIds(question.responseIds());
         }
 
         // Load an creates responses
         return createResponses(responseActionRepository.byQuestion(question));
+    }
+
+    /**
+     * Get already loaded responses from ids
+     *
+     * @param responseIds List of response ids to get
+     *
+     * @return The list of responses
+     */
+    private Collection<Response> responsesFromIds(int[] responseIds) {
+        final Collection<Response> responses = new ArrayList<>(responseIds.length);
+
+        for (int id : responseIds) {
+            final Response response = this.responses.get(id);
+
+            if (response != null) {
+                responses.add(response);
+            }
+        }
+
+        return responses;
     }
 
     /**
@@ -192,13 +211,7 @@ public final class DialogService implements PreloadableService {
             responses.add(
                 this.responses.computeIfAbsent(
                     entry.getKey(),
-                    id -> new Response(
-                        id,
-                        entry.getValue().stream()
-                            .map(this::createAction)
-                            .filter(Objects::nonNull)
-                            .collect(Collectors.toList())
-                    )
+                    id -> createResponse(id, entry.getValue())
                 )
             );
         }
@@ -207,19 +220,38 @@ public final class DialogService implements PreloadableService {
     }
 
     /**
+     * Create a dialog response
+     */
+    private Response createResponse(int id, List<ResponseAction> actionEntities) {
+        final List<Action> actions = new ArrayList<>(actionEntities.size());
+
+        for (ResponseAction actionEntity : actionEntities) {
+            final Action action = createAction(actionEntity);
+
+            if (action != null) {
+                actions.add(action);
+            }
+        }
+
+        return new Response(id, actions);
+    }
+
+    /**
      * Create a single response action
      * Note: If the action is not supported, the method will log a warning, and return null
      *
      * @return The created action or null if no factory is found (a warning will be logged)
      */
-    private Action createAction(ResponseAction action) {
-        if (!actionFactories.containsKey(action.action())) {
+    private @Nullable Action createAction(ResponseAction action) {
+        final ActionFactory factory = actionFactories.get(action.action());
+
+        if (factory == null) {
             logger.warn("Response action {} is not supported for response {}", action.action(), action.responseId());
 
             return null;
         }
 
-        return actionFactories.get(action.action()).create(action);
+        return factory.create(action);
     }
 
     /**

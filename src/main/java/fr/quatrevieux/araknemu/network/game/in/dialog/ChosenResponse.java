@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * A dialog response is chosen by the player
@@ -38,10 +39,12 @@ public final class ChosenResponse implements Packet {
         this.response = response;
     }
 
+    @Pure
     public int question() {
         return question;
     }
 
+    @Pure
     public int response() {
         return response;
     }

@@ -21,6 +21,10 @@ package fr.quatrevieux.araknemu.core.event;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.EnsuresKeyForIf;
+import org.checkerframework.checker.nullness.qual.KeyFor;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -37,7 +41,7 @@ public final class DefaultListenerAggregate implements ListenerAggregate {
 
     private final Logger logger;
     private final Map<Class<? extends Listener>, Listener> listeners = new HashMap<>();
-    private final Map<Class, Set<Class<? extends Listener>>> events = new HashMap<>();
+    private final Map<Class, Set<@KeyFor("listeners") Class<? extends Listener>>> events = new HashMap<>();
 
     public DefaultListenerAggregate() {
         this(defaultLogger);
@@ -53,26 +57,25 @@ public final class DefaultListenerAggregate implements ListenerAggregate {
             return;
         }
 
-        for (Class listenerClass : events.get(event.getClass())) {
+        for (@KeyFor("listeners") Class<? extends Listener> listenerClass : events.get(event.getClass())) {
             try {
-                get(listenerClass).on(event);
+                listeners.get(listenerClass).on(event);
             } catch (RuntimeException e) {
-                logger.error(e.getMessage(), e);
+                logger.error("Error during execution of listener " + listenerClass.getName(), e);
             }
         }
     }
 
     @Override
     public void add(Listener listener) {
-        if (!events.containsKey(listener.event())) {
-            events.put(listener.event(), new LinkedHashSet<>());
-        }
+        final Class<? extends Listener> listenerClass = listener.getClass();
 
-        listeners.put(listener.getClass(), listener);
-        events.get(listener.event()).add(listener.getClass());
+        listeners.put(listenerClass, listener);
+        events.computeIfAbsent(listener.event(), lc -> new LinkedHashSet<>()).add(listenerClass);
     }
 
     @Override
+    @EnsuresKeyForIf(expression = "#1", map = "listeners", result = true)
     public boolean has(Class<? extends Listener> listenerClass) {
         return listeners.containsKey(listenerClass);
     }
@@ -83,13 +86,14 @@ public final class DefaultListenerAggregate implements ListenerAggregate {
             return;
         }
 
-        final Listener listener = listeners.remove(listenerClass);
+        final Listener listener = NullnessUtil.castNonNull(listeners.remove(listenerClass));
 
-        events.get(listener.event()).remove(listenerClass);
+        NullnessUtil.castNonNull(events.get(listener.event())).remove(listenerClass);
     }
 
     @Override
-    public <E extends Listener> E get(Class<E> listenerClass) {
+    @SuppressWarnings("unchecked")
+    public <E extends Listener> @Nullable E get(Class<E> listenerClass) {
         return (E) listeners.get(listenerClass);
     }
 }

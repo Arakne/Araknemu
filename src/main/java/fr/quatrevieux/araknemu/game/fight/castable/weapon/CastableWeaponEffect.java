@@ -75,7 +75,7 @@ public final class CastableWeaponEffect implements SpellEffect {
 
     @Override
     public String text() {
-        return null;
+        return "";
     }
 
     @Override

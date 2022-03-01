@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.data.value.SpellTemplateEffect;
 import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,13 +64,14 @@ public class SpellTemplateLevelTransformer implements Transformer<SpellTemplate.
     }
 
     @Override
-    public String serialize(SpellTemplate.Level value) {
+    public @PolyNull String serialize(SpellTemplate.@PolyNull Level value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public SpellTemplate.Level unserialize(String serialize) {
-        if (serialize.isEmpty() || "-1".equals(serialize)) {
+    @SuppressWarnings("return")
+    public SpellTemplate.@PolyNull Level unserialize(@PolyNull String serialize) {
+        if (serialize == null || serialize.isEmpty() || "-1".equals(serialize)) {
             return null;
         }
 
@@ -136,7 +138,7 @@ public class SpellTemplateLevelTransformer implements Transformer<SpellTemplate.
             integer(params[3]),
             integer(params[4]),
             integer(params[5]),
-            params.length == 7 ? params[6] : null
+            params.length == 7 ? params[6] : ""
         );
     }
 

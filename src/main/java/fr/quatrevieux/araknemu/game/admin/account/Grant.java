@@ -73,6 +73,7 @@ public final class Grant extends AbstractCommand<Grant.Arguments> {
         performer.success("Permissions updated for {}", account.pseudo());
     }
 
+    @SuppressWarnings("initialization.field.uninitialized")
     public static final class Arguments {
         @Argument(
             metaVar = "PERMISSIONS", required = true, handler = CustomEnumOptionHandler.class,

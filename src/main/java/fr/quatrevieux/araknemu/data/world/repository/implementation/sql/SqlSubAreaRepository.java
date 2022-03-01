@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.constant.Alignment;
 import fr.quatrevieux.araknemu.data.world.entity.environment.area.SubArea;
 import fr.quatrevieux.araknemu.data.world.repository.environment.area.SubAreaRepository;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -100,7 +101,7 @@ final class SqlSubAreaRepository implements SubAreaRepository {
             return new SubArea(
                 rs.getInt("SUBAREA_ID"),
                 rs.getInt("AREA_ID"),
-                rs.getString("SUBAREA_NAME"),
+                NullnessUtil.castNonNull(rs.getString("SUBAREA_NAME")),
                 rs.getBoolean("CONQUESTABLE"),
                 Alignment.byId(rs.getInt("ALIGNMENT"))
             );

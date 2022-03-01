@@ -65,7 +65,7 @@ class CastableWeaponTest extends GameBaseCase {
         assertEquals(4, weapon.effects().get(0).min());
         assertEquals(8, weapon.effects().get(0).max());
         assertEquals(0, weapon.effects().get(0).special());
-        assertNull(weapon.effects().get(0).text());
+        assertEquals("", weapon.effects().get(0).text());
         assertEquals(97, weapon.effects().get(0).effect());
         assertEquals(0, weapon.effects().get(0).duration());
         assertEquals(0, weapon.effects().get(0).probability());
@@ -77,7 +77,7 @@ class CastableWeaponTest extends GameBaseCase {
         assertEquals(4, weapon.effects().get(1).min());
         assertEquals(8, weapon.effects().get(1).max());
         assertEquals(0, weapon.effects().get(1).special());
-        assertNull(weapon.effects().get(1).text());
+        assertEquals("", weapon.effects().get(1).text());
         assertEquals(99, weapon.effects().get(1).effect());
         assertEquals(0, weapon.effects().get(1).duration());
         assertEquals(0, weapon.effects().get(1).probability());
@@ -96,7 +96,7 @@ class CastableWeaponTest extends GameBaseCase {
         assertEquals(1, weapon.effects().get(0).min());
         assertEquals(7, weapon.effects().get(0).max());
         assertEquals(0, weapon.effects().get(0).special());
-        assertNull(weapon.effects().get(0).text());
+        assertEquals("", weapon.effects().get(0).text());
         assertEquals(100, weapon.effects().get(0).effect());
         assertEquals(0, weapon.effects().get(0).duration());
         assertEquals(0, weapon.effects().get(0).probability());
@@ -115,7 +115,7 @@ class CastableWeaponTest extends GameBaseCase {
         assertEquals(6, weapon.criticalEffects().get(0).min());
         assertEquals(12, weapon.criticalEffects().get(0).max());
         assertEquals(0, weapon.criticalEffects().get(0).special());
-        assertNull(weapon.criticalEffects().get(0).text());
+        assertEquals("", weapon.criticalEffects().get(0).text());
         assertEquals(100, weapon.criticalEffects().get(0).effect());
         assertEquals(0, weapon.criticalEffects().get(0).duration());
         assertEquals(0, weapon.criticalEffects().get(0).probability());

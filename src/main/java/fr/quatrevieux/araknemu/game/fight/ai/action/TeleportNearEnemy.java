@@ -29,7 +29,10 @@ import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.spell.Spell;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -39,8 +42,8 @@ import java.util.stream.Collectors;
  * Try to teleport near enemy
  */
 public final class TeleportNearEnemy implements ActionGenerator {
-    private SpellCaster caster;
-    private List<Spell> teleportSpells;
+    private @MonotonicNonNull SpellCaster caster;
+    private List<Spell> teleportSpells = Collections.emptyList();
 
     @Override
     public void initialize(AI ai) {
@@ -102,7 +105,7 @@ public final class TeleportNearEnemy implements ActionGenerator {
     private boolean selectBestTeleportTargetForSpell(Selector selector, BattlefieldMap map, Spell spell) {
         for (FightCell cell : map) {
             // Target or launch is not valid
-            if (!cell.walkable() || !caster.validate(spell, cell)) {
+            if (!cell.walkable() || !NullnessUtil.castNonNull(caster).validate(spell, cell)) {
                 continue;
             }
 
@@ -121,8 +124,8 @@ public final class TeleportNearEnemy implements ActionGenerator {
     private class Selector {
         private final CoordinateCell<FightCell> enemyCell;
         private int distance;
-        private FightCell cell;
-        private Spell spell;
+        private @MonotonicNonNull FightCell cell;
+        private @MonotonicNonNull Spell spell;
 
         public Selector(FightCell enemyCell, FightCell currentCell) {
             this.enemyCell = enemyCell.coordinate();
@@ -158,11 +161,11 @@ public final class TeleportNearEnemy implements ActionGenerator {
          * May returns an empty optional if no teleport spell can be found, or if the fighter is already on the best cell
          */
         public Optional<Action> action() {
-            if (spell == null) {
+            if (spell == null || cell == null) {
                 return Optional.empty();
             }
 
-            return Optional.of(caster.create(spell, cell));
+            return Optional.of(NullnessUtil.castNonNull(caster).create(spell, cell));
         }
     }
 }

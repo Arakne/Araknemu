@@ -25,6 +25,8 @@ import fr.quatrevieux.araknemu.game.item.inventory.ItemStorage;
 import fr.quatrevieux.araknemu.game.item.inventory.StackableItemStorage;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
 
 import java.util.Optional;
 
@@ -36,11 +38,13 @@ import java.util.Optional;
 public final class DefaultSlot implements InventorySlot {
     private final StackableItemStorage<InventoryEntry> storage;
 
+    @SuppressWarnings("method.invocation") // id() is static
     public DefaultSlot(ItemStorage<InventoryEntry> storage) {
         this.storage = new StackableItemStorage<>(storage, id());
     }
 
     @Override
+    @Pure
     public int id() {
         return ItemEntry.DEFAULT_POSITION;
     }
@@ -80,7 +84,7 @@ public final class DefaultSlot implements InventorySlot {
     }
 
     @Override
-    public void uncheckedSet(InventoryEntry entry) {
+    public void uncheckedSet(@Nullable InventoryEntry entry) {
         // Do not store a single item : do nothing
     }
 }

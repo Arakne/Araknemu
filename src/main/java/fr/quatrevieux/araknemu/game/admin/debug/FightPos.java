@@ -67,6 +67,12 @@ public final class FightPos extends AbstractCommand<FightPos.Arguments> {
         }
 
         final ExplorationMap map = user.player().exploration().map();
+
+        if (map == null) {
+            performer.error("The player is not on map");
+            return;
+        }
+
         final List<Integer>[] places = new List[] {
             map.fightPlaces(0).stream().map(MapCell::id).collect(Collectors.toList()),
             map.fightPlaces(1).stream().map(MapCell::id).collect(Collectors.toList()),
@@ -89,6 +95,7 @@ public final class FightPos extends AbstractCommand<FightPos.Arguments> {
         return new Arguments();
     }
 
+    @SuppressWarnings("initialization.field.uninitialized")
     public static final class Arguments {
         @Argument
         private Action action;

@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.admin.player.teleport;
 
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.data.value.Geolocation;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.GeolocationService;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 
@@ -52,13 +53,15 @@ public final class PositionResolver implements LocationResolver {
             throw new IllegalArgumentException("Malformed position : must be in format x;y");
         }
 
+        final ExplorationMap currentMap = player.isExploring() ? player.exploration().map() : null;
+
         try {
             target.setMap(service.find(
                 new Geolocation(
                     Integer.parseInt(parts[0]),
                     Integer.parseInt(parts[1])
                 ),
-                player.isExploring() ? GeolocationService.GeolocationContext.fromMap(player.exploration().map()) : new GeolocationService.GeolocationContext()
+                currentMap != null ? GeolocationService.GeolocationContext.fromMap(currentMap) : new GeolocationService.GeolocationContext()
             ));
         } catch (EntityNotFoundException e) {
             throw new IllegalArgumentException("Cannot found map at position " + argument);

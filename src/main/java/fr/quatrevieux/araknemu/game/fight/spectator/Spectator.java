@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.player.CharacterProperties;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.PlayerSessionScope;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Objects;
 
@@ -133,7 +134,7 @@ public final class Spectator implements PlayerSessionScope {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

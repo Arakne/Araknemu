@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcTemplateRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -121,7 +122,7 @@ final class SqlNpcTemplateRepository implements NpcTemplateRepository {
                     rs.getInt("COLOR2"),
                     rs.getInt("COLOR3")
                 ),
-                rs.getString("ACCESSORIES"),
+                NullnessUtil.castNonNull(rs.getString("ACCESSORIES")),
                 rs.getInt("EXTRA_CLIP"),
                 rs.getInt("CUSTOM_ARTWORK"),
                 store == null

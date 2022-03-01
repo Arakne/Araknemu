@@ -249,7 +249,7 @@ public class FightBaseCase extends GameBaseCase {
     }
 
     public CastScope makeCastScope(Fighter caster, Castable castable, SpellEffect effect, FightCell target) {
-        return new CastScope(castable, caster, target).withEffects(Collections.singletonList(effect));
+        return CastScope.simple(castable, caster, target, Collections.singletonList(effect));
     }
 
     public CastScope makeCastScopeForEffect(int effectId) {

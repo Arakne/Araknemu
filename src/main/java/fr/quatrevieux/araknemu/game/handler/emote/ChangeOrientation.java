@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.emote.SetOrientationRequest;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Change the exploration player orientation for role player
@@ -33,11 +34,11 @@ import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 public final class ChangeOrientation implements PacketHandler<GameSession, SetOrientationRequest> {
     @Override
     public void handle(GameSession session, SetOrientationRequest packet) throws Exception {
-        if (!session.player().restrictions().canMoveAllDirections() && !packet.orientation().restricted()) {
+        if (!NullnessUtil.castNonNull(session.player()).restrictions().canMoveAllDirections() && !packet.orientation().restricted()) {
             throw new ErrorPacket(new Noop());
         }
 
-        session.exploration().setOrientation(packet.orientation());
+        NullnessUtil.castNonNull(session.exploration()).setOrientation(packet.orientation());
     }
 
     @Override

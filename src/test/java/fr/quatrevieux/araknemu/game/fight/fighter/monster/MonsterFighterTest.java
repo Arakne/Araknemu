@@ -98,7 +98,7 @@ class MonsterFighterTest extends FightBaseCase {
         assertEquals(-1, fighter.id());
         assertEquals(Direction.SOUTH_EAST, fighter.orientation());
         assertFalse(fighter.dead());
-        assertNull(fighter.weapon());
+        assertThrows(FightException.class, fighter::weapon);
         assertInstanceOf(BuffList.class, fighter.buffs());
         assertInstanceOf(States.class, fighter.states());
         assertTrue(fighter.ready());
@@ -230,7 +230,7 @@ class MonsterFighterTest extends FightBaseCase {
         fighter.move(fight.map().get(123));
         fighter.move(null);
 
-        assertNull(fighter.cell());
+        assertThrows(IllegalStateException.class, fighter::cell);
         assertFalse(fight.map().get(123).fighter().isPresent());
     }
 

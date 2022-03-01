@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.core.config;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +28,7 @@ import java.util.Map;
  * Default implementation of configuration system
  */
 public final class DefaultConfiguration implements Configuration {
-    private final Map<Class<? extends ConfigurationModule>, ConfigurationModule> modules = new HashMap<>();
+    private final Map<ConfigurationModule<?>, @NonNull Object> modules = new HashMap<>();
 
     private final Driver driver;
 
@@ -35,28 +37,22 @@ public final class DefaultConfiguration implements Configuration {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <M extends ConfigurationModule> M module(Class<M> moduleClass) {
-        if (modules.containsKey(moduleClass)) {
-            return (M) modules.get(moduleClass);
+    @SuppressWarnings({"unchecked", "cast.unsafe"})
+    public <C extends @NonNull Object> @NonNull C module(ConfigurationModule<C> module) {
+        C config = (C) modules.get(module);
+
+        if (config != null) {
+            return config;
         }
 
-        final M module;
-
-        try {
-            module = moduleClass.newInstance();
-        } catch (Exception e) {
-            throw new Error("Cannot load configuration ", e);
-        }
-
-        module.setPool(
+        config = module.create(
             driver.has(module.name())
                 ? driver.pool(module.name())
                 : new EmptyPool()
         );
 
-        modules.put(moduleClass, module);
+        modules.put(module, config);
 
-        return module;
+        return config;
     }
 }

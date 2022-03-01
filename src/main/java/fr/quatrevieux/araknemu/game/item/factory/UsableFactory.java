@@ -27,8 +27,9 @@ import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.SuperType;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMapper;
 import fr.quatrevieux.araknemu.game.item.type.UsableItem;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 
@@ -36,19 +37,21 @@ import java.util.List;
  * Factory for usable items.
  */
 public final class UsableFactory implements ItemFactory {
-    private final EffectMappers mappers;
+    private final EffectMapper<UseEffect> useEffectEffectMapper;
+    private final EffectMapper<SpecialEffect> specialEffectEffectMapper;
 
-    public UsableFactory(EffectMappers mappers) {
-        this.mappers = mappers;
+    public UsableFactory(EffectMapper<UseEffect> useEffectEffectMapper, EffectMapper<SpecialEffect> specialEffectEffectMapper) {
+        this.useEffectEffectMapper = useEffectEffectMapper;
+        this.specialEffectEffectMapper = specialEffectEffectMapper;
     }
 
     @Override
-    public Item create(ItemTemplate template, ItemType type, GameItemSet set, boolean maximize) {
+    public Item create(ItemTemplate template, ItemType type, @Nullable GameItemSet set, boolean maximize) {
         return create(template, type, template.effects());
     }
 
     @Override
-    public Item retrieve(ItemTemplate template, ItemType type, GameItemSet set, List<ItemTemplateEffectEntry> effects) {
+    public Item retrieve(ItemTemplate template, ItemType type, @Nullable GameItemSet set, List<ItemTemplateEffectEntry> effects) {
         return create(template, type, effects);
     }
 
@@ -61,8 +64,8 @@ public final class UsableFactory implements ItemFactory {
         return new UsableItem(
             template,
             type,
-            mappers.get(UseEffect.class).create(effects),
-            mappers.get(SpecialEffect.class).create(effects, true)
+            useEffectEffectMapper.create(effects),
+            specialEffectEffectMapper.create(effects, true)
         );
     }
 }

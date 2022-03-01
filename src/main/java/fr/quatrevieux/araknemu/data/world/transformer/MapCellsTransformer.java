@@ -23,6 +23,7 @@ import fr.arakne.utils.maps.serializer.CellData;
 import fr.arakne.utils.maps.serializer.DefaultMapDataSerializer;
 import fr.arakne.utils.maps.serializer.MapDataSerializer;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
  * Transformer for map cell
@@ -41,12 +42,12 @@ public final class MapCellsTransformer implements Transformer<CellData[]> {
     }
 
     @Override
-    public String serialize(CellData[] value) {
+    public @PolyNull String serialize(CellData @PolyNull[] value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public CellData[] unserialize(String serialize) {
-        return serializer.deserialize(serialize);
+    public CellData @PolyNull[] unserialize(@PolyNull String serialize) {
+        return serialize == null ? null : serializer.deserialize(serialize);
     }
 }

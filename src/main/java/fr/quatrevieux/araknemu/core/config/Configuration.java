@@ -19,16 +19,18 @@
 
 package fr.quatrevieux.araknemu.core.config;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 /**
  * Base configuration
  */
 public interface Configuration {
     /**
-     * Get the configuration module from its class
+     * Get the configuration module
      *
-     * @param moduleClass The module type to get
+     * @param module The module type to get
      *
      * @return The module instance
      */
-    public <M extends ConfigurationModule> M module(Class<M> moduleClass);
+    public <C extends @NonNull Object> @NonNull C module(ConfigurationModule<C> module);
 }

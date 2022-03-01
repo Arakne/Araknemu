@@ -183,7 +183,6 @@ public class FunctionalTest extends GameBaseCase {
         requestStack.clear();
 
         Move move = new Move(
-            fighter1.turn(),
             fighter1,
             new Path<>(
                 new Decoder<>(fight.map()),
@@ -221,6 +220,11 @@ public class FunctionalTest extends GameBaseCase {
                     public boolean success() {
                         return true;
                     }
+
+                    @Override
+                    public void apply(FightTurn turn) {
+
+                    }
                 }
             )
         );
@@ -234,7 +238,6 @@ public class FunctionalTest extends GameBaseCase {
         fighter1.turn().stop();
 
         move = new Move(
-            fighter2.turn(),
             fighter2,
             new Path<>(
                 new Decoder<>(fight.map()),
@@ -261,6 +264,7 @@ public class FunctionalTest extends GameBaseCase {
         requestStack.assertLast(
             new FightAction(
                 new CastSuccess(
+                    new Cast(null, null, null),
                     player.fighter(),
                     player.fighter().spells().get(3),
                     other.fighter().cell(),
@@ -285,6 +289,7 @@ public class FunctionalTest extends GameBaseCase {
         requestStack.assertLast(
             new FightAction(
                 new CastSuccess(
+                    new Cast(null, null, null),
                     other.fighter(),
                     other.fighter().spells().get(3),
                     player.fighter().cell(),
@@ -313,7 +318,6 @@ public class FunctionalTest extends GameBaseCase {
         // Close combat
         other.fighter().turn().perform(
             new CloseCombat(
-                other.fighter().turn(),
                 other.fighter(),
                 player.fighter().cell(),
                 new WeaponConstraintsValidator(),
@@ -411,7 +415,6 @@ public class FunctionalTest extends GameBaseCase {
         FightTurn currentTurn = fight.turnList().current().get();
 
         currentTurn.perform(new Cast(
-            currentTurn,
             currentTurn.fighter(),
             currentTurn.fighter().spells().get(spellId),
             target
@@ -422,7 +425,6 @@ public class FunctionalTest extends GameBaseCase {
         FightTurn currentTurn = fight.turnList().current().get();
 
         currentTurn.perform(new Cast(
-            currentTurn,
             currentTurn.fighter(),
             currentTurn.fighter().spells().get(spellId),
             target,
@@ -442,7 +444,6 @@ public class FunctionalTest extends GameBaseCase {
         FightTurn currentTurn = fight.turnList().current().get();
 
         currentTurn.perform(new Cast(
-            currentTurn,
             currentTurn.fighter(),
             currentTurn.fighter().spells().get(spellId),
             target,
@@ -460,7 +461,6 @@ public class FunctionalTest extends GameBaseCase {
         FightTurn currentTurn = fight.turnList().current().get();
 
         currentTurn.perform(new Cast(
-            currentTurn,
             currentTurn.fighter(),
             currentTurn.fighter().spells().get(spellId),
             target,

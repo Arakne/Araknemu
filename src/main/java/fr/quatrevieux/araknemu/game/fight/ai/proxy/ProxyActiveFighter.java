@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Proxy class for override properties of the active fighter (i.e. the fighter handled by the AI)
@@ -38,14 +39,14 @@ import fr.quatrevieux.araknemu.game.world.creature.Sprite;
  */
 public final class ProxyActiveFighter implements ActiveFighter {
     private final ActiveFighter fighter;
-    private final FightCell position;
+    private final @Nullable FightCell position;
 
     public ProxyActiveFighter(ActiveFighter fighter) {
         this.fighter = fighter;
         this.position = null;
     }
 
-    private ProxyActiveFighter(ActiveFighter fighter, FightCell position) {
+    private ProxyActiveFighter(ActiveFighter fighter, @Nullable FightCell position) {
         this.fighter = fighter;
         this.position = position;
     }
@@ -56,12 +57,12 @@ public final class ProxyActiveFighter implements ActiveFighter {
     }
 
     @Override
-    public Object attachment(Object key) {
+    public @Nullable Object attachment(Object key) {
         return fighter.attachment(key);
     }
 
     @Override
-    public <T> T attachment(Class<T> type) {
+    public <T> @Nullable T attachment(Class<T> type) {
         return fighter.attachment(type);
     }
 
@@ -90,7 +91,7 @@ public final class ProxyActiveFighter implements ActiveFighter {
     }
 
     @Override
-    public void move(FightCell cell) {
+    public void move(@Nullable FightCell cell) {
         throw new UnsupportedOperationException("This is a proxy fighter");
     }
 
@@ -130,7 +131,7 @@ public final class ProxyActiveFighter implements ActiveFighter {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

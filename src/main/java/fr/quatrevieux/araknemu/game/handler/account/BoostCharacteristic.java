@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.account.AskBoost;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Boost player characteristic
@@ -32,7 +33,7 @@ public final class BoostCharacteristic implements PacketHandler<GameSession, Ask
     @Override
     public void handle(GameSession session, AskBoost packet) throws Exception {
         try {
-            session.player()
+            NullnessUtil.castNonNull(session.player())
                 .properties()
                 .characteristics()
                 .boostCharacteristic(packet.characteristic())

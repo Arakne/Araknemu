@@ -59,7 +59,6 @@ class SendFightActionTest extends FightBaseCase {
     @Test
     void onActionStarted() {
         Move move = new Move(
-            new FightTurn(player.fighter(), fight, Duration.ofSeconds(30)),
             player.fighter(),
             new Path<>(
                 new Decoder<>(fight.map()),
@@ -83,7 +82,6 @@ class SendFightActionTest extends FightBaseCase {
     @Test
     void onActionFailed() {
         Move move = new Move(
-            new FightTurn(player.fighter(), fight, Duration.ofSeconds(30)),
             player.fighter(),
             new Path<>(
                 new Decoder<>(fight.map()),

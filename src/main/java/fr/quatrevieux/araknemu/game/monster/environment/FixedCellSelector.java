@@ -22,13 +22,14 @@ package fr.quatrevieux.araknemu.game.monster.environment;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 /**
  * Cell selector for fixed monster group
  */
 public final class FixedCellSelector implements SpawnCellSelector {
     private final Position position;
-    private ExplorationMap map;
+    private @MonotonicNonNull ExplorationMap map;
 
     public FixedCellSelector(Position position) {
         this.position = position;
@@ -41,6 +42,12 @@ public final class FixedCellSelector implements SpawnCellSelector {
 
     @Override
     public ExplorationMapCell cell() {
+        final ExplorationMap map = this.map;
+
+        if (map == null) {
+            throw new IllegalStateException("Map must be loaded before");
+        }
+
         return map.get(position.cell());
     }
 }

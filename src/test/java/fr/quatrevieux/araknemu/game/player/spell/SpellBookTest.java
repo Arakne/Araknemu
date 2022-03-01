@@ -20,11 +20,11 @@
 package fr.quatrevieux.araknemu.game.player.spell;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
+import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.player.spell.event.SpellLearned;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
@@ -36,11 +36,17 @@ import org.mockito.Mockito;
 
 import java.lang.reflect.Field;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.StreamSupport;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SpellBookTest extends GameBaseCase {
     private SpellService service;
@@ -59,48 +65,40 @@ class SpellBookTest extends GameBaseCase {
 
     @Test
     void all() {
-        List<SpellBookEntry> entries = Arrays.asList(
-            new SpellBookEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3)),
-            new SpellBookEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6))
-        );
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player);
 
-        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, entries);
+        book.addEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3));
+        book.addEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6));
 
-        assertContainsAll(book.all(), entries.toArray());
+        assertContainsAll(book.all(), book.entry(3), book.entry(6));
     }
 
     @Test
     void entryNotFound() {
-        List<SpellBookEntry> entries = Arrays.asList(
-            new SpellBookEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3)),
-            new SpellBookEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6))
-        );
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player);
 
-        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, entries);
+        book.addEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3));
+        book.addEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6));
 
         assertThrows(NoSuchElementException.class, () -> book.entry(789));
     }
 
     @Test
     void entry() {
-        List<SpellBookEntry> entries = Arrays.asList(
-            new SpellBookEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3)),
-            new SpellBookEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6))
-        );
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player);
 
-        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, entries);
+        book.addEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3));
+        book.addEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6));
 
-        assertSame(entries.get(0), book.entry(3));
+        assertSame(service.get(3).level(5), book.entry(3).spell());
     }
 
     @Test
     void has() {
-        List<SpellBookEntry> entries = Arrays.asList(
-            new SpellBookEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3)),
-            new SpellBookEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6))
-        );
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player);
 
-        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, entries);
+        book.addEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3));
+        book.addEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6));
 
         assertTrue(book.has(3));
         assertTrue(book.has(6));
@@ -111,11 +109,8 @@ class SpellBookTest extends GameBaseCase {
     void hasTooHighLevel() throws SQLException {
         dataSet.pushHighLevelSpells();
 
-        List<SpellBookEntry> entries = Collections.singletonList(
-            new SpellBookEntry(new PlayerSpell(1, 1908, true, 1, 1), service.get(1908))
-        );
-
-        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, entries);
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player);
+        book.addEntry(new PlayerSpell(1, 1908, true, 1, 1), service.get(1908));
 
         assertFalse(book.has(1908));
     }
@@ -123,7 +118,7 @@ class SpellBookTest extends GameBaseCase {
     @Test
     void learnSuccess() throws NoSuchFieldException, IllegalAccessException {
         ListenerAggregate dispatcher = new DefaultListenerAggregate();
-        SpellBook book = new SpellBook(dispatcher, player, new ArrayList<>());
+        SpellBook book = new SpellBook(dispatcher, player);
 
         AtomicReference<SpellLearned> ref = new AtomicReference<>();
         dispatcher.add(SpellLearned.class, ref::set);
@@ -153,7 +148,7 @@ class SpellBookTest extends GameBaseCase {
         dataSet.pushHighLevelSpells();
 
         ListenerAggregate dispatcher = new DefaultListenerAggregate();
-        SpellBook book = new SpellBook(dispatcher, player, new ArrayList<>());
+        SpellBook book = new SpellBook(dispatcher, player);
 
         AtomicReference<SpellLearned> ref = new AtomicReference<>();
         dispatcher.add(SpellLearned.class, ref::set);
@@ -167,26 +162,24 @@ class SpellBookTest extends GameBaseCase {
     void canLearnTooLowLevel() throws SQLException, ContainerException {
         dataSet.pushHighLevelSpells();
 
-        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, new ArrayList<>());
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player);
 
         assertFalse(book.canLearn(service.get(1908)));
     }
 
     @Test
     void canLearnAlreadyLearned() throws SQLException, ContainerException {
-        List<SpellBookEntry> entries = Arrays.asList(
-            new SpellBookEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3)),
-            new SpellBookEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6))
-        );
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player);
 
-        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, entries);
+        book.addEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3));
+        book.addEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6));
 
         assertFalse(book.canLearn(service.get(3)));
     }
 
     @Test
     void canUpgradeTooHighLevel() {
-        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, new ArrayList<>());
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player);
         player.setLevel(5);
         player.setSpellPoints(10);
 
@@ -199,7 +192,7 @@ class SpellBookTest extends GameBaseCase {
 
     @Test
     void canUpgradeNoEnoughPoints() {
-        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, new ArrayList<>());
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player);
         player.setLevel(5);
         player.setSpellPoints(2);
 
@@ -212,7 +205,7 @@ class SpellBookTest extends GameBaseCase {
 
     @Test
     void canUpgradeExactlyGoodPoints() {
-        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, new ArrayList<>());
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player);
         player.setLevel(5);
         player.setSpellPoints(4);
 
@@ -225,7 +218,7 @@ class SpellBookTest extends GameBaseCase {
 
     @Test
     void removePointsForUpgrade() {
-        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, new ArrayList<>());
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player);
         player.setSpellPoints(5);
 
         Spell spell = Mockito.mock(Spell.class);
@@ -238,24 +231,21 @@ class SpellBookTest extends GameBaseCase {
 
     @Test
     void getNotBoosted() {
-        List<SpellBookEntry> entries = Arrays.asList(
-            new SpellBookEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3)),
-            new SpellBookEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6))
-        );
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player);
 
-        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, entries);
+        book.addEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3));
+        book.addEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6));
 
         assertSame(book.get(3), book.entry(3).spell());
     }
 
     @Test
     void getBoosted() {
-        List<SpellBookEntry> entries = Arrays.asList(
-            new SpellBookEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3)),
-            new SpellBookEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6))
-        );
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player);
 
-        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, entries);
+        book.addEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3));
+        book.addEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6));
+
         book.boosts().boost(3, SpellsBoosts.Modifier.DAMAGE, 50);
         book.boosts().boost(3, SpellsBoosts.Modifier.AP_COST, 2);
 
@@ -270,13 +260,11 @@ class SpellBookTest extends GameBaseCase {
     void iterator() throws SQLException {
         dataSet.pushHighLevelSpells();
 
-        List<SpellBookEntry> entries = Arrays.asList(
-            new SpellBookEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3)),
-            new SpellBookEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6)),
-            new SpellBookEntry(new PlayerSpell(1, 1908, true, 1, 63), service.get(1908))
-        );
+        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player);
 
-        SpellBook book = new SpellBook(new DefaultListenerAggregate(), player, entries);
+        book.addEntry(new PlayerSpell(1, 3, true, 5, 1), service.get(3));
+        book.addEntry(new PlayerSpell(1, 6, true, 2, 2), service.get(6));
+        book.addEntry(new PlayerSpell(1, 1908, true, 1, 63), service.get(1908));
 
         assertArrayEquals(
             new int[] {3, 6},

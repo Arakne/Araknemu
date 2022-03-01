@@ -72,10 +72,13 @@ public final class MonsterService implements PreloadableService {
      * @throws fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException When the monster template is not found
      */
     public GradeSet load(int id) {
-        return monsters.containsKey(id)
-            ? monsters.get(id)
-            : createMonsterGrades(repository.get(id))
-        ;
+        final GradeSet grades = monsters.get(id);
+
+        if (grades != null) {
+            return grades;
+        }
+
+        return createMonsterGrades(repository.get(id));
     }
 
     /**

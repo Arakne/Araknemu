@@ -21,9 +21,11 @@ package fr.quatrevieux.araknemu.game.handler.account;
 
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
+import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.account.AskCharacterList;
 import fr.quatrevieux.araknemu.network.game.out.account.CharactersList;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Handle {@link AskCharacterList}
@@ -37,10 +39,12 @@ public final class ListCharacters implements PacketHandler<GameSession, AskChara
 
     @Override
     public void handle(GameSession session, AskCharacterList packet) throws Exception {
+        final GameAccount account = NullnessUtil.castNonNull(session.account());
+
         session.send(
             new CharactersList(
-                session.account().remainingTime(),
-                service.list(session.account())
+                account.remainingTime(),
+                service.list(account)
             )
         );
     }

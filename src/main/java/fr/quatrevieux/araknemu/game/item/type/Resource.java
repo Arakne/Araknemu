@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.item.GameItemSet;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -70,7 +71,11 @@ public final class Resource implements Item {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
         if (obj == null || obj.getClass() != getClass()) {
             return false;
         }

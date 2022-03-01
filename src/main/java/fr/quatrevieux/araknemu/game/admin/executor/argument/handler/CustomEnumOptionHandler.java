@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.admin.executor.argument.handler;
 
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.OptionDef;
@@ -47,7 +48,7 @@ public final class CustomEnumOptionHandler<E extends Enum<E>> extends OptionHand
     public int parseArguments(Parameters params) throws CmdLineException {
         final String value = params.getParameter(0).replace("_", "-");
 
-        for (E item : (E[]) setter.getType().getEnumConstants()) {
+        for (E item : (E[]) NullnessUtil.castNonNull(setter.getType().getEnumConstants())) {
             if (item.name().replace("_", "-").equalsIgnoreCase(value)) {
                 setter.addValue(item);
                 return 1;
@@ -71,7 +72,7 @@ public final class CustomEnumOptionHandler<E extends Enum<E>> extends OptionHand
 
     @SuppressWarnings("unchecked")
     private String[] availableValues() {
-        final E[] items = (E[]) setter.getType().getEnumConstants();
+        final E[] items = (E[]) NullnessUtil.castNonNull(setter.getType().getEnumConstants());
         final String[] names = new String[items.length];
 
         for (int i = 0; i < items.length; ++i) {

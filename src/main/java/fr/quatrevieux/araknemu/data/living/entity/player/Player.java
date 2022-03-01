@@ -34,6 +34,7 @@ import java.util.Set;
 /**
  * Entity class for player
  */
+@SuppressWarnings({"argument"}) // @todo refactor repository PK system
 public final class Player implements WalletEntity {
     private final int id;
     private final int accountId;

@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Question;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.ResponseAction;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.ResponseActionRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -140,8 +141,8 @@ final class SqlResponseActionRepository implements ResponseActionRepository {
         public ResponseAction create(ResultSet rs) throws SQLException {
             return new ResponseAction(
                 rs.getInt("RESPONSE_ID"),
-                rs.getString("ACTION"),
-                rs.getString("ARGUMENTS")
+                NullnessUtil.castNonNull(rs.getString("ACTION")),
+                NullnessUtil.castNonNull(rs.getString("ARGUMENTS"))
             );
         }
 

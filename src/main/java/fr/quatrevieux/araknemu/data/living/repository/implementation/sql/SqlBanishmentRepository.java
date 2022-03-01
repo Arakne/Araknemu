@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.living.entity.account.Banishment;
 import fr.quatrevieux.araknemu.data.living.repository.account.BanishmentRepository;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -151,9 +152,9 @@ final class SqlBanishmentRepository implements BanishmentRepository {
             return new Banishment(
                 rs.getInt("BANISHMENT_ID"),
                 rs.getInt("ACCOUNT_ID"),
-                instantTransformer.unserialize(rs.getString("START_DATE")),
-                instantTransformer.unserialize(rs.getString("END_DATE")),
-                rs.getString("CAUSE"),
+                instantTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("START_DATE"))),
+                instantTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("END_DATE"))),
+                NullnessUtil.castNonNull(rs.getString("CAUSE")),
                 rs.getInt("BANISHER_ID")
             );
         }

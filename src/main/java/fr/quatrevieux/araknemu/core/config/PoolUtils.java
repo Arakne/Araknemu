@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.core.config;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.time.Duration;
 
 /**
@@ -37,7 +39,7 @@ public final class PoolUtils implements Pool {
     }
 
     @Override
-    public String get(String key) {
+    public @Nullable String get(String key) {
         return pool.get(key);
     }
 
@@ -45,8 +47,10 @@ public final class PoolUtils implements Pool {
      * Parse a config item as integer
      */
     public int integer(String key, int defaultValue) {
-        return pool.has(key)
-            ? Integer.parseInt(pool.get(key))
+        final String value = pool.get(key);
+
+        return value != null
+            ? Integer.parseInt(value)
             : defaultValue
         ;
     }
@@ -64,11 +68,13 @@ public final class PoolUtils implements Pool {
      * This method handle values like "1", "true", "yes", "on" as true
      */
     public boolean bool(String key, boolean defaultValue) {
-        if (!pool.has(key)) {
+        String value = pool.get(key);
+
+        if (value == null) {
             return defaultValue;
         }
 
-        final String value = pool.get(key).toLowerCase();
+        value = value.toLowerCase();
 
         for (String v : new String[] {"1", "true", "yes", "on"}) {
             if (value.equals(v)) {
@@ -92,8 +98,10 @@ public final class PoolUtils implements Pool {
      * Parse a config item as String
      */
     public String string(String key, String defaultValue) {
-        return pool.has(key)
-            ? pool.get(key)
+        final String value = pool.get(key);
+
+        return value != null
+            ? value
             : defaultValue
         ;
     }
@@ -110,8 +118,10 @@ public final class PoolUtils implements Pool {
      * Parse a config item as double
      */
     public double decimal(String key, double defaultValue) {
-        return pool.has(key)
-            ? Double.parseDouble(pool.get(key))
+        final String value = pool.get(key);
+
+        return value != null
+            ? Double.parseDouble(value)
             : defaultValue
         ;
     }
@@ -142,11 +152,13 @@ public final class PoolUtils implements Pool {
      * @see Duration#parse(CharSequence)
      */
     public Duration duration(String key, Duration defaultValue) {
-        if (!pool.has(key)) {
+        String value = pool.get(key);
+
+        if (value == null) {
             return defaultValue;
         }
 
-        String value = pool.get(key).toUpperCase();
+        value = value.toUpperCase();
 
         if (value.charAt(0) != 'P') {
             value = "PT" + value;

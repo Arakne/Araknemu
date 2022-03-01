@@ -31,6 +31,9 @@ import fr.quatrevieux.araknemu.game.player.race.GamePlayerRace;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
+import org.checkerframework.checker.initialization.qual.UnderInitialization;
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
 /**
  * Characteristic map for player
@@ -47,6 +50,7 @@ public final class PlayerCharacteristics implements CharacterCharacteristics {
 
     private Characteristics stuff;
 
+    @SuppressWarnings("assignment")
     public PlayerCharacteristics(Dispatcher dispatcher, GamePlayer player, Player entity) {
         this.dispatcher = dispatcher;
         this.player = player;
@@ -177,7 +181,8 @@ public final class PlayerCharacteristics implements CharacterCharacteristics {
     /**
      * Compute the stuff stats
      */
-    private Characteristics computeStuffStats() {
+    @RequiresNonNull("player")
+    private Characteristics computeStuffStats(@UnknownInitialization PlayerCharacteristics this) {
         final MutableCharacteristics characteristics = new DefaultCharacteristics();
 
         for (AbstractEquipment equipment : player.inventory().equipments()) {

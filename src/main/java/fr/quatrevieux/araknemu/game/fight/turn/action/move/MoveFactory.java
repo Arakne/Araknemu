@@ -51,11 +51,12 @@ public final class MoveFactory implements MoveActionFactory {
 
     @Override
     public Move create(Path<FightCell> path) {
+        // @todo define on module after refactor
         final FightPathValidator[] validators = new FightPathValidator[] {
             new TackleValidator(),
             new StopOnEnemyValidator(),
         };
 
-        return new Move(turn, turn.fighter(), path, validators);
+        return new Move(turn.fighter(), path, validators);
     }
 }

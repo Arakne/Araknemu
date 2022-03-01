@@ -20,6 +20,8 @@
 package fr.quatrevieux.araknemu.core.network.util;
 
 import fr.quatrevieux.araknemu.core.network.Channel;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.net.InetSocketAddress;
 import java.util.Stack;
@@ -31,14 +33,14 @@ public final class DummyChannel implements Channel {
     private long id = 1;
     private boolean isAlive = true;
     private Stack<Object> messages = new Stack<>();
-    private DummyServer<?> server;
+    private @Nullable DummyServer<?> server;
     private String ipAddress;
 
     public DummyChannel() {
         this("127.0.0.1");
     }
 
-    public DummyChannel(String ipAddress) {
+    public DummyChannel(@Nullable String ipAddress) {
         this.ipAddress = ipAddress == null ? "127.0.0.1" : ipAddress;
     }
 

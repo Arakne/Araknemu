@@ -55,7 +55,7 @@ class SaveUpgradedSpellTest extends GameBaseCase {
         spell.setLevel(3);
         this.<Player>readField(gamePlayer(), "entity").setSpellPoints(5);
 
-        SpellBookEntry entry = new SpellBookEntry(spell, container.get(SpellService.class).get(202));
+        SpellBookEntry entry = new SpellBookEntry(null, spell, container.get(SpellService.class).get(202));
 
         listener.on(new SpellUpgraded(entry));
 

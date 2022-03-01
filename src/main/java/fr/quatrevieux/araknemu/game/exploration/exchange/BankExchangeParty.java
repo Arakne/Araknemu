@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeLeaved;
 import fr.quatrevieux.araknemu.network.game.out.exchange.StorageList;
 import fr.quatrevieux.araknemu.network.game.out.exchange.movement.storage.StorageMovementError;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Exchange party for store items into the bank
@@ -54,7 +55,7 @@ public final class BankExchangeParty implements ExchangeParty {
     }
 
     @Override
-    public Creature target() {
+    public @Nullable Creature target() {
         // Bank do not have target
         return null;
     }

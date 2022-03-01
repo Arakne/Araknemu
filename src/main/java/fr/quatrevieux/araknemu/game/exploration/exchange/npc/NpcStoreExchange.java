@@ -90,8 +90,10 @@ public final class NpcStoreExchange implements Exchange, Sender {
             throw new IllegalArgumentException("Item not available");
         }
 
-        player.inventory().removeKamas(store.price(itemId, quantity));
-        store.get(itemId, quantity).forEach((item, itemQuantity) -> player.inventory().add(item, itemQuantity));
+        final NpcStore.Sell sell = store.buy(itemId, quantity);
+
+        player.inventory().removeKamas(sell.price());
+        sell.items().forEach((item, itemQuantity) -> player.inventory().add(item, itemQuantity));
     }
 
     /**

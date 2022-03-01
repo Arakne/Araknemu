@@ -60,20 +60,20 @@ class MoveTest extends FightBaseCase {
     @Test
     void validateEmptyPath() {
         assertFalse(
-            new Move(turn, turn.fighter(),
+            new Move(turn.fighter(),
                 new Path<>(
                     new Decoder<>(fight.map()),
                     Arrays.asList(new PathStep<>(fight.map().get(185), Direction.EAST))
                 ),
                 new FightPathValidator[0]
-            ).validate()
+            ).validate(turn)
         );
     }
 
     @Test
     void validateNotEnoughMovementPoints() {
         assertFalse(
-            new Move(turn, turn.fighter(),
+            new Move(turn.fighter(),
                 new Path<>(
                     new Decoder<>(fight.map()),
                     Arrays.asList(
@@ -85,14 +85,14 @@ class MoveTest extends FightBaseCase {
                     )
                 ),
                 new FightPathValidator[0]
-            ).validate()
+            ).validate(turn)
         );
     }
 
     @Test
     void validateRestrictedDirection() {
         assertFalse(
-            new Move(turn, turn.fighter(),
+            new Move(turn.fighter(),
                 new Path<>(
                     new Decoder<>(fight.map()),
                     Arrays.asList(
@@ -103,14 +103,14 @@ class MoveTest extends FightBaseCase {
                     )
                 ),
                 new FightPathValidator[0]
-            ).validate()
+            ).validate(turn)
         );
     }
 
     @Test
     void validateNotWalkableCells() {
         assertFalse(
-            new Move(turn, turn.fighter(),
+            new Move(turn.fighter(),
                 new Path<>(
                     new Decoder<>(fight.map()),
                     Arrays.asList(
@@ -119,14 +119,14 @@ class MoveTest extends FightBaseCase {
                     )
                 ),
                 new FightPathValidator[0]
-            ).validate()
+            ).validate(turn)
         );
     }
 
     @Test
     void validateValid() {
         assertTrue(
-            new Move(turn, turn.fighter(),
+            new Move(turn.fighter(),
                 new Path<>(
                     new Decoder<>(fight.map()),
                     Arrays.asList(
@@ -137,13 +137,13 @@ class MoveTest extends FightBaseCase {
                     )
                 ),
                 new FightPathValidator[0]
-            ).validate()
+            ).validate(turn)
         );
     }
 
     @Test
     void startSuccess() {
-        Move move = new Move(turn, turn.fighter(),
+        Move move = new Move(turn.fighter(),
             new Path<>(
                 new Decoder<>(fight.map()),
                 Arrays.asList(
@@ -172,7 +172,7 @@ class MoveTest extends FightBaseCase {
 
     @Test
     void startTruncatedBecauseOfEnemy() {
-        Move move = new Move(turn, turn.fighter(),
+        Move move = new Move(turn.fighter(),
             new Path<>(
                 new Decoder<>(fight.map()),
                 Arrays.asList(
@@ -205,7 +205,7 @@ class MoveTest extends FightBaseCase {
 
     @Test
     void startWithTackle() {
-        Move move = new Move(turn, turn.fighter(),
+        Move move = new Move(turn.fighter(),
             new Path<>(
                 new Decoder<>(fight.map()),
                 Arrays.asList(
@@ -238,7 +238,7 @@ class MoveTest extends FightBaseCase {
         assertEquals(104, result.action());
         assertArrayEquals(new Object[0], result.arguments());
 
-        move.failed();
+        result.apply(turn);
 
         assertEquals(0, turn.points().movementPoints());
         assertEquals(0, turn.points().actionPoints());
@@ -246,7 +246,7 @@ class MoveTest extends FightBaseCase {
 
     @Test
     void end() {
-        Move move = new Move(turn, turn.fighter(),
+        Move move = new Move(turn.fighter(),
             new Path<>(
                 new Decoder<>(fight.map()),
                 Arrays.asList(
@@ -258,8 +258,7 @@ class MoveTest extends FightBaseCase {
             new FightPathValidator[0]
         );
 
-        move.start();
-        move.end();
+        move.start().apply(turn);
 
         assertEquals(1, turn.points().movementPoints());
         assertEquals(213, fighter.cell().id());
@@ -268,7 +267,7 @@ class MoveTest extends FightBaseCase {
 
     @Test
     void duration() {
-        Move move = new Move(turn, turn.fighter(),
+        Move move = new Move(turn.fighter(),
             new Path<>(
                 new Decoder<>(fight.map()),
                 Arrays.asList(

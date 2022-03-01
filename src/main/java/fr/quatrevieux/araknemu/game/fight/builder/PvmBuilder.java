@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -47,9 +48,9 @@ public final class PvmBuilder implements FightBuilder {
     private final Logger logger;
     private final ScheduledExecutorService executor;
 
-    private ExplorationMap map;
-    private GamePlayer initiator;
-    private MonsterGroup group;
+    private @MonotonicNonNull ExplorationMap map;
+    private @MonotonicNonNull GamePlayer initiator;
+    private @MonotonicNonNull MonsterGroup group;
     private boolean randomize = true;
 
     public PvmBuilder(FightService service, FighterFactory fighterFactory, RandomUtil random, PvmType type, Logger logger, ScheduledExecutorService executor) {
@@ -63,6 +64,14 @@ public final class PvmBuilder implements FightBuilder {
 
     @Override
     public Fight build(int fightId) {
+        final ExplorationMap map = this.map;
+        final GamePlayer initiator = this.initiator;
+        final MonsterGroup group = this.group;
+
+        if (map == null || initiator == null || group == null) {
+            throw new IllegalStateException("Missing mandatory data for build the fight");
+        }
+
         final BaseBuilder builder = new BaseBuilder(service, randomize ? random : null, type, logger, executor);
 
         builder.map(map);

@@ -21,20 +21,24 @@ package fr.quatrevieux.araknemu.game.item.factory;
 
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Effect;
-import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.item.*;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
+import fr.quatrevieux.araknemu.game.item.GameItemSet;
+import fr.quatrevieux.araknemu.game.item.Item;
+import fr.quatrevieux.araknemu.game.item.ItemService;
+import fr.quatrevieux.araknemu.game.item.SuperType;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToCharacteristicMapping;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
 import fr.quatrevieux.araknemu.game.item.type.Wearable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class WearableFactoryTest extends GameBaseCase {
     private WearableFactory factory;
@@ -46,7 +50,7 @@ class WearableFactoryTest extends GameBaseCase {
 
         dataSet.pushItemSets();
 
-        factory = new WearableFactory(SuperType.AMULET, container.get(EffectMappers.class));
+        factory = new WearableFactory(SuperType.AMULET, container.get(EffectToCharacteristicMapping.class), container.get(EffectToSpecialMapping.class));
     }
 
     @Test

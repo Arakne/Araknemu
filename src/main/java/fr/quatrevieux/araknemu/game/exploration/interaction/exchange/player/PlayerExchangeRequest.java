@@ -28,9 +28,11 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.request.Invitation;
 import fr.quatrevieux.araknemu.game.exploration.interaction.request.InvitationHandler;
 import fr.quatrevieux.araknemu.game.exploration.interaction.request.RequestDialog;
 import fr.quatrevieux.araknemu.game.exploration.interaction.request.TargetRequestDialog;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeLeaved;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeRequestError;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeRequested;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Request for a player exchange
@@ -40,12 +42,13 @@ import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeRequested;
 public final class PlayerExchangeRequest implements ExchangeInteraction, InvitationHandler {
     private final Invitation invitation;
 
+    @SuppressWarnings("method.invocation")
     public PlayerExchangeRequest(ExplorationPlayer initiator, ExplorationPlayer target) {
         invitation = invitation(initiator, target);
     }
 
     @Override
-    public Interaction start() {
+    public @Nullable Interaction start() {
         return invitation.start();
     }
 
@@ -100,7 +103,9 @@ public final class PlayerExchangeRequest implements ExchangeInteraction, Invitat
             return error(invitation, ExchangeRequestError.Error.CANT_EXCHANGE);
         }
 
-        if (!invitation.target().map().equals(invitation.initiator().map())) {
+        final ExplorationMap map = invitation.initiator().map();
+
+        if (map == null || !map.equals(invitation.target().map())) {
             return error(invitation, ExchangeRequestError.Error.CANT_EXCHANGE);
         }
 

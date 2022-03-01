@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.exploration.interaction.action;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * Enum for all game actions
@@ -57,6 +58,12 @@ public enum ActionType {
      * Get an action by id
      */
     public static ActionType byId(int id) {
-        return actionsById.get(id);
+        final ActionType type = actionsById.get(id);
+
+        if (type == null) {
+            throw new NoSuchElementException("Action " + id + " is not found");
+        }
+
+        return type;
     }
 }

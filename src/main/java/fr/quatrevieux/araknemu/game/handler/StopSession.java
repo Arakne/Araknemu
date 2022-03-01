@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.handler;
 
+import fr.quatrevieux.araknemu.common.session.SessionLog;
 import fr.quatrevieux.araknemu.core.network.SessionClosed;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.handler.event.Disconnected;
@@ -41,7 +42,7 @@ public final class StopSession implements PacketHandler<GameSession, SessionClos
 
         if (session.isLogged()) {
             session.account().detach();
-            session.log().stop();
+            session.log().ifPresent(SessionLog::stop);
         }
     }
 
@@ -50,6 +51,7 @@ public final class StopSession implements PacketHandler<GameSession, SessionClos
         return SessionClosed.class;
     }
 
+    @SuppressWarnings("return")
     private Stream<PlayerSessionScope> scopes(GameSession session) {
         return Stream.of(session.exploration(), session.fighter(), session.player()).filter(Objects::nonNull);
     }

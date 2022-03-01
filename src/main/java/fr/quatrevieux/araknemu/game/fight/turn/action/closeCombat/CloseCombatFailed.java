@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 
 /**
@@ -50,5 +51,11 @@ public final class CloseCombatFailed implements ActionResult {
     @Override
     public boolean success() {
         return false;
+    }
+
+    @Override
+    public void apply(FightTurn turn) {
+        turn.points().useActionPoints(caster.weapon().apCost());
+        turn.stop();
     }
 }

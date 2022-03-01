@@ -107,13 +107,15 @@ public final class CharactersService {
 
         return repository.findByAccount(account.id(), account.serverId())
             .stream()
-            .map(player -> new AccountCharacter(
-                account,
-                player,
-                items.containsKey(player.id())
-                    ? new CharacterAccessories(items.get(player.id()))
-                    : new EmptyAccessories()
-            ))
+            .map(player -> {
+                final List<PlayerItem> accessories = items.get(player.id());
+
+                return new AccountCharacter(
+                    account,
+                    player,
+                    accessories != null ? new CharacterAccessories(accessories) : new EmptyAccessories()
+                );
+            })
             .collect(Collectors.toList())
         ;
     }

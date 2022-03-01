@@ -36,11 +36,8 @@ import fr.quatrevieux.araknemu.game.listener.player.spell.SendUpgradedSpell;
 import fr.quatrevieux.araknemu.game.listener.player.spell.SetDefaultPositionSpellBook;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import fr.quatrevieux.araknemu.game.player.race.PlayerRaceService;
+import fr.quatrevieux.araknemu.game.spell.SpellLevels;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
-
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Service for handle player spells
@@ -86,28 +83,23 @@ public final class SpellBookService implements EventsSubscriber {
      * Load the spell book
      */
     public SpellBook load(Dispatcher dispatcher, Player player) {
-        final Map<Integer, SpellBookEntry> entries = repository.byPlayer(player)
-            .stream()
-            .map(entity -> new SpellBookEntry(entity, service.get(entity.spellId())))
-            .collect(
-                Collectors.toMap(
-                    entry -> entry.spell().id(),
-                    Function.identity()
-                )
-            )
-        ;
+        final SpellBook spellBook = new SpellBook(dispatcher, player);
 
-        playerRaceService.get(player.race())
-            .spells()
-            .stream()
-            .filter(spell -> !entries.containsKey(spell.id()))
-            .map(spell -> new SpellBookEntry(
-                new PlayerSpell(player.id(), spell.id(), true),
-                spell
-            ))
-            .forEach(entry -> entries.put(entry.spell().id(), entry))
-        ;
+        // Add player spells
+        for (PlayerSpell spell : repository.byPlayer(player)) {
+            spellBook.addEntry(spell, service.get(spell.spellId()));
+        }
 
-        return new SpellBook(dispatcher, player, entries.values());
+        // Add base race spells
+        for (SpellLevels spell : playerRaceService.get(player.race()).spells()) {
+            if (!spellBook.hasEntry(spell.id())) {
+                spellBook.addEntry(
+                    new PlayerSpell(player.id(), spell.id(), true),
+                    spell
+                );
+            }
+        }
+
+        return spellBook;
     }
 }

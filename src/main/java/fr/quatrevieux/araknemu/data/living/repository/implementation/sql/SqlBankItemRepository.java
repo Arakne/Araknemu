@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.data.living.entity.account.BankItem;
 import fr.quatrevieux.araknemu.data.living.repository.account.BankItemRepository;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -180,7 +181,7 @@ final class SqlBankItemRepository implements BankItemRepository {
                 rs.getInt("SERVER_ID"),
                 rs.getInt("ITEM_ENTRY_ID"),
                 rs.getInt("ITEM_TEMPLATE_ID"),
-                effectsTransformer.unserialize(rs.getString("ITEM_EFFECTS")),
+                effectsTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("ITEM_EFFECTS"))),
                 rs.getInt("QUANTITY")
             );
         }

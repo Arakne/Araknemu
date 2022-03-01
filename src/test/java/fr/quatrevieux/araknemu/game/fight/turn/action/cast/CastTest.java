@@ -19,10 +19,11 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.cast;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
-import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
@@ -31,7 +32,6 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.turn.action.event.SpellCasted;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.spell.Spell;
-import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +41,11 @@ import org.mockito.Mockito;
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CastTest extends FightBaseCase {
     private Fight fight;
@@ -67,7 +71,6 @@ class CastTest extends FightBaseCase {
     @Test
     void values() {
         Cast cast = new Cast(
-            turn,
             fighter,
             fighter.spells().get(3),
             fight.map().get(186)
@@ -79,18 +82,10 @@ class CastTest extends FightBaseCase {
     }
 
     @Test
-    void validateSpellNotFound() {
-        Cast cast = new Cast(turn, fighter, null, fight.map().get(123));
-
-        assertFalse(cast.validate());
-        requestStack.assertLast(Error.cantCastNotFound());
-    }
-
-    @Test
     void validateBadCell() {
-        Cast cast = new Cast(turn, fighter, fighter.spells().get(3), fight.map().get(0));
+        Cast cast = new Cast(fighter, fighter.spells().get(3), fight.map().get(0));
 
-        assertFalse(cast.validate());
+        assertFalse(cast.validate(turn));
         requestStack.assertLast(Error.cantCastCellNotAvailable());
     }
 
@@ -98,9 +93,9 @@ class CastTest extends FightBaseCase {
     void validateNotEnoughAp() {
         turn.points().useActionPoints(5);
 
-        Cast cast = new Cast(turn, fighter, fighter.spells().get(3), fight.map().get(0));
+        Cast cast = new Cast(fighter, fighter.spells().get(3), fight.map().get(0));
 
-        assertFalse(cast.validate());
+        assertFalse(cast.validate(turn));
         requestStack.assertLast(Error.cantCastNotEnoughActionPoints(1, 5));
     }
 
@@ -108,23 +103,22 @@ class CastTest extends FightBaseCase {
     void validateBadState() {
         fighter.states().push(19);
 
-        Cast cast = new Cast(turn, fighter, fighter.spells().get(3), fight.map().get(123));
+        Cast cast = new Cast(fighter, fighter.spells().get(3), fight.map().get(123));
 
-        assertFalse(cast.validate());
+        assertFalse(cast.validate(turn));
         requestStack.assertLast(Error.cantCastBadState());
     }
 
     @Test
     void validateSuccess() {
-        Cast cast = new Cast(turn, fighter, fighter.spells().get(3), fight.map().get(186));
+        Cast cast = new Cast(fighter, fighter.spells().get(3), fight.map().get(186));
 
-        assertTrue(cast.validate());
+        assertTrue(cast.validate(turn));
     }
 
     @Test
     void startSuccess() {
         Cast cast = new Cast(
-            turn,
             fighter,
             fighter.spells().get(3),
             fight.map().get(186),
@@ -154,7 +148,6 @@ class CastTest extends FightBaseCase {
         fighter.setOrientation(Direction.NORTH_EAST);
 
         Cast cast = new Cast(
-            turn,
             fighter,
             fighter.spells().get(3),
             fighter.cell(),
@@ -174,7 +167,6 @@ class CastTest extends FightBaseCase {
     @Test
     void startCriticalHit() {
         Cast cast = new Cast(
-            turn,
             fighter,
             fighter.spells().get(3),
             fight.map().get(186),
@@ -202,7 +194,6 @@ class CastTest extends FightBaseCase {
     @Test
     void startCriticalFailure() {
         Cast cast = new Cast(
-            turn,
             fighter,
             fighter.spells().get(3),
             fight.map().get(186),
@@ -223,18 +214,8 @@ class CastTest extends FightBaseCase {
         assertSame(fighter, result.performer());
         assertArrayEquals(new Object[] {3}, result.arguments());
         assertEquals(Direction.SOUTH_EAST, fighter.orientation());
-    }
 
-    @Test
-    void failed() {
-        Cast cast = new Cast(
-            turn,
-            fighter,
-            fighter.spells().get(3),
-            fight.map().get(186)
-        );
-
-        cast.failed();
+        result.apply(turn);
 
         requestStack.assertLast(ActionEffect.usedActionPoints(fighter, 5));
         assertEquals(1, turn.points().actionPoints());
@@ -248,13 +229,19 @@ class CastTest extends FightBaseCase {
         Mockito.when(spell.endsTurnOnFailure()).thenReturn(true);
 
         Cast cast = new Cast(
-            turn,
             fighter,
             spell,
-            fight.map().get(186)
+            fight.map().get(186),
+            new SpellConstraintsValidator(new CastConstraintValidator[0]),
+            new CriticalityStrategy() {
+                public int hitRate(int base) { return 0; }
+                public int failureRate(int base) { return 0; }
+                public boolean hit(int baseRate) { return false; }
+                public boolean failed(int baseRate) { return true; }
+            }
         );
 
-        cast.failed();
+        cast.start().apply(turn);
 
         assertEquals(2, turn.points().actionPoints());
         assertFalse(turn.active());
@@ -263,7 +250,6 @@ class CastTest extends FightBaseCase {
     @Test
     void duration() {
         Cast cast = new Cast(
-            turn,
             fighter,
             fighter.spells().get(3),
             fight.map().get(186)
@@ -278,7 +264,6 @@ class CastTest extends FightBaseCase {
         fight.dispatcher().add(SpellCasted.class, ref::set);
 
         Cast cast = new Cast(
-            turn,
             fighter,
             fighter.spells().get(3),
             fight.map().get(186),
@@ -293,8 +278,7 @@ class CastTest extends FightBaseCase {
 
         requestStack.clear();
 
-        cast.start();
-        cast.end();
+        cast.start().apply(turn);
 
         int damage = other.fighter().life().max() - other.fighter().life().current();
 
@@ -312,7 +296,6 @@ class CastTest extends FightBaseCase {
     @Test
     void endOnCriticalHit() {
         Cast cast = new Cast(
-            turn,
             fighter,
             fighter.spells().get(3),
             fight.map().get(186),
@@ -327,8 +310,7 @@ class CastTest extends FightBaseCase {
 
         requestStack.clear();
 
-        cast.start();
-        cast.end();
+        cast.start().apply(turn);
 
         int damage = other.fighter().life().max() - other.fighter().life().current();
 

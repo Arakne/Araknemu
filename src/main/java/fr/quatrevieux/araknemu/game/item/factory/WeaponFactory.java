@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.item.factory;
 
 import fr.arakne.utils.value.Interval;
+import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
@@ -29,10 +30,11 @@ import fr.quatrevieux.araknemu.game.item.SuperType;
 import fr.quatrevieux.araknemu.game.item.effect.CharacteristicEffect;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 import fr.quatrevieux.araknemu.game.item.effect.WeaponEffect;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMapper;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 
@@ -40,21 +42,30 @@ import java.util.List;
  * Factory for weapons
  */
 public final class WeaponFactory implements ItemFactory {
-    private final EffectMappers mappers;
     private final SpellEffectService effectService;
+    private final EffectMapper<WeaponEffect> weaponEffectEffectMapper;
+    private final EffectMapper<CharacteristicEffect> characteristicEffectEffectMapper;
+    private final EffectMapper<SpecialEffect> specialEffectEffectMapper;
 
-    public WeaponFactory(EffectMappers mappers, SpellEffectService effectService) {
-        this.mappers = mappers;
+    public WeaponFactory(
+        SpellEffectService effectService,
+        EffectMapper<WeaponEffect> weaponEffectEffectMapper,
+        EffectMapper<CharacteristicEffect> characteristicEffectEffectMapper,
+        EffectMapper<SpecialEffect> specialEffectEffectMapper
+    ) {
         this.effectService = effectService;
+        this.weaponEffectEffectMapper = weaponEffectEffectMapper;
+        this.characteristicEffectEffectMapper = characteristicEffectEffectMapper;
+        this.specialEffectEffectMapper = specialEffectEffectMapper;
     }
 
     @Override
-    public Item create(ItemTemplate template, ItemType type, GameItemSet set, boolean maximize) {
+    public Item create(ItemTemplate template, ItemType type, @Nullable GameItemSet set, boolean maximize) {
         return create(template, type, set, template.effects(), maximize);
     }
 
     @Override
-    public Item retrieve(ItemTemplate template, ItemType type, GameItemSet set, List<ItemTemplateEffectEntry> effects) {
+    public Item retrieve(ItemTemplate template, ItemType type, @Nullable GameItemSet set, List<ItemTemplateEffectEntry> effects) {
         return create(template, type, set, effects, false);
     }
 
@@ -63,20 +74,30 @@ public final class WeaponFactory implements ItemFactory {
         return SuperType.WEAPON;
     }
 
-    private Item create(ItemTemplate template, ItemType type, GameItemSet set, List<ItemTemplateEffectEntry> effects, boolean maximize) {
+    private Item create(ItemTemplate template, ItemType type, @Nullable GameItemSet set, List<ItemTemplateEffectEntry> effects, boolean maximize) {
+        final EffectArea area = type.effectArea();
+
+        if (area == null) {
+            throw new IllegalArgumentException("Invalid item type provided");
+        }
+
         return new Weapon(
             template,
             type,
             set,
-            mappers.get(WeaponEffect.class).create(effects),
-            mappers.get(CharacteristicEffect.class).create(effects, maximize),
-            mappers.get(SpecialEffect.class).create(effects, maximize),
+            weaponEffectEffectMapper.create(effects),
+            characteristicEffectEffectMapper.create(effects, maximize),
+            specialEffectEffectMapper.create(effects, maximize),
             parseInfo(template.weaponInfo()),
-            effectService.area(type.effectArea())
+            effectService.area(area)
         );
     }
 
-    private Weapon.WeaponInfo parseInfo(String info) {
+    private Weapon.WeaponInfo parseInfo(@Nullable String info) {
+        if (info == null) {
+            throw new IllegalArgumentException("weapon info is missing");
+        }
+
         final String[] parts = StringUtils.split(info, ";");
 
         return new Weapon.WeaponInfo(

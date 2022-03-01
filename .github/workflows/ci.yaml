@@ -42,7 +42,7 @@ jobs:
           distribution: 'adopt'
 
       - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots verify
+        run: mvn --batch-mode --update-snapshots -P '!checkerframework,!checkerframework-jdk8,!checkerframework-jdk9orlater' verify
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
@@ -92,4 +92,25 @@ jobs:
           distribution: 'adopt'
 
       - name: Run tests
-        run: mvn --batch-mode -Djacoco.skip=true test
+        run: mvn --batch-mode -Djacoco.skip=true -P '!checkerframework,!checkerframework-jdk8,!checkerframework-jdk9orlater' test
+
+  static_analysis:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java_version: [11]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: "Europe/Paris"
+
+      - name: Set up JDK ${{ matrix.java_version }}
+        uses: actions/setup-java@v2
+        with:
+          java-version: 11
+          distribution: 'adopt'
+
+      - name: Run tests
+        run: mvn clean compile

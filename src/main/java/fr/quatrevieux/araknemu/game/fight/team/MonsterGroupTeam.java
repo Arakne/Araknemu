@@ -27,6 +27,9 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
+import org.checkerframework.checker.initialization.qual.UnderInitialization;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,6 +50,7 @@ public final class MonsterGroupTeam implements FightTeam {
     private final List<MonsterFighter> fighters;
     private final TeamOptions options;
 
+    @SuppressWarnings({"assignment", "argument"})
     public MonsterGroupTeam(MonsterGroup monsterGroup, List<Integer> startPlaces, int number) {
         this.monsterGroup = monsterGroup;
         this.number = number;
@@ -57,7 +61,7 @@ public final class MonsterGroupTeam implements FightTeam {
     }
 
     @Override
-    public Fighter leader() {
+    public @Nullable Fighter leader() {
         return null;
     }
 
@@ -137,7 +141,9 @@ public final class MonsterGroupTeam implements FightTeam {
      * Creates fighters from monsters of the group
      * Ids of monsters are negative integer sequence (starting at -1 for the first monster)
      */
-    private List<MonsterFighter> makeFighters() {
+    @RequiresNonNull("monsterGroup")
+    @SuppressWarnings("argument")
+    private List<MonsterFighter> makeFighters(@UnderInitialization MonsterGroupTeam this) {
         final List<MonsterFighter> fighters = new ArrayList<>(monsterGroup.monsters().size());
 
         int id = 0;

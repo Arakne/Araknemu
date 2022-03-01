@@ -23,6 +23,8 @@ import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.spectator.Spectator;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 /**
@@ -31,32 +33,36 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
  * @param <P> Packet to handle
  */
 public final class EnsureFightingOrSpectator<P extends Packet> implements PacketHandler<GameSession, P> {
-    private final PacketHandler<GameSession, P> fighting;
-    private final PacketHandler<GameSession, P> spectator;
+    private final PacketHandler<GameSession, P> fightingHandler;
+    private final PacketHandler<GameSession, P> spectatorHandler;
 
-    public EnsureFightingOrSpectator(PacketHandler<GameSession, P> fighting, PacketHandler<GameSession, P> spectator) {
-        this.fighting = fighting;
-        this.spectator = spectator;
+    public EnsureFightingOrSpectator(PacketHandler<GameSession, P> fightingHandler, PacketHandler<GameSession, P> spectatorHandler) {
+        this.fightingHandler = fightingHandler;
+        this.spectatorHandler = spectatorHandler;
     }
 
     @Override
     public void handle(GameSession session, P packet) {
         final Fight fight;
+        final PlayerFighter fighter = session.fighter();
+        final Spectator spectator = session.spectator();
 
-        if (session.fighter() != null) {
-            fight = session.fighter().fight();
-        } else if (session.spectator() != null) {
-            fight = session.spectator().fight();
+        if (fighter != null) {
+            fight = fighter.fight();
+        } else if (spectator != null) {
+            fight = spectator.fight();
         } else {
             throw new CloseImmediately("Not in fight");
         }
 
         fight.execute(() -> {
             try {
+                // Use getter instead of local variable because the task is executed
+                // asynchronously, so the session may change
                 if (session.fighter() != null) {
-                    fighting.handle(session, packet);
+                    fightingHandler.handle(session, packet);
                 } else if (session.spectator() != null) {
-                    spectator.handle(session, packet);
+                    spectatorHandler.handle(session, packet);
                 }
             } catch (Exception e) {
                 session.exception(e);
@@ -66,6 +72,6 @@ public final class EnsureFightingOrSpectator<P extends Packet> implements Packet
 
     @Override
     public Class<P> packet() {
-        return fighting.packet();
+        return fightingHandler.packet();
     }
 }

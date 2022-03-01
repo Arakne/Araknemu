@@ -43,6 +43,7 @@ import fr.quatrevieux.araknemu.game.listener.fight.turn.SendUsedActionPoints;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.SendUsedMovementPoints;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightAction;
 import fr.quatrevieux.araknemu.game.listener.fight.turn.action.SendFightActionTerminated;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.time.Duration;
 import java.util.Collections;
@@ -53,8 +54,8 @@ import java.util.Collections;
 public final class ActiveState implements LeavableState, EventsSubscriber {
     private final FighterOrderStrategy orderStrategy;
 
-    private Fight fight;
-    private Listener[] listeners;
+    private @MonotonicNonNull Fight fight;
+    private Listener @MonotonicNonNull[] listeners;
 
     public ActiveState(FighterOrderStrategy orderStrategy) {
         this.orderStrategy = orderStrategy;
@@ -77,27 +78,33 @@ public final class ActiveState implements LeavableState, EventsSubscriber {
 
     @Override
     public Listener[] listeners() {
-        if (listeners == null) {
-            listeners = new Listener[] {
-                new SendFightStarted(fight),
-                new SendFightersInformation(fight),
-                new SendFightTurnStarted(fight),
-                new SendFightTurnStopped(fight),
-                new SendFightAction(fight),
-                new SendFightActionTerminated(),
-                new SendUsedMovementPoints(fight),
-                new SendUsedActionPoints(fight),
-                new SendFighterLifeChanged(fight),
-                new SendFighterDie(fight),
-                new RemoveDeadFighter(fight),
-                new DispelDeadFighterBuff(fight),
-                new CheckFightTerminated(fight),
-                new SendTurnList(fight),
-                new RefreshBuffs(),
-            };
+        if (listeners != null) {
+            return listeners;
         }
 
-        return listeners;
+        final Fight fight = this.fight;
+
+        if (fight == null) {
+            throw new IllegalStateException("State must be started");
+        }
+
+        return listeners = new Listener[] {
+            new SendFightStarted(fight),
+            new SendFightersInformation(fight),
+            new SendFightTurnStarted(fight),
+            new SendFightTurnStopped(fight),
+            new SendFightAction(fight),
+            new SendFightActionTerminated(),
+            new SendUsedMovementPoints(fight),
+            new SendUsedActionPoints(fight),
+            new SendFighterLifeChanged(fight),
+            new SendFighterDie(fight),
+            new RemoveDeadFighter(fight),
+            new DispelDeadFighterBuff(fight),
+            new CheckFightTerminated(fight),
+            new SendTurnList(fight),
+            new RefreshBuffs(),
+        };
     }
 
     @Override
@@ -107,6 +114,12 @@ public final class ActiveState implements LeavableState, EventsSubscriber {
 
     @Override
     public synchronized void leave(Fighter fighter) {
+        final Fight fight = this.fight;
+
+        if (fight == null) {
+            throw new IllegalStateException("State must be started");
+        }
+
         // nextState is performed 1.5s after fight stop
         // So leave can occurs on terminated fight
         if (!fight.active()) {
@@ -138,7 +151,7 @@ public final class ActiveState implements LeavableState, EventsSubscriber {
      * Terminate the fight
      */
     public void terminate() {
-        if (fight.state() != this) {
+        if (fight == null || fight.state() != this) {
             return;
         }
 

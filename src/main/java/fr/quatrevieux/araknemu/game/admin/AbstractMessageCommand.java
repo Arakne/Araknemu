@@ -87,6 +87,7 @@ public abstract class AbstractMessageCommand extends AbstractCommand<AbstractMes
         ;
     }
 
+    @SuppressWarnings("initialization.field.uninitialized")
     public static final class Arguments {
         @Argument(
             metaVar = "MESSAGE", handler = ConcatRestOfArgumentsHandler.class, required = true,

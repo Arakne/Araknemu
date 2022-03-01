@@ -101,8 +101,8 @@ public final class InventoryService implements EventsSubscriber {
      *
      * @param player Player to load
      */
-    public PlayerInventory load(Player player) {
-        return new PlayerInventory(
+    public LoadedInventory load(Player player) {
+        return new LoadedInventory(
             player,
             repository.byPlayer(player)
                 .stream()

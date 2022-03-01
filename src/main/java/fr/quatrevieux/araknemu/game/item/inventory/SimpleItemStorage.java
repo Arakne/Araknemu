@@ -61,11 +61,13 @@ public final class SimpleItemStorage<E extends ItemEntry> implements ItemStorage
 
     @Override
     public E get(int id) throws ItemNotFoundException {
-        if (!items.containsKey(id)) {
+        final E entry = items.get(id);
+
+        if (entry == null) {
             throw new ItemNotFoundException(id);
         }
 
-        return items.get(id);
+        return entry;
     }
 
     @Override
@@ -80,11 +82,11 @@ public final class SimpleItemStorage<E extends ItemEntry> implements ItemStorage
 
     @Override
     public E delete(int id) throws ItemNotFoundException {
-        if (!items.containsKey(id)) {
+        final E entry = items.remove(id);
+
+        if (entry == null) {
             throw new ItemNotFoundException(id);
         }
-
-        final E entry = items.remove(id);
 
         dispatcher.dispatch(new ObjectDeleted(entry));
 

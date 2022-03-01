@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.team.ConfigurableTeamOptions;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Handle the toggle of a team option
@@ -40,7 +41,7 @@ import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 public abstract class AbstractToggleTeamOption<P extends Packet> implements PacketHandler<GameSession, P> {
     @Override
     public final void handle(GameSession session, P packet) throws Exception {
-        final PlayerFighter fighter = session.fighter();
+        final PlayerFighter fighter = NullnessUtil.castNonNull(session.fighter());
 
         if (!fighter.isTeamLeader() || !(fighter.team().options() instanceof ConfigurableTeamOptions) || !check(session, fighter)) {
             // If the option cannot be changed, the request must be silently ignored : so send a noop packet

@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.data.living.transformer;
 
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.transformer.TransformerException;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -34,12 +35,12 @@ public final class InstantTransformer implements Transformer<Instant> {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneOffset.UTC);
 
     @Override
-    public String serialize(Instant value) {
+    public @PolyNull String serialize(@PolyNull Instant value) {
         return value == null ? null : formatter.format(value);
     }
 
     @Override
-    public Instant unserialize(String serialize) throws TransformerException {
+    public @PolyNull Instant unserialize(@PolyNull String serialize) throws TransformerException {
         return serialize == null ? null : formatter.parse(serialize, Instant::from);
     }
 }

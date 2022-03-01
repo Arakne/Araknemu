@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.admin.context;
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandNotFoundException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -33,7 +34,7 @@ import java.util.List;
  */
 public abstract class AbstractContext<C extends AbstractContext> implements Context {
     private final List<AbstractContextConfigurator<C>> configurators;
-    private SimpleContext context;
+    private @MonotonicNonNull SimpleContext context;
 
     public AbstractContext(List<AbstractContextConfigurator<C>> configurators) {
         this.configurators = configurators;

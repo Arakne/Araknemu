@@ -39,6 +39,7 @@ class UpdateSpellTest extends GameBaseCase {
             "SUK202~3~d",
             new UpdateSpell(
                 new SpellBookEntry(
+                    gamePlayer().properties().spells(),
                     new PlayerSpell(1, 202, false, 3, 3),
                     container.get(SpellService.class).get(202)
                 )

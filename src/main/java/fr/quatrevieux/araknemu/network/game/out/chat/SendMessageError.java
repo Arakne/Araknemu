@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.network.game.out.chat;
 
 import fr.quatrevieux.araknemu.game.chat.ChatException;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Cannot send the message
@@ -28,9 +29,9 @@ import fr.quatrevieux.araknemu.game.chat.ChatException;
  */
 public final class SendMessageError {
     private final ChatException.Error error;
-    private final String target;
+    private final @Nullable String target;
 
-    public SendMessageError(ChatException.Error error, String target) {
+    public SendMessageError(ChatException.Error error, @Nullable String target) {
         this.error = error;
         this.target = target;
     }

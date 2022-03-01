@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public interface FightTeam extends Sender, Team<Fighter> {
     /**
      * Get the team leader (the fight initiator)
      */
-    public Fighter leader();
+    public @Nullable Fighter leader();
 
     /**
      * Get the team id (must be unique over the map)

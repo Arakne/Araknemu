@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Validate a single castable constraint
@@ -48,5 +49,5 @@ public interface CastConstraintValidator<C extends Castable> {
      *
      * @return The error if constraint failed, or null
      */
-    public Error validate(Turn turn, C castable, FightCell target);
+    public @Nullable Error validate(Turn turn, C castable, FightCell target);
 }

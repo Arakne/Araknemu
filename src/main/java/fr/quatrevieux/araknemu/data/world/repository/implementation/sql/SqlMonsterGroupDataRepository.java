@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -111,7 +112,7 @@ final class SqlMonsterGroupDataRepository implements MonsterGroupDataRepository 
                 Duration.ofMillis(rs.getLong("RESPAWN_TIME")),
                 rs.getInt("MAX_SIZE"),
                 rs.getInt("MAX_COUNT"),
-                monstersTransformer.unserialize(rs.getString("MONSTERS")),
+                monstersTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("MONSTERS"))),
                 rs.getString("COMMENT"),
                 new Position(
                     rs.getInt("WIN_FIGHT_TELEPORT_MAP_ID"),

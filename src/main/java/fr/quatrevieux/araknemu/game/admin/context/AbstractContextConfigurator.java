@@ -20,20 +20,22 @@
 package fr.quatrevieux.araknemu.game.admin.context;
 
 import fr.quatrevieux.araknemu.game.admin.Command;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Configure a context by adding commands and sub-contexts
  * This class must be extended on a module
  */
 public abstract class AbstractContextConfigurator<C extends Context> implements Cloneable {
-    private SimpleContext context;
+    private @MonotonicNonNull SimpleContext context;
 
     /**
      * Define the context to be configured
      */
     @SuppressWarnings("unchecked")
     public final AbstractContextConfigurator<C> with(SimpleContext context) {
-        AbstractContextConfigurator<C> withContext =  null;
+        AbstractContextConfigurator<C> withContext = null;
 
         try {
             withContext = (AbstractContextConfigurator<C>) clone();
@@ -42,7 +44,7 @@ public abstract class AbstractContextConfigurator<C extends Context> implements 
             // Ignore: ContextConfigurator is Cloneable
         }
 
-        return withContext;
+        return NullnessUtil.castNonNull(withContext);
     }
 
     /**
@@ -53,8 +55,8 @@ public abstract class AbstractContextConfigurator<C extends Context> implements 
     /**
      * Add a new command to the context
      */
-    public final void add(Command command) {
-        context.add(command);
+    protected final void add(Command<?> command) {
+        NullnessUtil.castNonNull(context).add(command);
     }
 
     /**
@@ -63,7 +65,7 @@ public abstract class AbstractContextConfigurator<C extends Context> implements 
      * @param name The child name
      * @param child The child
      */
-    public final void add(String name, Context child) {
-        context.add(name, child);
+    protected final void add(String name, Context child) {
+        NullnessUtil.castNonNull(context).add(name, child);
     }
 }
