@@ -117,11 +117,22 @@ class ChallengeInvitationHandlerTest extends GameBaseCase {
     }
 
     @Test
-    void startNotOneSameMap() throws ContainerException {
+    void startNotOnSameMap() throws ContainerException {
         challenger.changeMap(
             container.get(ExplorationMapService.class).load(10540),
             123
         );
+
+        assertNull(invitation.start());
+
+        requestStack.assertLast(
+            new GameActionResponse("", ActionType.JOIN_FIGHT, initiator.id(), "p")
+        );
+    }
+
+    @Test
+    void startNotOnMap() throws ContainerException {
+        initiator.leave();
 
         assertNull(invitation.start());
 

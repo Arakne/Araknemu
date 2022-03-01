@@ -85,6 +85,8 @@ class GameNpcTest extends GameBaseCase {
 
     @Test
     void join() throws SQLException {
+        assertThrows(IllegalStateException.class, npc::cell);
+
         dataSet.pushMaps().pushSubAreas().pushAreas();
 
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);

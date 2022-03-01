@@ -28,6 +28,12 @@ class IpAddressTransformerTest {
     private IpAddressTransformer transformer = new IpAddressTransformer();
 
     @Test
+    void withNull() {
+        assertNull(transformer.serialize(null));
+        assertNull(transformer.unserialize(null));
+    }
+
+    @Test
     void serialize() {
         assertEquals("12.52.102.78", transformer.serialize(new IPAddressString("12.52.102.78")));
         assertEquals("12.52.102.78/24", transformer.serialize(new IPAddressString("12.52.102.78/24")));

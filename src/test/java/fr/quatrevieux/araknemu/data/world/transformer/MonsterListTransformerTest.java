@@ -24,11 +24,21 @@ import fr.quatrevieux.araknemu._test.TestCase;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class MonsterListTransformerTest extends TestCase {
+    @Test
+    void invalid() {
+        MonsterListTransformer transformer = new MonsterListTransformer();
+
+        assertThrows(IllegalArgumentException.class, () -> transformer.unserialize(null));
+        assertThrows(IllegalArgumentException.class, () -> transformer.unserialize(""));
+        assertThrows(UnsupportedOperationException.class, () -> transformer.serialize(Collections.emptyList()));
+    }
+
     @Test
     void unserialize() {
         MonsterListTransformer transformer = new MonsterListTransformer();

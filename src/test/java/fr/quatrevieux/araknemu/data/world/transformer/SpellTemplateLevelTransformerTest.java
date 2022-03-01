@@ -32,6 +32,7 @@ class SpellTemplateLevelTransformerTest extends TestCase {
     @Test
     void unserializeEmpty() {
         assertNull(transformer.unserialize(""));
+        assertNull(transformer.unserialize(null));
     }
 
     @Test
@@ -100,5 +101,10 @@ class SpellTemplateLevelTransformerTest extends TestCase {
     @Test
     void unserializeBadAreas() {
         assertThrows(IllegalArgumentException.class, () -> transformer.unserialize("265,7,,,4,0,0d0+7|265,8,,,4,0,0d0+8|2|0|0|50|100|false|false|false|false|0|0|0|5|Cc||18;19;3;1;41|9|false"));
+    }
+
+    @Test
+    void serialize() {
+        assertThrows(UnsupportedOperationException.class, () -> transformer.serialize(null));
     }
 }

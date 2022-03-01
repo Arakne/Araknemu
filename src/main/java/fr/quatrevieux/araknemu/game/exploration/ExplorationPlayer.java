@@ -190,6 +190,7 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
      */
     public void changeMap(ExplorationMap map, int cell) {
         this.map = null;
+        this.cell = null;
         player.setPosition(
             new Position(map.id(), cell)
         );
@@ -226,6 +227,7 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
             map.remove(this);
             dispatch(new MapLeaved(map));
             map = null;
+            cell = null;
         }
     }
 

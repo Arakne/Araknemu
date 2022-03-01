@@ -57,6 +57,16 @@ class FightPosTest extends CommandTestCase {
     }
 
     @Test
+    void notOnMap() throws SQLException, AdminException {
+        explorationPlayer().leave();
+
+        executeWithAdminUser("fightpos");
+        requestStack.assertLast(
+            new CommandResult(LogType.ERROR, "The player is not on map")
+        );
+    }
+
+    @Test
     void noFightPos() throws AdminException, SQLException {
         explorationPlayer().changeMap(container.get(ExplorationMapService.class).load(10300), 200);
 

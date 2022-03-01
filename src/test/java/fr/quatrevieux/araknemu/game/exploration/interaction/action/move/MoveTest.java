@@ -110,6 +110,22 @@ class MoveTest extends GameBaseCase {
     }
 
     @Test
+    void notOnMap() {
+        Move move = new Move(
+            player,
+            new Path<>(new Decoder<>(player.map())),
+            new PathValidator[] {new ValidateWalkable()}
+        );
+
+        player.leave();
+
+        move.setId(1);
+
+        assertThrows(IllegalStateException.class, () -> player.interactions().push(move), "The player is not on a map");
+        assertFalse(player.interactions().busy());
+    }
+
+    @Test
     void invalidStartCell() {
         player.changeCell(123);
 

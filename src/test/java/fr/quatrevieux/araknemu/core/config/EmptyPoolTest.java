@@ -14,23 +14,19 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2022 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.turn.action;
+package fr.quatrevieux.araknemu.core.config;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.NoSuchElementException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-class ActionTypeTest {
+class EmptyPoolTest {
     @Test
-    void byId() {
-        assertEquals(ActionType.CAST, ActionType.byId(300));
-        assertEquals(ActionType.MOVE, ActionType.byId(1));
-
-        assertThrows(NoSuchElementException.class, () -> ActionType.byId(404));
+    void values() {
+        assertFalse(new EmptyPool().has("foo"));
+        assertNull(new EmptyPool().get("foo"));
     }
 }

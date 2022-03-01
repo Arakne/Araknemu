@@ -54,6 +54,7 @@ class ExceptionHandlerTest extends CommandTestCase {
         );
         assertHandle(new CommandPermissionsException("TEST", EnumSet.of(Permission.ACCESS, Permission.MANAGE_PLAYER)), "Unauthorized command 'TEST', you need at least these permissions [ACCESS, MANAGE_PLAYER]");
         assertHandle(new ContextException("MY ERROR"), "Error during resolving context : MY ERROR");
+        assertHandle(new ContextException(), "Error during resolving context : fr.quatrevieux.araknemu.game.admin.exception.ContextException");
         assertHandle(new ContextNotFoundException("TEST"), "The context 'TEST' is not found");
         assertHandle(new Exception("my error"), "Error : java.lang.Exception: my error");
     }

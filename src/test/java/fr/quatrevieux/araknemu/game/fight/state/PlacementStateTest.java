@@ -98,6 +98,16 @@ class PlacementStateTest extends FightBaseCase {
     }
 
     @Test
+    void notStarted() {
+        assertThrows(IllegalStateException.class, state::listeners);
+        assertThrows(IllegalStateException.class, state::remainingTime);
+        assertThrows(JoinFightException.class, () -> state.joinTeam(fighter, fight.team(0)));
+        assertThrows(InvalidFightStateException.class, () -> state.leave(fighter));
+
+        state.changePlace(fighter, fight.map().get(0));
+    }
+
+    @Test
     void remainingTimeNotSupported() {
         state.start(fight);
         assertThrows(UnsupportedOperationException.class, () -> state.remainingTime());

@@ -52,4 +52,11 @@ class MonsterAiFactoryTest extends FightBaseCase {
     void createSuccess() {
         assertTrue(factory.create(fight.team(1).fighters().stream().findFirst().get()).isPresent());
     }
+
+    @Test
+    void createInvalidAiType() {
+        factory = new MonsterAiFactory();
+
+        assertThrows(IllegalArgumentException.class, () -> factory.create(fight.team(1).fighters().stream().findFirst().get()));
+    }
 }

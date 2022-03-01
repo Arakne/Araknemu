@@ -87,6 +87,9 @@ class ExplorationPlayerTest extends GameBaseCase {
             }
         };
 
+        assertThrows(IllegalStateException.class, () -> player.cell());
+        assertNull(player.map());
+
         player.dispatcher().add(listener);
         player.join(map);
 
@@ -128,6 +131,11 @@ class ExplorationPlayerTest extends GameBaseCase {
     }
 
     @Test
+    void moveNotOnMap() throws ContainerException {
+        assertThrows(IllegalArgumentException.class, () -> player.move(container.get(ExplorationMapService.class).load(10340).get(123), Direction.EAST));
+    }
+
+    @Test
     void leave() throws ContainerException {
         ExplorationMap map = container.get(ExplorationMapService.class).load(player.position().map());
         player.join(map);
@@ -152,6 +160,7 @@ class ExplorationPlayerTest extends GameBaseCase {
         assertFalse(map.creatures().contains(player));
         assertSame(map, ref.get());
         assertNull(player.map());
+        assertThrows(IllegalStateException.class, () -> player.cell());
     }
 
     @Test
@@ -169,6 +178,11 @@ class ExplorationPlayerTest extends GameBaseCase {
                 Collections.singleton(player.sprite())
             )
         );
+    }
+
+    @Test
+    void changeCellNotOnMap() throws ContainerException {
+        assertThrows(IllegalStateException.class, () -> player.changeCell(147));
     }
 
     @Test

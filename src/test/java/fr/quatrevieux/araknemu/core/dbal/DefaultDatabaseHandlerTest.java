@@ -51,6 +51,11 @@ class DefaultDatabaseHandlerTest extends TestCase {
     }
 
     @Test
+    void getWithInvalidDriver() {
+        assertThrows(IllegalArgumentException.class, () -> handler.get("invalid"));
+    }
+
+    @Test
     void getWillCreatePool() throws SQLException {
         ConnectionPool pool = handler.get("realm");
 

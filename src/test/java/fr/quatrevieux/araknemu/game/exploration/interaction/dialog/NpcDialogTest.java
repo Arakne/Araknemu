@@ -38,7 +38,10 @@ import org.junit.jupiter.api.Test;
 import java.util.Collections;
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class NpcDialogTest extends GameBaseCase {
     private ExplorationPlayer player;
@@ -91,6 +94,18 @@ class NpcDialogTest extends GameBaseCase {
         assertFalse(player.interactions().interacting());
 
         requestStack.assertAll(new DialogCreationError());
+    }
+
+    @Test
+    void forQuestionNotStarted() {
+        GameNpc npc = new GameNpc(
+            dataSet.refresh(new Npc(472, 0, null, null, null)),
+            dataSet.refresh(new NpcTemplate(878, 0, 0, 0, null, null, null, 0, 0, null)),
+            Collections.emptyList(),
+            Collections.emptyList()
+        );
+
+        assertThrows(IllegalArgumentException.class, () -> new NpcDialog(player, npc).forQuestion(1));
     }
 
     @Test

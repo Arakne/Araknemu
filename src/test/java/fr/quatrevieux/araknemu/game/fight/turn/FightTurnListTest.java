@@ -58,6 +58,12 @@ class FightTurnListTest extends FightBaseCase {
     }
 
     @Test
+    void notInitialized() {
+        assertThrows(IllegalStateException.class, () -> turnList.fighters());
+        assertThrows(IllegalStateException.class, () -> turnList.remove(null));
+    }
+
+    @Test
     void initWillOrderFighters() {
         turnList.init(new AlternateTeamFighterOrder());
 

@@ -37,6 +37,8 @@ class FightPlacesTransformerTest extends TestCase {
 
         assertCount(9, places[0]);
         assertCount(10, places[1]);
+
+        assertCount(0, transformer.unserialize(null));
     }
 
     @Test

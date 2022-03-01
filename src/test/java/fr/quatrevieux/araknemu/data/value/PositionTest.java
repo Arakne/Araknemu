@@ -38,6 +38,7 @@ class PositionTest {
         Position position = new Position(1254, 235);
 
         assertNotEquals(null, position);
+        assertNotEquals(position, null);
         assertNotEquals(new Position(74, 52), position);
         assertEquals(position, position);
         assertEquals(new Position(1254, 235), position);

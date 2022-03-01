@@ -288,6 +288,13 @@ class PlayerFighterTest extends FightBaseCase {
     }
 
     @Test
+    void notInFight() {
+        assertThrows(IllegalStateException.class, () -> fighter.fight());
+        assertThrows(IllegalStateException.class, () -> fighter.init());
+        assertThrows(IllegalStateException.class, () -> fighter.team());
+    }
+
+    @Test
     void registerUnregister() {
         fighter.register(session);
         assertSame(fighter, session.fighter());

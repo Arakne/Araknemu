@@ -170,6 +170,20 @@ class NpcExchangePartyProcessorTest extends GameBaseCase {
     }
 
     @Test
+    void processInvalidShouldDoNothing() throws SQLException {
+        ExplorationPlayer player = explorationPlayer();
+        PlayerExchangeStorage storage = new PlayerExchangeStorage(player);
+        storage.dispatcher().register(processor);
+
+        ExchangePartyProcessor otherProcessor = Mockito.mock(ExchangePartyProcessor.class);
+
+        processor.process(otherProcessor);
+
+        Mockito.verify(otherProcessor, Mockito.never()).addKamas(Mockito.anyInt());
+        Mockito.verify(otherProcessor, Mockito.never()).addItem(Mockito.any(), Mockito.anyInt());
+    }
+
+    @Test
     void processWithoutKamas() throws SQLException {
         ExplorationPlayer player = explorationPlayer();
         PlayerExchangeStorage storage = new PlayerExchangeStorage(player);

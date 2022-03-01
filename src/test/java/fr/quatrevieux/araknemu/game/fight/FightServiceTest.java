@@ -35,6 +35,7 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.builder.BaseBuilder;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
+import fr.quatrevieux.araknemu.game.fight.builder.FightBuilder;
 import fr.quatrevieux.araknemu.game.fight.event.FightCreated;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
@@ -88,6 +89,12 @@ class FightServiceTest extends FightBaseCase {
     @Test
     void handler() {
         assertNotNull(service.handler(ChallengeBuilder.class));
+        assertThrows(NoSuchElementException.class, () -> service.handler(new fr.quatrevieux.araknemu.game.fight.builder.FightBuilder() {
+            @Override
+            public Fight build(int fightId) {
+                return null;
+            }
+        }.getClass()));
     }
 
     @Test
@@ -149,6 +156,8 @@ class FightServiceTest extends FightBaseCase {
     @Test
     void remove() throws Exception {
         Fight fight = createFight(false);
+
+        service.remove(fight); // No-op (not yet on map)
 
         service.created(fight);
         service.remove(fight);

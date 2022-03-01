@@ -52,4 +52,11 @@ class LinkTest {
         assertEquals("<u><a href='asfunction:onHref,ExecCmd,help command,true'>command</a></u>", Link.Type.HELP.create("command").toString());
         assertEquals("<u><a href='asfunction:onHref,ShowPlayerPopupMenu,player'>player</a></u>", Link.Type.PLAYER.create("player").toString());
     }
+
+    @Test
+    void invalid() {
+        assertThrows(IllegalStateException.class, () -> new Link().toString());
+        assertThrows(IllegalStateException.class, () -> new Link().text("foo").toString());
+        assertThrows(IllegalStateException.class, () -> new Link().arguments("foo").toString());
+    }
 }

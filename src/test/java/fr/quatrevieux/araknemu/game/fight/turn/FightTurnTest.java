@@ -105,6 +105,8 @@ class FightTurnTest extends FightBaseCase {
 
     @Test
     void startWillInitPoints() {
+        assertThrows(IllegalStateException.class, turn::points);
+
         turn.start();
 
         assertInstanceOf(FighterTurnPoints.class, turn.points());

@@ -32,6 +32,7 @@ import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.FightPathValidator;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.StopOnEnemyValidator;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.TackleValidator;
+import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -229,6 +230,49 @@ class MoveTest extends FightBaseCase {
         assertInstanceOf(MoveFailed.class, result);
         assertEquals(3, MoveFailed.class.cast(result).lostMovementPoints());
         assertEquals(6, MoveFailed.class.cast(result).lostActionPoints());
+        assertEquals(185, MoveFailed.class.cast(result).target().id());
+        assertEquals(1, MoveFailed.class.cast(result).path().size());
+
+        assertFalse(result.success());
+        assertSame(fighter, result.performer());
+        assertSame(fighter, result.performer());
+        assertEquals(104, result.action());
+        assertArrayEquals(new Object[0], result.arguments());
+
+        result.apply(turn);
+
+        assertEquals(0, turn.points().movementPoints());
+        assertEquals(0, turn.points().actionPoints());
+    }
+
+    @Test
+    void startWithTackleWithoutActionPoint() {
+        fighter.turn().points().removeActionPoints(6);
+
+        Move move = new Move(turn.fighter(),
+            new Path<>(
+                new Decoder<>(fight.map()),
+                Arrays.asList(
+                    new PathStep<>(fight.map().get(185), Direction.EAST),
+                    new PathStep<>(fight.map().get(199), Direction.SOUTH_WEST),
+                    new PathStep<>(fight.map().get(213), Direction.SOUTH_WEST),
+                    new PathStep<>(fight.map().get(198), Direction.NORTH_WEST)
+                )
+            ),
+            new FightPathValidator[] {
+                new StopOnEnemyValidator(),
+                new TackleValidator(),
+            }
+        );
+
+        other.fighter().characteristics().alter(Characteristic.AGILITY, 500);
+        other.fighter().move(fight.map().get(170));
+
+        ActionResult result = move.start();
+
+        assertInstanceOf(MoveFailed.class, result);
+        assertEquals(3, MoveFailed.class.cast(result).lostMovementPoints());
+        assertEquals(0, MoveFailed.class.cast(result).lostActionPoints());
         assertEquals(185, MoveFailed.class.cast(result).target().id());
         assertEquals(1, MoveFailed.class.cast(result).path().size());
 
