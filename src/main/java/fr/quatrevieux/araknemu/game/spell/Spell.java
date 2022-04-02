@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.spell;
 
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
+import org.checkerframework.checker.index.qual.Positive;
 
 /**
  * Interface for spells
@@ -43,7 +44,7 @@ public interface Spell extends Castable {
     /**
      * Get the spell level in interval [1-6]
      */
-    public int level();
+    public @Positive int level();
 
     /**
      * Minimal player level for use the spell

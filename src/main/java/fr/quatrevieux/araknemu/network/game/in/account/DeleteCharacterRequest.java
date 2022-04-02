@@ -20,9 +20,10 @@
 package fr.quatrevieux.araknemu.network.game.in.account;
 
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.PacketTokenizer;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
-import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Ask for character deletion
@@ -49,16 +50,16 @@ public final class DeleteCharacterRequest implements Packet {
     public static final class Parser implements SinglePacketParser<DeleteCharacterRequest> {
         @Override
         public DeleteCharacterRequest parse(String input) throws ParsePacketException {
-            final String[] parts = StringUtils.split(input, "|", 2);
+            final PacketTokenizer tokenizer = tokenize(input, '|');
 
             return new DeleteCharacterRequest(
-                Integer.parseInt(parts[0]),
-                parts.length == 2 ? parts[1] : ""
+                tokenizer.nextInt(),
+                tokenizer.nextPartOrDefault("")
             );
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "AD";
         }
     }

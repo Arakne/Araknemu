@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.handler.fight;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.fight.FighterReady;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Change the ready state of the fighter
@@ -29,7 +30,7 @@ import fr.quatrevieux.araknemu.network.game.in.fight.FighterReady;
 public final class ChangeFighterReadyState implements PacketHandler<GameSession, FighterReady> {
     @Override
     public void handle(GameSession session, FighterReady packet) {
-        session.fighter().setReady(packet.ready());
+        NullnessUtil.castNonNull(session.fighter()).setReady(packet.ready());
     }
 
     @Override

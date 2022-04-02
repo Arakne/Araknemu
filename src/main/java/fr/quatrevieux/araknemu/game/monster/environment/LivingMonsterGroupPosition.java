@@ -29,6 +29,9 @@ import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilder;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroupFactory;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -47,7 +50,7 @@ public final class LivingMonsterGroupPosition {
     private final MonsterGroupData data;
     private final SpawnCellSelector cellSelector;
 
-    private ExplorationMap map;
+    private @MonotonicNonNull ExplorationMap map;
 
     public LivingMonsterGroupPosition(MonsterGroupFactory factory, MonsterEnvironmentService environmentService, FightService fightService, MonsterGroupData data, SpawnCellSelector cellSelector, boolean fixed) {
         this.factory = factory;
@@ -79,6 +82,10 @@ public final class LivingMonsterGroupPosition {
      * Note: this method will not check the max count of monsters : if called manually, the group count can exceed max count
      */
     public void spawn() {
+        if (map == null) {
+            throw new IllegalStateException("Monster group is not on map");
+        }
+
         map.add(factory.create(data, this));
     }
 
@@ -89,6 +96,10 @@ public final class LivingMonsterGroupPosition {
      * and this method will do nothing if the map is already full
      */
     public void respawn() {
+        if (map == null) {
+            throw new IllegalStateException("Monster group is not on map");
+        }
+
         if (groupStream().count() < data.maxCount()) {
             map.add(factory.create(data, this));
         }
@@ -108,7 +119,7 @@ public final class LivingMonsterGroupPosition {
     /**
      * Find the group spawn cell
      *
-     * If the cell is fixed (not -1 on {@link MonsterGroupPosition#position() cell}), this cell is returned
+     * If the cell is fixed (not -1 on {@link MonsterGroupPosition#cell()}), this cell is returned
      * If not, a random free (without creatures, objects, and walkable) cell is returned
      *
      * @see fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell#free()
@@ -135,6 +146,9 @@ public final class LivingMonsterGroupPosition {
      * @return The created fight
      */
     public Fight startFight(MonsterGroup group, ExplorationPlayer player) {
+        // The existence of the MonsterGroup instance ensure that the map is already set
+        final ExplorationMap map = NullnessUtil.castNonNull(this.map);
+
         map.remove(group);
         environmentService.respawn(this, data.respawnTime());
 
@@ -150,6 +164,7 @@ public final class LivingMonsterGroupPosition {
     /**
      * Get stream of groups related to the current group position
      */
+    @RequiresNonNull("map")
     private Stream<MonsterGroup> groupStream() {
         return map.creatures().stream()
             .filter(MonsterGroup.class::isInstance)

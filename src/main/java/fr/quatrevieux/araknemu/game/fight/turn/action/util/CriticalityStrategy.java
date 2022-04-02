@@ -19,6 +19,9 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.util;
 
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
+
 /**
  * Compute the criticality rate
  */
@@ -30,7 +33,7 @@ public interface CriticalityStrategy {
      *
      * @return Get the critical hit rate. The lower value is 2 (1/2). Higher the value is, lower is the critical probability
      */
-    public int hitRate(int base);
+    public @Positive int hitRate(@Positive int base);
 
     /**
      * Compute the critical failure rate
@@ -39,7 +42,7 @@ public interface CriticalityStrategy {
      *
      * @return Get the critical failure rate. The lower value is 2 (1/2).
      */
-    public int failureRate(int base);
+    public @Positive int failureRate(@Positive int base);
 
     /**
      * Random check is its a critical hit
@@ -48,7 +51,7 @@ public interface CriticalityStrategy {
      *
      * @return true on critical
      */
-    public boolean hit(int baseRate);
+    public boolean hit(@NonNegative int baseRate);
 
     /**
      * Random check is its a critical failure
@@ -57,5 +60,5 @@ public interface CriticalityStrategy {
      *
      * @return true on failure
      */
-    public boolean failed(int baseRate);
+    public boolean failed(@NonNegative int baseRate);
 }

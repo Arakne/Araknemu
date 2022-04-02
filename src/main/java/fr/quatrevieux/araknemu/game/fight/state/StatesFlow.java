@@ -20,21 +20,25 @@
 package fr.quatrevieux.araknemu.game.fight.state;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
+import org.checkerframework.checker.index.qual.IndexFor;
+import org.checkerframework.common.value.qual.MinLen;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * Handle fight states flow
  */
 public final class StatesFlow {
-    private final FightState[] states;
-    private int current = 0;
+    private final FightState @MinLen(1) [] states;
+    private @IndexFor("states") int current = 0;
 
-    public StatesFlow(FightState... states) {
+    public StatesFlow(FightState @MinLen(1)... states) {
         this.states = states;
     }
 
     /**
      * Get the current fight state
      */
+    @Pure
     public FightState current() {
         return states[current];
     }
@@ -42,6 +46,7 @@ public final class StatesFlow {
     /**
      * Start the next state
      */
+    @SuppressWarnings({"array.access.unsafe.high", "unary.increment"}) // Let java fails if current is too high
     public void next(Fight fight) {
         states[++current].start(fight);
     }

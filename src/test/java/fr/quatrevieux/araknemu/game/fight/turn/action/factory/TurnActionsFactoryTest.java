@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastFactory;
+import fr.quatrevieux.araknemu.game.fight.turn.action.cast.SpellNotFound;
 import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombat;
 import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombatFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
@@ -61,21 +62,26 @@ class TurnActionsFactoryTest extends FightBaseCase {
         player.fighter().move(fight.map().get(185));
 
         assertInstanceOf(Move.class, factory.create(ActionType.MOVE, new String[] {"ddvfdg"}));
+        assertThrows(IllegalArgumentException.class, () -> factory.create(ActionType.MOVE, new String[] {}));
     }
 
     @Test
     void createCast() throws Exception {
         assertInstanceOf(Cast.class, factory.create(ActionType.CAST, new String[] {"3", "123"}));
+        assertThrows(IllegalArgumentException.class, () -> factory.create(ActionType.CAST, new String[] {"3"}));
+        assertThrows(IllegalArgumentException.class, () -> factory.create(ActionType.CAST, new String[] {"3", "1000"}));
     }
 
     @Test
     void createCastSpellNotFound() throws Exception {
-        assertInstanceOf(Cast.class, factory.create(ActionType.CAST, new String[] {"7458", "123"}));
+        assertInstanceOf(SpellNotFound.class, factory.create(ActionType.CAST, new String[] {"7458", "123"}));
     }
 
     @Test
     void createCloseCombat() throws Exception {
         assertInstanceOf(CloseCombat.class, factory.create(ActionType.CLOSE_COMBAT, new String[] {"123"}));
+        assertThrows(IllegalArgumentException.class, () -> factory.create(ActionType.CLOSE_COMBAT, new String[] {}));
+        assertThrows(IllegalArgumentException.class, () -> factory.create(ActionType.CLOSE_COMBAT, new String[] {"1000"}));
     }
 
     @Test

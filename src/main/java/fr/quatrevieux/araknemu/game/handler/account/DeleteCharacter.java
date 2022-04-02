@@ -24,10 +24,12 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.account.AccountCharacter;
 import fr.quatrevieux.araknemu.game.account.CharactersService;
+import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.account.DeleteCharacterRequest;
 import fr.quatrevieux.araknemu.network.game.out.account.CharacterDeleted;
 import fr.quatrevieux.araknemu.network.game.out.account.CharactersList;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Delete the character
@@ -43,15 +45,17 @@ public final class DeleteCharacter implements PacketHandler<GameSession, DeleteC
 
     @Override
     public void handle(GameSession session, DeleteCharacterRequest packet) throws Exception {
+        final GameAccount account = NullnessUtil.castNonNull(session.account());
+
         try {
             final AccountCharacter character = service.get(
-                session.account(),
+                account,
                 packet.id()
             );
 
             if (
                 character.level() >= configuration.deleteAnswerLevel()
-                && !session.account().checkAnswer(packet.answer())
+                && !account.checkAnswer(packet.answer())
             ) {
                 throw new Exception("Bad secret answer");
             }
@@ -64,8 +68,8 @@ public final class DeleteCharacter implements PacketHandler<GameSession, DeleteC
         session.send(new CharacterDeleted(true));
         session.send(
             new CharactersList(
-                session.account().remainingTime(),
-                service.list(session.account())
+                account.remainingTime(),
+                service.list(account)
             )
         );
     }

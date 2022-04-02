@@ -28,7 +28,12 @@ import fr.quatrevieux.araknemu.data.living.entity.player.PlayerItem;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerItemRepository;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
+import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
+import fr.quatrevieux.araknemu.util.Asserter;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
+import org.checkerframework.common.value.qual.IntRange;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -188,15 +193,23 @@ final class SqlPlayerItemRepository implements PlayerItemRepository {
                 rs.getInt("PLAYER_ID"),
                 rs.getInt("ITEM_ENTRY_ID"),
                 rs.getInt("ITEM_TEMPLATE_ID"),
-                effectsTransformer.unserialize(rs.getString("ITEM_EFFECTS")),
-                rs.getInt("QUANTITY"),
-                rs.getInt("POSITION")
+                effectsTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("ITEM_EFFECTS"))),
+                Asserter.assertPositive(rs.getInt("QUANTITY")), // Quantity must be positive (cannot be = 0)
+                checkPosition(rs.getInt("POSITION"))
             );
         }
 
         @Override
         public PlayerItem fillKeys(PlayerItem entity, ResultSet keys) throws SQLException {
             throw new UnsupportedOperationException();
+        }
+
+        private @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int checkPosition(int position) {
+            if (position < -1 || position > InventorySlots.SLOT_MAX) {
+                return ItemEntry.DEFAULT_POSITION;
+            }
+
+            return position;
         }
     }
 }

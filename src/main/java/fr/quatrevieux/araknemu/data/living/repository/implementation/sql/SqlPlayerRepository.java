@@ -33,6 +33,8 @@ import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.value.ServerCharacters;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
+import fr.quatrevieux.araknemu.util.Asserter;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -166,12 +168,12 @@ final class SqlPlayerRepository implements PlayerRepository {
     }
 
     @Override
-    public boolean nameExists(Player player) {
+    public boolean nameExists(int serverId, String name) {
         return utils.aggregate(
             "SELECT COUNT(*) FROM PLAYER WHERE PLAYER_NAME = ? AND SERVER_ID = ?",
             stmt -> {
-                stmt.setString(1, player.name());
-                stmt.setInt(2,    player.serverId());
+                stmt.setString(1, name);
+                stmt.setInt(2, serverId);
             }
         ) > 0;
     }
@@ -281,44 +283,51 @@ final class SqlPlayerRepository implements PlayerRepository {
     }
 
     private class Loader implements RepositoryUtils.Loader<Player> {
+        private final Gender[] genders = Gender.values();
+
         @Override
         public Player create(ResultSet rs) throws SQLException {
             return new Player(
                 rs.getInt("PLAYER_ID"),
                 rs.getInt("ACCOUNT_ID"),
                 rs.getInt("SERVER_ID"),
-                rs.getString("PLAYER_NAME"),
-                Race.byId(rs.getInt("RACE")),
-                Gender.values()[rs.getInt("SEX")],
-                new Colors(
-                    rs.getInt("COLOR1"),
-                    rs.getInt("COLOR2"),
-                    rs.getInt("COLOR3")
-                ),
-                rs.getInt("PLAYER_LEVEL"),
+                NullnessUtil.castNonNull(rs.getString("PLAYER_NAME")),
+                Race.byId(Asserter.assertPositive(rs.getInt("RACE"))),
+                genders[Asserter.assertIndexFor(genders, rs.getInt("SEX"))],
+                createColors(rs),
+                Asserter.assertPositive(rs.getInt("PLAYER_LEVEL")),
                 characteristicsTransformer.unserialize(
-                    rs.getString("PLAYER_STATS")
+                    NullnessUtil.castNonNull(rs.getString("PLAYER_STATS"))
                 ),
                 new Position(
-                    rs.getInt("MAP_ID"),
-                    rs.getInt("CELL_ID")
+                    Asserter.assertNonNegative(rs.getInt("MAP_ID")),
+                    Asserter.assertNonNegative(rs.getInt("CELL_ID"))
                 ),
-                channelsTransformer.unserialize(rs.getString("CHANNELS")),
-                rs.getInt("BOOST_POINTS"),
-                rs.getInt("SPELL_POINTS"),
-                rs.getInt("LIFE_POINTS"),
-                rs.getLong("PLAYER_EXPERIENCE"),
+                channelsTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("CHANNELS"))),
+                Asserter.assertNonNegative(rs.getInt("BOOST_POINTS")),
+                Asserter.assertNonNegative(rs.getInt("SPELL_POINTS")),
+                Asserter.assertNonNegative(rs.getInt("LIFE_POINTS")),
+                Asserter.assertNonNegative(rs.getLong("PLAYER_EXPERIENCE")),
                 new Position(
-                    rs.getInt("SAVED_MAP_ID"),
-                    rs.getInt("SAVED_CELL_ID")
+                    Asserter.assertNonNegative(rs.getInt("SAVED_MAP_ID")),
+                    Asserter.assertNonNegative(rs.getInt("SAVED_CELL_ID"))
                 ),
-                rs.getLong("PLAYER_KAMAS")
+                Asserter.assertNonNegative(rs.getLong("PLAYER_KAMAS"))
             );
         }
 
         @Override
         public Player fillKeys(Player entity, ResultSet keys) throws SQLException {
             return entity.withId(keys.getInt(1));
+        }
+
+        @SuppressWarnings("argument") // Ignore invalid colors error
+        private Colors createColors(ResultSet rs) throws SQLException {
+            return new Colors(
+                rs.getInt("COLOR1"),
+                rs.getInt("COLOR2"),
+                rs.getInt("COLOR3")
+            );
         }
     }
 }

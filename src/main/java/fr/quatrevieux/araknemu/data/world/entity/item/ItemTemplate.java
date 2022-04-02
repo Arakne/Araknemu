@@ -20,6 +20,8 @@
 package fr.quatrevieux.araknemu.data.world.entity.item;
 
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 
@@ -32,13 +34,13 @@ public final class ItemTemplate {
     private final String name;
     private final int level;
     private final List<ItemTemplateEffectEntry> effects;
-    private final int weight;
+    private final @NonNegative int weight;
     private final String condition;
     private final int itemSet;
-    private final String weaponInfo;
-    private final int price;
+    private final @Nullable String weaponInfo;
+    private final @NonNegative int price;
 
-    public ItemTemplate(int id, int type, String name, int level, List<ItemTemplateEffectEntry> effects, int weight, String condition, int itemSet, String weaponInfo, int price) {
+    public ItemTemplate(int id, int type, String name, int level, List<ItemTemplateEffectEntry> effects, @NonNegative int weight, String condition, int itemSet, @Nullable String weaponInfo, @NonNegative int price) {
         this.id = id;
         this.type = type;
         this.name = name;
@@ -71,7 +73,7 @@ public final class ItemTemplate {
         return effects;
     }
 
-    public int weight() {
+    public @NonNegative int weight() {
         return weight;
     }
 
@@ -83,16 +85,19 @@ public final class ItemTemplate {
         return itemSet;
     }
 
-    public String weaponInfo() {
+    /**
+     * Get weapon characteristics, like AP cost, range...
+     */
+    public @Nullable String weaponInfo() {
         return weaponInfo;
     }
 
-    public int price() {
+    public @NonNegative int price() {
         return price;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

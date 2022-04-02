@@ -27,8 +27,10 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.PathValidationException;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.validator.PathValidator;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Move the player
@@ -48,6 +50,12 @@ public final class Move implements BlockingAction {
 
     @Override
     public void start(ActionQueue queue) {
+        final ExplorationMap map = player.map();
+
+        if (map == null) {
+            throw new IllegalStateException("The player is not on a map");
+        }
+
         if (path.isEmpty()) {
             throw new IllegalArgumentException("Empty path");
         }
@@ -72,11 +80,11 @@ public final class Move implements BlockingAction {
         }
 
         queue.setPending(this);
-        player.map().send(new GameActionResponse(this));
+        map.send(new GameActionResponse(this));
     }
 
     @Override
-    public void cancel(String argument) {
+    public void cancel(@Nullable String argument) {
         if (argument == null) {
             return;
         }

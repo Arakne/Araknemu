@@ -24,7 +24,8 @@ import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AddCharacterRequestTest {
     @Test
@@ -52,6 +53,13 @@ class AddCharacterRequestTest {
     void parseInvalidRace() {
         AddCharacterRequest.Parser parser = new AddCharacterRequest.Parser();
 
-        assertThrows(IndexOutOfBoundsException.class, () -> parser.parse("bob|0|1|145|541|123"));
+        assertThrows(ParsePacketException.class, () -> parser.parse("bob|0|1|145|541|123"));
+    }
+    @Test
+    void parseInvalidColor() {
+        AddCharacterRequest.Parser parser = new AddCharacterRequest.Parser();
+
+        assertThrows(ParsePacketException.class, () -> parser.parse("bob|5|1|-5|541|123"));
+        assertThrows(ParsePacketException.class, () -> parser.parse("bob|5|1|1000000000|541|123"));
     }
 }

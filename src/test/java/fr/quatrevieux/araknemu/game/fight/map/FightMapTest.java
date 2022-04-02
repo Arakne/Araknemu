@@ -25,9 +25,13 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FightMapTest extends GameBaseCase {
     private FightMap map;
@@ -86,6 +90,8 @@ class FightMapTest extends GameBaseCase {
     void startPlaces() throws ContainerException {
         assertEquals(container.get(MapTemplateRepository.class).get(10340).fightPlaces()[0], map.startPlaces(0));
         assertEquals(container.get(MapTemplateRepository.class).get(10340).fightPlaces()[1], map.startPlaces(1));
+        assertEquals(Collections.emptyList(), map.startPlaces(2));
+        assertEquals(Collections.emptyList(), map.startPlaces(10));
     }
 
     @Test
@@ -93,12 +99,5 @@ class FightMapTest extends GameBaseCase {
         assertEquals(17, map.dimensions().height());
         assertEquals(15, map.dimensions().width());
         assertEquals(479, map.size());
-    }
-
-    @Test
-    void destroy() {
-        map.destroy();
-
-        assertEquals(0, map.size());
     }
 }

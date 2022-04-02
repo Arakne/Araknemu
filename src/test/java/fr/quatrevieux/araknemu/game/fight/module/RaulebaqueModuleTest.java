@@ -31,6 +31,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  *
@@ -62,6 +63,8 @@ class RaulebaqueModuleTest extends FightBaseCase {
     void startPositions() throws Exception {
         Fight fight = createFight(false);
         RaulebaqueModule module = new RaulebaqueModule(fight);
+
+        assertThrows(IllegalStateException.class, () -> module.startPositions());
 
         fight.register(module);
         fight.nextState();

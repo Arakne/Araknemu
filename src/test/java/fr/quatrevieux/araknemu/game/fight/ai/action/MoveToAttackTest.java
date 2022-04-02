@@ -20,14 +20,17 @@
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class MoveToAttackTest extends AiBaseCase {
     @Override
@@ -36,6 +39,11 @@ class MoveToAttackTest extends AiBaseCase {
         super.setUp();
 
         action = MoveToAttack.nearest(container.get(Simulator.class));
+    }
+
+    @Test
+    void generateNotInitialized() {
+        assertFalse(action.generate(Mockito.mock(AI.class)).isPresent());
     }
 
     @Test

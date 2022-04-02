@@ -22,18 +22,19 @@ package fr.quatrevieux.araknemu.game.admin.executor.argument;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Handle commands without arguments, which use {@link Void} as argument type
  */
 public final class VoidHydrator implements ArgumentsHydrator {
     @Override
-    public <A> A hydrate(Command<A> command, A commandArguments, CommandParser.Arguments parsedArguments) throws Exception {
+    public <@Nullable A> A hydrate(Command<A> command, @Nullable A commandArguments, CommandParser.Arguments parsedArguments) throws Exception {
         return null;
     }
 
     @Override
-    public <A> boolean supports(Command<A> command, A commandArguments) {
+    public <A> boolean supports(Command<A> command, @Nullable A commandArguments) {
         if (commandArguments != null) {
             return false;
         }

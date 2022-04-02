@@ -26,17 +26,23 @@ import fr.quatrevieux.araknemu.core.config.PoolUtils;
 /**
  * Configuration module for database system
  */
-public final class DatabaseConfiguration implements ConfigurationModule {
-    private PoolUtils pool;
+public final class DatabaseConfiguration {
+    public static final ConfigurationModule<DatabaseConfiguration> MODULE = new ConfigurationModule<DatabaseConfiguration>() {
+        @Override
+        public DatabaseConfiguration create(Pool pool) {
+            return new DatabaseConfiguration(pool);
+        }
 
-    @Override
-    public void setPool(Pool pool) {
+        @Override
+        public String name() {
+            return "database";
+        }
+    };
+
+    private final PoolUtils pool;
+
+    public DatabaseConfiguration(Pool pool) {
         this.pool = new PoolUtils(pool);
-    }
-
-    @Override
-    public String name() {
-        return "database";
     }
 
     /**

@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.transformer;
 
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
  * Adapter for transform immutable characteristics
@@ -28,12 +29,12 @@ public final class ImmutableCharacteristicsTransformer implements Transformer<Ch
     private final CharacteristicsTransformer inner = new CharacteristicsTransformer();
 
     @Override
-    public String serialize(Characteristics value) {
+    public @PolyNull String serialize(@PolyNull Characteristics value) {
         return inner.serialize(value);
     }
 
     @Override
-    public Characteristics unserialize(String serialize) {
+    public @PolyNull Characteristics unserialize(@PolyNull String serialize) {
         return inner.unserialize(serialize);
     }
 }

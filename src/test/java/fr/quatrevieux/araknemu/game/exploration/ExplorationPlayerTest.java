@@ -87,6 +87,9 @@ class ExplorationPlayerTest extends GameBaseCase {
             }
         };
 
+        assertThrows(IllegalStateException.class, () -> player.cell());
+        assertNull(player.map());
+
         player.dispatcher().add(listener);
         player.join(map);
 
@@ -99,6 +102,14 @@ class ExplorationPlayerTest extends GameBaseCase {
         ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
 
         assertThrows(IllegalArgumentException.class, () -> player.join(map));
+    }
+
+    @Test
+    void joinInvalidCell() throws ContainerException {
+        player.player().setPosition(new Position(10300, 1000));
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10300);
+
+        assertThrows(IllegalStateException.class, () -> player.join(map));
     }
 
     @Test
@@ -128,6 +139,11 @@ class ExplorationPlayerTest extends GameBaseCase {
     }
 
     @Test
+    void moveNotOnMap() throws ContainerException {
+        assertThrows(IllegalArgumentException.class, () -> player.move(container.get(ExplorationMapService.class).load(10340).get(123), Direction.EAST));
+    }
+
+    @Test
     void leave() throws ContainerException {
         ExplorationMap map = container.get(ExplorationMapService.class).load(player.position().map());
         player.join(map);
@@ -152,6 +168,7 @@ class ExplorationPlayerTest extends GameBaseCase {
         assertFalse(map.creatures().contains(player));
         assertSame(map, ref.get());
         assertNull(player.map());
+        assertThrows(IllegalStateException.class, () -> player.cell());
     }
 
     @Test
@@ -169,6 +186,22 @@ class ExplorationPlayerTest extends GameBaseCase {
                 Collections.singleton(player.sprite())
             )
         );
+    }
+
+    @Test
+    void changeCellInvalidCell() throws ContainerException {
+        ExplorationMap map = container.get(ExplorationMapService.class).load(player.position().map());
+        player.join(map);
+
+        assertThrows(IllegalArgumentException.class, () -> player.changeCell(1000));
+
+        assertEquals(200, player.position().cell());
+        assertEquals(map.get(200), player.cell());
+    }
+
+    @Test
+    void changeCellNotOnMap() throws ContainerException {
+        assertThrows(IllegalStateException.class, () -> player.changeCell(147));
     }
 
     @Test

@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -173,8 +174,8 @@ final class SqlConnectionLogRepository implements ConnectionLogRepository {
         public ConnectionLog create(ResultSet rs) throws SQLException {
             final ConnectionLog log = new ConnectionLog(
                 rs.getInt("ACCOUNT_ID"),
-                instantTransformer.unserialize(rs.getString("START_DATE")),
-                rs.getString("IP_ADDRESS")
+                instantTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("START_DATE"))),
+                NullnessUtil.castNonNull(rs.getString("IP_ADDRESS"))
             );
 
             log.setEndDate(instantTransformer.unserialize(rs.getString("END_DATE")));

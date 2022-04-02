@@ -68,11 +68,9 @@ public final class AccountService implements EventsSubscriber {
      * @param accountId Account race
      */
     public boolean isLogged(int accountId) {
-        if (!accounts.containsKey(accountId)) {
-            return false;
-        }
+        final GameAccount account = accounts.get(accountId);
 
-        return accounts.get(accountId).isLogged();
+        return account != null && account.isLogged();
     }
 
     /**
@@ -87,8 +85,10 @@ public final class AccountService implements EventsSubscriber {
         final Map<Integer, GameAccount> loadedAccounts = new HashMap<>();
         final int[] toLoad = Arrays.stream(ids)
             .filter(id -> {
-                if (accounts.containsKey(id)) {
-                    loadedAccounts.put(id, accounts.get(id));
+                final GameAccount account = accounts.get(id);
+
+                if (account != null) {
+                    loadedAccounts.put(id, account);
                     return false;
                 }
 

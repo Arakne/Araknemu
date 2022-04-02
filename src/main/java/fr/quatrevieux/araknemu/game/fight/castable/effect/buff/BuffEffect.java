@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.SpellEffectArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Overrides effect parameters for buff effect
@@ -30,9 +31,9 @@ public final class BuffEffect implements SpellEffect {
     private final SpellEffect baseEffect;
 
     private final int effect;
-    private final int value;
+    private final @NonNegative int value;
 
-    private BuffEffect(SpellEffect baseEffect, int effect, int value) {
+    private BuffEffect(SpellEffect baseEffect, int effect, @NonNegative int value) {
         this.baseEffect = baseEffect;
         this.effect = effect;
         this.value = value;
@@ -44,12 +45,12 @@ public final class BuffEffect implements SpellEffect {
     }
 
     @Override
-    public int min() {
+    public @NonNegative int min() {
         return value;
     }
 
     @Override
-    public int max() {
+    public @NonNegative int max() {
         return 0;
     }
 
@@ -59,18 +60,18 @@ public final class BuffEffect implements SpellEffect {
     }
 
     @Override
-    public int duration() {
+    public @NonNegative int duration() {
         return baseEffect.duration();
     }
 
     @Override
-    public int probability() {
+    public @NonNegative int probability() {
         return 0;
     }
 
     @Override
     public String text() {
-        return null;
+        return "";
     }
 
     @Override
@@ -89,7 +90,7 @@ public final class BuffEffect implements SpellEffect {
      * @param baseEffect The spell effect
      * @param value The applied value
      */
-    public static BuffEffect fixed(SpellEffect baseEffect, int value) {
+    public static BuffEffect fixed(SpellEffect baseEffect, @NonNegative int value) {
         return new BuffEffect(baseEffect, baseEffect.effect(), value);
     }
 
@@ -100,7 +101,7 @@ public final class BuffEffect implements SpellEffect {
      * @param effect The overridden effect id
      * @param value The applied value
      */
-    public static BuffEffect withCustomEffect(SpellEffect baseEffect, int effect, int value) {
+    public static BuffEffect withCustomEffect(SpellEffect baseEffect, int effect, @NonNegative int value) {
         return new BuffEffect(baseEffect, effect, value);
     }
 }

@@ -21,6 +21,9 @@ package fr.quatrevieux.araknemu.game.spell.effect.target;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+import java.util.Objects;
 
 /**
  * Implementation of effect target using spell flags
@@ -72,7 +75,20 @@ public final class SpellEffectTarget implements EffectTarget {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (obj == null) {
+            return false;
+        }
+
         return getClass().equals(obj.getClass()) && flags == ((SpellEffectTarget) obj).flags;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(flags);
     }
 }

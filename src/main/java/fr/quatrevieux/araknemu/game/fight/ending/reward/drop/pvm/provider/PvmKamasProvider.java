@@ -24,6 +24,7 @@ import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.fight.ending.EndFightResults;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Provide win kamas on Pvm fight
@@ -41,8 +42,8 @@ public final class PvmKamasProvider implements DropRewardProvider {
     }
 
     private static class ExtractKamas implements FighterOperation {
-        private int minKamas = 0;
-        private int maxKamas = 0;
+        private @NonNegative int minKamas = 0;
+        private @NonNegative int maxKamas = 0;
 
         @Override
         public void onMonster(MonsterFighter fighter) {

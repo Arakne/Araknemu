@@ -23,9 +23,11 @@ import fr.arakne.utils.value.Colors;
 import fr.arakne.utils.value.constant.Gender;
 import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.PacketTokenizer;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
-import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.common.value.qual.IntRange;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Request for create a new character
@@ -64,27 +66,31 @@ public final class AddCharacterRequest implements Packet {
     public static final class Parser implements SinglePacketParser<AddCharacterRequest> {
         @Override
         public AddCharacterRequest parse(String input) throws ParsePacketException {
-            final String[] data = StringUtils.split(input, "|", 6);
-
-            if (data.length != 6) {
-                throw new ParsePacketException(code() + input, "Invalid data : required 6 parts");
-            }
+            final PacketTokenizer tokenizer = tokenize(input, '|');
 
             return new AddCharacterRequest(
-                data[0],
-                Race.byId(Integer.parseInt(data[1])),
-                Gender.parse(data[2]),
+                tokenizer.nextPart(),
+                Race.byId(tokenizer.nextPositiveInt()),
+                Gender.parse(tokenizer.nextPart()),
                 new Colors(
-                    Integer.parseInt(data[3]),
-                    Integer.parseInt(data[4]),
-                    Integer.parseInt(data[5])
+                    checkColor(tokenizer.nextInt()),
+                    checkColor(tokenizer.nextInt()),
+                    checkColor(tokenizer.nextInt())
                 )
             );
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "AA";
+        }
+
+        private static @IntRange(from = -1, to = Colors.MAX_COLOR_VALUE) int checkColor(int value) {
+            if (value < -1 || value > Colors.MAX_COLOR_VALUE) {
+                throw new ParsePacketException("AA", "Invalid color value");
+            }
+
+            return value;
         }
     }
 }

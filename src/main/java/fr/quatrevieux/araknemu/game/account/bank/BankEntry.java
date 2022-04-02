@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.account.bank;
 import fr.quatrevieux.araknemu.data.living.entity.account.BankItem;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.AbstractItemEntry;
+import org.checkerframework.common.value.qual.IntVal;
 
 /**
  * Entry for a bank item
@@ -37,7 +38,7 @@ public final class BankEntry extends AbstractItemEntry {
     }
 
     @Override
-    public int position() {
+    public @IntVal(DEFAULT_POSITION) int position() {
         return DEFAULT_POSITION;
     }
 

@@ -100,6 +100,13 @@ class ActiveStateTest extends GameBaseCase {
         super.tearDown();
     }
 
+    @Test
+    void notStarted() {
+        assertThrows(IllegalStateException.class, state::listeners);
+        assertThrows(IllegalStateException.class, () -> state.leave(fighter));
+        state.terminate();
+    }
+
     @RepeatedIfExceptionsTest
     void start() throws InterruptedException {
         state.start(fight);

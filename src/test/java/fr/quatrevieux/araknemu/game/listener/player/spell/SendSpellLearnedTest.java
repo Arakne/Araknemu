@@ -54,7 +54,7 @@ class SendSpellLearnedTest extends GameBaseCase {
 
         listener.on(
             new SpellLearned(
-                new SpellBookEntry(entity, container.get(SpellService.class).get(2))
+                new SpellBookEntry(null, entity, container.get(SpellService.class).get(2))
             )
         );
 

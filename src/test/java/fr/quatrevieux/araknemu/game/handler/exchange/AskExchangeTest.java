@@ -71,6 +71,15 @@ class AskExchangeTest extends GameBaseCase {
     }
 
     @Test
+    void notOnMap() throws ErrorPacket {
+        player.leave();
+        assertThrows(ErrorPacket.class, () -> handler.handle(session, new ExchangeRequest(ExchangeType.PLAYER_EXCHANGE, other.id(), null)));
+
+        assertFalse(player.interactions().busy());
+        assertFalse(other.interactions().busy());
+    }
+
+    @Test
     void successWithNpcStore() throws ErrorPacket, SQLException {
         dataSet.pushNpcWithStore();
 

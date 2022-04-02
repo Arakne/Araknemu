@@ -26,7 +26,9 @@ import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcRepository;
+import fr.quatrevieux.araknemu.util.Asserter;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -110,17 +112,19 @@ final class SqlNpcRepository implements NpcRepository {
     }
 
     private class Loader implements RepositoryUtils.Loader<Npc> {
+        private final Direction[] directions = Direction.values();
+
         @Override
         public Npc create(ResultSet rs) throws SQLException {
             return new Npc(
                 rs.getInt("NPC_ID"),
                 rs.getInt("NPC_TEMPLATE_ID"),
                 new Position(
-                    rs.getInt("MAP_ID"),
-                    rs.getInt("CELL_ID")
+                    Asserter.assertNonNegative(rs.getInt("MAP_ID")),
+                    Asserter.assertNonNegative(rs.getInt("CELL_ID"))
                 ),
-                Direction.values()[rs.getInt("ORIENTATION")],
-                Arrays.stream(StringUtils.split(rs.getString("QUESTIONS"), ';'))
+                directions[Asserter.assertIndexFor(directions, rs.getInt("ORIENTATION"))],
+                Arrays.stream(StringUtils.split(NullnessUtil.castNonNull(rs.getString("QUESTIONS")), ';'))
                     .mapToInt(Integer::parseInt)
                     .toArray()
             );

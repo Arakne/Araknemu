@@ -137,6 +137,7 @@ public final class Ban extends AbstractCommand<Ban.Arguments> implements SubArgu
         }
     }
 
+    @SuppressWarnings("initialization.field.uninitialized")
     public static final class Arguments implements SubArguments<Ban> {
         @Argument(required = true, metaVar = "ACTION")
         @SubCommands({

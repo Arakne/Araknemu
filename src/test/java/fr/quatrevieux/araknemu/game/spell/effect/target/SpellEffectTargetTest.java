@@ -26,7 +26,10 @@ import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SpellEffectTargetTest extends FightBaseCase {
     Fight fight;
@@ -99,5 +102,19 @@ class SpellEffectTargetTest extends FightBaseCase {
         assertFalse(et.test(caster, caster));
         assertFalse(et.test(caster, enemy));
         assertTrue(et.test(caster, teammate));
+    }
+
+    @Test
+    void equalsAndHash() {
+        SpellEffectTarget et = new SpellEffectTarget(SpellEffectTarget.NOT_ENEMY | SpellEffectTarget.NOT_SELF);
+
+        assertEquals(et, et);
+        assertEquals(et, new SpellEffectTarget(SpellEffectTarget.NOT_ENEMY | SpellEffectTarget.NOT_SELF));
+        assertNotEquals(et, new SpellEffectTarget(SpellEffectTarget.NOT_ENEMY));
+        assertNotEquals(et, new Object());
+        assertFalse(et.equals(null));
+
+        assertEquals(et.hashCode(), new SpellEffectTarget(SpellEffectTarget.NOT_ENEMY | SpellEffectTarget.NOT_SELF).hashCode());
+        assertNotEquals(et.hashCode(), new SpellEffectTarget(SpellEffectTarget.NOT_ENEMY).hashCode());
     }
 }

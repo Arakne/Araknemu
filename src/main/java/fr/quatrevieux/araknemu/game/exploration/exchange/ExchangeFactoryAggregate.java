@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.game.exploration.exchange;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeInteraction;
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -44,7 +46,8 @@ public class ExchangeFactoryAggregate<C extends ExplorationCreature> implements 
     /**
      * Register a new factory
      */
-    protected final void register(ExchangeTypeFactory<C> factory) {
+    @RequiresNonNull("factories")
+    protected final void register(@UnknownInitialization ExchangeFactoryAggregate<C> this, ExchangeTypeFactory<C> factory) {
         factories.put(factory.type(), factory);
     }
 

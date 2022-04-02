@@ -20,10 +20,11 @@
 package fr.quatrevieux.araknemu.network.game.in.basic.admin;
 
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.PacketTokenizer;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 import fr.quatrevieux.araknemu.data.value.Geolocation;
-import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Teleport to the requested map
@@ -48,22 +49,18 @@ public final class AdminMove implements Packet {
     public static final class Parser implements SinglePacketParser<AdminMove> {
         @Override
         public AdminMove parse(String input) throws ParsePacketException {
-            final String[] parts = StringUtils.split(input, ",", 2);
-
-            if (parts.length != 2) {
-                throw new ParsePacketException(code() + input, "Missing coordinates");
-            }
+            final PacketTokenizer tokenizer = tokenize(input, ',');
 
             return new AdminMove(
                 new Geolocation(
-                    Integer.parseInt(parts[0]),
-                    Integer.parseInt(parts[1])
+                    tokenizer.nextInt(),
+                    tokenizer.nextInt()
                 )
             );
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "BaM";
         }
     }

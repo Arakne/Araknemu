@@ -19,26 +19,34 @@
 
 package fr.quatrevieux.araknemu.data.value;
 
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.signedness.qual.Signed;
+import org.checkerframework.dataflow.qual.Pure;
+
 /**
  * Position object into the world
  */
 public final class Position {
-    private final int map;
-    private final int cell;
+    private final @NonNegative int map;
+    private final @NonNegative int cell;
 
-    public Position(int map, int cell) {
+    public Position(@NonNegative int map, @NonNegative int cell) {
         this.map = map;
         this.cell = cell;
     }
 
-    public int map() {
+    @Pure
+    public @NonNegative int map() {
         return map;
     }
 
-    public int cell() {
+    @Pure
+    public @NonNegative int cell() {
         return cell;
     }
 
+    @Pure
     public boolean isNull() {
         return map == 0 && cell == 0;
     }
@@ -46,25 +54,25 @@ public final class Position {
     /**
      * Change the cell position
      */
-    public Position newCell(int cell) {
+    public Position newCell(@NonNegative int cell) {
         return new Position(map, cell);
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         return
             this == o
             || (o instanceof Position && equals((Position) o))
         ;
     }
 
-    public boolean equals(Position other) {
+    public boolean equals(@Nullable Position other) {
         return other != null && other.cell == cell && other.map == map;
     }
 
     @Override
     public int hashCode() {
-        int result = map;
+        @Signed int result = map;
         result = 31 * result + cell;
         return result;
     }

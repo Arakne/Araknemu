@@ -39,6 +39,7 @@ public final class AIHelper {
         this(new ProxyAI(ai));
     }
 
+    @SuppressWarnings({"assignment", "argument"})
     public AIHelper(ProxyAI ai) {
         this.ai = ai;
 

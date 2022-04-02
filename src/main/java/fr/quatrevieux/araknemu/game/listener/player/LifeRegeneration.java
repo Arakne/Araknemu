@@ -60,7 +60,7 @@ public final class LifeRegeneration implements EventsSubscriber {
             new Listener<StopExploration>() {
                 @Override
                 public void on(StopExploration event) {
-                    event.session().player().properties().life().stopLifeRegeneration();
+                    event.player().player().properties().life().stopLifeRegeneration();
                     event.session().send(new StopLifeTimer());
                 }
 

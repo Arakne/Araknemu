@@ -28,6 +28,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.Optional;
 
@@ -40,8 +42,8 @@ public final class MoveBackApplier {
     public static final int MAX_DAMAGE = 8;
 
     private final Fight fight;
-    private final int baseDamage;
-    private final int maxDamage;
+    private final @NonNegative int baseDamage;
+    private final @Positive int maxDamage;
 
     private final Decoder<FightCell> decoder;
     private final RandomUtil random = new RandomUtil();
@@ -55,7 +57,7 @@ public final class MoveBackApplier {
      * @param baseDamage The base damage per remaining distance
      * @param maxDamage The maximum damage of the random part per remaining distance
      */
-    public MoveBackApplier(Fight fight, int baseDamage, int maxDamage) {
+    public MoveBackApplier(Fight fight, @NonNegative int baseDamage, @Positive int maxDamage) {
         this.fight = fight;
         this.baseDamage = baseDamage;
         this.maxDamage = maxDamage;
@@ -69,7 +71,7 @@ public final class MoveBackApplier {
      * @param target The spell target
      * @param distance The move back distance
      */
-    public void apply(ActiveFighter caster, PassiveFighter target, int distance) {
+    public void apply(ActiveFighter caster, PassiveFighter target, @NonNegative int distance) {
         final Direction direction = caster.cell().coordinate().directionTo(target.cell());
         FightCell destination = target.cell();
 
@@ -108,7 +110,7 @@ public final class MoveBackApplier {
      * @param direction The move direction
      * @param distance Remain move distance
      */
-    private void applyBlockingDamageChain(ActiveFighter caster, PassiveFighter target, FightCell lastCell, Direction direction, int distance) {
+    private void applyBlockingDamageChain(ActiveFighter caster, PassiveFighter target, FightCell lastCell, Direction direction, @NonNegative int distance) {
         int damage = computeDamage(caster, distance);
 
         if (damage <= 0) {
@@ -144,7 +146,7 @@ public final class MoveBackApplier {
      *
      * @return The damage
      */
-    private int computeDamage(ActiveFighter caster, int distance) {
+    private @NonNegative int computeDamage(ActiveFighter caster, @NonNegative int distance) {
         return (baseDamage + random.rand(1, maxDamage) * caster.level() / 50) * distance;
     }
 }

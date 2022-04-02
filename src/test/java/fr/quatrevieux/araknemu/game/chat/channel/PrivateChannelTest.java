@@ -76,6 +76,19 @@ class PrivateChannelTest extends GameBaseCase {
     }
 
     @Test
+    void noTarget() throws SQLException, ContainerException {
+        assertThrows(ChatException.class, () -> channel.send(
+            gamePlayer(),
+            new Message(
+                ChannelType.PRIVATE,
+                null,
+                "",
+                ""
+            )
+        ));
+    }
+
+    @Test
     void success() throws SQLException, ContainerException, ChatException {
         List<ConcealedMessage> events = new ArrayList<>();
 

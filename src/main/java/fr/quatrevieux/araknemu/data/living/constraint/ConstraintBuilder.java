@@ -19,6 +19,13 @@
 
 package fr.quatrevieux.araknemu.data.living.constraint;
 
+import org.checkerframework.checker.builder.qual.CalledMethods;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
+import org.checkerframework.common.returnsreceiver.qual.This;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,16 +49,17 @@ import java.util.List;
  * @param <T> The entity type
  * @param <E> The error type
  */
-public class ConstraintBuilder<T, E> {
+public class ConstraintBuilder<T, E extends @NonNull Object> {
     private final List<EntityConstraint<T, E>> constraints = new ArrayList<>();
 
-    private AbstractValueConstraint.Getter<T, ?> getter;
-    private E error;
+    private AbstractValueConstraint.@MonotonicNonNull Getter<T, ?> getter;
+    private @MonotonicNonNull E error;
 
     /**
      * Set the current value getter
      */
-    public ConstraintBuilder<T, E> value(AbstractValueConstraint.Getter<T, ?> getter) {
+    @EnsuresNonNull({"this.getter"})
+    public @This ConstraintBuilder<T, E> value(AbstractValueConstraint.Getter<T, ?> getter) {
         this.getter = getter;
 
         return this;
@@ -60,7 +68,8 @@ public class ConstraintBuilder<T, E> {
     /**
      * Set the current error object
      */
-    public ConstraintBuilder<T, E> error(E error) {
+    @EnsuresNonNull({"this.error"})
+    public @This ConstraintBuilder<T, E> error(@NonNull E error) {
         this.error = error;
 
         return this;
@@ -69,8 +78,8 @@ public class ConstraintBuilder<T, E> {
     /**
      * Ensure not empty
      */
-    public ConstraintBuilder<T, E> notEmpty() {
-        constraints.add(new NotEmpty<>(error, (AbstractValueConstraint.Getter<T, String>) getter));
+    public @This ConstraintBuilder<T, E> notEmpty(@CalledMethods({"value", "error"}) ConstraintBuilder<T, E> this) {
+        constraints.add(new NotEmpty<>(NullnessUtil.castNonNull(error), (AbstractValueConstraint.Getter<T, String>) NullnessUtil.castNonNull(getter)));
 
         return this;
     }
@@ -78,8 +87,8 @@ public class ConstraintBuilder<T, E> {
     /**
      * Check value by regex
      */
-    public ConstraintBuilder<T, E> regex(String regex) {
-        constraints.add(new Regex<>(error, (AbstractValueConstraint.Getter<T, String>) getter, regex));
+    public @This ConstraintBuilder<T, E> regex(@CalledMethods({"value", "error"}) ConstraintBuilder<T, E> this, String regex) {
+        constraints.add(new Regex<>(NullnessUtil.castNonNull(error), (AbstractValueConstraint.Getter<T, String>) NullnessUtil.castNonNull(getter), regex));
 
         return this;
     }
@@ -87,8 +96,8 @@ public class ConstraintBuilder<T, E> {
     /**
      * Check with lambda expression
      */
-    public ConstraintBuilder<T, E> check(ValueCheck.Checker checker) {
-        constraints.add(new ValueCheck<>(error, getter, checker));
+    public @This ConstraintBuilder<T, E> check(@CalledMethods({"value", "error"}) ConstraintBuilder<T, E> this, ValueCheck.Checker checker) {
+        constraints.add(new ValueCheck<>(NullnessUtil.castNonNull(error), NullnessUtil.castNonNull(getter), checker));
 
         return this;
     }
@@ -96,8 +105,8 @@ public class ConstraintBuilder<T, E> {
     /**
      * Maximum allowed value
      */
-    public <V extends Comparable> ConstraintBuilder<T, E> max(V value) {
-        constraints.add(new Max<>(error, (AbstractValueConstraint.Getter<T, V>) getter, value));
+    public @This <V extends Comparable> ConstraintBuilder<T, E> max(@CalledMethods({"value", "error"}) ConstraintBuilder<T, E> this, V value) {
+        constraints.add(new Max<>(NullnessUtil.castNonNull(error), (AbstractValueConstraint.Getter<T, V>) NullnessUtil.castNonNull(getter), value));
 
         return this;
     }
@@ -105,8 +114,8 @@ public class ConstraintBuilder<T, E> {
     /**
      * Minimum string length
      */
-    public ConstraintBuilder<T, E> minLength(int length) {
-        constraints.add(new MinLength<>(error, (AbstractValueConstraint.Getter<T, String>) getter, length));
+    public @This ConstraintBuilder<T, E> minLength(@CalledMethods({"value", "error"}) ConstraintBuilder<T, E> this, int length) {
+        constraints.add(new MinLength<>(NullnessUtil.castNonNull(error), (AbstractValueConstraint.Getter<T, String>) NullnessUtil.castNonNull(getter), length));
 
         return this;
     }
@@ -114,8 +123,8 @@ public class ConstraintBuilder<T, E> {
     /**
      * Maximum string length
      */
-    public ConstraintBuilder<T, E> maxLength(int length) {
-        constraints.add(new MaxLength<>(error, (AbstractValueConstraint.Getter<T, String>) getter, length));
+    public @This ConstraintBuilder<T, E> maxLength(@CalledMethods({"value", "error"}) ConstraintBuilder<T, E> this, int length) {
+        constraints.add(new MaxLength<>(NullnessUtil.castNonNull(error), (AbstractValueConstraint.Getter<T, String>) NullnessUtil.castNonNull(getter), length));
 
         return this;
     }
@@ -123,8 +132,8 @@ public class ConstraintBuilder<T, E> {
     /**
      * Lambda check for the entire entity value
      */
-    public ConstraintBuilder<T, E> entityCheck(EntityCheck.Checker<T> checker) {
-        constraints.add(new EntityCheck<>(error, checker));
+    public @This ConstraintBuilder<T, E> entityCheck(@CalledMethods({"value", "error"}) ConstraintBuilder<T, E> this, EntityCheck.Checker<T> checker) {
+        constraints.add(new EntityCheck<>(NullnessUtil.castNonNull(error), checker));
 
         return this;
     }
@@ -137,7 +146,8 @@ public class ConstraintBuilder<T, E> {
      *      .check(...)
      * );
      */
-    public ConstraintBuilder<T, E> not(BuilderFactory<T, E> factory) {
+    @SuppressWarnings("monotonic")
+    public @This ConstraintBuilder<T, E> not(BuilderFactory<T, E> factory) {
         final ConstraintBuilder<T, E> builder = new ConstraintBuilder<>();
 
         builder.error  = error;
@@ -153,13 +163,13 @@ public class ConstraintBuilder<T, E> {
     /**
      * Build the constraint
      */
-    public EntityConstraint<T, E> build() {
+    public EntityConstraint<T, @NonNull E> build() {
         if (constraints.size() == 1) {
             return constraints.get(0);
         }
 
         return new Must<>(
-            constraints.toArray(new EntityConstraint[] {})
+            constraints.toArray(new EntityConstraint[0])
         );
     }
 }

@@ -63,5 +63,6 @@ class ItemsMovementTest {
     @Test
     void invalid() {
         assertThrows(ParsePacketException.class, () -> parser.parse("invalid"));
+        assertThrows(ParsePacketException.class, () -> parser.parse(""));
     }
 }

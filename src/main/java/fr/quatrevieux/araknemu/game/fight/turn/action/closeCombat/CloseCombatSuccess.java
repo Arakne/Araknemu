@@ -19,12 +19,15 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat;
 
+import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
 import java.util.List;
 
@@ -77,5 +80,15 @@ public final class CloseCombatSuccess implements ActionResult {
      */
     public List<SpellEffect> effects() {
         return critical ? weapon.criticalEffects() : weapon.effects();
+    }
+
+    @Override
+    public void apply(FightTurn turn) {
+        if (critical) {
+            caster.fight().send(ActionEffect.criticalHitCloseCombat(caster));
+        }
+
+        turn.points().useActionPoints(caster.weapon().apCost());
+        turn.fight().effects().apply(CastScope.simple(caster.weapon(), caster, target, effects()));
     }
 }

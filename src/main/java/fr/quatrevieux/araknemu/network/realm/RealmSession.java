@@ -24,6 +24,10 @@ import fr.quatrevieux.araknemu.core.network.session.Session;
 import fr.quatrevieux.araknemu.network.AccountSession;
 import fr.quatrevieux.araknemu.realm.ConnectionKey;
 import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * Wrap IoSession for Realm
@@ -31,7 +35,7 @@ import fr.quatrevieux.araknemu.realm.authentication.AuthenticationAccount;
 public final class RealmSession extends AbstractDelegatedSession implements AccountSession<AuthenticationAccount> {
     private final ConnectionKey key;
 
-    private AuthenticationAccount account;
+    private @Nullable AuthenticationAccount account;
 
     public RealmSession(Session session) {
         super(session);
@@ -47,21 +51,27 @@ public final class RealmSession extends AbstractDelegatedSession implements Acco
     }
 
     @Override
+    @EnsuresNonNull({"account()", "this.account"})
+    @SuppressWarnings("contracts.postcondition")
     public void attach(AuthenticationAccount account) {
         this.account = account;
     }
 
     @Override
-    public AuthenticationAccount detach() {
+    public @Nullable AuthenticationAccount detach() {
         return account = null;
     }
 
     @Override
-    public AuthenticationAccount account() {
+    @Pure
+    public @Nullable AuthenticationAccount account() {
         return account;
     }
 
     @Override
+    @Pure
+    @EnsuresNonNullIf(expression = {"account()", "this.account"}, result = true)
+    @SuppressWarnings({"contracts.postcondition", "contracts.conditional.postcondition.true.override", "contracts.conditional.postcondition"})
     public boolean isLogged() {
         return account != null;
     }

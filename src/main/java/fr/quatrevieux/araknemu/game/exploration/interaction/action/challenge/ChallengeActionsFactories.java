@@ -42,14 +42,22 @@ public final class ChallengeActionsFactories implements ExplorationActionRegistr
     }
 
     private AskChallenge ask(ExplorationPlayer player, ActionType action, String[] arguments) {
-        return new AskChallenge(player, Integer.parseInt(arguments[0]), fightService);
+        return new AskChallenge(player, parseTarget(arguments), fightService);
     }
 
     private AcceptChallenge accept(ExplorationPlayer player, ActionType action, String[] arguments) {
-        return new AcceptChallenge(player, Integer.parseInt(arguments[0]));
+        return new AcceptChallenge(player, parseTarget(arguments));
     }
 
     private RefuseChallenge refuse(ExplorationPlayer player, ActionType action, String[] arguments) {
-        return new RefuseChallenge(player, Integer.parseInt(arguments[0]));
+        return new RefuseChallenge(player, parseTarget(arguments));
+    }
+
+    private int parseTarget(String[] arguments) {
+        if (arguments.length < 1) {
+            throw new IllegalArgumentException("Target is missing");
+        }
+
+        return Integer.parseInt(arguments[0]);
     }
 }

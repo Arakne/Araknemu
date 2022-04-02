@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Multipl
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.util.Asserter;
 
 /**
  * Suffered damage will be healed, or multiplied
@@ -64,7 +65,7 @@ public final class HealOrMultiplyDamageHandler implements EffectHandler, BuffHoo
      * Modify the damage multiplier depending on the chance
      */
     private void apply(Buff buff, MultipliableDamage damage) {
-        final boolean heal = random.bool(buff.effect().special());
+        final boolean heal = random.bool(Asserter.assertPercent(buff.effect().special()));
 
         if (heal) {
             damage.multiply(-buff.effect().max());

@@ -82,8 +82,14 @@ public final class PlacementCellsGenerator {
      * Get a random cell from the entire map
      */
     private FightCell randomFightCell() {
+        final int size = map.size();
+
+        if (size < 1) {
+            throw new IllegalStateException("The map " + map.id() + " is empty");
+        }
+
         for (;;) {
-            final FightCell cell = map.get(random.nextInt(map.size()));
+            final FightCell cell = map.get(random.nextInt(size));
 
             if (cell.walkable()) {
                 return cell;

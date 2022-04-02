@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.exploration.npc.dialog.NpcQuestion;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.ActionFactory;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -41,7 +42,7 @@ public final class NextQuestion implements Action {
     private final int[] questionIds;
 
     // Lazy loading of questions : prevent from stack overflow
-    private Collection<NpcQuestion> questions;
+    private @MonotonicNonNull Collection<NpcQuestion> questions;
 
     public NextQuestion(DialogService service, int[] questionIds) {
         this.service = service;

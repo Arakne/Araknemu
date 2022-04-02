@@ -31,6 +31,7 @@ import fr.quatrevieux.araknemu.game.admin.formatter.Link;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.kohsuke.args4j.Argument;
 
 import java.util.ArrayList;
@@ -68,6 +69,7 @@ public final class LineOfSight extends AbstractCommand<LineOfSight.Arguments> {
     }
 
     @Override
+    @SuppressWarnings("argument") // the cell is valid
     public void execute(AdminPerformer performer, Arguments arguments) {
         final AdminUser user = AdminUser.class.cast(performer);
         final FightMap map = new FightMap(repository.get(user.player().position().map()));
@@ -109,15 +111,16 @@ public final class LineOfSight extends AbstractCommand<LineOfSight.Arguments> {
         return new Arguments();
     }
 
+    @SuppressWarnings("initialization.field.uninitialized")
     public static final class Arguments {
         @Argument(metaVar = "target cell id")
-        private Integer cellId;
+        private @NonNegative Integer cellId;
 
-        public void setCellId(Integer cellId) {
+        public void setCellId(@NonNegative Integer cellId) {
             this.cellId = cellId;
         }
 
-        public int cellId() {
+        public @NonNegative int cellId() {
             return cellId;
         }
 

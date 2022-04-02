@@ -36,6 +36,10 @@ import fr.quatrevieux.araknemu.game.player.inventory.itemset.ItemSets;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlot;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
 import fr.quatrevieux.araknemu.game.world.creature.accessory.Accessories;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.common.value.qual.IntRange;
+import org.checkerframework.dataflow.qual.Pure;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -46,6 +50,7 @@ import java.util.stream.Collectors;
  * Inventory for player
  */
 public final class PlayerInventory implements Inventory<InventoryEntry>, Dispatcher {
+    private final GamePlayer owner;
     private final Player player;
     private final ItemStorage<InventoryEntry> storage;
     private final Wallet wallet;
@@ -53,10 +58,11 @@ public final class PlayerInventory implements Inventory<InventoryEntry>, Dispatc
     private final Accessories accessories;
     private final ItemSets itemSets;
 
-    private GamePlayer owner;
-    private int weight;
+    private @NonNegative int weight;
 
-    public PlayerInventory(Player player, Collection<InventoryService.LoadedItem> items) {
+    @SuppressWarnings({"assignment", "argument", "return"})
+    public PlayerInventory(GamePlayer owner, Player player, Collection<InventoryService.LoadedItem> items) {
+        this.owner = owner;
         this.player = player;
         this.storage = new SimpleItemStorage<>(
             this,
@@ -68,7 +74,7 @@ public final class PlayerInventory implements Inventory<InventoryEntry>, Dispatc
         );
 
         wallet = new SimpleWallet(player, this);
-        slots = new InventorySlots(this, storage);
+        slots = new InventorySlots(this, storage, owner);
         accessories = new InventoryAccessories(slots);
         itemSets = new ItemSets(this);
     }
@@ -79,7 +85,7 @@ public final class PlayerInventory implements Inventory<InventoryEntry>, Dispatc
     }
 
     @Override
-    public InventoryEntry add(Item item, int quantity, int position) throws InventoryException {
+    public InventoryEntry add(Item item, @Positive int quantity, @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int position) throws InventoryException {
         final InventorySlot target = slots.get(position);
 
         target.check(item, quantity);
@@ -114,20 +120,6 @@ public final class PlayerInventory implements Inventory<InventoryEntry>, Dispatc
     }
 
     /**
-     * Attach the inventory to its owner
-     */
-    public PlayerInventory attach(GamePlayer owner) {
-        if (this.owner != null) {
-            throw new IllegalStateException("Owner already set");
-        }
-
-        this.owner = owner;
-        slots.init(owner);
-
-        return this;
-    }
-
-    /**
      * Get current player equipments
      */
     public Collection<AbstractEquipment> equipments() {
@@ -141,7 +133,7 @@ public final class PlayerInventory implements Inventory<InventoryEntry>, Dispatc
      *
      * @return The item contained in the slot, or an empty Optional
      */
-    public Optional<Item> bySlot(int slotId) throws InventoryException {
+    public Optional<Item> bySlot(@IntRange(from = 0, to = InventorySlots.SLOT_MAX) int slotId) throws InventoryException {
         return slots.get(slotId).entry().map(InventoryEntry::item);
     }
 
@@ -187,18 +179,19 @@ public final class PlayerInventory implements Inventory<InventoryEntry>, Dispatc
         }
     }
 
+    @Pure
     @Override
-    public long kamas() {
+    public @NonNegative long kamas() {
         return player.kamas();
     }
 
     @Override
-    public void addKamas(long quantity) {
+    public void addKamas(@Positive long quantity) {
         wallet.addKamas(quantity);
     }
 
     @Override
-    public void removeKamas(long quantity) {
+    public void removeKamas(@Positive long quantity) {
         wallet.removeKamas(quantity);
     }
 
@@ -211,7 +204,7 @@ public final class PlayerInventory implements Inventory<InventoryEntry>, Dispatc
      * @return true if the entry change position
      *         false if the entry is destroyed (like stacking or eat)
      */
-    boolean move(InventoryEntry entry, int position) throws InventoryException {
+    boolean move(InventoryEntry entry, @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int position) throws InventoryException {
         final InventorySlot target = slots.get(position);
 
         target.check(entry.item(), entry.quantity());

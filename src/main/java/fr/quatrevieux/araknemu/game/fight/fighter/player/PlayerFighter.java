@@ -35,6 +35,8 @@ import fr.quatrevieux.araknemu.game.player.inventory.slot.WeaponSlot;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 /**
  * Fighter for a player
@@ -45,9 +47,10 @@ public final class PlayerFighter extends AbstractFighter implements Fighter, Pla
     private final PlayerFighterSprite sprite;
 
     private boolean ready = false;
-    private CastableWeapon weapon;
-    private FightTeam team;
+    private @MonotonicNonNull CastableWeapon weapon;
+    private @MonotonicNonNull FightTeam team;
 
+    @SuppressWarnings({"assignment", "argument"})
     public PlayerFighter(GamePlayer player) {
         this.player = player;
         this.properties = new PlayerFighterProperties(this, player.properties());
@@ -139,12 +142,16 @@ public final class PlayerFighter extends AbstractFighter implements Fighter, Pla
     }
 
     @Override
-    public int level() {
+    public @Positive int level() {
         return player.properties().experience().level();
     }
 
     @Override
     public FightTeam team() {
+        if (team == null) {
+            throw new IllegalStateException("Team is not set");
+        }
+
         return team;
     }
 

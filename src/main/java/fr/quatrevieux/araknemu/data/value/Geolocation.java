@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.data.value;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Objects;
 
 /**
@@ -47,7 +49,7 @@ public final class Geolocation {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

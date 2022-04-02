@@ -21,6 +21,8 @@ package fr.quatrevieux.araknemu.data.living.transformer;
 
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -30,7 +32,7 @@ import java.util.Set;
  */
 public final class ChannelsTransformer implements Transformer<Set<ChannelType>> {
     @Override
-    public String serialize(Set<ChannelType> value) {
+    public @NonNull String serialize(@PolyNull Set<ChannelType> value) {
         if (value == null || value.isEmpty()) {
             return "";
         }
@@ -45,7 +47,7 @@ public final class ChannelsTransformer implements Transformer<Set<ChannelType>> 
     }
 
     @Override
-    public Set<ChannelType> unserialize(String serialize) {
+    public @NonNull Set<ChannelType> unserialize(@PolyNull String serialize) {
         final Set<ChannelType> channels = EnumSet.noneOf(ChannelType.class);
 
         if (serialize == null || serialize.isEmpty()) {

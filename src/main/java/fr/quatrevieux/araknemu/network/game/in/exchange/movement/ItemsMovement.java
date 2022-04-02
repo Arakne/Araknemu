@@ -20,9 +20,11 @@
 package fr.quatrevieux.araknemu.network.game.in.exchange.movement;
 
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.PacketTokenizer;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
-import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Add or remove item from exchange
@@ -34,9 +36,9 @@ import org.apache.commons.lang3.StringUtils;
 public final class ItemsMovement implements Packet {
     private final int id;
     private final int quantity;
-    private final int price;
+    private final @NonNegative int price;
 
-    public ItemsMovement(int id, int quantity, int price) {
+    public ItemsMovement(int id, int quantity, @NonNegative int price) {
         this.id = id;
         this.quantity = quantity;
         this.price = price;
@@ -57,22 +59,22 @@ public final class ItemsMovement implements Packet {
     public static final class Parser implements SinglePacketParser<ItemsMovement> {
         @Override
         public ItemsMovement parse(String input) throws ParsePacketException {
-            final int sign = input.charAt(0) == '-' ? -1 : +1;
-            final String[] parts = StringUtils.split(input.substring(1), "|", 3);
-
-            if (parts.length < 2) {
-                throw new ParsePacketException(code() + input, "Expects at least 2 parts");
+            if (input.isEmpty()) {
+                throw new ParsePacketException(code(), "Missing packet arguments");
             }
 
+            final int sign = input.charAt(0) == '-' ? -1 : +1;
+            final PacketTokenizer tokenizer = new PacketTokenizer(code(), input.substring(1), '|');
+
             return new ItemsMovement(
-                Integer.parseInt(parts[0]),
-                sign * Integer.parseInt(parts[1]),
-                parts.length > 2 ? Integer.parseInt(parts[2]) : 0
+                tokenizer.nextInt(),
+                sign * tokenizer.nextPositiveInt(),
+                tokenizer.nextNonNegativeIntOrDefault(0)
             );
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "EMO";
         }
     }

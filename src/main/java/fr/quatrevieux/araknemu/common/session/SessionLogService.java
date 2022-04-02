@@ -19,11 +19,14 @@
 
 package fr.quatrevieux.araknemu.common.session;
 
+import fr.quatrevieux.araknemu.common.account.AbstractLivingAccount;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
 import fr.quatrevieux.araknemu.network.AccountSession;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -43,9 +46,11 @@ public final class SessionLogService {
      *
      * @param session Session to load
      *
-     * @return The log from database, or a new log is not exists
+     * @return The log from database, or a new log if not exists
      */
-    public SessionLog load(AccountSession<?> session) {
+    @RequiresNonNull("#1.account()")
+    @SuppressWarnings("contracts.precondition")
+    public <A extends @NonNull AbstractLivingAccount<?>> SessionLog load(AccountSession<A> session) {
         try {
             return new SessionLog(
                 repository.currentSession(session.account().id()),
@@ -61,7 +66,8 @@ public final class SessionLogService {
      *
      * @param session The session
      */
-    public SessionLog create(AccountSession<?> session) {
+    @RequiresNonNull("#1.account()")
+    public <A extends @NonNull AbstractLivingAccount<?>> SessionLog create(AccountSession<A> session) {
         return new SessionLog(
             repository.add(new ConnectionLog(
                 session.account().id(),

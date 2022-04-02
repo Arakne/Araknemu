@@ -27,6 +27,8 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveActionFactory;
 
 /**
  * Factory for fight actions
+ *
+ * @todo refactor : do not link with turn, and define the factory globally to fight
  */
 public interface ActionsFactory {
     /**

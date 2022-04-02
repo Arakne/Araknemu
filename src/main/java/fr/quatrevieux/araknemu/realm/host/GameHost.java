@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.realm.host;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Host for game server
  */
@@ -111,7 +113,7 @@ public final class GameHost {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

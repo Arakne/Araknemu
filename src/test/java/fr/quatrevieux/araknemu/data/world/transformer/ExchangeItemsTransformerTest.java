@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ExchangeItemsTransformerTest {
@@ -37,6 +38,7 @@ class ExchangeItemsTransformerTest {
 
     @Test
     void unserialize() {
+        assertNull(transformer.unserialize(null));
         assertEquals(new HashMap<>(), transformer.unserialize(""));
         assertEquals(new HashMap<Integer, Integer>() {{ put(123, 1); }}, transformer.unserialize("123"));
         assertEquals(new HashMap<Integer, Integer>() {{ put(123, 4); }}, transformer.unserialize("123:4"));

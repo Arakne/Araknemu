@@ -102,7 +102,7 @@ public final class Credentials implements Packet {
             final String username = parts[0].trim();
             final String hash     = parts[1].trim();
 
-            if (hash.charAt(0) != '#') {
+            if (hash.length() < 3 || hash.charAt(0) != '#') {
                 throw new ParsePacketException(input, "Invalid hash format");
             }
 

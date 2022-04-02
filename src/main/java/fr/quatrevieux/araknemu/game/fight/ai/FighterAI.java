@@ -27,6 +27,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.time.Duration;
 import java.util.Optional;
@@ -45,7 +47,7 @@ public final class FighterAI implements Runnable, AI {
     private final ActionGenerator generator;
     private final AIHelper helper;
 
-    private Turn turn;
+    private @Nullable Turn turn;
 
     /**
      * Creates the AI
@@ -53,6 +55,7 @@ public final class FighterAI implements Runnable, AI {
      * @param fighter The fighter to control
      * @param generator The action generator
      */
+    @SuppressWarnings({"argument", "assignment"})
     public FighterAI(ActiveFighter fighter, Fight fight, ActionGenerator generator) {
         this.fighter = fighter;
         this.fight = fight;
@@ -104,7 +107,13 @@ public final class FighterAI implements Runnable, AI {
     }
 
     @Override
-    public Turn turn() {
+    public @NonNull Turn turn() {
+        final Turn turn = this.turn;
+
+        if (turn == null) {
+            throw new IllegalStateException("AI must be started");
+        }
+
         return turn;
     }
 

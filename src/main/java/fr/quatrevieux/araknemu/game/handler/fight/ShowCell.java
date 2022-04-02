@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.fight.ShowCellRequest;
 import fr.quatrevieux.araknemu.network.game.out.fight.CellShown;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Show a cell during a fight
@@ -33,7 +34,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.CellShown;
 public final class ShowCell implements PacketHandler<GameSession, ShowCellRequest> {
     @Override
     public void handle(GameSession session, ShowCellRequest packet) throws Exception {
-        final Fighter fighter = session.fighter();
+        final Fighter fighter = NullnessUtil.castNonNull(session.fighter());
 
         fighter.team().send(new CellShown(fighter, packet.cellId()));
     }

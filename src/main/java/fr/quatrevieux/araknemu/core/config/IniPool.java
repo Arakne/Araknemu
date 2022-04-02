@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.core.config;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.ini4j.Profile;
 
 /**
@@ -37,7 +38,7 @@ public final class IniPool implements Pool {
     }
 
     @Override
-    public String get(String key) {
+    public @Nullable String get(String key) {
         return section.get(key);
     }
 }

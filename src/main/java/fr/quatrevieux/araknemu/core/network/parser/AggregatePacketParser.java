@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.core.network.parser;
 
+import org.checkerframework.checker.index.qual.Positive;
+
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -30,8 +32,8 @@ import java.util.concurrent.ConcurrentMap;
 public final class AggregatePacketParser implements PacketParser {
     private final ConcurrentMap<String, SinglePacketParser> parsers = new ConcurrentHashMap<>();
 
-    private int minCodeLength = 2;
-    private int maxCodeLength = 2;
+    private @Positive int minCodeLength = 2;
+    private @Positive int maxCodeLength = 2;
 
     public AggregatePacketParser(SinglePacketParser[] parsers) {
         for (SinglePacketParser parser : parsers) {

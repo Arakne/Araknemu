@@ -35,10 +35,13 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.builder.BaseBuilder;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
+import fr.quatrevieux.araknemu.game.fight.builder.FightBuilder;
 import fr.quatrevieux.araknemu.game.fight.event.FightCreated;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.module.FightModule;
 import fr.quatrevieux.araknemu.game.fight.module.RaulebaqueModule;
+import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.listener.player.exploration.LeaveExplorationForFight;
 import fr.quatrevieux.araknemu.game.listener.player.fight.AttachFighter;
@@ -86,6 +89,12 @@ class FightServiceTest extends FightBaseCase {
     @Test
     void handler() {
         assertNotNull(service.handler(ChallengeBuilder.class));
+        assertThrows(NoSuchElementException.class, () -> service.handler(new fr.quatrevieux.araknemu.game.fight.builder.FightBuilder() {
+            @Override
+            public Fight build(int fightId) {
+                return null;
+            }
+        }.getClass()));
     }
 
     @Test
@@ -148,6 +157,8 @@ class FightServiceTest extends FightBaseCase {
     void remove() throws Exception {
         Fight fight = createFight(false);
 
+        service.remove(fight); // No-op (not yet on map)
+
         service.created(fight);
         service.remove(fight);
 
@@ -206,9 +217,14 @@ class FightServiceTest extends FightBaseCase {
     }
 
     @Test
-    void modules() throws ContainerException {
+    void modules() throws Exception {
+        PlayerFighter fighter1 = makePlayerFighter(gamePlayer());
+        PlayerFighter fighter2 = makePlayerFighter(other);
+
         BaseBuilder builder = new BaseBuilder(service, new RandomUtil(), new ChallengeType(configuration.fight()), container.get(Logger.class), executor);
         builder.map(container.get(ExplorationMapService.class).load(10340));
+        builder.addTeam((number, startPlaces) -> new SimpleTeam(fighter1, startPlaces, number));
+        builder.addTeam((number, startPlaces) -> new SimpleTeam(fighter2, startPlaces, number));
         Fight fight = builder.build(1);
 
         Collection<FightModule> modules = service.modules(fight);

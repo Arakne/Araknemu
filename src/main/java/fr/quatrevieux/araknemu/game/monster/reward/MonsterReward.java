@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.monster.reward;
 
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterRewardItem;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.List;
 
@@ -36,7 +37,7 @@ public interface MonsterReward {
     /**
      * Winning base experience
      */
-    public long experience();
+    public @NonNegative long experience();
 
     /**
      * List of dropped items

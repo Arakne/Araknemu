@@ -44,6 +44,9 @@ import fr.quatrevieux.araknemu.game.player.PlayerSessionScope;
 import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+import org.checkerframework.checker.index.qual.IndexFor;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * Player for exploration game session
@@ -53,29 +56,34 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
 
     private final ListenerAggregate dispatcher = new DefaultListenerAggregate();
     private final InteractionHandler interactions = new InteractionHandler();
-    private final Restrictions restrictions = new Restrictions(this);
+    private final Restrictions restrictions;
     private final Sprite sprite;
 
-    private ExplorationMap map;
-    private ExplorationMapCell cell;
+    private @Nullable ExplorationMap map;
+    private @Nullable ExplorationMapCell cell;
     private Direction orientation = Direction.SOUTH_EAST;
 
+    @SuppressWarnings({"assignment", "argument"})
     public ExplorationPlayer(GamePlayer player) {
         this.player = player;
+        this.restrictions = new Restrictions(this);
         this.sprite = new PlayerSprite(this);
 
         restrictions.refresh();
     }
 
+    @Pure
     @Override
     public int id() {
         return player.id();
     }
 
+    @Pure
     public GameAccount account() {
         return player.account();
     }
 
+    @Pure
     @Override
     public CharacterProperties properties() {
         return player.properties();
@@ -86,6 +94,7 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
         player.send(packet);
     }
 
+    @Pure
     @Override
     public ListenerAggregate dispatcher() {
         return dispatcher;
@@ -106,25 +115,33 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
         leave();
         interactions().stop();
 
-        dispatch(new StopExploration(session));
+        dispatch(new StopExploration(session, this));
         session.setExploration(null);
     }
 
+    @Pure
     @Override
     public Sprite sprite() {
         return sprite;
     }
 
+    @Pure
     @Override
     public ExplorationMapCell cell() {
+        if (cell == null) {
+            throw new IllegalStateException("The player has not join a map");
+        }
+
         return cell;
     }
 
+    @Pure
     @Override
     public Position position() {
         return player.position();
     }
 
+    @Pure
     @Override
     public Direction orientation() {
         return orientation;
@@ -133,14 +150,17 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
     /**
      * @todo Returns {@code Optional<ExplorationMap>}
      */
+    @Pure
     @Override
-    public ExplorationMap map() {
+    public @Nullable ExplorationMap map() {
         return map;
     }
 
     @Override
     public void move(ExplorationMapCell cell, Direction orientation) {
-        if (!cell.map().equals(map)) {
+        final ExplorationMap map = this.map;
+
+        if (map == null || !cell.map().equals(map)) {
             throw new IllegalArgumentException("Cell is not on the current map");
         }
 
@@ -166,6 +186,10 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
             throw new IllegalArgumentException("Map id do not corresponds with player's position");
         }
 
+        if (position().cell() >= map.size()) {
+            throw new IllegalStateException("Invalid cell");
+        }
+
         this.cell = map.get(position().cell());
         this.map = map;
         map.add(this);
@@ -179,8 +203,9 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
      * @param map The new map
      * @param cell The new cell
      */
-    public void changeMap(ExplorationMap map, int cell) {
+    public void changeMap(ExplorationMap map, @IndexFor("#1") int cell) {
         this.map = null;
+        this.cell = null;
         player.setPosition(
             new Position(map.id(), cell)
         );
@@ -196,7 +221,17 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
      *
      * @see ExplorationPlayer#changeMap(ExplorationMap, int) For changing the map and cell
      */
-    public void changeCell(int cell) {
+    public void changeCell(@IndexFor("this.map()") int cell) {
+        final ExplorationMap map = this.map;
+
+        if (map == null) {
+            throw new IllegalStateException("Player is not on map");
+        }
+
+        if (cell >= map.size()) {
+            throw new IllegalArgumentException("The cell " + cell + " do exists on map " + map.id());
+        }
+
         player.setPosition(player.position().newCell(cell));
         this.cell = map.get(cell);
 
@@ -211,12 +246,14 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
             map.remove(this);
             dispatch(new MapLeaved(map));
             map = null;
+            cell = null;
         }
     }
 
     /**
      * Get the inventory
      */
+    @Pure
     public PlayerInventory inventory() {
         return player.inventory();
     }
@@ -224,6 +261,7 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
     /**
      * Handle player interactions
      */
+    @Pure
     public InteractionHandler interactions() {
         return interactions;
     }
@@ -231,6 +269,7 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
     /**
      * Get the player data
      */
+    @Pure
     public GamePlayer player() {
          return player;
     }
@@ -238,6 +277,7 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
     /**
      * Get the restrictions of the exploration player
      */
+    @Pure
     public Restrictions restrictions() {
         return restrictions;
     }

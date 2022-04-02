@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemSet;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -102,8 +103,8 @@ final class SqlItemSetRepository implements ItemSetRepository {
         public ItemSet create(ResultSet rs) throws SQLException {
             return new ItemSet(
                 rs.getInt("ITEM_SET_ID"),
-                rs.getString("ITEM_SET_NAME"),
-                bonusTransformer.unserialize(rs.getString("ITEM_SET_BONUS"))
+                NullnessUtil.castNonNull(rs.getString("ITEM_SET_NAME")),
+                bonusTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("ITEM_SET_BONUS")))
             );
         }
 

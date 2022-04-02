@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.game.fight.turn.action;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
+import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.event.FightActionStarted;
 import fr.quatrevieux.araknemu.game.fight.turn.action.event.FightActionTerminated;
 import io.github.artsok.RepeatedIfExceptionsTest;
@@ -40,6 +42,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ActionHandlerTest extends FightBaseCase {
     private Fight fight;
     private ActionHandler actionHandler;
+    private FightTurn turn;
 
     @Override
     @BeforeEach
@@ -48,7 +51,8 @@ class ActionHandlerTest extends FightBaseCase {
 
         fight = createFight();
         fight.start();
-        actionHandler = new ActionHandler(fight);
+        turn = new FightTurn(fight.fighters().get(0), fight, Duration.ZERO);
+        actionHandler = new ActionHandler(turn, fight);
     }
 
     @Override
@@ -63,7 +67,7 @@ class ActionHandlerTest extends FightBaseCase {
     void startInvalid() {
         assertFalse(actionHandler.start(new Action() {
             @Override
-            public boolean validate() {
+            public boolean validate(Turn turn) {
                 return false;
             }
 
@@ -83,16 +87,6 @@ class ActionHandlerTest extends FightBaseCase {
             }
 
             @Override
-            public void end() {
-
-            }
-
-            @Override
-            public void failed() {
-
-            }
-
-            @Override
             public Duration duration() {
                 return null;
             }
@@ -104,7 +98,7 @@ class ActionHandlerTest extends FightBaseCase {
         Action action = Mockito.mock(Action.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
-        Mockito.when(action.validate()).thenReturn(true);
+        Mockito.when(action.validate(turn)).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(action.duration()).thenReturn(Duration.ZERO);
 
@@ -123,7 +117,7 @@ class ActionHandlerTest extends FightBaseCase {
         Action action = Mockito.mock(Action.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
-        Mockito.when(action.validate()).thenReturn(true);
+        Mockito.when(action.validate(turn)).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
 
         Mockito.when(result.success()).thenReturn(false);
@@ -136,7 +130,7 @@ class ActionHandlerTest extends FightBaseCase {
         assertSame(result, ref.get().result());
 
         Mockito.verify(action, Mockito.never()).duration();
-        Mockito.verify(action).failed();
+        Mockito.verify(result).apply(turn);
     }
 
     @RepeatedIfExceptionsTest
@@ -144,7 +138,7 @@ class ActionHandlerTest extends FightBaseCase {
         Action action = Mockito.mock(Action.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
-        Mockito.when(action.validate()).thenReturn(true);
+        Mockito.when(action.validate(turn)).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(action.duration()).thenReturn(Duration.ofMillis(100));
 
@@ -152,10 +146,10 @@ class ActionHandlerTest extends FightBaseCase {
 
         assertTrue(actionHandler.start(action));
 
-        Mockito.verify(action, Mockito.never()).end();
+        Mockito.verify(result, Mockito.never()).apply(turn);
 
         Thread.sleep(150);
-        Mockito.verify(action, Mockito.times(1)).end();
+        Mockito.verify(result, Mockito.times(1)).apply(turn);
     }
 
     @Test
@@ -163,7 +157,7 @@ class ActionHandlerTest extends FightBaseCase {
         Action action = Mockito.mock(Action.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
-        Mockito.when(action.validate()).thenReturn(true);
+        Mockito.when(action.validate(turn)).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(action.duration()).thenReturn(Duration.ofMillis(1000));
 
@@ -192,7 +186,7 @@ class ActionHandlerTest extends FightBaseCase {
         Action action = Mockito.mock(Action.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
-        Mockito.when(action.validate()).thenReturn(true);
+        Mockito.when(action.validate(turn)).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(action.duration()).thenReturn(Duration.ofMillis(1000));
 
@@ -205,7 +199,7 @@ class ActionHandlerTest extends FightBaseCase {
 
         actionHandler.terminate();
 
-        Mockito.verify(action).end();
+        Mockito.verify(result).apply(turn);
         assertSame(action, ref.get().action());
     }
 
@@ -214,7 +208,7 @@ class ActionHandlerTest extends FightBaseCase {
         Action action = Mockito.mock(Action.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
-        Mockito.when(action.validate()).thenReturn(true);
+        Mockito.when(action.validate(turn)).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(action.duration()).thenReturn(Duration.ofMillis(200));
 
@@ -225,7 +219,7 @@ class ActionHandlerTest extends FightBaseCase {
         actionHandler.terminate();
 
         Thread.sleep(250);
-        Mockito.verify(action, Mockito.times(1)).end();
+        Mockito.verify(result, Mockito.times(1)).apply(turn);
     }
 
     @Test
@@ -233,7 +227,7 @@ class ActionHandlerTest extends FightBaseCase {
         Action action = Mockito.mock(Action.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
-        Mockito.when(action.validate()).thenReturn(true);
+        Mockito.when(action.validate(turn)).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(action.duration()).thenReturn(Duration.ofMillis(1000));
 
@@ -255,10 +249,10 @@ class ActionHandlerTest extends FightBaseCase {
         Action action = Mockito.mock(Action.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
-        Mockito.when(action.validate()).thenReturn(true);
+        Mockito.when(action.validate(turn)).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(action.duration()).thenReturn(Duration.ofMillis(1000));
-        Mockito.doThrow(new RuntimeException()).when(action).end();
+        Mockito.doThrow(new RuntimeException()).when(result).apply(turn);
 
         Mockito.when(result.success()).thenReturn(true);
 
@@ -277,7 +271,7 @@ class ActionHandlerTest extends FightBaseCase {
         Action action = Mockito.mock(Action.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
-        Mockito.when(action.validate()).thenReturn(true);
+        Mockito.when(action.validate(turn)).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(action.duration()).thenReturn(Duration.ofMillis(1000));
 
@@ -309,7 +303,7 @@ class ActionHandlerTest extends FightBaseCase {
         Action action = Mockito.mock(Action.class);
         ActionResult result = Mockito.mock(ActionResult.class);
 
-        Mockito.when(action.validate()).thenReturn(true);
+        Mockito.when(action.validate(turn)).thenReturn(true);
         Mockito.when(action.start()).thenReturn(result);
         Mockito.when(action.duration()).thenReturn(Duration.ofMillis(1000));
 
@@ -323,8 +317,7 @@ class ActionHandlerTest extends FightBaseCase {
 
         actionHandler.terminate();
 
-        Mockito.verify(action, Mockito.never()).end();
+        Mockito.verify(result, Mockito.never()).apply(turn);
         assertNull(ref.get());
     }
-
 }

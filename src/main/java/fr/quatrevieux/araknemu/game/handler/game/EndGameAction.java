@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.handler.game;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * End the current game action with success
@@ -29,8 +30,7 @@ import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionAcknowledge
 public final class EndGameAction implements PacketHandler<GameSession, GameActionAcknowledge> {
     @Override
     public void handle(GameSession session, GameActionAcknowledge packet) throws Exception {
-        session
-            .exploration()
+        NullnessUtil.castNonNull(session.exploration())
             .interactions()
             .end(packet.actionId())
         ;

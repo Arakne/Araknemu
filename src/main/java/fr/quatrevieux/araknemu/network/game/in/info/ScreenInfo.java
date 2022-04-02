@@ -20,9 +20,12 @@
 package fr.quatrevieux.araknemu.network.game.in.info;
 
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.PacketTokenizer;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
-import org.apache.commons.lang3.StringUtils;
+import fr.quatrevieux.araknemu.util.ParseUtils;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Send the screen information (size, and state)
@@ -36,21 +39,21 @@ public final class ScreenInfo implements Packet {
         OTHER
     }
 
-    private final int width;
-    private final int height;
+    private final @Positive int width;
+    private final @Positive int height;
     private final State state;
 
-    public ScreenInfo(int width, int height, State state) {
+    public ScreenInfo(@Positive int width, @Positive int height, State state) {
         this.width = width;
         this.height = height;
         this.state = state;
     }
 
-    public int width() {
+    public @Positive int width() {
         return width;
     }
 
-    public int height() {
+    public @Positive int height() {
         return height;
     }
 
@@ -59,23 +62,21 @@ public final class ScreenInfo implements Packet {
     }
 
     public static final class Parser implements SinglePacketParser<ScreenInfo> {
+        private final State[] states = State.values();
+
         @Override
         public ScreenInfo parse(String input) throws ParsePacketException {
-            final String[] parts = StringUtils.split(input, ";", 3);
+            final PacketTokenizer tokenizer = tokenize(input, ';');
 
-            if (parts.length != 3) {
-                throw new ParsePacketException("Ir" + input, "Screen info must be composed of 3 parts");
-            }
+            final int width = tokenizer.nextPositiveInt();
+            final int height = tokenizer.nextPositiveInt();
+            final int state = Math.min(ParseUtils.parseDecimalChar(tokenizer.nextPart()), states.length - 1);
 
-            return new ScreenInfo(
-                Integer.parseInt(parts[0]),
-                Integer.parseInt(parts[1]),
-                State.values()[parts[2].charAt(0) - '0']
-            );
+            return new ScreenInfo(width, height, states[state]);
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "Ir";
         }
     }

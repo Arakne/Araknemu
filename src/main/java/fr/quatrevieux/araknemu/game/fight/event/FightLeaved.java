@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.event;
 
 import fr.quatrevieux.araknemu.game.fight.ending.reward.FightReward;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Optional;
 
@@ -27,13 +28,13 @@ import java.util.Optional;
  * The fighter has leave the fight
  */
 public final class FightLeaved {
-    private final FightReward reward;
+    private final @Nullable FightReward reward;
 
     public FightLeaved() {
         this(null);
     }
 
-    public FightLeaved(FightReward reward) {
+    public FightLeaved(@Nullable FightReward reward) {
         this.reward = reward;
     }
 

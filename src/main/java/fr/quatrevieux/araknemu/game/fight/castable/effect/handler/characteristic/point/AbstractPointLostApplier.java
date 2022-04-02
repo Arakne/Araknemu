@@ -31,6 +31,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.player.characteristic.ComputedCharacteristics;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Compute and apply turn point lost (action or movement)
@@ -97,7 +98,7 @@ public abstract class AbstractPointLostApplier {
     /**
      * Create the buff effect for the given point lost
      */
-    private SpellEffect buffEffect(SpellEffect baseEffect, int pointLost) {
+    private SpellEffect buffEffect(SpellEffect baseEffect, @NonNegative int pointLost) {
         return removalPointEffect == USE_SPELL_EFFECT
             ? BuffEffect.fixed(baseEffect, pointLost)
             : BuffEffect.withCustomEffect(baseEffect, removalPointEffect, pointLost)
@@ -113,7 +114,7 @@ public abstract class AbstractPointLostApplier {
      *
      * @return Number of lost points. Can be 0 if dodge all loose, and cannot exceed value parameter.
      */
-    private int computePointLost(ActiveFighter caster, PassiveFighter target, int value) {
+    private int computePointLost(ActiveFighter caster, PassiveFighter target, @NonNegative int value) {
         final int maxPoints = target.characteristics().initial().get(this.characteristic);
         final int currentPoints = target.characteristics().get(this.characteristic);
 

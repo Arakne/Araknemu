@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.data.world.entity.environment;
 import fr.arakne.utils.maps.serializer.CellData;
 import fr.arakne.utils.value.Dimensions;
 import fr.quatrevieux.araknemu.data.value.Geolocation;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ import java.util.List;
  * Entity for Dofus map
  */
 public final class MapTemplate {
-    private final int id;
+    private final @NonNegative int id;
     private final String date;
     private final Dimensions dimensions;
     private final String key;
@@ -39,7 +40,7 @@ public final class MapTemplate {
     private final int subAreaId;
     private final boolean indoor;
 
-    public MapTemplate(int id, String date, Dimensions dimensions, String key, CellData[] cells, List<Integer>[] fightPlaces, Geolocation geolocation, int subAreaId, boolean indoor) {
+    public MapTemplate(@NonNegative int id, String date, Dimensions dimensions, String key, CellData[] cells, List<Integer>[] fightPlaces, Geolocation geolocation, int subAreaId, boolean indoor) {
         this.id = id;
         this.date = date;
         this.dimensions = dimensions;
@@ -51,7 +52,7 @@ public final class MapTemplate {
         this.indoor = indoor;
     }
 
-    public int id() {
+    public @NonNegative int id() {
         return id;
     }
 

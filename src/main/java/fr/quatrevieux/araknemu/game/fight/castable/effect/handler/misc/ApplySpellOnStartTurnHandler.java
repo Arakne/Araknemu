@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
+import fr.quatrevieux.araknemu.util.Asserter;
 
 /**
  * Apply related spell effects on start turn of the target fighter
@@ -64,12 +65,14 @@ public final class ApplySpellOnStartTurnHandler implements EffectHandler, BuffHo
     @Override
     public boolean onStartTurn(Buff buff) {
         final PassiveFighter target = buff.target();
-        final Spell spell = spellService.get(buff.effect().min()).level(buff.effect().max());
+        final Spell spell = spellService.get(buff.effect().min())
+            .level(Asserter.assertPositive(buff.effect().max()))
+        ;
 
-        final CastScope castScope = new CastScope(spell, (ActiveFighter) target, target.cell());
+        final CastScope castScope = CastScope.probable(spell, (ActiveFighter) target, target.cell(), spell.effects());
 
         fight.send(ActionEffect.launchVisualEffect(target, target.cell(), spell));
-        fight.effects().apply(castScope.withRandomEffects(spell.effects()));
+        fight.effects().apply(castScope);
 
         return !target.dead();
     }

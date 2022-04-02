@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.transformer.PermissionsTransformer;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -178,12 +179,12 @@ final class SqlAccountRepository implements AccountRepository {
         public Account create(ResultSet rs) throws SQLException {
             return new Account(
                 rs.getInt("ACCOUNT_ID"),
-                rs.getString("USERNAME"),
-                rs.getString("PASSWORD"),
-                rs.getString("PSEUDO"),
+                NullnessUtil.castNonNull(rs.getString("USERNAME")),
+                NullnessUtil.castNonNull(rs.getString("PASSWORD")),
+                NullnessUtil.castNonNull(rs.getString("PSEUDO")),
                 permissionsTransformer.unserialize(rs.getInt("PERMISSIONS")),
-                rs.getString("QUESTION"),
-                rs.getString("ANSWER")
+                NullnessUtil.castNonNull(rs.getString("QUESTION")),
+                NullnessUtil.castNonNull(rs.getString("ANSWER"))
             );
         }
 

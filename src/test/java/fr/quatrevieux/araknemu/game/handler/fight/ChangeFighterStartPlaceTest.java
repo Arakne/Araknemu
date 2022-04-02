@@ -66,6 +66,22 @@ class ChangeFighterStartPlaceTest extends FightBaseCase {
     }
 
     @Test
+    void handleInvalidCell() throws Exception {
+        fight = createFight();
+        fighter = player.fighter();
+
+        try {
+            handler.handle(session, new FighterChangePlace(1000));
+            fail("ErrorPacket must be thrown");
+        } catch (ErrorPacket e) {
+            assertEquals(
+                new ChangeFighterPlaceError().toString(),
+                e.packet().toString()
+            );
+        }
+    }
+
+    @Test
     void handleSuccess() throws Exception {
         fight = createFight();
         fighter = player.fighter();

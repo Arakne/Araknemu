@@ -25,12 +25,20 @@ import fr.quatrevieux.araknemu.data.transformer.ImmutableCharacteristicsTransfor
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.SortedMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class RaceBaseStatsTransformerTest extends TestCase {
     private RaceBaseStatsTransformer transformer = new RaceBaseStatsTransformer(new ImmutableCharacteristicsTransformer());
+
+    @Test
+    void invalid() {
+        assertThrows(IllegalArgumentException.class, () -> transformer.unserialize(null));
+        assertThrows(IllegalArgumentException.class, () -> transformer.unserialize(""));
+        assertThrows(UnsupportedOperationException.class, () -> transformer.serialize(null));
+    }
 
     @Test
     void unserialize() {

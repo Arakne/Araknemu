@@ -45,9 +45,14 @@ class DefaultDatabaseHandlerTest extends TestCase {
                 new IniDriver(
                     new Ini(new File("src/test/test_config.ini"))
                 )
-            ).module(DatabaseConfiguration.class),
+            ).module(DatabaseConfiguration.MODULE),
             LogManager.getLogger()
         );
+    }
+
+    @Test
+    void getWithInvalidDriver() {
+        assertThrows(IllegalArgumentException.class, () -> handler.get("invalid"));
     }
 
     @Test

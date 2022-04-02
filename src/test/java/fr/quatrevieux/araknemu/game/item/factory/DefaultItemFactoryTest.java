@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.SuperType;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
+import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
 import fr.quatrevieux.araknemu.game.item.type.Resource;
 import org.junit.jupiter.api.Test;
 
@@ -35,7 +35,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DefaultItemFactoryTest extends GameBaseCase {
     @Test
@@ -51,7 +53,7 @@ class DefaultItemFactoryTest extends GameBaseCase {
     @Test
     void createSuccess() throws ContainerException {
         DefaultItemFactory factory = new DefaultItemFactory(
-            new ResourceFactory(container.get(EffectMappers.class))
+            new ResourceFactory(container.get(EffectToSpecialMapping.class))
         );
 
         ItemTemplate template = new ItemTemplate(284, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10);
@@ -67,7 +69,7 @@ class DefaultItemFactoryTest extends GameBaseCase {
     @Test
     void retrieveSuccess() throws ContainerException {
         DefaultItemFactory factory = new DefaultItemFactory(
-            new ResourceFactory(container.get(EffectMappers.class))
+            new ResourceFactory(container.get(EffectToSpecialMapping.class))
         );
 
         ItemTemplate template = new ItemTemplate(284, 48, "Sel", 1, new ArrayList<>(), 1, "", 0, "", 10);

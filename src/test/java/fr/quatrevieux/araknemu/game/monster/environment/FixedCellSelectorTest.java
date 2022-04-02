@@ -38,7 +38,7 @@ class FixedCellSelectorTest extends GameBaseCase {
 
         dataSet.pushMaps().pushSubAreas().pushAreas();
 
-        selector = new FixedCellSelector(new Position(10340, 123));
+        selector = new FixedCellSelector(123);
     }
 
     @Test
@@ -47,5 +47,19 @@ class FixedCellSelectorTest extends GameBaseCase {
         selector.setMap(map);
 
         assertEquals(map.get(123), selector.cell());
+    }
+
+    @Test
+    void cellWithoutMap() {
+        assertThrows(IllegalStateException.class, selector::cell);
+    }
+
+    @Test
+    void cellInvalid() {
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
+        selector = new FixedCellSelector(1000);
+        selector.setMap(map);
+
+        assertThrows(IllegalStateException.class, selector::cell);
     }
 }

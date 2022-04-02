@@ -23,6 +23,8 @@ import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.player.experience.event.PlayerLevelUp;
 import fr.quatrevieux.araknemu.game.player.experience.event.PlayerXpChanged;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
 
 /**
  * Manage the player level and experience
@@ -41,28 +43,28 @@ public final class GamePlayerExperience {
     /**
      * Get the current player level
      */
-    public int level() {
+    public @Positive int level() {
         return entity.level();
     }
 
     /**
      * Get the minimal experience for current level
      */
-    public long min() {
+    public @NonNegative long min() {
         return service.byLevel(entity.level()).experience();
     }
 
     /**
      * Get the current player experience
      */
-    public long current() {
+    public @NonNegative long current() {
         return entity.experience();
     }
 
     /**
      * Get the next level experience
      */
-    public long max() {
+    public @NonNegative long max() {
         return service.byLevel(entity.level() + 1).experience();
     }
 
@@ -78,7 +80,7 @@ public final class GamePlayerExperience {
      *
      * @param experience Experience to add
      */
-    public void add(long experience) {
+    public void add(@NonNegative long experience) {
         entity.setExperience(entity.experience() + experience);
 
         if (maxLevelReached()) {

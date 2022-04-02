@@ -23,6 +23,7 @@ import fr.arakne.utils.value.Interval;
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.function.BiConsumer;
 
@@ -31,6 +32,8 @@ import java.util.function.BiConsumer;
  *
  * Computed value is :
  * ( [jet + boost] * percent / 100 + fixed + effectBonus ) * multiply
+ *
+ * @todo mettre des positive et non negative de partout
  */
 public final class EffectValue implements Cloneable {
     enum State {
@@ -51,8 +54,8 @@ public final class EffectValue implements Cloneable {
     private int boost = 0;
     private int percent = 100;
     private int fixed = 0;
-    private int multiply = 1;
-    private int value = 0;
+    private @NonNegative int multiply = 1;
+    private @NonNegative int value = 0;
 
     EffectValue(SpellEffect effect) {
         this.effect = effect;
@@ -138,7 +141,7 @@ public final class EffectValue implements Cloneable {
      * Unlike percent, the multiplier will be used at the end of the operation.
      * So, it multiplies jet, percent and fixed bonus
      */
-    public EffectValue multiply(int value) {
+    public EffectValue multiply(@NonNegative int value) {
         this.multiply = value;
 
         return this;
@@ -147,7 +150,7 @@ public final class EffectValue implements Cloneable {
     /**
      * Get the dice value
      */
-    public int value() {
+    public @NonNegative int value() {
         return applyBoost(jet());
     }
 
@@ -235,7 +238,7 @@ public final class EffectValue implements Cloneable {
         }
     }
 
-    private int jet() {
+    private @NonNegative int jet() {
         switch (state) {
             case FIXED:
                 return value;
@@ -252,7 +255,7 @@ public final class EffectValue implements Cloneable {
         }
     }
 
-    private int applyBoost(int value) {
+    private @NonNegative int applyBoost(int value) {
         return Math.max(
             ((boost + value) * percent / 100 + fixed + effect.boost()) * multiply,
             0

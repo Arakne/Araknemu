@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.world.entity.environment.area.Area;
 import fr.quatrevieux.araknemu.data.world.repository.environment.area.AreaRepository;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -96,7 +97,7 @@ final class SqlAreaRepository implements AreaRepository {
         public Area create(ResultSet rs) throws SQLException {
             return new Area(
                 rs.getInt("AREA_ID"),
-                rs.getString("AREA_NAME"),
+                NullnessUtil.castNonNull(rs.getString("AREA_NAME")),
                 rs.getInt("SUPERAREA_ID")
             );
         }

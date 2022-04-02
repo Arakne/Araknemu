@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.exploration.interaction.request;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Implementation of {@link Invitation} using {@link InvitationHandler}
@@ -47,7 +48,7 @@ public final class SimpleInvitation implements Invitation {
     }
 
     @Override
-    public Interaction start() {
+    public @Nullable Interaction start() {
         if (!handler.check(this)) {
             return null;
         }

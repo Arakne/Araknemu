@@ -53,11 +53,11 @@ class InventoryEntryTest extends GameBaseCase {
         dataSet.pushItemTemplates();
 
         inventory = new PlayerInventory(
+            gamePlayer(true),
             dataSet.refresh(new Player(gamePlayer().id())),
             Collections.emptyList()
         );
 
-        inventory.attach(gamePlayer(true));
         dispatcher = gamePlayer().dispatcher();
     }
 
@@ -183,22 +183,6 @@ class InventoryEntryTest extends GameBaseCase {
 
         assertEquals(9, entry.quantity());
         assertSame(entry, ref.get().entry());
-    }
-
-    @Test
-    void removeNegativeQuantity() throws InventoryException, ContainerException {
-        InventoryEntry entry = inventory.add(
-            container.get(ItemService.class).create(284),
-            12
-        );
-
-        AtomicReference<ObjectQuantityChanged> ref = new AtomicReference<>();
-        dispatcher.add(ObjectQuantityChanged.class, ref::set);
-
-        assertThrows(InventoryException.class, () -> entry.remove(-3));
-
-        assertEquals(12, entry.quantity());
-        assertNull(ref.get());
     }
 
     @Test

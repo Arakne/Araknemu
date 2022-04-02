@@ -19,13 +19,15 @@
 
 package fr.quatrevieux.araknemu.game.spell;
 
+import org.checkerframework.dataflow.qual.Pure;
+
 /**
  * List of spells
  */
 public interface SpellList extends Iterable<Spell> {
     /**
      * Get one spell by its id
-     * {@link SpellList#has(int)} must be called before, and returns true. If not undefined behavior can occurs
+     * {@link SpellList#has(int)} must be called before, and returns true. If not undefined behavior can occur
      *
      * @param spellId The spell id
      */
@@ -36,5 +38,6 @@ public interface SpellList extends Iterable<Spell> {
      *
      * @param spellId ID of the spell to check
      */
+    @Pure
     public boolean has(int spellId);
 }

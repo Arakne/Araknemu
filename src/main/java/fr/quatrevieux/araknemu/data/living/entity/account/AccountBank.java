@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.living.entity.account;
 
 import fr.quatrevieux.araknemu.data.living.entity.WalletEntity;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Store the bank information for a server account
@@ -27,9 +28,9 @@ import fr.quatrevieux.araknemu.data.living.entity.WalletEntity;
 public final class AccountBank implements WalletEntity {
     private final int accountId;
     private final int serverId;
-    private long kamas;
+    private @NonNegative long kamas;
 
-    public AccountBank(int accountId, int serverId, long kamas) {
+    public AccountBank(int accountId, int serverId, @NonNegative long kamas) {
         this.accountId = accountId;
         this.serverId = serverId;
         this.kamas = kamas;
@@ -54,12 +55,12 @@ public final class AccountBank implements WalletEntity {
     }
 
     @Override
-    public long kamas() {
+    public @NonNegative long kamas() {
         return kamas;
     }
 
     @Override
-    public void setKamas(long kamas) {
+    public void setKamas(@NonNegative long kamas) {
         this.kamas = kamas;
     }
 }

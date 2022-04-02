@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.fighter;
 
 import fr.quatrevieux.araknemu.game.spell.SpellList;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public interface ActiveFighter extends PassiveFighter {
     /**
@@ -36,7 +37,7 @@ public interface ActiveFighter extends PassiveFighter {
      *
      * @see Fighter#attach(Object, Object) For set the attachment
      */
-    public Object attachment(Object key);
+    public @Nullable Object attachment(Object key);
 
     /**
      * Get attachment by its class
@@ -47,7 +48,7 @@ public interface ActiveFighter extends PassiveFighter {
      *
      * @see Fighter#attach(Object) Fir set the attachment
      */
-    public default <T> T attachment(Class<T> type) {
+    public default <T> @Nullable T attachment(Class<T> type) {
         return type.cast(attachment((Object) type));
     }
 }

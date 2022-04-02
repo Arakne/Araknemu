@@ -20,10 +20,12 @@
 package fr.quatrevieux.araknemu.network.game.in.exchange;
 
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.PacketTokenizer;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangeType;
-import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.common.value.qual.MinLen;
 
 import java.util.Optional;
 
@@ -34,10 +36,10 @@ import java.util.Optional;
  */
 public final class ExchangeRequest implements Packet {
     private final ExchangeType type;
-    private final Integer id;
-    private final Integer cell;
+    private final @Nullable Integer id;
+    private final @Nullable Integer cell;
 
-    public ExchangeRequest(ExchangeType type, Integer id, Integer cell) {
+    public ExchangeRequest(ExchangeType type, @Nullable Integer id, @Nullable Integer cell) {
         this.type = type;
         this.id = id;
         this.cell = cell;
@@ -67,29 +69,29 @@ public final class ExchangeRequest implements Packet {
     }
 
     public static final class Parser implements SinglePacketParser<ExchangeRequest> {
+        private final ExchangeType[] types = ExchangeType.values();
+
         @Override
         public ExchangeRequest parse(String input) throws ParsePacketException {
-            final String[] parts = StringUtils.splitPreserveAllTokens(input, "|", 3);
+            final PacketTokenizer tokenizer = tokenize(input, '|');
 
-            if (parts.length < 2) {
-                throw new ParsePacketException(code() + input, "Exchange request must have at least two parts");
-            }
+            final int typeId = tokenizer.nextInt();
+            final String targetId = tokenizer.nextPart();
+            final String cellId = tokenizer.nextPartOrDefault("");
 
-            final int typeId = Integer.parseInt(parts[0]);
-
-            if (typeId < 0 || typeId >= ExchangeType.values().length) {
+            if (typeId < 0 || typeId >= types.length) {
                 throw new ParsePacketException(code() + input, "Invalid exchange type");
             }
 
             return new ExchangeRequest(
-                ExchangeType.values()[typeId],
-                !parts[1].isEmpty() ? Integer.parseInt(parts[1]) : null,
-                parts.length == 3 && !parts[2].isEmpty() ? Integer.parseInt(parts[2]) : null
+                types[typeId],
+                !targetId.isEmpty() ? Integer.parseInt(targetId) : null,
+                !cellId.isEmpty() ? Integer.parseInt(cellId) : null
             );
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "ER";
         }
     }

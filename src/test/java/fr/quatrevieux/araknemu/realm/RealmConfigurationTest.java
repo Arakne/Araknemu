@@ -29,19 +29,17 @@ import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RealmConfigurationTest {
     private RealmConfiguration configuration;
 
     @BeforeEach
     void setUp() throws IOException {
-        configuration = new RealmConfiguration();
-        configuration.setPool(
-            new IniDriver(
-                new Ini(new File("src/test/test_config.ini"))
-            ).pool("realm")
-        );
+        configuration = new RealmConfiguration(new IniDriver(
+            new Ini(new File("src/test/test_config.ini"))
+        ).pool("realm"));
     }
 
     @Test

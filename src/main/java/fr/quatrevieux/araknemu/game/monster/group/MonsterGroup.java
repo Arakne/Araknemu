@@ -49,6 +49,7 @@ public final class MonsterGroup implements ExplorationCreature {
     private Direction orientation;
     private ExplorationMapCell cell;
 
+    @SuppressWarnings({"assignment", "argument"})
     public MonsterGroup(LivingMonsterGroupPosition handler, int id, List<Monster> monsters, Direction orientation, ExplorationMapCell cell, Position winFightTeleportPosition) {
         this.handler = handler;
         this.id = id;

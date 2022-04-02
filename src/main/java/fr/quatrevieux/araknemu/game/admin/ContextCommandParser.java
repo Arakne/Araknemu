@@ -25,6 +25,8 @@ import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
 import fr.quatrevieux.araknemu.game.admin.exception.ContextNotFoundException;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.index.qual.LTEqLengthOf;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -117,11 +119,12 @@ public final class ContextCommandParser implements CommandParser {
      */
     private Context parseContext(State state) throws AdminException {
         final char prefix = state.current();
+        final ContextResolver resolver = resolvers.get(prefix);
         final Context context;
 
-        if (resolvers.containsKey(prefix)) {
+        if (resolver != null) {
             state.next();
-            context = resolvers.get(prefix).resolve(state.performer, () -> state.skipBlank().nextWord());
+            context = resolver.resolve(state.performer, () -> state.skipBlank().nextWord());
         } else {
             context = defaultContextFactory.apply(state.performer);
         }
@@ -150,7 +153,7 @@ public final class ContextCommandParser implements CommandParser {
     private static class State {
         private final AdminPerformer performer;
         private final String line;
-        private int cursor = 0;
+        private @NonNegative @LTEqLengthOf("line") int cursor = 0;
 
         public State(AdminPerformer performer, String line) {
             this.performer = performer;
@@ -160,6 +163,7 @@ public final class ContextCommandParser implements CommandParser {
         /**
          * Get the character at the cursor position
          */
+        @SuppressWarnings("argument") // Let charAt fail if cursor is too high
         public char current() {
             return line.charAt(cursor);
         }
@@ -168,7 +172,9 @@ public final class ContextCommandParser implements CommandParser {
          * Move to the next character
          */
         public State next() {
-            ++cursor;
+            if (cursor < line.length()) {
+                ++cursor;
+            }
 
             return this;
         }

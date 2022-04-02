@@ -74,7 +74,7 @@ public final class PlayerConstraints extends AbstractConstraintBuilderFactory<Pl
             .maxLength(configuration.nameMaxLength())
 
             .error(Error.NAME_ALEREADY_EXISTS)
-            .not(b -> b.entityCheck(repository::nameExists))
+            .not(b -> b.entityCheck(entity -> repository.nameExists(entity.serverId(), entity.name())))
 
             .error(Error.CREATE_CHARACTER_FULL)
             .value(repository::accountCharactersCount)

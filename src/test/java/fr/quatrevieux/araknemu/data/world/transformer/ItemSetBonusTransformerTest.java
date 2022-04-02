@@ -36,6 +36,7 @@ class ItemSetBonusTransformerTest extends TestCase {
     @Test
     void serializeEmpty() {
         assertEquals("", transformer.serialize(Collections.emptyList()));
+        assertNull(transformer.serialize(null));
     }
 
     @Test

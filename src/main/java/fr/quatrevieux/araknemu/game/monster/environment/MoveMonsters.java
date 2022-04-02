@@ -29,6 +29,8 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.common.value.qual.IntRange;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -44,8 +46,8 @@ import java.util.Optional;
 public final class MoveMonsters implements Task {
     private final MonsterEnvironmentService service;
     private final Duration delay;
-    private final int moveChance;
-    private final int maxDistance;
+    private final @IntRange(from = 0, to = 100) int moveChance;
+    private final @Positive int maxDistance;
 
     private final RandomUtil random = new RandomUtil();
 
@@ -57,7 +59,7 @@ public final class MoveMonsters implements Task {
      * @param moveChance Move chance for each groups, in percent
      * @param maxDistance The maximum move distance in cell count
      */
-    public MoveMonsters(MonsterEnvironmentService service, Duration delay, int moveChance, int maxDistance) {
+    public MoveMonsters(MonsterEnvironmentService service, Duration delay, @IntRange(from = 0, to = 100) int moveChance, @Positive int maxDistance) {
         this.service = service;
         this.delay = delay;
         this.moveChance = moveChance;

@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.game.exploration.interaction;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Base interface for player interactions
  */
@@ -28,7 +30,7 @@ public interface Interaction {
      *
      * @return The started interaction or null if the interaction is aborted
      */
-    public Interaction start();
+    public @Nullable Interaction start();
 
     /**
      * Terminate the interaction

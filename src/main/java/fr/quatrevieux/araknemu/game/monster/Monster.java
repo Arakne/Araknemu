@@ -24,6 +24,9 @@ import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterTemplate;
 import fr.quatrevieux.araknemu.game.monster.reward.MonsterReward;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
+import org.checkerframework.checker.index.qual.IndexFor;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
 
 /**
  * Monster grade data
@@ -33,9 +36,10 @@ public final class Monster {
     private final MonsterTemplate template;
     private final SpellList spellList;
     private final MonsterReward reward;
-    private final int grade;
+    private final @NonNegative @IndexFor("template.grades()") int grade;
 
-    public Monster(MonsterTemplate template, SpellList spellList, MonsterReward reward, int grade) {
+    @SuppressWarnings({"argument", "assignment"}) // checker do not track reference of template
+    public Monster(MonsterTemplate template, SpellList spellList, MonsterReward reward, @NonNegative @IndexFor("#1.grades()") int grade) {
         this.template = template;
         this.spellList = spellList;
         this.reward = reward;
@@ -56,14 +60,14 @@ public final class Monster {
         return template.gfxId();
     }
 
-    public int gradeNumber() {
+    public @Positive int gradeNumber() {
         return grade + 1;
     }
 
     /**
      * The grade level
      */
-    public int level() {
+    public @Positive int level() {
         return template.grades()[grade].level();
     }
 

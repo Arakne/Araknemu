@@ -20,16 +20,20 @@
 package fr.quatrevieux.araknemu.core.config;
 
 /**
- * Configuration for a module
+ * Create a configuration object related to the configuration pool
+ * The instance of the configuration should be cached, and used as a singleton / static final constant
+ *
+ * @param <C> The configuration class
  */
-public interface ConfigurationModule {
+public interface ConfigurationModule<C> {
     /**
-     * Set the configuration pool to the module
+     * Create the configuration object from the pool
      */
-    public void setPool(Pool pool);
+    public C create(Pool pool);
 
     /**
      * Get the module name
+     * This name is used as configuration section
      */
     public String name();
 }

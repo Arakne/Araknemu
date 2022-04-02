@@ -86,6 +86,18 @@ class LaunchFireworkTest extends GameBaseCase {
     }
 
     @Test
+    void startNotOnMap() throws SQLException {
+        explorationPlayer().leave();
+        requestStack.clear();
+
+        ActionQueue queue = new ActionQueue();
+        action.start(queue);
+
+        requestStack.assertEmpty();
+        assertFalse(queue.isBusy());
+    }
+
+    @Test
     void cancel() {
         action.cancel(null);
     }

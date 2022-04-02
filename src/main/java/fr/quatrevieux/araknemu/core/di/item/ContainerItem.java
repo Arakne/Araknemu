@@ -21,12 +21,13 @@ package fr.quatrevieux.araknemu.core.di.item;
 
 import fr.quatrevieux.araknemu.core.di.Container;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Item of a container
  * @param <T> Contained item
  */
-public interface ContainerItem<T> {
+public interface ContainerItem<T extends @NonNull Object> {
     /**
      * The item type
      */
@@ -39,5 +40,5 @@ public interface ContainerItem<T> {
      *
      * @return The contained value
      */
-    public T value(Container container) throws ContainerException;
+    public @NonNull T value(Container container) throws ContainerException;
 }

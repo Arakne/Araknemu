@@ -49,10 +49,9 @@ class InventorySlotsTest extends GameBaseCase {
                 new DefaultListenerAggregate(),
                 null,
                 Collections.emptyList()
-            )
+            ),
+            gamePlayer()
         );
-
-        slots.init(gamePlayer());
     }
 
     @Test
@@ -101,7 +100,6 @@ class InventorySlotsTest extends GameBaseCase {
 
     @Test
     void getInvalid() {
-        assertThrows(InventoryException.class, () -> slots.get(-15));
         assertThrows(InventoryException.class, () -> slots.get(123));
     }
 

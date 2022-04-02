@@ -24,7 +24,8 @@ import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.ActionFactory;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
-import org.apache.commons.lang3.StringUtils;
+import fr.quatrevieux.araknemu.util.Splitter;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -43,10 +44,10 @@ import java.util.stream.Collectors;
  */
 public final class RemoveObject implements Action {
     private final int itemId;
-    private final int quantity;
+    private final @Positive int quantity;
     private final boolean required;
 
-    public RemoveObject(int itemId, int quantity, boolean required) {
+    public RemoveObject(int itemId, @Positive int quantity, boolean required) {
         this.itemId = itemId;
         this.quantity = quantity;
         this.required = required;
@@ -86,6 +87,11 @@ public final class RemoveObject implements Action {
         for (InventoryEntry entry : entries) {
             final int toRemove = Math.min(entry.quantity(), currentQuantity);
 
+            // Should not occur: entry.quantity() is == 0 only temporary on entry deletion
+            if (toRemove <= 0) {
+                continue;
+            }
+
             entry.remove(toRemove);
             currentQuantity -= toRemove;
 
@@ -103,12 +109,12 @@ public final class RemoveObject implements Action {
 
         @Override
         public Action create(ResponseAction entity) {
-            final String[] arguments = StringUtils.split(entity.arguments(), ",", 3);
+            final Splitter splitter = new Splitter(entity.arguments(), ',');
 
             return new RemoveObject(
-                Integer.parseInt(arguments[0]),
-                arguments.length > 1 ? Integer.parseInt(arguments[1]) : 1,
-                arguments.length < 3 || "1".equals(arguments[2])
+                splitter.nextInt(),
+                splitter.nextPositiveIntOrDefault(1),
+                !splitter.hasNext() || "1".equals(splitter.nextPart())
             );
         }
     }

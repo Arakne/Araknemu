@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.network.realm.in;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Choose a game server
@@ -51,7 +52,7 @@ public final class ChooseServer implements Packet {
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "AX";
         }
     }

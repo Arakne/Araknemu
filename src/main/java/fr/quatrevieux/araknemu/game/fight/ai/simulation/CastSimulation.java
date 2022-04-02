@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
+import org.checkerframework.checker.index.qual.Positive;
 
 /**
  * The simulation result of a cast
@@ -147,7 +148,7 @@ public final class CastSimulation {
      * @param duration The poison duration in turns
      * @param target The target fighter
      */
-    public void addPoison(final Interval value, final int duration, final PassiveFighter target) {
+    public void addPoison(final Interval value, final @Positive int duration, final PassiveFighter target) {
         apply(new EffectValueComputer() {
             @Override
             public double lifeChange() {

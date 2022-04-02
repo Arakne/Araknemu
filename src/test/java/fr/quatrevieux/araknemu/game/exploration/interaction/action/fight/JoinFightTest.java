@@ -99,6 +99,17 @@ class JoinFightTest extends FightBaseCase {
         );
     }
 
+    @Test
+    void notOnMap() throws SQLException, ContainerException {
+        explorationPlayer().leave();
+
+        action.start(new ActionQueue());
+
+        requestStack.assertLast(
+            new GameActionResponse("", ActionType.JOIN_FIGHT, player.id(), "p")
+        );
+    }
+
     @RepeatedIfExceptionsTest
     void fullTeam() throws SQLException, ContainerException, JoinFightException, InterruptedException {
         for (int i = 10; fight.team(0).fighters().size() < fight.team(0).startPlaces().size(); ++i) {

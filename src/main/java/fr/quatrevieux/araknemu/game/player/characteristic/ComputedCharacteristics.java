@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.player.characteristic;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Objects;
 
@@ -58,7 +59,7 @@ public class ComputedCharacteristics<C extends Characteristics> implements Chara
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

@@ -178,7 +178,6 @@ import fr.quatrevieux.araknemu.game.handler.loader.LoggedLoader;
 import fr.quatrevieux.araknemu.game.handler.loader.PlayingLoader;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.SuperType;
-import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMappers;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToCharacteristicMapping;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToSpecialMapping;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectToUseMapping;
@@ -289,7 +288,7 @@ public final class GameModule implements ContainerModule {
 
         configurator.factory(
             GameConfiguration.class,
-            container -> app.configuration().module(GameConfiguration.class)
+            container -> app.configuration().module(GameConfiguration.MODULE)
         );
 
         configurator.factory(
@@ -543,7 +542,8 @@ public final class GameModule implements ContainerModule {
                 container.get(ItemFactory.class),
                 container.get(ItemSetRepository.class),
                 container.get(ItemTypeRepository.class),
-                container.get(EffectMappers.class)
+                container.get(EffectToCharacteristicMapping.class),
+                container.get(EffectToSpecialMapping.class)
             )
         );
 
@@ -758,35 +758,35 @@ public final class GameModule implements ContainerModule {
 
         configurator.persist(SpectatorFactory.class, container -> new DefaultSpectatorFactory());
 
-        configurator.persist(
-            EffectMappers.class,
-            container -> new EffectMappers(
-                new EffectToSpecialMapping(),
-                new EffectToWeaponMapping(),
-                new EffectToCharacteristicMapping(),
-                new EffectToUseMapping(
-                    container.get(SpellService.class)
-                )
-            )
-        );
+        configurator.persist(EffectToSpecialMapping.class, container -> new EffectToSpecialMapping());
+        configurator.persist(EffectToWeaponMapping.class, container -> new EffectToWeaponMapping());
+        configurator.persist(EffectToCharacteristicMapping.class, container -> new EffectToCharacteristicMapping());
+        configurator.persist(EffectToUseMapping.class, container -> new EffectToUseMapping(
+            container.get(SpellService.class)
+        ));
 
         configurator.persist(
             ItemFactory.class,
             container -> new DefaultItemFactory(
-                new ResourceFactory(container.get(EffectMappers.class)),
-                new UsableFactory(container.get(EffectMappers.class)),
-                new WeaponFactory(
-                    container.get(EffectMappers.class),
-                    container.get(SpellEffectService.class)
+                new ResourceFactory(container.get(EffectToSpecialMapping.class)),
+                new UsableFactory(
+                    container.get(EffectToUseMapping.class),
+                    container.get(EffectToSpecialMapping.class)
                 ),
-                new WearableFactory(SuperType.AMULET, container.get(EffectMappers.class)),
-                new WearableFactory(SuperType.RING, container.get(EffectMappers.class)),
-                new WearableFactory(SuperType.BELT, container.get(EffectMappers.class)),
-                new WearableFactory(SuperType.BOOT, container.get(EffectMappers.class)),
-                new WearableFactory(SuperType.SHIELD, container.get(EffectMappers.class)),
-                new WearableFactory(SuperType.HELMET, container.get(EffectMappers.class)),
-                new WearableFactory(SuperType.MANTLE, container.get(EffectMappers.class)),
-                new WearableFactory(SuperType.DOFUS, container.get(EffectMappers.class))
+                new WeaponFactory(
+                    container.get(SpellEffectService.class),
+                    container.get(EffectToWeaponMapping.class),
+                    container.get(EffectToCharacteristicMapping.class),
+                    container.get(EffectToSpecialMapping.class)
+                ),
+                new WearableFactory(SuperType.AMULET, container.get(EffectToCharacteristicMapping.class), container.get(EffectToSpecialMapping.class)),
+                new WearableFactory(SuperType.RING, container.get(EffectToCharacteristicMapping.class), container.get(EffectToSpecialMapping.class)),
+                new WearableFactory(SuperType.BELT, container.get(EffectToCharacteristicMapping.class), container.get(EffectToSpecialMapping.class)),
+                new WearableFactory(SuperType.BOOT, container.get(EffectToCharacteristicMapping.class), container.get(EffectToSpecialMapping.class)),
+                new WearableFactory(SuperType.SHIELD, container.get(EffectToCharacteristicMapping.class), container.get(EffectToSpecialMapping.class)),
+                new WearableFactory(SuperType.HELMET, container.get(EffectToCharacteristicMapping.class), container.get(EffectToSpecialMapping.class)),
+                new WearableFactory(SuperType.MANTLE, container.get(EffectToCharacteristicMapping.class), container.get(EffectToSpecialMapping.class)),
+                new WearableFactory(SuperType.DOFUS, container.get(EffectToCharacteristicMapping.class), container.get(EffectToSpecialMapping.class))
             )
         );
 

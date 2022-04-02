@@ -29,13 +29,15 @@ import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.spell.boost.DispatcherSpellsBoosts;
 import fr.quatrevieux.araknemu.game.spell.boost.SimpleSpellsBoosts;
 import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.EnsuresKeyForIf;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * The player spell book
@@ -46,27 +48,16 @@ public final class SpellBook implements SpellList, Dispatcher {
     private final Dispatcher dispatcher;
     private final Player player;
 
-    private final Map<Integer, SpellBookEntry> entries;
-    private final SpellBookEntry[] entriesByPosition = new SpellBookEntry[MAX_POSITION];
+    private final Map<Integer, SpellBookEntry> entries = new HashMap<>();
+    private final @Nullable SpellBookEntry[] entriesByPosition = new SpellBookEntry[MAX_POSITION];
     private final SpellsBoosts boosts;
 
-    public SpellBook(Dispatcher dispatcher, Player player, Collection<SpellBookEntry> entries) {
+    @SuppressWarnings("argument")
+    public SpellBook(Dispatcher dispatcher, Player player) {
         this.dispatcher = dispatcher;
         this.player = player;
 
         this.boosts = new DispatcherSpellsBoosts(new SimpleSpellsBoosts(), dispatcher);
-        this.entries = entries
-            .stream()
-            .map(entry -> entry.attach(this))
-            .collect(
-                Collectors.toMap(
-                    e -> e.spell().id(),
-                    Function.identity()
-                )
-            )
-        ;
-
-        indexingByPosition();
     }
 
     @Override
@@ -114,8 +105,12 @@ public final class SpellBook implements SpellList, Dispatcher {
      * @param spellId Spell to check
      */
     @Override
+    @EnsuresKeyForIf(result = true, expression = "#1", map = "entries")
+    @SuppressWarnings("contracts.conditional.postcondition") // checker do not consider null check as key existence
     public boolean has(int spellId) {
-        return entries.containsKey(spellId) && entries.get(spellId).spell().minPlayerLevel() <= player.level();
+        final SpellBookEntry entry = entries.get(spellId);
+
+        return entry != null && entry.spell().minPlayerLevel() <= player.level();
     }
 
     /**
@@ -136,11 +131,10 @@ public final class SpellBook implements SpellList, Dispatcher {
         }
 
         final SpellBookEntry entry = new SpellBookEntry(
+            this,
             new PlayerSpell(player.id(), spell.id(), false),
             spell
         );
-
-        entry.attach(this);
 
         entries.put(spell.id(), entry);
         dispatch(new SpellLearned(entry));
@@ -149,7 +143,7 @@ public final class SpellBook implements SpellList, Dispatcher {
     /**
      * Get available spell upgrade points
      */
-    public int upgradePoints() {
+    public @NonNegative int upgradePoints() {
         return player.spellPoints();
     }
 
@@ -158,6 +152,28 @@ public final class SpellBook implements SpellList, Dispatcher {
      */
     public SpellsBoosts boosts() {
         return boosts;
+    }
+
+    /**
+     * Check if the entry already exists on the spell book
+     * Unlike {@link SpellBook#has(int)} the level of the player is not checked
+     *
+     * /!\ Internal method /!\
+     */
+    boolean hasEntry(int spellId) {
+        return entries.containsKey(spellId);
+    }
+
+    /**
+     * Add an entry to the spell book
+     *
+     * /!\ Internal method /!\
+     */
+    void addEntry(PlayerSpell entity, SpellLevels spell) {
+        final SpellBookEntry entry = new SpellBookEntry(this, entity, spell);
+
+        entries.put(spell.id(), entry);
+        indexing(entry);
     }
 
     void freePosition(SpellBookEntry entry) {
@@ -169,17 +185,22 @@ public final class SpellBook implements SpellList, Dispatcher {
     }
 
     void indexing(SpellBookEntry entry) {
-        if (entry.position() > MAX_POSITION) {
+        final int position = entry.position() - 1;
+
+        if (position >= MAX_POSITION) {
             return;
         }
 
-        if (entriesByPosition[entry.position() - 1] != null) {
-            entriesByPosition[entry.position() - 1].move(PlayerSpell.DEFAULT_POSITION);
+        final SpellBookEntry lastEntry = entriesByPosition[position];
+
+        if (lastEntry != null) {
+            lastEntry.move(PlayerSpell.DEFAULT_POSITION);
         }
 
-        entriesByPosition[entry.position() - 1] = entry;
+        entriesByPosition[position] = entry;
     }
 
+    @SuppressWarnings("argument") // canUpgrade() is called before, so spell points cannot be < 0
     void removePointsForUpgrade(Spell spell) {
         player.setSpellPoints(player.spellPoints() - spell.level() + 1);
     }
@@ -187,14 +208,6 @@ public final class SpellBook implements SpellList, Dispatcher {
     boolean canUpgrade(Spell spell) {
         return player.spellPoints() >= spell.level() - 1
             && player.level() >= spell.minPlayerLevel()
-        ;
-    }
-
-    private void indexingByPosition() {
-        entries
-            .values().stream()
-            .filter(entry -> entry.position() <= MAX_POSITION)
-            .forEach(entry -> entriesByPosition[entry.position() - 1] = entry)
         ;
     }
 }

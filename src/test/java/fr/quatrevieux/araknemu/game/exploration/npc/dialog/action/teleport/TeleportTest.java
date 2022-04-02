@@ -72,6 +72,14 @@ class TeleportTest extends GameBaseCase {
     }
 
     @Test
+    void applyInvalidCell() {
+        assertThrows(IllegalArgumentException.class, () -> factory.create(new ResponseAction(1, "", "10340,1000")).apply(player));
+
+        assertEquals(10300, player.map().id());
+        assertEquals(279, player.cell().id());
+    }
+
+    @Test
     void applyWithCinematic() {
         factory.create(new ResponseAction(1, "", "10340,128,5")).apply(player);
 

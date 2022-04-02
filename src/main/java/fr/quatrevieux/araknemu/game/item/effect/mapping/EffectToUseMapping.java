@@ -84,9 +84,4 @@ public final class EffectToUseMapping implements EffectMapper<UseEffect> {
             .collect(Collectors.toList())
         ;
     }
-
-    @Override
-    public Class<UseEffect> type() {
-        return UseEffect.class;
-    }
 }

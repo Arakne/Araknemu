@@ -28,6 +28,10 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.factory.TurnActionsFactory
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStarted;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStopped;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnTerminated;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.dataflow.qual.Pure;
 
 import java.time.Duration;
 import java.util.concurrent.ScheduledFuture;
@@ -35,6 +39,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Handle a fighter turn
+ *
+ * @todo turn list on constructor
  */
 public final class FightTurn implements Turn {
     private final AtomicBoolean active = new AtomicBoolean(false);
@@ -46,14 +52,15 @@ public final class FightTurn implements Turn {
     private final ActionHandler actionHandler;
     private final TurnActionsFactory actionFactory;
 
-    private ScheduledFuture timer;
-    private FighterTurnPoints points;
+    private @MonotonicNonNull ScheduledFuture timer;
+    private @MonotonicNonNull FighterTurnPoints points;
 
+    @SuppressWarnings({"assignment", "argument"})
     public FightTurn(Fighter fighter, Fight fight, Duration duration) {
         this.fighter = fighter;
         this.fight = fight;
         this.duration = duration;
-        this.actionHandler = new ActionHandler(fight);
+        this.actionHandler = new ActionHandler(this, fight);
         this.actionFactory = new TurnActionsFactory(this);
     }
 
@@ -65,6 +72,7 @@ public final class FightTurn implements Turn {
     /**
      * Get the related fight
      */
+    @Pure
     public Fight fight() {
         return fight;
     }
@@ -86,6 +94,8 @@ public final class FightTurn implements Turn {
      *
      * @return true if the turn is successfully started, or false when turn needs to be skipped
      */
+    @EnsuresNonNull("points")
+    @EnsuresNonNullIf(expression = "timer", result = true)
     public boolean start() {
         points = new FighterTurnPoints(fight, fighter);
 
@@ -105,6 +115,7 @@ public final class FightTurn implements Turn {
     /**
      * Stop the turn and start the next turn
      */
+    @SuppressWarnings("dereference.of.nullable")
     public void stop() {
         if (!active.getAndSet(false)) {
             return;
@@ -165,6 +176,10 @@ public final class FightTurn implements Turn {
 
     @Override
     public FighterTurnPoints points() {
+        if (points == null) {
+            throw new IllegalStateException("Fight turn not yet started");
+        }
+
         return points;
     }
 

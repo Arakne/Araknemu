@@ -19,6 +19,12 @@
 
 package fr.quatrevieux.araknemu.core.config;
 
+import fr.quatrevieux.araknemu.util.Asserter;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.common.value.qual.IntRange;
+
 import java.time.Duration;
 
 /**
@@ -37,7 +43,7 @@ public final class PoolUtils implements Pool {
     }
 
     @Override
-    public String get(String key) {
+    public @Nullable String get(String key) {
         return pool.get(key);
     }
 
@@ -45,10 +51,33 @@ public final class PoolUtils implements Pool {
      * Parse a config item as integer
      */
     public int integer(String key, int defaultValue) {
-        return pool.has(key)
-            ? Integer.parseInt(pool.get(key))
+        final String value = pool.get(key);
+
+        return value != null
+            ? Integer.parseInt(value)
             : defaultValue
         ;
+    }
+
+    /**
+     * Parse a config item as a positive integer (i.e. >= 1)
+     */
+    public @Positive int positiveInteger(String key, @Positive int defaultValue) {
+        return Asserter.assertPositive(integer(key, defaultValue));
+    }
+
+    /**
+     * Parse a config item as a non-negative integer (i.e. >= 0)
+     */
+    public @NonNegative int nonNegativeInteger(String key, @NonNegative int defaultValue) {
+        return Asserter.assertNonNegative(integer(key, defaultValue));
+    }
+
+    /**
+     * Parse a config item as a percent integer (i.e. in interval [0, 100])
+     */
+    public @IntRange(from = 0, to = 100) int percent(String key, @IntRange(from = 0, to = 100) int defaultValue) {
+        return Asserter.assertPercent(integer(key, defaultValue));
     }
 
     /**
@@ -64,11 +93,13 @@ public final class PoolUtils implements Pool {
      * This method handle values like "1", "true", "yes", "on" as true
      */
     public boolean bool(String key, boolean defaultValue) {
-        if (!pool.has(key)) {
+        String value = pool.get(key);
+
+        if (value == null) {
             return defaultValue;
         }
 
-        final String value = pool.get(key).toLowerCase();
+        value = value.toLowerCase();
 
         for (String v : new String[] {"1", "true", "yes", "on"}) {
             if (value.equals(v)) {
@@ -92,8 +123,10 @@ public final class PoolUtils implements Pool {
      * Parse a config item as String
      */
     public String string(String key, String defaultValue) {
-        return pool.has(key)
-            ? pool.get(key)
+        final String value = pool.get(key);
+
+        return value != null
+            ? value
             : defaultValue
         ;
     }
@@ -110,8 +143,10 @@ public final class PoolUtils implements Pool {
      * Parse a config item as double
      */
     public double decimal(String key, double defaultValue) {
-        return pool.has(key)
-            ? Double.parseDouble(pool.get(key))
+        final String value = pool.get(key);
+
+        return value != null
+            ? Double.parseDouble(value)
             : defaultValue
         ;
     }
@@ -141,12 +176,15 @@ public final class PoolUtils implements Pool {
      *
      * @see Duration#parse(CharSequence)
      */
+    @SuppressWarnings("argument") // because of toUpperCase() call, checker miss the value length
     public Duration duration(String key, Duration defaultValue) {
-        if (!pool.has(key)) {
+        String value = pool.get(key);
+
+        if (value == null || value.isEmpty()) {
             return defaultValue;
         }
 
-        String value = pool.get(key).toUpperCase();
+        value = value.toUpperCase();
 
         if (value.charAt(0) != 'P') {
             value = "PT" + value;

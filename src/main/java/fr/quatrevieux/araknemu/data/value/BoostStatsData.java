@@ -20,6 +20,9 @@
 package fr.quatrevieux.araknemu.data.value;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.dataflow.qual.Pure;
 
 import java.util.List;
 import java.util.Map;
@@ -72,11 +75,11 @@ public final class BoostStatsData {
     }
 
     public static final class Interval {
-        private final int start;
-        private final int cost;
-        private final int boost;
+        private final @NonNegative int start;
+        private final @Positive int cost;
+        private final @Positive int boost;
 
-        public Interval(int start, int cost, int boost) {
+        public Interval(@NonNegative int start, @Positive int cost, @Positive int boost) {
             this.start = start;
             this.cost = cost;
             this.boost = boost;
@@ -86,21 +89,24 @@ public final class BoostStatsData {
          * The start characteristics points interval for the current boost rule
          * This value is inclusive
          */
-        public int start() {
+        @Pure
+        public @NonNegative int start() {
             return start;
         }
 
         /**
          * The cost for boot the characteristic
          */
-        public int cost() {
+        @Pure
+        public @Positive int cost() {
             return cost;
         }
 
         /**
          * The boost value : how many characteristics points are added on boost
          */
-        public int boost() {
+        @Pure
+        public @Positive int boost() {
             return boost;
         }
 

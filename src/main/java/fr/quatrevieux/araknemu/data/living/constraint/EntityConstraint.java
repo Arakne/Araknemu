@@ -19,6 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.living.constraint;
 
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Constraint for an entity
  *
@@ -39,10 +42,11 @@ public interface EntityConstraint<T, E> {
      *
      * @return true is the entity is valid
      */
+    @EnsuresNonNullIf(expression = "error()", result = false)
     public boolean check(T entity);
 
     /**
      * Get the error information
      */
-    public E error();
+    public @Nullable E error();
 }

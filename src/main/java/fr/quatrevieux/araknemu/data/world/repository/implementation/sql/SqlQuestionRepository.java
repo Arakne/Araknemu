@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Question;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.QuestionRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -153,14 +154,15 @@ final class SqlQuestionRepository implements QuestionRepository {
 
     private class Loader implements RepositoryUtils.Loader<Question> {
         @Override
+        @SuppressWarnings("argument") // StringUtils.split is ensured to return a non-empty string
         public Question create(ResultSet rs) throws SQLException {
             return new Question(
                 rs.getInt("QUESTION_ID"),
-                Arrays.stream(StringUtils.split(rs.getString("RESPONSE_IDS"), ';'))
+                Arrays.stream(StringUtils.split(NullnessUtil.castNonNull(rs.getString("RESPONSE_IDS")), ';'))
                     .mapToInt(Integer::parseInt)
                     .toArray(),
-                StringUtils.split(rs.getString("PARAMETERS"), ';'),
-                rs.getString("CONDITIONS")
+                StringUtils.split(NullnessUtil.castNonNull(rs.getString("PARAMETERS")), ';'),
+                NullnessUtil.castNonNull(rs.getString("CONDITIONS"))
             );
         }
 

@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.interaction.dialog.NpcDialog;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.dialog.LeaveDialogRequest;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Stop the current NPC dialog
@@ -30,7 +31,7 @@ import fr.quatrevieux.araknemu.network.game.in.dialog.LeaveDialogRequest;
 public final class StopDialog implements PacketHandler<GameSession, LeaveDialogRequest> {
     @Override
     public void handle(GameSession session, LeaveDialogRequest packet) {
-        session.exploration().interactions().get(NpcDialog.class).stop();
+        NullnessUtil.castNonNull(session.exploration()).interactions().get(NpcDialog.class).stop();
     }
 
     @Override

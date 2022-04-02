@@ -24,14 +24,15 @@ import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.exception.CommandException;
 import fr.quatrevieux.araknemu.game.admin.exception.ExceptionHandler;
 import fr.quatrevieux.araknemu.game.admin.formatter.Link;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Exception handler for base command exception
  */
 public final class CommandExceptionHandler implements ExceptionHandler.Function<CommandException> {
     @Override
-    public void handle(AdminPerformer performer, CommandException error, CommandParser.Arguments arguments) {
-        performer.error("An error occurs during execution of '{}' : {}", error.command(), error.getMessage());
+    public void handle(AdminPerformer performer, CommandException error, CommandParser.@Nullable Arguments arguments) {
+        performer.error("An error occurs during execution of '{}' : {}", error.command(), error.getMessage() != null ? error.getMessage() : error.toString());
         performer.error(
             "See {} for usage",
             (new Link())

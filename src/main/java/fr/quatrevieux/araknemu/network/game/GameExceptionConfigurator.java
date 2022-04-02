@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
 import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.MarkerManager;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Configure base exception for a game session
@@ -47,7 +48,7 @@ public final class GameExceptionConfigurator implements SessionConfigurator.Conf
                 final Exception ex = (Exception) cause;
 
                 if (ex.getCause() != null) {
-                    logger.warn(MarkerManager.getMarker("ERROR_PACKET"), "[{}] Error packet caused by : {}", session, ex.getCause().toString());
+                    logger.warn(MarkerManager.getMarker("ERROR_PACKET"), "[{}] Error packet caused by : {}", session, NullnessUtil.castNonNull(ex.getCause()).toString());
                 }
             }
 
@@ -55,7 +56,7 @@ public final class GameExceptionConfigurator implements SessionConfigurator.Conf
         });
 
         inner.addExceptionHandler(CloseImmediately.class, cause -> {
-            logger.error(MarkerManager.getMarker("CLOSE_IMMEDIATELY"), "[{}] Session closed : {}", session, cause.getMessage());
+            logger.error(MarkerManager.getMarker("CLOSE_IMMEDIATELY"), "[{}] Session closed : {}", session, cause.getMessage() == null ? cause.toString() : cause.getMessage());
 
             return true;
         });

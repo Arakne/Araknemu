@@ -27,6 +27,8 @@ import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -115,10 +117,10 @@ final class SqlSpellTemplateRepository implements SpellTemplateRepository {
         public SpellTemplate create(ResultSet rs) throws SQLException {
             return new SpellTemplate(
                 rs.getInt("SPELL_ID"),
-                rs.getString("SPELL_NAME"),
-                rs.getInt("SPELL_SPRITE"),
-                rs.getString("SPELL_SPRITE_ARG"),
-                new SpellTemplate.Level[]{
+                NullnessUtil.castNonNull(rs.getString("SPELL_NAME")),
+                NullnessUtil.castNonNull(rs.getInt("SPELL_SPRITE")),
+                NullnessUtil.castNonNull(rs.getString("SPELL_SPRITE_ARG")),
+                new SpellTemplate.@Nullable Level[]{
                     levelTransformer.unserialize(rs.getString("SPELL_LVL_1")),
                     levelTransformer.unserialize(rs.getString("SPELL_LVL_2")),
                     levelTransformer.unserialize(rs.getString("SPELL_LVL_3")),
@@ -126,7 +128,7 @@ final class SqlSpellTemplateRepository implements SpellTemplateRepository {
                     levelTransformer.unserialize(rs.getString("SPELL_LVL_5")),
                     levelTransformer.unserialize(rs.getString("SPELL_LVL_6")),
                 },
-                Arrays.stream(StringUtils.split(rs.getString("SPELL_TARGET"), ";"))
+                Arrays.stream(StringUtils.split(NullnessUtil.castNonNull(rs.getString("SPELL_TARGET")), ";"))
                     .mapToInt(Integer::parseInt)
                     .toArray()
             );

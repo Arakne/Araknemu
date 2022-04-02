@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Base formula for compute the Pvm experience
@@ -106,6 +107,7 @@ public final class PvmXpProvider implements DropRewardProvider {
         }
 
         @Override
+        @SuppressWarnings("argument") // winXp is always >= 0
         public void provide(DropReward reward) {
             final long winXp = (long) (
                 totalXp
@@ -120,14 +122,14 @@ public final class PvmXpProvider implements DropRewardProvider {
     }
 
     private static class ExtractXp implements FighterOperation {
-        private long xp;
+        private @NonNegative long xp;
 
         @Override
         public void onMonster(MonsterFighter fighter) {
             xp += fighter.reward().experience();
         }
 
-        public long get() {
+        public @NonNegative long get() {
             return xp;
         }
     }

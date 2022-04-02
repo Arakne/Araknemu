@@ -63,7 +63,6 @@ class FinishStateTest extends FightBaseCase {
         assertFalse(player.isFighting());
         assertFalse(other.isFighting());
         assertCount(0, fight.teams());
-        assertEquals(0, fight.map().size());
 
         requestStack.assertLast(
             new FightEnd(
@@ -99,7 +98,6 @@ class FinishStateTest extends FightBaseCase {
 
         assertFalse(player.isFighting());
         assertCount(0, fight.teams());
-        assertEquals(0, fight.map().size());
 
         assertBetween(100, 140, player.inventory().kamas() - lastKamas);
         assertEquals(241, player.properties().experience().current() - lastXp);
@@ -141,7 +139,6 @@ class FinishStateTest extends FightBaseCase {
 
         assertFalse(player.isFighting());
         assertCount(0, fight.teams());
-        assertEquals(0, fight.map().size());
 
         assertEquals(player.inventory().kamas(), lastKamas);
         assertEquals(player.properties().experience().current(), lastXp);

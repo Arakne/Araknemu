@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.world.creature.characteristics;
 
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -46,7 +47,7 @@ public final class DefaultCharacteristics implements MutableCharacteristics {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (obj == this) {
             return true;
         }

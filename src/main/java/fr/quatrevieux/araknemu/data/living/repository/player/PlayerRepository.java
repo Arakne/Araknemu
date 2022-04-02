@@ -41,11 +41,12 @@ public interface PlayerRepository extends MutableRepository<Player> {
     /**
      * Check if the name is already used into the current server
      *
-     * @param player The criteria
+     * @param serverId The server to search on
+     * @param name The requested name
      *
      * @return true if exists
      */
-    public boolean nameExists(Player player);
+    public boolean nameExists(int serverId, String name);
 
     /**
      * Get the account characters count

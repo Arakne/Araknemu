@@ -22,6 +22,9 @@ package fr.quatrevieux.araknemu.network.game.in.spell;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import fr.quatrevieux.araknemu.util.ParseUtils;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Ask for upgrade a spell
@@ -29,24 +32,24 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Spells.as#L23
  */
 public final class SpellUpgrade implements Packet {
-    private final int spellId;
+    private final @NonNegative int spellId;
 
-    public SpellUpgrade(int spellId) {
+    public SpellUpgrade(@NonNegative int spellId) {
         this.spellId = spellId;
     }
 
-    public int spellId() {
+    public @NonNegative int spellId() {
         return spellId;
     }
 
     public static final class Parser implements SinglePacketParser<SpellUpgrade> {
         @Override
         public SpellUpgrade parse(String input) throws ParsePacketException {
-            return new SpellUpgrade(Integer.parseUnsignedInt(input));
+            return new SpellUpgrade(ParseUtils.parseNonNegativeInt(input));
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "SB";
         }
     }

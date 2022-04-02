@@ -71,7 +71,7 @@ class StopOnEnemyValidatorTest extends FightBaseCase {
             )
         );
         
-        Move move = new Move(turn, turn.fighter(), path, new FightPathValidator[0]);
+        Move move = new Move(turn.fighter(), path, new FightPathValidator[0]);
         
         MoveResult result = new MoveSuccess(fighter, path);
 
@@ -94,7 +94,7 @@ class StopOnEnemyValidatorTest extends FightBaseCase {
 
         other.fighter().move(fight.map().get(198));
         
-        Move move = new Move(turn, turn.fighter(), path, new FightPathValidator[0]);
+        Move move = new Move(turn.fighter(), path, new FightPathValidator[0]);
 
         MoveResult result = new MoveSuccess(fighter, path);
 
@@ -121,7 +121,7 @@ class StopOnEnemyValidatorTest extends FightBaseCase {
 
         other.fighter().move(fight.map().get(212));
 
-        Move move = new Move(turn, turn.fighter(), path, new FightPathValidator[0]);
+        Move move = new Move(turn.fighter(), path, new FightPathValidator[0]);
 
         MoveResult result = new MoveSuccess(fighter, path);
 

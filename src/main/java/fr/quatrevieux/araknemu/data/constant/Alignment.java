@@ -19,6 +19,10 @@
 
 package fr.quatrevieux.araknemu.data.constant;
 
+import org.checkerframework.checker.index.qual.GTENegativeOne;
+
+import java.util.NoSuchElementException;
+
 /**
  * List of available alignments
  */
@@ -28,6 +32,8 @@ public enum Alignment {
     BONTARIAN,
     BRAKMARIAN,
     MERCENARY;
+
+    private static final Alignment[] VALUES = values();
 
     /**
      * Get the alignment id
@@ -39,7 +45,13 @@ public enum Alignment {
     /**
      * Get an alignment by its id
      */
-    public static Alignment byId(int id) {
-        return values()[id + 1];
+    public static Alignment byId(@GTENegativeOne int id) {
+        final int index = id + 1;
+
+        if (index >= VALUES.length) {
+            throw new NoSuchElementException("Invalid alignment " + id);
+        }
+
+        return VALUES[index];
     }
 }

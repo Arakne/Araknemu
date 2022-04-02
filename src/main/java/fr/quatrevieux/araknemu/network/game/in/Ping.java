@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.network.game.in;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Ping request received
@@ -34,7 +35,7 @@ public final class Ping implements Packet {
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "ping";
         }
     }

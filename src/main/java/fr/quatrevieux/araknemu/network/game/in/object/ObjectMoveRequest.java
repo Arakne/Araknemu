@@ -20,9 +20,14 @@
 package fr.quatrevieux.araknemu.network.game.in.object;
 
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.PacketTokenizer;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
-import org.apache.commons.lang3.StringUtils;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
+import org.checkerframework.checker.index.qual.GTENegativeOne;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.common.value.qual.IntRange;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Request for object move
@@ -31,10 +36,10 @@ import org.apache.commons.lang3.StringUtils;
  */
 public final class ObjectMoveRequest implements Packet {
     private final int id;
-    private final int position;
-    private final int quantity;
+    private final @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int position;
+    private final @Positive int quantity;
 
-    public ObjectMoveRequest(int id, int position, int quantity) {
+    public ObjectMoveRequest(int id, @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int position, @Positive int quantity) {
         this.id = id;
         this.position = position;
         this.quantity = quantity;
@@ -44,29 +49,37 @@ public final class ObjectMoveRequest implements Packet {
         return id;
     }
 
-    public int position() {
+    public @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int position() {
         return position;
     }
 
-    public int quantity() {
+    public @Positive int quantity() {
         return quantity;
     }
 
     public static final class Parser implements SinglePacketParser<ObjectMoveRequest> {
         @Override
         public ObjectMoveRequest parse(String input) throws ParsePacketException {
-            final String[] parts = StringUtils.split(input, "|", 3);
+            final PacketTokenizer tokenizer = tokenize(input, '|');
 
             return new ObjectMoveRequest(
-                Integer.parseInt(parts[0]),
-                Integer.parseInt(parts[1]),
-                parts.length == 3 ? Integer.parseUnsignedInt(parts[2]) : 1
+                tokenizer.nextInt(),
+                checkValidPosition(tokenizer.nextNonNegativeOrNegativeOneInt()),
+                tokenizer.nextPositiveIntOrDefault(1)
             );
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "OM";
+        }
+
+        private @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int checkValidPosition(@GTENegativeOne int position) {
+            if (position > InventorySlots.SLOT_MAX) {
+                throw new ParsePacketException(code(), "Invalid object position " + position);
+            }
+
+            return position;
         }
     }
 }

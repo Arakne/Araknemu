@@ -38,7 +38,7 @@ class MySQLDriverTest {
     void newConnection() throws IOException, SQLException {
         MySQLDriver driver = new MySQLDriver(
             new DefaultConfiguration(new IniDriver(new Ini(new File("src/test/test_config.ini"))))
-                .module(DatabaseConfiguration.class)
+                .module(DatabaseConfiguration.MODULE)
                 .connection("test_mysql")
         );
 

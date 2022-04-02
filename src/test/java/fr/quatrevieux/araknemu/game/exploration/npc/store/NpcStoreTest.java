@@ -79,8 +79,8 @@ class NpcStoreTest extends GameBaseCase {
     }
 
     @Test
-    void getOneWithFixedStats() {
-        Map<Item, Integer> ret = store.get(39, 1);
+    void buyOneWithFixedStats() {
+        Map<Item, Integer> ret = store.buy(39, 1).items();
 
         assertEquals(1, ret.size());
         assertTrue(ret.containsKey(itemService.create(39)));
@@ -88,8 +88,8 @@ class NpcStoreTest extends GameBaseCase {
     }
 
     @Test
-    void getMultipleWithFixedStats() {
-        Map<Item, Integer> ret = store.get(39, 5);
+    void buyMultipleWithFixedStats() {
+        Map<Item, Integer> ret = store.buy(39, 5).items();
 
         assertEquals(1, ret.size());
         assertTrue(ret.containsKey(itemService.create(39)));
@@ -97,8 +97,8 @@ class NpcStoreTest extends GameBaseCase {
     }
 
     @Test
-    void getOneWithRandomStats() {
-        Map<Item, Integer> ret = store.get(2425, 1);
+    void buyOneWithRandomStats() {
+        Map<Item, Integer> ret = store.buy(2425, 1).items();
 
         assertEquals(1, ret.size());
 
@@ -107,7 +107,7 @@ class NpcStoreTest extends GameBaseCase {
         assertEquals(2425, item.template().id());
         assertEquals(1, (int) ret.get(item));
 
-        Map<Item, Integer> ret2 = store.get(2425, 1);
+        Map<Item, Integer> ret2 = store.buy(2425, 1).items();
         Item other = new ArrayList<>(ret2.keySet()).get(0);
 
         assertEquals(2425, other.template().id());
@@ -115,8 +115,8 @@ class NpcStoreTest extends GameBaseCase {
     }
 
     @Test
-    void getMultipleWithRandomStats() {
-        Map<Item, Integer> ret = store.get(2425, 5);
+    void buyMultipleWithRandomStats() {
+        Map<Item, Integer> ret = store.buy(2425, 5).items();
 
         assertTrue(ret.size() > 1);
         assertTrue(ret.keySet().stream().allMatch(item -> item.template().id() == 2425));
@@ -125,9 +125,9 @@ class NpcStoreTest extends GameBaseCase {
 
     @Test
     void price() {
-        assertEquals(100, store.price(39, 1));
-        assertEquals(500, store.price(39, 5));
-        assertEquals(2750, store.price(2425, 5));
+        assertEquals(100, store.buy(39, 1).price());
+        assertEquals(500, store.buy(39, 5).price());
+        assertEquals(2750, store.buy(2425, 5).price());
     }
 
     @Test

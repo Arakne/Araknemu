@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.admin.executor.argument;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.Command;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -34,7 +35,7 @@ import java.util.List;
 public final class StringListHydrator implements ArgumentsHydrator {
     @Override
     @SuppressWarnings("unchecked")
-    public <A> A hydrate(Command<A> command, A commandArguments, CommandParser.Arguments parsedArguments) {
+    public <@Nullable A> A hydrate(Command<A> command, @Nullable A commandArguments, CommandParser.Arguments parsedArguments) {
         final List<String> inputArguments = parsedArguments.arguments().subList(1, parsedArguments.arguments().size());
 
         if (commandArguments == null) {
@@ -49,7 +50,7 @@ public final class StringListHydrator implements ArgumentsHydrator {
     }
 
     @Override
-    public <A> boolean supports(Command<A> command, A commandArguments) {
+    public <A> boolean supports(Command<A> command, @Nullable A commandArguments) {
         if (commandArguments != null && !(commandArguments instanceof List)) {
             return false;
         }
@@ -62,8 +63,17 @@ public final class StringListHydrator implements ArgumentsHydrator {
                 return true;
             }
 
+            final Type[] executeParameterTypes = command.getClass()
+                .getMethod("execute", AdminPerformer.class, List.class)
+                .getGenericParameterTypes()
+            ;
+
+            if (executeParameterTypes.length < 2) {
+                return false;
+            }
+
             // Same as AbstractTypedArgumentsHydrator, but with generic type
-            return checkType(command.getClass().getMethod("execute", AdminPerformer.class, List.class).getGenericParameterTypes()[1]);
+            return checkType(executeParameterTypes[1]);
         } catch (Exception e) {
             return false;
         }
@@ -75,10 +85,12 @@ public final class StringListHydrator implements ArgumentsHydrator {
         }
 
         final ParameterizedType parameterizedType = (ParameterizedType) argumentsType;
+        final Type[] typeArguments = parameterizedType.getActualTypeArguments();
 
         return
             parameterizedType.getRawType().equals(List.class)
-            && parameterizedType.getActualTypeArguments()[0].equals(String.class)
+            && typeArguments.length >= 1
+            && typeArguments[0].equals(String.class)
         ;
     }
 }

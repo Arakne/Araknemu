@@ -71,6 +71,14 @@ class FighterAITest extends FightBaseCase {
     }
 
     @Test
+    void notStarted() {
+        FighterAI ai = new FighterAI(fighter, fight, NullGenerator.INSTANCE);
+
+        assertThrows(IllegalStateException.class, ai::turn);
+        assertThrows(IllegalStateException.class, ai::run);
+    }
+
+    @Test
     void enemyShouldFilterDeadFighters() {
         FighterAI ai = new FighterAI(fighter, fight, NullGenerator.INSTANCE);
 

@@ -23,6 +23,8 @@ import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import fr.quatrevieux.araknemu.util.ParseUtils;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Change the player sprite orientation on exploration
@@ -41,19 +43,21 @@ public final class SetOrientationRequest implements Packet {
     }
 
     public static final class Parser implements SinglePacketParser<SetOrientationRequest> {
+        private final Direction[] directions = Direction.values();
+
         @Override
         public SetOrientationRequest parse(String input) throws ParsePacketException {
-            final int number = input.charAt(0) - '0';
+            final int number = ParseUtils.parseDecimalChar(input);
 
-            if (number >= Direction.values().length) {
+            if (number >= directions.length) {
                 throw new ParsePacketException(code() + input, "Invalid direction");
             }
 
-            return new SetOrientationRequest(Direction.values()[number]);
+            return new SetOrientationRequest(directions[number]);
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "eD";
         }
     }

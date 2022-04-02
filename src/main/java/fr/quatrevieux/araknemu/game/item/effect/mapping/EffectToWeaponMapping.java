@@ -56,9 +56,4 @@ public final class EffectToWeaponMapping implements EffectMapper<WeaponEffect> {
             .collect(Collectors.toList())
         ;
     }
-
-    @Override
-    public Class<WeaponEffect> type() {
-        return WeaponEffect.class;
-    }
 }

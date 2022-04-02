@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.network.game.in.fight.option;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Ask help to other fighters
@@ -36,7 +37,7 @@ public final class NeedHelpRequest implements Packet {
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "fH";
         }
     }

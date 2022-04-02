@@ -111,7 +111,7 @@ public final class RealmModule implements ContainerModule {
 
         configurator.factory(
             RealmConfiguration.class,
-            container -> app.configuration().module(RealmConfiguration.class)
+            container -> app.configuration().module(RealmConfiguration.MODULE)
         );
 
         configurator.factory(

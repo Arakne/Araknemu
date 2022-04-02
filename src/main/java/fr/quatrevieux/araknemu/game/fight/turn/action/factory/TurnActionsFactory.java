@@ -40,6 +40,7 @@ public final class TurnActionsFactory implements ActionsFactory {
 
     private final Map<ActionType, FightActionFactory> factories = new EnumMap<>(ActionType.class);
 
+    // @todo tour plus nécessaire ?
     public TurnActionsFactory(FightTurn turn) {
         this.moveFactory = new MoveFactory(turn);
         this.castFactory = new CastFactory(turn);

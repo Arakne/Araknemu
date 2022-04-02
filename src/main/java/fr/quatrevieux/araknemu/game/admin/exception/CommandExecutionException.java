@@ -20,6 +20,9 @@
 package fr.quatrevieux.araknemu.game.admin.exception;
 
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * Exception wrapper for store the parsed command arguments
@@ -29,7 +32,7 @@ public final class CommandExecutionException extends CommandException {
     private final CommandParser.Arguments arguments;
 
     public CommandExecutionException(CommandParser.Arguments arguments, Throwable cause) {
-        super(arguments.command(), cause.getMessage(), cause);
+        super(arguments.command(), cause.getMessage() == null ? "[no message]" : cause.getMessage(), cause);
         this.arguments = arguments;
     }
 
@@ -38,5 +41,11 @@ public final class CommandExecutionException extends CommandException {
      */
     public CommandParser.Arguments arguments() {
         return arguments;
+    }
+
+    @Override
+    @Pure
+    public synchronized @NonNull Throwable getCause() {
+        return NullnessUtil.castNonNull(super.getCause());
     }
 }

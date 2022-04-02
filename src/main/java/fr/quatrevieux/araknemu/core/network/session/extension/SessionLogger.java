@@ -61,7 +61,7 @@ public final class SessionLogger implements ConfigurableSession.ExceptionHandler
         }
 
         if (cause instanceof HandlerNotFoundException) {
-            logger.warn(NETWORK_ERROR_MARKER, cause.getMessage());
+            logger.warn(NETWORK_ERROR_MARKER, cause.getMessage() == null ? cause.toString() : cause.getMessage());
 
             return false;
         }

@@ -29,7 +29,7 @@ import fr.quatrevieux.araknemu.network.game.in.account.ClientUid;
 public final class SaveClientUid implements PacketHandler<GameSession, ClientUid> {
     @Override
     public void handle(GameSession session, ClientUid packet) {
-        session.log().setClientUid(packet.uid());
+        session.log().ifPresent(log -> log.setClientUid(packet.uid()));
     }
 
     @Override

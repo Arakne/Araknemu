@@ -26,11 +26,15 @@ import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.item.type.UsableItem;
+import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectUseRequest;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import org.checkerframework.checker.index.qual.GTENegativeOne;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Use an object
@@ -38,19 +42,21 @@ import fr.quatrevieux.araknemu.network.game.out.info.Error;
 public final class UseObject implements PacketHandler<GameSession, ObjectUseRequest> {
     @Override
     public void handle(GameSession session, ObjectUseRequest packet) throws Exception {
-        if (!session.player().restrictions().canUseObject()) {
+        final GamePlayer player = NullnessUtil.castNonNull(session.player());
+
+        if (!player.restrictions().canUseObject()) {
             throw new ErrorPacket(Error.cantDoOnCurrentState());
         }
 
-        final InventoryEntry entry = session.player().inventory().get(packet.objectId());
+        final InventoryEntry entry = player.inventory().get(packet.objectId());
         final UsableItem item = UsableItem.class.cast(entry.item());
 
         boolean result = true;
 
         try {
             result = packet.isTarget()
-                ? handleForTarget(session, item, packet)
-                : handleForSelf(session, item)
+                ? handleForTarget(NullnessUtil.castNonNull(session.exploration()), item, packet)
+                : handleForSelf(NullnessUtil.castNonNull(session.exploration()), item)
             ;
         } finally {
             if (result) {
@@ -66,20 +72,20 @@ public final class UseObject implements PacketHandler<GameSession, ObjectUseRequ
         return ObjectUseRequest.class;
     }
 
-    private boolean handleForSelf(GameSession session, UsableItem item) {
-        if (!item.check(session.exploration())) {
+    private boolean handleForSelf(ExplorationPlayer exploration, UsableItem item) {
+        if (!item.check(exploration)) {
             return false;
         }
 
-        item.apply(session.exploration());
+        item.apply(exploration);
         return true;
     }
 
-    private boolean handleForTarget(GameSession session, UsableItem item, ObjectUseRequest packet) {
-        final ApplyItemOperation operation = new ApplyItemOperation(item, session.exploration(), packet.cell());
-        final ExplorationMap map = session.exploration().map();
+    private boolean handleForTarget(ExplorationPlayer exploration, UsableItem item, ObjectUseRequest packet) {
+        final ApplyItemOperation operation = new ApplyItemOperation(item, exploration, packet.cell());
+        final ExplorationMap map = exploration.map();
 
-        if (map.has(packet.target())) {
+        if (map != null && map.has(packet.target())) {
             map.creature(packet.target()).apply(operation);
         } else {
             operation.onNull();
@@ -91,18 +97,18 @@ public final class UseObject implements PacketHandler<GameSession, ObjectUseRequ
     private static class ApplyItemOperation implements Operation {
         private final UsableItem item;
         private final ExplorationPlayer caster;
-        private final int targetCell;
+        private final @GTENegativeOne int targetCell;
 
         private boolean success = false;
 
-        public ApplyItemOperation(UsableItem item, ExplorationPlayer caster, int targetCell) {
+        public ApplyItemOperation(UsableItem item, ExplorationPlayer caster, @GTENegativeOne int targetCell) {
             this.item = item;
             this.caster = caster;
             this.targetCell = targetCell;
         }
 
         @Override
-        public void onExplorationPlayer(ExplorationPlayer target) {
+        public void onExplorationPlayer(@Nullable ExplorationPlayer target) {
             if (!item.checkTarget(caster, target, targetCell)) {
                 success = false;
                 return;

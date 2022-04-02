@@ -55,13 +55,13 @@ public final class Simulator {
      * @return The simulation result
      */
     public CastSimulation simulate(Spell spell, ActiveFighter caster, FightCell target) {
-        final CastSimulation normalSimulation = simulate(spell, new CastScope(spell, caster, target).withEffects(spell.effects()));
+        final CastSimulation normalSimulation = simulate(spell, CastScope.simple(spell, caster, target, spell.effects()));
 
         if (spell.criticalHit() < 2) {
             return normalSimulation;
         }
 
-        final CastSimulation criticalSimulation = simulate(spell, new CastScope(spell, caster, target).withEffects(spell.criticalEffects()));
+        final CastSimulation criticalSimulation = simulate(spell, CastScope.simple(spell, caster, target, spell.criticalEffects()));
         final CastSimulation simulation = new CastSimulation(spell, caster, target);
 
         final int criticalRate = 100 / new BaseCriticalityStrategy(caster).hitRate(spell.criticalHit());
@@ -81,11 +81,11 @@ public final class Simulator {
         final CastSimulation simulation = new CastSimulation(spell, scope.caster(), scope.target());
 
         for (CastScope.EffectScope effect : scope.effects()) {
-            if (!simulators.containsKey(effect.effect().effect())) {
+            final EffectSimulator simulator = simulators.get(effect.effect().effect());
+
+            if (simulator == null) {
                 continue;
             }
-
-            final EffectSimulator simulator = simulators.get(effect.effect().effect());
 
             if (effect.effect().probability() > 0) {
                 final CastSimulation probableSimulation = new CastSimulation(spell, scope.caster(), scope.target());

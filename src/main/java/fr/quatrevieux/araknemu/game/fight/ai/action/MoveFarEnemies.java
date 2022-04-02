@@ -25,7 +25,9 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.util.Movement;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,8 +41,9 @@ import java.util.stream.Collectors;
 public final class MoveFarEnemies implements ActionGenerator {
     private final Movement movement;
 
-    private List<CoordinateCell<FightCell>> enemiesCells;
+    private List<CoordinateCell<FightCell>> enemiesCells = Collections.emptyList();
 
+    @SuppressWarnings("methodref.receiver.bound")
     public MoveFarEnemies() {
         movement = new Movement(this::score, scoredCell -> true);
     }
@@ -69,6 +72,6 @@ public final class MoveFarEnemies implements ActionGenerator {
      * Select the highest distance
      */
     private double score(CoordinateCell<FightCell> cell) {
-        return enemiesCells.stream().mapToDouble(cell::distance).min().orElse(0);
+        return NullnessUtil.castNonNull(enemiesCells).stream().mapToDouble(cell::distance).min().orElse(0);
     }
 }

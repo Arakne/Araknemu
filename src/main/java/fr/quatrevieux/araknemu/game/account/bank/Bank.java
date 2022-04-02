@@ -37,6 +37,12 @@ import fr.quatrevieux.araknemu.game.item.inventory.StackableItemStorage;
 import fr.quatrevieux.araknemu.game.item.inventory.Wallet;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.common.value.qual.IntRange;
+import org.checkerframework.dataflow.qual.Pure;
 
 import java.util.Iterator;
 import java.util.stream.Collectors;
@@ -50,7 +56,7 @@ public final class Bank implements Inventory<BankEntry>, Dispatcher {
     private final ListenerAggregate dispatcher = new DefaultListenerAggregate();
     private final Wallet wallet;
 
-    private ItemStorage<BankEntry> storage;
+    private @MonotonicNonNull ItemStorage<BankEntry> storage;
 
     public Bank(BankService service, AccountBank entity) {
         this.service = service;
@@ -59,18 +65,19 @@ public final class Bank implements Inventory<BankEntry>, Dispatcher {
         wallet = new SimpleWallet(entity, dispatcher);
     }
 
+    @Pure
     @Override
-    public long kamas() {
+    public @NonNegative long kamas() {
         return wallet.kamas();
     }
 
     @Override
-    public void addKamas(long quantity) {
+    public void addKamas(@Positive long quantity) {
         wallet.addKamas(quantity);
     }
 
     @Override
-    public void removeKamas(long quantity) {
+    public void removeKamas(@Positive long quantity) {
         wallet.removeKamas(quantity);
     }
 
@@ -80,7 +87,7 @@ public final class Bank implements Inventory<BankEntry>, Dispatcher {
     }
 
     @Override
-    public BankEntry add(Item item, int quantity, int position) throws InventoryException {
+    public BankEntry add(Item item, @Positive int quantity, @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int position) throws InventoryException {
         return storage().add(item, quantity, position);
     }
 
@@ -118,7 +125,7 @@ public final class Bank implements Inventory<BankEntry>, Dispatcher {
     /**
      * Get the cost for open the current bank
      */
-    public long cost() {
+    public @NonNegative long cost() {
         return service.cost(entity);
     }
 
@@ -152,7 +159,7 @@ public final class Bank implements Inventory<BankEntry>, Dispatcher {
     /**
      * Create a new entry
      */
-    private BankEntry create(int id, Item item, int quantity, int position) {
+    private BankEntry create(int id, Item item, @Positive int quantity, @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int position) {
         return new BankEntry(
             this,
             new BankItem(

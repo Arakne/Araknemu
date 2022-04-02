@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.account.GameAccount;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.listener.player.exchange.bank.SaveBank;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -83,7 +84,8 @@ public final class BankService {
     /**
      * Get the cost for open the bank account
      */
-    long cost(AccountBank bank) {
+    @SuppressWarnings("return") // bankCostPerEntry is positive, but cannot be annotated
+    @NonNegative long cost(AccountBank bank) {
         return (long) (itemRepository.count(bank) * configuration.bankCostPerEntry());
     }
 }

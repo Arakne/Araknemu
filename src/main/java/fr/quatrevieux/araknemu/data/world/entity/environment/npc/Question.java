@@ -19,16 +19,19 @@
 
 package fr.quatrevieux.araknemu.data.world.entity.environment.npc;
 
+import org.checkerframework.common.value.qual.MinLen;
+import org.checkerframework.dataflow.qual.Pure;
+
 /**
  * Store NPC questions data
  */
 public final class Question {
     private final int id;
     private final int[] responseIds;
-    private final String[] parameters;
+    private final @MinLen(1) String[] parameters;
     private final String condition;
 
-    public Question(int id, int[] responseIds, String[] parameters, String condition) {
+    public Question(int id, int[] responseIds, @MinLen(1) String[] parameters, String condition) {
         this.id = id;
         this.responseIds = responseIds;
         this.parameters = parameters;
@@ -39,6 +42,7 @@ public final class Question {
      * The question ID
      * Should corresponds with dialog SWF
      */
+    @Pure
     public int id() {
         return id;
     }
@@ -46,6 +50,7 @@ public final class Question {
     /**
      * List of available response ids
      */
+    @Pure
     public int[] responseIds() {
         return responseIds;
     }
@@ -53,7 +58,8 @@ public final class Question {
     /**
      * Get the question variable / parameters like name
      */
-    public String[] parameters() {
+    @Pure
+    public @MinLen(1) String[] parameters() {
         return parameters;
     }
 
@@ -61,6 +67,7 @@ public final class Question {
      * Get the question condition
      * If not match, the next question should be asked
      */
+    @Pure
     public String condition() {
         return condition;
     }

@@ -21,6 +21,8 @@ package fr.quatrevieux.araknemu.data.world.entity.monster;
 
 import fr.arakne.utils.value.Colors;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.dataflow.qual.Pure;
 
 import java.util.Map;
 
@@ -86,18 +88,19 @@ public final class MonsterTemplate {
     /**
      * List of available grades (level, characteristics, spells...)
      */
+    @Pure
     public Grade[] grades() {
         return grades;
     }
 
     public static final class Grade {
-        private final int level;
-        private final int life;
+        private final @Positive int level;
+        private final @Positive int life;
         private final int initiative;
         private final Characteristics characteristics;
-        private final Map<Integer, Integer> spells;
+        private final Map<Integer, @Positive Integer> spells;
 
-        public Grade(int level, int life, int initiative, Characteristics characteristics, Map<Integer, Integer> spells) {
+        public Grade(@Positive int level, @Positive int life, int initiative, Characteristics characteristics, Map<Integer, @Positive Integer> spells) {
             this.level = level;
             this.life = life;
             this.initiative = initiative;
@@ -109,14 +112,14 @@ public final class MonsterTemplate {
          * The monster level
          * Will be displayed on the sprite (information for the player), but has no more effects
          */
-        public int level() {
+        public @Positive int level() {
             return level;
         }
 
         /**
          * The monster max life
          */
-        public int life() {
+        public @Positive int life() {
             return life;
         }
 
@@ -139,7 +142,7 @@ public final class MonsterTemplate {
          * Get the monster spells
          * The response is a map with spell id as key and spell level as value
          */
-        public Map<Integer, Integer> spells() {
+        public Map<Integer, @Positive Integer> spells() {
             return spells;
         }
     }

@@ -22,17 +22,19 @@ package fr.quatrevieux.araknemu.game.item.effect;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Item effect for characteristics
  */
 public final class CharacteristicEffect implements ItemEffect {
     private final Effect effect;
-    private final int value;
+    private final @NonNegative int value;
     private final int multiplier;
     private final Characteristic characteristic;
 
-    public CharacteristicEffect(Effect effect, int value, int multiplier, Characteristic characteristic) {
+    public CharacteristicEffect(Effect effect, @NonNegative int value, int multiplier, Characteristic characteristic) {
         this.effect = effect;
         this.value = value;
         this.multiplier = multiplier;
@@ -54,7 +56,7 @@ public final class CharacteristicEffect implements ItemEffect {
      *
      * @see CharacteristicEffect#boost() for the real characteristic value
      */
-    public int value() {
+    public @NonNegative int value() {
         return value;
     }
 
@@ -75,12 +77,12 @@ public final class CharacteristicEffect implements ItemEffect {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
 
-        if (getClass() != o.getClass()) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
 

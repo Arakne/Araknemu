@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.exploration.event;
 
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 /**
@@ -26,9 +27,18 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
  */
 public final class StopExploration {
     private final GameSession session;
+    private final ExplorationPlayer player;
 
-    public StopExploration(GameSession session) {
+    public StopExploration(GameSession session, ExplorationPlayer player) {
         this.session = session;
+        this.player = player;
+    }
+
+    /**
+     * Get the stopped session
+     */
+    public ExplorationPlayer player() {
+        return player;
     }
 
     public GameSession session() {

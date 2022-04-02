@@ -157,6 +157,7 @@ public final class Banip extends AbstractCommand<Banip.Arguments> implements Sub
         ;
     }
 
+    @SuppressWarnings("initialization.field.uninitialized")
     public static final class Arguments implements SubArguments<Banip> {
         @Argument(required = true, metaVar = "ACTION")
         @SubCommands({
@@ -172,6 +173,7 @@ public final class Banip extends AbstractCommand<Banip.Arguments> implements Sub
             sub.execute(performer, command);
         }
 
+        @SuppressWarnings("initialization.field.uninitialized")
         public abstract static class AbstractIpSubArguments implements SubArguments<Banip> {
             @Argument(index = 0, required = true, metaVar = "IP_ADDRESS")
             private IPAddressString ipAddress;
@@ -181,6 +183,7 @@ public final class Banip extends AbstractCommand<Banip.Arguments> implements Sub
             }
         }
 
+        @SuppressWarnings("initialization.field.uninitialized")
         public static final class ListArguments implements SubArguments<Banip> {
             @Override
             public void execute(AdminPerformer performer, Banip command) {
@@ -188,6 +191,7 @@ public final class Banip extends AbstractCommand<Banip.Arguments> implements Sub
             }
         }
 
+        @SuppressWarnings("initialization.field.uninitialized")
         public static final class CheckArguments extends AbstractIpSubArguments {
             @Override
             public void execute(AdminPerformer performer, Banip command) throws CommandException {
@@ -195,6 +199,7 @@ public final class Banip extends AbstractCommand<Banip.Arguments> implements Sub
             }
         }
 
+        @SuppressWarnings("initialization.field.uninitialized")
         public static final class RemoveArguments extends AbstractIpSubArguments {
             @Override
             public void execute(AdminPerformer performer, Banip command) throws CommandException {
@@ -202,6 +207,7 @@ public final class Banip extends AbstractCommand<Banip.Arguments> implements Sub
             }
         }
 
+        @SuppressWarnings("initialization.field.uninitialized")
         public static final class AddArguments extends AbstractIpSubArguments {
             // @todo do not use sub command here
             @Argument(index = 1, required = true, handler = SubCommandHandler.class, metaVar = "DURATION")
@@ -230,6 +236,7 @@ public final class Banip extends AbstractCommand<Banip.Arguments> implements Sub
                 public String cause();
             }
 
+            @SuppressWarnings("initialization.field.uninitialized")
             public static final class For implements DurationContainer {
                 @Argument(required = true, metaVar = "DURATION")
                 private Duration duration;
@@ -248,6 +255,7 @@ public final class Banip extends AbstractCommand<Banip.Arguments> implements Sub
                 }
             }
 
+            @SuppressWarnings("initialization.field.uninitialized")
             public static final class Forever implements DurationContainer {
                 @Argument(required = true, handler = ConcatRestOfArgumentsHandler.class, metaVar = "MESSAGE")
                 private String cause;

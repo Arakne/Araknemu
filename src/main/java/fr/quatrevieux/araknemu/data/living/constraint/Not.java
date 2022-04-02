@@ -19,13 +19,16 @@
 
 package fr.quatrevieux.araknemu.data.living.constraint;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Reverse constraint check result
  *
  * @param <T> The entity type
  * @param <E> The error type
  */
-public final class Not<T, E> implements EntityConstraint<T, E> {
+public final class Not<T, @NonNull E> implements EntityConstraint<T, E> {
     private final EntityConstraint<T, E> constraint;
 
     public Not(EntityConstraint<T, E> constraint) {
@@ -33,12 +36,13 @@ public final class Not<T, E> implements EntityConstraint<T, E> {
     }
 
     @Override
+    @SuppressWarnings("contracts.conditional.postcondition")
     public boolean check(T entity) {
         return !constraint.check(entity);
     }
 
     @Override
-    public E error() {
+    public @Nullable E error() {
         return constraint.error();
     }
 }

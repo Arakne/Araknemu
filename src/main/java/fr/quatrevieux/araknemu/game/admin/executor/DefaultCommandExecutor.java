@@ -38,6 +38,7 @@ public final class DefaultCommandExecutor implements CommandExecutor {
     }
 
     @Override
+    @SuppressWarnings("type.argument")
     public <A> void execute(Command<A> command, AdminPerformer performer, CommandParser.Arguments arguments) throws AdminException {
         if (!performer.isGranted(command.permissions())) {
             throw new CommandPermissionsException(command.name(), command.permissions());
@@ -54,7 +55,7 @@ public final class DefaultCommandExecutor implements CommandExecutor {
         } catch (AdminException ae) {
             throw ae;
         } catch (Exception e) {
-            throw new CommandException(command.name(), e.getMessage());
+            throw new CommandException(command.name(), e.getMessage() != null ? e.getMessage() : e.toString());
         }
 
         command.execute(performer, args);

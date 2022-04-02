@@ -20,22 +20,23 @@
 package fr.quatrevieux.araknemu.core.di.item;
 
 import fr.quatrevieux.araknemu.core.di.Container;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Simple value container item
  *
  * @param <T> The value type
  */
-public final class ValueItem<T> implements ContainerItem<T> {
+public final class ValueItem<T extends @NonNull Object> implements ContainerItem<T> {
     private final Class<T> type;
-    private final T value;
+    private final @NonNull T value;
 
-    public ValueItem(Class<T> type, T value) {
+    public ValueItem(Class<T> type, @NonNull T value) {
         this.type = type;
         this.value = value;
     }
 
-    public ValueItem(T value) {
+    public ValueItem(@NonNull T value) {
         this((Class<T>) value.getClass(), value);
     }
 
@@ -45,7 +46,7 @@ public final class ValueItem<T> implements ContainerItem<T> {
     }
 
     @Override
-    public T value(Container container) {
+    public @NonNull T value(Container container) {
         return value;
     }
 }

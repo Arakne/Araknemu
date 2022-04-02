@@ -122,8 +122,6 @@ class BankEntryTest extends GameBaseCase {
         AtomicReference<ObjectQuantityChanged> ref = new AtomicReference<>();
         bank.dispatcher().add(ObjectQuantityChanged.class, ref::set);
 
-        assertThrows(InventoryException.class, () -> entry.remove(0));
-        assertThrows(InventoryException.class, () -> entry.remove(-5));
         assertThrows(InventoryException.class, () -> entry.remove(5));
 
         assertNull(ref.get());

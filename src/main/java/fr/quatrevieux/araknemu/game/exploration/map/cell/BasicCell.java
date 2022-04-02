@@ -23,12 +23,13 @@ import fr.arakne.utils.maps.AbstractCellDataAdapter;
 import fr.arakne.utils.maps.serializer.CellData;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Simple cell type
  */
 public final class BasicCell extends AbstractCellDataAdapter<ExplorationMap, ExplorationMapCell> implements ExplorationMapCell {
-    public BasicCell(int id, CellData template, ExplorationMap map) {
+    public BasicCell(@NonNegative int id, CellData template, ExplorationMap map) {
         super(map, template, id);
     }
 

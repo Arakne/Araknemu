@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.handler;
 import fr.quatrevieux.araknemu.core.network.exception.CloseImmediately;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 
 /**
@@ -38,11 +39,13 @@ public final class EnsureFighting<P extends Packet> implements PacketHandler<Gam
 
     @Override
     public void handle(GameSession session, P packet) {
-        if (session.fighter() == null) {
+        final PlayerFighter fighter = session.fighter();
+
+        if (fighter == null) {
             throw new CloseImmediately("Not in fight");
         }
 
-        session.fighter().fight().execute(() -> {
+        fighter.fight().execute(() -> {
             // The player has left the fight before the execution of the action
             if (session.fighter() == null) {
                 return;

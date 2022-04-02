@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.NoneAction;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Perform a game action into the fight
@@ -34,7 +35,7 @@ public final class PerformTurnAction implements PacketHandler<GameSession, GameA
     @Override
     public void handle(GameSession session, GameActionRequest packet) {
         try {
-            final FightTurn turn = session.fighter().turn();
+            final FightTurn turn = NullnessUtil.castNonNull(session.fighter()).turn();
 
             turn.perform(turn.actions().create(ActionType.byId(packet.type()), packet.arguments()));
         } catch (Exception e) {

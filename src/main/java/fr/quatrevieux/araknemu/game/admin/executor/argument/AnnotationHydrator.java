@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.admin.executor.argument.handler.LocalTimeHan
 import fr.quatrevieux.araknemu.game.admin.executor.argument.type.SubArguments;
 import fr.quatrevieux.araknemu.game.admin.help.CommandHelp;
 import inet.ipaddr.IPAddressString;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.OptionHandlerRegistry;
 import org.kohsuke.args4j.ParserProperties;
@@ -56,7 +57,11 @@ public final class AnnotationHydrator implements ArgumentsHydrator {
     }
 
     @Override
-    public <A> A hydrate(Command<A> command, A commandArguments, CommandParser.Arguments parsedArguments) throws Exception {
+    public <@Nullable A> A hydrate(Command<A> command, @Nullable A commandArguments, CommandParser.Arguments parsedArguments) throws Exception {
+        if (commandArguments == null) {
+            throw new IllegalArgumentException("A command arguments instance must be provided");
+        }
+
         final CmdLineParser parser = new CmdLineParser(commandArguments, parserProperties);
 
         // @todo handle custom properties
@@ -66,7 +71,8 @@ public final class AnnotationHydrator implements ArgumentsHydrator {
     }
 
     @Override
-    public <A> CommandHelp help(Command<A> command, A commandArguments, CommandHelp help) {
+    @SuppressWarnings("argument") // args4j do not use nullable annotations
+    public <A> CommandHelp help(Command<A> command, @Nullable A commandArguments, CommandHelp help) {
         final HelpGenerator generator = new HelpGenerator(command, new CmdLineParser(commandArguments, parserProperties));
 
         return help.modify(builder -> {
@@ -77,7 +83,7 @@ public final class AnnotationHydrator implements ArgumentsHydrator {
     }
 
     @Override
-    public <A> boolean supports(Command<A> command, A commandArguments) {
+    public <A> boolean supports(Command<A> command, @Nullable A commandArguments) {
         return commandArguments != null;
     }
 
@@ -101,6 +107,7 @@ public final class AnnotationHydrator implements ArgumentsHydrator {
             parseOptions(parser.getOptions(), option -> option.option.toString(), help);
         }
 
+        @SuppressWarnings("argument") // library do not use Nullable annotation
         public void arguments(CommandHelp.Builder help) {
             parseOptions(parser.getArguments(), argument -> argument.getNameAndMeta(null), help);
         }

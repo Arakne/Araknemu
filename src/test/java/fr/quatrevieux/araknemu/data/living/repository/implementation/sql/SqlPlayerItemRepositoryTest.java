@@ -79,6 +79,36 @@ class SqlPlayerItemRepositoryTest extends GameBaseCase {
     }
 
     @Test
+    void getShouldFixInvalidPosition() {
+        PlayerItem item1 = repository.add(
+            new PlayerItem(
+                1,
+                3,
+                39,
+                Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "")),
+                5,
+                -5
+            )
+        );
+        PlayerItem item2 = repository.add(
+            new PlayerItem(
+                1,
+                10,
+                39,
+                Arrays.asList(new ItemTemplateEffectEntry(Effect.ADD_INTELLIGENCE, 2, 0, 0, "")),
+                5,
+                300
+            )
+        );
+
+        item1 = repository.get(item1);
+        item2 = repository.get(item2);
+
+        assertEquals(-1, item1.position());
+        assertEquals(-1, item2.position());
+    }
+
+    @Test
     void has() {
         PlayerItem item = repository.add(
             new PlayerItem(

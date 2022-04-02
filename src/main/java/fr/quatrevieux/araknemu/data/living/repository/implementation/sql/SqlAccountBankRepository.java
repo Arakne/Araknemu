@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.living.entity.account.AccountBank;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
+import fr.quatrevieux.araknemu.util.Asserter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -116,7 +117,7 @@ final class SqlAccountBankRepository implements AccountBankRepository {
             return new AccountBank(
                 rs.getInt("ACCOUNT_ID"),
                 rs.getInt("SERVER_ID"),
-                rs.getLong("BANK_KAMAS")
+                Asserter.assertNonNegative(rs.getLong("BANK_KAMAS"))
             );
         }
 

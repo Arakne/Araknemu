@@ -210,7 +210,7 @@ class MovementPointLostApplierTest extends FightBaseCase {
         requestStack.assertAll(
             new Stats(caster.properties()),
             ActionEffect.buff(buff, -2),
-            "GIE127;1;2;;0;null;5;0"
+            "GIE127;1;2;;0;;5;0"
         );
     }
 

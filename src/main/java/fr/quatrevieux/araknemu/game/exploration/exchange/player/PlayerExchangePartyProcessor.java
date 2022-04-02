@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.exploration.exchange.ExchangePartyProcessor;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeLeaved;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.Map;
 
@@ -49,7 +50,7 @@ public final class PlayerExchangePartyProcessor implements ExchangePartyProcesso
             valid = false;
         }
 
-        for (Map.Entry<ItemEntry, Integer> entry : storage.items().entrySet()) {
+        for (Map.Entry<ItemEntry, @Positive Integer> entry : storage.items().entrySet()) {
             if (entry.getValue() > entry.getKey().quantity()) {
                 storage.setItem(entry.getKey(), entry.getKey().quantity());
 
@@ -62,9 +63,11 @@ public final class PlayerExchangePartyProcessor implements ExchangePartyProcesso
 
     @Override
     public void process(ExchangePartyProcessor distant) {
-        if (storage.kamas() > 0) {
-            player.inventory().removeKamas(storage.kamas());
-            distant.addKamas(storage.kamas());
+        final long kamas = storage.kamas();
+
+        if (kamas > 0) {
+            player.inventory().removeKamas(kamas);
+            distant.addKamas(kamas);
         }
 
         storage.items().forEach((entry, quantity) -> {
@@ -92,12 +95,12 @@ public final class PlayerExchangePartyProcessor implements ExchangePartyProcesso
     }
 
     @Override
-    public void addKamas(long kamas) {
+    public void addKamas(@Positive long kamas) {
         player.inventory().addKamas(kamas);
     }
 
     @Override
-    public void addItem(Item item, int quantity) {
+    public void addItem(Item item, @Positive int quantity) {
         player.inventory().add(item, quantity);
     }
 }

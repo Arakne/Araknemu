@@ -28,6 +28,8 @@ import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -54,9 +56,10 @@ public final class MoveToAttack implements ActionGenerator {
 
     private final Map<FightCell, Collection<CastSimulation>> possibleActionsCache = new HashMap<>();
 
-    private ActiveFighter fighter;
-    private AIHelper helper;
+    private @MonotonicNonNull ActiveFighter fighter;
+    private @MonotonicNonNull AIHelper helper;
 
+    @SuppressWarnings("methodref.receiver.bound")
     private MoveToAttack(Simulator simulator, TargetSelectionStrategy strategy) {
         this.simulator = simulator;
         this.attack = new Attack(simulator);
@@ -77,7 +80,7 @@ public final class MoveToAttack implements ActionGenerator {
         helper = ai.helper();
 
         // Cannot move or attack
-        if (!helper.canCast() || !helper.canMove()) {
+        if (fighter == null || !helper.canCast() || !helper.canMove()) {
             return Optional.empty();
         }
 
@@ -115,7 +118,7 @@ public final class MoveToAttack implements ActionGenerator {
             return possibleCasts;
         }
 
-        possibleCasts = helper.withPosition(cell).spells()
+        possibleCasts = NullnessUtil.castNonNull(helper).withPosition(cell).spells()
             .simulate(simulator)
             .filter(attack::valid) // Keep only effective attacks
             .collect(Collectors.toList())
@@ -182,7 +185,7 @@ public final class MoveToAttack implements ActionGenerator {
     public static final class BestTargetStrategy implements TargetSelectionStrategy {
         @Override
         public double score(MoveToAttack generator, CoordinateCell<FightCell> target) {
-            return maxScore(generator, target.cell()) - target.distance(generator.fighter.cell());
+            return maxScore(generator, target.cell()) - target.distance(NullnessUtil.castNonNull(generator.fighter).cell());
         }
 
         /**
@@ -199,7 +202,7 @@ public final class MoveToAttack implements ActionGenerator {
     private static final class NearestStrategy implements TargetSelectionStrategy {
         @Override
         public double score(MoveToAttack generator, CoordinateCell<FightCell> target) {
-            return -target.distance(generator.fighter.cell()) + sigmoid(BestTargetStrategy.maxScore(generator, target.cell()));
+            return -target.distance(NullnessUtil.castNonNull(generator.fighter).cell()) + sigmoid(BestTargetStrategy.maxScore(generator, target.cell()));
         }
 
         /**

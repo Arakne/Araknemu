@@ -111,12 +111,12 @@ class GameSessionTest extends GameBaseCase {
         login();
         GameSession session = new GameSession(new ConfigurableSession(new DummyChannel()));
 
-        assertNull(session.log());
+        assertFalse(session.log().isPresent());
 
         SessionLog log = container.get(SessionLogService.class).create(this.session);
         session.setLog(log);
 
-        assertSame(log, session.log());
+        assertSame(log, session.log().get());
     }
 
     @Test

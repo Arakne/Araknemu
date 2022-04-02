@@ -14,19 +14,22 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2022 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.monster.environment;
+package fr.quatrevieux.araknemu.game.item;
 
-import fr.quatrevieux.araknemu._test.TestCase;
-import fr.quatrevieux.araknemu.data.value.Position;
 import org.junit.jupiter.api.Test;
 
-class SpawnCellSelectorTest extends TestCase {
+import java.util.NoSuchElementException;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class SuperTypeTest {
     @Test
-    void forPosition() {
-        assertInstanceOf(RandomCellSelector.class, SpawnCellSelector.forPosition(new Position(10340, -1)));
-        assertInstanceOf(FixedCellSelector.class, SpawnCellSelector.forPosition(new Position(10340, 123)));
+    void byId() {
+        assertSame(SuperType.WEAPON, SuperType.byId(2));
+        assertThrows(NoSuchElementException.class, () -> SuperType.byId(-1));
+        assertThrows(NoSuchElementException.class, () -> SuperType.byId(10000));
     }
 }

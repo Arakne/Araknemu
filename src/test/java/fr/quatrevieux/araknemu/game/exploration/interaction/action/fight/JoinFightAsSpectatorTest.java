@@ -91,9 +91,21 @@ class JoinFightAsSpectatorTest extends FightBaseCase {
     @Test
     void badMap() throws SQLException, ContainerException {
         explorationPlayer().changeMap(container.get(ExplorationMapService.class).load(10540), 123);
-        assertFalse(explorationPlayer().player().isSpectator());
 
         action.start(new ActionQueue());
+        assertFalse(explorationPlayer().player().isSpectator());
+
+        requestStack.assertLast(
+            new GameActionResponse("", ActionType.JOIN_FIGHT, player.id(), "p")
+        );
+    }
+
+    @Test
+    void notOnMap() throws SQLException, ContainerException {
+        explorationPlayer().leave();
+
+        action.start(new ActionQueue());
+        assertFalse(explorationPlayer().player().isSpectator());
 
         requestStack.assertLast(
             new GameActionResponse("", ActionType.JOIN_FIGHT, player.id(), "p")

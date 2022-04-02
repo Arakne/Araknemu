@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.CommandParser;
 import fr.quatrevieux.araknemu.game.admin.exception.handler.CommandExceptionHandler;
 import fr.quatrevieux.araknemu.game.admin.exception.handler.CommandNotFoundExceptionHandler;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +41,7 @@ public final class ExceptionHandler {
         register(CommandNotFoundException.class, new CommandNotFoundExceptionHandler());
         register(CommandException.class, new CommandExceptionHandler());
         register(CommandPermissionsException.class, (user, e, arguments) -> user.error("Unauthorized command '{}', you need at least these permissions {}", e.command(), e.permissions()));
-        register(ContextException.class, (user, e, arguments) -> user.error("Error during resolving context : {}", e.getMessage()));
+        register(ContextException.class, (user, e, arguments) -> user.error("Error during resolving context : {}", e.getMessage() != null ? e.getMessage() : e.toString()));
         register(ContextNotFoundException.class, (user, e, arguments) -> user.error("The context '{}' is not found", e.context()));
     }
 
@@ -50,7 +51,7 @@ public final class ExceptionHandler {
     public void handle(AdminPerformer performer, Throwable error) {
         final CommandParser.Arguments arguments;
 
-        Function handler = defaultHandler;
+        Function handler;
         Throwable baseError = error;
 
         // The exception is wrapped into a CommandExecutionException
@@ -63,14 +64,16 @@ public final class ExceptionHandler {
             arguments = null;
         }
 
-        if (!handlers.containsKey(baseError.getClass())) {
-            // Use CommandExecutionException as CommandException
-            if (error instanceof CommandException) {
-                handler = handlers.get(CommandException.class);
-                baseError = error;
-            }
-        } else {
-            handler = handlers.get(baseError.getClass());
+        handler = handlers.get(baseError.getClass());
+
+        // Use CommandExecutionException as CommandException
+        if (handler == null && error instanceof CommandException) {
+            handler = handlers.get(CommandException.class);
+            baseError = error;
+        }
+
+        if (handler == null) {
+            handler = defaultHandler;
         }
 
         handler.handle(performer, baseError, arguments);
@@ -97,6 +100,6 @@ public final class ExceptionHandler {
          * @param error The triggered error
          * @param arguments The execution arguments. Can be null
          */
-        public void handle(AdminPerformer performer, T error, CommandParser.Arguments arguments);
+        public void handle(AdminPerformer performer, T error, CommandParser.@Nullable Arguments arguments);
     }
 }

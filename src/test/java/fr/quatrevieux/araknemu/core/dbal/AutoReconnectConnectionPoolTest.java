@@ -42,7 +42,7 @@ class AutoReconnectConnectionPoolTest {
     void setUp() throws IOException, SQLException {
         SQLiteDriver driver = new SQLiteDriver(
             new DefaultConfiguration(new IniDriver(new Ini(new File("src/test/test_config.ini"))))
-                .module(DatabaseConfiguration.class)
+                .module(DatabaseConfiguration.MODULE)
                 .connection("realm")
         );
 

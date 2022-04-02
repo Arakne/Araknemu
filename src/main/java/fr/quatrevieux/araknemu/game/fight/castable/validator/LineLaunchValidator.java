@@ -24,13 +24,14 @@ import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Check if spell should be cast in line launch
  */
 public final class LineLaunchValidator implements CastConstraintValidator {
     @Override
-    public Error validate(Turn turn, Castable castable, FightCell target) {
+    public @Nullable Error validate(Turn turn, Castable castable, FightCell target) {
         if (check(turn, castable, target)) {
             return null;
         }

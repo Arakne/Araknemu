@@ -20,10 +20,12 @@
 package fr.quatrevieux.araknemu.game.handler.fight;
 
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.fight.AskFightDetails;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightDetails;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Show details on the fight
@@ -37,7 +39,11 @@ public final class ShowFightDetails implements PacketHandler<GameSession, AskFig
 
     @Override
     public void handle(GameSession session, AskFightDetails packet) {
-        session.send(new FightDetails(service.getFromMap(session.exploration().map().id(), packet.fightId())));
+        final ExplorationMap map = NullnessUtil.castNonNull(session.exploration()).map();
+
+        if (map != null) {
+            session.send(new FightDetails(service.getFromMap(map.id(), packet.fightId())));
+        }
     }
 
     @Override

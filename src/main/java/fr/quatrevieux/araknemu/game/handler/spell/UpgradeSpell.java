@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.spell.SpellUpgrade;
 import fr.quatrevieux.araknemu.network.game.out.spell.SpellUpgradeError;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Upgrade the spell
@@ -32,7 +33,7 @@ public final class UpgradeSpell implements PacketHandler<GameSession, SpellUpgra
     @Override
     public void handle(GameSession session, SpellUpgrade packet) throws Exception {
         try {
-            session.player().properties().spells()
+            NullnessUtil.castNonNull(session.player()).properties().spells()
                 .entry(packet.spellId())
                 .upgrade()
             ;

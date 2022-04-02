@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.PacketParser;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.session.ConfigurableSession;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.function.Consumer;
 
@@ -54,7 +55,7 @@ public final class RealmPacketParserMiddleware implements ConfigurableSession.Re
     private final PacketParser[] loginPackets;
     private final PacketParser parser;
 
-    private int packetCount = 0;
+    private @NonNegative int packetCount = 0;
 
     /**
      * @param loginPackets The "indexed" packets (i.e. recognized by there received position)

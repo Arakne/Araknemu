@@ -92,6 +92,7 @@ public final class Kick extends AbstractCommand<Kick.Arguments> {
         performer.success("{} player(s) kicked from server", count);
     }
 
+    @SuppressWarnings("initialization.field.uninitialized")
     public static final class Arguments {
         @Option(name = "--all", usage = "Kick all players", forbids = {"--ip"})
         private boolean all;

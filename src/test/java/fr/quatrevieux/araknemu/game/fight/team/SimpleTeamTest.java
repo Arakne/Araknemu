@@ -52,10 +52,34 @@ class SimpleTeamTest extends FightBaseCase {
             Arrays.asList(123, 456),
             1
         );
+
+        team.setFight(createFight());
     }
 
     @Test
-    void getters() {
+    void withoutFight() throws SQLException {
+        team = new SimpleTeam(
+            fighter = new PlayerFighter(gamePlayer(true)),
+            Arrays.asList(123, 456),
+            1
+        );
+
+        assertSame(fighter, team.leader());
+        assertEquals(Arrays.asList(fighter), new ArrayList<>(team.fighters())); // Make list copy for equality
+        assertEquals(Arrays.asList(123, 456), team.startPlaces());
+        assertEquals(1, team.number());
+        assertEquals(1, team.id());
+        assertEquals(0, team.type());
+        assertEquals(Alignment.NONE, team.alignment());
+        assertEquals(player.position().cell(), team.cell());
+
+        assertSame(team, fighter.team());
+
+        assertThrows(IllegalStateException.class, team::options);
+    }
+
+    @Test
+    void getters() throws Exception {
         assertSame(fighter, team.leader());
         assertEquals(Arrays.asList(fighter), new ArrayList<>(team.fighters())); // Make list copy for equality
         assertEquals(Arrays.asList(123, 456), team.startPlaces());

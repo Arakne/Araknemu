@@ -19,13 +19,15 @@
 
 package fr.quatrevieux.araknemu.core.network.parser;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Exception raised when cannot parse a packet
  */
 public class ParsePacketException extends RuntimeException {
     private final String packet;
 
-    public ParsePacketException(String packet, String message, Throwable cause) {
+    public ParsePacketException(String packet, String message, @Nullable Throwable cause) {
         super(message, cause);
 
         this.packet = packet;

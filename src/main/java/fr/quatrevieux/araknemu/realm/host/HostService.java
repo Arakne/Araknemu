@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -72,6 +73,10 @@ public final class HostService {
     public void updateHost(int id, GameHost.State state, boolean canLog) {
         final GameHost host = hosts.get(id);
 
+        if (host == null) {
+            throw new NoSuchElementException("Host " + id + " is not found");
+        }
+
         host.setState(state);
         host.setCanLog(canLog);
         dispatcher.dispatch(new HostsUpdated(hosts.values()));
@@ -82,7 +87,9 @@ public final class HostService {
      * @param id The host race
      */
     public boolean isAvailable(int id) {
-        return hosts.containsKey(id) && hosts.get(id).canLog();
+        final GameHost host = hosts.get(id);
+
+        return host != null && host.canLog();
     }
 
     /**
@@ -90,7 +97,13 @@ public final class HostService {
      * @param id The host race
      */
     public GameHost get(int id) {
-        return hosts.get(id);
+        final GameHost host = hosts.get(id);
+
+        if (host == null) {
+            throw new NoSuchElementException("Host " + id + " is not found");
+        }
+
+        return host;
     }
 
     /**

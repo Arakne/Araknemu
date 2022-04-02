@@ -21,6 +21,8 @@ package fr.quatrevieux.araknemu.data.value;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.NoSuchElementException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class EffectAreaTest {
@@ -55,5 +57,11 @@ class EffectAreaTest {
         assertEquals(area.hashCode(), new EffectArea(EffectArea.Type.CIRCLE, 3).hashCode());
         assertNotEquals(area.hashCode(), new EffectArea(EffectArea.Type.RING, 3).hashCode());
         assertNotEquals(area.hashCode(), new EffectArea(EffectArea.Type.CIRCLE, 4).hashCode());
+    }
+
+    @Test
+    void typeByChar() {
+        assertSame(EffectArea.Type.RING, EffectArea.Type.byChar('O'));
+        assertThrows(NoSuchElementException.class, () -> EffectArea.Type.byChar('_'));
     }
 }

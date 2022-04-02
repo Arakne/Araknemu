@@ -38,9 +38,17 @@ class PositionTest {
         Position position = new Position(1254, 235);
 
         assertNotEquals(null, position);
+        assertNotEquals(position, null);
         assertNotEquals(new Position(74, 52), position);
         assertEquals(position, position);
         assertEquals(new Position(1254, 235), position);
+    }
+
+    @Test
+    void hash() {
+        assertEquals(new Position(1254, 235).hashCode(), new Position(1254, 235).hashCode());
+        assertNotEquals(new Position(1255, 235).hashCode(), new Position(1254, 235).hashCode());
+        assertNotEquals(new Position(1254, 234).hashCode(), new Position(1254, 235).hashCode());
     }
 
     @Test

@@ -26,6 +26,9 @@ import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcExchange;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcExchangeRepository;
+import fr.quatrevieux.araknemu.util.Asserter;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,9 +42,9 @@ import java.util.Map;
 final class SqlNpcExchangeRepository implements NpcExchangeRepository {
     private final QueryExecutor executor;
     private final RepositoryUtils<NpcExchange> utils;
-    private final Transformer<Map<Integer, Integer>> itemsTransformer;
+    private final Transformer<Map<Integer, @Positive Integer>> itemsTransformer;
 
-    public SqlNpcExchangeRepository(QueryExecutor executor, Transformer<Map<Integer, Integer>> itemsTransformer) {
+    public SqlNpcExchangeRepository(QueryExecutor executor, Transformer<Map<Integer, @Positive Integer>> itemsTransformer) {
         this.executor = executor;
         this.itemsTransformer = itemsTransformer;
 
@@ -109,10 +112,10 @@ final class SqlNpcExchangeRepository implements NpcExchangeRepository {
             return new NpcExchange(
                 rs.getInt("NPC_EXCHANGE_ID"),
                 rs.getInt("NPC_TEMPLATE_ID"),
-                rs.getLong("REQUIRED_KAMAS"),
-                itemsTransformer.unserialize(rs.getString("REQUIRED_ITEMS")),
-                rs.getLong("EXCHANGED_KAMAS"),
-                itemsTransformer.unserialize(rs.getString("EXCHANGED_ITEMS"))
+                Asserter.assertNonNegative(rs.getLong("REQUIRED_KAMAS")),
+                itemsTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("REQUIRED_ITEMS"))),
+                Asserter.assertNonNegative(rs.getLong("EXCHANGED_KAMAS")),
+                itemsTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("EXCHANGED_ITEMS")))
             );
         }
 

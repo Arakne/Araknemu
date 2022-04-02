@@ -38,6 +38,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -93,6 +94,11 @@ class HostServiceTest extends RealmBaseCase {
         assertSame(GameHost.State.SAVING, gh.state());
         assertFalse(gh.canLog());
         assertEquals(service.all(), ref.get().hosts());
+    }
+
+    @Test
+    void updateStateHostNotFound() {
+        assertThrows(NoSuchElementException.class, () -> service.updateHost(404, GameHost.State.SAVING, false));
     }
 
     @Test

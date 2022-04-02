@@ -32,6 +32,7 @@ import fr.quatrevieux.araknemu.game.listener.player.SendLevelUp;
 import fr.quatrevieux.araknemu.game.listener.player.SendPlayerXp;
 import fr.quatrevieux.araknemu.game.player.event.PlayerLoaded;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,10 +116,12 @@ public final class PlayerExperienceService implements PreloadableService, Events
      * @param entity The player entity
      * @param newLevel The reached level
      */
-    void applyLevelUpBonus(Player entity, int newLevel) {
+    void applyLevelUpBonus(Player entity, @Positive int newLevel) {
         final int diff = newLevel - entity.level();
 
-        entity.setSpellPoints(entity.spellPoints() + configuration.spellBoostPointsOnLevelUp() * diff);
-        entity.setBoostPoints(entity.boostPoints() + configuration.characteristicPointsOnLevelUp() * diff);
+        if (diff > 0) {
+            entity.setSpellPoints(entity.spellPoints() + configuration.spellBoostPointsOnLevelUp() * diff);
+            entity.setBoostPoints(entity.boostPoints() + configuration.characteristicPointsOnLevelUp() * diff);
+        }
     }
 }

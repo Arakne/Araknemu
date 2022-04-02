@@ -41,6 +41,10 @@ public final class MoveFactory implements MoveActionFactory {
 
     @Override
     public Action create(String[] arguments) {
+        if (arguments.length < 1) {
+            throw new IllegalArgumentException("Invalid move arguments");
+        }
+
         return create(new Decoder<>(turn.fight().map()).decode(arguments[0], turn.fighter().cell()));
     }
 
@@ -51,11 +55,12 @@ public final class MoveFactory implements MoveActionFactory {
 
     @Override
     public Move create(Path<FightCell> path) {
+        // @todo define on module after refactor
         final FightPathValidator[] validators = new FightPathValidator[] {
             new TackleValidator(),
             new StopOnEnemyValidator(),
         };
 
-        return new Move(turn, turn.fighter(), path, validators);
+        return new Move(turn.fighter(), path, validators);
     }
 }

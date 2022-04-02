@@ -35,6 +35,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightsCount;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.ShowFight;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.MapReady;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.Collection;
 
@@ -52,7 +53,7 @@ public final class LoadExtraInfo implements PacketHandler<GameSession, AskExtraI
 
     @Override
     public void handle(GameSession session, AskExtraInfo packet) throws Exception {
-        final ExplorationMap map = session.exploration().map();
+        final ExplorationMap map = NullnessUtil.castNonNull(session.exploration()).map();
 
         if (map == null) {
             throw new CloseImmediately("A map should be loaded before get extra info");

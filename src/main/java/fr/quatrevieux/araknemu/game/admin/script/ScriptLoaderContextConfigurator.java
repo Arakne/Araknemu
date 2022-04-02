@@ -25,6 +25,8 @@ import fr.quatrevieux.araknemu.game.admin.context.AbstractContextConfigurator;
 import fr.quatrevieux.araknemu.game.admin.context.Context;
 import groovy.util.GroovyScriptEngine;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -62,7 +64,7 @@ public final class ScriptLoaderContextConfigurator<C extends Context> extends Ab
         }
 
         // Issue #185 : engine must be loaded only if directory exists
-        loadEngine();
+        final GroovyScriptEngine engine = loadEngine();
 
         final Container container = containerResolver.apply(context);
 
@@ -71,7 +73,7 @@ public final class ScriptLoaderContextConfigurator<C extends Context> extends Ab
                 logger.debug("Load command script {}", file.toAbsolutePath().toString());
 
                 try {
-                    final Class type = engine.get().loadScriptByName(file.getFileName().toString());
+                    final Class type = engine.loadScriptByName(NullnessUtil.castNonNull(file.getFileName()).toString());
 
                     if (Command.class.isAssignableFrom(type)) {
                         logger.debug("Find command {}", type.getSimpleName());
@@ -88,7 +90,7 @@ public final class ScriptLoaderContextConfigurator<C extends Context> extends Ab
 
     private Command instantiate(Container container, Class<? extends Command> type) throws InstantiationException, IllegalAccessException, InvocationTargetException {
         for (Constructor constructor : type.getConstructors()) {
-            final Object[] parameters = resolveArguments(container, constructor);
+            final Object @Nullable[] parameters = resolveArguments(container, constructor);
 
             if (parameters != null) {
                 return (Command) constructor.newInstance(parameters);
@@ -99,9 +101,9 @@ public final class ScriptLoaderContextConfigurator<C extends Context> extends Ab
         return type.newInstance();
     }
 
-    private Object[] resolveArguments(Container container, Constructor constructor) {
-        final Object[] parameters = new Object[constructor.getParameterCount()];
+    private Object @Nullable[] resolveArguments(Container container, Constructor constructor) {
         final Class[] parametersTypes = constructor.getParameterTypes();
+        final Object[] parameters = new Object[parametersTypes.length];
 
         for (int i = 0; i < parameters.length; ++i) {
             if (!container.has(parametersTypes[i])) {
@@ -114,16 +116,20 @@ public final class ScriptLoaderContextConfigurator<C extends Context> extends Ab
         return parameters;
     }
 
-    private synchronized void loadEngine() {
-        if (engine.get() != null) {
-            return;
+    private synchronized GroovyScriptEngine loadEngine() {
+        GroovyScriptEngine engine = this.engine.get();
+
+        if (engine != null) {
+            return engine;
         }
 
         try {
-            engine.set(new GroovyScriptEngine(new URL[] {path.toUri().toURL()}));
+            this.engine.set(engine = new GroovyScriptEngine(new URL[] {path.toUri().toURL()}));
         } catch (MalformedURLException e) {
             // Should not occurs
             throw new RuntimeException();
         }
+
+        return engine;
     }
 }

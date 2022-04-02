@@ -19,19 +19,20 @@
 
 package fr.quatrevieux.araknemu.game.monster.environment;
 
-import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 /**
  * Cell selector for fixed monster group
  */
 public final class FixedCellSelector implements SpawnCellSelector {
-    private final Position position;
-    private ExplorationMap map;
+    private final @NonNegative int cell;
+    private @MonotonicNonNull ExplorationMap map;
 
-    public FixedCellSelector(Position position) {
-        this.position = position;
+    public FixedCellSelector(@NonNegative int cell) {
+        this.cell = cell;
     }
 
     @Override
@@ -41,6 +42,16 @@ public final class FixedCellSelector implements SpawnCellSelector {
 
     @Override
     public ExplorationMapCell cell() {
-        return map.get(position.cell());
+        final ExplorationMap map = this.map;
+
+        if (map == null) {
+            throw new IllegalStateException("Map must be loaded before");
+        }
+
+        if (map.size() <= cell) {
+            throw new IllegalStateException("Invalid cell " + cell + " for map " + map.id());
+        }
+
+        return map.get(cell);
     }
 }

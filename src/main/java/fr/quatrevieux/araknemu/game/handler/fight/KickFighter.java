@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.fight.KickFighterRequest;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Kick a fighter during placement state
@@ -38,7 +39,7 @@ import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 public final class KickFighter implements PacketHandler<GameSession, KickFighterRequest> {
     @Override
     public void handle(GameSession session, KickFighterRequest packet) {
-        final Fighter fighter = session.fighter();
+        final Fighter fighter = NullnessUtil.castNonNull(session.fighter());
 
         if (!fighter.isTeamLeader() || packet.fighterId() == fighter.id()) {
             // @todo Im error ?

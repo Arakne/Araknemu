@@ -28,6 +28,9 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.util.Asserter;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Simulate simple damage effect
@@ -49,7 +52,8 @@ public final class DamageSimulator implements EffectSimulator {
         final int fixed = caster.characteristics().get(Characteristic.FIXED_DAMAGE);
 
         for (PassiveFighter target : effect.targets()) {
-            final Interval value = EffectValue.create(effect.effect(), simulation.caster(), target)
+            final SpellEffect spellEffect = effect.effect();
+            final Interval value = EffectValue.create(spellEffect, simulation.caster(), target)
                 .percent(boost)
                 .percent(percent)
                 .fixed(fixed)
@@ -57,21 +61,22 @@ public final class DamageSimulator implements EffectSimulator {
             ;
 
             final Interval damage = value.map(base -> computeDamage(base, target));
+            final int duration = spellEffect.duration();
 
-            if (effect.effect().duration() < 1) {
-                simulation.addDamage(damage, target);
+            if (duration >= 1) {
+                simulation.addPoison(damage, duration, target);
             } else {
-                simulation.addPoison(damage, effect.effect().duration(), target);
+                simulation.addDamage(damage, target);
             }
         }
     }
 
-    private int computeDamage(int value, PassiveFighter target) {
+    private @NonNegative int computeDamage(@NonNegative int value, PassiveFighter target) {
         final Damage damage = new Damage(value, element)
             .percent(target.characteristics().get(element.percentResistance()))
             .fixed(target.characteristics().get(element.fixedResistance()))
         ;
 
-        return damage.value();
+        return Asserter.castNonNegative(damage.value());
     }
 }

@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.core.di;
 
 import fr.quatrevieux.araknemu.core.di.item.FactoryItem;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  *
@@ -42,7 +43,7 @@ public interface ContainerConfigurator {
      *
      * @return this
      */
-    public <T> ContainerConfigurator set(Class<T> type, T object);
+    public <@NonNull T> ContainerConfigurator set(Class<T> type, @NonNull T object);
 
     /**
      * Add a factory to the container
@@ -52,7 +53,7 @@ public interface ContainerConfigurator {
      *
      * @return this
      */
-    public <T> ContainerConfigurator factory(Class<T> type, FactoryItem.Factory<T> factory);
+    public <@NonNull T> ContainerConfigurator factory(Class<T> type, FactoryItem.Factory<T> factory);
 
     /**
      * Add a factory to the container and persist (i.e. cache) the value
@@ -62,5 +63,5 @@ public interface ContainerConfigurator {
      *
      * @return this
      */
-    public <T> ContainerConfigurator persist(Class<T> type, FactoryItem.Factory<T> factory);
+    public <@NonNull T> ContainerConfigurator persist(Class<T> type, FactoryItem.Factory<T> factory);
 }

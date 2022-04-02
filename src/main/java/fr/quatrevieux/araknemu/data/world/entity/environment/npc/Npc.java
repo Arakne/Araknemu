@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.data.world.entity.environment.npc;
 
 import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.data.value.Position;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * Store the NPC data
@@ -59,6 +60,7 @@ public final class Npc {
     /**
      * Get the NPC position on map
      */
+    @Pure
     public Position position() {
         return position;
     }

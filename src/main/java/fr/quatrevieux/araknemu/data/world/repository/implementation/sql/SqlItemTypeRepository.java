@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
 import fr.quatrevieux.araknemu.game.item.SuperType;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -103,8 +104,8 @@ final class SqlItemTypeRepository implements ItemTypeRepository {
         public ItemType create(ResultSet rs) throws SQLException {
             return new ItemType(
                 rs.getInt("TYPE_ID"),
-                rs.getString("TYPE_NAME"),
-                SuperType.values()[rs.getInt("SUPER_TYPE")],
+                NullnessUtil.castNonNull(rs.getString("TYPE_NAME")),
+                SuperType.byId(rs.getInt("SUPER_TYPE")),
                 areaTransformer.unserialize(rs.getString("EFFECT_AREA"))
             );
         }

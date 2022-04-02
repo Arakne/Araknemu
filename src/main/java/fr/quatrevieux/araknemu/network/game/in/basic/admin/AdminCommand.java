@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.network.game.in.basic.admin;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Admin console command
@@ -46,7 +47,7 @@ public final class AdminCommand implements Packet {
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "BA";
         }
     }

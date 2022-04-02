@@ -14,27 +14,19 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2022 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.item.effect.mapping;
+package fr.quatrevieux.araknemu.core.config;
 
-import fr.quatrevieux.araknemu.game.GameBaseCase;
-import fr.quatrevieux.araknemu.game.item.effect.CharacteristicEffect;
-import fr.quatrevieux.araknemu.game.item.effect.WeaponEffect;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class EffectMappersTest extends GameBaseCase {
+class EmptyPoolTest {
     @Test
-    void get() {
-        EffectToCharacteristicMapping m1 = new EffectToCharacteristicMapping();
-        EffectToWeaponMapping m2 = new EffectToWeaponMapping();
-
-        EffectMappers mappers = new EffectMappers(m1, m2);
-
-        assertSame(m1, mappers.get(CharacteristicEffect.class));
-        assertSame(m2, mappers.get(WeaponEffect.class));
+    void values() {
+        assertFalse(new EmptyPool().has("foo"));
+        assertNull(new EmptyPool().get("foo"));
     }
 }

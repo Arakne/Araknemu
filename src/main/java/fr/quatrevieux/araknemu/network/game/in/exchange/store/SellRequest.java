@@ -20,9 +20,11 @@
 package fr.quatrevieux.araknemu.network.game.in.exchange.store;
 
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.PacketTokenizer;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
-import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Sell an item to an NPC
@@ -31,9 +33,9 @@ import org.apache.commons.lang3.StringUtils;
  */
 public final class SellRequest implements Packet {
     private final int itemId;
-    private final int quantity;
+    private final @Positive int quantity;
 
-    public SellRequest(int itemId, int quantity) {
+    public SellRequest(int itemId, @Positive int quantity) {
         this.itemId = itemId;
         this.quantity = quantity;
     }
@@ -48,27 +50,23 @@ public final class SellRequest implements Packet {
     /**
      * Quantity to sell
      */
-    public int quantity() {
+    public @Positive int quantity() {
         return quantity;
     }
 
     public static final class Parser implements SinglePacketParser<SellRequest> {
         @Override
         public SellRequest parse(String input) throws ParsePacketException {
-            final String[] parts = StringUtils.split(input, "|", 2);
-
-            if (parts.length != 2) {
-                throw new ParsePacketException(code() + input, "Invalid parts number");
-            }
+            final PacketTokenizer tokenizer = tokenize(input, '|');
 
             return new SellRequest(
-                Integer.parseInt(parts[0]),
-                Integer.parseUnsignedInt(parts[1])
+                tokenizer.nextInt(),
+                tokenizer.nextPositiveInt()
             );
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "ES";
         }
     }

@@ -218,7 +218,7 @@ public class GameBaseCase extends DatabaseTestCase {
         app = new Araknemu(
             conf,
             new DefaultDatabaseHandler(
-                conf.module(DatabaseConfiguration.class),
+                conf.module(DatabaseConfiguration.MODULE),
                 LogManager.getLogger()
             )
         );
@@ -338,7 +338,7 @@ public class GameBaseCase extends DatabaseTestCase {
         characteristics.set(Characteristic.STRENGTH, 50);
         characteristics.set(Characteristic.INTELLIGENCE, 150);
 
-        Player player = dataSet.push(new Player(-1, session.account().id(), session.account().serverId(), "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 50, characteristics, new Position(10540, 200), EnumSet.allOf(ChannelType.class), 0, 0, -1, 5481459, new Position(10540, 200), 15225));
+        Player player = dataSet.push(new Player(-1, session.account().id(), session.account().serverId(), "Bob", Race.FECA, Gender.MALE, new Colors(123, 456, 789), 50, characteristics, new Position(10540, 200), EnumSet.allOf(ChannelType.class), 0, 0, Integer.MAX_VALUE, 5481459, new Position(10540, 200), 15225));
 
         if (!load) {
             session.setPlayer(
@@ -406,7 +406,7 @@ public class GameBaseCase extends DatabaseTestCase {
 
         container.get(PlayerExperienceService.class).preload(container.get(Logger.class));
 
-        Player player = dataSet.push(new Player(-1, 5, 2, "Other", Race.CRA, Gender.MALE, new Colors(-1, -1, -1), level, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, -1, 0, new Position(10540, 210), 0));
+        Player player = dataSet.push(new Player(-1, 5, 2, "Other", Race.CRA, Gender.MALE, new Colors(-1, -1, -1), level, new DefaultCharacteristics(), new Position(10540, 210), EnumSet.allOf(ChannelType.class), 0, 0, Integer.MAX_VALUE, 0, new Position(10540, 210), 0));
         GameSession session = server.createSession();
 
         // @todo à tester

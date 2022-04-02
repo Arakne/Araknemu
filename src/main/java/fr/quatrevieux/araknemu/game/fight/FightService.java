@@ -137,10 +137,13 @@ public final class FightService implements EventsSubscriber {
      */
     @SuppressWarnings("unchecked")
     public <B extends FightBuilder> FightHandler<B> handler(Class<B> type) {
-        return new FightHandler<>(
-            this,
-            (B) builderFactories.get(type).create(this, executor)
-        );
+        final FightBuilderFactory<B> builderFactory = builderFactories.get(type);
+
+        if (builderFactory == null) {
+            throw new NoSuchElementException("Builder for fight type " + type.getSimpleName() + " is not registered");
+        }
+
+        return new FightHandler<>(this, builderFactory.create(this, executor));
     }
 
     /**
@@ -149,8 +152,10 @@ public final class FightService implements EventsSubscriber {
      * @param mapId The map id
      */
     public Collection<Fight> fightsByMap(int mapId) {
-        if (fightsByMapId.containsKey(mapId)) {
-            return fightsByMapId.get(mapId).values();
+        final Map<Integer, Fight> fightsOnMap = fightsByMapId.get(mapId);
+
+        if (fightsOnMap != null) {
+            return fightsOnMap.values();
         }
 
         return Collections.emptyList();
@@ -174,17 +179,14 @@ public final class FightService implements EventsSubscriber {
      * @param fightId The fight id
      */
     public Fight getFromMap(int mapId, int fightId) {
-        if (!fightsByMapId.containsKey(mapId)) {
-            throw new NoSuchElementException("Fight not found");
-        }
-
         final Map<Integer, Fight> fights = fightsByMapId.get(mapId);
+        final Fight fight;
 
-        if (!fights.containsKey(fightId)) {
-            throw new NoSuchElementException("Fight not found");
+        if (fights != null && (fight = fights.get(fightId)) != null) {
+            return fight;
         }
 
-        return fights.get(fightId);
+        throw new NoSuchElementException("Fight not found");
     }
 
     /**
@@ -198,15 +200,12 @@ public final class FightService implements EventsSubscriber {
      * The fight is initialized
      */
     synchronized void created(Fight fight) {
-        if (fightsByMapId.containsKey(fight.map().id())) {
-            fightsByMapId.get(fight.map().id()).put(fight.id(), fight);
-        } else {
-            final Map<Integer, Fight> fights = new ConcurrentHashMap<>();
+        final Map<Integer, Fight> fights = fightsByMapId.computeIfAbsent(
+            fight.map().id(),
+            mapId -> new ConcurrentHashMap<>()
+        );
 
-            fights.put(fight.id(), fight);
-
-            fightsByMapId.put(fight.map().id(), fights);
-        }
+        fights.put(fight.id(), fight);
 
         dispatcher.dispatch(new FightCreated(fight));
     }
@@ -215,7 +214,11 @@ public final class FightService implements EventsSubscriber {
      * Remove the fight
      */
     synchronized void remove(Fight fight) {
-        fightsByMapId.get(fight.map().id()).remove(fight.id());
+        final Map<Integer, Fight> fightsOnMap = fightsByMapId.get(fight.map().id());
+
+        if (fightsOnMap != null) {
+            fightsOnMap.remove(fight.id());
+        }
     }
 
     /**

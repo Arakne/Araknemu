@@ -22,6 +22,10 @@ package fr.quatrevieux.araknemu.network.game.in.fight;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import fr.quatrevieux.araknemu.util.ParseUtils;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.common.value.qual.MinLen;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * Change fight start place
@@ -29,24 +33,25 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L31
  */
 public final class FighterChangePlace implements Packet {
-    private final int cellId;
+    private final @NonNegative int cellId;
 
-    public FighterChangePlace(int cellId) {
+    public FighterChangePlace(@NonNegative int cellId) {
         this.cellId = cellId;
     }
 
-    public int cellId() {
+    @Pure
+    public @NonNegative int cellId() {
         return cellId;
     }
 
     public static final class Parser implements SinglePacketParser<FighterChangePlace> {
         @Override
         public FighterChangePlace parse(String input) throws ParsePacketException {
-            return new FighterChangePlace(Integer.parseUnsignedInt(input));
+            return new FighterChangePlace(ParseUtils.parseNonNegativeInt(input));
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "Gp";
         }
     }

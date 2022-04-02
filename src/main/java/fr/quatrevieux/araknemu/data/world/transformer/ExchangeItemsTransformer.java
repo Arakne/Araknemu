@@ -21,7 +21,9 @@ package fr.quatrevieux.araknemu.data.world.transformer;
 
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.transformer.TransformerException;
-import org.apache.commons.lang3.StringUtils;
+import fr.quatrevieux.araknemu.util.Splitter;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,22 +33,31 @@ import java.util.Map;
  *
  * @see fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcExchange#requiredItems()
  */
-public final class ExchangeItemsTransformer implements Transformer<Map<Integer, Integer>> {
+public final class ExchangeItemsTransformer implements Transformer<Map<Integer, @Positive Integer>> {
     @Override
-    public String serialize(Map<Integer, Integer> value) {
+    public @PolyNull String serialize(@PolyNull Map<Integer, @Positive Integer> value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Map<Integer, Integer> unserialize(String serialize) throws TransformerException {
-        final Map<Integer, Integer> items = new HashMap<>();
+    public @PolyNull Map<Integer, @Positive Integer> unserialize(@PolyNull String serialize) throws TransformerException {
+        if (serialize == null) {
+            return null;
+        }
 
-        for (String itemData : StringUtils.split(serialize, ";")) {
-            final String[] parts = StringUtils.split(itemData, ":", 2);
+        if (serialize.isEmpty()) {
+            return new HashMap<>();
+        }
+
+        final Map<Integer, @Positive Integer> items = new HashMap<>();
+        final Splitter splitter = new Splitter(serialize, ';');
+
+        while (splitter.hasNext()) {
+            final Splitter parts = splitter.nextSplit(':');
 
             items.put(
-                Integer.parseInt(parts[0]),
-                parts.length == 2 ? Integer.parseInt(parts[1]) : 1
+                parts.nextInt(),
+                parts.nextPositiveIntOrDefault(1)
             );
         }
 

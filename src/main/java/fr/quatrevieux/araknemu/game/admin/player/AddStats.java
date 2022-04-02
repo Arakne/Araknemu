@@ -75,6 +75,7 @@ public final class AddStats extends AbstractCommand<AddStats.Arguments> {
         );
     }
 
+    @SuppressWarnings("initialization.field.uninitialized")
     public static final class Arguments {
         @Argument(
             index = 0,

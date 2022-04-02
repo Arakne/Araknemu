@@ -120,7 +120,7 @@ public final class ChatService implements EventsSubscriber {
             return false;
         }
 
-        for (int i = 0; i < parts.length; i += 2) {
+        for (int i = 0; i < parts.length - 1; i += 2) {
             if (!message.contains("°" + (i / 2))) {
                 return false;
             }

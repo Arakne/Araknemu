@@ -21,11 +21,13 @@ package fr.quatrevieux.araknemu.game.handler.game;
 
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionFactory;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.game.action.GameActionRequest;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
+import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 /**
  * Validate and start a game action
@@ -39,10 +41,12 @@ public final class ValidateGameAction implements PacketHandler<GameSession, Game
 
     @Override
     public void handle(GameSession session, GameActionRequest packet) throws Exception {
+        final ExplorationPlayer player = NullnessUtil.castNonNull(session.exploration());
+
         try {
-            session.exploration().interactions().push(
+            player.interactions().push(
                 factory.create(
-                    session.exploration(),
+                    player,
                     ActionType.byId(packet.type()),
                     packet.arguments()
                 )

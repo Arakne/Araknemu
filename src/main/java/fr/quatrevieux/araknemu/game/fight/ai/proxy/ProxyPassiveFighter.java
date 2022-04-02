@@ -29,6 +29,8 @@ import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Proxy class for override properties of other fighters
@@ -54,6 +56,7 @@ public final class ProxyPassiveFighter implements PassiveFighter {
     }
 
     @Override
+    @SuppressWarnings("argument") // cell id always valid
     public FightCell cell() {
         return ai.map().get(fighter.cell().id());
     }
@@ -69,7 +72,7 @@ public final class ProxyPassiveFighter implements PassiveFighter {
     }
 
     @Override
-    public void move(FightCell cell) {
+    public void move(@Nullable FightCell cell) {
         throw new UnsupportedOperationException("This is a proxy fighter");
     }
 
@@ -89,7 +92,7 @@ public final class ProxyPassiveFighter implements PassiveFighter {
     }
 
     @Override
-    public int level() {
+    public @Positive int level() {
         return fighter.level();
     }
 
@@ -109,7 +112,7 @@ public final class ProxyPassiveFighter implements PassiveFighter {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

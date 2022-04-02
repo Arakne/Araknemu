@@ -41,6 +41,7 @@ public final class Boost implements ActionGenerator, CastSpell.SimulationSelecto
     private final int minDuration;
     private final boolean allowWithoutDelay;
 
+    @SuppressWarnings({"argument", "assignment"})
     public Boost(Simulator simulator, double selfBoostRate, double alliesBoostRate, int minDuration, boolean allowWithoutDelay) {
         this.generator = new CastSpell(simulator, this);
 

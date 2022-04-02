@@ -61,11 +61,10 @@ public final class MapTriggerService implements PreloadableService, EventsSubscr
         final Collection<MapTrigger> mapTriggers = repository.all();
 
         for (MapTrigger trigger : mapTriggers) {
-            if (!triggers.containsKey(trigger.map())) {
-                triggers.put(trigger.map(), new ArrayList<>());
-            }
-
-            triggers.get(trigger.map()).add(trigger);
+            triggers
+                .computeIfAbsent(trigger.map(), mapId -> new ArrayList<>())
+                .add(trigger)
+            ;
         }
 
         preloading = true;
@@ -104,16 +103,18 @@ public final class MapTriggerService implements PreloadableService, EventsSubscr
      * Get all triggers for a map
      */
     public Collection<CellAction> forMap(ExplorationMap map) {
-        if (!triggers.containsKey(map.id())) {
+        Collection<MapTrigger> triggersOnMap = triggers.get(map.id());
+
+        if (triggersOnMap == null) {
             // Triggers are preloaded but not found on this map
             if (preloading) {
                 return Collections.emptyList();
             }
 
-            triggers.put(map.id(), repository.findByMap(map.id()));
+            triggers.put(map.id(), triggersOnMap = repository.findByMap(map.id()));
         }
 
-        return triggers.get(map.id()).stream()
+        return triggersOnMap.stream()
             .map(actionFactory::create)
             .collect(Collectors.toList())
         ;

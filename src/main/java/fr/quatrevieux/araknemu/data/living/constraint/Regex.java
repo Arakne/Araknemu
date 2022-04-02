@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.data.living.constraint;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 import java.util.regex.Pattern;
 
 /**
@@ -27,16 +29,16 @@ import java.util.regex.Pattern;
  * @param <T> The entity type
  * @param <E> The error type
  */
-public final class Regex<T, E> extends AbstractValueConstraint<T, E, String> {
+public final class Regex<T, @NonNull E> extends AbstractValueConstraint<T, E, String> {
     private final Pattern regex;
 
-    public Regex(E error, Getter<T, String> getter, Pattern regex) {
+    public Regex(@NonNull E error, Getter<T, String> getter, Pattern regex) {
         super(error, getter);
 
         this.regex = regex;
     }
 
-    public Regex(E error, Getter<T, String> getter, String regex) {
+    public Regex(@NonNull E error, Getter<T, String> getter, String regex) {
         this(error, getter, Pattern.compile(regex));
     }
 

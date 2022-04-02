@@ -149,4 +149,15 @@ class RemoveObjectTest extends GameBaseCase {
 
         assertEquals(0, entry.quantity());
     }
+
+    @Test
+    void applyWithZeroQuantityShouldBeIgnored() {
+        InventoryEntry entry = player.inventory().add(service.create(2425), 0);
+
+        requestStack.clear();
+        factory.create(new ResponseAction(1, "REM_OBJECT", "2425")).apply(player);
+
+        requestStack.assertEmpty();
+        assertEquals(0, entry.quantity());
+    }
 }

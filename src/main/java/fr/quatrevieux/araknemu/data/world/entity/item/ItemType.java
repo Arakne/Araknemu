@@ -21,6 +21,8 @@ package fr.quatrevieux.araknemu.data.world.entity.item;
 
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.item.SuperType;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * Type for items
@@ -29,28 +31,48 @@ public final class ItemType {
     private final int id;
     private final String name;
     private final SuperType superType;
-    private final EffectArea effectArea;
+    private final @Nullable EffectArea effectArea;
 
-    public ItemType(int id, String name, SuperType superType, EffectArea effectArea) {
+    public ItemType(int id, String name, SuperType superType, @Nullable EffectArea effectArea) {
         this.id = id;
         this.name = name;
         this.superType = superType;
         this.effectArea = effectArea;
     }
 
+    /**
+     * The type id
+     *
+     * This is the primary key.
+     * The value can be found in `items_xx_xxx.swf` file, as key of `I.t` object.
+     */
+    @Pure
     public int id() {
         return id;
     }
 
+    /**
+     * Human-readable item type
+     * Not used internally
+     */
+    @Pure
     public String name() {
         return name;
     }
 
+    @Pure
     public SuperType superType() {
         return superType;
     }
 
-    public EffectArea effectArea() {
+    /**
+     * The area of the weapon effect
+     *
+     * This value is provided only for weapon types.
+     * Other item types should return null.
+     */
+    @Pure
+    public @Nullable EffectArea effectArea() {
         return effectArea;
     }
 

@@ -28,6 +28,8 @@ import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 import fr.quatrevieux.araknemu.game.item.effect.WeaponEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.SpellEffectArea;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +42,7 @@ public final class Weapon extends AbstractEquipment {
     private final WeaponInfo info;
     private final SpellEffectArea area;
 
-    public Weapon(ItemTemplate template, ItemType type, GameItemSet set, List<WeaponEffect> weaponEffects, List<CharacteristicEffect> characteristics, List<SpecialEffect> specials, WeaponInfo info, SpellEffectArea area) {
+    public Weapon(ItemTemplate template, ItemType type, @Nullable GameItemSet set, List<WeaponEffect> weaponEffects, List<CharacteristicEffect> characteristics, List<SpecialEffect> specials, WeaponInfo info, SpellEffectArea area) {
         super(template, type, set, characteristics, specials);
 
         this.weaponEffects = weaponEffects;
@@ -76,7 +78,7 @@ public final class Weapon extends AbstractEquipment {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (!super.equals(obj)) {
             return false;
         }
@@ -96,14 +98,14 @@ public final class Weapon extends AbstractEquipment {
     }
 
     public static final class WeaponInfo {
-        private final int apCost;
+        private final @NonNegative int apCost;
         private final Interval range;
-        private final int criticalRate;
-        private final int failureRate;
-        private final int criticalBonus;
+        private final @NonNegative int criticalRate;
+        private final @NonNegative int failureRate;
+        private final @NonNegative int criticalBonus;
         private final boolean isTwoHanded;
 
-        public WeaponInfo(int apCost, Interval range, int criticalRate, int failureRate, int criticalBonus, boolean isTwoHanded) {
+        public WeaponInfo(@NonNegative int apCost, Interval range, @NonNegative int criticalRate, @NonNegative int failureRate, @NonNegative int criticalBonus, boolean isTwoHanded) {
             this.apCost = apCost;
             this.range = range;
             this.criticalRate = criticalRate;
@@ -112,7 +114,7 @@ public final class Weapon extends AbstractEquipment {
             this.isTwoHanded = isTwoHanded;
         }
 
-        public int apCost() {
+        public @NonNegative int apCost() {
             return apCost;
         }
 
@@ -120,15 +122,15 @@ public final class Weapon extends AbstractEquipment {
             return range;
         }
 
-        public int criticalRate() {
+        public @NonNegative int criticalRate() {
             return criticalRate;
         }
 
-        public int failureRate() {
+        public @NonNegative int failureRate() {
             return failureRate;
         }
 
-        public int criticalBonus() {
+        public @NonNegative int criticalBonus() {
             return criticalBonus;
         }
 

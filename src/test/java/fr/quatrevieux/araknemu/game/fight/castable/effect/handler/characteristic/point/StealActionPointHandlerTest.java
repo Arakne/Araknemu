@@ -106,7 +106,7 @@ class StealActionPointHandlerTest extends FightBaseCase {
             new AddBuff(buffT.get()),
             new Stats(caster.properties()),
             ActionEffect.buff(buffC.get(), 2),
-            "GIE111;1;2;;0;null;5;0"
+            "GIE111;1;2;;0;;5;0"
         );
     }
 
@@ -240,7 +240,7 @@ class StealActionPointHandlerTest extends FightBaseCase {
             new AddBuff(buffT.get()),
             new Stats(caster.properties()),
             ActionEffect.buff(buffC.get(), buffC.get().effect().min()),
-            "GIE111;1;2;;0;null;5;0"
+            "GIE111;1;2;;0;;5;0"
         );
     }
 
