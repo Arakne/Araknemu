@@ -14,32 +14,22 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2022 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.network.game.in.game.action;
+package fr.quatrevieux.araknemu.game.item;
 
-import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import org.junit.jupiter.api.Test;
+
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GameActionRequestTest {
+class SuperTypeTest {
     @Test
-    void parse() {
-        GameActionRequest.Parser parser = new GameActionRequest.Parser();
-
-        GameActionRequest ga = parser.parse("001dfi");
-
-        assertEquals(1, ga.type());
-        assertArrayEquals(new String[] {"dfi"}, ga.arguments());
-    }
-
-    @Test
-    void parseInvalid() {
-        GameActionRequest.Parser parser = new GameActionRequest.Parser();
-
-        assertThrows(ParsePacketException.class, () -> parser.parse("02"));
-
+    void byId() {
+        assertSame(SuperType.WEAPON, SuperType.byId(2));
+        assertThrows(NoSuchElementException.class, () -> SuperType.byId(-1));
+        assertThrows(NoSuchElementException.class, () -> SuperType.byId(10000));
     }
 }

@@ -50,4 +50,9 @@ class ObjectMoveRequestTest {
     void generateWithNegativeQuantity() {
         assertThrows(ParsePacketException.class, () -> parser.parse("5|2|-2"));
     }
+
+    @Test
+    void parseWithInvalidPosition() {
+        assertThrows(ParsePacketException.class, () -> parser.parse("5|90"));
+    }
 }

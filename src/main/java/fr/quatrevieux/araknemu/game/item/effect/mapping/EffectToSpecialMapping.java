@@ -79,9 +79,4 @@ public final class EffectToSpecialMapping implements EffectMapper<SpecialEffect>
             .collect(Collectors.toList())
         ;
     }
-
-    @Override
-    public Class<SpecialEffect> type() {
-        return SpecialEffect.class;
-    }
 }

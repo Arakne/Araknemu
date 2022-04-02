@@ -70,5 +70,6 @@ class DurationOptionHandlerTest extends TestCase {
         assertEquals(Duration.parse("P1DT3H"), hydrator.hydrate(command, command.createArguments(), new CommandParser.Arguments("", "", "", Arrays.asList("foo", "1dt3h"), null)).duration);
 
         assertThrows(CmdLineException.class, () -> hydrator.hydrate(command, command.createArguments(), new CommandParser.Arguments("", "", "", Arrays.asList("foo", "invalid"), null)));
+        assertThrows(CmdLineException.class, () -> hydrator.hydrate(command, command.createArguments(), new CommandParser.Arguments("", "", "", Arrays.asList("foo", ""), null)));
     }
 }

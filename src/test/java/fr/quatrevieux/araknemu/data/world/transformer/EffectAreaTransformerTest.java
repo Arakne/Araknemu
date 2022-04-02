@@ -33,6 +33,11 @@ class EffectAreaTransformerTest {
     }
 
     @Test
+    void unserializeInvalid() {
+        assertThrows(IllegalArgumentException.class, () -> transformer.unserialize("a"));
+    }
+
+    @Test
     void unserialize() {
         assertEquals(new EffectArea(EffectArea.Type.CIRCLE, 3), transformer.unserialize("Cd"));
     }

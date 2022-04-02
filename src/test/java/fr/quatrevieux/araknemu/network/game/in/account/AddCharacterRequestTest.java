@@ -55,4 +55,11 @@ class AddCharacterRequestTest {
 
         assertThrows(ParsePacketException.class, () -> parser.parse("bob|0|1|145|541|123"));
     }
+    @Test
+    void parseInvalidColor() {
+        AddCharacterRequest.Parser parser = new AddCharacterRequest.Parser();
+
+        assertThrows(ParsePacketException.class, () -> parser.parse("bob|5|1|-5|541|123"));
+        assertThrows(ParsePacketException.class, () -> parser.parse("bob|5|1|1000000000|541|123"));
+    }
 }

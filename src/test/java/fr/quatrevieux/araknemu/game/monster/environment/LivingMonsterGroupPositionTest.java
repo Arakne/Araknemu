@@ -118,6 +118,12 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
     }
 
     @Test
+    void mapNotLoaded() {
+        assertThrows(IllegalStateException.class, monsterGroupPosition::spawn);
+        assertThrows(IllegalStateException.class, monsterGroupPosition::respawn);
+    }
+
+    @Test
     void fixedGroup() {
         monsterGroupPosition = new LivingMonsterGroupPosition(
             container.get(MonsterGroupFactory.class),

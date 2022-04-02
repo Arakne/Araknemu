@@ -40,6 +40,7 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class WeaponFactoryTest extends GameBaseCase {
@@ -157,6 +158,32 @@ class WeaponFactoryTest extends GameBaseCase {
 
         assertCount(1, weapon.specials());
         assertEquals(Effect.NULL1, weapon.specials().get(0).effect());
+    }
+
+    @Test
+    void createMissingArea() {
+        ItemType type = new ItemType(6, "Épée", SuperType.WEAPON, null);
+        assertThrows(IllegalArgumentException.class, () -> factory.create(
+            new ItemTemplate(40, 6, "Petite Epée de Boisaille", 1,
+                Arrays.asList(
+                    new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")
+                ),
+                20, "CS>4", 0, "4;1;1;50;30;5;0", 200
+            ), type, null, false
+        ));
+    }
+
+    @Test
+    void createMissingInfo() {
+        ItemType type = new ItemType(6, "Épée", SuperType.WEAPON, new EffectArea(EffectArea.Type.CELL, 0));
+        assertThrows(IllegalArgumentException.class, () -> factory.create(
+            new ItemTemplate(40, 6, "Petite Epée de Boisaille", 1,
+                Arrays.asList(
+                    new ItemTemplateEffectEntry(Effect.INFLICT_DAMAGE_NEUTRAL, 1, 7, 0, "1d7+0")
+                ),
+                20, "CS>4", 0, null, 200
+            ), type, null, false
+        ));
     }
 
     @Test

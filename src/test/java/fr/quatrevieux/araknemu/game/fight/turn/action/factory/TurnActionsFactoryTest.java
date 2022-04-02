@@ -62,11 +62,14 @@ class TurnActionsFactoryTest extends FightBaseCase {
         player.fighter().move(fight.map().get(185));
 
         assertInstanceOf(Move.class, factory.create(ActionType.MOVE, new String[] {"ddvfdg"}));
+        assertThrows(IllegalArgumentException.class, () -> factory.create(ActionType.MOVE, new String[] {}));
     }
 
     @Test
     void createCast() throws Exception {
         assertInstanceOf(Cast.class, factory.create(ActionType.CAST, new String[] {"3", "123"}));
+        assertThrows(IllegalArgumentException.class, () -> factory.create(ActionType.CAST, new String[] {"3"}));
+        assertThrows(IllegalArgumentException.class, () -> factory.create(ActionType.CAST, new String[] {"3", "1000"}));
     }
 
     @Test
@@ -77,6 +80,8 @@ class TurnActionsFactoryTest extends FightBaseCase {
     @Test
     void createCloseCombat() throws Exception {
         assertInstanceOf(CloseCombat.class, factory.create(ActionType.CLOSE_COMBAT, new String[] {"123"}));
+        assertThrows(IllegalArgumentException.class, () -> factory.create(ActionType.CLOSE_COMBAT, new String[] {}));
+        assertThrows(IllegalArgumentException.class, () -> factory.create(ActionType.CLOSE_COMBAT, new String[] {"1000"}));
     }
 
     @Test

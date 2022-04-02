@@ -96,7 +96,7 @@ public final class PasswordManager {
     private List<@KeyFor("algorithms") String> checkAlgorithms(@UnderInitialization PasswordManager this, List<String> availableAlgorithms) {
         if (!algorithms.keySet().containsAll(availableAlgorithms)) {
             final List<String> invalidAlgorithms = new ArrayList<>(availableAlgorithms);
-            availableAlgorithms.removeAll(algorithms.keySet());
+            invalidAlgorithms.removeAll(algorithms.keySet());
 
             throw new IllegalArgumentException("Hash algorithms " + invalidAlgorithms + " are not registered");
         }

@@ -105,6 +105,14 @@ class ExplorationPlayerTest extends GameBaseCase {
     }
 
     @Test
+    void joinInvalidCell() throws ContainerException {
+        player.player().setPosition(new Position(10300, 1000));
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10300);
+
+        assertThrows(IllegalStateException.class, () -> player.join(map));
+    }
+
+    @Test
     void move() throws ContainerException {
         ExplorationMap map = container.get(ExplorationMapService.class).load(player.position().map());
         player.join(map);
@@ -178,6 +186,17 @@ class ExplorationPlayerTest extends GameBaseCase {
                 Collections.singleton(player.sprite())
             )
         );
+    }
+
+    @Test
+    void changeCellInvalidCell() throws ContainerException {
+        ExplorationMap map = container.get(ExplorationMapService.class).load(player.position().map());
+        player.join(map);
+
+        assertThrows(IllegalArgumentException.class, () -> player.changeCell(1000));
+
+        assertEquals(200, player.position().cell());
+        assertEquals(map.get(200), player.cell());
     }
 
     @Test

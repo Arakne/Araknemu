@@ -45,6 +45,13 @@ class PositionTest {
     }
 
     @Test
+    void hash() {
+        assertEquals(new Position(1254, 235).hashCode(), new Position(1254, 235).hashCode());
+        assertNotEquals(new Position(1255, 235).hashCode(), new Position(1254, 235).hashCode());
+        assertNotEquals(new Position(1254, 234).hashCode(), new Position(1254, 235).hashCode());
+    }
+
+    @Test
     void newCell() {
         Position position = new Position(1254, 235);
 

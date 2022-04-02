@@ -63,9 +63,4 @@ public interface EffectMapper<E extends ItemEffect> {
     public default List<E> create(List<ItemTemplateEffectEntry> effects) {
         return create(effects, false);
     }
-
-    /**
-     * Get the mapped item effect class
-     */
-    public Class<E> type();
 }

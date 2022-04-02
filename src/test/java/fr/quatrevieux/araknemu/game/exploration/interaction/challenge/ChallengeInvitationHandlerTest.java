@@ -22,8 +22,8 @@ package fr.quatrevieux.araknemu.game.exploration.interaction.challenge;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
-import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.Interaction;
+import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.request.Invitation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.FightService;
@@ -34,7 +34,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ChallengeInvitationHandlerTest extends GameBaseCase {
     private ChallengeInvitationHandler handler;
@@ -173,5 +176,18 @@ class ChallengeInvitationHandlerTest extends GameBaseCase {
 
         assertFalse(initiator.interactions().interacting());
         assertFalse(challenger.interactions().interacting());
+    }
+
+    @Test
+    void acceptInitiatorLeaveMap() {
+        initiator.interactions().start(invitation);
+
+        initiator.leave();
+        invitation.accept(challenger.interactions().get(ChallengerDialog.class));
+
+        requestStack.assertLast(new GameActionResponse("", ActionType.REFUSE_CHALLENGE, challenger.id(), initiator.id()));
+
+        assertFalse(initiator.interactions().busy());
+        assertFalse(challenger.interactions().busy());
     }
 }

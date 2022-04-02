@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.network.game.in.spell;
 
+import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import org.junit.jupiter.api.Test;
 
@@ -31,5 +32,11 @@ class SpellMoveTest extends GameBaseCase {
 
         assertEquals(123, move.spellId());
         assertEquals(5, move.position());
+    }
+
+    @Test
+    void parseInvalidPosition() {
+        assertThrows(ParsePacketException.class, () -> new SpellMove.Parser().parse("123|64"));
+        assertThrows(ParsePacketException.class, () -> new SpellMove.Parser().parse("123|-2"));
     }
 }

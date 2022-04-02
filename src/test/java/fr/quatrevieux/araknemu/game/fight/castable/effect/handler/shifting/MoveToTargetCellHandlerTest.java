@@ -42,6 +42,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MoveToTargetCellHandlerTest extends FightBaseCase {
     private Fight fight;
@@ -104,6 +105,37 @@ class MoveToTargetCellHandlerTest extends FightBaseCase {
         assertFalse(lastCell.fighter().isPresent());
         assertSame(target, destination.fighter().get());
         assertSame(destination, target.cell());
+    }
+
+    @Test
+    void applyShouldIgnoreIfDistanceIsZero() {
+        configureFight(fb -> fb
+            .addSelf(b -> b.cell(235))
+            .addEnemy(b -> b.player(other).cell(221))
+        );
+
+        caster = player.fighter();
+        target = other.fighter();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        FightCell lastCell = target.cell();
+
+        CastScope scope = makeCastScope(caster, spell, effect, lastCell);
+        handler.handle(scope, scope.effects().get(0));
+
+        requestStack.assertNotContains(ActionEffect.class);
+
+        assertTrue(lastCell.fighter().isPresent());
+        assertSame(target, lastCell.fighter().get());
+        assertSame(lastCell, target.cell());
     }
 
     @ParameterizedTest

@@ -102,4 +102,17 @@ class FightActionsFactoriesTest extends FightBaseCase {
 
         assertThrows(IllegalArgumentException.class, () -> factory.create(player, ActionType.JOIN_FIGHT, new String[] {fight.id() + ""}));
     }
+
+    @Test
+    void joinMissingFightId() throws Exception {
+        ExplorationPlayer player = explorationPlayer();
+
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
+        player.changeMap(map, 123);
+
+        Fight fight = createSimpleFight(map);
+        fight.start();
+
+        assertThrows(IllegalArgumentException.class, () -> factory.create(player, ActionType.JOIN_FIGHT, new String[] {}));
+    }
 }

@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,6 +32,8 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RandomMonsterListGeneratorTest  extends GameBaseCase {
     private RandomMonsterListGenerator generator;
@@ -122,6 +125,20 @@ class RandomMonsterListGeneratorTest  extends GameBaseCase {
     @Test
     void groupSize8() {
         Map<Integer, Integer> counts = countsForMaxSize(8);
+
+        assertBetween(80, 100, counts.get(1));
+        assertBetween(100, 120, counts.get(2));
+        assertBetween(120, 140, counts.get(3));
+        assertBetween(160, 180, counts.get(4));
+        assertBetween(160, 180, counts.get(5));
+        assertBetween(120, 140, counts.get(6));
+        assertBetween(100, 125, counts.get(7));
+        assertBetween(80, 100, counts.get(8));
+    }
+
+    @Test
+    void groupSize0() {
+        Map<Integer, Integer> counts = countsForMaxSize(0);
 
         assertBetween(80, 100, counts.get(1));
         assertBetween(100, 120, counts.get(2));

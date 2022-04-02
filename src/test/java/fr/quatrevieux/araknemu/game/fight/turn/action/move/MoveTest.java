@@ -161,6 +161,8 @@ class MoveTest extends FightBaseCase {
 
         assertInstanceOf(MoveSuccess.class, result);
         assertEquals(3, MoveSuccess.class.cast(result).lostMovementPoints());
+        assertEquals(0, MoveSuccess.class.cast(result).lostActionPoints());
+        assertEquals(Direction.NORTH_WEST, MoveSuccess.class.cast(result).orientation());
         assertEquals(198, MoveSuccess.class.cast(result).target().id());
 
         assertTrue(result.success());

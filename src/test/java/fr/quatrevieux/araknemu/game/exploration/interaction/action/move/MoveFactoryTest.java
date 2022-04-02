@@ -68,6 +68,12 @@ class MoveFactoryTest extends GameBaseCase {
     }
 
     @Test
+    void createMissingPath() throws Exception {
+        explorationPlayer().move(explorationPlayer().map().get(100), Direction.SOUTH_EAST);
+        assertThrows(IllegalArgumentException.class, () -> factory.create(explorationPlayer(), ActionType.MOVE, new String[] {}));
+    }
+
+    @Test
     void type() {
         assertSame(ActionType.MOVE, factory.type());
     }

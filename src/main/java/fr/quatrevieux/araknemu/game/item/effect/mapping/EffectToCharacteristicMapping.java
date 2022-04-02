@@ -134,11 +134,6 @@ public final class EffectToCharacteristicMapping implements EffectMapper<Charact
         ;
     }
 
-    @Override
-    public Class<CharacteristicEffect> type() {
-        return CharacteristicEffect.class;
-    }
-
     /**
      * Check if the effect is a negative effect
      *

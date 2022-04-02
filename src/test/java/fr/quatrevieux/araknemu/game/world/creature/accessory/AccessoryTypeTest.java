@@ -21,6 +21,8 @@ package fr.quatrevieux.araknemu.game.world.creature.accessory;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.NoSuchElementException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class AccessoryTypeTest {
@@ -31,6 +33,8 @@ class AccessoryTypeTest {
         assertEquals(AccessoryType.MANTLE, AccessoryType.bySlot(7));
         assertEquals(AccessoryType.PET, AccessoryType.bySlot(8));
         assertEquals(AccessoryType.SHIELD, AccessoryType.bySlot(15));
+
+        assertThrows(NoSuchElementException.class, () -> AccessoryType.bySlot(0));
     }
 
     @Test

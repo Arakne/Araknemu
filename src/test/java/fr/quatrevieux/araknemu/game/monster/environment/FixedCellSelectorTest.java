@@ -48,4 +48,18 @@ class FixedCellSelectorTest extends GameBaseCase {
 
         assertEquals(map.get(123), selector.cell());
     }
+
+    @Test
+    void cellWithoutMap() {
+        assertThrows(IllegalStateException.class, selector::cell);
+    }
+
+    @Test
+    void cellInvalid() {
+        ExplorationMap map = container.get(ExplorationMapService.class).load(10340);
+        selector = new FixedCellSelector(1000);
+        selector.setMap(map);
+
+        assertThrows(IllegalStateException.class, selector::cell);
+    }
 }
