@@ -20,18 +20,19 @@
 package fr.quatrevieux.araknemu.data.value;
 
 import fr.quatrevieux.araknemu.data.constant.Effect;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Item effect entry
  */
 public final class ItemTemplateEffectEntry {
     private final Effect effect;
-    private final int min;
-    private final int max;
-    private final int special;
+    private final @NonNegative int min;
+    private final @NonNegative int max;
+    private final @NonNegative int special;
     private final String text;
 
-    public ItemTemplateEffectEntry(Effect effect, int min, int max, int special, String text) {
+    public ItemTemplateEffectEntry(Effect effect, @NonNegative int min, @NonNegative int max, @NonNegative int special, String text) {
         this.effect = effect;
         this.min = min;
         this.max = max;
@@ -49,7 +50,7 @@ public final class ItemTemplateEffectEntry {
     /**
      * Get the minimum value
      */
-    public int min() {
+    public @NonNegative int min() {
         return min;
     }
 
@@ -57,14 +58,14 @@ public final class ItemTemplateEffectEntry {
      * Get the max value.
      * If zero, the effect will be a constant
      */
-    public int max() {
+    public @NonNegative int max() {
         return max;
     }
 
     /**
      * Get special value (not range value, reference to an external entity like spell)
      */
-    public int special() {
+    public @NonNegative int special() {
         return special;
     }
 

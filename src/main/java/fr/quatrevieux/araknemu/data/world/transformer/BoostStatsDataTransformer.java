@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.data.world.transformer;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.BoostStatsData;
+import fr.quatrevieux.araknemu.util.Splitter;
 import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.PolyNull;
@@ -50,19 +51,21 @@ public final class BoostStatsDataTransformer implements Transformer<BoostStatsDa
         final Map<Characteristic, List<BoostStatsData.Interval>> data = new EnumMap<>(Characteristic.class);
 
         for (String characteristicData : StringUtils.split(serialize, ";")) {
-            final String[] entry = StringUtils.split(characteristicData, ":", 2);
+            final Splitter entry = new Splitter(characteristicData, ':');
 
-            final Characteristic characteristic = Characteristic.fromId(Integer.parseInt(entry[0]));
+            final Characteristic characteristic = Characteristic.fromId(entry.nextInt());
             final List<BoostStatsData.Interval> intervals = new ArrayList<>();
 
-            for (String intervalData : StringUtils.split(entry[1], ",")) {
-                final String[] parts = StringUtils.split(intervalData, "@", 3);
+            final Splitter intervalData = entry.nextSplit(',');
+
+            while (intervalData.hasNext()) {
+                final Splitter parts = intervalData.nextSplit('@');
 
                 intervals.add(
                     new BoostStatsData.Interval(
-                        Integer.parseInt(parts[0]),
-                        Integer.parseInt(parts[1]),
-                        parts.length == 3 ? Integer.parseInt(parts[2]) : 1
+                        parts.nextNonNegativeInt(),
+                        parts.nextPositiveInt(),
+                        parts.nextPositiveIntOrDefault(1)
                     )
                 );
             }

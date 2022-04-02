@@ -28,6 +28,8 @@ import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.Geolocation;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
+import fr.quatrevieux.araknemu.util.Asserter;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
@@ -88,7 +90,7 @@ final class SqlMapTemplateRepository implements MapTemplateRepository {
     }
 
     @Override
-    public MapTemplate get(int id) {
+    public MapTemplate get(@NonNegative int id) {
         return utils.findOne(
             "SELECT * FROM maps WHERE id = ?",
             stmt -> stmt.setInt(1, id)
@@ -125,11 +127,11 @@ final class SqlMapTemplateRepository implements MapTemplateRepository {
         @Override
         public MapTemplate create(ResultSet rs) throws SQLException {
             return new MapTemplate(
-                rs.getInt("id"),
+                Asserter.assertNonNegative(rs.getInt("id")),
                 NullnessUtil.castNonNull(rs.getString("date")),
                 new Dimensions(
-                    rs.getInt("width"),
-                    rs.getInt("height")
+                    Asserter.assertPositive(rs.getInt("width")),
+                    Asserter.assertPositive(rs.getInt("height"))
                 ),
                 NullnessUtil.castNonNull(rs.getString("key")),
                 cellsTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("mapData"))),

@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.network.game.in.game.action;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * The game action is successfully executed by the client
@@ -48,7 +49,7 @@ public final class GameActionAcknowledge implements Packet {
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "GKK";
         }
     }

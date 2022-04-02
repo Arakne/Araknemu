@@ -23,6 +23,9 @@ import fr.quatrevieux.araknemu.core.config.ConfigurationModule;
 import fr.quatrevieux.araknemu.core.config.Pool;
 import fr.quatrevieux.araknemu.core.config.PoolUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.common.value.qual.IntRange;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -171,29 +174,29 @@ public final class GameConfiguration {
         /**
          * Minimal length of player name
          */
-        public int nameMinLength() {
-            return pool.integer("player.name.minLength", 2);
+        public @Positive int nameMinLength() {
+            return pool.positiveInteger("player.name.minLength", 2);
         }
 
         /**
          * Maximal length of player name
          */
-        public int nameMaxLength() {
-            return pool.integer("player.name.maxLength", 20);
+        public @Positive int nameMaxLength() {
+            return pool.positiveInteger("player.name.maxLength", 20);
         }
 
         /**
          * Maximal length for generated name
          */
-        public int maxNameGeneratedLength() {
-            return pool.integer("player.name.generated.maxLength", 8);
+        public @Positive int maxNameGeneratedLength() {
+            return pool.positiveInteger("player.name.generated.maxLength", 8);
         }
 
         /**
          * Minimal length for generated name
          */
-        public int minNameGeneratedLength() {
-            return pool.integer("player.name.generated.minLength", 4);
+        public @Positive int minNameGeneratedLength() {
+            return pool.positiveInteger("player.name.generated.minLength", 4);
         }
 
         /**
@@ -209,24 +212,24 @@ public final class GameConfiguration {
          *
          * To change this value, you should also change in lang.swf, the value `C.SECRET_ANSWER_SINCE_LEVEL`
          */
-        public int deleteAnswerLevel() {
-            return pool.integer("player.deleteAnswerLevel", 20);
+        public @Positive int deleteAnswerLevel() {
+            return pool.positiveInteger("player.deleteAnswerLevel", 20);
         }
 
         /**
          * Get the level up spell points
          * By default, value is set to 1
          */
-        public int spellBoostPointsOnLevelUp() {
-            return pool.integer("player.level.spellPoints", 1);
+        public @NonNegative int spellBoostPointsOnLevelUp() {
+            return pool.nonNegativeInteger("player.level.spellPoints", 1);
         }
 
         /**
          * Get the level up characteristic points
          * By default, value is set to 5
          */
-        public int characteristicPointsOnLevelUp() {
-            return pool.integer("player.level.characteristicPoints", 5);
+        public @NonNegative int characteristicPointsOnLevelUp() {
+            return pool.nonNegativeInteger("player.level.characteristicPoints", 5);
         }
 
         /**
@@ -234,8 +237,8 @@ public final class GameConfiguration {
          * This is the number of milliseconds required to regenerate 1 life point. Set to 0 to disable.
          * By default 1000 (1 LP / sec)
          */
-        public int baseLifeRegeneration() {
-            return pool.integer("player.lifeRegeneration.base", 1000);
+        public @NonNegative int baseLifeRegeneration() {
+            return pool.nonNegativeInteger("player.lifeRegeneration.base", 1000);
         }
 
         /**
@@ -276,8 +279,8 @@ public final class GameConfiguration {
         /**
          * Number of threads to use for the activity service
          */
-        public int threadsCount() {
-            return pool.integer("activity.threadsCount", 1);
+        public @Positive int threadsCount() {
+            return pool.positiveInteger("activity.threadsCount", 1);
         }
 
         /**
@@ -293,16 +296,16 @@ public final class GameConfiguration {
          * The value must be an integer value between ]0, 100]
          * By default 25%
          */
-        public int monsterMovePercent() {
-            return pool.integer("activity.monsters.movePercent", 25);
+        public @IntRange(from = 0, to = 100) int monsterMovePercent() {
+            return pool.percent("activity.monsters.movePercent", 25);
         }
 
         /**
          * The maximum move distance for monsters
          * By default 5
          */
-        public int monsterMoveDistance() {
-            return pool.integer("activity.monsters.moveDistance", 5);
+        public @Positive int monsterMoveDistance() {
+            return pool.positiveInteger("activity.monsters.moveDistance", 5);
         }
 
         /**
@@ -310,8 +313,8 @@ public final class GameConfiguration {
          * With a factor of 2, the respawn will be 2 times faster
          * By default 1
          */
-        public int monsterRespawnSpeedFactor() {
-            return pool.integer("activity.monsters.respawnSpeedFactor", 1);
+        public @Positive int monsterRespawnSpeedFactor() {
+            return pool.positiveInteger("activity.monsters.respawnSpeedFactor", 1);
         }
     }
 

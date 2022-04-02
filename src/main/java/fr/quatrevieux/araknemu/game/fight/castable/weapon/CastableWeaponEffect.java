@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.SpellEffectArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Effect for a weapon
@@ -49,12 +50,12 @@ public final class CastableWeaponEffect implements SpellEffect {
     }
 
     @Override
-    public int min() {
+    public @NonNegative int min() {
         return applyCriticalBonus(effect.min());
     }
 
     @Override
-    public int max() {
+    public @NonNegative int max() {
         return applyCriticalBonus(effect.max());
     }
 
@@ -64,12 +65,12 @@ public final class CastableWeaponEffect implements SpellEffect {
     }
 
     @Override
-    public int duration() {
+    public @NonNegative int duration() {
         return 0;
     }
 
     @Override
-    public int probability() {
+    public @NonNegative int probability() {
         return 0;
     }
 
@@ -88,7 +89,7 @@ public final class CastableWeaponEffect implements SpellEffect {
         return WeaponEffectTarget.INSTANCE;
     }
 
-    private int applyCriticalBonus(int base) {
+    private @NonNegative int applyCriticalBonus(@NonNegative int base) {
         if (critical) {
             return base + weapon.info().criticalBonus();
         }

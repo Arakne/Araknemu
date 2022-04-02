@@ -22,7 +22,9 @@ package fr.quatrevieux.araknemu.game.player.inventory.slot;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.common.value.qual.IntRange;
 
 import java.util.Optional;
 
@@ -30,14 +32,14 @@ import java.util.Optional;
  * Null object for slot
  */
 public final class NullSlot implements InventorySlot {
-    private final int id;
+    private final @IntRange(from = 0, to = 57) int id;
 
-    public NullSlot(int id) {
+    public NullSlot(@IntRange(from = 0, to = 57) int id) {
         this.id = id;
     }
 
     @Override
-    public int id() {
+    public @IntRange(from = 0, to = 57) int id() {
         return id;
     }
 
@@ -62,7 +64,7 @@ public final class NullSlot implements InventorySlot {
     }
 
     @Override
-    public InventoryEntry set(Item item, int quantity) throws InventoryException {
+    public InventoryEntry set(Item item, @Positive int quantity) throws InventoryException {
         throw new InventoryException("Null slot");
     }
 }

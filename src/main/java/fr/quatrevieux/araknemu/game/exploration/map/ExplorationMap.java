@@ -36,6 +36,12 @@ import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.exploration.map.event.NewSpriteOnMap;
 import fr.quatrevieux.araknemu.game.exploration.map.event.SpriteRemoveFromMap;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import org.checkerframework.checker.index.qual.IndexFor;
+import org.checkerframework.checker.index.qual.LengthOf;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -54,7 +60,7 @@ public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispa
     private final MapTemplate template;
     private final ExplorationSubArea subArea;
 
-    private final Map<Integer, ExplorationMapCell> cells;
+    private final Map<@NonNegative Integer, ExplorationMapCell> cells;
     private final ConcurrentMap<Integer, ExplorationCreature> creatures = new ConcurrentHashMap<>();
 
     private final ListenerAggregate dispatcher = new DefaultListenerAggregate();
@@ -75,7 +81,8 @@ public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispa
      *
      * filename : data/maps/[id]_[date](X).swf
      */
-    public int id() {
+    @Pure
+    public @NonNegative int id() {
         return template.id();
     }
 
@@ -84,6 +91,7 @@ public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispa
      *
      * filename : data/maps/[id]_[date](X).swf
      */
+    @Pure
     public String date() {
         return template.date();
     }
@@ -92,6 +100,7 @@ public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispa
      * Get the map decryption key
      * Used by map swf which finish with "X.swf"
      */
+    @Pure
     public String key() {
         return template.key();
     }
@@ -102,6 +111,8 @@ public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispa
      * /!\ Because cells are interleaved, the real height of the map is x2,
      *     and the width is lower one every two lines
      */
+    @Pure
+    @Override
     public Dimensions dimensions() {
         return template.dimensions();
     }
@@ -109,12 +120,17 @@ public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispa
     /**
      * Get the number of cells of the map
      */
-    public int size() {
+    @Pure
+    @Override
+    @SuppressWarnings("return") // Cannot infer template.cells().length to be equals to this length
+    public @LengthOf("this") int size() {
         return template.cells().length;
     }
 
     @Override
-    public ExplorationMapCell get(int id) {
+    @SideEffectFree
+    @SuppressWarnings("array.access.unsafe.high") // Cannot infer template.cells().length to be equals to this length
+    public ExplorationMapCell get(@IndexFor("this") int id) {
         final ExplorationMapCell cell = cells.get(id);
 
         if (cell != null) {
@@ -171,6 +187,7 @@ public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispa
      *
      * @param id The creature id
      */
+    @Pure
     public ExplorationCreature creature(int id) {
         final ExplorationCreature creature = creatures.get(id);
 
@@ -186,6 +203,7 @@ public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispa
      *
      * @param id The creature id
      */
+    @Pure
     public boolean has(int id) {
         return creatures.containsKey(id);
     }
@@ -214,6 +232,7 @@ public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispa
     /**
      * Can launch a fight on the map ?
      */
+    @Pure
     public boolean canLaunchFight() {
         return template.fightPlaces().length >= 2;
     }
@@ -225,12 +244,15 @@ public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispa
      *
      * @return List of placement cells, or empty list if there is not place for the given team
      */
-    public List<ExplorationMapCell> fightPlaces(int team) {
-        if (team >= template.fightPlaces().length) {
+    @SuppressWarnings("methodref.param") // places are considered as safe cell ids
+    public List<ExplorationMapCell> fightPlaces(@NonNegative int team) {
+        final List<Integer>[] places = template.fightPlaces();
+
+        if (team >= places.length) {
             return Collections.emptyList();
         }
 
-        return template.fightPlaces()[team].stream().map(this::get).collect(Collectors.toList());
+        return places[team].stream().map(this::get).collect(Collectors.toList());
     }
 
     /**

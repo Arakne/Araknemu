@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
+import fr.quatrevieux.araknemu.util.Asserter;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
@@ -114,11 +115,11 @@ final class SqlItemTemplateRepository implements ItemTemplateRepository {
                 NullnessUtil.castNonNull(rs.getString("ITEM_NAME")),
                 rs.getInt("ITEM_LEVEL"),
                 effectsTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("ITEM_EFFECTS"))),
-                rs.getInt("WEIGHT"),
+                Asserter.assertNonNegative(rs.getInt("WEIGHT")),
                 NullnessUtil.castNonNull(rs.getString("CONDITIONS")),
                 rs.getInt("ITEM_SET_ID"),
                 rs.getString("WEAPON_INFO"),
-                rs.getInt("PRICE")
+                Asserter.assertNonNegative(rs.getInt("PRICE"))
             );
         }
 

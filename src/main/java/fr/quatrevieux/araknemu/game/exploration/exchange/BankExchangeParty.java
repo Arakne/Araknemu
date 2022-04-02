@@ -30,6 +30,9 @@ import fr.quatrevieux.araknemu.game.world.creature.Creature;
 import fr.quatrevieux.araknemu.network.game.out.exchange.ExchangeLeaved;
 import fr.quatrevieux.araknemu.network.game.out.exchange.StorageList;
 import fr.quatrevieux.araknemu.network.game.out.exchange.movement.storage.StorageMovementError;
+import fr.quatrevieux.araknemu.util.Asserter;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -85,11 +88,16 @@ public final class BankExchangeParty implements ExchangeParty {
 
     @Override
     public void kamas(long quantity) {
+        if (quantity == 0) {
+            send(new StorageMovementError());
+            return;
+        }
+
         try {
             if (quantity > 0) {
                 addKamasToBank(quantity);
             } else {
-                removeKamasFromBank(-quantity);
+                removeKamasFromBank(Asserter.castPositive(-quantity));
             }
         } catch (IllegalArgumentException e) {
             send(new StorageMovementError());
@@ -98,11 +106,16 @@ public final class BankExchangeParty implements ExchangeParty {
 
     @Override
     public void item(int itemEntryId, int quantity) {
+        if (quantity == 0) {
+            send(new StorageMovementError());
+            return;
+        }
+
         try {
             if (quantity > 0) {
                 addItemToBank(player.inventory().get(itemEntryId), quantity);
             } else {
-                removeItemFromBank(bank.get(itemEntryId), -quantity);
+                removeItemFromBank(bank.get(itemEntryId), Asserter.castPositive(-quantity));
             }
         } catch (InventoryException e) {
             send(new StorageMovementError());
@@ -117,21 +130,25 @@ public final class BankExchangeParty implements ExchangeParty {
     /**
      * Remove kamas from inventory and store into bank
      */
-    private void addKamasToBank(long quantity) {
-        quantity = Math.min(quantity, player.inventory().kamas());
+    private void addKamasToBank(@NonNegative long quantity) {
+        final long actualQuantity = Math.min(quantity, player.inventory().kamas());
 
-        player.inventory().removeKamas(quantity);
-        bank.addKamas(quantity);
+        if (actualQuantity > 0) {
+            player.inventory().removeKamas(actualQuantity);
+            bank.addKamas(actualQuantity);
+        }
     }
 
     /**
      * Retrieve kamas from the bank, and add into inventory
      */
-    private void removeKamasFromBank(long quantity) {
-        quantity = Math.min(quantity, bank.kamas());
+    private void removeKamasFromBank(@NonNegative long quantity) {
+        final long actualQuantity = Math.min(quantity, bank.kamas());
 
-        bank.removeKamas(quantity);
-        player.inventory().addKamas(quantity);
+        if (actualQuantity > 0) {
+            bank.removeKamas(actualQuantity);
+            player.inventory().addKamas(actualQuantity);
+        }
     }
 
     /**
@@ -140,15 +157,17 @@ public final class BankExchangeParty implements ExchangeParty {
      * @param entry The player's inventory item
      * @param quantity The quantity to add
      */
-    private void addItemToBank(ItemEntry entry, int quantity) {
+    private void addItemToBank(ItemEntry entry, @Positive int quantity) {
         if (!entry.isDefaultPosition()) {
             throw new InventoryException("The item should be in default position");
         }
 
-        quantity = Math.min(entry.quantity(), quantity);
+        final int actualQuantity = Math.min(entry.quantity(), quantity);
 
-        entry.remove(quantity);
-        bank.add(entry.item(), quantity);
+        if (actualQuantity > 0) {
+            entry.remove(actualQuantity);
+            bank.add(entry.item(), actualQuantity);
+        }
     }
 
     /**
@@ -157,10 +176,12 @@ public final class BankExchangeParty implements ExchangeParty {
      * @param entry The bank item to move
      * @param quantity The quantity to move
      */
-    private void removeItemFromBank(ItemEntry entry, int quantity) {
-        quantity = Math.min(entry.quantity(), quantity);
+    private void removeItemFromBank(ItemEntry entry, @Positive int quantity) {
+        final int actualQuantity = Math.min(entry.quantity(), quantity);
 
-        entry.remove(quantity);
-        player.inventory().add(entry.item(), quantity);
+        if (actualQuantity > 0) {
+            entry.remove(actualQuantity);
+            player.inventory().add(entry.item(), actualQuantity);
+        }
     }
 }

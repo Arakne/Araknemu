@@ -19,7 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.value;
 
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.common.value.qual.IntRange;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -73,9 +75,9 @@ public final class EffectArea {
     }
 
     private final Type type;
-    private final int size;
+    private final @IntRange(from = 0, to = 63) int size;
 
-    public EffectArea(Type type, int size) {
+    public EffectArea(Type type, @IntRange(from = 0, to = 63) int size) {
         this.type = type;
         this.size = size;
     }
@@ -84,7 +86,7 @@ public final class EffectArea {
         return type;
     }
 
-    public int size() {
+    public @IntRange(from = 0, to = 63) int size() {
         return size;
     }
 

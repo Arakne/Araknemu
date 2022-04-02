@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.BlockingAction;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.network.game.out.game.action.GameActionResponse;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -33,13 +34,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public final class LaunchFirework implements BlockingAction {
     private final ExplorationPlayer player;
 
-    private final int cell;
+    private final @NonNegative int cell;
     private final int animation;
     private final int size;
 
     private int id;
 
-    public LaunchFirework(ExplorationPlayer player, int cell, int animation, int size) {
+    public LaunchFirework(ExplorationPlayer player, @NonNegative int cell, int animation, int size) {
         this.player = player;
         this.cell = cell;
         this.animation = animation;

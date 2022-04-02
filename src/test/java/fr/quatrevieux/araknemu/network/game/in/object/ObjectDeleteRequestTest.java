@@ -22,7 +22,8 @@ package fr.quatrevieux.araknemu.network.game.in.object;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ObjectDeleteRequestTest {
     @Test
@@ -35,11 +36,11 @@ class ObjectDeleteRequestTest {
 
     @Test
     void parseBadFormat() {
-        assertThrows(ParsePacketException.class, () -> new ObjectDeleteRequest.Parser().parse("invalid"), "Needs 2 parts");
+        assertThrows(ParsePacketException.class, () -> new ObjectDeleteRequest.Parser().parse("invalid"));
     }
 
     @Test
     void parseNegativeQuantity() {
-        assertThrows(NumberFormatException.class, () -> new ObjectDeleteRequest.Parser().parse("12|-5"));
+        assertThrows(ParsePacketException.class, () -> new ObjectDeleteRequest.Parser().parse("12|-5"));
     }
 }

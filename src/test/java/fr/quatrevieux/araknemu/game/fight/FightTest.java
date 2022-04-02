@@ -249,7 +249,6 @@ class FightTest extends GameBaseCase {
         fight.destroy();
 
         assertCount(0, fight.teams());
-        assertEquals(0, fight.map().size());
         assertFalse(fight.alive());
     }
 

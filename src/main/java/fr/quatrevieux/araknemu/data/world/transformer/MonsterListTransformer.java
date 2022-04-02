@@ -23,6 +23,7 @@ import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.transformer.TransformerException;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
+import fr.quatrevieux.araknemu.util.Splitter;
 import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.PolyNull;
@@ -67,26 +68,21 @@ public final class MonsterListTransformer implements Transformer<List<MonsterGro
         final List<MonsterGroupData.Monster> monsters = new ArrayList<>(monstersStr.length);
 
         for (String monsterStr : monstersStr) {
-            final String[] dataAndRate = StringUtils.split(monsterStr, "x", 2);
-            final String[] data = StringUtils.split(dataAndRate[0], ",", 3);
+            final Splitter dataAndRate = new Splitter(monsterStr, 'x');
+            final Splitter data = dataAndRate.nextSplit(',');
 
-            int rate = 1;
-
-            if (dataAndRate.length == 2) {
-                rate = Integer.parseInt(dataAndRate[1]);
-            }
-
-            final int monsterId = Integer.parseInt(data[0]);
+            final int rate = dataAndRate.nextPositiveIntOrDefault(1);
+            final int monsterId = data.nextInt();
 
             int minLevel = 1;
             int maxLevel = Integer.MAX_VALUE;
 
-            if (data.length > 1) {
-                minLevel = maxLevel = Integer.parseInt(data[1]);
+            if (data.hasNext()) {
+                minLevel = maxLevel = data.nextPositiveInt();
             }
 
-            if (data.length > 2) {
-                maxLevel = Integer.parseInt(data[2]);
+            if (data.hasNext()) {
+                maxLevel = data.nextPositiveInt();
             }
 
             monsters.add(new MonsterGroupData.Monster(monsterId, new Interval(minLevel, maxLevel), rate));

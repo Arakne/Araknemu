@@ -49,10 +49,11 @@ public final class AskExchange implements PacketHandler<GameSession, ExchangeReq
         }
 
         try {
-            if (packet.id().isPresent()) {
-                // @todo check creature type ?
-                player.interactions().start(factory.create(packet.type(), player, map.creature(packet.id().get())));
-            }
+            // @todo check creature type ?
+            packet.id()
+                .map(map::creature)
+                .ifPresent(target -> player.interactions().start(factory.create(packet.type(), player, target)))
+            ;
         } catch (RuntimeException e) {
             throw new ErrorPacket(new ExchangeRequestError(ExchangeRequestError.Error.CANT_EXCHANGE));
         }

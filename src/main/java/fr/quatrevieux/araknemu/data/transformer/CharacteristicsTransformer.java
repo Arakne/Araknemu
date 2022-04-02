@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
-import org.apache.commons.lang3.StringUtils;
+import fr.quatrevieux.araknemu.util.Splitter;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
@@ -31,8 +31,8 @@ import org.checkerframework.checker.nullness.qual.PolyNull;
  */
 public final class CharacteristicsTransformer implements Transformer<Characteristics> {
     private static final int SERIALIZED_BASE    = 32;
-    private static final String VALUE_SEPARATOR = ":";
-    private static final String STATS_SEPARATOR = ";";
+    private static final char VALUE_SEPARATOR = ':';
+    private static final char STATS_SEPARATOR = ';';
 
     @Override
     public @PolyNull String serialize(@PolyNull Characteristics characteristics) {
@@ -67,17 +67,20 @@ public final class CharacteristicsTransformer implements Transformer<Characteris
         }
 
         final MutableCharacteristics characteristics = new DefaultCharacteristics();
+        final Splitter splitter = new Splitter(serialized, STATS_SEPARATOR);
 
-        for (String stats : StringUtils.split(serialized, STATS_SEPARATOR)) {
-            if (stats.isEmpty()) {
+        while (splitter.hasNext()) {
+            final String sData = splitter.nextPart();
+
+            if (sData.isEmpty()) {
                 continue;
             }
 
-            final String[] data = StringUtils.split(stats, VALUE_SEPARATOR, 2);
+            final Splitter data = new Splitter(sData, VALUE_SEPARATOR);
 
             characteristics.set(
-                Characteristic.fromId(Integer.parseInt(data[0], SERIALIZED_BASE)),
-                Integer.parseInt(data[1], SERIALIZED_BASE)
+                Characteristic.fromId(data.nextInt(SERIALIZED_BASE)),
+                data.nextInt(SERIALIZED_BASE)
             );
         }
 

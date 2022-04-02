@@ -40,32 +40,33 @@ class SqlMonsterGroupPositionRepositoryTest  extends GameBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, -1), 1));
-        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10340, 112), 2));
-        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(new Position(10540, 112), 2));
+        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(10340, -1, 1));
+        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(10340, 112, 2));
+        dataSet.pushMonsterGroupPosition(new MonsterGroupPosition(10540, 112, 2));
 
         repository = new SqlMonsterGroupPositionRepository(new ConnectionPoolExecutor(app.database().get("game")));
     }
 
     @Test
     void get() {
-        MonsterGroupPosition position = repository.get(new MonsterGroupPosition(new Position(10340, -1), 0));
+        MonsterGroupPosition position = repository.get(new MonsterGroupPosition(10340, -1, 0));
 
-        assertEquals(new Position(10340, -1), position.position());
+        assertEquals(10340, position.map());
+        assertEquals(-1, position.cell());
         assertEquals(1, position.groupId());
     }
 
     @Test
     void has() {
-        assertTrue(repository.has(new MonsterGroupPosition(new Position(10340, -1), 0)));
-        assertFalse(repository.has(new MonsterGroupPosition(new Position(404, -1), 0)));
+        assertTrue(repository.has(new MonsterGroupPosition(10340, -1, 0)));
+        assertFalse(repository.has(new MonsterGroupPosition(404, -1, 0)));
     }
 
     @Test
     void getNotFound() {
-        assertThrows(EntityNotFoundException.class, () -> repository.get(new MonsterGroupPosition(new Position(10340, 111), 0)));
-        assertThrows(EntityNotFoundException.class, () -> repository.get(new MonsterGroupPosition(new Position(103404, -1), 0)));
-        assertThrows(EntityNotFoundException.class, () -> repository.get(new MonsterGroupPosition(new Position(404, 404), 0)));
+        assertThrows(EntityNotFoundException.class, () -> repository.get(new MonsterGroupPosition(10340, 111, 0)));
+        assertThrows(EntityNotFoundException.class, () -> repository.get(new MonsterGroupPosition(103404, -1, 0)));
+        assertThrows(EntityNotFoundException.class, () -> repository.get(new MonsterGroupPosition(404, 404, 0)));
     }
 
     @Test
@@ -96,12 +97,12 @@ class SqlMonsterGroupPositionRepositoryTest  extends GameBaseCase {
         Collection<MonsterGroupPosition> positions = repository.all();
 
         assertArrayEquals(
-            new Object[] {
-                new Position(10340, -1),
-                new Position(10340, 112),
-                new Position(10540, 112),
-            },
-            positions.stream().map(MonsterGroupPosition::position).toArray()
+            new Object[] {10340, 10340, 10540},
+            positions.stream().map(MonsterGroupPosition::map).toArray()
+        );
+        assertArrayEquals(
+            new Object[] {-1, 112, 112},
+            positions.stream().map(MonsterGroupPosition::cell).toArray()
         );
     }
 }

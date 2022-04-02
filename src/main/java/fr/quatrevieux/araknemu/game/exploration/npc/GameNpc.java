@@ -97,6 +97,7 @@ public final class GameNpc implements ExplorationCreature {
      *
      * The cell will be set, and the npc will be added to the map
      */
+    @SuppressWarnings("argument") // Ignore invalid cell
     public void join(ExplorationMap map) {
         cell = map.get(entity.position().cell());
         map.add(this);

@@ -26,6 +26,9 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.util.CopyOnFirstWriteCollection;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.dataflow.qual.Pure;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -39,13 +42,13 @@ public final class DropReward implements FightReward {
     private final RewardType type;
     private final Fighter fighter;
 
-    private final Map<Integer, Integer> items = new HashMap<>();
+    private final Map<Integer, @Positive Integer> items = new HashMap<>();
     private final Collection<DropRewardAction> actions;
 
-    private long xp = 0;
-    private long mountXp = 0;
-    private long guildXp = 0;
-    private int kamas = 0;
+    private @NonNegative long xp = 0;
+    private @NonNegative long mountXp = 0;
+    private @NonNegative long guildXp = 0;
+    private @NonNegative int kamas = 0;
 
     public DropReward(RewardType type, Fighter fighter, Collection<DropRewardAction> actions) {
         this.type = type;
@@ -90,28 +93,32 @@ public final class DropReward implements FightReward {
     /**
      * Get player win xp
      */
-    public long xp() {
+    @Pure
+    public @NonNegative long xp() {
         return xp;
     }
 
     /**
      * Xp given to the player's guild
      */
-    public long guildXp() {
+    @Pure
+    public @NonNegative long guildXp() {
         return guildXp;
     }
 
     /**
      * Xp given to the player's mount
      */
-    public long mountXp() {
+    @Pure
+    public @NonNegative long mountXp() {
         return mountXp;
     }
 
     /**
      * Win kamas
      */
-    public int kamas() {
+    @Pure
+    public @NonNegative int kamas() {
         return kamas;
     }
 
@@ -121,7 +128,8 @@ public final class DropReward implements FightReward {
      * The key is the item id
      * The value is the item quantity
      */
-    public Map<Integer, Integer> items() {
+    @Pure
+    public Map<Integer, @Positive Integer> items() {
         return items;
     }
 
@@ -130,7 +138,7 @@ public final class DropReward implements FightReward {
      *
      * @see DropReward#xp()
      */
-    public void setXp(long xp) {
+    public void setXp(@NonNegative long xp) {
         this.xp = xp;
     }
 
@@ -139,7 +147,7 @@ public final class DropReward implements FightReward {
      *
      * @see DropReward#mountXp()
      */
-    public void setMountXp(long mountXp) {
+    public void setMountXp(@NonNegative long mountXp) {
         this.mountXp = mountXp;
     }
 
@@ -148,7 +156,7 @@ public final class DropReward implements FightReward {
      *
      * @see DropReward#guildXp()
      */
-    public void setGuildXp(long guildXp) {
+    public void setGuildXp(@NonNegative long guildXp) {
         this.guildXp = guildXp;
     }
 
@@ -157,7 +165,7 @@ public final class DropReward implements FightReward {
      *
      * @see DropReward#kamas()
      */
-    public void setKamas(int kamas) {
+    public void setKamas(@NonNegative int kamas) {
         this.kamas = kamas;
     }
 
@@ -169,8 +177,8 @@ public final class DropReward implements FightReward {
      *
      * @see fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate#id()
      */
-    public void addItem(int itemId, int quantity) {
-        items.put(itemId, items.getOrDefault(itemId, 0) + quantity);
+    public void addItem(int itemId, @Positive int quantity) {
+        items.merge(itemId, quantity, (a, b) -> a + b); // Do not use Integer::sum because it does not handle @Positive
     }
 
     /**

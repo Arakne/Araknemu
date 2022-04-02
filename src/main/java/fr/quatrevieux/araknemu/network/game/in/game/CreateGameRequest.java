@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.network.game.in.game;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import fr.quatrevieux.araknemu.util.ParseUtils;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Ask for create new game session
@@ -46,15 +48,21 @@ public final class CreateGameRequest implements Packet {
     }
 
     public static final class Parser implements SinglePacketParser<CreateGameRequest> {
+        private final Type[] types = Type.values();
+
         @Override
         public CreateGameRequest parse(String input) throws ParsePacketException {
-            return new CreateGameRequest(
-                Type.values()[input.charAt(0) - '0']
-            );
+            final int typeId = ParseUtils.parseDecimalChar(input);
+
+            if (typeId >= types.length) {
+                throw new ParsePacketException(code() + input, "Invalid game session type");
+            }
+
+            return new CreateGameRequest(types[typeId]);
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "GC";
         }
     }

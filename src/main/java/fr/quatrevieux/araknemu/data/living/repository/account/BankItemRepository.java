@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
 import fr.quatrevieux.araknemu.core.dbal.repository.MutableRepository;
 import fr.quatrevieux.araknemu.data.living.entity.account.AccountBank;
 import fr.quatrevieux.araknemu.data.living.entity.account.BankItem;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.Collection;
 
@@ -63,5 +64,5 @@ public interface BankItemRepository extends MutableRepository<BankItem> {
      *
      * @return The number of item entries
      */
-    public int count(AccountBank bank);
+    public @NonNegative int count(AccountBank bank);
 }

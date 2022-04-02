@@ -43,6 +43,10 @@ public final class EffectAreaTransformer implements Transformer<EffectArea> {
             return null;
         }
 
+        if (serialize.length() < 2) {
+            throw new IllegalArgumentException("An effect area must have a length of 2");
+        }
+
         return new EffectArea(
             EffectArea.Type.byChar(serialize.charAt(0)),
             Base64.ord(serialize.charAt(1))

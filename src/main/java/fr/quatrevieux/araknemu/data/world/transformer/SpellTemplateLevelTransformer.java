@@ -24,7 +24,10 @@ import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.data.value.SpellTemplateEffect;
 import fr.quatrevieux.araknemu.data.world.entity.SpellTemplate;
+import fr.quatrevieux.araknemu.util.ParseUtils;
+import fr.quatrevieux.araknemu.util.Splitter;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 
 import java.util.ArrayList;
@@ -77,15 +80,19 @@ public class SpellTemplateLevelTransformer implements Transformer<SpellTemplate.
 
         final String[] parts = StringUtils.splitByWholeSeparatorPreserveAllTokens(serialize, "|", 20);
 
+        if (parts.length < 20) {
+            throw new IllegalArgumentException("Cannot parse spell level '" + serialize + "' : some data are missing");
+        }
+
         try {
             return check(
                 new SpellTemplate.Level(
                     effects(parts[NORMAL_EFFECTS]),
                     effects(parts[CRITICAL_EFFECTS]),
-                    integer(parts[AP_COST]),
+                    nonNegative(parts[AP_COST]),
                     interval(parts[RANGE_MIN], parts[RANGE_MAX]),
-                    integer(parts[CRITICAL_RATE]),
-                    integer(parts[FAILURE_RATE]),
+                    nonNegative(parts[CRITICAL_RATE]),
+                    nonNegative(parts[FAILURE_RATE]),
                     bool(parts[LINE_ONLY]),
                     bool(parts[LINE_OF_SIGHT]),
                     bool(parts[FREE_CELL]),
@@ -110,14 +117,18 @@ public class SpellTemplateLevelTransformer implements Transformer<SpellTemplate.
         return value.isEmpty() ? 0 : Integer.parseInt(value);
     }
 
+    private @NonNegative int nonNegative(String value) {
+        return value.isEmpty() ? 0 : ParseUtils.parseNonNegativeInt(value);
+    }
+
     private boolean bool(String value) {
         return "true".equals(value);
     }
 
     private Interval interval(String min, String max) {
         return new Interval(
-            integer(min),
-            integer(max)
+            nonNegative(min),
+            nonNegative(max)
         );
     }
 
@@ -129,23 +140,23 @@ public class SpellTemplateLevelTransformer implements Transformer<SpellTemplate.
     }
 
     private SpellTemplateEffect effect(String sEffect) {
-        final String[] params = StringUtils.splitByWholeSeparatorPreserveAllTokens(sEffect, ",", 7);
+        final Splitter params = new Splitter(sEffect, ',');
 
         return new SpellTemplateEffect(
-            integer(params[0]),
-            integer(params[1]),
-            integer(params[2]),
-            integer(params[3]),
-            integer(params[4]),
-            integer(params[5]),
-            params.length == 7 ? params[6] : ""
+            params.nextIntOrDefault(0),
+            params.nextNonNegativeIntOrDefault(0),
+            params.nextNonNegativeIntOrDefault(0),
+            params.nextIntOrDefault(0),
+            Math.max(0, params.nextIntOrDefault(0)), // Some spells extracted from langs use -1 for duration
+            params.nextNonNegativeIntOrDefault(0),
+            params.nextPartOrDefault("")
         );
     }
 
     private List<EffectArea> areas(String sAreas) {
         final List<EffectArea> areas = new ArrayList<>(sAreas.length() / 2);
 
-        for (int i = 0; i < sAreas.length(); i += 2) {
+        for (int i = 0; i < sAreas.length() - 1; i += 2) {
             areas.add(areaTransformer.unserialize(sAreas.substring(i, i + 2)));
         }
 

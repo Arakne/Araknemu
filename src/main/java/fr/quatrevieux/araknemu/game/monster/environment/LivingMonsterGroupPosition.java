@@ -119,7 +119,7 @@ public final class LivingMonsterGroupPosition {
     /**
      * Find the group spawn cell
      *
-     * If the cell is fixed (not -1 on {@link MonsterGroupPosition#position() cell}), this cell is returned
+     * If the cell is fixed (not -1 on {@link MonsterGroupPosition#cell()}), this cell is returned
      * If not, a random free (without creatures, objects, and walkable) cell is returned
      *
      * @see fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell#free()

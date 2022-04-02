@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.item.effect.CharacteristicEffect;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -155,7 +156,7 @@ public final class EffectToCharacteristicMapping implements EffectMapper<Charact
      *
      * @throws NoSuchElementException When effect is not registered
      */
-    public CharacteristicEffect create(Effect effect, int value) {
+    public CharacteristicEffect create(Effect effect, @NonNegative int value) {
         final MappedCharacteristic mapped = get(effect);
 
         return new CharacteristicEffect(effect, value, mapped.multiplier, mapped.characteristic);

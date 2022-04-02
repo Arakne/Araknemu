@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
+import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -47,7 +48,7 @@ public interface PassiveFighter extends Creature<FightCell> {
     /**
      * Get the fighter level
      */
-    public int level();
+    public @Positive int level();
 
     /**
      * Get the fighter life

@@ -24,6 +24,8 @@ import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.characteristic.event.LifeChanged;
 import fr.quatrevieux.araknemu.game.world.creature.Life;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.common.value.qual.IntRange;
 
 /**
  * Handle player life
@@ -32,12 +34,12 @@ public final class PlayerLife implements Life {
     private final GamePlayer player;
     private final Player entity;
 
-    private int max;
+    private @NonNegative int max;
     /**
      * Time in microseconds. The value should be set to 0 to disable the regeneration
      */
     private long lifeRegenerationStart;
-    private int lifeRegenerationSpeed;
+    private @NonNegative int lifeRegenerationSpeed;
 
     public PlayerLife(GamePlayer player, Player entity) {
         this.player = player;
@@ -46,16 +48,16 @@ public final class PlayerLife implements Life {
     }
 
     @Override
-    public int max() {
+    public @NonNegative int max() {
         return max;
     }
 
     @Override
-    public int current() {
+    public @NonNegative int current() {
         return entity.life() + calculateLifeRegeneration();
     }
 
-    private int calculateLifeRegeneration() {
+    private @NonNegative int calculateLifeRegeneration() {
         if (lifeRegenerationStart == 0) {
             return 0;
         }
@@ -64,12 +66,11 @@ public final class PlayerLife implements Life {
         final int currentLife = entity.life();
 
         int lifeToAdd = (int) (currentTime - lifeRegenerationStart) / lifeRegenerationSpeed;
+        lifeToAdd = Math.min(lifeToAdd, this.max - currentLife);
 
-        if (this.max <= (lifeToAdd + currentLife)) {
-            lifeToAdd = this.max - currentLife;
-        }
-
-        return lifeToAdd;
+        // Can occur if system clock is set to a time in the past, after the generation is started
+        // So currentTime will be lower than lifeRegenerationStart
+        return Math.max(lifeToAdd, 0);
     }
 
     /**
@@ -94,7 +95,7 @@ public final class PlayerLife implements Life {
      * Set the lifeRegenerationStart timestamps to System.currentTimeMillis()
      * @param lifeRegenerationSpeed The required delay in milliseconds to regenerate 1 life point
      */
-    public void startLifeRegeneration(int lifeRegenerationSpeed) {
+    public void startLifeRegeneration(@NonNegative int lifeRegenerationSpeed) {
         // Regen already started : restart the regen
         if (lifeRegenerationStart != 0) {
             stopLifeRegeneration();
@@ -110,7 +111,8 @@ public final class PlayerLife implements Life {
     /**
      * Get the current percent life
      */
-    public byte percent() {
+    @SuppressWarnings("return") // max() is < current(), so this value cannot be > 100
+    public @IntRange(from = 0, to = 100) byte percent() {
         return (byte) (100 * current() / max());
     }
 
@@ -119,7 +121,7 @@ public final class PlayerLife implements Life {
      *
      * @param value Value to add. If the value is upper than remaining life, only the remaining life will be added
      */
-    public void add(int value) {
+    public void add(@NonNegative int value) {
         set(value + current());
     }
 
@@ -128,7 +130,7 @@ public final class PlayerLife implements Life {
      *
      * @param value The new life value
      */
-    public void set(int value) {
+    public void set(@NonNegative int value) {
         final int last = current();
 
         if (value < 0) {
@@ -151,8 +153,8 @@ public final class PlayerLife implements Life {
         entity.setLife(max * percent / 100);
     }
 
-    private int computeMaxLife() {
-        return player.race().life(entity.level()) + player.properties().characteristics().get(Characteristic.VITALITY);
+    private @NonNegative int computeMaxLife() {
+        return Math.max(player.race().life(entity.level()) + player.properties().characteristics().get(Characteristic.VITALITY), 1);
     }
 
     /**

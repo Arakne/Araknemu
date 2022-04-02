@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.ResponseAction;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.ChangeMap;
+import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.Action;
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.action.ActionFactory;
@@ -46,8 +47,13 @@ public final class GoToAstrub implements Action {
     @Override
     public void apply(ExplorationPlayer player) {
         final Position position = player.player().race().astrubPosition();
+        final ExplorationMap targetMap = service.load(position.map());
 
-        player.interactions().push(new ChangeMap(player, service.load(position.map()), position.cell(), 7));
+        if (position.cell() >= targetMap.size()) {
+            throw new IllegalStateException("Invalid cell for astrub map " + position);
+        }
+
+        player.interactions().push(new ChangeMap(player, targetMap, position.cell(), 7));
         player.player().setSavedPosition(position);
         player.send(Information.positionSaved());
     }

@@ -35,6 +35,7 @@ import fr.quatrevieux.araknemu.game.player.inventory.slot.WeaponSlot;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import fr.quatrevieux.araknemu.network.game.GameSession;
+import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 /**
@@ -141,7 +142,7 @@ public final class PlayerFighter extends AbstractFighter implements Fighter, Pla
     }
 
     @Override
-    public int level() {
+    public @Positive int level() {
         return player.properties().experience().level();
     }
 

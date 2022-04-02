@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
+import org.checkerframework.common.value.qual.MinLen;
 
 import java.util.Collection;
 import java.util.EnumSet;
@@ -52,6 +53,10 @@ public final class SubscribeChannels implements Packet {
     public static final class Parser implements SinglePacketParser<SubscribeChannels> {
         @Override
         public SubscribeChannels parse(String input) throws ParsePacketException {
+            if (input.isEmpty()) {
+                throw new ParsePacketException(code(), "The packet must start with + or -");
+            }
+
             final Collection<ChannelType> channels = EnumSet.noneOf(ChannelType.class);
 
             for (int i = 1; i < input.length(); ++i) {
@@ -67,7 +72,7 @@ public final class SubscribeChannels implements Packet {
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "cC";
         }
     }

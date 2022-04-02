@@ -63,8 +63,17 @@ public final class StringListHydrator implements ArgumentsHydrator {
                 return true;
             }
 
+            final Type[] executeParameterTypes = command.getClass()
+                .getMethod("execute", AdminPerformer.class, List.class)
+                .getGenericParameterTypes()
+            ;
+
+            if (executeParameterTypes.length < 2) {
+                return false;
+            }
+
             // Same as AbstractTypedArgumentsHydrator, but with generic type
-            return checkType(command.getClass().getMethod("execute", AdminPerformer.class, List.class).getGenericParameterTypes()[1]);
+            return checkType(executeParameterTypes[1]);
         } catch (Exception e) {
             return false;
         }
@@ -76,10 +85,12 @@ public final class StringListHydrator implements ArgumentsHydrator {
         }
 
         final ParameterizedType parameterizedType = (ParameterizedType) argumentsType;
+        final Type[] typeArguments = parameterizedType.getActualTypeArguments();
 
         return
             parameterizedType.getRawType().equals(List.class)
-            && parameterizedType.getActualTypeArguments()[0].equals(String.class)
+            && typeArguments.length >= 1
+            && typeArguments[0].equals(String.class)
         ;
     }
 }

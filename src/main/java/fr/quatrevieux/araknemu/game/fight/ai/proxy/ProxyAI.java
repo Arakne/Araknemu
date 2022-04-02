@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -98,7 +99,7 @@ public final class ProxyAI implements AI {
      *
      * @see fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper#withPosition(FightCell)
      */
-    public ProxyAI withPosition(int cellId) {
+    public ProxyAI withPosition(@NonNegative int cellId) {
         final ProxyAI newAi = new ProxyAI(this);
 
         newAi.map = newAi.map.modify(modifier -> {

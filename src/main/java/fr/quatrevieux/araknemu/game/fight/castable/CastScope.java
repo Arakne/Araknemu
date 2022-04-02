@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,6 +69,7 @@ public final class CastScope {
     /**
      * Get the casted action
      */
+    @Pure
     public Castable action() {
         return action;
     }
@@ -86,6 +88,7 @@ public final class CastScope {
     /**
      * Get the caster
      */
+    @Pure
     public ActiveFighter caster() {
         return caster;
     }
@@ -93,6 +96,7 @@ public final class CastScope {
     /**
      * Get the targeted cell
      */
+    @Pure
     public FightCell target() {
         return target;
     }
@@ -141,6 +145,7 @@ public final class CastScope {
     /**
      * Get list of effects to apply
      */
+    @Pure
     public List<EffectScope> effects() {
         return effects;
     }
@@ -210,6 +215,7 @@ public final class CastScope {
         /**
          * The related effect
          */
+        @Pure
         public SpellEffect effect() {
             return effect;
         }

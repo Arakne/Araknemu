@@ -92,7 +92,7 @@ public final class MonsterEnvironmentService implements EventsSubscriber, Preloa
 
         for (MonsterGroupPosition position : positionRepository.all()) {
             groupsByMap
-                .computeIfAbsent(position.position().map(), mapId -> new ArrayList<>())
+                .computeIfAbsent(position.map(), mapId -> new ArrayList<>())
                 .add(createByPosition(position))
             ;
         }
@@ -183,8 +183,8 @@ public final class MonsterEnvironmentService implements EventsSubscriber, Preloa
             this,
             fightService,
             dataRepository.get(position.groupId()),
-            SpawnCellSelector.forPosition(position.position()),
-            position.position().cell() != -1
+            position.cell() != -1 ? new FixedCellSelector(position.cell()) : new RandomCellSelector(),
+            position.cell() != -1
         );
     }
 }

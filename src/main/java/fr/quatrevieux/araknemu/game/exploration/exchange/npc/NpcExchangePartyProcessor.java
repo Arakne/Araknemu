@@ -36,6 +36,8 @@ import fr.quatrevieux.araknemu.game.exploration.npc.exchange.GameNpcExchange;
 import fr.quatrevieux.araknemu.game.exploration.npc.exchange.NpcExchangeEntry;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -97,12 +99,12 @@ public final class NpcExchangePartyProcessor implements ExchangePartyProcessor, 
     }
 
     @Override
-    public void addKamas(long kamas) {
+    public void addKamas(@Positive long kamas) {
         // No-op
     }
 
     @Override
-    public void addItem(Item item, int quantity) {
+    public void addItem(Item item, @Positive int quantity) {
         // No-op
     }
 
@@ -152,10 +154,10 @@ public final class NpcExchangePartyProcessor implements ExchangePartyProcessor, 
         storage.notifyChanges(last);
     }
 
-    private static Map<ItemEntry, Integer> buildItems(NpcExchangeEntry entry) {
-        final Map<ItemEntry, Integer> items = new HashMap<>();
+    private static Map<ItemEntry, @Positive Integer> buildItems(NpcExchangeEntry entry) {
+        final Map<ItemEntry, @Positive Integer> items = new HashMap<>();
 
-        for (Map.Entry<ItemTemplate, Integer> item : entry.items()) {
+        for (Map.Entry<ItemTemplate, @Positive Integer> item : entry.items()) {
             items.put(new NpcExchangeItemEntry(item.getKey()), item.getValue());
         }
 
@@ -168,7 +170,7 @@ public final class NpcExchangePartyProcessor implements ExchangePartyProcessor, 
      */
     private class Storage implements ExchangeStorage {
         private final NpcExchangeEntry entry;
-        private final Map<ItemEntry, Integer> items;
+        private final Map<ItemEntry, @Positive Integer> items;
 
         public Storage(NpcExchangeEntry entry) {
             this.entry = entry;
@@ -176,12 +178,12 @@ public final class NpcExchangePartyProcessor implements ExchangePartyProcessor, 
         }
 
         @Override
-        public Map<ItemEntry, Integer> items() {
+        public Map<ItemEntry, @Positive Integer> items() {
             return items;
         }
 
         @Override
-        public long kamas() {
+        public @NonNegative long kamas() {
             return entry.kamas();
         }
 

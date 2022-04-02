@@ -79,7 +79,7 @@
         <dependency>
             <groupId>fr.arakne</groupId>
             <artifactId>arakne-map</artifactId>
-            <version>0.6-alpha</version>
+            <version>0.7-alpha</version>
         </dependency>
         <dependency>
             <groupId>de.mkammerer</groupId>
@@ -283,6 +283,7 @@
                             <annotationProcessors>
                                 <!-- Add all the checkers you want to enable here -->
                                 <annotationProcessor>org.checkerframework.checker.nullness.NullnessChecker</annotationProcessor>
+                                <annotationProcessor>org.checkerframework.checker.index.IndexChecker</annotationProcessor>
                             </annotationProcessors>
                             <compilerArgs>
 <!--                                <arg>-Awarns</arg>-->

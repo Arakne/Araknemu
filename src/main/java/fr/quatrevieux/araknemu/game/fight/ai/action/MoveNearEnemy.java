@@ -24,6 +24,8 @@ import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.util.Asserter;
+import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
 
@@ -64,7 +66,7 @@ public final class MoveNearEnemy implements ActionGenerator {
     /**
      * Compute the cell cost for optimize the path finding
      */
-    private int cellCost(FightCell cell) {
+    private @Positive int cellCost(FightCell cell) {
         // A fighter is on the cell : the cell is not walkable
         // But the fighter may leave the place at the next turn
         // The cost is higher than a simple detour, but permit to resolve a path blocked by a fighter
@@ -74,6 +76,6 @@ public final class MoveNearEnemy implements ActionGenerator {
 
         // Add a cost of 3 for each enemy around the cell
         // This cost corresponds to the detour cost + 1
-        return 1 + (int) (3 * NullnessUtil.castNonNull(helper).enemies().adjacent(cell).count());
+        return 1 + Asserter.castNonNegative(3 * (int) NullnessUtil.castNonNull(helper).enemies().adjacent(cell).count());
     }
 }

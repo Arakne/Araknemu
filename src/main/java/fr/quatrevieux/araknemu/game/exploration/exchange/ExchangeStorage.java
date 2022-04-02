@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.game.exploration.exchange;
 import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.Map;
 
@@ -32,12 +34,12 @@ public interface ExchangeStorage {
     /**
      * Get the current items on the exchange
      */
-    public Map<ItemEntry, Integer> items();
+    public Map<ItemEntry, @Positive Integer> items();
 
     /**
      * Get the current kamas quantity on the exchange
      */
-    public long kamas();
+    public @NonNegative long kamas();
 
     /**
      * Get the accept state

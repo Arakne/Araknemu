@@ -23,7 +23,8 @@ import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SellRequestTest {
     private SellRequest.Parser parser;
@@ -48,6 +49,6 @@ class SellRequestTest {
 
     @Test
     void parseNegativeQuantity() {
-        assertThrows(NumberFormatException.class, () -> parser.parse("112|-3"));
+        assertThrows(ParsePacketException.class, () -> parser.parse("112|-3"));
     }
 }

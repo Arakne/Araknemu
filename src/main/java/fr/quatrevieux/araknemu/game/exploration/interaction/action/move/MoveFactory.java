@@ -50,9 +50,13 @@ public final class MoveFactory implements SingleActionFactory {
             throw new IllegalArgumentException("The player is not on a map");
         }
 
+        if (arguments.length < 1) {
+            throw new IllegalArgumentException("Missing move path");
+        }
+
         return new Move(
             player,
-            new Decoder<>(map).decode(arguments[0], map.get(player.position().cell())),
+            new Decoder<>(map).decode(arguments[0], player.cell()),
             validators
         );
     }

@@ -129,6 +129,7 @@ public final class DialogService implements PreloadableService {
             questions.add(cachedQuestion);
         }
 
+        // @todo refactor : do not use optional but a callback as parameter
         return Optional.of(questions);
     }
 

@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.util;
 
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -50,7 +51,7 @@ public final class CopyOnFirstWriteCollection<E> implements Collection<E> {
     }
 
     @Override
-    public int size() {
+    public @NonNegative int size() {
         return inner.size();
     }
 

@@ -19,6 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.world.entity.environment.npc;
 
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
+
 import java.util.Map;
 
 /**
@@ -29,12 +32,12 @@ import java.util.Map;
 public final class NpcExchange {
     private final int id;
     private final int npcTemplateId;
-    private final long requiredKamas;
-    private final Map<Integer, Integer> requiredItems;
-    private final long exchangedKamas;
-    private final Map<Integer, Integer> exchangedItems;
+    private final @NonNegative long requiredKamas;
+    private final Map<Integer, @Positive Integer> requiredItems;
+    private final @NonNegative long exchangedKamas;
+    private final Map<Integer, @Positive Integer> exchangedItems;
 
-    public NpcExchange(int id, int npcTemplateId, long requiredKamas, Map<Integer, Integer> requiredItems, long exchangedKamas, Map<Integer, Integer> exchangedItems) {
+    public NpcExchange(int id, int npcTemplateId, @NonNegative long requiredKamas, Map<Integer, @Positive Integer> requiredItems, @NonNegative long exchangedKamas, Map<Integer, @Positive Integer> exchangedItems) {
         this.id = id;
         this.npcTemplateId = npcTemplateId;
         this.requiredKamas = requiredKamas;
@@ -62,7 +65,7 @@ public final class NpcExchange {
     /**
      * The required amount of kamas for perform the exchange
      */
-    public long requiredKamas() {
+    public @NonNegative long requiredKamas() {
         return requiredKamas;
     }
 
@@ -74,14 +77,14 @@ public final class NpcExchange {
      *
      * @see fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate#id()
      */
-    public Map<Integer, Integer> requiredItems() {
+    public Map<Integer, @Positive Integer> requiredItems() {
         return requiredItems;
     }
 
     /**
      * The amount of exchanged kamas
      */
-    public long exchangedKamas() {
+    public @NonNegative long exchangedKamas() {
         return exchangedKamas;
     }
 
@@ -93,7 +96,7 @@ public final class NpcExchange {
      *
      * @see fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate#id()
      */
-    public Map<Integer, Integer> exchangedItems() {
+    public Map<Integer, @Positive Integer> exchangedItems() {
         return exchangedItems;
     }
 }

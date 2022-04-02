@@ -22,8 +22,11 @@ package fr.quatrevieux.araknemu.game.item.inventory;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
+import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.common.value.qual.IntRange;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -60,7 +63,7 @@ public final class StackableItemStorage<E extends ItemEntry> implements ItemStor
     }
 
     @Override
-    public E add(Item item, int quantity, int position) throws InventoryException {
+    public E add(Item item, @Positive int quantity, @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int position) throws InventoryException {
         if (position == stackPosition) {
             final E entry = stackMap.get(item);
 

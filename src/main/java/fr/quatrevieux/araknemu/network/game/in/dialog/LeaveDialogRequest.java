@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.network.game.in.dialog;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Stops a dialog with a NPC
@@ -36,7 +37,7 @@ public final class LeaveDialogRequest implements Packet {
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "DV";
         }
     }

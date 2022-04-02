@@ -20,9 +20,11 @@
 package fr.quatrevieux.araknemu.network.game.in.object;
 
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.PacketTokenizer;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
-import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.index.qual.GTENegativeOne;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Request for use an object
@@ -32,10 +34,10 @@ import org.apache.commons.lang3.StringUtils;
 public final class ObjectUseRequest implements Packet {
     private final int objectId;
     private final int target;
-    private final int cell;
+    private final @GTENegativeOne int cell;
     private final boolean isTarget;
 
-    public ObjectUseRequest(int objectId, int target, int cell, boolean isTarget) {
+    public ObjectUseRequest(int objectId, int target, @GTENegativeOne int cell, boolean isTarget) {
         this.objectId = objectId;
         this.target = target;
         this.cell = cell;
@@ -50,10 +52,13 @@ public final class ObjectUseRequest implements Packet {
         return target;
     }
 
-    public int cell() {
+    public @GTENegativeOne int cell() {
         return cell;
     }
 
+    /**
+     * Does a target is provided by the packet (i.e. use on target)
+     */
     public boolean isTarget() {
         return isTarget;
     }
@@ -61,22 +66,24 @@ public final class ObjectUseRequest implements Packet {
     public static final class Parser implements SinglePacketParser<ObjectUseRequest> {
         @Override
         public ObjectUseRequest parse(String input) throws ParsePacketException {
-            final String[] parts = StringUtils.splitByWholeSeparatorPreserveAllTokens(input, "|", 3);
+            final PacketTokenizer tokenizer = tokenize(input, '|');
 
-            if (parts.length == 3) {
+            final int objectId = tokenizer.nextInt();
+
+            if (tokenizer.hasNext()) {
                 return new ObjectUseRequest(
-                    Integer.parseInt(parts[0]),
-                    parts[1].isEmpty() ? 0  : Integer.parseInt(parts[1]),
-                    parts[2].isEmpty() ? -1 : Integer.parseInt(parts[2]),
+                    objectId,
+                    tokenizer.nextIntOrDefault(0),
+                    tokenizer.nextNonNegativeOrNegativeOneIntOrDefault(-1),
                     true
                 );
             }
 
-            return new ObjectUseRequest(Integer.parseInt(parts[0]), 0, 0, false);
+            return new ObjectUseRequest(objectId, 0, 0, false);
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "OU";
         }
     }

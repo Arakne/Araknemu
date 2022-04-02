@@ -23,7 +23,10 @@ import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.type.AbstractEquipment;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
+import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.common.value.qual.IntRange;
+import org.checkerframework.dataflow.qual.Pure;
 
 import java.util.Optional;
 
@@ -34,7 +37,8 @@ public interface InventorySlot {
     /**
      * The slot id
      */
-    public int id();
+    @Pure
+    public @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int id();
 
     /**
      * Get the current entry
@@ -61,7 +65,7 @@ public interface InventorySlot {
      *
      * This method will be called after an {@link fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory#add(Item)}
      */
-    public InventoryEntry set(Item item, int quantity) throws InventoryException;
+    public InventoryEntry set(Item item, @Positive int quantity) throws InventoryException;
 
     /**
      * Set the entry to the slot without do any checks

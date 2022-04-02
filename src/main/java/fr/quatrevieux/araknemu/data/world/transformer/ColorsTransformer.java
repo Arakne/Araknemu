@@ -40,6 +40,7 @@ public final class ColorsTransformer implements Transformer<Colors> {
     }
 
     @Override
+    @SuppressWarnings("argument") // Assume that color values are valid
     public @PolyNull Colors unserialize(@PolyNull String serialize) throws TransformerException {
         if (serialize == null) {
             return null;

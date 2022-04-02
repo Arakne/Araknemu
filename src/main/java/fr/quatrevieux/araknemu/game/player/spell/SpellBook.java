@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.spell.boost.DispatcherSpellsBoosts;
 import fr.quatrevieux.araknemu.game.spell.boost.SimpleSpellsBoosts;
 import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.EnsuresKeyForIf;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -142,7 +143,7 @@ public final class SpellBook implements SpellList, Dispatcher {
     /**
      * Get available spell upgrade points
      */
-    public int upgradePoints() {
+    public @NonNegative int upgradePoints() {
         return player.spellPoints();
     }
 
@@ -184,19 +185,22 @@ public final class SpellBook implements SpellList, Dispatcher {
     }
 
     void indexing(SpellBookEntry entry) {
-        if (entry.position() > MAX_POSITION) {
+        final int position = entry.position() - 1;
+
+        if (position >= MAX_POSITION) {
             return;
         }
 
-        final SpellBookEntry lastEntry = entriesByPosition[entry.position() - 1];
+        final SpellBookEntry lastEntry = entriesByPosition[position];
 
         if (lastEntry != null) {
             lastEntry.move(PlayerSpell.DEFAULT_POSITION);
         }
 
-        entriesByPosition[entry.position() - 1] = entry;
+        entriesByPosition[position] = entry;
     }
 
+    @SuppressWarnings("argument") // canUpgrade() is called before, so spell points cannot be < 0
     void removePointsForUpgrade(Spell spell) {
         player.setSpellPoints(player.spellPoints() - spell.level() + 1);
     }

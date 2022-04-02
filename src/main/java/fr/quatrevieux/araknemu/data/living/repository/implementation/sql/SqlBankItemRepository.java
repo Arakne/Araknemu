@@ -28,6 +28,8 @@ import fr.quatrevieux.araknemu.data.living.entity.account.BankItem;
 import fr.quatrevieux.araknemu.data.living.repository.account.BankItemRepository;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
+import fr.quatrevieux.araknemu.util.Asserter;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
@@ -163,14 +165,14 @@ final class SqlBankItemRepository implements BankItemRepository {
     }
 
     @Override
-    public int count(AccountBank bank) throws RepositoryException {
-        return utils.aggregate(
+    public @NonNegative int count(AccountBank bank) throws RepositoryException {
+        return Asserter.castNonNegative(utils.aggregate(
             "SELECT COUNT(*) FROM BANK_ITEM WHERE ACCOUNT_ID = ? AND SERVER_ID = ?",
             stmt -> {
                 stmt.setInt(1, bank.accountId());
                 stmt.setInt(2, bank.serverId());
             }
-        );
+        ));
     }
 
     private class Loader implements RepositoryUtils.Loader<BankItem> {
@@ -182,7 +184,7 @@ final class SqlBankItemRepository implements BankItemRepository {
                 rs.getInt("ITEM_ENTRY_ID"),
                 rs.getInt("ITEM_TEMPLATE_ID"),
                 effectsTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("ITEM_EFFECTS"))),
-                rs.getInt("QUANTITY")
+                Asserter.assertNonNegative(rs.getInt("QUANTITY"))
             );
         }
 

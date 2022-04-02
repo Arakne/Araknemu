@@ -23,7 +23,9 @@ import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import org.apache.commons.lang3.ArrayUtils;
+import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.common.value.qual.MinLen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +37,11 @@ public final class RandomCellSelector implements SpawnCellSelector {
     private static final RandomUtil RANDOM = RandomUtil.createShared();
 
     private @MonotonicNonNull ExplorationMap map;
-    private int @MonotonicNonNull[] availableCells;
+    private @IndexFor("map") int @MonotonicNonNull @MinLen(1) [] availableCells;
 
     @Override
+    @SuppressWarnings("assignment") // cell ids are safe
     public void setMap(ExplorationMap map) {
-        this.map = map;
-
         final List<Integer> freeCells = new ArrayList<>();
 
         for (int team = 0; team < 2; ++team) {
@@ -51,17 +52,21 @@ public final class RandomCellSelector implements SpawnCellSelector {
             }
         }
 
-        availableCells = ArrayUtils.toPrimitive(RANDOM.shuffle(freeCells).toArray(new Integer[0]));
+        final int[] cells = ArrayUtils.toPrimitive(RANDOM.shuffle(freeCells).toArray(new Integer[0]));
 
-        if (availableCells.length == 0) {
+        if (cells.length == 0) {
             throw new IllegalArgumentException("No spawn position available on map " + map.id());
         }
+
+        this.map = map;
+        this.availableCells = cells;
     }
 
     @Override
+    @SuppressWarnings("assignment") // checker do not follow reference of this.map
     public ExplorationMapCell cell() {
         final ExplorationMap map = this.map;
-        final int[] availableCells = this.availableCells;
+        final @IndexFor("map") int[] availableCells = this.availableCells;
 
         if (map == null || availableCells == null) {
             throw new IllegalStateException("Map must be loaded before");

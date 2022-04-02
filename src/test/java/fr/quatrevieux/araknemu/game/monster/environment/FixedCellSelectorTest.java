@@ -38,7 +38,7 @@ class FixedCellSelectorTest extends GameBaseCase {
 
         dataSet.pushMaps().pushSubAreas().pushAreas();
 
-        selector = new FixedCellSelector(new Position(10340, 123));
+        selector = new FixedCellSelector(123);
     }
 
     @Test

@@ -19,7 +19,11 @@
 
 package fr.quatrevieux.araknemu.core.config;
 
+import fr.quatrevieux.araknemu.util.Asserter;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.common.value.qual.IntRange;
 
 import java.time.Duration;
 
@@ -53,6 +57,27 @@ public final class PoolUtils implements Pool {
             ? Integer.parseInt(value)
             : defaultValue
         ;
+    }
+
+    /**
+     * Parse a config item as a positive integer (i.e. >= 1)
+     */
+    public @Positive int positiveInteger(String key, @Positive int defaultValue) {
+        return Asserter.assertPositive(integer(key, defaultValue));
+    }
+
+    /**
+     * Parse a config item as a non-negative integer (i.e. >= 0)
+     */
+    public @NonNegative int nonNegativeInteger(String key, @NonNegative int defaultValue) {
+        return Asserter.assertNonNegative(integer(key, defaultValue));
+    }
+
+    /**
+     * Parse a config item as a percent integer (i.e. in interval [0, 100])
+     */
+    public @IntRange(from = 0, to = 100) int percent(String key, @IntRange(from = 0, to = 100) int defaultValue) {
+        return Asserter.assertPercent(integer(key, defaultValue));
     }
 
     /**
@@ -151,10 +176,11 @@ public final class PoolUtils implements Pool {
      *
      * @see Duration#parse(CharSequence)
      */
+    @SuppressWarnings("argument") // because of toUpperCase() call, checker miss the value length
     public Duration duration(String key, Duration defaultValue) {
         String value = pool.get(key);
 
-        if (value == null) {
+        if (value == null || value.isEmpty()) {
             return defaultValue;
         }
 

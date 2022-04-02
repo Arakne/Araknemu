@@ -24,6 +24,8 @@ import fr.quatrevieux.araknemu.game.admin.AbstractCommand;
 import fr.quatrevieux.araknemu.game.admin.AdminPerformer;
 import fr.quatrevieux.araknemu.game.admin.exception.AdminException;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.util.ParseUtils;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.kohsuke.args4j.Argument;
 
 /**
@@ -87,8 +89,8 @@ public final class SetLife extends AbstractCommand<SetLife.Arguments> {
             return "max".equalsIgnoreCase(value);
         }
 
-        public int number() {
-            return Integer.parseInt(value);
+        public @NonNegative int number() {
+            return ParseUtils.parseNonNegativeInt(value);
         }
     }
 }

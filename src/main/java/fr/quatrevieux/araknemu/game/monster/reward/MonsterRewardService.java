@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterRewardItemRe
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterRewardRepository;
 import fr.quatrevieux.araknemu.game.PreloadableService;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.Collections;
 import java.util.List;
@@ -72,7 +73,7 @@ public final class MonsterRewardService implements PreloadableService {
      * @param monsterId The monster id to load
      * @param gradeNumber The grade number (starts at 1)
      */
-    public MonsterReward get(int monsterId, int gradeNumber) {
+    public MonsterReward get(int monsterId, @Positive int gradeNumber) {
         return rewards
             .computeIfAbsent(monsterId, id -> preloading
                 ? NullMonsterGradesReward.INSTANCE

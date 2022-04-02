@@ -41,6 +41,10 @@ public final class MoveFactory implements MoveActionFactory {
 
     @Override
     public Action create(String[] arguments) {
+        if (arguments.length < 1) {
+            throw new IllegalArgumentException("Invalid move arguments");
+        }
+
         return create(new Decoder<>(turn.fight().map()).decode(arguments[0], turn.fighter().cell()));
     }
 

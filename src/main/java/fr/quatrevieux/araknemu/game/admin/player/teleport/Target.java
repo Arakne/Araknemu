@@ -20,6 +20,9 @@
 package fr.quatrevieux.araknemu.game.admin.player.teleport;
 
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
+import org.checkerframework.checker.index.qual.IndexFor;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * The teleportation target
@@ -28,9 +31,9 @@ import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
  */
 public final class Target {
     private ExplorationMap map;
-    private int cell;
+    private @NonNegative int cell;
 
-    public Target(ExplorationMap map, int cell) {
+    public Target(ExplorationMap map, @NonNegative int cell) {
         this.map = map;
         this.cell = cell;
     }
@@ -46,13 +49,14 @@ public final class Target {
      * Define the target cell id
      * If the cell is not walkable, a walkable cell will be used instead
      */
-    public void setCell(int cell) {
+    public void setCell(@NonNegative int cell) {
         this.cell = cell;
     }
 
     /**
      * Get the target map
      */
+    @Pure
     public ExplorationMap map() {
         return map;
     }
@@ -61,7 +65,9 @@ public final class Target {
      * Get the target cell
      * The target cell is always walkable
      */
-    public int cell() {
+    @SuppressWarnings("return") // Due to call to non-pure methods, check can't follow map() references
+    public @NonNegative @IndexFor("map()") int cell() {
+        final ExplorationMap map = map();
         // @todo better algo : get nearest walkable cell
         // @todo save real cell
         if (cell < map.size() && map.get(cell).walkable()) {

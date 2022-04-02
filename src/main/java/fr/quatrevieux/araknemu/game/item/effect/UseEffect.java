@@ -24,7 +24,10 @@ import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.effect.use.UseEffectHandler;
+import org.checkerframework.checker.index.qual.GTENegativeOne;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.common.value.qual.ArrayLen;
 
 import java.util.Arrays;
 
@@ -34,9 +37,9 @@ import java.util.Arrays;
 public final class UseEffect implements ItemEffect {
     private final UseEffectHandler handler;
     private final Effect effect;
-    private final int[] arguments;
+    private final @NonNegative int @ArrayLen(3) [] arguments;
 
-    public UseEffect(UseEffectHandler handler, Effect effect, int[] arguments) {
+    public UseEffect(UseEffectHandler handler, Effect effect, @NonNegative int @ArrayLen(3)[] arguments) {
         this.handler = handler;
         this.effect = effect;
         this.arguments = arguments;
@@ -58,7 +61,7 @@ public final class UseEffect implements ItemEffect {
         );
     }
 
-    public int[] arguments() {
+    public @NonNegative int @ArrayLen(3)[] arguments() {
         return arguments;
     }
 
@@ -89,7 +92,7 @@ public final class UseEffect implements ItemEffect {
     /**
      * Check if the player can use the effect to the target
      */
-    public boolean checkTarget(ExplorationPlayer caster, @Nullable ExplorationPlayer target, int cell) {
+    public boolean checkTarget(ExplorationPlayer caster, @Nullable ExplorationPlayer target, @GTENegativeOne int cell) {
         return handler.checkTarget(this, caster, target, cell);
     }
 
@@ -110,7 +113,7 @@ public final class UseEffect implements ItemEffect {
     /**
      * Apply the effect to the target
      */
-    public void applyToTarget(ExplorationPlayer caster, @Nullable ExplorationPlayer target, int cell) {
+    public void applyToTarget(ExplorationPlayer caster, @Nullable ExplorationPlayer target, @GTENegativeOne int cell) {
         handler.applyToTarget(this, caster, target, cell);
     }
 

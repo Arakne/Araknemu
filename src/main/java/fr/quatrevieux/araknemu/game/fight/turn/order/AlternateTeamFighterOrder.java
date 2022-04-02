@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.turn.order;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
+import fr.quatrevieux.araknemu.util.Asserter;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public final class AlternateTeamFighterOrder implements FighterOrderStrategy {
         for (FightTeam team : teams) {
             // Sort team fighters by their initiative desc
             final Queue<Fighter> fighters = new PriorityQueue<>(
-                team.fighters().size(),
+                Asserter.castPositive(team.fighters().size()),
                 (f1, f2) -> f2.characteristics().initiative() - f1.characteristics().initiative()
             );
 

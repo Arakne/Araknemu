@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcTemplateRepository;
+import fr.quatrevieux.araknemu.util.Asserter;
 import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
 
@@ -107,6 +108,8 @@ final class SqlNpcTemplateRepository implements NpcTemplateRepository {
     }
 
     private class Loader implements RepositoryUtils.Loader<NpcTemplate> {
+        private final Gender[] genders = Gender.values();
+
         @Override
         public NpcTemplate create(ResultSet rs) throws SQLException {
             final String store = rs.getString("STORE_ITEMS");
@@ -116,12 +119,8 @@ final class SqlNpcTemplateRepository implements NpcTemplateRepository {
                 rs.getInt("GFXID"),
                 rs.getInt("SCALE_X"),
                 rs.getInt("SCALE_Y"),
-                Gender.values()[rs.getInt("SEX")],
-                new Colors(
-                    rs.getInt("COLOR1"),
-                    rs.getInt("COLOR2"),
-                    rs.getInt("COLOR3")
-                ),
+                genders[Asserter.assertIndexFor(genders, rs.getInt("SEX"))],
+                createColors(rs),
                 NullnessUtil.castNonNull(rs.getString("ACCESSORIES")),
                 rs.getInt("EXTRA_CLIP"),
                 rs.getInt("CUSTOM_ARTWORK"),
@@ -136,6 +135,15 @@ final class SqlNpcTemplateRepository implements NpcTemplateRepository {
         @Override
         public NpcTemplate fillKeys(NpcTemplate entity, ResultSet keys) {
             throw new RepositoryException("Read-only entity");
+        }
+
+        @SuppressWarnings("argument") // Ignore invalid colors error
+        private Colors createColors(ResultSet rs) throws SQLException {
+            return new Colors(
+                rs.getInt("COLOR1"),
+                rs.getInt("COLOR2"),
+                rs.getInt("COLOR3")
+            );
         }
     }
 }

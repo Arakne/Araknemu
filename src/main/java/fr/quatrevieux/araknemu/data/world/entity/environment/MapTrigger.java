@@ -19,18 +19,21 @@
 
 package fr.quatrevieux.araknemu.data.world.entity.environment;
 
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.dataflow.qual.Pure;
+
 /**
  * Map cell triggers
  * Perform an action when player arrive on the cell
  */
 public final class MapTrigger {
     private final int map;
-    private final int cell;
+    private final @NonNegative int cell;
     private final int action;
     private final String arguments;
     private final String conditions;
 
-    public MapTrigger(int map, int cell, int action, String arguments, String conditions) {
+    public MapTrigger(int map, @NonNegative int cell, int action, String arguments, String conditions) {
         this.map = map;
         this.cell = cell;
         this.action = action;
@@ -38,22 +41,27 @@ public final class MapTrigger {
         this.conditions = conditions;
     }
 
+    @Pure
     public int map() {
         return map;
     }
 
-    public int cell() {
+    @Pure
+    public @NonNegative int cell() {
         return cell;
     }
 
+    @Pure
     public int action() {
         return action;
     }
 
+    @Pure
     public String arguments() {
         return arguments;
     }
 
+    @Pure
     public String conditions() {
         return conditions;
     }

@@ -154,6 +154,7 @@ final class SqlQuestionRepository implements QuestionRepository {
 
     private class Loader implements RepositoryUtils.Loader<Question> {
         @Override
+        @SuppressWarnings("argument") // StringUtils.split is ensured to return a non-empty string
         public Question create(ResultSet rs) throws SQLException {
             return new Question(
                 rs.getInt("QUESTION_ID"),

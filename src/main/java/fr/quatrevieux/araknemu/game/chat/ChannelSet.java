@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.chat;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.game.chat.event.ChannelSubscriptionAdded;
 import fr.quatrevieux.araknemu.game.chat.event.ChannelSubscriptionRemoved;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -44,7 +45,7 @@ public final class ChannelSet implements Set<ChannelType> {
     }
 
     @Override
-    public int size() {
+    public @NonNegative int size() {
         return set.size();
     }
 

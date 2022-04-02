@@ -108,6 +108,7 @@ final class SqlResponseActionRepository implements ResponseActionRepository {
     }
 
     @Override
+    @SuppressWarnings("array.access.unsafe.high.constant") // checker do not handle switch case
     public Map<Integer, List<ResponseAction>> byQuestion(Question question) {
         switch (question.responseIds().length) {
             case 0:

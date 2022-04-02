@@ -30,12 +30,13 @@ import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.ItemClassCo
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.ItemTypeConstraint;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SingleItemConstraint;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SlotConstraint;
+import org.checkerframework.common.value.qual.IntRange;
 
 /**
  * Base slot class for wearable
  */
 public abstract class AbstractWearableSlot extends AbstractEquipmentSlot {
-    public AbstractWearableSlot(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage, GamePlayer owner, int id, SuperType type) {
+    public AbstractWearableSlot(Dispatcher dispatcher, ItemStorage<InventoryEntry> storage, GamePlayer owner, @IntRange(from = 0, to = InventorySlots.SLOT_MAX) int id, SuperType type) {
         super(
             dispatcher,
             new SimpleSlot(

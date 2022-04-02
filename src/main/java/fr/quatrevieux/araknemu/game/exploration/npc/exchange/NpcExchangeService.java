@@ -31,6 +31,7 @@ import fr.quatrevieux.araknemu.game.event.GameStarted;
 import fr.quatrevieux.araknemu.game.exploration.npc.ExchangeProvider;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.HashMap;
 import java.util.List;
@@ -114,8 +115,8 @@ public final class NpcExchangeService implements PreloadableService, EventsSubsc
     /**
      * Load the item template map
      */
-    private Map<ItemTemplate, Integer> loadItemTemplates(Map<Integer, Integer> templateIdsAndQuantity) {
-        final Map<ItemTemplate, Integer> templates = new HashMap<>(templateIdsAndQuantity.size());
+    private Map<ItemTemplate, @Positive Integer> loadItemTemplates(Map<Integer, @Positive Integer> templateIdsAndQuantity) {
+        final Map<ItemTemplate, @Positive Integer> templates = new HashMap<>(templateIdsAndQuantity.size());
 
         // @todo templateRepository#getAll
         templateIdsAndQuantity.forEach((templateId, quantity) -> templates.put(templateRepository.get(templateId), quantity));

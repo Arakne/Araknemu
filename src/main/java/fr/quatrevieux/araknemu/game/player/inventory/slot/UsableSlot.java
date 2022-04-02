@@ -26,7 +26,9 @@ import fr.quatrevieux.araknemu.game.item.type.UsableItem;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.ItemClassConstraint;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.constraint.SlotConstraint;
+import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.common.value.qual.IntRange;
 
 import java.util.Optional;
 
@@ -39,7 +41,7 @@ public final class UsableSlot implements InventorySlot {
 
     private final InventorySlot slot;
 
-    public UsableSlot(ItemStorage<InventoryEntry> storage, int id) {
+    public UsableSlot(ItemStorage<InventoryEntry> storage, @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int id) {
         slot = new SimpleSlot(
             id,
             new SlotConstraint[] {
@@ -50,7 +52,7 @@ public final class UsableSlot implements InventorySlot {
     }
 
     @Override
-    public int id() {
+    public @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int id() {
         return slot.id();
     }
 
@@ -70,7 +72,7 @@ public final class UsableSlot implements InventorySlot {
     }
 
     @Override
-    public InventoryEntry set(Item item, int quantity) throws InventoryException {
+    public InventoryEntry set(Item item, @Positive int quantity) throws InventoryException {
         return slot.set(item, quantity);
     }
 

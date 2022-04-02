@@ -22,6 +22,9 @@ package fr.quatrevieux.araknemu.network.game.in.fight;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import fr.quatrevieux.araknemu.util.ParseUtils;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Show a cell on fight
@@ -29,27 +32,27 @@ import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L77
  */
 public final class ShowCellRequest implements Packet {
-    private final int cellId;
+    private final @NonNegative int cellId;
 
-    public ShowCellRequest(int cellId) {
+    public ShowCellRequest(@NonNegative int cellId) {
         this.cellId = cellId;
     }
 
     /**
      * The shown cell id
      */
-    public int cellId() {
+    public @NonNegative int cellId() {
         return cellId;
     }
 
     public static final class Parser implements SinglePacketParser<ShowCellRequest> {
         @Override
         public ShowCellRequest parse(String input) throws ParsePacketException {
-            return new ShowCellRequest(Integer.parseInt(input));
+            return new ShowCellRequest(ParseUtils.parseNonNegativeInt(input));
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "Gf";
         }
     }

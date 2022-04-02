@@ -87,7 +87,7 @@ class SqlMapTemplateRepositoryTest extends GameBaseCase {
 
     @Test
     void getIndoor() throws SQLException {
-        dataSet.pushMap(90002, "", 0, 0, "", "", "", new Geolocation(0, 0), 1, true);
+        dataSet.pushMap(90002, "", 1, 1, "", "", "", new Geolocation(0, 0), 1, true);
 
         assertTrue(repository.get(90002).indoor());
     }
@@ -115,7 +115,7 @@ class SqlMapTemplateRepositoryTest extends GameBaseCase {
 
     @Test
     void byGeolocationMultipleMaps() throws SQLException {
-        dataSet.pushMap(5, "", 0, 0, "", "", "", new Geolocation(3, 6), 0, false);
+        dataSet.pushMap(5, "", 1, 1, "", "", "", new Geolocation(3, 6), 0, false);
 
         List<MapTemplate> maps = new ArrayList<>(repository.byGeolocation(new Geolocation(3, 6)));
 

@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.util;
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
 
 /**
  * Base algorithm for compute criticality
@@ -39,9 +41,9 @@ public final class BaseCriticalityStrategy implements CriticalityStrategy {
     }
 
     @Override
-    public int hitRate(int base) {
+    public @Positive int hitRate(int base) {
         if (base <= 2) {
-            return base;
+            return Math.max(base, 1);
         }
 
         base -= fighter.characteristics().get(Characteristic.CRITICAL_BONUS);
@@ -53,7 +55,7 @@ public final class BaseCriticalityStrategy implements CriticalityStrategy {
     }
 
     @Override
-    public boolean hit(int baseRate) {
+    public boolean hit(@NonNegative int baseRate) {
         if (baseRate < 2) { // No criticality
             return false;
         }
@@ -62,12 +64,12 @@ public final class BaseCriticalityStrategy implements CriticalityStrategy {
     }
 
     @Override
-    public int failureRate(int base) {
+    public @Positive int failureRate(@Positive int base) {
         return Math.max(base - fighter.characteristics().get(Characteristic.FAIL_MALUS), 2);
     }
 
     @Override
-    public boolean failed(int baseRate) {
+    public boolean failed(@NonNegative int baseRate) {
         return baseRate > 0 && RANDOM.reverseBool(failureRate(baseRate));
     }
 }

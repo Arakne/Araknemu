@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
+import fr.quatrevieux.araknemu.util.Asserter;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
@@ -110,13 +111,13 @@ final class SqlMonsterGroupDataRepository implements MonsterGroupDataRepository 
             return new MonsterGroupData(
                 rs.getInt("MONSTER_GROUP_ID"),
                 Duration.ofMillis(rs.getLong("RESPAWN_TIME")),
-                rs.getInt("MAX_SIZE"),
-                rs.getInt("MAX_COUNT"),
+                Asserter.assertNonNegative(rs.getInt("MAX_SIZE")),
+                Asserter.assertPositive(rs.getInt("MAX_COUNT")),
                 monstersTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("MONSTERS"))),
                 rs.getString("COMMENT"),
                 new Position(
-                    rs.getInt("WIN_FIGHT_TELEPORT_MAP_ID"),
-                    rs.getInt("WIN_FIGHT_TELEPORT_CELL_ID")
+                    Asserter.assertNonNegative(rs.getInt("WIN_FIGHT_TELEPORT_MAP_ID")),
+                    Asserter.assertNonNegative(rs.getInt("WIN_FIGHT_TELEPORT_CELL_ID"))
                 ),
                 rs.getBoolean("FIXED_TEAM_NUMBER")
             );

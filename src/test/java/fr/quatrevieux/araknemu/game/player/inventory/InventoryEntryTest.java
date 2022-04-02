@@ -186,22 +186,6 @@ class InventoryEntryTest extends GameBaseCase {
     }
 
     @Test
-    void removeNegativeQuantity() throws InventoryException, ContainerException {
-        InventoryEntry entry = inventory.add(
-            container.get(ItemService.class).create(284),
-            12
-        );
-
-        AtomicReference<ObjectQuantityChanged> ref = new AtomicReference<>();
-        dispatcher.add(ObjectQuantityChanged.class, ref::set);
-
-        assertThrows(InventoryException.class, () -> entry.remove(-3));
-
-        assertEquals(12, entry.quantity());
-        assertNull(ref.get());
-    }
-
-    @Test
     void removeTooHighQuantity() throws InventoryException, ContainerException {
         InventoryEntry entry = inventory.add(
             container.get(ItemService.class).create(284),

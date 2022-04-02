@@ -20,9 +20,10 @@
 package fr.quatrevieux.araknemu.network.game.in.dialog;
 
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.PacketTokenizer;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
-import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.dataflow.qual.Pure;
 
 /**
@@ -52,20 +53,16 @@ public final class ChosenResponse implements Packet {
     public static final class Parser implements SinglePacketParser<ChosenResponse> {
         @Override
         public ChosenResponse parse(String input) throws ParsePacketException {
-            final String[] parts = StringUtils.split(input, "|", 2);
-
-            if (parts.length != 2) {
-                throw new ParsePacketException(code() + input, "Expects two parts");
-            }
+            final PacketTokenizer tokenizer = tokenize(input, '|');
 
             return new ChosenResponse(
-                Integer.parseInt(parts[0]),
-                Integer.parseInt(parts[1])
+                tokenizer.nextInt(),
+                tokenizer.nextInt()
             );
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "DR";
         }
     }

@@ -23,11 +23,15 @@ import fr.arakne.utils.maps.MapCell;
 import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Cell of exploration map
  */
 public interface ExplorationMapCell extends MapCell<ExplorationMapCell> {
+    @Override
+    public @NonNegative int id();
+
     @Override
     public ExplorationMap map();
 

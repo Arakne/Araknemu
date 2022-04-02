@@ -105,7 +105,7 @@ final class SqlItemTypeRepository implements ItemTypeRepository {
             return new ItemType(
                 rs.getInt("TYPE_ID"),
                 NullnessUtil.castNonNull(rs.getString("TYPE_NAME")),
-                SuperType.values()[rs.getInt("SUPER_TYPE")],
+                SuperType.byId(rs.getInt("SUPER_TYPE")),
                 areaTransformer.unserialize(rs.getString("EFFECT_AREA"))
             );
         }

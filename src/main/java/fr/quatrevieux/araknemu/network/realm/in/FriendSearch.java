@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.network.realm.in;
 
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Packet for find a friend server
@@ -48,7 +49,7 @@ public final class FriendSearch implements Packet {
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "AF";
         }
     }

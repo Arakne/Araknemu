@@ -46,6 +46,7 @@ import fr.quatrevieux.araknemu.game.listener.map.fight.SendTeamFighterRemoved;
 import fr.quatrevieux.araknemu.game.listener.map.fight.SendTeamOptionChanged;
 import fr.quatrevieux.araknemu.game.listener.player.SendMapData;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -60,7 +61,7 @@ public final class ExplorationMapService implements PreloadableService, EventsSu
     private final Dispatcher dispatcher;
     private final CellLoader loader;
 
-    private final ConcurrentMap<Integer, ExplorationMap> maps = new ConcurrentHashMap<>();
+    private final ConcurrentMap<@NonNegative Integer, ExplorationMap> maps = new ConcurrentHashMap<>();
 
     public ExplorationMapService(MapTemplateRepository repository, FightService fightService, AreaService areaService, Dispatcher dispatcher, CellLoader loader) {
         this.repository = repository;
@@ -73,7 +74,7 @@ public final class ExplorationMapService implements PreloadableService, EventsSu
     /**
      * Load the exploration map
      */
-    public ExplorationMap load(int mapId) throws EntityNotFoundException {
+    public ExplorationMap load(@NonNegative int mapId) throws EntityNotFoundException {
         final ExplorationMap loadedMap = maps.get(mapId);
 
         if (loadedMap == null) {

@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.network.in;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Response for RPing request
@@ -47,7 +48,7 @@ public final class PingResponse implements Packet {
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "rpong";
         }
     }

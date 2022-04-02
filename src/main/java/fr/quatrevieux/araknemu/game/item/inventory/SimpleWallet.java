@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.game.item.inventory;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.data.living.entity.WalletEntity;
 import fr.quatrevieux.araknemu.game.item.inventory.event.KamasChanged;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
 
 /**
  * Base implementation of Wallet
@@ -36,12 +38,12 @@ public final class SimpleWallet implements Wallet {
     }
 
     @Override
-    public long kamas() {
+    public @NonNegative long kamas() {
         return entity.kamas();
     }
 
     @Override
-    public void addKamas(long quantity) {
+    public void addKamas(@Positive long quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be a positive number");
         }
@@ -50,7 +52,7 @@ public final class SimpleWallet implements Wallet {
     }
 
     @Override
-    public void removeKamas(long quantity) {
+    public void removeKamas(@Positive long quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be a positive number");
         }
@@ -70,7 +72,7 @@ public final class SimpleWallet implements Wallet {
     private void updateKamas(long quantity) {
         final long last = entity.kamas();
 
-        entity.setKamas(last + quantity);
+        entity.setKamas(Math.max(last + quantity, 0));
         dispatcher.dispatch(new KamasChanged(last, entity.kamas()));
     }
 }

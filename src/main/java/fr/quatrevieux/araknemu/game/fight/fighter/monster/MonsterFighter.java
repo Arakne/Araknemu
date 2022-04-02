@@ -32,6 +32,7 @@ import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.monster.reward.MonsterReward;
 import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import org.checkerframework.checker.index.qual.Positive;
 
 /**
  * Fighter for a monster
@@ -87,7 +88,7 @@ public final class MonsterFighter extends AbstractFighter {
     }
 
     @Override
-    public int level() {
+    public @Positive int level() {
         return monster.level();
     }
 

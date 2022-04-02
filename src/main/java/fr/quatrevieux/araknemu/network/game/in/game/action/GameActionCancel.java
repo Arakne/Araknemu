@@ -20,9 +20,10 @@
 package fr.quatrevieux.araknemu.network.game.in.game.action;
 
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.PacketTokenizer;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
-import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Cancel the current game action, and all its followers
@@ -49,20 +50,16 @@ public final class GameActionCancel implements Packet {
     public static final class Parser implements SinglePacketParser<GameActionCancel> {
         @Override
         public GameActionCancel parse(String input) throws ParsePacketException {
-            final String[] parts = StringUtils.split(input, "|", 2);
-
-            if (parts.length != 2) {
-                throw new ParsePacketException("GKE" + input, "The packet should have 2 parts separated by a pipe");
-            }
+            final PacketTokenizer tokenizer = tokenize(input, '|');
 
             return new GameActionCancel(
-                Integer.parseInt(parts[0]),
-                parts[1]
+                tokenizer.nextInt(),
+                tokenizer.nextPart()
             );
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "GKE";
         }
     }

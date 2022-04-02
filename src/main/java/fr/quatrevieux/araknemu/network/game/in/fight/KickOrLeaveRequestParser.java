@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.network.game.in.fight;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Parse packet for leave or kick fighter
@@ -38,7 +39,7 @@ public final class KickOrLeaveRequestParser implements SinglePacketParser<Packet
     }
 
     @Override
-    public String code() {
+    public @MinLen(2) String code() {
         return "GQ";
     }
 }

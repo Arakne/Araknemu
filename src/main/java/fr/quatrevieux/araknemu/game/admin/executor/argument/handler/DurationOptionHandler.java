@@ -48,6 +48,10 @@ public final class DurationOptionHandler extends OneArgumentOptionHandler<Durati
     protected Duration parse(String argument) throws NumberFormatException, CmdLineException {
         String value = argument.toUpperCase();
 
+        if (value.isEmpty()) {
+            throw new NumberFormatException("Invalid duration");
+        }
+
         if (value.charAt(0) != 'P') {
             if (!value.contains("T") && !value.contains("D")) {
                 value = "PT" + value;

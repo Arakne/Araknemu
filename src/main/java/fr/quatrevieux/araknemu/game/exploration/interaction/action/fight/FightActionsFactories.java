@@ -50,6 +50,10 @@ public final class FightActionsFactories implements ExplorationActionRegistry.Se
     }
 
     private Action join(ExplorationPlayer player, ActionType action, String[] arguments) {
+        if (arguments.length < 1) {
+            throw new IllegalArgumentException("Missing fight id");
+        }
+
         final ExplorationMap map = player.map();
 
         if (map == null) {

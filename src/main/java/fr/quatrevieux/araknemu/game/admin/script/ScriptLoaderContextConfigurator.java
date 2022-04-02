@@ -102,8 +102,8 @@ public final class ScriptLoaderContextConfigurator<C extends Context> extends Ab
     }
 
     private Object @Nullable[] resolveArguments(Container container, Constructor constructor) {
-        final Object[] parameters = new Object[constructor.getParameterCount()];
         final Class[] parametersTypes = constructor.getParameterTypes();
+        final Object[] parameters = new Object[parametersTypes.length];
 
         for (int i = 0; i < parameters.length; ++i) {
             if (!container.has(parametersTypes[i])) {

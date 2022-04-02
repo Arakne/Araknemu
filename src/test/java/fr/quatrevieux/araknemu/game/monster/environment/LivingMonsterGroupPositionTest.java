@@ -127,7 +127,7 @@ class LivingMonsterGroupPositionTest extends GameBaseCase {
                 new MonsterGroupData.Monster(36, new Interval(5, 5), 1),
                 new MonsterGroupData.Monster(31, new Interval(2, 2), 1)
             ), "", new Position(0, 0), false),
-            new FixedCellSelector(new Position(10340, 123)), true
+            new FixedCellSelector(123), true
         );
 
         monsterGroupPosition.populate(map);

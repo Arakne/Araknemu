@@ -31,7 +31,10 @@ import org.checkerframework.checker.nullness.util.NullnessUtil;
 public final class SellItem implements PacketHandler<GameSession, SellRequest> {
     @Override
     public void handle(GameSession session, SellRequest packet) {
-        NullnessUtil.castNonNull(session.exploration()).interactions().get(StoreDialog.class).sell(packet.itemId(), packet.quantity());
+        NullnessUtil.castNonNull(session.exploration()).interactions()
+            .get(StoreDialog.class)
+            .sell(packet.itemId(), packet.quantity())
+        ;
     }
 
     @Override

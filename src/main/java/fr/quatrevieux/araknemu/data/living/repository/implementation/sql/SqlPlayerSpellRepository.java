@@ -26,6 +26,8 @@ import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
+import fr.quatrevieux.araknemu.util.Asserter;
+import org.checkerframework.common.value.qual.IntRange;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -138,14 +140,22 @@ final class SqlPlayerSpellRepository implements PlayerSpellRepository {
                 rs.getInt("PLAYER_ID"),
                 rs.getInt("SPELL_ID"),
                 rs.getBoolean("CLASS_SPELL"),
-                rs.getInt("SPELL_LEVEL"),
-                rs.getInt("SPELL_POSITION")
+                Asserter.assertPositive(rs.getInt("SPELL_LEVEL")),
+                castPosition(rs.getInt("SPELL_POSITION"))
             );
         }
 
         @Override
         public PlayerSpell fillKeys(PlayerSpell entity, ResultSet keys) throws SQLException {
             throw new UnsupportedOperationException();
+        }
+
+        private @IntRange(from = 1, to = 63) int castPosition(int position) {
+            if (position < 1 || position > 63) {
+                return PlayerSpell.DEFAULT_POSITION;
+            }
+
+            return position;
         }
     }
 }

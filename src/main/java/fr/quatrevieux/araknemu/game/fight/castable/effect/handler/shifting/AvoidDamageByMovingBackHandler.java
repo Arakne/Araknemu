@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.util.Asserter;
 
 /**
  * Buff effect which permit to "cancel" a damage effect by moving back
@@ -62,7 +63,7 @@ public final class AvoidDamageByMovingBackHandler implements EffectHandler, Buff
             return true;
         }
 
-        if (!random.bool(buff.effect().min())) {
+        if (!random.bool(Asserter.assertPercent(buff.effect().min()))) {
             return true;
         }
 

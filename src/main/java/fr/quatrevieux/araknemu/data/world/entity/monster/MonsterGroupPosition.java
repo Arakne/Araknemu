@@ -19,28 +19,45 @@
 
 package fr.quatrevieux.araknemu.data.world.entity.monster;
 
-import fr.quatrevieux.araknemu.data.value.Position;
+import org.checkerframework.checker.index.qual.GTENegativeOne;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.framework.qual.EnsuresQualifierIf;
 
 /**
  * Spawn position for the monster group on map
  */
 public final class MonsterGroupPosition {
-    private final Position position;
+    private final @NonNegative int map;
+    private final @GTENegativeOne int cell;
     private final int groupId;
 
-    public MonsterGroupPosition(Position position, int groupId) {
-        this.position = position;
+    public MonsterGroupPosition(@NonNegative int map, @GTENegativeOne int cell, int groupId) {
+        this.map = map;
+        this.cell = cell;
         this.groupId = groupId;
     }
 
     /**
-     * The group spawn position
-     * The cell is not required : If the value is -1, the group may spawn in any free free
+     * The group spawn map id
+     * This is part of primary key
      *
-     * The position is the primary key : this value is unique
+     * @see fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate#id()
      */
-    public Position position() {
-        return position;
+    @Pure
+    public @NonNegative int map() {
+        return map;
+    }
+
+    /**
+     * The group spawn cell
+     * The cell is not required : If the value is -1, the group may spawn on any free cell
+     *
+     * This is part of primary key
+     */
+    @Pure
+    public @GTENegativeOne int cell() {
+        return cell;
     }
 
     /**
@@ -48,6 +65,7 @@ public final class MonsterGroupPosition {
      *
      * @see MonsterGroupData#id()
      */
+    @Pure
     public int groupId() {
         return groupId;
     }

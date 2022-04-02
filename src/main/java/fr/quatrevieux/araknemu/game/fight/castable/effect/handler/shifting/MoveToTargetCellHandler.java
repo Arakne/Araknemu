@@ -54,6 +54,10 @@ public final class MoveToTargetCellHandler implements EffectHandler {
         final int distance = casterCell.distance(cast.target()) - 1;
         final Direction direction = casterCell.directionTo(cast.target());
 
+        if (distance < 1) {
+            return;
+        }
+
         decoder.nextCellByDirection(casterCell.cell(), direction)
             .flatMap(FightCell::fighter)
             .ifPresent(target -> applier.apply(caster, target, distance))

@@ -31,7 +31,9 @@ import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.ItemService;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
+import fr.quatrevieux.araknemu.util.Splitter;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
@@ -134,7 +136,7 @@ public final class GetItem extends AbstractCommand<GetItem.Arguments> {
             index = 1, metaVar = "QUANTITY",
             usage = "The quantity of item to generate. By default all generated items will gets the same characteristics unless --each option is used."
         )
-        private int quantity = 1;
+        private @Positive int quantity = 1;
 
         @Pure
         public boolean max() {
@@ -171,12 +173,12 @@ public final class GetItem extends AbstractCommand<GetItem.Arguments> {
         }
 
         @Pure
-        public int times() {
+        public @Positive int times() {
             return each ? quantity : 1;
         }
 
         @Pure
-        public int quantity() {
+        public @Positive int quantity() {
             return each ? 1 : quantity;
         }
     }
@@ -208,22 +210,24 @@ public final class GetItem extends AbstractCommand<GetItem.Arguments> {
             final List<ItemTemplateEffectEntry> effects = new ArrayList<>();
 
             for (String strEffect : StringUtils.split(value, ",")) {
-                final String[] parts = StringUtils.split(strEffect, ":", 5);
+                final Splitter parts = new Splitter(strEffect, ':');
                 final Effect effect;
 
+                final String effectName = parts.nextPart().toUpperCase();
+
                 try {
-                    effect = Effect.valueOf(parts[0].toUpperCase());
+                    effect = Effect.valueOf(effectName);
                 } catch (IllegalArgumentException e) {
-                    throw new CmdLineException(owner, "Undefined effect " + parts[0], e);
+                    throw new CmdLineException(owner, "Undefined effect " + effectName, e);
                 }
 
                 effects.add(
                     new ItemTemplateEffectEntry(
                         effect,
-                        parts.length > 1 ? Integer.parseInt(parts[1]) : 0,
-                        parts.length > 2 ? Integer.parseInt(parts[2]) : 0,
-                        parts.length > 3 ? Integer.parseInt(parts[3]) : 0,
-                        parts.length > 4 ? parts[4]                   : ""
+                        parts.nextNonNegativeIntOrDefault(0),
+                        parts.nextNonNegativeIntOrDefault(0),
+                        parts.nextNonNegativeIntOrDefault(0),
+                        parts.nextPartOrDefault("")
                     )
                 );
             }

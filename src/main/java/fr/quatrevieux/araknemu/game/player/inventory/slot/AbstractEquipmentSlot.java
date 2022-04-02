@@ -25,7 +25,9 @@ import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
 import fr.quatrevieux.araknemu.game.item.type.AbstractEquipment;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
 import fr.quatrevieux.araknemu.game.player.inventory.event.EquipmentChanged;
+import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.common.value.qual.IntRange;
 
 import java.util.Optional;
 
@@ -42,7 +44,7 @@ public abstract class AbstractEquipmentSlot implements InventorySlot {
     }
 
     @Override
-    public int id() {
+    public @IntRange(from = -1, to = 57) int id() {
         return slot.id();
     }
 
@@ -61,7 +63,7 @@ public abstract class AbstractEquipmentSlot implements InventorySlot {
     }
 
     @Override
-    public InventoryEntry set(Item item, int quantity) throws InventoryException {
+    public InventoryEntry set(Item item, @Positive int quantity) throws InventoryException {
         final InventoryEntry entry = slot.set(item, quantity);
 
         dispatcher.dispatch(new EquipmentChanged(entry, id(), true));

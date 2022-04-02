@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
+import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
@@ -105,7 +106,7 @@ public final class UsableItem implements Item {
     /**
      * Check if the player can use the item to the target
      */
-    public boolean checkTarget(ExplorationPlayer player, @Nullable ExplorationPlayer target, int cell) {
+    public boolean checkTarget(ExplorationPlayer player, @Nullable ExplorationPlayer target, @GTENegativeOne int cell) {
         for (UseEffect effect : useEffects) {
             if (!effect.checkTarget(player, target, cell)) {
                 return false;
@@ -118,7 +119,7 @@ public final class UsableItem implements Item {
     /**
      * Apply the item use effects to the target
      */
-    public void applyToTarget(ExplorationPlayer player, @Nullable ExplorationPlayer target, int cell) {
+    public void applyToTarget(ExplorationPlayer player, @Nullable ExplorationPlayer target, @GTENegativeOne int cell) {
         for (UseEffect effect : useEffects) {
             effect.applyToTarget(player, target, cell);
         }

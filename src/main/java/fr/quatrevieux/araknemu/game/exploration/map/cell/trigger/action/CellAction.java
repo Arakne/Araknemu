@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Action for trigger cell
@@ -35,5 +36,5 @@ public interface CellAction {
     /**
      * Get the trigger cell id
      */
-    public int cell();
+    public @NonNegative int cell();
 }

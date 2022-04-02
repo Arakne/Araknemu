@@ -103,6 +103,7 @@ public final class Argon2Hash implements HashAlgorithm {
     /**
      * Parse the argon2 type from the hashed value
      */
+    @SuppressWarnings("argument") // Ignore invalid arguments: generation and check are internal
     private Argon2Factory.Argon2Types typeOf(String hashedValue) {
         return typeByName(hashedValue.substring(1, hashedValue.indexOf('$', "$argon2".length())));
     }

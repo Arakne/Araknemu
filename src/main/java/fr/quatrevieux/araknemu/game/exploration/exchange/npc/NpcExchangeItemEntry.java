@@ -24,7 +24,9 @@ import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.common.value.qual.IntVal;
 
 import java.util.List;
 import java.util.Objects;
@@ -45,7 +47,7 @@ final class NpcExchangeItemEntry implements ItemEntry {
     }
 
     @Override
-    public int position() {
+    public @IntVal(DEFAULT_POSITION) int position() {
         return DEFAULT_POSITION;
     }
 
@@ -55,7 +57,7 @@ final class NpcExchangeItemEntry implements ItemEntry {
     }
 
     @Override
-    public int quantity() {
+    public @NonNegative int quantity() {
         return 0;
     }
 

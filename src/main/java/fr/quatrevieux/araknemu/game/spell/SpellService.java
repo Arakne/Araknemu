@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.PreloadableService;
 import fr.quatrevieux.araknemu.game.spell.adapter.SpellLevelAdapter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +90,7 @@ public final class SpellService implements PreloadableService {
     /**
      * Make one spell level
      */
-    private Spell makeLevel(int level, SpellTemplate template, SpellTemplate.Level data) {
+    private Spell makeLevel(@Positive int level, SpellTemplate template, SpellTemplate.Level data) {
         return new SpellLevelAdapter(
             level,
             template,

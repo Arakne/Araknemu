@@ -22,6 +22,8 @@ package fr.quatrevieux.araknemu.game.fight.map.util;
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
+import fr.quatrevieux.araknemu.util.Asserter;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.List;
 
@@ -81,9 +83,10 @@ public final class PlacementCellsGenerator {
     /**
      * Get a random cell from the entire map
      */
+    @SuppressWarnings("cast.unsafe") // map.size() is positive
     private FightCell randomFightCell() {
         for (;;) {
-            final FightCell cell = map.get(random.nextInt(map.size()));
+            final FightCell cell = map.get(random.nextInt((@Positive int) map.size()));
 
             if (cell.walkable()) {
                 return cell;

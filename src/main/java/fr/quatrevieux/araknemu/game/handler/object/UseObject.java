@@ -32,6 +32,7 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectUseRequest;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
+import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
 
@@ -96,11 +97,11 @@ public final class UseObject implements PacketHandler<GameSession, ObjectUseRequ
     private static class ApplyItemOperation implements Operation {
         private final UsableItem item;
         private final ExplorationPlayer caster;
-        private final int targetCell;
+        private final @GTENegativeOne int targetCell;
 
         private boolean success = false;
 
-        public ApplyItemOperation(UsableItem item, ExplorationPlayer caster, int targetCell) {
+        public ApplyItemOperation(UsableItem item, ExplorationPlayer caster, @GTENegativeOne int targetCell) {
             this.item = item;
             this.caster = caster;
             this.targetCell = targetCell;

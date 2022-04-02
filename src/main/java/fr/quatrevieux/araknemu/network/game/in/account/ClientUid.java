@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.network.game.in.account;
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Packet for identify client (the client UID will be the same over all sessions)
@@ -48,7 +49,7 @@ public final class ClientUid implements Packet {
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "Ai";
         }
     }

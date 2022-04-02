@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.Team;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -55,6 +56,7 @@ public final class ProxyPassiveFighter implements PassiveFighter {
     }
 
     @Override
+    @SuppressWarnings("argument") // cell id always valid
     public FightCell cell() {
         return ai.map().get(fighter.cell().id());
     }
@@ -90,7 +92,7 @@ public final class ProxyPassiveFighter implements PassiveFighter {
     }
 
     @Override
-    public int level() {
+    public @Positive int level() {
         return fighter.level();
     }
 

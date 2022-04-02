@@ -23,6 +23,8 @@ import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.data.value.BoostStatsData;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.SortedMap;
 
@@ -33,17 +35,17 @@ import java.util.SortedMap;
 public final class PlayerRace {
     private final Race race;
     private final String name;
-    private final SortedMap<Integer, Characteristics> baseStats;
+    private final SortedMap<@Positive Integer, Characteristics> baseStats;
     private final int startDiscernment;
-    private final int startPods;
-    private final int startLife;
-    private final int perLevelLife;
+    private final @Positive int startPods;
+    private final @Positive int startLife;
+    private final @NonNegative int perLevelLife;
     private final BoostStatsData boostStats;
     private final Position startPosition;
     private final Position astrubPosition;
     private final int[] spells;
 
-    public PlayerRace(Race race, String name, SortedMap<Integer, Characteristics> baseStats, int startDiscernment, int startPods, int startLife, int perLevelLife, BoostStatsData boostStats, Position startPosition, Position astrubPosition, int[] spells) {
+    public PlayerRace(Race race, String name, SortedMap<@Positive Integer, Characteristics> baseStats, int startDiscernment, @Positive int startPods, @Positive int startLife, @NonNegative int perLevelLife, BoostStatsData boostStats, Position startPosition, Position astrubPosition, int[] spells) {
         this.race = race;
         this.name = name;
         this.baseStats = baseStats;
@@ -77,7 +79,7 @@ public final class PlayerRace {
      * This include AP, MP
      * The stats are indexed by the minimum level for applying (ex: 7 AP on level 100)
      */
-    public SortedMap<Integer, Characteristics> baseStats() {
+    public SortedMap<@Positive Integer, Characteristics> baseStats() {
         return baseStats;
     }
 
@@ -91,21 +93,21 @@ public final class PlayerRace {
     /**
      * The base pods for the race
      */
-    public int startPods() {
+    public @Positive int startPods() {
         return startPods;
     }
 
     /**
      * The base life for the race
      */
-    public int startLife() {
+    public @Positive int startLife() {
         return startLife;
     }
 
     /**
      * Number of life point win per level
      */
-    public int perLevelLife() {
+    public @NonNegative int perLevelLife() {
         return perLevelLife;
     }
 

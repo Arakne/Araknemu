@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
+import fr.quatrevieux.araknemu.util.ParseUtils;
 
 /**
  * Factory for close combat action
@@ -47,9 +48,19 @@ public final class CloseCombatFactory implements FightActionFactory {
 
     @Override
     public Action create(String[] arguments) {
+        if (arguments.length < 1) {
+            throw new IllegalArgumentException("Invalid close combat arguments");
+        }
+
+        final int cellId = ParseUtils.parseNonNegativeInt(arguments[0]);
+
+        if (cellId >= turn.fight().map().size()) {
+            throw new IllegalArgumentException("Invalid target cell");
+        }
+
         return new CloseCombat(
             turn.fighter(),
-            turn.fight().map().get(Integer.parseInt(arguments[0])),
+            turn.fight().map().get(cellId),
             validator,
             criticalityStrategy
         );

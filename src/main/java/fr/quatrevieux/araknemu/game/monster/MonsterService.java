@@ -26,6 +26,8 @@ import fr.quatrevieux.araknemu.game.monster.reward.MonsterRewardService;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.index.qual.IndexFor;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -103,11 +105,11 @@ public final class MonsterService implements PreloadableService {
     /**
      * Create a single monster level
      */
-    private Monster createMonster(MonsterTemplate template, int grade) {
+    private Monster createMonster(MonsterTemplate template, @IndexFor("#1.grades()") int grade) {
         final MonsterTemplate.Grade gradeData = template.grades()[grade];
         final Map<Integer, Spell> spells = new HashMap<>(gradeData.spells().size());
 
-        for (Map.Entry<Integer, Integer> entry : gradeData.spells().entrySet()) {
+        for (Map.Entry<Integer, @Positive Integer> entry : gradeData.spells().entrySet()) {
             spells.put(entry.getKey(), spellService.get(entry.getKey()).level(entry.getValue()));
         }
 

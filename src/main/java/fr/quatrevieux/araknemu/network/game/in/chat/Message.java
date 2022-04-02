@@ -20,11 +20,12 @@
 package fr.quatrevieux.araknemu.network.game.in.chat;
 
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.PacketTokenizer;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
-import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.dataflow.qual.Pure;
 
 /**
@@ -68,33 +69,29 @@ public final class Message implements Packet {
     public static final class Parser implements SinglePacketParser<Message> {
         @Override
         public Message parse(String input) throws ParsePacketException {
-            final String[] parts = StringUtils.split(input, "|", 3);
+            final PacketTokenizer tokenizer = tokenize(input, '|');
 
-            if (parts.length < 2) {
-                throw new ParsePacketException("BM" + input, "Needs at least 2 parts");
-            }
+            final String channel = tokenizer.nextPart();
 
-            final String extra = parts.length == 3 ? parts[2] : "";
-
-            if (parts[0].length() == 1) {
+            if (channel.length() == 1) {
                 return new Message(
-                    ChannelType.byChar(parts[0].charAt(0)),
+                    ChannelType.byChar(channel.charAt(0)),
                     null,
-                    parts[1],
-                    extra
+                    tokenizer.nextPart(),
+                    tokenizer.nextPartOrDefault("")
                 );
             }
 
             return new Message(
                 ChannelType.PRIVATE,
-                parts[0],
-                parts[1],
-                extra
+                channel,
+                tokenizer.nextPart(),
+                tokenizer.nextPartOrDefault("")
             );
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "BM";
         }
     }

@@ -21,6 +21,8 @@ package fr.quatrevieux.araknemu.game.monster.reward;
 
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterRewardItem;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.List;
 
@@ -29,9 +31,9 @@ import java.util.List;
  */
 public final class DefaultMonsterReward implements MonsterReward {
     private final MonsterGradesReward reward;
-    private final int grade;
+    private final @Positive int grade;
 
-    public DefaultMonsterReward(MonsterGradesReward reward, int grade) {
+    public DefaultMonsterReward(MonsterGradesReward reward, @Positive int grade) {
         this.reward = reward;
         this.grade = grade;
     }
@@ -42,7 +44,7 @@ public final class DefaultMonsterReward implements MonsterReward {
     }
 
     @Override
-    public long experience() {
+    public @NonNegative long experience() {
         return reward.experience(grade);
     }
 

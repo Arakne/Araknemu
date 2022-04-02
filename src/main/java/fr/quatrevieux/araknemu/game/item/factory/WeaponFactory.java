@@ -33,7 +33,7 @@ import fr.quatrevieux.araknemu.game.item.effect.WeaponEffect;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMapper;
 import fr.quatrevieux.araknemu.game.item.type.Weapon;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffectService;
-import org.apache.commons.lang3.StringUtils;
+import fr.quatrevieux.araknemu.util.Splitter;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
@@ -98,18 +98,18 @@ public final class WeaponFactory implements ItemFactory {
             throw new IllegalArgumentException("weapon info is missing");
         }
 
-        final String[] parts = StringUtils.split(info, ";");
+        final Splitter splitter = new Splitter(info, ';');
 
         return new Weapon.WeaponInfo(
-            Integer.parseInt(parts[0]),
+            splitter.nextNonNegativeInt(),
             new Interval(
-                Integer.parseInt(parts[1]),
-                Integer.parseInt(parts[2])
+                splitter.nextNonNegativeInt(),
+                splitter.nextNonNegativeInt()
             ),
-            Integer.parseInt(parts[3]),
-            Integer.parseInt(parts[4]),
-            Integer.parseInt(parts[5]),
-            parts[6].equals("1")
+            splitter.nextNonNegativeInt(),
+            splitter.nextNonNegativeInt(),
+            splitter.nextNonNegativeInt(),
+            splitter.nextPart().equals("1")
         );
     }
 }

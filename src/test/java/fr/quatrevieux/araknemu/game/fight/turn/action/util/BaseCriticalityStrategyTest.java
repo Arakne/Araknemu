@@ -65,7 +65,7 @@ class BaseCriticalityStrategyTest extends FightBaseCase {
 
     @Test
     void hitRate0() {
-        assertEquals(0, strategy.hitRate(0));
+        assertEquals(1, strategy.hitRate(0));
     }
 
     @Test

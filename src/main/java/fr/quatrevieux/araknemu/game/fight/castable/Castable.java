@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.castable;
 
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.List;
 
@@ -41,17 +42,17 @@ public interface Castable {
     /**
      * The AP cost
      */
-    public int apCost();
+    public @NonNegative int apCost();
 
     /**
      * Percent of chance for get critical hit
      */
-    public int criticalHit();
+    public @NonNegative int criticalHit();
 
     /**
      * Percent of chance for get a critical failure
      */
-    public int criticalFailure();
+    public @NonNegative int criticalFailure();
 
     /**
      * Does the castable range is modifiable ?

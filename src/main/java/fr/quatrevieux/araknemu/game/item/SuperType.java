@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.game.item;
 
+import java.util.NoSuchElementException;
+
 /**
  * Item super types
  */
@@ -45,5 +47,22 @@ public enum SuperType {
     BUFF,
     FOLLOWER,
     MOUNT,
-    LIVING_OBJECT
+    LIVING_OBJECT,
+    ;
+
+    private static final SuperType[] VALUES = values();
+
+    /**
+     * Get a SupeType by its id
+     * This id can be found into `items_xx_xxx.swf`, as key of `I.st` object
+     *
+     * @throws NoSuchElementException If the type is not found
+     */
+    public static SuperType byId(int id) {
+        if (id < 0 || id >= VALUES.length) {
+            throw new NoSuchElementException("Invalid super type " + id);
+        }
+
+        return VALUES[id];
+    }
 }

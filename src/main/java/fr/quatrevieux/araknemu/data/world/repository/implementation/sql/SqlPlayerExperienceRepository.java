@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerExperience;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceRepository;
+import fr.quatrevieux.araknemu.util.Asserter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -89,8 +90,8 @@ final class SqlPlayerExperienceRepository implements PlayerExperienceRepository 
         @Override
         public PlayerExperience create(ResultSet rs) throws SQLException {
             return new PlayerExperience(
-                rs.getInt("PLAYER_LEVEL"),
-                rs.getLong("EXPERIENCE")
+                Asserter.assertPositive(rs.getInt("PLAYER_LEVEL")),
+                Asserter.assertNonNegative(rs.getLong("EXPERIENCE"))
             );
         }
 

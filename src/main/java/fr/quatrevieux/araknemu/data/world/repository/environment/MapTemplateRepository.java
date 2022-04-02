@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.data.world.repository.environment;
 import fr.quatrevieux.araknemu.core.dbal.repository.Repository;
 import fr.quatrevieux.araknemu.data.value.Geolocation;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 import java.util.Collection;
 
@@ -32,7 +33,7 @@ public interface MapTemplateRepository extends Repository<MapTemplate> {
     /**
      * Get a map by its id
      */
-    public MapTemplate get(int id);
+    public MapTemplate get(@NonNegative int id);
 
     /**
      * Find maps matching with given geolocation

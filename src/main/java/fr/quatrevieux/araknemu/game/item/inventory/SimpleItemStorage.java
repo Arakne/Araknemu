@@ -24,6 +24,9 @@ import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectAdded;
 import fr.quatrevieux.araknemu.game.item.inventory.event.ObjectDeleted;
 import fr.quatrevieux.araknemu.game.item.inventory.exception.ItemNotFoundException;
+import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.common.value.qual.IntRange;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -71,7 +74,7 @@ public final class SimpleItemStorage<E extends ItemEntry> implements ItemStorage
     }
 
     @Override
-    public E add(Item item, int quantity, int position) {
+    public E add(Item item, @Positive int quantity, @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int position) {
         final E entry = factory.create(++lastId, item, quantity, position);
 
         push(entry);
@@ -106,6 +109,6 @@ public final class SimpleItemStorage<E extends ItemEntry> implements ItemStorage
         /**
          * Create the inventory entry for the current item storage
          */
-        public E create(int id, Item item, int quantity, int position);
+        public E create(int id, Item item, @Positive int quantity, @IntRange(from = -1, to = InventorySlots.SLOT_MAX) int position);
     }
 }

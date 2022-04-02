@@ -31,6 +31,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.event.TurnTerminated;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.dataflow.qual.Pure;
 
 import java.time.Duration;
 import java.util.concurrent.ScheduledFuture;
@@ -71,6 +72,7 @@ public final class FightTurn implements Turn {
     /**
      * Get the related fight
      */
+    @Pure
     public Fight fight() {
         return fight;
     }

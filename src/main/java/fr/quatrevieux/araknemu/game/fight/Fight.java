@@ -158,6 +158,7 @@ public final class Fight implements Dispatcher, Sender {
     /**
      * Get the fight map
      */
+    @Pure
     public FightMap map() {
         return map;
     }
@@ -172,6 +173,7 @@ public final class Fight implements Dispatcher, Sender {
     /**
      * Get the current fight state if the type corresponds
      */
+    @Pure
     @SuppressWarnings("unchecked")
     public <T extends FightState> T state(Class<T> type) {
         if (!type.isInstance(statesFlow.current())) {

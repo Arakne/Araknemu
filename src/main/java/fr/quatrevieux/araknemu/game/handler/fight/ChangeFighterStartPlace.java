@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.fight.FighterChangePlace;
@@ -39,10 +40,16 @@ public final class ChangeFighterStartPlace implements PacketHandler<GameSession,
         final PlayerFighter fighter = NullnessUtil.castNonNull(session.fighter());
         final Fight fight = fighter.fight();
 
+        if (packet.cellId() >= fight.map().size()) {
+            throw new ErrorPacket(new ChangeFighterPlaceError());
+        }
+
+        final FightCell targetCell = fight.map().get(packet.cellId());
+
         try {
             fight
                 .state(PlacementState.class)
-                .changePlace(fighter, fight.map().get(packet.cellId()))
+                .changePlace(fighter, targetCell)
             ;
         } catch (FightException e) {
             throw new ErrorPacket(new ChangeFighterPlaceError());

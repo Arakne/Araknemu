@@ -19,6 +19,9 @@
 
 package fr.quatrevieux.araknemu.data.living.entity.player;
 
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.common.value.qual.IntRange;
+
 /**
  * Save player spell data
  */
@@ -26,12 +29,12 @@ public final class PlayerSpell {
     public static final int DEFAULT_POSITION = 63;
 
     private final int playerId;
-    private final int spellId;
+    private final  int spellId;
     private final boolean classSpell;
-    private int level;
-    private int position;
+    private @Positive int level;
+    private @IntRange(from = 1, to = 63) int position;
 
-    public PlayerSpell(int playerId, int spellId, boolean classSpell, int level, int position) {
+    public PlayerSpell(int playerId, int spellId, boolean classSpell, @Positive int level, @IntRange(from = 1, to = 63) int position) {
         this.playerId = playerId;
         this.spellId = spellId;
         this.classSpell = classSpell;
@@ -55,19 +58,19 @@ public final class PlayerSpell {
         return classSpell;
     }
 
-    public int level() {
+    public @Positive int level() {
         return level;
     }
 
-    public int position() {
+    public @IntRange(from = 1, to = 63) int position() {
         return position;
     }
 
-    public void setLevel(int level) {
+    public void setLevel(@Positive int level) {
         this.level = level;
     }
 
-    public void setPosition(int position) {
+    public void setPosition(@IntRange(from = 1, to = 63) int position) {
         this.position = position;
     }
 }

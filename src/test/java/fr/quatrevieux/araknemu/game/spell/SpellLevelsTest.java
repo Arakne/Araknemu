@@ -20,7 +20,6 @@
 package fr.quatrevieux.araknemu.game.spell;
 
 import fr.quatrevieux.araknemu.data.value.EffectArea;
-import fr.quatrevieux.araknemu.data.world.repository.SpellTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.spell.adapter.SpellLevelAdapter;
 import fr.quatrevieux.araknemu.game.spell.adapter.SpellLevelConstraintAdapter;
@@ -31,7 +30,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SpellLevelsTest extends GameBaseCase {
     private SpellLevels levels;
@@ -51,11 +54,6 @@ class SpellLevelsTest extends GameBaseCase {
         assertEquals(202, levels.id());
         assertEquals(5, levels.max());
         assertEquals("Morsure du Bouftou", levels.name());
-    }
-
-    @Test
-    void levelTooLow() {
-        assertThrows(NoSuchElementException.class, () -> levels.level(0));
     }
 
     @Test

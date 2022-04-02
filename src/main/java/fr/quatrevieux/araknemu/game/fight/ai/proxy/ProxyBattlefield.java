@@ -24,6 +24,10 @@ import fr.arakne.utils.value.Dimensions;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import org.checkerframework.checker.index.qual.IndexFor;
+import org.checkerframework.checker.index.qual.LengthOf;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.SameLen;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -40,7 +44,7 @@ import java.util.function.Consumer;
  */
 public final class ProxyBattlefield implements BattlefieldMap {
     private final BattlefieldMap map;
-    private final ProxyCell @Nullable[] cells;
+    private final ProxyCell @Nullable @SameLen("this") [] cells;
 
     public ProxyBattlefield(BattlefieldMap map) {
         this.map = map;
@@ -48,6 +52,7 @@ public final class ProxyBattlefield implements BattlefieldMap {
     }
 
     @EnsuresNonNull("cells")
+    @SuppressWarnings({"assignment", "array.access.unsafe.high"}) // other and this have same length
     private ProxyBattlefield(ProxyBattlefield other) {
         this.map = other.map;
         this.cells = new ProxyCell[other.map.size()];
@@ -61,12 +66,14 @@ public final class ProxyBattlefield implements BattlefieldMap {
     }
 
     @Override
-    public int size() {
+    @SuppressWarnings("return") // map and this have same length
+    public @LengthOf("this") int size() {
         return map.size();
     }
 
     @Override
-    public FightCell get(int id) {
+    @SuppressWarnings({"argument"}) // map and this have same length
+    public FightCell get(@IndexFor("this") int id) {
         if (cells == null) {
             return map.get(id);
         }
@@ -173,7 +180,7 @@ public final class ProxyBattlefield implements BattlefieldMap {
         }
 
         @Override
-        public int id() {
+        public @NonNegative int id() {
             return cell.id();
         }
 
@@ -203,7 +210,7 @@ public final class ProxyBattlefield implements BattlefieldMap {
     /**
      * Builder class for modifying a proxy map
      */
-    @SuppressWarnings("accessing.nullable") // map.cells is never null, but no way to tell this to checker
+    @SuppressWarnings({"accessing.nullable", "array.access.unsafe.high"}) // map.cells is never null, but no way to tell this to checker
     public static class Modifier {
         private final ProxyBattlefield map;
 
@@ -219,7 +226,7 @@ public final class ProxyBattlefield implements BattlefieldMap {
          *
          * @return this instance
          */
-        public Modifier free(int cellId) {
+        public Modifier free(@NonNegative int cellId) {
             map.cells[cellId].free = true;
 
             return this;
@@ -230,7 +237,7 @@ public final class ProxyBattlefield implements BattlefieldMap {
          *
          * @param cellId The cell to get
          */
-        public FightCell get(int cellId) {
+        public FightCell get(@NonNegative int cellId) {
             return map.cells[cellId];
         }
 
@@ -242,7 +249,7 @@ public final class ProxyBattlefield implements BattlefieldMap {
          *
          * @return this instance
          */
-        public Modifier setFighter(int cellId, PassiveFighter fighter) {
+        public Modifier setFighter(@NonNegative int cellId, PassiveFighter fighter) {
             map.cells[cellId].free = false;
             map.cells[cellId].fighter = fighter;
 

@@ -31,6 +31,7 @@ import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 import fr.quatrevieux.araknemu.game.item.effect.mapping.EffectMapper;
 import fr.quatrevieux.araknemu.game.item.factory.ItemFactory;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.index.qual.Positive;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -121,13 +122,13 @@ public final class ItemService implements PreloadableService {
      *
      * @return Map of item associated with the quantity
      */
-    public Map<Item, Integer> createBulk(ItemTemplate template, int quantity) {
-        final Map<Item, Integer> items = new HashMap<>();
+    public Map<Item, @Positive Integer> createBulk(ItemTemplate template, @Positive int quantity) {
+        final Map<Item, @Positive Integer> items = new HashMap<>();
 
-        for (; quantity > 0; --quantity) {
+        for (int count = 0; count < quantity; ++count) {
             final Item generated = create(template);
 
-            items.put(generated, items.getOrDefault(generated, 0) + 1);
+            items.merge(generated, 1, (a, b) -> a + b); // Do not use Integer::sum because it does not handle @Positive
         }
 
         return items;

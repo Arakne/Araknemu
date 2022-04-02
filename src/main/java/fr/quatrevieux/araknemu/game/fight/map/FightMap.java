@@ -22,9 +22,15 @@ package fr.quatrevieux.araknemu.game.fight.map;
 import fr.arakne.utils.maps.serializer.CellData;
 import fr.arakne.utils.value.Dimensions;
 import fr.quatrevieux.araknemu.data.world.entity.environment.MapTemplate;
+import org.checkerframework.checker.index.qual.IndexFor;
+import org.checkerframework.checker.index.qual.LengthOf;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.SameLen;
 import org.checkerframework.checker.initialization.qual.UnderInitialization;
+import org.checkerframework.dataflow.qual.Pure;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,7 +39,7 @@ import java.util.List;
  */
 public final class FightMap implements BattlefieldMap {
     private final MapTemplate template;
-    private final List<FightCell> cells;
+    private final FightCell @SameLen("this") [] cells;
 
     public FightMap(MapTemplate template) {
         this.template = template;
@@ -43,7 +49,7 @@ public final class FightMap implements BattlefieldMap {
     /**
      * Get the map id
      */
-    public int id() {
+    public @NonNegative int id() {
         return template.id();
     }
 
@@ -53,15 +59,21 @@ public final class FightMap implements BattlefieldMap {
      * @param cellId The cell id
      */
     @Override
-    public FightCell get(int cellId) {
-        return cells.get(cellId);
+    public FightCell get(@NonNegative @IndexFor("this") int cellId) {
+        return cells[cellId];
     }
 
     /**
      * Get start places for a team
      */
-    public List<Integer> startPlaces(int team) {
-        return template.fightPlaces()[team];
+    public List<Integer> startPlaces(@NonNegative int team) {
+        final List<Integer>[] places = template.fightPlaces();
+
+        if (team >= places.length) {
+            return Collections.emptyList();
+        }
+
+        return places[team];
     }
 
     @Override
@@ -69,14 +81,15 @@ public final class FightMap implements BattlefieldMap {
         return template.dimensions();
     }
 
+    @Pure
     @Override
-    public int size() {
-        return cells.size();
+    public @LengthOf("this") int size() {
+        return cells.length;
     }
 
     @Override
     public Iterator<FightCell> iterator() {
-        return cells.iterator();
+        return Arrays.stream(cells).iterator();
     }
 
     /**
@@ -86,21 +99,19 @@ public final class FightMap implements BattlefieldMap {
         for (FightCell cell : cells) {
             cell.fighter().ifPresent(fighter -> cell.removeFighter());
         }
-
-        cells.clear();
     }
 
-    @SuppressWarnings("argument")
-    private List<FightCell> makeCells(@UnderInitialization FightMap this, CellData[] template) {
-        final List<FightCell> cells = new ArrayList<>(template.length);
+    @SuppressWarnings({"assignment", "return", "argument"}) // Caused by UnderInitialization and SameLen("this")
+    private FightCell @SameLen("this") [] makeCells(@UnderInitialization FightMap this, CellData[] template) {
+        final FightCell[] cells = new FightCell[template.length];
 
         for (int i = 0; i < template.length; ++i) {
             final CellData cell = template[i];
 
             if (!cell.active() || !cell.movement().walkable()) {
-                cells.add(new UnwalkableFightCell(this, template[i], i));
+                cells[i] = new UnwalkableFightCell(this, template[i], i);
             } else {
-                cells.add(new WalkableFightCell(this, template[i], i));
+                cells[i] = new WalkableFightCell(this, template[i], i);
             }
         }
 

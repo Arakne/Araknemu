@@ -27,7 +27,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FightMapTest extends GameBaseCase {
     private FightMap map;
@@ -93,12 +96,5 @@ class FightMapTest extends GameBaseCase {
         assertEquals(17, map.dimensions().height());
         assertEquals(15, map.dimensions().width());
         assertEquals(479, map.size());
-    }
-
-    @Test
-    void destroy() {
-        map.destroy();
-
-        assertEquals(0, map.size());
     }
 }

@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStore;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 import fr.quatrevieux.araknemu.network.game.out.exchange.store.NpcStoreList;
+import org.checkerframework.checker.index.qual.Positive;
 
 /**
  * Exchange logic for the NPC store
@@ -81,7 +82,7 @@ public final class NpcStoreExchange implements Exchange, Sender {
      *
      * @throws IllegalArgumentException When invalid item, quantity is given, or player doesn't have enough kamas
      */
-    public void buy(int itemId, int quantity) {
+    public void buy(int itemId, @Positive int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Invalid quantity");
         }
@@ -91,8 +92,12 @@ public final class NpcStoreExchange implements Exchange, Sender {
         }
 
         final NpcStore.Sell sell = store.buy(itemId, quantity);
+        final long price = sell.price();
 
-        player.inventory().removeKamas(sell.price());
+        if (price > 0) {
+            player.inventory().removeKamas(price);
+        }
+
         sell.items().forEach((item, itemQuantity) -> player.inventory().add(item, itemQuantity));
     }
 
@@ -104,7 +109,7 @@ public final class NpcStoreExchange implements Exchange, Sender {
      *
      * @throws fr.quatrevieux.araknemu.game.item.inventory.exception.InventoryException When cannot sell the item
      */
-    public void sell(int itemId, int quantity) {
+    public void sell(int itemId, @Positive int quantity) {
         final ItemEntry entry = player.inventory().get(itemId);
         final long price = store.sellPrice(entry.item(), quantity);
 

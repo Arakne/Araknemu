@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
+import fr.quatrevieux.araknemu.util.Asserter;
 
 /**
  * Handle spell return buff effect
@@ -108,10 +109,12 @@ public final class SpellReturnHandler implements EffectHandler, BuffHook {
             return false;
         }
 
-        if (returnEffect.special() == 100) {
+        final int probability = Asserter.assertPercent(returnEffect.special());
+
+        if (probability >= 100) {
             return true;
         }
 
-        return random.bool(returnEffect.special());
+        return random.bool(probability);
     }
 }

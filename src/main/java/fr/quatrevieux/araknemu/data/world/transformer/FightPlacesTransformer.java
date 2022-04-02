@@ -32,6 +32,8 @@ import java.util.List;
 
 /**
  * Transform map fight places
+ *
+ * @todo use int[][] for fight places
  */
 public final class FightPlacesTransformer implements Transformer<List<Integer>[]> {
     @Override
@@ -58,7 +60,7 @@ public final class FightPlacesTransformer implements Transformer<List<Integer>[]
     private List<Integer> parseTeamPlaces(String places) {
         final List<Integer> cells = new ArrayList<>(places.length() / 2);
 
-        for (int i = 0; i < places.length(); i += 2) {
+        for (int i = 0; i < places.length() - 1; i += 2) {
             cells.add(Base64.decode(places.substring(i, i + 2)));
         }
 

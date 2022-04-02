@@ -100,7 +100,6 @@ class InventorySlotsTest extends GameBaseCase {
 
     @Test
     void getInvalid() {
-        assertThrows(InventoryException.class, () -> slots.get(-15));
         assertThrows(InventoryException.class, () -> slots.get(123));
     }
 

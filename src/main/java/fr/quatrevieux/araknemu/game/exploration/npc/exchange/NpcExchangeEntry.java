@@ -23,6 +23,8 @@ import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcExchange;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.ItemService;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
@@ -45,9 +47,9 @@ public final class NpcExchangeEntry {
 
     private final @Nullable ItemService itemService;
     private final NpcExchange entity;
-    private final Map<ItemTemplate, Integer> templatesAndQuantity;
+    private final Map<ItemTemplate, @Positive Integer> templatesAndQuantity;
 
-    public NpcExchangeEntry(@Nullable ItemService itemService, NpcExchange entity, Map<ItemTemplate, Integer> templatesAndQuantity) {
+    public NpcExchangeEntry(@Nullable ItemService itemService, NpcExchange entity, Map<ItemTemplate, @Positive Integer> templatesAndQuantity) {
         this.itemService = itemService;
         this.entity = entity;
         this.templatesAndQuantity = templatesAndQuantity;
@@ -72,7 +74,7 @@ public final class NpcExchangeEntry {
      */
     @Pure
     @SuppressWarnings("return") // Cast from Set to Collection trigger an error
-    public Collection<Map.Entry<ItemTemplate, Integer>> items() {
+    public Collection<Map.Entry<ItemTemplate, @Positive Integer>> items() {
         return templatesAndQuantity.entrySet();
     }
 
@@ -80,7 +82,7 @@ public final class NpcExchangeEntry {
      * Get the exchanged kamas
      */
     @Pure
-    public long kamas() {
+    public @NonNegative long kamas() {
         return entity.exchangedKamas();
     }
 
@@ -90,8 +92,8 @@ public final class NpcExchangeEntry {
      * @return The items associated with the generated quantity
      */
     @RequiresNonNull("itemService")
-    public Map<Item, Integer> generate() {
-        final Map<Item, Integer> items = new HashMap<>();
+    public Map<Item, @Positive Integer> generate() {
+        final Map<Item, @Positive Integer> items = new HashMap<>();
 
         templatesAndQuantity.forEach((template, quantity) -> items.putAll(NullnessUtil.castNonNull(itemService).createBulk(template, quantity)));
 

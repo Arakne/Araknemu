@@ -20,9 +20,13 @@
 package fr.quatrevieux.araknemu.network.game.in.spell;
 
 import fr.quatrevieux.araknemu.core.network.parser.Packet;
+import fr.quatrevieux.araknemu.core.network.parser.PacketTokenizer;
 import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
-import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.common.value.qual.IntRange;
+import org.checkerframework.common.value.qual.MinLen;
 
 /**
  * Spell move to spell bar
@@ -30,35 +34,50 @@ import org.apache.commons.lang3.StringUtils;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Spells.as#L19
  */
 public final class SpellMove implements Packet {
-    private final int spellId;
-    private final int position;
+    private final @NonNegative int spellId;
+    private final @IntRange(from = 1, to = 63) int position;
 
-    public SpellMove(int spellId, int position) {
+    public SpellMove(@NonNegative int spellId, @IntRange(from = 1, to = 63) int position) {
         this.spellId = spellId;
         this.position = position;
     }
 
-    public int spellId() {
+    /**
+     * Spell to move
+     *
+     * @see fr.quatrevieux.araknemu.data.world.entity.SpellTemplate#id()
+     */
+    public @NonNegative int spellId() {
         return spellId;
     }
 
-    public int position() {
+    /**
+     * The requested position
+     * This value is always positive, because position "0" is reserved for close combat
+     *
+     * @see fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell#position()
+     */
+    public @IntRange(from = 1, to = 63) int position() {
         return position;
     }
 
     public static final class Parser implements SinglePacketParser<SpellMove> {
         @Override
         public SpellMove parse(String input) throws ParsePacketException {
-            final String[] parts = StringUtils.split(input, "|", 2);
+            final PacketTokenizer tokenizer = tokenize(input, '|');
 
-            return new SpellMove(
-                Integer.parseUnsignedInt(parts[0]),
-                Integer.parseUnsignedInt(parts[1])
-            );
+            final int spellId = tokenizer.nextNonNegativeInt();
+            final int position = tokenizer.nextPositiveInt();
+
+            if (position > 63) {
+                throw new ParsePacketException(code() + input, "Invalid spell position " + position);
+            }
+
+            return new SpellMove(spellId, position);
         }
 
         @Override
-        public String code() {
+        public @MinLen(2) String code() {
             return "SM";
         }
     }
