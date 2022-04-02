@@ -16,6 +16,10 @@ build:
               override:
                 - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dcheckstyle.skip -P '!checkerframework,!checkerframework-jdk8,!checkerframework-jdk9orlater' -B -V
 
+            project_setup:
+              override:
+                - mvn compile -DskipTests=true -Dmaven.javadoc.skip=true -Dcheckstyle.skip -P '!checkerframework,!checkerframework-jdk8,!checkerframework-jdk9orlater' -B -V
+
             tests:
                 override:
                     - command: mysql -u root -e "create database araknemu"
