@@ -6,7 +6,8 @@ build:
               - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dcheckstyle.skip -P '!checkerframework,!checkerframework-jdk8,!checkerframework-jdk9orlater' -B -V
         tests:
             environment:
-                java: 'java@11-open'
+                sdkman:
+                  - 'java@11-open'
                 timezone: Europe/Paris
 
             services:
