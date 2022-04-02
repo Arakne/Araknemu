@@ -3,7 +3,7 @@ build:
         analysis:
           dependencies:
             override:
-              - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dcheckstyle.skip -B -V
+              - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dcheckstyle.skip -P '!checkerframework,!checkerframework-jdk8,!checkerframework-jdk9orlater' -B -V
         tests:
             environment:
                 java: 'java-8-oracle'
@@ -14,7 +14,7 @@ build:
 
             dependencies:
               override:
-                - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dcheckstyle.skip -B -V
+                - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dcheckstyle.skip -P '!checkerframework,!checkerframework-jdk8,!checkerframework-jdk9orlater' -B -V
 
             tests:
                 override:
