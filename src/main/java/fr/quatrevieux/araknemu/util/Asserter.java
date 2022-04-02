@@ -24,7 +24,6 @@ import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.common.value.qual.IntRange;
-import org.checkerframework.framework.qual.EnsuresQualifier;
 
 /**
  * Utility class for perform type assertions or casts
@@ -111,7 +110,7 @@ public final class Asserter {
      *
      * @throws IndexOutOfBoundsException When the value is out of range
      */
-    public static <T> @IndexFor("#1") int assertIndexFor(T[] array, int index) {
+    public static @IndexFor("#1") <T> int assertIndexFor(T[] array, int index) {
         if (index < 0 || index >= array.length) {
             throw new IndexOutOfBoundsException("Invalid index " + index + " for array of length " + array.length);
         }

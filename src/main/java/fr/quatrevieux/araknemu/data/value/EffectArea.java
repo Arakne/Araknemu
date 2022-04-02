@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.data.value;
 
-import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.common.value.qual.IntRange;
 

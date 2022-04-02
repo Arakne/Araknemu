@@ -22,7 +22,6 @@ package fr.quatrevieux.araknemu.data.world.entity.monster;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.dataflow.qual.Pure;
-import org.checkerframework.framework.qual.EnsuresQualifierIf;
 
 /**
  * Spawn position for the monster group on map

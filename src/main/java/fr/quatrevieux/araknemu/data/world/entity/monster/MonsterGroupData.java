@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.data.world.entity.monster;
 
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.value.Position;
+import fr.quatrevieux.araknemu.util.Asserter;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -55,7 +56,7 @@ public final class MonsterGroupData {
         this.fixedTeamNumber = fixedTeamNumber;
 
         // @fixme: do not handle "null" group
-        this.totalRate = monsters != null ? (@Positive int) monsters.stream().mapToInt(Monster::rate).sum() : 1;
+        this.totalRate = monsters != null ? Asserter.assertPositive(monsters.stream().mapToInt(Monster::rate).sum()) : 1;
     }
 
     /**

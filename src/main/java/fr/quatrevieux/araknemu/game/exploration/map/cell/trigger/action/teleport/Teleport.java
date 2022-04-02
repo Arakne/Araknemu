@@ -25,7 +25,6 @@ import fr.quatrevieux.araknemu.game.exploration.interaction.action.move.ChangeMa
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.trigger.action.CellAction;
-import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
@@ -45,18 +44,21 @@ public final class Teleport implements CellAction {
     }
 
     @Override
-    @SuppressWarnings("cast.unsafe")
     public void perform(ExplorationPlayer player) {
+        // teleport on same map
+        if (player.map() != null && target.map() == player.map().id()) {
+            if (target.cell() >= player.map().size()) {
+                throw new IllegalStateException("Invalid target cell for position " + target);
+            }
+
+            player.changeCell(target.cell());
+            return;
+        }
+
         final ExplorationMap map = service.load(target.map());
 
         if (target.cell() >= map.size()) {
             throw new IllegalStateException("Invalid target cell for position " + target);
-        }
-
-        // teleport on same map
-        if (map.equals(player.map())) {
-            player.changeCell((@IndexFor("player.map()") int) target.cell());
-            return;
         }
 
         player.interactions().push(new ChangeMap(player, map, target.cell()));

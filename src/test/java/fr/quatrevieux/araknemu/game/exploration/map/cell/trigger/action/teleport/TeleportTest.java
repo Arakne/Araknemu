@@ -67,6 +67,15 @@ class TeleportTest extends GameBaseCase {
     }
 
     @Test
+    void performOnSameMapInvalidCell() throws Exception {
+        teleport = new Teleport(service, 123, new Position(10300, 1000));
+        assertThrows(IllegalStateException.class, () -> teleport.perform(explorationPlayer()));
+
+        assertEquals(new Position(10300, 279), explorationPlayer().position());
+        assertFalse(explorationPlayer().interactions().busy());
+    }
+
+    @Test
     void teleportOnOtherMap() throws Exception {
         ExplorationPlayer player = explorationPlayer();
         requestStack.clear();
@@ -79,5 +88,16 @@ class TeleportTest extends GameBaseCase {
             new MapData(player.map()),
             new GameActionResponse("", ActionType.CHANGE_MAP, player.id(), "")
         );
+    }
+
+    @Test
+    void teleportOnOtherMapInvalidCell() throws Exception {
+        ExplorationPlayer player = explorationPlayer();
+        requestStack.clear();
+        teleport = new Teleport(service, 123, new Position(10540, 1000));
+        assertThrows(IllegalStateException.class, () -> teleport.perform(player));
+
+        assertEquals(new Position(10300, 279), player.position());
+        assertFalse(explorationPlayer().interactions().busy());
     }
 }
