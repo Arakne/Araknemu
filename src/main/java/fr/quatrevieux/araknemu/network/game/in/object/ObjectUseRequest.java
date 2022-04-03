@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.core.network.parser.ParsePacketException;
 import fr.quatrevieux.araknemu.core.network.parser.SinglePacketParser;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.common.value.qual.MinLen;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * Request for use an object
@@ -44,14 +45,17 @@ public final class ObjectUseRequest implements Packet {
         this.isTarget = isTarget;
     }
 
+    @Pure
     public int objectId() {
         return objectId;
     }
 
+    @Pure
     public int target() {
         return target;
     }
 
+    @Pure
     public @GTENegativeOne int cell() {
         return cell;
     }
@@ -59,6 +63,7 @@ public final class ObjectUseRequest implements Packet {
     /**
      * Does a target is provided by the packet (i.e. use on target)
      */
+    @Pure
     public boolean isTarget() {
         return isTarget;
     }

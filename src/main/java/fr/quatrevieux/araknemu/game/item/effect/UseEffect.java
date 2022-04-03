@@ -22,9 +22,9 @@ package fr.quatrevieux.araknemu.game.item.effect;
 import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.effect.use.UseEffectHandler;
-import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.common.value.qual.ArrayLen;
@@ -84,6 +84,8 @@ public final class UseEffect implements ItemEffect {
 
     /**
      * Check if the player can use the effect
+     *
+     * @see UseEffectHandler#check(UseEffect, ExplorationPlayer)
      */
     public boolean check(ExplorationPlayer caster) {
         return handler.check(this, caster);
@@ -91,13 +93,17 @@ public final class UseEffect implements ItemEffect {
 
     /**
      * Check if the player can use the effect to the target
+     *
+     * @see UseEffectHandler#checkTarget(UseEffect, ExplorationPlayer, ExplorationPlayer, ExplorationMapCell)
      */
-    public boolean checkTarget(ExplorationPlayer caster, @Nullable ExplorationPlayer target, @GTENegativeOne int cell) {
+    public boolean checkTarget(ExplorationPlayer caster, @Nullable ExplorationPlayer target, @Nullable ExplorationMapCell cell) {
         return handler.checkTarget(this, caster, target, cell);
     }
 
     /**
      * Check if the fighter can use the effect
+     *
+     * @see UseEffectHandler#checkFighter(UseEffect, PlayerFighter)
      */
     public boolean checkFighter(PlayerFighter fighter) {
         return handler.checkFighter(this, fighter);
@@ -105,6 +111,8 @@ public final class UseEffect implements ItemEffect {
 
     /**
      * Apply the effect to the player
+     *
+     * @see UseEffectHandler#apply(UseEffect, ExplorationPlayer)
      */
     public void apply(ExplorationPlayer caster) {
         handler.apply(this, caster);
@@ -112,13 +120,17 @@ public final class UseEffect implements ItemEffect {
 
     /**
      * Apply the effect to the target
+     *
+     * @see UseEffectHandler#applyToTarget(UseEffect, ExplorationPlayer, ExplorationPlayer, ExplorationMapCell)
      */
-    public void applyToTarget(ExplorationPlayer caster, @Nullable ExplorationPlayer target, @GTENegativeOne int cell) {
+    public void applyToTarget(ExplorationPlayer caster, @Nullable ExplorationPlayer target, @Nullable ExplorationMapCell cell) {
         handler.applyToTarget(this, caster, target, cell);
     }
 
     /**
      * Apply the effect to the fighter
+     *
+     * @see UseEffectHandler#applyToFighter(UseEffect, PlayerFighter)
      */
     public void applyToFighter(PlayerFighter fighter) {
         handler.applyToFighter(this, fighter);

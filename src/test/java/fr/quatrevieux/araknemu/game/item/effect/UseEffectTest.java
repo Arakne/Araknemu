@@ -25,7 +25,6 @@ import fr.quatrevieux.araknemu.data.constant.Effect;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.interaction.action.ActionType;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.effect.use.AddCharacteristicEffect;
@@ -37,7 +36,11 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UseEffectTest extends GameBaseCase {
     @Test
@@ -132,7 +135,7 @@ class UseEffectTest extends GameBaseCase {
     void applyToTarget() throws SQLException, ContainerException {
         UseEffect effect = new UseEffect(new FireworkEffect(), Effect.NULL1, new int[] {1, 0, 2900});
 
-        effect.applyToTarget(explorationPlayer(), null, 150);
+        effect.applyToTarget(explorationPlayer(), null, explorationPlayer().map().get(150));
 
         requestStack.assertLast(
             new GameActionResponse("1", ActionType.FIREWORK, explorationPlayer().id(), "150,2900,11,8,1")
@@ -143,7 +146,7 @@ class UseEffectTest extends GameBaseCase {
     void check() throws SQLException, ContainerException {
         UseEffect effect = new UseEffect(new FireworkEffect(), Effect.NULL1, new int[] {1, 0, 2900});
 
-        assertTrue(effect.checkTarget(null, null, 150));
+        assertTrue(effect.checkTarget(null, null, explorationPlayer().map().get(150)));
         assertFalse(effect.check(explorationPlayer()));
         assertFalse(effect.checkFighter(container.get(FighterFactory.class).create(gamePlayer())));
     }
