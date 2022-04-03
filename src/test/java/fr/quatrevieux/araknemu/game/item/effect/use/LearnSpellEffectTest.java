@@ -93,6 +93,18 @@ class LearnSpellEffectTest extends GameBaseCase {
     }
 
     @Test
+    void checkTarget() throws SQLException {
+        assertFalse(
+            effect.checkTarget(
+                new UseEffect(null, Effect.LEARN_SPELL, new int[] {0, 0, 202}),
+                explorationPlayer(),
+                null,
+                null
+            )
+        );
+    }
+
+    @Test
     void apply() throws SQLException, ContainerException {
         effect.apply(
             new UseEffect(null, Effect.LEARN_SPELL, new int[] {0, 0, 202}),

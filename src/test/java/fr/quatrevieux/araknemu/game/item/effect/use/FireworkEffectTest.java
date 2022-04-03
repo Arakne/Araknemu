@@ -50,6 +50,7 @@ class FireworkEffectTest extends GameBaseCase {
     @Test
     void check() {
         assertFalse(effect.check(new UseEffect(effect, Effect.FIREWORK , new int[] {2900, 0, 6}), player));
+        assertFalse(effect.checkTarget(new UseEffect(effect, Effect.FIREWORK , new int[] {2900, 0, 6}), player, null, null));
         assertTrue(effect.checkTarget(new UseEffect(effect, Effect.FIREWORK , new int[] {2900, 0, 6}), player, null, player.map().get(150)));
     }
 

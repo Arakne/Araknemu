@@ -104,7 +104,7 @@ class UseObjectTest extends GameBaseCase {
         explorationPlayer().leave();
         requestStack.clear();
 
-        handler.handle(session, new ObjectUseRequest(entry.id(), otherPlayer.id(), 0, true));
+        handler.handle(session, new ObjectUseRequest(entry.id(), otherPlayer.id(), -1, true));
 
         requestStack.assertAll(new Noop());
         assertEquals(10, other.properties().life().current());
@@ -121,7 +121,7 @@ class UseObjectTest extends GameBaseCase {
         other.properties().life().set(10);
         requestStack.clear();
 
-        handler.handle(session, new ObjectUseRequest(entry.id(), otherPlayer.id(), 0, true));
+        handler.handle(session, new ObjectUseRequest(entry.id(), otherPlayer.id(), -1, true));
 
         requestStack.assertAll(
             new DestroyItem(entry),
