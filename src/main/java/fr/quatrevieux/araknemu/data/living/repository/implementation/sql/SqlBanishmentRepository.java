@@ -20,12 +20,12 @@
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.living.entity.account.Banishment;
 import fr.quatrevieux.araknemu.data.living.repository.account.BanishmentRepository;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -148,14 +148,14 @@ final class SqlBanishmentRepository implements BanishmentRepository {
 
     private class Loader implements RepositoryUtils.Loader<Banishment> {
         @Override
-        public Banishment create(ResultSet rs) throws SQLException {
+        public Banishment create(Record record) throws SQLException {
             return new Banishment(
-                rs.getInt("BANISHMENT_ID"),
-                rs.getInt("ACCOUNT_ID"),
-                instantTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("START_DATE"))),
-                instantTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("END_DATE"))),
-                NullnessUtil.castNonNull(rs.getString("CAUSE")),
-                rs.getInt("BANISHER_ID")
+                record.getInt("BANISHMENT_ID"),
+                record.getInt("ACCOUNT_ID"),
+                record.unserialize("START_DATE", instantTransformer),
+                record.unserialize("END_DATE", instantTransformer),
+                record.getString("CAUSE"),
+                record.getInt("BANISHER_ID")
             );
         }
 

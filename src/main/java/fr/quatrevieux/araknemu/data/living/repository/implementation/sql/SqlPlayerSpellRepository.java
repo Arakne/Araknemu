@@ -21,12 +21,12 @@ package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.entity.player.PlayerSpell;
 import fr.quatrevieux.araknemu.data.living.repository.player.PlayerSpellRepository;
-import fr.quatrevieux.araknemu.util.Asserter;
 import org.checkerframework.common.value.qual.IntRange;
 
 import java.sql.ResultSet;
@@ -133,15 +133,15 @@ final class SqlPlayerSpellRepository implements PlayerSpellRepository {
         ) > 0;
     }
 
-    private class Loader implements RepositoryUtils.Loader<PlayerSpell> {
+    private static class Loader implements RepositoryUtils.Loader<PlayerSpell> {
         @Override
-        public PlayerSpell create(ResultSet rs) throws SQLException {
+        public PlayerSpell create(Record record) throws SQLException {
             return new PlayerSpell(
-                rs.getInt("PLAYER_ID"),
-                rs.getInt("SPELL_ID"),
-                rs.getBoolean("CLASS_SPELL"),
-                Asserter.assertPositive(rs.getInt("SPELL_LEVEL")),
-                castPosition(rs.getInt("SPELL_POSITION"))
+                record.getInt("PLAYER_ID"),
+                record.getInt("SPELL_ID"),
+                record.getBoolean("CLASS_SPELL"),
+                record.getPositiveInt("SPELL_LEVEL"),
+                castPosition(record.getInt("SPELL_POSITION"))
             );
         }
 

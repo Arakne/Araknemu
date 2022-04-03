@@ -20,15 +20,14 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcExchange;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.NpcTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.NpcExchangeRepository;
-import fr.quatrevieux.araknemu.util.Asserter;
 import org.checkerframework.checker.index.qual.Positive;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -108,14 +107,14 @@ final class SqlNpcExchangeRepository implements NpcExchangeRepository {
 
     private class Loader implements RepositoryUtils.Loader<NpcExchange> {
         @Override
-        public NpcExchange create(ResultSet rs) throws SQLException {
+        public NpcExchange create(Record record) throws SQLException {
             return new NpcExchange(
-                rs.getInt("NPC_EXCHANGE_ID"),
-                rs.getInt("NPC_TEMPLATE_ID"),
-                Asserter.assertNonNegative(rs.getLong("REQUIRED_KAMAS")),
-                itemsTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("REQUIRED_ITEMS"))),
-                Asserter.assertNonNegative(rs.getLong("EXCHANGED_KAMAS")),
-                itemsTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("EXCHANGED_ITEMS")))
+                record.getInt("NPC_EXCHANGE_ID"),
+                record.getInt("NPC_TEMPLATE_ID"),
+                record.getNonNegativeLong("REQUIRED_KAMAS"),
+                record.unserialize("REQUIRED_ITEMS", itemsTransformer),
+                record.getNonNegativeLong("EXCHANGED_KAMAS"),
+                record.unserialize("EXCHANGED_ITEMS", itemsTransformer)
             );
         }
 

@@ -21,11 +21,11 @@ package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.living.entity.account.AccountBank;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
-import fr.quatrevieux.araknemu.util.Asserter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -113,11 +113,11 @@ final class SqlAccountBankRepository implements AccountBankRepository {
 
     private static class Loader implements RepositoryUtils.Loader<AccountBank> {
         @Override
-        public AccountBank create(ResultSet rs) throws SQLException {
+        public AccountBank create(Record record) throws SQLException {
             return new AccountBank(
-                rs.getInt("ACCOUNT_ID"),
-                rs.getInt("SERVER_ID"),
-                Asserter.assertNonNegative(rs.getLong("BANK_KAMAS"))
+                record.getInt("ACCOUNT_ID"),
+                record.getInt("SERVER_ID"),
+                record.getNonNegativeLong("BANK_KAMAS")
             );
         }
 

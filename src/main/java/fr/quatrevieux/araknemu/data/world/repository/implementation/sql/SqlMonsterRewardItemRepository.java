@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterRewardItem;
@@ -99,13 +100,13 @@ final class SqlMonsterRewardItemRepository implements MonsterRewardItemRepositor
 
     private class Loader implements RepositoryUtils.Loader<MonsterRewardItem> {
         @Override
-        public MonsterRewardItem create(ResultSet rs) throws SQLException {
+        public MonsterRewardItem create(Record record) throws SQLException {
             return new MonsterRewardItem(
-                rs.getInt("MONSTER_ID"),
-                rs.getInt("ITEM_TEMPLATE_ID"),
-                rs.getInt("QUANTITY"),
-                rs.getInt("DISCERNMENT"),
-                rs.getFloat("RATE")
+                record.getInt("MONSTER_ID"),
+                record.getInt("ITEM_TEMPLATE_ID"),
+                record.getPositiveInt("QUANTITY"),
+                record.getNonNegativeInt("DISCERNMENT"),
+                record.getDouble("RATE")
             );
         }
 

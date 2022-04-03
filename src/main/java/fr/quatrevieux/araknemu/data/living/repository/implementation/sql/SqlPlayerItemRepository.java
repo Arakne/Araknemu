@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
@@ -30,9 +31,7 @@ import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.game.item.inventory.ItemEntry;
 import fr.quatrevieux.araknemu.game.player.inventory.slot.InventorySlots;
-import fr.quatrevieux.araknemu.util.Asserter;
 import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 import org.checkerframework.common.value.qual.IntRange;
 
 import java.sql.ResultSet;
@@ -188,14 +187,14 @@ final class SqlPlayerItemRepository implements PlayerItemRepository {
 
     private class Loader implements RepositoryUtils.Loader<PlayerItem> {
         @Override
-        public PlayerItem create(ResultSet rs) throws SQLException {
+        public PlayerItem create(Record record) throws SQLException {
             return new PlayerItem(
-                rs.getInt("PLAYER_ID"),
-                rs.getInt("ITEM_ENTRY_ID"),
-                rs.getInt("ITEM_TEMPLATE_ID"),
-                effectsTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("ITEM_EFFECTS"))),
-                Asserter.assertPositive(rs.getInt("QUANTITY")), // Quantity must be positive (cannot be = 0)
-                checkPosition(rs.getInt("POSITION"))
+                record.getInt("PLAYER_ID"),
+                record.getInt("ITEM_ENTRY_ID"),
+                record.getInt("ITEM_TEMPLATE_ID"),
+                record.unserialize("ITEM_EFFECTS", effectsTransformer),
+                record.getPositiveInt("QUANTITY"), // Quantity must be positive (cannot be = 0)
+                checkPosition(record.getInt("POSITION"))
             );
         }
 

@@ -73,7 +73,7 @@ public class RepositoryUtils<E> {
                         throw new EntityNotFoundException();
                     }
 
-                    return loader.create(rs);
+                    return loader.create(new Record(rs));
                 }
             );
         } catch (SQLException e) {
@@ -106,10 +106,11 @@ public class RepositoryUtils<E> {
                     binder.bind(statement);
 
                     final ResultSet rs = statement.executeQuery();
+                    final Record record = new Record(rs);
                     final List<E> result = new ArrayList<>();
 
                     while (rs.next()) {
-                        result.add(loader.create(rs));
+                        result.add(loader.create(record));
                     }
 
                     return result;
@@ -254,13 +255,13 @@ public class RepositoryUtils<E> {
          * Create an entity from database data
          * The created entity MUST be filled
          *
-         * @param rs Database data
+         * @param record Database data
          *
          * @return The created entity
          *
          * @throws SQLException Throws by ResultSet
          */
-        public E create(ResultSet rs) throws SQLException;
+        public E create(Record record) throws SQLException;
 
         /**
          * Fill the entity with generated keys

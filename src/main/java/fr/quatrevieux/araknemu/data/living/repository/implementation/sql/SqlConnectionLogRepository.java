@@ -21,13 +21,13 @@ package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.living.entity.account.ConnectionLog;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
 import fr.quatrevieux.araknemu.data.living.repository.account.ConnectionLogRepository;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -171,27 +171,18 @@ final class SqlConnectionLogRepository implements ConnectionLogRepository {
 
     private class Loader implements RepositoryUtils.Loader<ConnectionLog> {
         @Override
-        public ConnectionLog create(ResultSet rs) throws SQLException {
+        public ConnectionLog create(Record record) throws SQLException {
             final ConnectionLog log = new ConnectionLog(
-                rs.getInt("ACCOUNT_ID"),
-                instantTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("START_DATE"))),
-                NullnessUtil.castNonNull(rs.getString("IP_ADDRESS"))
+                record.getInt("ACCOUNT_ID"),
+                record.unserialize("START_DATE", instantTransformer),
+                record.getString("IP_ADDRESS")
             );
 
-            log.setEndDate(instantTransformer.unserialize(rs.getString("END_DATE")));
-            log.setClientUid(rs.getString("CLIENT_UID"));
+            log.setEndDate(record.nullableUnserialize("END_DATE", instantTransformer));
+            log.setClientUid(record.getNullableString("CLIENT_UID"));
 
-            final int serverId = rs.getInt("SERVER_ID");
-
-            if (!rs.wasNull()) {
-                log.setServerId(serverId);
-            }
-
-            final int playerId = rs.getInt("PLAYER_ID");
-
-            if (!rs.wasNull()) {
-                log.setPlayerId(playerId);
-            }
+            record.getOptionalInt("SERVER_ID").ifPresent(log::setServerId);
+            record.getOptionalInt("PLAYER_ID").ifPresent(log::setPlayerId);
 
             return log;
         }
