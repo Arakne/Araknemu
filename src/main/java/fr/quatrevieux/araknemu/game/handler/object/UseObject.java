@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.item.type.UsableItem;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
@@ -32,7 +33,6 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.in.object.ObjectUseRequest;
 import fr.quatrevieux.araknemu.network.game.out.basic.Noop;
 import fr.quatrevieux.araknemu.network.game.out.info.Error;
-import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
 
@@ -82,10 +82,16 @@ public final class UseObject implements PacketHandler<GameSession, ObjectUseRequ
     }
 
     private boolean handleForTarget(ExplorationPlayer exploration, UsableItem item, ObjectUseRequest packet) {
-        final ApplyItemOperation operation = new ApplyItemOperation(item, exploration, packet.cell());
         final ExplorationMap map = exploration.map();
 
-        if (map != null && map.has(packet.target())) {
+        if (map == null || packet.cell() >= map.size()) {
+            return false;
+        }
+
+        final ExplorationMapCell cell = packet.cell() != -1 ? map.get(packet.cell()) : null;
+        final ApplyItemOperation operation = new ApplyItemOperation(item, exploration, cell);
+
+        if (map.has(packet.target())) {
             map.creature(packet.target()).apply(operation);
         } else {
             operation.onNull();
@@ -97,11 +103,11 @@ public final class UseObject implements PacketHandler<GameSession, ObjectUseRequ
     private static class ApplyItemOperation implements Operation {
         private final UsableItem item;
         private final ExplorationPlayer caster;
-        private final @GTENegativeOne int targetCell;
+        private final @Nullable ExplorationMapCell targetCell;
 
         private boolean success = false;
 
-        public ApplyItemOperation(UsableItem item, ExplorationPlayer caster, @GTENegativeOne int targetCell) {
+        public ApplyItemOperation(UsableItem item, ExplorationPlayer caster, @Nullable ExplorationMapCell targetCell) {
             this.item = item;
             this.caster = caster;
             this.targetCell = targetCell;

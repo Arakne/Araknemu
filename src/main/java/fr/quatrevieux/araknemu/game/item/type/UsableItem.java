@@ -22,13 +22,13 @@ package fr.quatrevieux.araknemu.game.item.type;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.item.GameItemSet;
 import fr.quatrevieux.araknemu.game.item.Item;
 import fr.quatrevieux.araknemu.game.item.effect.ItemEffect;
 import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 import fr.quatrevieux.araknemu.game.item.effect.UseEffect;
-import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
@@ -106,7 +106,7 @@ public final class UsableItem implements Item {
     /**
      * Check if the player can use the item to the target
      */
-    public boolean checkTarget(ExplorationPlayer player, @Nullable ExplorationPlayer target, @GTENegativeOne int cell) {
+    public boolean checkTarget(ExplorationPlayer player, @Nullable ExplorationPlayer target, @Nullable ExplorationMapCell cell) {
         for (UseEffect effect : useEffects) {
             if (!effect.checkTarget(player, target, cell)) {
                 return false;
@@ -119,7 +119,7 @@ public final class UsableItem implements Item {
     /**
      * Apply the item use effects to the target
      */
-    public void applyToTarget(ExplorationPlayer player, @Nullable ExplorationPlayer target, @GTENegativeOne int cell) {
+    public void applyToTarget(ExplorationPlayer player, @Nullable ExplorationPlayer target, @Nullable ExplorationMapCell cell) {
         for (UseEffect effect : useEffects) {
             effect.applyToTarget(player, target, cell);
         }
