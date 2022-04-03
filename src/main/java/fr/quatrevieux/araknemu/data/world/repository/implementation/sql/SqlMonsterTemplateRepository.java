@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 import fr.arakne.utils.value.Colors;
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
@@ -33,7 +34,6 @@ import fr.quatrevieux.araknemu.util.ParseUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.index.qual.SameLen;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -121,22 +121,22 @@ final class SqlMonsterTemplateRepository implements MonsterTemplateRepository {
 
     private class Loader implements RepositoryUtils.Loader<MonsterTemplate> {
         @Override
-        public MonsterTemplate create(ResultSet rs) throws SQLException {
-            final String[] characteristics = StringUtils.splitPreserveAllTokens(NullnessUtil.castNonNull(rs.getString("CHARACTERISTICS")), "|");
-            final String[] lifePoints = StringUtils.splitPreserveAllTokens(NullnessUtil.castNonNull(rs.getString("LIFE_POINTS")), "|");
-            final String[] initiatives = StringUtils.splitPreserveAllTokens(NullnessUtil.castNonNull(rs.getString("INITIATIVES")), "|");
-            final String[] spells = StringUtils.splitPreserveAllTokens(NullnessUtil.castNonNull(rs.getString("SPELLS")), "|");
+        public MonsterTemplate create(Record record) throws SQLException {
+            final String[] characteristics = record.getCsvArray("CHARACTERISTICS", '|');
+            final String[] lifePoints = record.getCsvArray("LIFE_POINTS", '|');
+            final String[] initiatives = record.getCsvArray("INITIATIVES", '|');
+            final String[] spells = record.getCsvArray("SPELLS", '|');
 
             if (characteristics.length != lifePoints.length || characteristics.length != initiatives.length || characteristics.length != spells.length) {
                 throw new IllegalArgumentException("All grade characteristics must have the same length");
             }
 
             return new MonsterTemplate(
-                rs.getInt("MONSTER_ID"),
-                NullnessUtil.castNonNull(rs.getString("MONSTER_NAME")),
-                rs.getInt("GFXID"),
-                colorsTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("COLORS"))),
-                NullnessUtil.castNonNull(rs.getString("AI")),
+                record.getInt("MONSTER_ID"),
+                record.getString("MONSTER_NAME"),
+                record.getInt("GFXID"),
+                record.unserialize("COLORS", colorsTransformer),
+                record.getString("AI"),
                 parseGrades(characteristics, lifePoints, initiatives, spells)
             );
         }

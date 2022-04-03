@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
@@ -27,7 +28,6 @@ import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemType;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTypeRepository;
 import fr.quatrevieux.araknemu.game.item.SuperType;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -101,12 +101,12 @@ final class SqlItemTypeRepository implements ItemTypeRepository {
 
     private class Loader implements RepositoryUtils.Loader<ItemType> {
         @Override
-        public ItemType create(ResultSet rs) throws SQLException {
+        public ItemType create(Record record) throws SQLException {
             return new ItemType(
-                rs.getInt("TYPE_ID"),
-                NullnessUtil.castNonNull(rs.getString("TYPE_NAME")),
-                SuperType.byId(rs.getInt("SUPER_TYPE")),
-                areaTransformer.unserialize(rs.getString("EFFECT_AREA"))
+                record.getInt("TYPE_ID"),
+                record.getString("TYPE_NAME"),
+                SuperType.byId(record.getInt("SUPER_TYPE")),
+                record.nullableUnserialize("EFFECT_AREA", areaTransformer)
             );
         }
 

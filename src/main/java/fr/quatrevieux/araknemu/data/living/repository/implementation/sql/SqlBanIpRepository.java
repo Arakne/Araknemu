@@ -20,19 +20,18 @@
 package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.living.entity.BanIp;
 import fr.quatrevieux.araknemu.data.living.repository.BanIpRepository;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import inet.ipaddr.IPAddressString;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Collection;
-import java.util.Optional;
 
 /**
  * SQL Implementation for {@link BanIpRepository}
@@ -147,14 +146,14 @@ final class SqlBanIpRepository implements BanIpRepository {
 
     private class Loader implements RepositoryUtils.Loader<BanIp> {
         @Override
-        public BanIp create(ResultSet rs) throws SQLException {
+        public BanIp create(Record record) throws SQLException {
             return new BanIp(
-                rs.getInt("BANIP_ID"),
-                ipAddressTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("IP_ADDRESS"))),
-                instantTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("UPDATED_AT"))),
-                Optional.ofNullable(rs.getString("EXPIRES_AT")).map(instantTransformer::unserialize).orElse(null),
-                NullnessUtil.castNonNull(rs.getString("CAUSE")),
-                rs.getInt("BANISHER_ID")
+                record.getInt("BANIP_ID"),
+                record.unserialize("IP_ADDRESS", ipAddressTransformer),
+                record.unserialize("UPDATED_AT", instantTransformer),
+                record.nullableUnserialize("EXPIRES_AT", instantTransformer),
+                record.getString("CAUSE"),
+                record.getInt("BANISHER_ID")
             );
         }
 

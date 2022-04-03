@@ -21,13 +21,13 @@ package fr.quatrevieux.araknemu.data.living.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.living.entity.account.Account;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountRepository;
 import fr.quatrevieux.araknemu.data.living.transformer.PermissionsTransformer;
 import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -176,15 +176,15 @@ final class SqlAccountRepository implements AccountRepository {
         }
 
         @Override
-        public Account create(ResultSet rs) throws SQLException {
+        public Account create(Record record) throws SQLException {
             return new Account(
-                rs.getInt("ACCOUNT_ID"),
-                NullnessUtil.castNonNull(rs.getString("USERNAME")),
-                NullnessUtil.castNonNull(rs.getString("PASSWORD")),
-                NullnessUtil.castNonNull(rs.getString("PSEUDO")),
-                permissionsTransformer.unserialize(rs.getInt("PERMISSIONS")),
-                NullnessUtil.castNonNull(rs.getString("QUESTION")),
-                NullnessUtil.castNonNull(rs.getString("ANSWER"))
+                record.getInt("ACCOUNT_ID"),
+                record.getString("USERNAME"),
+                record.getString("PASSWORD"),
+                record.getString("PSEUDO"),
+                permissionsTransformer.unserialize(record.getInt("PERMISSIONS")),
+                record.getString("QUESTION"),
+                record.getString("ANSWER")
             );
         }
 

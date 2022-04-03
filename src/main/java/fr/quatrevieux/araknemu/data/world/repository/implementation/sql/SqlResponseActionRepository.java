@@ -20,13 +20,13 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Question;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.ResponseAction;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.ResponseActionRepository;
 import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -137,13 +137,13 @@ final class SqlResponseActionRepository implements ResponseActionRepository {
         }
     }
 
-    private class Loader implements RepositoryUtils.Loader<ResponseAction> {
+    private static class Loader implements RepositoryUtils.Loader<ResponseAction> {
         @Override
-        public ResponseAction create(ResultSet rs) throws SQLException {
+        public ResponseAction create(Record record) throws SQLException {
             return new ResponseAction(
-                rs.getInt("RESPONSE_ID"),
-                NullnessUtil.castNonNull(rs.getString("ACTION")),
-                NullnessUtil.castNonNull(rs.getString("ARGUMENTS"))
+                record.getInt("RESPONSE_ID"),
+                record.getString("ACTION"),
+                record.getString("ARGUMENTS")
             );
         }
 

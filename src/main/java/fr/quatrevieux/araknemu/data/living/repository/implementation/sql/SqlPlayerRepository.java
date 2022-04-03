@@ -24,6 +24,7 @@ import fr.arakne.utils.value.constant.Gender;
 import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.living.entity.player.Player;
@@ -33,8 +34,6 @@ import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.value.ServerCharacters;
 import fr.quatrevieux.araknemu.game.chat.ChannelType;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
-import fr.quatrevieux.araknemu.util.Asserter;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -286,33 +285,31 @@ final class SqlPlayerRepository implements PlayerRepository {
         private final Gender[] genders = Gender.values();
 
         @Override
-        public Player create(ResultSet rs) throws SQLException {
+        public Player create(Record record) throws SQLException {
             return new Player(
-                rs.getInt("PLAYER_ID"),
-                rs.getInt("ACCOUNT_ID"),
-                rs.getInt("SERVER_ID"),
-                NullnessUtil.castNonNull(rs.getString("PLAYER_NAME")),
-                Race.byId(Asserter.assertPositive(rs.getInt("RACE"))),
-                genders[Asserter.assertIndexFor(genders, rs.getInt("SEX"))],
-                createColors(rs),
-                Asserter.assertPositive(rs.getInt("PLAYER_LEVEL")),
-                characteristicsTransformer.unserialize(
-                    NullnessUtil.castNonNull(rs.getString("PLAYER_STATS"))
-                ),
+                record.getInt("PLAYER_ID"),
+                record.getInt("ACCOUNT_ID"),
+                record.getInt("SERVER_ID"),
+                record.getString("PLAYER_NAME"),
+                Race.byId(record.getPositiveInt("RACE")),
+                record.getArrayValue("SEX", genders),
+                createColors(record),
+                record.getPositiveInt("PLAYER_LEVEL"),
+                record.unserialize("PLAYER_STATS", characteristicsTransformer),
                 new Position(
-                    Asserter.assertNonNegative(rs.getInt("MAP_ID")),
-                    Asserter.assertNonNegative(rs.getInt("CELL_ID"))
+                    record.getNonNegativeInt("MAP_ID"),
+                    record.getNonNegativeInt("CELL_ID")
                 ),
-                channelsTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("CHANNELS"))),
-                Asserter.assertNonNegative(rs.getInt("BOOST_POINTS")),
-                Asserter.assertNonNegative(rs.getInt("SPELL_POINTS")),
-                Asserter.assertNonNegative(rs.getInt("LIFE_POINTS")),
-                Asserter.assertNonNegative(rs.getLong("PLAYER_EXPERIENCE")),
+                record.unserialize("CHANNELS", channelsTransformer),
+                record.getNonNegativeInt("BOOST_POINTS"),
+                record.getNonNegativeInt("SPELL_POINTS"),
+                record.getNonNegativeInt("LIFE_POINTS"),
+                record.getNonNegativeLong("PLAYER_EXPERIENCE"),
                 new Position(
-                    Asserter.assertNonNegative(rs.getInt("SAVED_MAP_ID")),
-                    Asserter.assertNonNegative(rs.getInt("SAVED_CELL_ID"))
+                    record.getNonNegativeInt("SAVED_MAP_ID"),
+                    record.getNonNegativeInt("SAVED_CELL_ID")
                 ),
-                Asserter.assertNonNegative(rs.getLong("PLAYER_KAMAS"))
+                record.getNonNegativeLong("PLAYER_KAMAS")
             );
         }
 
@@ -322,11 +319,11 @@ final class SqlPlayerRepository implements PlayerRepository {
         }
 
         @SuppressWarnings("argument") // Ignore invalid colors error
-        private Colors createColors(ResultSet rs) throws SQLException {
+        private Colors createColors(Record record) throws SQLException {
             return new Colors(
-                rs.getInt("COLOR1"),
-                rs.getInt("COLOR2"),
-                rs.getInt("COLOR3")
+                record.getInt("COLOR1"),
+                record.getInt("COLOR2"),
+                record.getInt("COLOR3")
             );
         }
     }

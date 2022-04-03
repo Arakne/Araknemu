@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.arakne.utils.value.constant.Race;
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
@@ -29,14 +30,10 @@ import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerRace;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerRaceRepository;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
-import fr.quatrevieux.araknemu.util.Asserter;
-import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.index.qual.Positive;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.SortedMap;
 
@@ -119,27 +116,25 @@ final class SqlPlayerRaceRepository implements PlayerRaceRepository {
 
     private class Loader implements RepositoryUtils.Loader<PlayerRace> {
         @Override
-        public PlayerRace create(ResultSet rs) throws SQLException {
+        public PlayerRace create(Record record) throws SQLException {
             return new PlayerRace(
-                Race.byId(Asserter.assertPositive(rs.getInt("RACE_ID"))),
-                NullnessUtil.castNonNull(rs.getString("RACE_NAME")),
-                characteristicsTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("RACE_STATS"))),
-                rs.getInt("START_DISCERNMENT"),
-                Asserter.assertPositive(rs.getInt("START_PODS")),
-                Asserter.assertPositive(rs.getInt("START_LIFE")),
-                Asserter.assertNonNegative(rs.getInt("PER_LEVEL_LIFE")),
-                boostStatsDataTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("STATS_BOOST"))),
+                Race.byId(record.getPositiveInt("RACE_ID")),
+                record.getString("RACE_NAME"),
+                record.unserialize("RACE_STATS", characteristicsTransformer),
+                record.getInt("START_DISCERNMENT"),
+                record.getPositiveInt("START_PODS"),
+                record.getPositiveInt("START_LIFE"),
+                record.getNonNegativeInt("PER_LEVEL_LIFE"),
+                record.unserialize("STATS_BOOST", boostStatsDataTransformer),
                 new Position(
-                    Asserter.assertNonNegative(rs.getInt("MAP_ID")),
-                    Asserter.assertNonNegative(rs.getInt("CELL_ID"))
+                    record.getNonNegativeInt("MAP_ID"),
+                    record.getNonNegativeInt("CELL_ID")
                 ),
                 new Position(
-                    Asserter.assertNonNegative(rs.getInt("ASTRUB_MAP_ID")),
-                    Asserter.assertNonNegative(rs.getInt("ASTRUB_CELL_ID"))
+                    record.getNonNegativeInt("ASTRUB_MAP_ID"),
+                    record.getNonNegativeInt("ASTRUB_CELL_ID")
                 ),
-                Arrays.stream(StringUtils.split(NullnessUtil.castNonNull(rs.getString("RACE_SPELLS")), "|"))
-                    .mapToInt(Integer::parseInt)
-                    .toArray()
+                record.getIntArray("RACE_SPELLS", '|')
             );
         }
 

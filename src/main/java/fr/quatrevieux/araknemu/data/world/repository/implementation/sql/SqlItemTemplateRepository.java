@@ -20,14 +20,13 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemTemplate;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemTemplateRepository;
-import fr.quatrevieux.araknemu.util.Asserter;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -108,18 +107,18 @@ final class SqlItemTemplateRepository implements ItemTemplateRepository {
 
     private class Loader implements RepositoryUtils.Loader<ItemTemplate> {
         @Override
-        public ItemTemplate create(ResultSet rs) throws SQLException {
+        public ItemTemplate create(Record record) throws SQLException {
             return new ItemTemplate(
-                rs.getInt("ITEM_TEMPLATE_ID"),
-                rs.getInt("ITEM_TYPE"),
-                NullnessUtil.castNonNull(rs.getString("ITEM_NAME")),
-                rs.getInt("ITEM_LEVEL"),
-                effectsTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("ITEM_EFFECTS"))),
-                Asserter.assertNonNegative(rs.getInt("WEIGHT")),
-                NullnessUtil.castNonNull(rs.getString("CONDITIONS")),
-                rs.getInt("ITEM_SET_ID"),
-                rs.getString("WEAPON_INFO"),
-                Asserter.assertNonNegative(rs.getInt("PRICE"))
+                record.getInt("ITEM_TEMPLATE_ID"),
+                record.getInt("ITEM_TYPE"),
+                record.getString("ITEM_NAME"),
+                record.getNonNegativeInt("ITEM_LEVEL"),
+                record.unserialize("ITEM_EFFECTS", effectsTransformer),
+                record.getNonNegativeInt("WEIGHT"),
+                record.getString("CONDITIONS"),
+                record.getInt("ITEM_SET_ID"),
+                record.getNullableString("WEAPON_INFO"),
+                record.getNonNegativeInt("PRICE")
             );
         }
 

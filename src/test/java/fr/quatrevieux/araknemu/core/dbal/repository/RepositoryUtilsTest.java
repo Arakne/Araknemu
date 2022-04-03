@@ -48,13 +48,13 @@ class RepositoryUtilsTest {
 
     public static class PersonLoader implements RepositoryUtils.Loader<Person> {
         @Override
-        public Person create(ResultSet rs) throws SQLException {
+        public Person create(Record record) throws SQLException {
             Person p = new Person();
 
-            p.id = rs.getInt("ID");
-            p.firstName = rs.getString("FIRST_NAME");
-            p.lastName = rs.getString("LAST_NAME");
-            p.age = rs.getInt("AGE");
+            p.id = record.getInt("ID");
+            p.firstName = record.getString("FIRST_NAME");
+            p.lastName = record.getString("LAST_NAME");
+            p.age = record.getInt("AGE");
 
             return p;
         }

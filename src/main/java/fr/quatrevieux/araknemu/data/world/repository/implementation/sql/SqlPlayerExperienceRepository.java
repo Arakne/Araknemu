@@ -20,11 +20,11 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.world.entity.character.PlayerExperience;
 import fr.quatrevieux.araknemu.data.world.repository.character.PlayerExperienceRepository;
-import fr.quatrevieux.araknemu.util.Asserter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -86,12 +86,12 @@ final class SqlPlayerExperienceRepository implements PlayerExperienceRepository 
         return utils.findAll("SELECT * FROM PLAYER_XP ORDER BY PLAYER_LEVEL ASC");
     }
 
-    private class Loader implements RepositoryUtils.Loader<PlayerExperience> {
+    private static class Loader implements RepositoryUtils.Loader<PlayerExperience> {
         @Override
-        public PlayerExperience create(ResultSet rs) throws SQLException {
+        public PlayerExperience create(Record record) throws SQLException {
             return new PlayerExperience(
-                Asserter.assertPositive(rs.getInt("PLAYER_LEVEL")),
-                Asserter.assertNonNegative(rs.getLong("EXPERIENCE"))
+                record.getPositiveInt("PLAYER_LEVEL"),
+                record.getNonNegativeLong("EXPERIENCE")
             );
         }
 

@@ -22,13 +22,12 @@ package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
 import fr.quatrevieux.araknemu.core.dbal.repository.EntityNotFoundException;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterRewardData;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterRewardRepository;
 import fr.quatrevieux.araknemu.util.Asserter;
-import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -107,14 +106,14 @@ final class SqlMonsterRewardRepository implements MonsterRewardRepository {
     private class Loader implements RepositoryUtils.Loader<MonsterRewardData> {
         @Override
         @SuppressWarnings("argument") // LongStream do not handle @NonNegative parameter
-        public MonsterRewardData create(ResultSet rs) throws SQLException {
+        public MonsterRewardData create(Record record) throws SQLException {
             return new MonsterRewardData(
-                rs.getInt("MONSTER_ID"),
+                record.getInt("MONSTER_ID"),
                 new Interval(
-                    Asserter.assertNonNegative(rs.getInt("MIN_KAMAS")),
-                    Asserter.assertNonNegative(rs.getInt("MAX_KAMAS"))
+                    record.getNonNegativeInt("MIN_KAMAS"),
+                    record.getNonNegativeInt("MAX_KAMAS")
                 ),
-                Arrays.stream(StringUtils.split(NullnessUtil.castNonNull(rs.getString("EXPERIENCES")), "|"))
+                Arrays.stream(record.getCsvArray("EXPERIENCES", '|'))
                     .mapToLong(Long::parseLong)
                     .map(Asserter::assertNonNegative)
                     .toArray()

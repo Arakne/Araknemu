@@ -299,4 +299,46 @@ public final class Splitter {
     public Splitter nextSplit(char delimiter) {
         return new Splitter(nextPart(), delimiter);
     }
+
+    /**
+     * Parse all remaining parts to an array of int
+     * If the value is empty, an array of size 0 is returned
+     * After calling
+     *
+     * Note: this method do not skip empty parts, which will cause {@link NumberFormatException}
+     *
+     * @throws NoSuchElementException When the end is already reached
+     * @throws NumberFormatException If a part is non-well formatted
+     */
+    public int[] toIntArray() {
+        if (currentPosition > string.length()) {
+            throw new NoSuchElementException();
+        }
+
+        final String str = currentPosition == 0 ? string : string.substring(currentPosition);
+        final char delimiter = this.delimiter;
+
+        if (str.isEmpty()) {
+            ++currentPosition; // Invalidate splitter for next call
+            return new int[0];
+        }
+
+        // Start count at 1 : number of parts is always 1 + delimiters count
+        int count = 1;
+
+        // Count delimiters
+        for (int i = 0; i < str.length(); ++i) {
+            if (str.charAt(i) == delimiter) {
+                ++count;
+            }
+        }
+
+        final int[] values = new int[count];
+
+        for (int i = 0; i < count; ++i) {
+            values[i] = nextInt();
+        }
+
+        return values;
+    }
 }

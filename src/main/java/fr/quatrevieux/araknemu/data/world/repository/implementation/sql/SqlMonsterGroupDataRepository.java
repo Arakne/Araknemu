@@ -20,14 +20,13 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.Position;
 import fr.quatrevieux.araknemu.data.world.entity.monster.MonsterGroupData;
 import fr.quatrevieux.araknemu.data.world.repository.monster.MonsterGroupDataRepository;
-import fr.quatrevieux.araknemu.util.Asserter;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -107,19 +106,19 @@ final class SqlMonsterGroupDataRepository implements MonsterGroupDataRepository 
 
     private class Loader implements RepositoryUtils.Loader<MonsterGroupData> {
         @Override
-        public MonsterGroupData create(ResultSet rs) throws SQLException {
+        public MonsterGroupData create(Record record) throws SQLException {
             return new MonsterGroupData(
-                rs.getInt("MONSTER_GROUP_ID"),
-                Duration.ofMillis(rs.getLong("RESPAWN_TIME")),
-                Asserter.assertNonNegative(rs.getInt("MAX_SIZE")),
-                Asserter.assertPositive(rs.getInt("MAX_COUNT")),
-                monstersTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("MONSTERS"))),
-                rs.getString("COMMENT"),
+                record.getInt("MONSTER_GROUP_ID"),
+                Duration.ofMillis(record.getLong("RESPAWN_TIME")),
+                record.getNonNegativeInt("MAX_SIZE"),
+                record.getPositiveInt("MAX_COUNT"),
+                record.unserialize("MONSTERS", monstersTransformer),
+                record.getNullableString("COMMENT"),
                 new Position(
-                    Asserter.assertNonNegative(rs.getInt("WIN_FIGHT_TELEPORT_MAP_ID")),
-                    Asserter.assertNonNegative(rs.getInt("WIN_FIGHT_TELEPORT_CELL_ID"))
+                    record.getNonNegativeInt("WIN_FIGHT_TELEPORT_MAP_ID"),
+                    record.getNonNegativeInt("WIN_FIGHT_TELEPORT_CELL_ID")
                 ),
-                rs.getBoolean("FIXED_TEAM_NUMBER")
+                record.getBoolean("FIXED_TEAM_NUMBER")
             );
         }
 

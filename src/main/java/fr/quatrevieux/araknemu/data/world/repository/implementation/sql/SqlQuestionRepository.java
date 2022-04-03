@@ -20,18 +20,17 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Npc;
 import fr.quatrevieux.araknemu.data.world.entity.environment.npc.Question;
 import fr.quatrevieux.araknemu.data.world.repository.environment.npc.QuestionRepository;
 import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -152,17 +151,15 @@ final class SqlQuestionRepository implements QuestionRepository {
         return sorted;
     }
 
-    private class Loader implements RepositoryUtils.Loader<Question> {
+    private static class Loader implements RepositoryUtils.Loader<Question> {
         @Override
         @SuppressWarnings("argument") // StringUtils.split is ensured to return a non-empty string
-        public Question create(ResultSet rs) throws SQLException {
+        public Question create(Record record) throws SQLException {
             return new Question(
-                rs.getInt("QUESTION_ID"),
-                Arrays.stream(StringUtils.split(NullnessUtil.castNonNull(rs.getString("RESPONSE_IDS")), ';'))
-                    .mapToInt(Integer::parseInt)
-                    .toArray(),
-                StringUtils.split(NullnessUtil.castNonNull(rs.getString("PARAMETERS")), ';'),
-                NullnessUtil.castNonNull(rs.getString("CONDITIONS"))
+                record.getInt("QUESTION_ID"),
+                record.getIntArray("RESPONSE_IDS", ';'),
+                StringUtils.split(record.getString("PARAMETERS"), ';'),
+                record.getString("CONDITIONS")
             );
         }
 

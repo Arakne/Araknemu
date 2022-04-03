@@ -223,4 +223,41 @@ class SplitterTest {
         assertEquals("e", subSplit.nextPart());
         assertThrows(NoSuchElementException.class, subSplit::nextPart);
     }
+
+    @Test
+    void toIntArray() {
+        assertArrayEquals(new int[] {123, 45, 74}, new Splitter("123;45;74", ';').toIntArray());
+        assertArrayEquals(new int[] {123}, new Splitter("123", ';').toIntArray());
+        assertArrayEquals(new int[] {}, new Splitter("", ';').toIntArray());
+        assertThrows(NumberFormatException.class, new Splitter("invalid", ';')::toIntArray);
+    }
+
+    @Test
+    void toIntArrayShouldMoveCursorToEnd() {
+        Splitter splitter = new Splitter("12;34", ';');
+
+        assertArrayEquals(new int[] {12, 34}, splitter.toIntArray());
+        assertFalse(splitter.hasNext());
+        assertThrows(NoSuchElementException.class, splitter::nextPart);
+        assertThrows(NoSuchElementException.class, splitter::toIntArray);
+
+        splitter = new Splitter("", ';');
+        assertArrayEquals(new int[0], splitter.toIntArray());
+        assertFalse(splitter.hasNext());
+        assertThrows(NoSuchElementException.class, splitter::nextPart);
+        assertThrows(NoSuchElementException.class, splitter::toIntArray);
+
+        splitter = new Splitter("foo,bar,147,52", ',');
+
+        assertEquals("foo", splitter.nextPart());
+        assertEquals("bar", splitter.nextPart());
+        assertArrayEquals(new int[] {147, 52}, splitter.toIntArray());
+        assertFalse(splitter.hasNext());
+
+        splitter = new Splitter("foo,", ',');
+
+        assertEquals("foo", splitter.nextPart());
+        assertArrayEquals(new int[0], splitter.toIntArray());
+        assertFalse(splitter.hasNext());
+    }
 }

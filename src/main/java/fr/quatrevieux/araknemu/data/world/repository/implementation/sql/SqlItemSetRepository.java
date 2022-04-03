@@ -20,13 +20,13 @@
 package fr.quatrevieux.araknemu.data.world.repository.implementation.sql;
 
 import fr.quatrevieux.araknemu.core.dbal.executor.QueryExecutor;
+import fr.quatrevieux.araknemu.core.dbal.repository.Record;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryException;
 import fr.quatrevieux.araknemu.core.dbal.repository.RepositoryUtils;
 import fr.quatrevieux.araknemu.data.transformer.Transformer;
 import fr.quatrevieux.araknemu.data.value.ItemTemplateEffectEntry;
 import fr.quatrevieux.araknemu.data.world.entity.item.ItemSet;
 import fr.quatrevieux.araknemu.data.world.repository.item.ItemSetRepository;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -100,11 +100,11 @@ final class SqlItemSetRepository implements ItemSetRepository {
 
     private class Loader implements RepositoryUtils.Loader<ItemSet> {
         @Override
-        public ItemSet create(ResultSet rs) throws SQLException {
+        public ItemSet create(Record record) throws SQLException {
             return new ItemSet(
-                rs.getInt("ITEM_SET_ID"),
-                NullnessUtil.castNonNull(rs.getString("ITEM_SET_NAME")),
-                bonusTransformer.unserialize(NullnessUtil.castNonNull(rs.getString("ITEM_SET_BONUS")))
+                record.getInt("ITEM_SET_ID"),
+                record.getString("ITEM_SET_NAME"),
+                record.unserialize("ITEM_SET_BONUS", bonusTransformer)
             );
         }
 
