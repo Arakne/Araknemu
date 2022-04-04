@@ -31,6 +31,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.ConfigurableTeamOptions;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
@@ -130,14 +131,14 @@ class JoinFightTest extends FightBaseCase {
         assertTrue(player.isFighting());
         assertFalse(player.isExploring());
         assertSame(fight, player.fighter().fight());
-        assertContains(player.fighter().cell().id(), fight.team(0).startPlaces());
+        assertContains(player.fighter().cell(), fight.team(0).startPlaces());
         assertContains(player.fighter(), fight.team(0).fighters());
 
         requestStack.assertAll(
             new StopLifeTimer(),
             new fr.quatrevieux.araknemu.network.game.out.fight.JoinFight(fight),
             new AddSprites(fight.fighters().stream().map(Fighter::sprite).collect(Collectors.toList())),
-            new FightStartPositions(new List[] { fight.team(0).startPlaces(), fight.team(1).startPlaces() }, 0),
+            new FightStartPositions(new FightCell[][] { fight.team(0).startPlaces().toArray(new FightCell[0]), fight.team(1).startPlaces().toArray(new FightCell[0]) }, 0),
             new AddSprites(Collections.singleton(player.fighter().sprite()))
         );
     }

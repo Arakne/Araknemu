@@ -31,12 +31,12 @@ class FightPlacesTransformerTest extends TestCase {
 
     @Test
     void unserializeSuccess() {
-        List<Integer>[] places = transformer.unserialize("dKdvdgc3cPc4dhdwdZ|fIftfee1eMeyeNe2fffu");
+        int[][] places = transformer.unserialize("dKdvdgc3cPc4dhdwdZ|fIftfee1eMeyeNe2fffu");
 
         assertCount(2, places);
 
-        assertCount(9, places[0]);
-        assertCount(10, places[1]);
+        assertEquals(9, places[0].length);
+        assertEquals(10, places[1].length);
 
         assertCount(0, transformer.unserialize(null));
     }

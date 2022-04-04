@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.admin.debug;
 
+import fr.arakne.utils.maps.MapCell;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.admin.CommandTestCase;
@@ -92,7 +93,10 @@ class FightPosTest extends CommandTestCase {
 
         requestStack.assertAll(
             new CommandResult(LogType.DEFAULT, "Places : [55, 83, 114, 127, 128, 170, 171, 183, 185, 198] | [48, 63, 75, 90, 92, 106, 121, 122, 137, 150]"),
-            new FightStartPositions(container.get(MapTemplateRepository.class).get(10340).fightPlaces(), 0)
+            new FightStartPositions(new MapCell[][] {
+                explorationPlayer().map().fightPlaces(0).toArray(new MapCell[0]),
+                explorationPlayer().map().fightPlaces(1).toArray(new MapCell[0])
+            }, 0)
         );
     }
 }

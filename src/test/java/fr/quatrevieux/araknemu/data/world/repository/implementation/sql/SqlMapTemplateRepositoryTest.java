@@ -78,9 +78,9 @@ class SqlMapTemplateRepositoryTest extends GameBaseCase {
     void getWithPlaces() {
         assertArrayEquals(
             repository.get(10340).fightPlaces(),
-            new List[] {
-                Arrays.asList(55, 83, 114, 127, 128, 170, 171, 183, 185, 198),
-                Arrays.asList(48, 63, 75, 90, 92, 106, 121, 122, 137, 150)
+            new int[][] {
+                new int[] {55, 83, 114, 127, 128, 170, 171, 183, 185, 198},
+                new int[] {48, 63, 75, 90, 92, 106, 121, 122, 137, 150}
             }
         );
     }

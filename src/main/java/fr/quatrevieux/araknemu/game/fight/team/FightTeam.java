@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.data.constant.Alignment;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -65,7 +66,7 @@ public interface FightTeam extends Sender, Team<Fighter> {
     /**
      * Get start places
      */
-    public List<Integer> startPlaces();
+    public List<FightCell> startPlaces();
 
     /**
      * Send packet to all players

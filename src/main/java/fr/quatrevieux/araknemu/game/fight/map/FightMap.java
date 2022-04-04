@@ -29,6 +29,7 @@ import org.checkerframework.checker.index.qual.SameLen;
 import org.checkerframework.checker.initialization.qual.UnderInitialization;
 import org.checkerframework.dataflow.qual.Pure;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
@@ -66,16 +67,24 @@ public final class FightMap implements BattlefieldMap {
     /**
      * Get start places for a team
      */
-    public List<Integer> startPlaces(@NonNegative int team) {
-        final List<Integer>[] places = template.fightPlaces();
+    @SuppressWarnings("assignment") // fightPlaces bounds are not checked
+    public List<FightCell> startPlaces(@NonNegative int team) {
+        final @IndexFor("this") int[][] places = template.fightPlaces();
 
         if (team >= places.length) {
             return Collections.emptyList();
         }
 
-        return places[team];
+        final List<FightCell> startCells = new ArrayList<>(places.length);
+
+        for (int cellId : places[team]) {
+            startCells.add(cells[cellId]);
+        }
+
+        return startCells;
     }
 
+    @Pure
     @Override
     public Dimensions dimensions() {
         return template.dimensions();

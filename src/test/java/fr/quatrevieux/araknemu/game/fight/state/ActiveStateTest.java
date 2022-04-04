@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
 import fr.quatrevieux.araknemu.game.fight.event.FightLeaved;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.listener.fight.CheckFightTerminated;
@@ -71,13 +72,14 @@ class ActiveStateTest extends GameBaseCase {
 
         dataSet.pushMaps().pushSubAreas().pushAreas();
 
+        FightMap map;
         fight = new Fight(
             1,
             new ChallengeType(configuration.fight()),
-            container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
+            map = container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
             Arrays.asList(
-                new SimpleTeam(fighter = new PlayerFighter(gamePlayer(true)), Arrays.asList(123, 222), 0),
-                new SimpleTeam(other = new PlayerFighter(makeOtherPlayer()), Arrays.asList(321), 1)
+                new SimpleTeam(fighter = new PlayerFighter(gamePlayer(true)), Arrays.asList(map.get(123), map.get(222)), 0),
+                new SimpleTeam(other = new PlayerFighter(makeOtherPlayer()), Arrays.asList(map.get(321)), 1)
             ),
             new StatesFlow(
                 new NullState(),

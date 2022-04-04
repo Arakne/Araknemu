@@ -34,7 +34,6 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Map repository implementation for SQL database
@@ -43,9 +42,9 @@ final class SqlMapTemplateRepository implements MapTemplateRepository {
     private final QueryExecutor executor;
     private final RepositoryUtils<MapTemplate> utils;
     private final Transformer<CellData[]> cellsTransformer;
-    private final Transformer<List<Integer>[]> fightPlacesTransformer;
+    private final Transformer<@NonNegative int[][]> fightPlacesTransformer;
 
-    public SqlMapTemplateRepository(QueryExecutor executor, Transformer<CellData[]> cellsTransformer, Transformer<List<Integer>[]> fightPlacesTransformer) {
+    public SqlMapTemplateRepository(QueryExecutor executor, Transformer<CellData[]> cellsTransformer, Transformer<@NonNegative int[][]> fightPlacesTransformer) {
         this.executor = executor;
         this.cellsTransformer = cellsTransformer;
         this.fightPlacesTransformer = fightPlacesTransformer;

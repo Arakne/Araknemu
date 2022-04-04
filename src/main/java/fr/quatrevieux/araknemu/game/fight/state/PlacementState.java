@@ -163,7 +163,7 @@ public final class PlacementState implements LeavableState, EventsSubscriber {
             throw new FightMapException("Not walkable");
         }
 
-        if (!fighter.team().startPlaces().contains(cell.id())) {
+        if (!fighter.team().startPlaces().contains(cell)) {
             throw new FightException("Bad start cell");
         }
 

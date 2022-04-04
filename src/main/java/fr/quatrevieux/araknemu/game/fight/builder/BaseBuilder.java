@@ -23,6 +23,7 @@ import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.state.ActiveState;
 import fr.quatrevieux.araknemu.game.fight.state.FinishState;
@@ -111,6 +112,6 @@ public final class BaseBuilder implements FightBuilder {
          * @param number The team number
          * @param startPlaces The available start places
          */
-        public FightTeam create(int number, List<Integer> startPlaces);
+        public FightTeam create(int number, List<FightCell> startPlaces);
     }
 }

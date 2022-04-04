@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.util.ArrayList;
@@ -39,13 +40,13 @@ import java.util.List;
 public final class SimpleTeam implements FightTeam {
     private final PlayerFighter leader;
     private final List<PlayerFighter> fighters;
-    private final List<Integer> startPlaces;
+    private final List<FightCell> startPlaces;
     private final int number;
 
     private @MonotonicNonNull ConfigurableTeamOptions options;
 
     @SuppressWarnings({"argument", "assignment"})
-    public SimpleTeam(PlayerFighter leader, List<Integer> startPlaces, int number) {
+    public SimpleTeam(PlayerFighter leader, List<FightCell> startPlaces, int number) {
         this.leader = leader;
         this.fighters = new ArrayList<>();
         this.fighters.add(leader);
@@ -86,7 +87,7 @@ public final class SimpleTeam implements FightTeam {
     }
 
     @Override
-    public List<Integer> startPlaces() {
+    public List<FightCell> startPlaces() {
         return startPlaces;
     }
 
