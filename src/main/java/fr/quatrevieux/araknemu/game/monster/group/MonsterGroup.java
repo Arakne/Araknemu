@@ -82,8 +82,8 @@ public final class MonsterGroup implements ExplorationCreature {
     }
 
     @Override
-    public void apply(Operation operation) {
-        operation.onMonsterGroup(this);
+    public <R> R apply(Operation<R> operation) {
+        return operation.onMonsterGroup(this);
     }
 
     /**

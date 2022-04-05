@@ -21,12 +21,12 @@ package fr.quatrevieux.araknemu.game.exploration.creature.operation;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
-import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Dispatch event to the creature if supports
  */
-public final class DispatchEvent implements Operation {
+public final class DispatchEvent implements Operation<@Nullable Boolean> {
     private final Object event;
 
     public DispatchEvent(Object event) {
@@ -34,10 +34,9 @@ public final class DispatchEvent implements Operation {
     }
 
     @Override
-    public void onExplorationPlayer(ExplorationPlayer player) {
+    public Boolean onExplorationPlayer(ExplorationPlayer player) {
         player.dispatch(event);
-    }
 
-    @Override
-    public void onNpc(GameNpc npc) {}
+        return true;
+    }
 }

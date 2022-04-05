@@ -26,9 +26,10 @@ import fr.quatrevieux.araknemu.game.world.creature.Creature;
  * Base type for creature in exploration mode
  */
 public interface ExplorationCreature extends Creature<ExplorationMapCell> {
-
     /**
      * Apply the operation on the creature
+     *
+     * @return Result of the operation (forward return value of Operation#onXXX() method)
      */
-    public void apply(Operation operation);
+    public <R> R apply(Operation<R> operation);
 }

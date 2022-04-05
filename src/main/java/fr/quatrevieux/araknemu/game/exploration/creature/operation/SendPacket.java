@@ -21,12 +21,12 @@ package fr.quatrevieux.araknemu.game.exploration.creature.operation;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
-import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Send the packet to creatures which supports sending packet
  */
-public final class SendPacket implements Operation {
+public final class SendPacket implements Operation<@Nullable Boolean> {
     private final String packet;
 
     public SendPacket(Object packet) {
@@ -34,10 +34,9 @@ public final class SendPacket implements Operation {
     }
 
     @Override
-    public void onExplorationPlayer(ExplorationPlayer player) {
+    public Boolean onExplorationPlayer(ExplorationPlayer player) {
         player.send(packet);
-    }
 
-    @Override
-    public void onNpc(GameNpc npc) {}
+        return true;
+    }
 }

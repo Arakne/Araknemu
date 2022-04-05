@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Cell of exploration map
@@ -37,16 +38,17 @@ public interface ExplorationMapCell extends MapCell<ExplorationMapCell> {
 
     /**
      * Does the cell is free ?
-     * A cell is free is a new sprite can be added on, and no other objects is present
+     * A cell is free if a new sprite can be added on, and no other objects is present
      */
     public boolean free();
 
     /**
      * Apply an operation to all creatures on current cell
+     * If the operation return false, the iteration will be stopped
      *
      * @see ExplorationCreature#apply(Operation)
      */
-    public default void apply(Operation operation)  {
+    public default void apply(Operation<@Nullable Boolean> operation)  {
         // Optimisation : the cell is not walkable, no creatures can be located here
         if (!walkable()) {
             return;
@@ -54,7 +56,11 @@ public interface ExplorationMapCell extends MapCell<ExplorationMapCell> {
 
         for (ExplorationCreature creature : map().creatures()) {
             if (equals(creature.cell())) {
-                creature.apply(operation);
+                final Boolean result = creature.apply(operation);
+
+                if (result != null && !result) {
+                    break;
+                }
             }
         }
     }

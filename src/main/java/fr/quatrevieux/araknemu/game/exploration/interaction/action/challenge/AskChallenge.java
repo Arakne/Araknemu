@@ -48,13 +48,15 @@ public final class AskChallenge implements Action {
         final ExplorationMap map = player.map();
 
         if (map != null) {
-            map.creature(target).apply(new Operation() {
+            map.creature(target).apply(new Operation<Void>() {
                 @Override
-                public void onExplorationPlayer(ExplorationPlayer challenger) {
+                public Void onExplorationPlayer(ExplorationPlayer challenger) {
                     player
                         .interactions()
                         .start(new ChallengeInvitationHandler(fightService.handler(ChallengeBuilder.class)).invitation(player, challenger))
                     ;
+
+                    return null;
                 }
             });
         }

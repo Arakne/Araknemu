@@ -88,8 +88,8 @@ public final class GameNpc implements ExplorationCreature {
     }
 
     @Override
-    public void apply(Operation operation) {
-        operation.onNpc(this);
+    public <R> R apply(Operation<R> operation) {
+        return operation.onNpc(this);
     }
 
     /**

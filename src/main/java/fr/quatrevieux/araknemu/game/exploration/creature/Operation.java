@@ -25,20 +25,37 @@ import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 
 /**
  * Operation to apply on a creature
+ *
+ * @param <R> The result type of the operation.
+ *           This value must be returned by the {@link ExplorationCreature#apply(Operation)} method
+ *           The type must be Boolean for apply on map using {@link fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell#apply(Operation)}
  */
-public interface Operation {
+public interface Operation<R> {
     /**
-     * Apply the operation a an exploration player
+     * Apply the operation on an exploration player
      */
-    public default void onExplorationPlayer(ExplorationPlayer player) {}
+    public default R onExplorationPlayer(ExplorationPlayer player) {
+        return onCreature(player);
+    }
 
     /**
      * Apply the operation on a NPC
      */
-    public default void onNpc(GameNpc npc) {}
+    public default R onNpc(GameNpc npc) {
+        return onCreature(npc);
+    }
 
     /**
      * Apply the operation on a monster group
      */
-    public default void onMonsterGroup(MonsterGroup monsterGroup) {}
+    public default R onMonsterGroup(MonsterGroup monsterGroup) {
+        return onCreature(monsterGroup);
+    }
+
+    /**
+     * Generic operation to apply to all creatures
+     */
+    public default R onCreature(ExplorationCreature creature) {
+        return (R) null;
+    }
 }

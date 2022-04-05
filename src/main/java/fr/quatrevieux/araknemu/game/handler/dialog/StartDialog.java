@@ -44,15 +44,16 @@ public final class StartDialog implements PacketHandler<GameSession, CreateDialo
             throw new ErrorPacket(new Noop());
         }
 
-        map.creature(packet.npcId()).apply(new Operation() {
+        map.creature(packet.npcId()).apply(new Operation<Void>() {
             @Override
-            public void onExplorationPlayer(ExplorationPlayer player) {
+            public Void onExplorationPlayer(ExplorationPlayer player) {
                 throw new IllegalArgumentException("Cannot start a dialog with a player");
             }
 
             @Override
-            public void onNpc(GameNpc npc) {
+            public Void onNpc(GameNpc npc) {
                 exploration.interactions().start(new NpcDialog(exploration, npc));
+                return null;
             }
         });
     }

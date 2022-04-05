@@ -172,8 +172,8 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
     }
 
     @Override
-    public void apply(Operation operation) {
-        operation.onExplorationPlayer(this);
+    public <R> R apply(Operation<R> operation) {
+        return operation.onExplorationPlayer(this);
     }
 
     /**

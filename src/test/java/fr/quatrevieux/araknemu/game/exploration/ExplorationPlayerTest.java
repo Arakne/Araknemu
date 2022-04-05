@@ -41,6 +41,7 @@ import fr.quatrevieux.araknemu.network.game.GameSession;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.sql.SQLException;
@@ -340,9 +341,11 @@ class ExplorationPlayerTest extends GameBaseCase {
 
     @Test
     void apply() {
-        Operation operation = Mockito.mock(Operation.class);
+        Object o = new Object();
+        Operation<Object> operation = Mockito.mock(Operation.class);
+        Mockito.when(operation.onExplorationPlayer(player)).thenReturn(o);
 
-        player.apply(operation);
+        assertSame(o, player.apply(operation));
 
         Mockito.verify(operation).onExplorationPlayer(player);
     }

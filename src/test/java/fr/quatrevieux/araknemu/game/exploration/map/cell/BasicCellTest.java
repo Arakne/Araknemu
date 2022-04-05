@@ -22,10 +22,19 @@ package fr.quatrevieux.araknemu.game.exploration.map.cell;
 import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
+import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
+import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
+import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -103,5 +112,60 @@ class BasicCellTest extends GameBaseCase {
 
         player.changeCell(186);
         assertTrue(new BasicCell(185, repository.get(10340).cells()[185], service.load(10340)).free());
+    }
+
+    @Test
+    void apply() throws Exception {
+        ExplorationMap map = explorationPlayer().map();
+        ExplorationPlayer other = makeOtherExplorationPlayer();
+
+        explorationPlayer().changeCell(279);
+        other.changeMap(map, 279);
+
+        Collection<ExplorationCreature> creatures = new ArrayList<>();
+
+        map.get(279).apply(new Operation<Boolean>() {
+            @Override
+            public Boolean onCreature(ExplorationCreature creature) {
+                creatures.add(creature);
+                return true;
+            }
+        });
+
+        assertEquals(Arrays.asList(explorationPlayer(), other), creatures);
+
+        creatures.clear();
+        other.changeCell(275);
+
+        map.get(279).apply(new Operation<Boolean>() {
+            @Override
+            public Boolean onCreature(ExplorationCreature creature) {
+                creatures.add(creature);
+                return true;
+            }
+        });
+
+        assertEquals(Arrays.asList(explorationPlayer()), creatures);
+    }
+
+    @Test
+    void applyWithReturnFalseShouldSkipOtherCreatures() throws Exception {
+        ExplorationMap map = explorationPlayer().map();
+        ExplorationPlayer other = makeOtherExplorationPlayer();
+
+        explorationPlayer().changeCell(279);
+        other.changeMap(map, 279);
+
+        Collection<ExplorationCreature> creatures = new ArrayList<>();
+
+        map.get(279).apply(new Operation<Boolean>() {
+            @Override
+            public Boolean onCreature(ExplorationCreature creature) {
+                creatures.add(creature);
+                return false;
+            }
+        });
+
+        assertEquals(Arrays.asList(explorationPlayer()), creatures);
     }
 }
