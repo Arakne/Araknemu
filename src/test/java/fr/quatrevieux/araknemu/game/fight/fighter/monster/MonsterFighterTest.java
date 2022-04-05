@@ -85,7 +85,7 @@ class MonsterFighterTest extends FightBaseCase {
                 container.get(ExplorationMapService.class).load(10340).get(123),
                 new Position(0, 0)
             ),
-            Collections.singletonList(123),
+            Collections.singletonList(loadFightMap(10340).get(123)),
             1
         );
 

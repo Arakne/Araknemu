@@ -42,6 +42,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -245,13 +246,13 @@ public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispa
      */
     @SuppressWarnings("methodref.param") // places are considered as safe cell ids
     public List<ExplorationMapCell> fightPlaces(@NonNegative int team) {
-        final List<Integer>[] places = template.fightPlaces();
+        final int[][] places = template.fightPlaces();
 
         if (team >= places.length) {
             return Collections.emptyList();
         }
 
-        return places[team].stream().map(this::get).collect(Collectors.toList());
+        return Arrays.stream(places[team]).mapToObj(this::get).collect(Collectors.toList());
     }
 
     /**

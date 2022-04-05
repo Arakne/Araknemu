@@ -87,7 +87,7 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
-        public List<Integer> startPlaces() {
+        public List<FightCell> startPlaces() {
             return null;
         }
 

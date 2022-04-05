@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.listener.fight;
 
+import fr.arakne.utils.maps.MapCell;
 import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.fight.event.FightJoined;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
@@ -27,7 +28,6 @@ import fr.quatrevieux.araknemu.network.game.out.fight.JoinFight;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -55,9 +55,9 @@ public final class SendFightJoined implements Listener<FightJoined> {
 
         fighter.send(
             new FightStartPositions(
-                new List[] {
-                    event.fight().team(0).startPlaces(),
-                    event.fight().team(1).startPlaces(),
+                new MapCell[][] {
+                    event.fight().team(0).startPlaces().toArray(new MapCell[0]),
+                    event.fight().team(1).startPlaces().toArray(new MapCell[0]),
                 },
                 fighter.team().number()
             )

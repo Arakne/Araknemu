@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
 import org.checkerframework.checker.initialization.qual.UnderInitialization;
@@ -45,13 +46,13 @@ import java.util.List;
 public final class MonsterGroupTeam implements FightTeam {
     private final MonsterGroup monsterGroup;
     private final int number;
-    private final List<Integer> startPlaces;
+    private final List<FightCell> startPlaces;
 
     private final List<MonsterFighter> fighters;
     private final TeamOptions options;
 
     @SuppressWarnings({"assignment", "argument"})
-    public MonsterGroupTeam(MonsterGroup monsterGroup, List<Integer> startPlaces, int number) {
+    public MonsterGroupTeam(MonsterGroup monsterGroup, List<FightCell> startPlaces, int number) {
         this.monsterGroup = monsterGroup;
         this.number = number;
         this.startPlaces = startPlaces;
@@ -91,7 +92,7 @@ public final class MonsterGroupTeam implements FightTeam {
     }
 
     @Override
-    public List<Integer> startPlaces() {
+    public List<FightCell> startPlaces() {
         return startPlaces;
     }
 

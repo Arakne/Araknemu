@@ -30,7 +30,7 @@ import fr.quatrevieux.araknemu.network.game.out.fight.CancelFight;
 import fr.quatrevieux.araknemu.network.game.out.game.FightStartPositions;
 import org.kohsuke.args4j.Argument;
 
-import java.util.List;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
@@ -73,17 +73,21 @@ public final class FightPos extends AbstractCommand<FightPos.Arguments> {
             return;
         }
 
-        final List<Integer>[] places = new List[] {
-            map.fightPlaces(0).stream().map(MapCell::id).collect(Collectors.toList()),
-            map.fightPlaces(1).stream().map(MapCell::id).collect(Collectors.toList()),
+        final MapCell[][] places = new MapCell[][] {
+            map.fightPlaces(0).toArray(new MapCell[0]),
+            map.fightPlaces(1).toArray(new MapCell[0]),
         };
 
-        if (places[0].isEmpty() || places[1].isEmpty()) {
+        if (places[0].length == 0 || places[1].length == 0) {
             performer.error("No fight places found");
             return;
         }
 
-        performer.info("Places : {} | {}", places[0], places[1]);
+        performer.info(
+            "Places : {} | {}",
+            Arrays.stream(places[0]).mapToInt(MapCell::id).mapToObj(Integer::toString).collect(Collectors.joining(", ", "[", "]")),
+            Arrays.stream(places[1]).mapToInt(MapCell::id).mapToObj(Integer::toString).collect(Collectors.joining(", ", "[", "]"))
+        );
 
         if (arguments.show()) {
             user.send(new FightStartPositions(places, 0));

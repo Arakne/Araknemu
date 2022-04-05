@@ -19,22 +19,60 @@
 
 package fr.quatrevieux.araknemu.network.game.out.game;
 
+import fr.arakne.utils.maps.DofusMap;
+import fr.arakne.utils.maps.MapCell;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import org.checkerframework.checker.index.qual.LessThanUnknown;
+import org.checkerframework.checker.index.qual.LowerBoundUnknown;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.SameLenUnknown;
+import org.checkerframework.checker.index.qual.SearchIndexUnknown;
+import org.checkerframework.checker.index.qual.SubstringIndexUnknown;
+import org.checkerframework.checker.index.qual.UpperBoundUnknown;
+import org.checkerframework.checker.initialization.qual.Initialized;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.UnknownKeyFor;
+import org.checkerframework.common.value.qual.UnknownVal;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class FightStartPositionsTest {
     @Test
     void generate() {
+        class FakeCell implements MapCell {
+            private final int id;
+
+            public FakeCell(int id) {
+                this.id = id;
+            }
+
+            @Override
+            public int id() {
+                return id;
+            }
+
+            @Override
+            public boolean walkable() {
+                return false;
+            }
+
+            @Override
+            public DofusMap map() {
+                return null;
+            }
+        }
+
         assertEquals(
             "GPa3btbYb_cacQcRc3c5dg|aWa_blbAbCbQb5b6cjcw|0",
             new FightStartPositions(
-                new List[] {
-                    Arrays.asList(55, 83, 114, 127, 128, 170, 171, 183, 185, 198),
-                    Arrays.asList(48, 63, 75, 90, 92, 106, 121, 122, 137, 150)
+                new MapCell[][] {
+                    new MapCell[] {new FakeCell(55), new FakeCell(83), new FakeCell(114), new FakeCell(127), new FakeCell(128), new FakeCell(170), new FakeCell(171), new FakeCell(183), new FakeCell(185), new FakeCell(198)},
+                    new MapCell[] {new FakeCell(48), new FakeCell(63), new FakeCell(75), new FakeCell(90), new FakeCell(92), new FakeCell(106), new FakeCell(121), new FakeCell(122), new FakeCell(137), new FakeCell(150)}
                 },
                 0
             ).toString()

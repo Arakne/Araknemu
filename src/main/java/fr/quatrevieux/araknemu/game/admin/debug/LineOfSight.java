@@ -37,7 +37,6 @@ import org.kohsuke.args4j.Argument;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Display accessible cells by line of sight
@@ -77,12 +76,12 @@ public final class LineOfSight extends AbstractCommand<LineOfSight.Arguments> {
         final CoordinateCell<FightCell> current = map.get(user.player().position().cell()).coordinate();
         final CellSight<FightCell> sight = new CellSight<>(current);
 
-        final List<Integer> accessible;
-        final List<Integer> blocked;
+        final List<FightCell> accessible;
+        final List<FightCell> blocked;
 
         if (!arguments.hasTargetCell()) {
-            accessible = sight.accessible().stream().map(MapCell::id).collect(Collectors.toList());
-            blocked = sight.blocked().stream().map(MapCell::id).collect(Collectors.toList());
+            accessible = new ArrayList<>(sight.accessible());
+            blocked = new ArrayList<>(sight.blocked());
         } else {
             final Iterator<FightCell> los = sight.to(map.get(arguments.cellId()));
 
@@ -95,15 +94,18 @@ public final class LineOfSight extends AbstractCommand<LineOfSight.Arguments> {
                 final FightCell cell = los.next();
 
                 if (isFree) {
-                    accessible.add(cell.id());
+                    accessible.add(cell);
                     isFree = !cell.sightBlocking();
                 } else {
-                    blocked.add(cell.id());
+                    blocked.add(cell);
                 }
             }
         }
 
-        user.send(new FightStartPositions(new List[] {blocked, accessible}, 0));
+        user.send(new FightStartPositions(new MapCell[][] {
+            blocked.toArray(new MapCell[0]),
+            accessible.toArray(new MapCell[0]),
+        }, 0));
     }
 
     @Override

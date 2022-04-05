@@ -34,6 +34,7 @@ import fr.quatrevieux.araknemu.game.fight.exception.InvalidFightStateException;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
+import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
@@ -78,13 +79,14 @@ class PlacementStateTest extends FightBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
+        FightMap map;
         fight = new Fight(
             1,
             new ChallengeType(configuration.fight()),
-            container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
+            map = loadFightMap(10340),
             new ArrayList<>(Arrays.asList(
-                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(123, 222), 0),
-                new SimpleTeam(makePlayerFighter(other), Arrays.asList(321), 1)
+                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
+                new SimpleTeam(makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
             )),
             new StatesFlow(
                 new NullState(),
@@ -161,13 +163,14 @@ class PlacementStateTest extends FightBaseCase {
         Mockito.when(type.hasPlacementTimeLimit()).thenReturn(true);
         Mockito.when(type.placementDuration()).thenReturn(Duration.ZERO);
 
+        FightMap map;
         fight = new Fight(
             1,
             type,
-            container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
+            map = loadFightMap(10340),
             new ArrayList<>(Arrays.asList(
-                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(123, 222), 0),
-                new SimpleTeam(makePlayerFighter(other), Arrays.asList(321), 1)
+                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
+                new SimpleTeam(makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
             )),
             new StatesFlow(
                 state = new PlacementState(false),
@@ -190,13 +193,14 @@ class PlacementStateTest extends FightBaseCase {
         Mockito.when(type.hasPlacementTimeLimit()).thenReturn(true);
         Mockito.when(type.placementDuration()).thenReturn(Duration.ofSeconds(10));
 
+        FightMap map;
         fight = new Fight(
             1,
             type,
-            container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
+            map = loadFightMap(10340),
             new ArrayList<>(Arrays.asList(
-                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(123, 222), 0),
-                new SimpleTeam(makePlayerFighter(other), Arrays.asList(321), 1)
+                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
+                new SimpleTeam(makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
             )),
             new StatesFlow(
                 state = new PlacementState(false),
@@ -224,13 +228,14 @@ class PlacementStateTest extends FightBaseCase {
         Mockito.when(type.hasPlacementTimeLimit()).thenReturn(true);
         Mockito.when(type.placementDuration()).thenReturn(Duration.ofSeconds(10));
 
+        FightMap map;
         fight = new Fight(
             1,
             type,
-            container.get(FightService.class).map(container.get(ExplorationMapService.class).load(10340)),
+            map = loadFightMap(10340),
             new ArrayList<>(Arrays.asList(
-                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(123, 222), 0),
-                new SimpleTeam(makePlayerFighter(other), Arrays.asList(321), 1)
+                new SimpleTeam(fighter = makePlayerFighter(player), Arrays.asList(map.get(123), map.get(222)), 0),
+                new SimpleTeam(makePlayerFighter(other), Arrays.asList(map.get(321)), 1)
             )),
             new StatesFlow(
                 state = new PlacementState(false),
@@ -360,7 +365,7 @@ class PlacementStateTest extends FightBaseCase {
         assertSame(fight.team(0), newFighter.team());
         assertNotNull(newFighter.cell());
         assertSame(newFighter, newFighter.cell().fighter().get());
-        assertContains(newFighter.cell().id(), fight.team(0).startPlaces());
+        assertContains(newFighter.cell(), fight.team(0).startPlaces());
 
         assertSame(newFighter, ref.get().fighter());
 

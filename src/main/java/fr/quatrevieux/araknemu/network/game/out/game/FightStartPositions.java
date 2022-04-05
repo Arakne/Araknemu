@@ -20,9 +20,9 @@
 package fr.quatrevieux.araknemu.network.game.out.game;
 
 import fr.arakne.utils.encoding.Base64;
+import fr.arakne.utils.maps.MapCell;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -31,10 +31,10 @@ import java.util.stream.Collectors;
  * https://github.com/Emudofus/Dofus/blob/1.29/dofus/aks/Game.as#L145
  */
 public final class FightStartPositions {
-    private final List<Integer>[] places;
+    private final MapCell[][] places;
     private final int team;
 
-    public FightStartPositions(List<Integer>[] places, int team) {
+    public FightStartPositions(MapCell[][] places, int team) {
         this.places = places;
         this.team = team;
     }
@@ -44,14 +44,13 @@ public final class FightStartPositions {
         return "GP" +
             Arrays.stream(places)
                 .map(
-                    list -> list
-                        .stream()
-                        .map(i -> Base64.encode(i, 2))
+                    list -> Arrays.stream(list)
+                        .mapToInt(MapCell::id)
+                        .mapToObj(i -> Base64.encode(i, 2))
                         .collect(Collectors.joining())
                 )
                 .collect(Collectors.joining("|")) +
             "|" + team
         ;
-
     }
 }

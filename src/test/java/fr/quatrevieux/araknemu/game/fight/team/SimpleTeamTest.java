@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.team;
 
+import fr.arakne.utils.maps.MapCell;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.data.constant.Alignment;
 import fr.quatrevieux.araknemu.game.fight.Fight;
@@ -28,6 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -35,6 +37,7 @@ import org.mockito.Mockito;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -47,9 +50,10 @@ class SimpleTeamTest extends FightBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
+        FightMap map = loadFightMap(10340);
         team = new SimpleTeam(
             fighter = new PlayerFighter(gamePlayer(true)),
-            Arrays.asList(123, 456),
+            Arrays.asList(map.get(123), map.get(456)),
             1
         );
 
@@ -58,15 +62,16 @@ class SimpleTeamTest extends FightBaseCase {
 
     @Test
     void withoutFight() throws SQLException {
+        FightMap map = loadFightMap(10340);
         team = new SimpleTeam(
             fighter = new PlayerFighter(gamePlayer(true)),
-            Arrays.asList(123, 456),
+            Arrays.asList(map.get(123), map.get(456)),
             1
         );
 
         assertSame(fighter, team.leader());
         assertEquals(Arrays.asList(fighter), new ArrayList<>(team.fighters())); // Make list copy for equality
-        assertEquals(Arrays.asList(123, 456), team.startPlaces());
+        assertEquals(Arrays.asList(map.get(123), map.get(456)), team.startPlaces());
         assertEquals(1, team.number());
         assertEquals(1, team.id());
         assertEquals(0, team.type());
@@ -82,7 +87,7 @@ class SimpleTeamTest extends FightBaseCase {
     void getters() throws Exception {
         assertSame(fighter, team.leader());
         assertEquals(Arrays.asList(fighter), new ArrayList<>(team.fighters())); // Make list copy for equality
-        assertEquals(Arrays.asList(123, 456), team.startPlaces());
+        assertEquals(Arrays.asList(123, 456), team.startPlaces().stream().map(MapCell::id).collect(Collectors.toList()));
         assertEquals(1, team.number());
         assertEquals(1, team.id());
         assertEquals(0, team.type());
