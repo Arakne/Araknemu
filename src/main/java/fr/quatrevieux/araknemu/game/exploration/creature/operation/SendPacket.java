@@ -21,12 +21,11 @@ package fr.quatrevieux.araknemu.game.exploration.creature.operation;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Send the packet to creatures which supports sending packet
  */
-public final class SendPacket implements Operation<@Nullable Boolean> {
+public final class SendPacket implements Operation<Boolean> {
     private final String packet;
 
     public SendPacket(Object packet) {

@@ -39,7 +39,6 @@ import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.LengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
@@ -227,7 +226,7 @@ public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispa
      *
      * @see ExplorationCreature#apply(Operation)
      */
-    public void apply(Operation<@Nullable Boolean> operation) {
+    public void apply(Operation<Boolean> operation) {
         for (ExplorationCreature creature : creatures.values()) {
             final Boolean result = creature.apply(operation);
 

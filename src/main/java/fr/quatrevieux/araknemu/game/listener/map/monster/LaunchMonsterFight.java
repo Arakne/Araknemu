@@ -23,7 +23,6 @@ import fr.quatrevieux.araknemu.core.event.Listener;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.interaction.event.PlayerMoveFinished;
 import fr.quatrevieux.araknemu.game.monster.group.MonsterGroup;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Start the PvM fight if the player reach a monster group cell
@@ -31,7 +30,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public final class LaunchMonsterFight implements Listener<PlayerMoveFinished> {
     @Override
     public void on(PlayerMoveFinished event) {
-        event.cell().apply(new Operation<@Nullable Boolean>() {
+        event.cell().apply(new Operation<Boolean>() {
             @Override
             public Boolean onMonsterGroup(MonsterGroup monsterGroup) {
                 monsterGroup.startFight(event.player());

@@ -25,7 +25,6 @@ import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.event.NewSpriteOnMap;
 import fr.quatrevieux.araknemu.network.game.out.game.AddSprites;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Collections;
 
@@ -44,7 +43,7 @@ public final class SendNewSprite implements Listener<NewSpriteOnMap> {
         // Save the string value for optimisation
         final String packet = new AddSprites(Collections.singleton(event.sprite())).toString();
 
-        map.apply(new Operation<@Nullable Boolean>() {
+        map.apply(new Operation<Boolean>() {
             @Override
             public Boolean onExplorationPlayer(ExplorationPlayer player) {
                 if (player.id() != event.sprite().id()) {

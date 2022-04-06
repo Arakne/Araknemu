@@ -24,7 +24,6 @@ import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Cell of exploration map
@@ -48,7 +47,7 @@ public interface ExplorationMapCell extends MapCell<ExplorationMapCell> {
      *
      * @see ExplorationCreature#apply(Operation)
      */
-    public default void apply(Operation<@Nullable Boolean> operation)  {
+    public default void apply(Operation<Boolean> operation)  {
         // Optimisation : the cell is not walkable, no creatures can be located here
         if (!walkable()) {
             return;

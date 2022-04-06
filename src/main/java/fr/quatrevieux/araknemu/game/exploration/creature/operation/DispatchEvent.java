@@ -21,12 +21,11 @@ package fr.quatrevieux.araknemu.game.exploration.creature.operation;
 
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Dispatch event to the creature if supports
  */
-public final class DispatchEvent implements Operation<@Nullable Boolean> {
+public final class DispatchEvent implements Operation<Boolean> {
     private final Object event;
 
     public DispatchEvent(Object event) {

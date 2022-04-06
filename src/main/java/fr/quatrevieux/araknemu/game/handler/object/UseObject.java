@@ -92,7 +92,7 @@ public final class UseObject implements PacketHandler<GameSession, ObjectUseRequ
         final ApplyItemOperation operation = new ApplyItemOperation(item, exploration, cell);
 
         return map.has(packet.target())
-            ? map.creature(packet.target()).apply(operation)
+            ? NullnessUtil.castNonNull(map.creature(packet.target()).apply(operation)) // The implementation ensure that the return value is never null
             : operation.onNull()
         ;
     }

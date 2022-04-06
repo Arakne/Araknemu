@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.exploration.creature;
 
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
 import fr.quatrevieux.araknemu.game.world.creature.Creature;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Base type for creature in exploration mode
@@ -31,5 +32,5 @@ public interface ExplorationCreature extends Creature<ExplorationMapCell> {
      *
      * @return Result of the operation (forward return value of Operation#onXXX() method)
      */
-    public <R> R apply(Operation<R> operation);
+    public <R> @Nullable R apply(Operation<R> operation);
 }

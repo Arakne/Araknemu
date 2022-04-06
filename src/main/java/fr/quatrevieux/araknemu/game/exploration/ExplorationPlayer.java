@@ -172,7 +172,7 @@ public final class ExplorationPlayer implements ExplorationCreature, Explorer, P
     }
 
     @Override
-    public <R> R apply(Operation<R> operation) {
+    public <R> @Nullable R apply(Operation<R> operation) {
         return operation.onExplorationPlayer(this);
     }
 
