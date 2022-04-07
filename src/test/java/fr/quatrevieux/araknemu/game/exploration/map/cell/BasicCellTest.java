@@ -26,17 +26,18 @@ import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
-import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
-import fr.quatrevieux.araknemu.game.exploration.npc.NpcService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BasicCellTest extends GameBaseCase {
     private MapTemplateRepository repository;
@@ -167,5 +168,24 @@ class BasicCellTest extends GameBaseCase {
         });
 
         assertEquals(Arrays.asList(explorationPlayer()), creatures);
+    }
+
+    @Test
+    void applyShouldNotFailedIfCreatureLeaveMapDuringApplication() throws Exception {
+        ExplorationMap map = explorationPlayer().map();
+        ExplorationPlayer me = explorationPlayer();
+        ExplorationPlayer other = makeOtherExplorationPlayer();
+
+        explorationPlayer().changeCell(279);
+        other.changeMap(map, 279);
+
+        map.get(279).apply(new Operation<Boolean>() {
+            @Override
+            public Boolean onExplorationPlayer(ExplorationPlayer player) {
+                me.leave();
+                other.leave();
+                return true;
+            }
+        });
     }
 }

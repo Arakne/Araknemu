@@ -54,12 +54,22 @@ public interface ExplorationMapCell extends MapCell<ExplorationMapCell> {
         }
 
         for (ExplorationCreature creature : map().creatures()) {
-            if (equals(creature.cell())) {
-                final Boolean result = creature.apply(operation);
-
-                if (result != null && !result) {
-                    break;
+            try {
+                // Cell do not match : skip
+                if (!equals(creature.cell())) {
+                    continue;
                 }
+            } catch (IllegalStateException e) {
+                // Creature may leave map (and cell) during application of Operation
+                // which will cause an IllegalStateException (ex: change map or start fight)
+                // So skip the creature
+                continue;
+            }
+
+            final Boolean result = creature.apply(operation);
+
+            if (result != null && !result) {
+                break;
             }
         }
     }
