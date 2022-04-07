@@ -120,9 +120,11 @@ class MonsterGroupTest extends GameBaseCase {
 
     @Test
     void apply() {
-        Operation operation = Mockito.mock(Operation.class);
+        Object o = new Object();
+        Operation<Object> operation = Mockito.mock(Operation.class);
+        Mockito.when(operation.onMonsterGroup(group)).thenReturn(o);
 
-        group.apply(operation);
+        assertSame(o, group.apply(operation));
 
         Mockito.verify(operation).onMonsterGroup(group);
     }

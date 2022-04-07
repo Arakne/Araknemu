@@ -22,10 +22,10 @@ package fr.quatrevieux.araknemu.game.handler.object;
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
 import fr.quatrevieux.araknemu.game.exploration.ExplorationPlayer;
+import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.cell.ExplorationMapCell;
-import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
 import fr.quatrevieux.araknemu.game.item.type.UsableItem;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.inventory.InventoryEntry;
@@ -91,21 +91,16 @@ public final class UseObject implements PacketHandler<GameSession, ObjectUseRequ
         final ExplorationMapCell cell = packet.cell() != -1 ? map.get(packet.cell()) : null;
         final ApplyItemOperation operation = new ApplyItemOperation(item, exploration, cell);
 
-        if (map.has(packet.target())) {
-            map.creature(packet.target()).apply(operation);
-        } else {
-            operation.onNull();
-        }
-
-        return operation.success;
+        return map.has(packet.target())
+            ? NullnessUtil.castNonNull(map.creature(packet.target()).apply(operation)) // The implementation ensure that the return value is never null
+            : operation.onNull()
+        ;
     }
 
-    private static class ApplyItemOperation implements Operation {
+    private static class ApplyItemOperation implements Operation<Boolean> {
         private final UsableItem item;
         private final ExplorationPlayer caster;
         private final @Nullable ExplorationMapCell targetCell;
-
-        private boolean success = false;
 
         public ApplyItemOperation(UsableItem item, ExplorationPlayer caster, @Nullable ExplorationMapCell targetCell) {
             this.item = item;
@@ -114,23 +109,22 @@ public final class UseObject implements PacketHandler<GameSession, ObjectUseRequ
         }
 
         @Override
-        public void onExplorationPlayer(@Nullable ExplorationPlayer target) {
+        public Boolean onExplorationPlayer(@Nullable ExplorationPlayer target) {
             if (!item.checkTarget(caster, target, targetCell)) {
-                success = false;
-                return;
+                return false;
             }
 
             item.applyToTarget(caster, target, targetCell);
-            success = true;
+            return true;
         }
 
         @Override
-        public void onNpc(GameNpc npc) {
-            onExplorationPlayer(null);
+        public Boolean onCreature(ExplorationCreature creature) {
+            return onNull();
         }
 
-        public void onNull() {
-            onExplorationPlayer(null);
+        public Boolean onNull() {
+            return onExplorationPlayer(null);
         }
     }
 }

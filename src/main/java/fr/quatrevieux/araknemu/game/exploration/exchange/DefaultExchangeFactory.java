@@ -24,9 +24,7 @@ import fr.quatrevieux.araknemu.game.exploration.creature.ExplorationCreature;
 import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 import fr.quatrevieux.araknemu.game.exploration.interaction.exchange.ExchangeInteraction;
 import fr.quatrevieux.araknemu.game.exploration.npc.GameNpc;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-
-import java.util.Optional;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Factory for exchanges
@@ -42,21 +40,21 @@ public final class DefaultExchangeFactory implements ExchangeFactory<Exploration
 
     @Override
     public ExchangeInteraction create(ExchangeType type, ExplorationPlayer initiator, ExplorationCreature target) {
-        final CreateExchange operation = new CreateExchange(type, initiator);
+        final @Nullable ExchangeInteraction exchange = target.apply(new CreateExchange(type, initiator));
 
-        target.apply(operation);
+        if (exchange == null) {
+            throw new IllegalArgumentException("Bad target");
+        }
 
-        return operation.exchange().orElseThrow(() -> new IllegalArgumentException("Bad target"));
+        return exchange;
     }
 
     /**
      * Visitor operation for create the exchange on the valid target
      */
-    private final class CreateExchange implements Operation {
+    private final class CreateExchange implements Operation<ExchangeInteraction> {
         private final ExchangeType type;
         private final ExplorationPlayer initiator;
-
-        private @MonotonicNonNull ExchangeInteraction exchange;
 
         public CreateExchange(ExchangeType type, ExplorationPlayer initiator) {
             this.type = type;
@@ -64,17 +62,13 @@ public final class DefaultExchangeFactory implements ExchangeFactory<Exploration
         }
 
         @Override
-        public void onExplorationPlayer(ExplorationPlayer player) {
-            exchange = playerFactory.create(type, initiator, player);
+        public ExchangeInteraction onExplorationPlayer(ExplorationPlayer player) {
+            return playerFactory.create(type, initiator, player);
         }
 
         @Override
-        public void onNpc(GameNpc npc) {
-            exchange = npcFactory.create(type, initiator, npc);
-        }
-
-        public Optional<ExchangeInteraction> exchange() {
-            return Optional.ofNullable(exchange);
+        public ExchangeInteraction onNpc(GameNpc npc) {
+            return npcFactory.create(type, initiator, npc);
         }
     }
 }

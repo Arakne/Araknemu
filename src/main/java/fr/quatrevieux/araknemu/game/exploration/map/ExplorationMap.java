@@ -39,6 +39,7 @@ import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.LengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
@@ -221,12 +222,23 @@ public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispa
     }
 
     /**
-     * Apply an operation to all creatures in map
+     * Apply an operation to all creatures in map, and return the first non-null operation value
+     * If the operation return a value, the iteration will be stopped
+     *
+     * @return The first non-null operation value
      *
      * @see ExplorationCreature#apply(Operation)
      */
-    public void apply(Operation operation) {
-        creatures.values().forEach(creature -> creature.apply(operation));
+    public <R> @Nullable R apply(Operation<R> operation) {
+        for (ExplorationCreature creature : creatures.values()) {
+            final R result = creature.apply(operation);
+
+            if (result != null) {
+                return result;
+            }
+        }
+
+        return null;
     }
 
     /**

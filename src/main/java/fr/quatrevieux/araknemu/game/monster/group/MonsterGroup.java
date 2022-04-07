@@ -31,6 +31,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.monster.environment.LivingMonsterGroupPosition;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 
@@ -82,8 +83,8 @@ public final class MonsterGroup implements ExplorationCreature {
     }
 
     @Override
-    public void apply(Operation operation) {
-        operation.onMonsterGroup(this);
+    public <R> @Nullable R apply(Operation<R> operation) {
+        return operation.onMonsterGroup(this);
     }
 
     /**

@@ -38,6 +38,8 @@ public interface Creature<C extends MapCell<C>> {
 
     /**
      * Get the creature cell
+     *
+     * @throws IllegalStateException When the creature is not yet on a cell (i.e. map change or not fully loaded)
      */
     public C cell();
 
