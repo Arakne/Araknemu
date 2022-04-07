@@ -43,14 +43,14 @@ public final class SendNewSprite implements Listener<NewSpriteOnMap> {
         // Save the string value for optimisation
         final String packet = new AddSprites(Collections.singleton(event.sprite())).toString();
 
-        map.apply(new Operation<Boolean>() {
+        map.apply(new Operation<Void>() {
             @Override
-            public Boolean onExplorationPlayer(ExplorationPlayer player) {
+            public Void onExplorationPlayer(ExplorationPlayer player) {
                 if (player.id() != event.sprite().id()) {
                     player.send(packet);
                 }
 
-                return true;
+                return null;
             }
         });
     }

@@ -36,6 +36,7 @@ import java.util.Collection;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -125,32 +126,32 @@ class BasicCellTest extends GameBaseCase {
 
         Collection<ExplorationCreature> creatures = new ArrayList<>();
 
-        map.get(279).apply(new Operation<Boolean>() {
+        assertNull(map.get(279).apply(new Operation<Void>() {
             @Override
-            public Boolean onCreature(ExplorationCreature creature) {
+            public Void onCreature(ExplorationCreature creature) {
                 creatures.add(creature);
-                return true;
+                return null;
             }
-        });
+        }));
 
         assertEquals(Arrays.asList(explorationPlayer(), other), creatures);
 
         creatures.clear();
         other.changeCell(275);
 
-        map.get(279).apply(new Operation<Boolean>() {
+        assertNull(map.get(279).apply(new Operation<Void>() {
             @Override
-            public Boolean onCreature(ExplorationCreature creature) {
+            public Void onCreature(ExplorationCreature creature) {
                 creatures.add(creature);
-                return true;
+                return null;
             }
-        });
+        }));
 
         assertEquals(Arrays.asList(explorationPlayer()), creatures);
     }
 
     @Test
-    void applyWithReturnFalseShouldSkipOtherCreatures() throws Exception {
+    void applyWithReturnValueShouldSkipOtherCreatures() throws Exception {
         ExplorationMap map = explorationPlayer().map();
         ExplorationPlayer other = makeOtherExplorationPlayer();
 
@@ -159,13 +160,13 @@ class BasicCellTest extends GameBaseCase {
 
         Collection<ExplorationCreature> creatures = new ArrayList<>();
 
-        map.get(279).apply(new Operation<Boolean>() {
+        assertSame(explorationPlayer(), map.get(279).apply(new Operation<ExplorationCreature>() {
             @Override
-            public Boolean onCreature(ExplorationCreature creature) {
+            public ExplorationCreature onCreature(ExplorationCreature creature) {
                 creatures.add(creature);
-                return false;
+                return creature;
             }
-        });
+        }));
 
         assertEquals(Arrays.asList(explorationPlayer()), creatures);
     }
@@ -179,13 +180,13 @@ class BasicCellTest extends GameBaseCase {
         explorationPlayer().changeCell(279);
         other.changeMap(map, 279);
 
-        map.get(279).apply(new Operation<Boolean>() {
+        assertNull(map.get(279).apply(new Operation<Void>() {
             @Override
-            public Boolean onExplorationPlayer(ExplorationPlayer player) {
+            public Void onExplorationPlayer(ExplorationPlayer player) {
                 me.leave();
                 other.leave();
-                return true;
+                return null;
             }
-        });
+        }));
     }
 }

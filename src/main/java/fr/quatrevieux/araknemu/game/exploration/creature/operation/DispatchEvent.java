@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 /**
  * Dispatch event to the creature if supports
  */
-public final class DispatchEvent implements Operation<Boolean> {
+public final class DispatchEvent implements Operation<Void> {
     private final Object event;
 
     public DispatchEvent(Object event) {
@@ -33,9 +33,9 @@ public final class DispatchEvent implements Operation<Boolean> {
     }
 
     @Override
-    public Boolean onExplorationPlayer(ExplorationPlayer player) {
+    public Void onExplorationPlayer(ExplorationPlayer player) {
         player.dispatch(event);
 
-        return true;
+        return null;
     }
 }

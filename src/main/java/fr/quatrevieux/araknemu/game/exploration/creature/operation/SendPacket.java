@@ -25,7 +25,7 @@ import fr.quatrevieux.araknemu.game.exploration.creature.Operation;
 /**
  * Send the packet to creatures which supports sending packet
  */
-public final class SendPacket implements Operation<Boolean> {
+public final class SendPacket implements Operation<Void> {
     private final String packet;
 
     public SendPacket(Object packet) {
@@ -33,9 +33,9 @@ public final class SendPacket implements Operation<Boolean> {
     }
 
     @Override
-    public Boolean onExplorationPlayer(ExplorationPlayer player) {
+    public Void onExplorationPlayer(ExplorationPlayer player) {
         player.send(packet);
 
-        return true;
+        return null;
     }
 }

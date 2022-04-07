@@ -298,26 +298,26 @@ class ExplorationMapTest extends GameBaseCase {
         Collection<GameNpc> npcs = new ArrayList<>();
         Collection<ExplorationPlayer> players = new ArrayList<>();
 
-        map.apply(new Operation<Boolean>() {
+        assertNull(map.apply(new Operation<Void>() {
             @Override
-            public Boolean onExplorationPlayer(ExplorationPlayer player) {
+            public Void onExplorationPlayer(ExplorationPlayer player) {
                 players.add(player);
-                return true;
+                return null;
             }
 
             @Override
-            public Boolean onNpc(GameNpc npc) {
+            public Void onNpc(GameNpc npc) {
                 npcs.add(npc);
-                return true;
+                return null;
             }
-        });
+        }));
 
         assertEquals(Arrays.asList(explorationPlayer(), other), players);
         assertEquals(Arrays.asList(npc), npcs);
     }
 
     @Test
-    void applyWithReturnFalseShouldIgnoreNextCreatures() throws Exception {
+    void applyWithReturnValueShouldIgnoreNextCreatures() throws Exception {
         dataSet.pushNpcs();
         ExplorationMap map = explorationPlayer().map();
         ExplorationPlayer other = makeOtherExplorationPlayer();
@@ -329,13 +329,13 @@ class ExplorationMapTest extends GameBaseCase {
 
         Collection<ExplorationCreature> creatures = new ArrayList<>();
 
-        map.apply(new Operation<Boolean>() {
+        assertSame(explorationPlayer(), map.apply(new Operation<ExplorationCreature>() {
             @Override
-            public Boolean onCreature(ExplorationCreature creature) {
+            public ExplorationCreature onCreature(ExplorationCreature creature) {
                 creatures.add(creature);
-                return false;
+                return creature;
             }
-        });
+        }));
 
         assertEquals(Arrays.asList(explorationPlayer()), creatures);
     }
