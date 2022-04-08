@@ -26,7 +26,6 @@ import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.LengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.SameLen;
-import org.checkerframework.checker.initialization.qual.UnderInitialization;
 import org.checkerframework.dataflow.qual.Pure;
 
 import java.util.ArrayList;
@@ -42,9 +41,10 @@ public final class FightMap implements BattlefieldMap {
     private final MapTemplate template;
     private final FightCell @SameLen("this") [] cells;
 
+    @SuppressWarnings("argument") // Do not result SameLen from template.cells()
     public FightMap(MapTemplate template) {
         this.template = template;
-        this.cells = makeCells(template.cells());
+        this.cells = makeCells(this, template.cells());
     }
 
     /**
@@ -110,17 +110,16 @@ public final class FightMap implements BattlefieldMap {
         }
     }
 
-    @SuppressWarnings({"assignment", "return", "argument"}) // Caused by UnderInitialization and SameLen("this")
-    private FightCell @SameLen("this") [] makeCells(@UnderInitialization FightMap this, CellData[] template) {
+    private static FightCell @SameLen("#1") [] makeCells(FightMap map, CellData @SameLen("#1") [] template) {
         final FightCell[] cells = new FightCell[template.length];
 
         for (int i = 0; i < template.length; ++i) {
             final CellData cell = template[i];
 
             if (!cell.active() || !cell.movement().walkable()) {
-                cells[i] = new UnwalkableFightCell(this, template[i], i);
+                cells[i] = new UnwalkableFightCell(map, template[i], i);
             } else {
-                cells[i] = new WalkableFightCell(this, template[i], i);
+                cells[i] = new WalkableFightCell(map, template[i], i);
             }
         }
 

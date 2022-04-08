@@ -107,7 +107,6 @@ public final class PvmXpProvider implements DropRewardProvider {
         }
 
         @Override
-        @SuppressWarnings("argument") // winXp is always >= 0
         public void provide(DropReward reward) {
             final long winXp = (long) (
                 totalXp
@@ -117,7 +116,7 @@ public final class PvmXpProvider implements DropRewardProvider {
                     * (1 + (double) reward.fighter().characteristics().get(Characteristic.WISDOM) / 100)
             );
 
-            reward.setXp(winXp);
+            reward.setXp(Math.max(winXp, 0));
         }
     }
 

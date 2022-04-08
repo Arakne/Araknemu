@@ -27,12 +27,11 @@ import fr.quatrevieux.araknemu.game.item.effect.SpecialEffect;
 import fr.quatrevieux.araknemu.game.item.type.AbstractEquipment;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
 import fr.quatrevieux.araknemu.game.player.characteristic.event.CharacteristicsChanged;
+import fr.quatrevieux.araknemu.game.player.inventory.PlayerInventory;
 import fr.quatrevieux.araknemu.game.player.race.GamePlayerRace;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.DefaultCharacteristics;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.MutableCharacteristics;
-import org.checkerframework.checker.initialization.qual.UnknownInitialization;
-import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
 /**
  * Characteristic map for player
@@ -49,7 +48,6 @@ public final class PlayerCharacteristics implements CharacterCharacteristics {
 
     private Characteristics stuff;
 
-    @SuppressWarnings("assignment")
     public PlayerCharacteristics(Dispatcher dispatcher, GamePlayer player, Player entity) {
         this.dispatcher = dispatcher;
         this.player = player;
@@ -57,7 +55,7 @@ public final class PlayerCharacteristics implements CharacterCharacteristics {
         this.race = player.race();
         this.base = new MutableComputedCharacteristics(new BaseCharacteristics(dispatcher, race, entity));
 
-        this.stuff = computeStuffStats();
+        this.stuff = computeStuffStats(player.inventory());
     }
 
     @Override
@@ -157,7 +155,7 @@ public final class PlayerCharacteristics implements CharacterCharacteristics {
      * Rebuild the stuff stats
      */
     public void rebuildStuffStats() {
-        stuff = computeStuffStats();
+        stuff = computeStuffStats(player.inventory());
 
         dispatcher.dispatch(new CharacteristicsChanged());
     }
@@ -180,15 +178,14 @@ public final class PlayerCharacteristics implements CharacterCharacteristics {
     /**
      * Compute the stuff stats
      */
-    @RequiresNonNull("player")
-    private Characteristics computeStuffStats(@UnknownInitialization PlayerCharacteristics this) {
+    private static Characteristics computeStuffStats(PlayerInventory inventory) {
         final MutableCharacteristics characteristics = new DefaultCharacteristics();
 
-        for (AbstractEquipment equipment : player.inventory().equipments()) {
+        for (AbstractEquipment equipment : inventory.equipments()) {
             equipment.apply(characteristics);
         }
 
-        player.inventory().itemSets().apply(characteristics);
+        inventory.itemSets().apply(characteristics);
 
         return new ComputedCharacteristics<>(characteristics);
     }
