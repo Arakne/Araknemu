@@ -174,7 +174,6 @@ class FightHandlerTest extends GameBaseCase {
 
         FightHandler<ChallengeBuilder> handler = new FightHandler<>(
             new FightService(
-                container.get(MapTemplateRepository.class),
                 dispatcher,
                 Arrays.asList(
                     new ChallengeBuilderFactory(container.get(FighterFactory.class), new ChallengeType(configuration.fight()), container.get(Logger.class))

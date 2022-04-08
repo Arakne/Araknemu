@@ -69,7 +69,6 @@ class FightServiceTest extends FightBaseCase {
         dataSet.pushMaps().pushSubAreas().pushAreas();
 
         service = new FightService(
-            container.get(MapTemplateRepository.class),
             dispatcher = new DefaultListenerAggregate(),
             Arrays.asList(
                 new ChallengeBuilderFactory(container.get(FighterFactory.class), container.get(ChallengeType.class), container.get(Logger.class))

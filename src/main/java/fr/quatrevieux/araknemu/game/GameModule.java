@@ -588,7 +588,6 @@ public final class GameModule implements ContainerModule {
         configurator.persist(
             FightService.class,
             container -> new FightService(
-                container.get(MapTemplateRepository.class),
                 container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class),
                 Arrays.asList(
                     new ChallengeBuilderFactory(
