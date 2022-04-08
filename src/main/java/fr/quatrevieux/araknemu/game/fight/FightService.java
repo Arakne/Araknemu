@@ -22,7 +22,6 @@ package fr.quatrevieux.araknemu.game.fight;
 import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.core.event.EventsSubscriber;
 import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.event.GameStopped;
 import fr.quatrevieux.araknemu.game.exploration.event.ExplorationPlayerCreated;
@@ -51,7 +50,6 @@ import java.util.stream.Collectors;
  * Service for create fights
  */
 public final class FightService implements EventsSubscriber {
-    private final MapTemplateRepository mapRepository;
     private final Dispatcher dispatcher;
     private final Map<Class, FightBuilderFactory> builderFactories;
     private final Collection<FightModule.Factory> moduleFactories;
@@ -61,8 +59,7 @@ public final class FightService implements EventsSubscriber {
     private final Map<Integer, Map<Integer, Fight>> fightsByMapId = new ConcurrentHashMap<>();
     private final AtomicInteger lastFightId = new AtomicInteger();
 
-    public FightService(MapTemplateRepository mapRepository, Dispatcher dispatcher, Collection<? extends FightBuilderFactory> factories, Collection<FightModule.Factory> moduleFactories, GameConfiguration.FightConfiguration configuration) {
-        this.mapRepository = mapRepository;
+    public FightService(Dispatcher dispatcher, Collection<? extends FightBuilderFactory> factories, Collection<FightModule.Factory> moduleFactories, GameConfiguration.FightConfiguration configuration) {
         this.dispatcher = dispatcher;
         this.moduleFactories = moduleFactories;
         this.configuration = configuration;
@@ -127,7 +124,7 @@ public final class FightService implements EventsSubscriber {
      * @param map The base map
      */
     public FightMap map(ExplorationMap map) {
-        return new FightMap(mapRepository.get(map.id()));
+        return new FightMap(map.template());
     }
 
     /**

@@ -19,7 +19,6 @@
 
 package fr.quatrevieux.araknemu.realm.authentication.password;
 
-import org.checkerframework.checker.initialization.qual.UnderInitialization;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
@@ -42,7 +41,7 @@ public final class PasswordManager {
             register(algorithm);
         }
 
-        this.availableAlgorithms = checkAlgorithms(availableAlgorithms);
+        this.availableAlgorithms = checkAlgorithms(this.algorithms, availableAlgorithms);
     }
 
     /**
@@ -92,8 +91,7 @@ public final class PasswordManager {
         algorithms.put(algorithm.name(), algorithm);
     }
 
-    @RequiresNonNull("algorithms")
-    private List<@KeyFor("algorithms") String> checkAlgorithms(@UnderInitialization PasswordManager this, List<String> availableAlgorithms) {
+    private static List<@KeyFor("#1") String> checkAlgorithms(Map<String, HashAlgorithm> algorithms, List<String> availableAlgorithms) {
         if (!algorithms.keySet().containsAll(availableAlgorithms)) {
             final List<String> invalidAlgorithms = new ArrayList<>(availableAlgorithms);
             invalidAlgorithms.removeAll(algorithms.keySet());

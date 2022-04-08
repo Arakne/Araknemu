@@ -291,4 +291,11 @@ public final class ExplorationMap implements DofusMap<ExplorationMapCell>, Dispa
     public ListenerAggregate dispatcher() {
         return dispatcher;
     }
+
+    /**
+     * Internal: do not call directly !
+     */
+    public MapTemplate template() {
+        return template;
+    }
 }
