@@ -45,7 +45,7 @@ public final class MoveNearEnemy<F extends ActiveFighter> implements ActionGener
         this.helper = ai.helper();
         this.pathfinder = helper.cells().pathfinder()
             .targetDistance(1)
-            .walkablePredicate(FightCell::walkableIgnoreFighter)
+            .walkablePredicate(cell -> true) // Fix #94 Ignore inaccessible cell (handled by cell cost)
             .cellWeightFunction(this::cellCost)
         ;
     }
@@ -57,9 +57,11 @@ public final class MoveNearEnemy<F extends ActiveFighter> implements ActionGener
         }
 
         final int movementPoints = helper.movementPoints();
+        final FightCell currentCell = ai.fighter().cell();
 
         return ai.enemy()
-            .map(enemy -> NullnessUtil.castNonNull(pathfinder).findPath(ai.fighter().cell(), enemy.cell()).truncate(movementPoints + 1))
+            .map(enemy -> NullnessUtil.castNonNull(pathfinder).findPath(currentCell, enemy.cell()).truncate(movementPoints + 1))
+            .map(path -> path.keepWhile(step -> step.cell().equals(currentCell) || step.cell().walkable())) // Truncate path to first unwalkable cell (may occur if the enemy cell is inaccessible or if other fighters block the path)
             .filter(path -> path.size() > 1)
             .map(path -> actions.move().create(ai.fighter(), path))
         ;
@@ -69,6 +71,13 @@ public final class MoveNearEnemy<F extends ActiveFighter> implements ActionGener
      * Compute the cell cost for optimize the path finding
      */
     private @Positive int cellCost(FightCell cell) {
+        // Fix #94 : Some cells are not accessible, but walkable/targetable using teleport.
+        // In this case the pathfinder will fail, so instead of ignoring unwalkable cells, simply set a very high cost,
+        // which allows the AI to generate a path to an inaccessible cell without throws a PathException
+        if (!cell.walkableIgnoreFighter()) {
+            return 1000;
+        }
+
         // A fighter is on the cell : the cell is not walkable
         // But the fighter may leave the place at the next turn
         // The cost is higher than a simple detour, but permit to resolve a path blocked by a fighter

@@ -137,6 +137,6 @@ class SqlMapTemplateRepositoryTest extends GameBaseCase {
 
     @Test
     void all() {
-        assertEquals(3, repository.all().size());
+        assertEquals(4, repository.all().size());
     }
 }

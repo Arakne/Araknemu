@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMapService;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilder;
+import fr.quatrevieux.araknemu.game.fight.builder.FightBuilder;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.event.FightStarted;
@@ -307,6 +308,12 @@ public class FightBaseCase extends GameBaseCase {
 
         public FightBuilder addSimpleTeam(PlayerFighter leader, List<Integer> places) {
             teams.add(new SimpleTeam(leader, places.stream().map(map()::get).collect(Collectors.toList()), teams.size()));
+
+            return this;
+        }
+
+        public FightBuilder map(int mapId) {
+            map = loadFightMap(mapId);
 
             return this;
         }
