@@ -38,6 +38,7 @@ import fr.quatrevieux.araknemu.game.fight.spectator.Spectators;
 import fr.quatrevieux.araknemu.game.fight.state.*;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
 import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.network.game.GameSession;
@@ -94,7 +95,8 @@ class FightTest extends GameBaseCase {
                 new FinishState()
             ),
             logger = Mockito.mock(Logger.class),
-            executor = ExecutorFactory.createSingleThread()
+            executor = ExecutorFactory.createSingleThread(),
+            container.get(FightActionsFactoryRegistry.class)
         );
     }
 
@@ -119,6 +121,7 @@ class FightTest extends GameBaseCase {
         assertFalse(fight.active());
         assertTrue(fight.alive());
         assertInstanceOf(Spectators.class, fight.spectators());
+        assertSame(container.get(FightActionsFactoryRegistry.class), fight.actions());
     }
 
     @Test

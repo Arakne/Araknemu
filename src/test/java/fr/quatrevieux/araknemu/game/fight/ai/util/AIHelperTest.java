@@ -141,6 +141,7 @@ class AIHelperTest extends AiBaseCase {
 
         assertNotSame(helper, ai.helper());
         CastSimulation simulation = helper.spells()
+            .caster(fight.actions().cast().validator())
             .simulate(container.get(Simulator.class))
             .findAny()
             .get();

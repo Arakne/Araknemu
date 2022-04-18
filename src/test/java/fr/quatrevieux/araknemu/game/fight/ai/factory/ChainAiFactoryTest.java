@@ -57,7 +57,7 @@ class ChainAiFactoryTest extends FightBaseCase {
 
     @Test
     void createSuccess() {
-        final FighterAI ai = new FighterAI(fighter, fighter.fight(), NullGenerator.INSTANCE);
+        final FighterAI ai = new FighterAI(fighter, fighter.fight(), NullGenerator.get());
 
         assertSame(ai, new ChainAiFactory(
             fighter -> Optional.empty(),

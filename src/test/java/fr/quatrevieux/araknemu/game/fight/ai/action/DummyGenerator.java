@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 
 import java.time.Duration;
 import java.util.Optional;
@@ -35,7 +36,7 @@ public class DummyGenerator implements ActionGenerator {
     public void initialize(AI ai) {}
 
     @Override
-    public Optional<Action> generate(AI ai) {
+    public Optional<Action> generate(AI ai, ActionsFactory actions) {
         return Optional.of(
             new Action() {
                 @Override

@@ -57,7 +57,7 @@ public class AiBaseCase extends FightBaseCase {
     protected Fight fight;
 
     protected AbstractAiBuilderFactory actionFactory;
-    protected ActionGenerator action;
+    protected ActionGenerator<Fighter> action;
     protected FighterAI ai;
 
     protected FightTurn turn;
@@ -88,7 +88,7 @@ public class AiBaseCase extends FightBaseCase {
         ai.start(turn = fight.turnList().current().get());
 
         if (action == null && actionFactory != null) {
-            GeneratorBuilder aiBuilder = new GeneratorBuilder();
+            GeneratorBuilder<Fighter> aiBuilder = new GeneratorBuilder<>();
             actionFactory.configure(aiBuilder, fighter);
             action = aiBuilder.build();
         }
@@ -100,7 +100,7 @@ public class AiBaseCase extends FightBaseCase {
 
     public Optional<Action> generateAction() {
         lastAction = null;
-        final Optional<Action> generated = action.generate(ai);
+        final Optional<Action> generated = action.generate(ai, fight.actions());
 
         generated.ifPresent(a -> lastAction = a);
 

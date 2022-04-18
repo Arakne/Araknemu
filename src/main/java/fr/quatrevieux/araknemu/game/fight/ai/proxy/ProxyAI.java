@@ -37,8 +37,8 @@ import java.util.stream.Stream;
  *
  * Note: this object is immutable : any change will result to a creation of a new instance
  */
-public final class ProxyAI implements AI {
-    private final AI ai;
+public final class ProxyAI implements AI<ActiveFighter> {
+    private final AI<?> ai;
 
     private ProxyBattlefield map;
     private ProxyActiveFighter fighter;
@@ -46,7 +46,7 @@ public final class ProxyAI implements AI {
 
     private final Map<PassiveFighter, PassiveFighter> fighters = new HashMap<>();
 
-    public ProxyAI(AI ai) {
+    public ProxyAI(AI<?> ai) {
         this.ai = ai;
         this.fighter = new ProxyActiveFighter(ai.fighter());
         this.map = new ProxyBattlefield(ai.map());

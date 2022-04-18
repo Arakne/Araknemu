@@ -21,8 +21,6 @@ package fr.quatrevieux.araknemu.game.fight.builder;
 
 import fr.quatrevieux.araknemu.game.fight.FightService;
 
-import java.util.concurrent.ScheduledExecutorService;
-
 /**
  * Factory for fight builder
  */
@@ -35,5 +33,5 @@ public interface FightBuilderFactory<B extends FightBuilder> {
     /**
      * Create the builder
      */
-    public B create(FightService service, ScheduledExecutorService executor);
+    public B create(FightService service);
 }

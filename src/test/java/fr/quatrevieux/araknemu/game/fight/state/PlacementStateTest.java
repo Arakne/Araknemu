@@ -36,6 +36,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFighterPositions;
@@ -95,7 +96,8 @@ class PlacementStateTest extends FightBaseCase {
                 new ActiveState()
             ),
             container.get(Logger.class),
-            ExecutorFactory.createSingleThread()
+            ExecutorFactory.createSingleThread(),
+            container.get(FightActionsFactoryRegistry.class)
         );
     }
 
@@ -177,7 +179,8 @@ class PlacementStateTest extends FightBaseCase {
                 new ActiveState()
             ),
             container.get(Logger.class),
-            ExecutorFactory.createSingleThread()
+            ExecutorFactory.createSingleThread(),
+            container.get(FightActionsFactoryRegistry.class)
         );
 
         state.start(fight);
@@ -207,7 +210,8 @@ class PlacementStateTest extends FightBaseCase {
                 new ActiveState()
             ),
             container.get(Logger.class),
-            ExecutorFactory.createSingleThread()
+            ExecutorFactory.createSingleThread(),
+            container.get(FightActionsFactoryRegistry.class)
         );
 
         state.start(fight);
@@ -242,7 +246,8 @@ class PlacementStateTest extends FightBaseCase {
                 new ActiveState()
             ),
             container.get(Logger.class),
-            ExecutorFactory.createSingleThread()
+            ExecutorFactory.createSingleThread(),
+            container.get(FightActionsFactoryRegistry.class)
         );
 
         state.start(fight);

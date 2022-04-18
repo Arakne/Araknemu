@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.ConditionalGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.GeneratorAggregate;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -35,36 +36,36 @@ import java.lang.reflect.Field;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 class ConditionalBuilderTest extends TestCase {
-    private ConditionalBuilder builder;
+    private ConditionalBuilder<Fighter> builder;
 
     @BeforeEach
     void setUp() {
-        builder = new ConditionalBuilder(ai -> true);
+        builder = new ConditionalBuilder<>(ai -> true);
     }
 
     @Test
     void buildEmpty() throws NoSuchFieldException, IllegalAccessException {
-        assertGenerated(builder.build(), NullGenerator.INSTANCE, NullGenerator.INSTANCE);
+        assertGenerated(builder.build(), NullGenerator.get(), NullGenerator.get());
     }
 
     @Test
     void onlySuccess() throws NoSuchFieldException, IllegalAccessException {
-        ActionGenerator g = Mockito.mock(ActionGenerator.class);
+        ActionGenerator<Fighter> g = Mockito.mock(ActionGenerator.class);
 
-        assertGenerated(builder.success(g).build(), g, NullGenerator.INSTANCE);
+        assertGenerated(builder.success(g).build(), g, NullGenerator.get());
     }
 
     @Test
     void onlyOtherwise() throws NoSuchFieldException, IllegalAccessException {
-        ActionGenerator g = Mockito.mock(ActionGenerator.class);
+        ActionGenerator<Fighter> g = Mockito.mock(ActionGenerator.class);
 
-        assertGenerated(builder.otherwise(g).build(), NullGenerator.INSTANCE, g);
+        assertGenerated(builder.otherwise(g).build(), NullGenerator.get(), g);
     }
 
     @Test
     void both() throws NoSuchFieldException, IllegalAccessException {
-        ActionGenerator gs = Mockito.mock(ActionGenerator.class);
-        ActionGenerator go = Mockito.mock(ActionGenerator.class);
+        ActionGenerator<Fighter> gs = Mockito.mock(ActionGenerator.class);
+        ActionGenerator<Fighter> go = Mockito.mock(ActionGenerator.class);
 
         assertGenerated(builder.success(gs).otherwise(go).build(), gs, go);
     }
@@ -80,10 +81,10 @@ class ConditionalBuilderTest extends TestCase {
 
     @Test
     void multipleActionShouldGenerateAggregate() throws NoSuchFieldException, IllegalAccessException {
-        ActionGenerator gs1 = Mockito.mock(ActionGenerator.class);
-        ActionGenerator gs2 = Mockito.mock(ActionGenerator.class);
-        ActionGenerator go1 = Mockito.mock(ActionGenerator.class);
-        ActionGenerator go2 = Mockito.mock(ActionGenerator.class);
+        ActionGenerator<Fighter> gs1 = Mockito.mock(ActionGenerator.class);
+        ActionGenerator<Fighter> gs2 = Mockito.mock(ActionGenerator.class);
+        ActionGenerator<Fighter> go1 = Mockito.mock(ActionGenerator.class);
+        ActionGenerator<Fighter> go2 = Mockito.mock(ActionGenerator.class);
 
         assertGenerated(
             builder
@@ -95,7 +96,7 @@ class ConditionalBuilderTest extends TestCase {
         );
     }
 
-    private void assertGenerated(ActionGenerator generator, Class successType, Class otherwiseType) throws NoSuchFieldException, IllegalAccessException {
+    private void assertGenerated(ActionGenerator<Fighter> generator, Class successType, Class otherwiseType) throws NoSuchFieldException, IllegalAccessException {
         assertInstanceOf(ConditionalGenerator.class, generator);
 
         Field success = ConditionalGenerator.class.getDeclaredField("success");
@@ -107,7 +108,7 @@ class ConditionalBuilderTest extends TestCase {
         assertInstanceOf(otherwiseType, otherwise.get(generator));
     }
 
-    private void assertGenerated(ActionGenerator generator, ActionGenerator successAction, ActionGenerator otherwiseAction) throws NoSuchFieldException, IllegalAccessException {
+    private void assertGenerated(ActionGenerator<Fighter> generator, ActionGenerator<Fighter> successAction, ActionGenerator<Fighter> otherwiseAction) throws NoSuchFieldException, IllegalAccessException {
         assertInstanceOf(ConditionalGenerator.class, generator);
 
         Field success = ConditionalGenerator.class.getDeclaredField("success");

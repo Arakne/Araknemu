@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -921,10 +922,10 @@ public class FunctionalTest extends FightBaseCase {
 
             // Ensure no critical hit / fail
             new CriticalityStrategy() {
-                public int hitRate(int base) { return 0; }
-                public int failureRate(int base) { return 0; }
-                public boolean hit(int baseRate) { return false; }
-                public boolean failed(int baseRate) { return false; }
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
             }
         ));
 
@@ -945,10 +946,10 @@ public class FunctionalTest extends FightBaseCase {
 
             // Ensure critical hit
             new CriticalityStrategy() {
-                public int hitRate(int base) { return 100; }
-                public int failureRate(int base) { return 0; }
-                public boolean hit(int baseRate) { return true; }
-                public boolean failed(int baseRate) { return false; }
+                public int hitRate(ActiveFighter fighter, int base) { return 100; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return true; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
             }
         ));
 

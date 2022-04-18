@@ -29,7 +29,7 @@ class TeleportNearEnemyTest extends AiBaseCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        action = new TeleportNearEnemy();
+        action = new TeleportNearEnemy<>();
         dataSet.pushFunctionalSpells();
     }
 

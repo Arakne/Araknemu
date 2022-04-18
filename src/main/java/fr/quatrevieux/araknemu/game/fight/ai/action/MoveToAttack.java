@@ -28,8 +28,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -48,109 +47,46 @@ import java.util.stream.Collectors;
  * and check all spells on all available cells.
  * The first matching cell is selected.
  */
-public final class MoveToAttack implements ActionGenerator {
-    private final Movement movement;
+public final class MoveToAttack<F extends ActiveFighter> implements ActionGenerator<F> {
     private final Simulator simulator;
-    private final Attack attack;
-    private final TargetSelectionStrategy strategy;
+    private final Attack<F> attack;
+    private final TargetSelectionStrategy<F> strategy;
 
-    private final Map<FightCell, Collection<CastSimulation>> possibleActionsCache = new HashMap<>();
-
-    private @MonotonicNonNull ActiveFighter fighter;
-    private @MonotonicNonNull AIHelper helper;
-
-    @SuppressWarnings("methodref.receiver.bound")
-    private MoveToAttack(Simulator simulator, TargetSelectionStrategy strategy) {
+    private MoveToAttack(Simulator simulator, TargetSelectionStrategy<F> strategy) {
         this.simulator = simulator;
-        this.attack = new Attack(simulator);
+        this.attack = new Attack<>(simulator);
         this.strategy = strategy;
-        this.movement = new Movement(this::score, this::isValidCell);
     }
 
     @Override
-    public void initialize(AI ai) {
-        movement.initialize(ai);
+    public void initialize(AI<F> ai) {
         attack.initialize(ai);
-
-        this.fighter = ai.fighter();
     }
 
     @Override
-    public Optional<Action> generate(AI ai) {
-        helper = ai.helper();
+    public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
+        final AIHelper helper = ai.helper();
+        final F fighter = ai.fighter();
 
         // Cannot move or attack
         if (fighter == null || !helper.canCast() || !helper.canMove()) {
             return Optional.empty();
         }
 
-        try {
-            // Can attack, but there is at least 1 enemy : do not perform move because of potential tackle
-            if (canAttackFromCell(fighter.cell()) && helper.enemies().adjacent().findFirst().isPresent()) {
-                return Optional.empty();
-            }
+        final GenerationScope scope = new GenerationScope(ai.fighter(), actions, ai.helper());
 
-            return movement.generate(ai);
-        } finally {
-            possibleActionsCache.clear();
-        }
-    }
-
-    /**
-     * Simulate possible attacks from the given cell
-     *
-     * - List available spells
-     * - Combine with all accessible cells
-     * - Check if the action is valid
-     * - Simulate the action
-     * - Keep only simulation results with an effective attack
-     *
-     * Note: Because the fighter should be move to the tested cell, values cannot be computed lazily, like with a stream
-     *
-     * @param cell The cell from which spells will be casted
-     *
-     * @see Attack#valid(CastSimulation) To check if the attack is effective
-     */
-    public Collection<CastSimulation> computePossibleCasts(FightCell cell) {
-        Collection<CastSimulation> possibleCasts = possibleActionsCache.get(cell);
-
-        if (possibleCasts != null) {
-            return possibleCasts;
+        // Can attack, but there is at least 1 enemy : do not perform move because of potential tackle
+        if (helper.enemies().adjacent().findFirst().isPresent() && scope.canAttackFromCell(fighter.cell())) {
+            return Optional.empty();
         }
 
-        possibleCasts = NullnessUtil.castNonNull(helper).withPosition(cell).spells()
-            .simulate(simulator)
-            .filter(attack::valid) // Keep only effective attacks
-            .collect(Collectors.toList())
-        ;
+        final Movement<F> movement = new Movement<>(
+            coordinates -> strategy.score(scope, coordinates),
+            scoredCell -> scope.canAttackFromCell(scoredCell.coordinates().cell())
+        );
+        movement.initialize(ai);
 
-        possibleActionsCache.put(cell, possibleCasts);
-
-        return possibleCasts;
-    }
-
-    /**
-     * Check if there is at least one attack possible from the given cell
-     */
-    private boolean canAttackFromCell(FightCell cell) {
-        return !computePossibleCasts(cell).isEmpty();
-    }
-
-    /**
-     * Compute the score of a cell
-     * The lowest value will be selected
-     */
-    private double score(CoordinateCell<FightCell> coordinate) {
-        return strategy.score(this, coordinate);
-    }
-
-    /**
-     * Check if the cell is a valid movement
-     *
-     * It must have at least one possible attack
-     */
-    private boolean isValidCell(Movement.ScoredCell scoredCell) {
-        return canAttackFromCell(scoredCell.coordinates().cell());
+        return movement.generate(ai, actions);
     }
 
     /**
@@ -159,50 +95,121 @@ public final class MoveToAttack implements ActionGenerator {
      * Note: This selected cell is not the best cell for perform an attack, but the nearest cell.
      *       So, it do not perform the best move for maximize damage.
      */
-    public static MoveToAttack nearest(Simulator simulator) {
-        return new MoveToAttack(simulator, new NearestStrategy());
+    public static <F extends ActiveFighter> MoveToAttack<F> nearest(Simulator simulator) {
+        return new MoveToAttack<>(simulator, new NearestStrategy<>());
     }
 
     /**
      * Select the best target cell for cast a spell, and maximizing damage
      */
-    public static MoveToAttack bestTarget(Simulator simulator) {
-        return new MoveToAttack(simulator, new BestTargetStrategy());
+    public static <F extends ActiveFighter> MoveToAttack<F> bestTarget(Simulator simulator) {
+        return new MoveToAttack<>(simulator, new BestTargetStrategy<>());
     }
 
-    public interface TargetSelectionStrategy {
+    /**
+     * Store parameters and possible actions of current action generator
+     */
+    public final class GenerationScope {
+        private final F fighter;
+        private final ActionsFactory<F> actions;
+        private final AIHelper helper;
+        private final Map<FightCell, Collection<CastSimulation>> possibleActionsCache = new HashMap<>();
+
+        public GenerationScope(F fighter, ActionsFactory<F> actions, AIHelper helper) {
+            this.fighter = fighter;
+            this.actions = actions;
+            this.helper = helper;
+        }
+
+        /**
+         * Fighter handle by the AI, which will perform the action
+         */
+        public F fighter() {
+            return fighter;
+        }
+
+        /**
+         * Compute the score of the cast action
+         * Higher is the score, more effective is the action
+         */
+        public double attackScore(CastSimulation simulation) {
+            return attack.score(simulation);
+        }
+
+        /**
+         * Check if there is at least one attack possible from the given cell
+         */
+        private boolean canAttackFromCell(FightCell cell) {
+            return !computePossibleCasts(cell).isEmpty();
+        }
+
+        /**
+         * Simulate possible attacks from the given cell
+         *
+         * - List available spells
+         * - Combine with all accessible cells
+         * - Check if the action is valid
+         * - Simulate the action
+         * - Keep only simulation results with an effective attack
+         *
+         * Note: Because the fighter should be move to the tested cell, values cannot be computed lazily, like with a stream
+         *
+         * @param cell The cell from which spells will be casted
+         *
+         * @see Attack#valid(CastSimulation) To check if the attack is effective
+         */
+        public Collection<CastSimulation> computePossibleCasts(FightCell cell) {
+            Collection<CastSimulation> possibleCasts = possibleActionsCache.get(cell);
+
+            if (possibleCasts != null) {
+                return possibleCasts;
+            }
+
+            possibleCasts = helper.withPosition(cell).spells().caster(actions.cast().validator())
+                .simulate(simulator)
+                .filter(attack::valid) // Keep only effective attacks
+                .collect(Collectors.toList())
+            ;
+
+            possibleActionsCache.put(cell, possibleCasts);
+
+            return possibleCasts;
+        }
+    }
+
+    public interface TargetSelectionStrategy<F extends ActiveFighter> {
         /**
          * Compute the score of a given target cell
          *
-         * @param generator The action generator
+         * @param scope Scope which contains parameters for perform action selection
          * @param target The cell to check
          *
          * @return The score as double. The highest value will be selected
          */
-        public double score(MoveToAttack generator, CoordinateCell<FightCell> target);
+        public double score(MoveToAttack<F>.GenerationScope scope, CoordinateCell<FightCell> target);
     }
 
-    public static final class BestTargetStrategy implements TargetSelectionStrategy {
+    public static final class BestTargetStrategy<F extends ActiveFighter> implements TargetSelectionStrategy<F> {
         @Override
-        public double score(MoveToAttack generator, CoordinateCell<FightCell> target) {
-            return maxScore(generator, target.cell()) - target.distance(NullnessUtil.castNonNull(generator.fighter).cell());
+        public double score(MoveToAttack<F>.GenerationScope scope, CoordinateCell<FightCell> target) {
+            return maxScore(scope, target.cell()) - target.distance(scope.fighter().cell());
         }
 
         /**
          * Compute the max spell score from the given cell
          */
-        private static double maxScore(MoveToAttack generator, FightCell cell) {
-            return generator.computePossibleCasts(cell).stream()
-                .mapToDouble(generator.attack::score)
+        private static <F extends ActiveFighter> double maxScore(MoveToAttack<F>.GenerationScope scope, FightCell cell) {
+            return scope.computePossibleCasts(cell).stream()
+                .mapToDouble(scope::attackScore)
                 .max().orElse(0)
             ;
         }
     }
 
-    private static final class NearestStrategy implements TargetSelectionStrategy {
+    private static final class NearestStrategy<F extends ActiveFighter> implements TargetSelectionStrategy<F> {
         @Override
-        public double score(MoveToAttack generator, CoordinateCell<FightCell> target) {
-            return -target.distance(NullnessUtil.castNonNull(generator.fighter).cell()) + sigmoid(BestTargetStrategy.maxScore(generator, target.cell()));
+        public double score(MoveToAttack<F>.GenerationScope scope, CoordinateCell<FightCell> target) {
+            return -target.distance(scope.fighter().cell()) + sigmoid(BestTargetStrategy.maxScore(scope, target.cell()));
         }
 
         /**

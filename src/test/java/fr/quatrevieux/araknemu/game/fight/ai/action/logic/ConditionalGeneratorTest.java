@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.action.logic;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -50,14 +51,15 @@ class ConditionalGeneratorTest {
         ActionGenerator go = Mockito.mock(ActionGenerator.class);
 
         AI ai = Mockito.mock(AI.class);
+        ActionsFactory actions = Mockito.mock(ActionsFactory.class);
         Action action = Mockito.mock(Action.class);
 
-        Mockito.when(gs.generate(ai)).thenReturn(Optional.of(action));
+        Mockito.when(gs.generate(ai, actions)).thenReturn(Optional.of(action));
 
         ConditionalGenerator aggregate = new ConditionalGenerator(a -> true, gs, go);
 
-        assertSame(action, aggregate.generate(ai).get());
-        Mockito.verify(go, Mockito.never()).generate(ai);
+        assertSame(action, aggregate.generate(ai, actions).get());
+        Mockito.verify(go, Mockito.never()).generate(ai, actions);
     }
 
     @Test
@@ -66,13 +68,14 @@ class ConditionalGeneratorTest {
         ActionGenerator go = Mockito.mock(ActionGenerator.class);
 
         AI ai = Mockito.mock(AI.class);
+        ActionsFactory actions = Mockito.mock(ActionsFactory.class);
         Action action = Mockito.mock(Action.class);
 
-        Mockito.when(go.generate(ai)).thenReturn(Optional.of(action));
+        Mockito.when(go.generate(ai, actions)).thenReturn(Optional.of(action));
 
         ConditionalGenerator aggregate = new ConditionalGenerator(a -> false, gs, go);
 
-        assertSame(action, aggregate.generate(ai).get());
-        Mockito.verify(gs, Mockito.never()).generate(ai);
+        assertSame(action, aggregate.generate(ai, actions).get());
+        Mockito.verify(gs, Mockito.never()).generate(ai, actions);
     }
 }

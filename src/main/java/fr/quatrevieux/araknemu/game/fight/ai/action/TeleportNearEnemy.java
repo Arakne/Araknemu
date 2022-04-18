@@ -24,13 +24,14 @@ import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.util.SpellCaster;
 import fr.quatrevieux.araknemu.game.fight.ai.util.SpellsHelper;
 import fr.quatrevieux.araknemu.game.fight.castable.Castable;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -41,15 +42,13 @@ import java.util.stream.Collectors;
 /**
  * Try to teleport near enemy
  */
-public final class TeleportNearEnemy implements ActionGenerator {
-    private @MonotonicNonNull SpellCaster caster;
+public final class TeleportNearEnemy<F extends ActiveFighter> implements ActionGenerator<F> {
     private List<Spell> teleportSpells = Collections.emptyList();
 
     @Override
-    public void initialize(AI ai) {
+    public void initialize(AI<F> ai) {
         final SpellsHelper helper = ai.helper().spells();
 
-        caster = helper.caster();
         teleportSpells = helper
             .withEffect(4)
             .sorted(Comparator.comparingInt(Castable::apCost))
@@ -58,7 +57,7 @@ public final class TeleportNearEnemy implements ActionGenerator {
     }
 
     @Override
-    public Optional<Action> generate(AI ai) {
+    public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
         if (teleportSpells.isEmpty()) {
             return Optional.empty();
         }
@@ -75,6 +74,7 @@ public final class TeleportNearEnemy implements ActionGenerator {
             return Optional.empty();
         }
 
+        final SpellCaster caster = ai.helper().spells().caster(actions.cast().validator());
         final Selector selector = new Selector(enemy.get().cell(), ai.fighter().cell());
 
         // Already at adjacent cell of the enemy
@@ -88,12 +88,12 @@ public final class TeleportNearEnemy implements ActionGenerator {
                 break; // Following spells have an higher cost
             }
 
-            if (selectBestTeleportTargetForSpell(selector, ai.map(), spell)) {
-                return selector.action();
+            if (selectBestTeleportTargetForSpell(caster, selector, ai.map(), spell)) {
+                return selector.action(ai.fighter(), actions);
             }
         }
 
-        return selector.action();
+        return selector.action(ai.fighter(), actions);
     }
 
     /**
@@ -102,10 +102,10 @@ public final class TeleportNearEnemy implements ActionGenerator {
      *
      * @return true if the spell can reach an adjacent cell
      */
-    private boolean selectBestTeleportTargetForSpell(Selector selector, BattlefieldMap map, Spell spell) {
+    private boolean selectBestTeleportTargetForSpell(SpellCaster caster, Selector selector, BattlefieldMap map, Spell spell) {
         for (FightCell cell : map) {
             // Target or launch is not valid
-            if (!cell.walkable() || !NullnessUtil.castNonNull(caster).validate(spell, cell)) {
+            if (!cell.walkable() || !caster.validate(spell, cell)) {
                 continue;
             }
 
@@ -160,12 +160,12 @@ public final class TeleportNearEnemy implements ActionGenerator {
          * Get the best cast action
          * May returns an empty optional if no teleport spell can be found, or if the fighter is already on the best cell
          */
-        public Optional<Action> action() {
+        public Optional<Action> action(F fighter, ActionsFactory<F> actions) {
             if (spell == null || cell == null) {
                 return Optional.empty();
             }
 
-            return Optional.of(NullnessUtil.castNonNull(caster).create(spell, cell));
+            return Optional.of(actions.cast().create(fighter, spell, cell));
         }
     }
 }

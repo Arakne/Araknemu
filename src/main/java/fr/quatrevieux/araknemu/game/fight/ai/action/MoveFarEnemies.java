@@ -23,8 +23,10 @@ import fr.arakne.utils.maps.CoordinateCell;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.util.Movement;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import org.checkerframework.checker.nullness.util.NullnessUtil;
 
 import java.util.Collections;
@@ -38,23 +40,23 @@ import java.util.stream.Collectors;
  * The selected cell is the cell with the highest distance from the nearest enemy
  * Select only cells with higher distance than current cell
  */
-public final class MoveFarEnemies implements ActionGenerator {
-    private final Movement movement;
+public final class MoveFarEnemies<F extends ActiveFighter> implements ActionGenerator<F> {
+    private final Movement<F> movement;
 
     private List<CoordinateCell<FightCell>> enemiesCells = Collections.emptyList();
 
     @SuppressWarnings("methodref.receiver.bound")
     public MoveFarEnemies() {
-        movement = new Movement(this::score, scoredCell -> true);
+        movement = new Movement<>(this::score, scoredCell -> true);
     }
 
     @Override
-    public void initialize(AI ai) {
+    public void initialize(AI<F> ai) {
         movement.initialize(ai);
     }
 
     @Override
-    public Optional<Action> generate(AI ai) {
+    public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
         final AIHelper helper = ai.helper();
 
         if (!helper.canMove()) {
@@ -63,7 +65,7 @@ public final class MoveFarEnemies implements ActionGenerator {
 
         enemiesCells = helper.enemies().cells().map(FightCell::coordinate).collect(Collectors.toList());
 
-        return movement.generate(ai);
+        return movement.generate(ai, actions);
     }
 
     /**

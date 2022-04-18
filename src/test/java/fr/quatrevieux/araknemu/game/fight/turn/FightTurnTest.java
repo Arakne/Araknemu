@@ -27,7 +27,7 @@ import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
-import fr.quatrevieux.araknemu.game.fight.turn.action.factory.TurnActionsFactory;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStarted;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStopped;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.RefreshBuffs;
@@ -38,7 +38,6 @@ import io.github.artsok.RepeatedIfExceptionsTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.time.Duration;
@@ -82,7 +81,6 @@ class FightTurnTest extends FightBaseCase {
         assertSame(fight, turn.fight());
         assertEquals(Duration.ofMillis(250), turn.duration());
         assertFalse(turn.active());
-        assertInstanceOf(TurnActionsFactory.class, turn.actions());
     }
 
     @Test

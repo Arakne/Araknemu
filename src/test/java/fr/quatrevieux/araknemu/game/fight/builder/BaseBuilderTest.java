@@ -35,9 +35,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
-import java.util.concurrent.Executors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BaseBuilderTest extends GameBaseCase {
     private BaseBuilder builder;
@@ -51,7 +53,7 @@ class BaseBuilderTest extends GameBaseCase {
         dataSet.pushMaps().pushSubAreas().pushAreas();
 
         type = Mockito.mock(FightType.class);
-        builder = new BaseBuilder(container.get(FightService.class), new RandomUtil(), type, container.get(Logger.class), ExecutorFactory.createSingleThread());
+        builder = new BaseBuilder(container.get(FightService.class), new RandomUtil(), type);
     }
 
     @Test
@@ -117,7 +119,7 @@ class BaseBuilderTest extends GameBaseCase {
 
     @Test
     void buildWithoutRandomizeTeam() throws Exception {
-        builder = new BaseBuilder(container.get(FightService.class), null, type, container.get(Logger.class), ExecutorFactory.createSingleThread());
+        builder = new BaseBuilder(container.get(FightService.class), null, type);
 
         PlayerFighter fighter = new PlayerFighter(gamePlayer());
         PlayerFighter other = new PlayerFighter(makeOtherPlayer());

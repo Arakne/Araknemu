@@ -22,12 +22,14 @@ package fr.quatrevieux.araknemu.game.fight.ai.action.logic;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 class GeneratorAggregateTest {
     @Test
@@ -53,17 +55,18 @@ class GeneratorAggregateTest {
         ActionGenerator g3 = Mockito.mock(ActionGenerator.class);
 
         AI ai = Mockito.mock(AI.class);
+        ActionsFactory actions = Mockito.mock(ActionsFactory.class);
 
         Action action = Mockito.mock(Action.class);
 
-        Mockito.when(g1.generate(ai)).thenReturn(Optional.empty());
-        Mockito.when(g2.generate(ai)).thenReturn(Optional.of(action));
+        Mockito.when(g1.generate(ai, actions)).thenReturn(Optional.empty());
+        Mockito.when(g2.generate(ai, actions)).thenReturn(Optional.of(action));
 
         GeneratorAggregate aggregate = new GeneratorAggregate(new ActionGenerator[] {g1, g2, g3});
 
-        assertSame(action, aggregate.generate(ai).get());
+        assertSame(action, aggregate.generate(ai, actions).get());
 
-        Mockito.verify(g3, Mockito.never()).generate(ai);
+        Mockito.verify(g3, Mockito.never()).generate(ai, actions);
     }
 
     @Test
@@ -73,13 +76,14 @@ class GeneratorAggregateTest {
         ActionGenerator g3 = Mockito.mock(ActionGenerator.class);
 
         AI ai = Mockito.mock(AI.class);
+        ActionsFactory actions = Mockito.mock(ActionsFactory.class);
 
-        Mockito.when(g1.generate(ai)).thenReturn(Optional.empty());
-        Mockito.when(g2.generate(ai)).thenReturn(Optional.empty());
-        Mockito.when(g3.generate(ai)).thenReturn(Optional.empty());
+        Mockito.when(g1.generate(ai, actions)).thenReturn(Optional.empty());
+        Mockito.when(g2.generate(ai, actions)).thenReturn(Optional.empty());
+        Mockito.when(g3.generate(ai, actions)).thenReturn(Optional.empty());
 
         GeneratorAggregate aggregate = new GeneratorAggregate(new ActionGenerator[] {g1, g2, g3});
 
-        assertFalse(aggregate.generate(ai).isPresent());
+        assertFalse(aggregate.generate(ai, actions).isPresent());
     }
 }

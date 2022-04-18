@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
-import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastFactory;
@@ -35,13 +35,12 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.Duration;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class TurnActionsFactoryTest extends FightBaseCase {
+class FightActionsFactoryRegistryTest extends FightBaseCase {
     private Fight fight;
-    private TurnActionsFactory factory;
+    private FightActionsFactoryRegistry factory;
+    private Fighter fighter;
 
     @Override
     @BeforeEach
@@ -49,39 +48,40 @@ class TurnActionsFactoryTest extends FightBaseCase {
         super.setUp();
 
         fight = createFight();
-        factory = new TurnActionsFactory(new FightTurn(player.fighter(), fight, Duration.ofSeconds(30)));
+        fighter = player.fighter();
+        factory = container.get(FightActionsFactoryRegistry.class);
     }
 
     @Test
     void createActionNotFound() {
-        assertThrows(FightException.class, () -> factory.create(ActionType.NONE, new String[] {}));
+        assertThrows(FightException.class, () -> factory.create(fighter, ActionType.NONE, new String[] {}));
     }
 
     @Test
     void createMove() throws Exception {
         player.fighter().move(fight.map().get(185));
 
-        assertInstanceOf(Move.class, factory.create(ActionType.MOVE, new String[] {"ddvfdg"}));
-        assertThrows(IllegalArgumentException.class, () -> factory.create(ActionType.MOVE, new String[] {}));
+        assertInstanceOf(Move.class, factory.create(fighter, ActionType.MOVE, new String[] {"ddvfdg"}));
+        assertThrows(IllegalArgumentException.class, () -> factory.create(fighter, ActionType.MOVE, new String[] {}));
     }
 
     @Test
     void createCast() throws Exception {
-        assertInstanceOf(Cast.class, factory.create(ActionType.CAST, new String[] {"3", "123"}));
-        assertThrows(IllegalArgumentException.class, () -> factory.create(ActionType.CAST, new String[] {"3"}));
-        assertThrows(IllegalArgumentException.class, () -> factory.create(ActionType.CAST, new String[] {"3", "1000"}));
+        assertInstanceOf(Cast.class, factory.create(fighter, ActionType.CAST, new String[] {"3", "123"}));
+        assertThrows(IllegalArgumentException.class, () -> factory.create(fighter, ActionType.CAST, new String[] {"3"}));
+        assertThrows(IllegalArgumentException.class, () -> factory.create(fighter, ActionType.CAST, new String[] {"3", "1000"}));
     }
 
     @Test
     void createCastSpellNotFound() throws Exception {
-        assertInstanceOf(SpellNotFound.class, factory.create(ActionType.CAST, new String[] {"7458", "123"}));
+        assertInstanceOf(SpellNotFound.class, factory.create(fighter, ActionType.CAST, new String[] {"7458", "123"}));
     }
 
     @Test
     void createCloseCombat() throws Exception {
-        assertInstanceOf(CloseCombat.class, factory.create(ActionType.CLOSE_COMBAT, new String[] {"123"}));
-        assertThrows(IllegalArgumentException.class, () -> factory.create(ActionType.CLOSE_COMBAT, new String[] {}));
-        assertThrows(IllegalArgumentException.class, () -> factory.create(ActionType.CLOSE_COMBAT, new String[] {"1000"}));
+        assertInstanceOf(CloseCombat.class, factory.create(fighter, ActionType.CLOSE_COMBAT, new String[] {"123"}));
+        assertThrows(IllegalArgumentException.class, () -> factory.create(fighter, ActionType.CLOSE_COMBAT, new String[] {}));
+        assertThrows(IllegalArgumentException.class, () -> factory.create(fighter, ActionType.CLOSE_COMBAT, new String[] {"1000"}));
     }
 
     @Test

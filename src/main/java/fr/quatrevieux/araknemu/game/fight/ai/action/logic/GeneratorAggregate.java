@@ -21,7 +21,9 @@ package fr.quatrevieux.araknemu.game.fight.ai.action.logic;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 
 import java.util.Optional;
 
@@ -34,24 +36,24 @@ import java.util.Optional;
  * - When an action is successfully generated, it will be executed,
  *   and the "pipeline" is reset after the action termination
  */
-public final class GeneratorAggregate implements ActionGenerator {
-    private final ActionGenerator[] actions;
+public final class GeneratorAggregate<F extends ActiveFighter> implements ActionGenerator<F> {
+    private final ActionGenerator<F>[] generators;
 
-    public GeneratorAggregate(ActionGenerator[] actions) {
-        this.actions = actions;
+    public GeneratorAggregate(ActionGenerator<F>[] generators) {
+        this.generators = generators;
     }
 
     @Override
-    public void initialize(AI ai) {
-        for (ActionGenerator generator : actions) {
+    public void initialize(AI<F> ai) {
+        for (ActionGenerator<F> generator : generators) {
             generator.initialize(ai);
         }
     }
 
     @Override
-    public Optional<Action> generate(AI ai) {
-        for (ActionGenerator generator : actions) {
-            final Optional<Action> generated = generator.generate(ai);
+    public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
+        for (ActionGenerator<F> generator : generators) {
+            final Optional<Action> generated = generator.generate(ai, actions);
 
             if (generated.isPresent()) {
                 return generated;

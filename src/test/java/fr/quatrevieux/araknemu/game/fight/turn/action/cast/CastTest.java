@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
@@ -124,10 +125,10 @@ class CastTest extends FightBaseCase {
             fight.map().get(186),
             new SpellConstraintsValidator(new CastConstraintValidator[0]),
             new CriticalityStrategy() {
-                public int hitRate(int base) { return 0; }
-                public int failureRate(int base) { return 0; }
-                public boolean hit(int baseRate) { return false; }
-                public boolean failed(int baseRate) { return false; }
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
             }
         );
 
@@ -153,10 +154,10 @@ class CastTest extends FightBaseCase {
             fighter.cell(),
             new SpellConstraintsValidator(new CastConstraintValidator[0]),
             new CriticalityStrategy() {
-                public int hitRate(int base) { return 0; }
-                public int failureRate(int base) { return 0; }
-                public boolean hit(int baseRate) { return false; }
-                public boolean failed(int baseRate) { return false; }
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
             }
         );
 
@@ -172,10 +173,10 @@ class CastTest extends FightBaseCase {
             fight.map().get(186),
             new SpellConstraintsValidator(new CastConstraintValidator[0]),
             new CriticalityStrategy() {
-                public int hitRate(int base) { return 0; }
-                public int failureRate(int base) { return 0; }
-                public boolean hit(int baseRate) { return true; }
-                public boolean failed(int baseRate) { return false; }
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return true; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
             }
         );
 
@@ -199,10 +200,10 @@ class CastTest extends FightBaseCase {
             fight.map().get(186),
             new SpellConstraintsValidator(new CastConstraintValidator[0]),
             new CriticalityStrategy() {
-                public int hitRate(int base) { return 0; }
-                public int failureRate(int base) { return 0; }
-                public boolean hit(int baseRate) { return false; }
-                public boolean failed(int baseRate) { return true; }
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return true; }
             }
         );
 
@@ -234,10 +235,10 @@ class CastTest extends FightBaseCase {
             fight.map().get(186),
             new SpellConstraintsValidator(new CastConstraintValidator[0]),
             new CriticalityStrategy() {
-                public int hitRate(int base) { return 0; }
-                public int failureRate(int base) { return 0; }
-                public boolean hit(int baseRate) { return false; }
-                public boolean failed(int baseRate) { return true; }
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return true; }
             }
         );
 
@@ -269,10 +270,10 @@ class CastTest extends FightBaseCase {
             fight.map().get(186),
             new SpellConstraintsValidator(new CastConstraintValidator[0]),
             new CriticalityStrategy() {
-                public int hitRate(int base) { return 0; }
-                public int failureRate(int base) { return 0; }
-                public boolean hit(int baseRate) { return false; }
-                public boolean failed(int baseRate) { return false; }
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
             }
         );
 
@@ -301,10 +302,10 @@ class CastTest extends FightBaseCase {
             fight.map().get(186),
             new SpellConstraintsValidator(new CastConstraintValidator[0]),
             new CriticalityStrategy() {
-                public int hitRate(int base) { return 0; }
-                public int failureRate(int base) { return 0; }
-                public boolean hit(int baseRate) { return true; }
-                public boolean failed(int baseRate) { return false; }
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return true; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
             }
         );
 

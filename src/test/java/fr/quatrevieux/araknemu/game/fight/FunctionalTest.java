@@ -34,6 +34,7 @@ import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.DropReward;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.FightRewardsSheet;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.RewardType;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -322,10 +323,10 @@ public class FunctionalTest extends GameBaseCase {
                 player.fighter().cell(),
                 new WeaponConstraintsValidator(),
                 new CriticalityStrategy() {
-                    public int hitRate(int base) { return 0; }
-                    public int failureRate(int base) { return 0; }
-                    public boolean hit(int baseRate) { return false; }
-                    public boolean failed(int baseRate) { return false; }
+                    public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                    public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                    public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                    public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
                 }
             )
         );
@@ -432,10 +433,10 @@ public class FunctionalTest extends GameBaseCase {
 
             // Ensure no critical hit / fail
             new CriticalityStrategy() {
-                public int hitRate(int base) { return 0; }
-                public int failureRate(int base) { return 0; }
-                public boolean hit(int baseRate) { return false; }
-                public boolean failed(int baseRate) { return false; }
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
             }
         ));
     }
@@ -449,10 +450,10 @@ public class FunctionalTest extends GameBaseCase {
             target,
             new SpellConstraintsValidator(),
             new CriticalityStrategy() {
-                public int hitRate(int base) { return 0; }
-                public int failureRate(int base) { return 0; }
-                public boolean hit(int baseRate) { return true; }
-                public boolean failed(int baseRate) { return false; }
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return true; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
             }
         ));
     }
@@ -466,10 +467,10 @@ public class FunctionalTest extends GameBaseCase {
             target,
             new SpellConstraintsValidator(),
             new CriticalityStrategy() {
-                public int hitRate(int base) { return 0; }
-                public int failureRate(int base) { return 0; }
-                public boolean hit(int baseRate) { return false; }
-                public boolean failed(int baseRate) { return true; }
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return true; }
             }
         ));
     }

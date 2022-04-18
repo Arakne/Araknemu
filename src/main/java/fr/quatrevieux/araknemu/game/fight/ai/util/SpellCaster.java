@@ -20,20 +20,28 @@
 package fr.quatrevieux.araknemu.game.fight.ai.util;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
-import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.spell.Spell;
+
+import java.util.stream.Stream;
 
 /**
  * Utility class for cast spells
  */
 public final class SpellCaster {
-    private final AI ai;
+    private final AI<?> ai;
+    private final AIHelper helper;
+    private final CastConstraintValidator<Spell> validator;
 
-    public SpellCaster(AI ai) {
+    public SpellCaster(AI<?> ai, AIHelper helper, CastConstraintValidator<Spell> validator) {
         this.ai = ai;
+        this.helper = helper;
+        this.validator = validator;
     }
 
     /**
@@ -46,15 +54,34 @@ public final class SpellCaster {
         }
 
         final Turn turn = ai.turn();
-        final CastConstraintValidator<Spell> validator = turn.actions().cast().validator();
 
         return validator.check(turn, spell, target);
     }
 
     /**
-     * Create the action
+     * Perform simulation of all spells through all available cells of the map
+     * All returned {@link CastSimulation} can effectively be performed
+     *
+     * <pre> {@code
+     * final SpellCaster helper = ai.helper().spells().caster(actions.cast().validator());
+     *
+     * Optional<Action> action = helper.simulate(simulator)
+     *     .filter(simulation -> simulation.enemiesLife() < -100) // Filter spell which cause at least 100 damage on enemies
+     *     .min(Comparator.comparingInt(CastSimulation::enemiesLife)) // Get the most powerful cast action
+     *     .map(helper::createAction) // Create the action from the simulation
+     * ;
+     * }</pre>
+     *
+     * @param simulator The simulator to use
+     *
+     * @return Stream of performed simulations
      */
-    public Action create(Spell spell, FightCell target) {
-        return ai.turn().actions().cast().create(spell, target);
+    public Stream<CastSimulation> simulate(Simulator simulator) {
+        final ActiveFighter fighter = ai.fighter();
+
+        return helper.spells().available().flatMap(spell -> helper.cells().stream()
+            .filter(target -> validate(spell, target)) // Validate spell (LoS, cooldown, target type...)
+            .map(target -> simulator.simulate(spell, fighter, target)) // Simulate cast
+        );
     }
 }

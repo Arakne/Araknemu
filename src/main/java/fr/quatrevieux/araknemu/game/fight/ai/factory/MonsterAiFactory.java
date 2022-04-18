@@ -32,24 +32,24 @@ import java.util.Optional;
 /**
  * Registry of AI factories for monsters
  */
-public final class MonsterAiFactory implements AiFactory {
-    private final Map<String, AiFactory> factories = new HashMap<>();
+public final class MonsterAiFactory implements AiFactory<Fighter> {
+    private final Map<String, AiFactory<Fighter>> factories = new HashMap<>();
 
-    public void register(String type, AiFactory factory) {
+    public void register(String type, AiFactory<Fighter> factory) {
         factories.put(type, factory);
     }
 
     @Override
-    public Optional<AI> create(Fighter fighter) {
+    public Optional<AI<Fighter>> create(Fighter fighter) {
         return fighter.apply(new ResolveAi()).get();
     }
 
     class ResolveAi implements FighterOperation {
-        private @MonotonicNonNull AI ai;
+        private @MonotonicNonNull AI<Fighter> ai;
 
         @Override
         public void onMonster(MonsterFighter fighter) {
-            final AiFactory factory = factories.get(fighter.monster().ai());
+            final AiFactory<Fighter> factory = factories.get(fighter.monster().ai());
 
             if (factory == null) {
                 throw new IllegalArgumentException("Unsupported AI type " + fighter.monster().ai());
@@ -61,7 +61,7 @@ public final class MonsterAiFactory implements AiFactory {
             ;
         }
 
-        public Optional<AI> get() {
+        public Optional<AI<Fighter>> get() {
             return Optional.ofNullable(ai);
         }
     }

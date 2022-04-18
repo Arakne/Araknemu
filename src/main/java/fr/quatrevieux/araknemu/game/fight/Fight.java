@@ -36,6 +36,7 @@ import fr.quatrevieux.araknemu.game.fight.state.FightState;
 import fr.quatrevieux.araknemu.game.fight.state.StatesFlow;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurnList;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
 import fr.quatrevieux.araknemu.game.world.util.Sender;
 import org.apache.commons.lang3.time.StopWatch;
@@ -70,6 +71,7 @@ public final class Fight implements Dispatcher, Sender {
     private final ListenerAggregate dispatcher;
     private final ScheduledExecutorService executor;
     private final Spectators spectators;
+    private final ActionsFactory<Fighter> actions;
 
     private final Lock executorLock = new ReentrantLock();
     private final EffectsHandler effects = new EffectsHandler();
@@ -79,7 +81,7 @@ public final class Fight implements Dispatcher, Sender {
     private volatile boolean alive = true;
 
     @SuppressWarnings({"assignment", "argument"})
-    public Fight(int id, FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow, Logger logger, ScheduledExecutorService executor) {
+    public Fight(int id, FightType type, FightMap map, List<FightTeam> teams, StatesFlow statesFlow, Logger logger, ScheduledExecutorService executor, ActionsFactory<Fighter> actions) {
         this.id = id;
         this.type = type;
         this.map = map;
@@ -90,6 +92,7 @@ public final class Fight implements Dispatcher, Sender {
         this.turnList = new FightTurnList(this);
         this.dispatcher = new DefaultListenerAggregate(logger);
         this.spectators = new Spectators(this);
+        this.actions = actions;
 
         teams.forEach(team -> team.setFight(this));
     }
@@ -211,6 +214,13 @@ public final class Fight implements Dispatcher, Sender {
      */
     public EffectsHandler effects() {
         return effects;
+    }
+
+    /**
+     * Get available fight actions factories
+     */
+    public ActionsFactory<Fighter> actions() {
+        return actions;
     }
 
     @Override

@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.turn.action.move;
 
 import fr.arakne.utils.maps.path.Path;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionFactory;
@@ -27,9 +28,12 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionFactory
 /**
  * Factory for a move action
  */
-public interface MoveActionFactory extends FightActionFactory {
+public interface MoveActionFactory<F extends ActiveFighter> extends FightActionFactory<F> {
     /**
      * Create the move action
+     *
+     * @param performer Fighter which perform the action
+     * @param path Move path
      */
-    public Action create(Path<FightCell> path);
+    public Action create(F performer, Path<FightCell> path);
 }

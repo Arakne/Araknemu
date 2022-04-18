@@ -23,9 +23,6 @@ import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterFactory;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
-import org.apache.logging.log4j.Logger;
-
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Create the pvm builder
@@ -34,13 +31,11 @@ public final class PvmBuilderFactory implements FightBuilderFactory<PvmBuilder> 
     private final FighterFactory fighterFactory;
     private final RandomUtil random;
     private final PvmType type;
-    private final Logger logger;
 
-    public PvmBuilderFactory(FighterFactory fighterFactory, PvmType type, Logger logger) {
+    public PvmBuilderFactory(FighterFactory fighterFactory, PvmType type) {
         this.fighterFactory = fighterFactory;
         this.random = new RandomUtil();
         this.type = type;
-        this.logger = logger;
     }
 
     @Override
@@ -49,7 +44,7 @@ public final class PvmBuilderFactory implements FightBuilderFactory<PvmBuilder> 
     }
 
     @Override
-    public PvmBuilder create(FightService service, ScheduledExecutorService executor) {
-        return new PvmBuilder(service, fighterFactory, random, type, logger, executor);
+    public PvmBuilder create(FightService service) {
+        return new PvmBuilder(service, fighterFactory, random, type);
     }
 }

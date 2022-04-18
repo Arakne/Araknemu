@@ -31,6 +31,7 @@ import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightMap;
 import fr.quatrevieux.araknemu.game.fight.team.SimpleTeam;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.listener.fight.CheckFightTerminated;
 import fr.quatrevieux.araknemu.game.listener.fight.SendFightStarted;
@@ -87,7 +88,8 @@ class ActiveStateTest extends GameBaseCase {
                 state = new ActiveState()
             ),
             container.get(Logger.class),
-            executor = ExecutorFactory.createSingleThread()
+            executor = ExecutorFactory.createSingleThread(),
+            container.get(FightActionsFactoryRegistry.class)
         );
 
         fight.nextState();

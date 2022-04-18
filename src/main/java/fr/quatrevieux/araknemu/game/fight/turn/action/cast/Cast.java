@@ -46,7 +46,7 @@ public final class Cast implements Action {
     private final CriticalityStrategy criticalityStrategy;
 
     public Cast(Fighter caster, Spell spell, FightCell target) {
-        this(caster, spell, target, new SpellConstraintsValidator(), new BaseCriticalityStrategy(caster));
+        this(caster, spell, target, new SpellConstraintsValidator(), new BaseCriticalityStrategy());
     }
 
     public Cast(Fighter caster, Spell spell, FightCell target, CastConstraintValidator<Spell> validator, CriticalityStrategy criticalityStrategy) {
@@ -76,7 +76,7 @@ public final class Cast implements Action {
             caster.setOrientation(caster.cell().coordinate().directionTo(target));
         }
 
-        if (criticalityStrategy.failed(spell.criticalFailure())) {
+        if (criticalityStrategy.failed(caster, spell.criticalFailure())) {
             return new CastFailed(caster, spell);
         }
 
@@ -85,7 +85,7 @@ public final class Cast implements Action {
             caster,
             spell,
             target,
-            criticalityStrategy.hit(spell.criticalHit())
+            criticalityStrategy.hit(caster, spell.criticalHit())
         );
     }
 

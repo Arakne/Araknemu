@@ -20,14 +20,14 @@
 package fr.quatrevieux.araknemu.game.fight.ai.factory;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
-import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 
 import java.util.Optional;
 
 /**
  * Factory for AI
  */
-public interface AiFactory {
+public interface AiFactory<F extends ActiveFighter> {
     /**
      * Create the AI for the given fighter
      *
@@ -35,5 +35,5 @@ public interface AiFactory {
      *
      * @return The AI, or an empty optional if cannot be resolved
      */
-    public Optional<AI> create(Fighter fighter);
+    public Optional<AI<F>> create(F fighter);
 }

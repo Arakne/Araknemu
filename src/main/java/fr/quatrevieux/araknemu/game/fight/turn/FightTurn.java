@@ -24,7 +24,6 @@ import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionHandler;
-import fr.quatrevieux.araknemu.game.fight.turn.action.factory.TurnActionsFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStarted;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnStopped;
 import fr.quatrevieux.araknemu.game.fight.turn.event.TurnTerminated;
@@ -50,7 +49,6 @@ public final class FightTurn implements Turn {
     private final Duration duration;
 
     private final ActionHandler actionHandler;
-    private final TurnActionsFactory actionFactory;
 
     private @MonotonicNonNull ScheduledFuture timer;
     private @MonotonicNonNull FighterTurnPoints points;
@@ -61,7 +59,6 @@ public final class FightTurn implements Turn {
         this.fight = fight;
         this.duration = duration;
         this.actionHandler = new ActionHandler(this, fight);
-        this.actionFactory = new TurnActionsFactory(this);
     }
 
     @Override
@@ -167,11 +164,6 @@ public final class FightTurn implements Turn {
      */
     public void terminate() {
         actionHandler.terminate();
-    }
-
-    @Override
-    public TurnActionsFactory actions() {
-        return actionFactory;
     }
 
     @Override

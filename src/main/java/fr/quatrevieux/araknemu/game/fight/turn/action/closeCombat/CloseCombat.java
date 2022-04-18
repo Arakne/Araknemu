@@ -43,7 +43,7 @@ public final class CloseCombat implements Action {
     private final CriticalityStrategy criticalityStrategy;
 
     public CloseCombat(Fighter caster, FightCell target) {
-        this(caster, target, new WeaponConstraintsValidator(), new BaseCriticalityStrategy(caster));
+        this(caster, target, new WeaponConstraintsValidator(), new BaseCriticalityStrategy());
     }
 
     public CloseCombat(Fighter caster, FightCell target, WeaponConstraintsValidator validator, CriticalityStrategy criticalityStrategy) {
@@ -68,7 +68,7 @@ public final class CloseCombat implements Action {
 
     @Override
     public ActionResult start() {
-        if (criticalityStrategy.failed(caster.weapon().criticalFailure())) {
+        if (criticalityStrategy.failed(caster, caster.weapon().criticalFailure())) {
             return new CloseCombatFailed(caster);
         }
 
@@ -76,7 +76,7 @@ public final class CloseCombat implements Action {
             caster,
             caster.weapon(),
             target,
-            criticalityStrategy.hit(caster.weapon().criticalHit())
+            criticalityStrategy.hit(caster, caster.weapon().criticalHit())
         );
     }
 

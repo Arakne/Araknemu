@@ -40,7 +40,6 @@ class ProxyTurnTest extends AiBaseCase {
 
         assertSame(fighter, turn.fighter());
         assertTrue(turn.active());
-        assertSame(ai.turn().actions(), turn.actions());
         assertSame(ai.turn().points(), turn.points());
     }
 

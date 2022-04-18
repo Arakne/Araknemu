@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.handler.fight;
 
 import fr.quatrevieux.araknemu.core.network.exception.ErrorPacket;
 import fr.quatrevieux.araknemu.core.network.parser.PacketHandler;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.network.game.GameSession;
@@ -35,9 +36,10 @@ public final class PerformTurnAction implements PacketHandler<GameSession, GameA
     @Override
     public void handle(GameSession session, GameActionRequest packet) {
         try {
-            final FightTurn turn = NullnessUtil.castNonNull(session.fighter()).turn();
+            final Fighter fighter = NullnessUtil.castNonNull(session.fighter());
+            final FightTurn turn = fighter.turn();
 
-            turn.perform(turn.actions().create(ActionType.byId(packet.type()), packet.arguments()));
+            turn.perform(fighter.fight().actions().create(fighter, ActionType.byId(packet.type()), packet.arguments()));
         } catch (Exception e) {
             throw new ErrorPacket(new NoneAction(), e);
         }
