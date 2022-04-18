@@ -22,7 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.ai;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
@@ -41,10 +41,10 @@ import java.util.stream.Stream;
  *       and the next action is scheduled after the last one.
  *       So the AI execution is not blocking, and executed in parallel of the turn timer.
  */
-public final class FighterAI implements Runnable, AI {
-    private final ActiveFighter fighter;
+public final class FighterAI implements Runnable, AI<Fighter> {
+    private final Fighter fighter;
     private final Fight fight;
-    private final ActionGenerator generator;
+    private final ActionGenerator<Fighter> generator;
     private final AIHelper helper;
 
     private @Nullable Turn turn;
@@ -56,7 +56,7 @@ public final class FighterAI implements Runnable, AI {
      * @param generator The action generator
      */
     @SuppressWarnings({"argument", "assignment"})
-    public FighterAI(ActiveFighter fighter, Fight fight, ActionGenerator generator) {
+    public FighterAI(Fighter fighter, Fight fight, ActionGenerator<Fighter> generator) {
         this.fighter = fighter;
         this.fight = fight;
         this.generator = generator;
@@ -84,7 +84,7 @@ public final class FighterAI implements Runnable, AI {
             return;
         }
 
-        final Optional<Action> action = generator.generate(this);
+        final Optional<Action> action = generator.generate(this, fight.actions());
 
         if (action.isPresent()) {
             currentTurn.perform(action.get());
@@ -97,7 +97,7 @@ public final class FighterAI implements Runnable, AI {
     }
 
     @Override
-    public ActiveFighter fighter() {
+    public Fighter fighter() {
         return fighter;
     }
 

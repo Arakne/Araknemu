@@ -33,14 +33,12 @@ import fr.quatrevieux.araknemu.game.fight.state.PlacementState;
 import fr.quatrevieux.araknemu.game.fight.state.StatesFlow;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.type.FightType;
-import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Base builder for fight
@@ -49,18 +47,14 @@ public final class BaseBuilder implements FightBuilder {
     private final FightService service;
     private final @Nullable RandomUtil random;
     private final FightType type;
-    private final Logger logger;
-    private final ScheduledExecutorService executor;
 
     private @MonotonicNonNull FightMap map;
     private final List<TeamFactory> teamFactories = new ArrayList<>();
 
-    public BaseBuilder(FightService service, @Nullable RandomUtil random, FightType type, Logger logger, ScheduledExecutorService executor) {
+    public BaseBuilder(FightService service, @Nullable RandomUtil random, FightType type) {
         this.service = service;
         this.random = random;
         this.type = type;
-        this.logger = logger;
-        this.executor = executor;
     }
 
     @Override
@@ -69,7 +63,7 @@ public final class BaseBuilder implements FightBuilder {
             throw new IllegalStateException("Missing map or teams");
         }
 
-        return new Fight(fightId, type, map, buildTeams(), statesFlow(), logger, executor);
+        return service.create(fightId, type, map, buildTeams(), statesFlow());
     }
 
     /**

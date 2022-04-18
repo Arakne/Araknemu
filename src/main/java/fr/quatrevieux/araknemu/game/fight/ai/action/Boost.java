@@ -23,7 +23,9 @@ import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.util.CastSpell;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 import java.util.Optional;
@@ -34,8 +36,8 @@ import java.util.Optional;
  * Self boost is priorized to allies boost.
  * The selected spell must, at least, boost allies or self.
  */
-public final class Boost implements ActionGenerator, CastSpell.SimulationSelector {
-    private final CastSpell generator;
+public final class Boost<F extends ActiveFighter> implements ActionGenerator<F>, CastSpell.SimulationSelector {
+    private final CastSpell<F> generator;
     private final double selfBoostRate;
     private final double alliesBoostRate;
     private final int minDuration;
@@ -43,7 +45,7 @@ public final class Boost implements ActionGenerator, CastSpell.SimulationSelecto
 
     @SuppressWarnings({"argument", "assignment"})
     public Boost(Simulator simulator, double selfBoostRate, double alliesBoostRate, int minDuration, boolean allowWithoutDelay) {
-        this.generator = new CastSpell(simulator, this);
+        this.generator = new CastSpell<>(simulator, this);
 
         this.selfBoostRate = selfBoostRate;
         this.alliesBoostRate = alliesBoostRate;
@@ -52,13 +54,13 @@ public final class Boost implements ActionGenerator, CastSpell.SimulationSelecto
     }
 
     @Override
-    public void initialize(AI ai) {
+    public void initialize(AI<F> ai) {
         generator.initialize(ai);
     }
 
     @Override
-    public Optional<Action> generate(AI ai) {
-        return generator.generate(ai);
+    public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
+        return generator.generate(ai, actions);
     }
 
     @Override
@@ -115,8 +117,8 @@ public final class Boost implements ActionGenerator, CastSpell.SimulationSelecto
      * Configure boost action with prioritization of self boost
      * And allow only long effects (>= 2 turns) to permit usage before {@link Attack}
      */
-    public static Boost self(Simulator simulator) {
-        return new Boost(simulator, 2d, 1d, 2, false);
+    public static <F extends ActiveFighter> Boost<F> self(Simulator simulator) {
+        return new Boost<>(simulator, 2d, 1d, 2, false);
     }
 
     /**
@@ -124,7 +126,7 @@ public final class Boost implements ActionGenerator, CastSpell.SimulationSelecto
      * Temporary effects (1 turn) are allowed.
      * This action must be declared after {@link Attack}
      */
-    public static Boost allies(Simulator simulator) {
-        return new Boost(simulator, 0.5d, 2d, 1, true);
+    public static <F extends ActiveFighter> Boost<F> allies(Simulator simulator) {
+        return new Boost<>(simulator, 0.5d, 2d, 1, true);
     }
 }

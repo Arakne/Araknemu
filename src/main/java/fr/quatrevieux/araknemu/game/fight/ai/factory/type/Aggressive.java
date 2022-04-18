@@ -40,7 +40,7 @@ public final class Aggressive extends AbstractAiBuilderFactory {
     }
 
     @Override
-    public void configure(GeneratorBuilder builder, Fighter fighter) {
+    public void configure(GeneratorBuilder<Fighter> builder, Fighter fighter) {
         builder
             .boostSelf(simulator)
             .attack(simulator)

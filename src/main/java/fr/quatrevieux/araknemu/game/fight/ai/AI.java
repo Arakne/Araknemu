@@ -31,8 +31,10 @@ import java.util.stream.Stream;
 /**
  * Base type for AI
  * Use by action generators as data accessor
+ *
+ * @param <F> Current fighter type
  */
-public interface AI {
+public interface AI<F extends ActiveFighter> {
     /**
      * Start the AI
      * The AI will be pushed into the fight to be executed
@@ -44,7 +46,7 @@ public interface AI {
     /**
      * Get the fighter controlled by the AI
      */
-    public ActiveFighter fighter();
+    public F fighter();
 
     /**
      * Get the current fight map

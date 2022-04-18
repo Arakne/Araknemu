@@ -23,7 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.EffectSimulator;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
-import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
+import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 
 import java.util.HashMap;
@@ -34,6 +34,11 @@ import java.util.Map;
  */
 public final class Simulator {
     private final Map<Integer, EffectSimulator> simulators = new HashMap<>();
+    private final CriticalityStrategy criticalityStrategy;
+
+    public Simulator(CriticalityStrategy criticalityStrategy) {
+        this.criticalityStrategy = criticalityStrategy;
+    }
 
     /**
      * Register an effect simulator
@@ -56,15 +61,16 @@ public final class Simulator {
      */
     public CastSimulation simulate(Spell spell, ActiveFighter caster, FightCell target) {
         final CastSimulation normalSimulation = simulate(spell, CastScope.simple(spell, caster, target, spell.effects()));
+        final int hitRate = spell.criticalHit();
 
-        if (spell.criticalHit() < 2) {
+        if (hitRate < 2) {
             return normalSimulation;
         }
 
         final CastSimulation criticalSimulation = simulate(spell, CastScope.simple(spell, caster, target, spell.criticalEffects()));
         final CastSimulation simulation = new CastSimulation(spell, caster, target);
 
-        final int criticalRate = 100 / new BaseCriticalityStrategy(caster).hitRate(spell.criticalHit());
+        final int criticalRate = 100 / criticalityStrategy.hitRate(caster, hitRate);
 
         simulation.merge(normalSimulation, 100 - criticalRate);
         simulation.merge(criticalSimulation, criticalRate);

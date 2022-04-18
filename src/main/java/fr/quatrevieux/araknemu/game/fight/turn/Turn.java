@@ -22,7 +22,6 @@ package fr.quatrevieux.araknemu.game.fight.turn;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
-import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 
 /**
  * Fighter turn
@@ -50,11 +49,6 @@ public interface Turn {
      * If there is no pending action, the action is immediately executed
      */
     public void later(Runnable nextAction);
-
-    /**
-     * Get the actions factory
-     */
-    public ActionsFactory actions();
 
     /**
      * Get the current fighter points

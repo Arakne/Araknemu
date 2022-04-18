@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.module.AiModule;
+import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,7 +53,7 @@ class SimulatorTest extends FightBaseCase {
 
     @Test
     void simulateWithoutSupportedEffects() {
-        simulator = new Simulator();
+        simulator = new Simulator(new BaseCriticalityStrategy());
 
         CastSimulation simulation = simulator.simulate(fighter.spells().get(3), fighter, other.fighter().cell());
 

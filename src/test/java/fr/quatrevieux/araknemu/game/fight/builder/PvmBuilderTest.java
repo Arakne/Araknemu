@@ -73,9 +73,7 @@ class PvmBuilderTest extends GameBaseCase {
             container.get(FightService.class),
             container.get(FighterFactory.class),
             new RandomUtil(),
-            container.get(PvmType.class),
-            container.get(Logger.class),
-            ExecutorFactory.createSingleThread()
+            container.get(PvmType.class)
         );
 
         MonsterService service = container.get(MonsterService.class);
@@ -143,9 +141,7 @@ class PvmBuilderTest extends GameBaseCase {
                 container.get(FightService.class),
                 container.get(FighterFactory.class),
                 random,
-                container.get(PvmType.class),
-                container.get(Logger.class),
-                ExecutorFactory.createSingleThread()
+                container.get(PvmType.class)
             );
 
             Fight fight = builder
@@ -169,9 +165,7 @@ class PvmBuilderTest extends GameBaseCase {
             container.get(FightService.class),
             container.get(FighterFactory.class),
             null,
-            container.get(PvmType.class),
-            container.get(Logger.class),
-            ExecutorFactory.createSingleThread()
+            container.get(PvmType.class)
         );
 
         for (int i = 0; i < 100; ++i) {

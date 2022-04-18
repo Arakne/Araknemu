@@ -23,8 +23,10 @@ import fr.arakne.utils.maps.CoordinateCell;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.util.Movement;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,23 +36,23 @@ import java.util.stream.Collectors;
 /**
  * Try to move near the allies
  */
-public final class MoveNearAllies implements ActionGenerator {
-    private final Movement movement;
+public final class MoveNearAllies<F extends ActiveFighter> implements ActionGenerator<F> {
+    private final Movement<F> movement;
 
     private List<CoordinateCell<FightCell>> alliesCells = Collections.emptyList();
 
     @SuppressWarnings("methodref.receiver.bound")
     public MoveNearAllies() {
-        this.movement = new Movement(this::score, scoredCell -> true);
+        this.movement = new Movement<>(this::score, scoredCell -> true);
     }
 
     @Override
-    public void initialize(AI ai) {
+    public void initialize(AI<F> ai) {
         movement.initialize(ai);
     }
 
     @Override
-    public Optional<Action> generate(AI ai) {
+    public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
         final AIHelper helper = ai.helper();
 
         if (!helper.canMove() || !helper.allies().stream().findAny().isPresent()) {
@@ -59,7 +61,7 @@ public final class MoveNearAllies implements ActionGenerator {
 
         alliesCells = helper.allies().cells().map(FightCell::coordinate).collect(Collectors.toList());
 
-        return movement.generate(ai);
+        return movement.generate(ai, actions);
     }
 
     /**

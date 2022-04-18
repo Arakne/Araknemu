@@ -22,8 +22,10 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 import fr.arakne.utils.maps.path.Pathfinder;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import fr.quatrevieux.araknemu.util.Asserter;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -34,12 +36,12 @@ import java.util.Optional;
 /**
  * Try to move near the selected enemy
  */
-public final class MoveNearEnemy implements ActionGenerator {
+public final class MoveNearEnemy<F extends ActiveFighter> implements ActionGenerator<F> {
     private @MonotonicNonNull Pathfinder<FightCell> pathfinder;
     private @MonotonicNonNull AIHelper helper;
 
     @Override
-    public void initialize(AI ai) {
+    public void initialize(AI<F> ai) {
         this.helper = ai.helper();
         this.pathfinder = helper.cells().pathfinder()
             .targetDistance(1)
@@ -49,7 +51,7 @@ public final class MoveNearEnemy implements ActionGenerator {
     }
 
     @Override
-    public Optional<Action> generate(AI ai) {
+    public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
         if (helper == null || !helper.canMove()) {
             return Optional.empty();
         }
@@ -59,7 +61,7 @@ public final class MoveNearEnemy implements ActionGenerator {
         return ai.enemy()
             .map(enemy -> NullnessUtil.castNonNull(pathfinder).findPath(ai.fighter().cell(), enemy.cell()).truncate(movementPoints + 1))
             .filter(path -> path.size() > 1)
-            .map(path -> ai.turn().actions().move().create(path))
+            .map(path -> actions.move().create(ai.fighter(), path))
         ;
     }
 

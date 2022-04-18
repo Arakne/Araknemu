@@ -265,4 +265,14 @@
         <property name="checks" value="ParameterNumberCheck" />
         <property name="files" value="data.*entity" />
     </module>
+
+    <!-- Ignore fight classes -->
+    <module name="SuppressionSingleFilter">
+        <property name="checks" value="MethodCountCheck" />
+        <property name="files" value="game.fight.Fight" />
+    </module>
+    <module name="SuppressionSingleFilter">
+        <property name="checks" value="ParameterNumberCheck" />
+        <property name="files" value="game.fight.FightService" />
+    </module>
 </module>

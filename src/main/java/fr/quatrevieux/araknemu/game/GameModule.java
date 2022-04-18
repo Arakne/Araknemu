@@ -128,6 +128,7 @@ import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.ParametersR
 import fr.quatrevieux.araknemu.game.exploration.npc.dialog.parameter.VariableResolver;
 import fr.quatrevieux.araknemu.game.exploration.npc.exchange.NpcExchangeService;
 import fr.quatrevieux.araknemu.game.exploration.npc.store.NpcStoreService;
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightService;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
@@ -145,6 +146,8 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.StealLifeSimulato
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
+import fr.quatrevieux.araknemu.game.fight.castable.spell.SpellConstraintsValidator;
+import fr.quatrevieux.araknemu.game.fight.castable.weapon.WeaponConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddExperience;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddItems;
 import fr.quatrevieux.araknemu.game.fight.ending.reward.drop.action.AddKamas;
@@ -166,6 +169,14 @@ import fr.quatrevieux.araknemu.game.fight.module.RaulebaqueModule;
 import fr.quatrevieux.araknemu.game.fight.module.StatesModule;
 import fr.quatrevieux.araknemu.game.fight.spectator.DefaultSpectatorFactory;
 import fr.quatrevieux.araknemu.game.fight.spectator.SpectatorFactory;
+import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastFactory;
+import fr.quatrevieux.araknemu.game.fight.turn.action.closeCombat.CloseCombatFactory;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionsFactoryRegistry;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.FightPathValidator;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.StopOnEnemyValidator;
+import fr.quatrevieux.araknemu.game.fight.turn.action.move.validators.TackleValidator;
+import fr.quatrevieux.araknemu.game.fight.turn.action.util.BaseCriticalityStrategy;
+import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.fight.type.ChallengeType;
 import fr.quatrevieux.araknemu.game.fight.type.PvmType;
 import fr.quatrevieux.araknemu.game.handler.loader.AdminLoader;
@@ -586,19 +597,64 @@ public final class GameModule implements ContainerModule {
         );
 
         configurator.persist(
+            fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFactory.class,
+            container -> new fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFactory(new FightPathValidator[] {
+                new TackleValidator(),
+                new StopOnEnemyValidator(),
+            })
+        );
+
+        configurator.persist(
+            CastFactory.class,
+            container -> new CastFactory(
+                new SpellConstraintsValidator(),
+                container.get(CriticalityStrategy.class)
+            )
+        );
+
+        configurator.persist(
+            CloseCombatFactory.class,
+            container -> new CloseCombatFactory(
+                new WeaponConstraintsValidator(),
+                container.get(CriticalityStrategy.class)
+            )
+        );
+
+        configurator.persist(
+            FightActionsFactoryRegistry.class,
+            container -> new FightActionsFactoryRegistry(
+                container.get(fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveFactory.class),
+                container.get(CastFactory.class),
+                container.get(CloseCombatFactory.class)
+            )
+        );
+
+        configurator.persist(
+            FightService.FightFactory.class,
+            container -> (id, type, map, teams, statesFlow, executor) -> new Fight(
+                id,
+                type,
+                map,
+                teams,
+                statesFlow,
+                container.get(Logger.class), // @todo fight logger
+                executor,
+                container.get(FightActionsFactoryRegistry.class)
+            )
+        );
+
+        configurator.persist(
             FightService.class,
             container -> new FightService(
                 container.get(fr.quatrevieux.araknemu.core.event.Dispatcher.class),
                 Arrays.asList(
                     new ChallengeBuilderFactory(
                         container.get(FighterFactory.class),
-                        container.get(ChallengeType.class),
-                        container.get(Logger.class) // @todo fight logger
+                        container.get(ChallengeType.class)
                     ),
                     new PvmBuilderFactory(
                         container.get(FighterFactory.class),
-                        container.get(PvmType.class),
-                        container.get(Logger.class) // @todo fight logger
+                        container.get(PvmType.class)
                     )
                 ),
                 Arrays.asList(
@@ -609,6 +665,7 @@ public final class GameModule implements ContainerModule {
                     LaunchedSpellsModule::new,
                     fight -> new AiModule(container.get(AiFactory.class))
                 ),
+                container.get(FightService.FightFactory.class),
                 container.get(GameConfiguration.class).fight()
             )
         );
@@ -789,6 +846,8 @@ public final class GameModule implements ContainerModule {
             )
         );
 
+        configurator.persist(CriticalityStrategy.class, container -> new BaseCriticalityStrategy());
+
         configurator.persist(
             MonsterGroupFactory.class,
             container -> new MonsterGroupFactory(
@@ -827,7 +886,7 @@ public final class GameModule implements ContainerModule {
 
         // @todo Move to "FightModule"
         configurator.persist(Simulator.class, container -> {
-            final Simulator simulator = new Simulator();
+            final Simulator simulator = new Simulator(container.get(CriticalityStrategy.class));
 
             simulator.register(91, new StealLifeSimulator(Element.WATER));
             simulator.register(92, new StealLifeSimulator(Element.EARTH));

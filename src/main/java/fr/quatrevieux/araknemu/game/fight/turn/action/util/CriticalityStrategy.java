@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.action.util;
 
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 
@@ -29,36 +30,40 @@ public interface CriticalityStrategy {
     /**
      * Compute the critical hit rate
      *
+     * @param fighter Fighter performing the action
      * @param base The base criticality
      *
      * @return Get the critical hit rate. The lower value is 2 (1/2). Higher the value is, lower is the critical probability
      */
-    public @Positive int hitRate(@Positive int base);
+    public @Positive int hitRate(ActiveFighter fighter, @Positive int base);
 
     /**
      * Compute the critical failure rate
      *
+     * @param fighter Fighter performing the action
      * @param base The base criticality
      *
      * @return Get the critical failure rate. The lower value is 2 (1/2).
      */
-    public @Positive int failureRate(@Positive int base);
+    public @Positive int failureRate(ActiveFighter fighter, @Positive int base);
 
     /**
-     * Random check is its a critical hit
+     * Random check is it's a critical hit
      *
+     * @param fighter Fighter performing the action
      * @param baseRate The base rate
      *
      * @return true on critical
      */
-    public boolean hit(@NonNegative int baseRate);
+    public boolean hit(ActiveFighter fighter, @NonNegative int baseRate);
 
     /**
-     * Random check is its a critical failure
+     * Random check is it's a critical failure
      *
+     * @param fighter Fighter performing the action
      * @param baseRate The base rate
      *
      * @return true on failure
      */
-    public boolean failed(@NonNegative int baseRate);
+    public boolean failed(ActiveFighter fighter, @NonNegative int baseRate);
 }

@@ -22,9 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.builder;
 import fr.arakne.utils.value.helper.RandomUtil;
 import fr.quatrevieux.araknemu.core.di.ContainerException;
 import fr.quatrevieux.araknemu.core.event.DefaultListenerAggregate;
-import fr.quatrevieux.araknemu.core.event.Dispatcher;
 import fr.quatrevieux.araknemu.core.event.Listener;
-import fr.quatrevieux.araknemu.data.world.repository.environment.MapTemplateRepository;
 import fr.quatrevieux.araknemu.game.GameBaseCase;
 import fr.quatrevieux.araknemu.game.GameConfiguration;
 import fr.quatrevieux.araknemu.game.exploration.map.ExplorationMap;
@@ -40,15 +38,12 @@ import fr.quatrevieux.araknemu.network.game.out.fight.exploration.AddTeamFighter
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.FightsCount;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.HideFight;
 import fr.quatrevieux.araknemu.network.game.out.fight.exploration.ShowFight;
-import fr.quatrevieux.araknemu.util.ExecutorFactory;
-import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 
@@ -69,7 +64,7 @@ class FightHandlerTest extends GameBaseCase {
     void withChallengeFight() throws ContainerException {
         FightHandler<ChallengeBuilder> handler = new FightHandler<>(
             container.get(FightService.class),
-            new ChallengeBuilder(container.get(FightService.class), container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), ExecutorFactory.createSingleThread(), new ChallengeType(configuration.fight()))
+            new ChallengeBuilder(container.get(FightService.class), container.get(FighterFactory.class), new RandomUtil(), new ChallengeType(configuration.fight()))
         );
 
         Fight fight = handler.start(
@@ -101,7 +96,7 @@ class FightHandlerTest extends GameBaseCase {
 
         FightHandler<ChallengeBuilder> handler = new FightHandler<>(
             service,
-            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), ExecutorFactory.createSingleThread(), new ChallengeType(configuration.fight()))
+            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), new ChallengeType(configuration.fight()))
         );
 
         Fight fight = handler.start(
@@ -144,7 +139,7 @@ class FightHandlerTest extends GameBaseCase {
 
         FightHandler<ChallengeBuilder> handler = new FightHandler<>(
             service,
-            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), ExecutorFactory.createSingleThread(), new ChallengeType(configuration.fight()))
+            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), new ChallengeType(configuration.fight()))
         );
 
         Fight fight = handler.start(
@@ -176,14 +171,15 @@ class FightHandlerTest extends GameBaseCase {
             new FightService(
                 dispatcher,
                 Arrays.asList(
-                    new ChallengeBuilderFactory(container.get(FighterFactory.class), new ChallengeType(configuration.fight()), container.get(Logger.class))
+                    new ChallengeBuilderFactory(container.get(FighterFactory.class), new ChallengeType(configuration.fight()))
                 ),
                 Arrays.asList(
                     (fight) -> module
                 ),
+                container.get(FightService.FightFactory.class),
                 container.get(GameConfiguration.class).fight()
             ),
-            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), container.get(Logger.class), ExecutorFactory.createSingleThread(), new ChallengeType(configuration.fight()))
+            new ChallengeBuilder(service, container.get(FighterFactory.class), new RandomUtil(), new ChallengeType(configuration.fight()))
         );
 
         Fight fight = handler.start(

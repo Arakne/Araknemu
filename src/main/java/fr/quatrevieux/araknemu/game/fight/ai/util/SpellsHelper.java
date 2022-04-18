@@ -20,10 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.ai.util;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
-import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
-import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
-import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
-import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.fight.castable.validator.CastConstraintValidator;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
@@ -38,15 +35,11 @@ import java.util.stream.StreamSupport;
  */
 public final class SpellsHelper {
     private final AIHelper helper;
-    private final AI ai;
+    private final AI<?> ai;
 
-    private final SpellCaster caster;
-
-    SpellsHelper(AIHelper helper, AI ai) {
+    SpellsHelper(AIHelper helper, AI<?> ai) {
         this.helper = helper;
         this.ai = ai;
-
-        this.caster = new SpellCaster(ai);
     }
 
     /**
@@ -101,48 +94,12 @@ public final class SpellsHelper {
     }
 
     /**
-     * Perform simulation of all spells through all available cells of the map
-     * All returned {@link CastSimulation} can effectively be performed
+     * Helper for create or simulation cast actions
+     * Note: a new instance is always returned
      *
-     * <pre> {@code
-     * final SpellsHelper helper = ai.helper().spells();
-     *
-     * Optional<Action> action = helper.simulate(simulator)
-     *     .filter(simulation -> simulation.enemiesLife() < -100) // Filter spell which cause at least 100 damage on enemies
-     *     .min(Comparator.comparingInt(CastSimulation::enemiesLife)) // Get the most powerful cast action
-     *     .map(helper::createAction) // Create the action from the simulation
-     * ;
-     * }</pre>
-     *
-     * @param simulator The simulator to use
-     *
-     * @return Stream of performed simulations
+     * @param validator Validator for simulated cast action
      */
-    public Stream<CastSimulation> simulate(Simulator simulator) {
-        final SpellCaster caster = caster();
-        final ActiveFighter fighter = ai.fighter();
-
-        return available().flatMap(spell -> helper.cells().stream()
-            .filter(target -> caster.validate(spell, target)) // Validate spell (LoS, cooldown, target type...)
-            .map(target -> simulator.simulate(spell, fighter, target)) // Simulate cast
-        );
-    }
-
-    /**
-     * Create an action from a cast simulation
-     *
-     * @param simulation The simulation
-     *
-     * @return The cast action
-     */
-    public Action createAction(CastSimulation simulation) {
-        return caster().create(simulation.spell(), simulation.target());
-    }
-
-    /**
-     * @return The {@link SpellCaster} instance
-     */
-    public SpellCaster caster() {
-        return caster;
+    public SpellCaster caster(CastConstraintValidator<Spell> validator) {
+        return new SpellCaster(ai, helper, validator);
     }
 }

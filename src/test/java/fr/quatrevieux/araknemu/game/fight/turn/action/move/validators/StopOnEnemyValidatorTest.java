@@ -134,7 +134,7 @@ class StopOnEnemyValidatorTest extends FightBaseCase {
     void functionalStopped() {
         other.fighter().move(fight.map().get(198));
 
-        Move move = turn.actions().move().create(new Path<FightCell>(
+        Move move = (Move) fight.actions().move().create(fighter, new Path<FightCell>(
             new Decoder<FightCell>(fight.map()),
             Arrays.asList(
                 new PathStep<FightCell>(fight.map().get(185), Direction.EAST),

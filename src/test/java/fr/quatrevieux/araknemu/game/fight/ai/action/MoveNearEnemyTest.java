@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -39,7 +40,7 @@ class MoveNearEnemyTest extends AiBaseCase {
 
     @Test
     void generateNotInitialized() {
-        assertFalse(action.generate(Mockito.mock(AI.class)).isPresent());
+        assertFalse(action.generate(Mockito.mock(AI.class), Mockito.mock(ActionsFactory.class)).isPresent());
     }
 
     @Test

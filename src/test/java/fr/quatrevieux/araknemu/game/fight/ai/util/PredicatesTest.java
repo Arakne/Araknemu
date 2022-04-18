@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.ai.util;
 
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -34,7 +35,7 @@ class PredicatesTest extends AiBaseCase {
             .addEnemy(b -> b.cell(135))
         );
 
-        assertTrue(Predicates.hasEnemyInRange().test(ai));
+        assertTrue(Predicates.<Fighter>hasEnemyInRange().test(ai));
     }
 
     @Test
@@ -47,7 +48,7 @@ class PredicatesTest extends AiBaseCase {
 
         removeSpell(3);
 
-        assertFalse(Predicates.hasEnemyInRange().test(ai));
+        assertFalse(Predicates.<Fighter>hasEnemyInRange().test(ai));
     }
 
     @Test
@@ -57,7 +58,7 @@ class PredicatesTest extends AiBaseCase {
             .addEnemy(b -> b.cell(256))
         );
 
-        assertFalse(Predicates.hasEnemyInRange().test(ai));
+        assertFalse(Predicates.<Fighter>hasEnemyInRange().test(ai));
     }
 
     @Test
@@ -68,7 +69,7 @@ class PredicatesTest extends AiBaseCase {
             .addAlly(b -> b.cell(125))
         );
 
-        assertTrue(Predicates.hasAllies().test(ai));
+        assertTrue(Predicates.<Fighter>hasAllies().test(ai));
 
         configureFight(fb -> fb
             .addSelf(b -> b.cell(123))
@@ -77,13 +78,13 @@ class PredicatesTest extends AiBaseCase {
             .addAlly(b -> b.cell(125))
         );
 
-        assertTrue(Predicates.hasAllies().test(ai));
+        assertTrue(Predicates.<Fighter>hasAllies().test(ai));
 
         configureFight(fb -> fb
             .addSelf(b -> b.cell(123))
             .addEnemy(b -> b.cell(135))
         );
 
-        assertFalse(Predicates.hasAllies().test(ai));
+        assertFalse(Predicates.<Fighter>hasAllies().test(ai));
     }
 }

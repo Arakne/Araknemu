@@ -24,14 +24,16 @@ import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
+import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 
 import java.util.Optional;
 
 /**
  * Try to cast the best spell
  */
-public final class CastSpell implements ActionGenerator {
+public final class CastSpell<F extends ActiveFighter> implements ActionGenerator<F> {
     private final Simulator simulator;
     private final SimulationSelector selector;
 
@@ -41,22 +43,22 @@ public final class CastSpell implements ActionGenerator {
     }
 
     @Override
-    public void initialize(AI ai) {
+    public void initialize(AI<F> ai) {
     }
 
     @Override
-    public Optional<Action> generate(AI ai) {
+    public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
         final AIHelper helper = ai.helper();
 
         if (!helper.canCast() || !ai.enemy().isPresent()) {
             return Optional.empty();
         }
 
-        return helper.spells()
+        return helper.spells().caster(actions.cast().validator())
             .simulate(simulator)
             .filter(selector::valid)
             .reduce((s1, s2) -> selector.compare(s2, s1) ? s2 : s1)
-            .map(helper.spells()::createAction)
+            .map(simulation -> actions.cast().create(ai.fighter(), simulation.spell(), simulation.target()))
         ;
     }
 

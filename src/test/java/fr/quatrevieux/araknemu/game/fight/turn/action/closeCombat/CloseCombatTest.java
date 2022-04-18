@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.WeaponConstraintsValidator;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
@@ -136,10 +137,10 @@ class CloseCombatTest extends FightBaseCase {
             fight.map().get(186),
             new WeaponConstraintsValidator(),
             new CriticalityStrategy() {
-                public int hitRate(int base) { return 0; }
-                public int failureRate(int base) { return 0; }
-                public boolean hit(int baseRate) { return false; }
-                public boolean failed(int baseRate) { return true; }
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return true; }
             }
         );
 
@@ -161,10 +162,10 @@ class CloseCombatTest extends FightBaseCase {
             fight.map().get(186),
             new WeaponConstraintsValidator(),
             new CriticalityStrategy() {
-                public int hitRate(int base) { return 0; }
-                public int failureRate(int base) { return 0; }
-                public boolean hit(int baseRate) { return false; }
-                public boolean failed(int baseRate) { return false; }
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
             }
         );
 
@@ -188,10 +189,10 @@ class CloseCombatTest extends FightBaseCase {
             fight.map().get(186),
             new WeaponConstraintsValidator(),
             new CriticalityStrategy() {
-                public int hitRate(int base) { return 0; }
-                public int failureRate(int base) { return 0; }
-                public boolean hit(int baseRate) { return true; }
-                public boolean failed(int baseRate) { return false; }
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return true; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
             }
         );
 
@@ -215,10 +216,10 @@ class CloseCombatTest extends FightBaseCase {
             fight.map().get(186),
             new WeaponConstraintsValidator(),
             new CriticalityStrategy() {
-                public int hitRate(int base) { return 0; }
-                public int failureRate(int base) { return 0; }
-                public boolean hit(int baseRate) { return false; }
-                public boolean failed(int baseRate) { return false; }
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
             }
         );
 
@@ -244,10 +245,10 @@ class CloseCombatTest extends FightBaseCase {
             fight.map().get(186),
             new WeaponConstraintsValidator(),
             new CriticalityStrategy() {
-                public int hitRate(int base) { return 0; }
-                public int failureRate(int base) { return 0; }
-                public boolean hit(int baseRate) { return true; }
-                public boolean failed(int baseRate) { return false; }
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return true; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
             }
         );
 
@@ -293,10 +294,10 @@ class CloseCombatTest extends FightBaseCase {
             fight.map().get(186),
             new WeaponConstraintsValidator(),
             new CriticalityStrategy() {
-                public int hitRate(int base) { return 0; }
-                public int failureRate(int base) { return 0; }
-                public boolean hit(int baseRate) { return false; }
-                public boolean failed(int baseRate) { return false; }
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
             }
         );
 
