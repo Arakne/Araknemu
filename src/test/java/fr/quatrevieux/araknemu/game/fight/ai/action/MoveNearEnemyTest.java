@@ -57,6 +57,21 @@ class MoveNearEnemyTest extends AiBaseCase {
         assertEquals(0, turn.points().movementPoints());
     }
 
+    // See: https://github.com/Arakne/Araknemu/issues/94
+    @Test
+    void notAccessibleCellShouldTruncateToNearestCell() {
+        configureFight(fb -> fb
+            .map(10342)
+            .addSelf(builder -> builder.cell(155))
+            .addEnemy(builder -> builder.cell(69))
+        );
+
+        generateAndPerformMove();
+
+        assertEquals(126, fighter.cell().id());
+        assertEquals(1, turn.points().movementPoints());
+    }
+
     @Test
     void noMP() {
         configureFight(fb -> fb
