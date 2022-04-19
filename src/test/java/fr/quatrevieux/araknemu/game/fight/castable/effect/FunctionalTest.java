@@ -886,6 +886,19 @@ public class FunctionalTest extends FightBaseCase {
         assertBetween(20, 34, damage);
     }
 
+    @Test
+    void damageOnActionPointUse() {
+        castNormal(200, fighter2.cell()); // Poison Paralysant
+        fighter1.turn().stop();
+
+        fighter2.turn().points().useActionPoints(5);
+        fighter2.turn().stop();
+
+        int damage = fighter2.life().max() - fighter2.life().current();
+        assertEquals(12, damage);
+        requestStack.assertOne(ActionEffect.alterLifePoints(fighter1, fighter2, -12));
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 

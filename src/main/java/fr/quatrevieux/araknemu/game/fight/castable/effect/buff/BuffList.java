@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Reflect
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
 
 import java.util.Collection;
@@ -87,9 +88,9 @@ public final class BuffList implements Iterable<Buff>, Buffs {
     }
 
     @Override
-    public void onEndTurn() {
+    public void onEndTurn(Turn turn) {
         for (Buff buff : buffs) {
-            buff.hook().onEndTurn(buff);
+            buff.hook().onEndTurn(buff, turn);
         }
     }
 

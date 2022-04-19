@@ -64,6 +64,7 @@ class FighterTurnPointsTest extends FightBaseCase {
         assertEquals(2, ref.get().quantity());
 
         assertEquals(1, points.movementPoints());
+        assertEquals(2, points.usedMovementPoints());
     }
 
     @Test
@@ -77,6 +78,7 @@ class FighterTurnPointsTest extends FightBaseCase {
         assertEquals(2, ref.get().quantity());
 
         assertEquals(4, points.actionPoints());
+        assertEquals(2, points.usedActionPoints());
     }
 
     @Test

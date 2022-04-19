@@ -179,7 +179,7 @@ public final class FightTurn implements Turn {
      * Perform actions on turn ending
      */
     private void endTurnActions(boolean aborted) {
-        fighter.buffs().onEndTurn();
+        fighter.buffs().onEndTurn(this);
 
         fight.dispatch(new TurnTerminated(this, aborted));
     }

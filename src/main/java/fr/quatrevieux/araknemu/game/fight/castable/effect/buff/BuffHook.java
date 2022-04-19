@@ -25,6 +25,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 
 /**
  * Hook action for apply buff effects
@@ -42,7 +43,7 @@ public interface BuffHook {
     /**
      * Apply effect on turn ending
      */
-    public default void onEndTurn(Buff buff) {}
+    public default void onEndTurn(Buff buff, Turn turn) {}
 
     /**
      * Start the buff

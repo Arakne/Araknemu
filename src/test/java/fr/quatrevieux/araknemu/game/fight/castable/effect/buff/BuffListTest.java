@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.Element;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Damage;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.ReflectedDamage;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
@@ -151,6 +152,7 @@ class BuffListTest extends FightBaseCase {
 
     @Test
     void onEndTurn() {
+        Turn turn = Mockito.mock(Turn.class);
         BuffHook hook1, hook2, hook3;
 
         Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
@@ -161,11 +163,11 @@ class BuffListTest extends FightBaseCase {
         list.add(buff2);
         list.add(buff3);
 
-        list.onEndTurn();
+        list.onEndTurn(turn);
 
-        Mockito.verify(hook1).onEndTurn(buff1);
-        Mockito.verify(hook2).onEndTurn(buff2);
-        Mockito.verify(hook3).onEndTurn(buff3);
+        Mockito.verify(hook1).onEndTurn(buff1, turn);
+        Mockito.verify(hook2).onEndTurn(buff2, turn);
+        Mockito.verify(hook3).onEndTurn(buff3, turn);
     }
 
     @Test
