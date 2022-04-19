@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import org.checkerframework.checker.index.qual.Positive;
 
 /**
  * Base effect for steal turn points
@@ -94,7 +95,7 @@ public abstract class AbstractStealPointHandler implements EffectHandler {
      * @param turn The active turn
      * @param toAdd Number of points to add. This value is always >= 1
      */
-    protected abstract void applyOnCurrentTurn(Fight fight, Turn turn, ActiveFighter caster, int toAdd);
+    protected abstract void applyOnCurrentTurn(Fight fight, Turn turn, ActiveFighter caster, @Positive int toAdd);
 
     /**
      * Apply to all targets and compute the stolen points

@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
+import org.checkerframework.checker.index.qual.Positive;
 
 /**
  * Effect for steal action points
@@ -48,7 +49,7 @@ public final class StealActionPointHandler extends AbstractStealPointHandler {
     }
 
     @Override
-    protected void applyOnCurrentTurn(Fight fight, Turn turn, ActiveFighter caster, int toAdd) {
+    protected void applyOnCurrentTurn(Fight fight, Turn turn, ActiveFighter caster, @Positive int toAdd) {
         turn.points().addActionPoints(toAdd);
         fight.send(ActionEffect.addActionPoints(caster, toAdd));
     }

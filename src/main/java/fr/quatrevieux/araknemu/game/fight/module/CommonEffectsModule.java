@@ -39,6 +39,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.point.StealActionPointHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.point.StealMovementPointHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.DamageOnActionPointUseHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.FixedCasterDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.FixedDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.FixedStealLifeHandler;
@@ -107,6 +108,7 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(88, new PercentLifeDamageHandler(Element.FIRE, fight));
         handler.register(89, new PercentLifeDamageHandler(Element.NEUTRAL, fight));
 
+        handler.register(131, new DamageOnActionPointUseHandler(fight));
         handler.register(671, new IndirectPercentLifeDamageHandler(Element.NEUTRAL, fight));
 
         handler.register(276, new PercentLifeLostDamageHandler(Element.EARTH, fight));

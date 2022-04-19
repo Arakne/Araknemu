@@ -285,7 +285,7 @@ class FightTurnTest extends FightBaseCase {
 
         assertFalse(turn.active());
         Mockito.verify(hook).onStartTurn(buff);
-        Mockito.verify(hook).onEndTurn(buff);
+        Mockito.verify(hook).onEndTurn(buff, turn);
         assertEquals(4, buff.remainingTurns());
         assertNull(ref.get());
         assertFalse(player.fighter().states().has(5));
@@ -307,7 +307,7 @@ class FightTurnTest extends FightBaseCase {
         Mockito.verify(hook).onStartTurn(buff);
 
         turn.stop();
-        Mockito.verify(hook).onEndTurn(buff);
+        Mockito.verify(hook).onEndTurn(buff, turn);
     }
 
     @Test

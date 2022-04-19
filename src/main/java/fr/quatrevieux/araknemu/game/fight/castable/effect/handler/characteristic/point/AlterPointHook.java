@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AlterCharacteristicHook;
 import fr.quatrevieux.araknemu.game.fight.turn.TurnPoints;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Buff hook for handle altering turn point characteristics (i.e. {@link Characteristic#ACTION_POINT} and {@link Characteristic#MOVEMENT_POINT})
@@ -99,6 +100,6 @@ public class AlterPointHook extends AlterCharacteristicHook {
          *
          * @param value Value to modify. Always a positive number
          */
-        public void modify(TurnPoints points, int value);
+        public void modify(TurnPoints points, @NonNegative int value);
     }
 }

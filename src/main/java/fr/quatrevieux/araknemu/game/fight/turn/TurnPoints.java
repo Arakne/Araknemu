@@ -19,6 +19,8 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn;
 
+import org.checkerframework.checker.index.qual.NonNegative;
+
 /**
  * Handle AP and MP of a fighter turn
  */
@@ -26,34 +28,44 @@ public interface TurnPoints {
     /**
      * Get the current fighter movement points
      */
-    public int movementPoints();
+    public @NonNegative int movementPoints();
 
     /**
      * Add movement points to the current turn
      */
-    public void addMovementPoints(int value);
+    public void addMovementPoints(@NonNegative int value);
 
     /**
      * Remove movement points to the current turn
      *
      * @return int The real removed MP amount
      */
-    public int removeMovementPoints(int value);
+    public @NonNegative int removeMovementPoints(@NonNegative int value);
 
     /**
      * Get the current fighter action points
      */
-    public int actionPoints();
+    public @NonNegative int actionPoints();
 
     /**
      * Add action points to the current turn
      */
-    public void addActionPoints(int value);
+    public void addActionPoints(@NonNegative int value);
 
     /**
      * Remove action points to the current turn
      *
      * @return int The real removed AP amount
      */
-    public int removeActionPoints(int value);
+    public @NonNegative int removeActionPoints(@NonNegative int value);
+
+    /**
+     * Get the quantity of action points used on the current turn
+     */
+    public @NonNegative int usedActionPoints();
+
+    /**
+     * Get the quantity of movement points used on the current turn
+     */
+    public @NonNegative int usedMovementPoints();
 }
