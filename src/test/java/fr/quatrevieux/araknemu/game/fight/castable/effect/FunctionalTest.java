@@ -899,6 +899,22 @@ public class FunctionalTest extends FightBaseCase {
         requestStack.assertOne(ActionEffect.alterLifePoints(fighter1, fighter2, -12));
     }
 
+    @Test
+    void boostCasterSight() {
+        castNormal(505, fighter1.cell()); // Rage Primaire
+
+        requestStack.assertOne(ActionEffect.boostSight(fighter1, fighter1, 4, 2));
+        assertEquals(4, fighter1.characteristics().get(Characteristic.SIGHT_BOOST));
+    }
+
+    @Test
+    void decreaseCasterSight() {
+        castNormal(978, fighter1.cell()); // Obscurité
+
+        requestStack.assertOne(ActionEffect.decreaseSight(fighter1, fighter1, 6, 3));
+        assertEquals(-6, fighter1.characteristics().get(Characteristic.SIGHT_BOOST));
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 

@@ -320,4 +320,26 @@ class ActionEffectTest {
 
         assertEquals("GA;208;456;325,12,11,0,1,3", ActionEffect.launchVisualEffect(caster, cell, spell).toString());
     }
+
+    @Test
+    void boostSight() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Mockito.when(caster.id()).thenReturn(456);
+
+        Fighter target = Mockito.mock(Fighter.class);
+        Mockito.when(target.id()).thenReturn(123);
+
+        assertEquals("GA;117;456;123,5,3", ActionEffect.boostSight(caster, target, 5, 3).toString());
+    }
+
+    @Test
+    void decreaseSight() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Mockito.when(caster.id()).thenReturn(456);
+
+        Fighter target = Mockito.mock(Fighter.class);
+        Mockito.when(target.id()).thenReturn(123);
+
+        assertEquals("GA;116;456;123,5,3", ActionEffect.decreaseSight(caster, target, 5, 3).toString());
+    }
 }
