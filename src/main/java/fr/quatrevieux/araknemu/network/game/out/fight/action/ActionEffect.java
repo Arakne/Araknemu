@@ -145,6 +145,30 @@ public final class ActionEffect {
     }
 
     /**
+     * Boost the sight of the target for a given duration
+     *
+     * @param caster Spell caster
+     * @param target Target
+     * @param value Boosted value
+     * @param duration Effect duration
+     */
+    public static ActionEffect boostSight(PassiveFighter caster, PassiveFighter target, int value, int duration) {
+        return new ActionEffect(117, caster, target.id(), value, duration);
+    }
+
+    /**
+     * Decrease the sight of the target for a given duration
+     *
+     * @param caster Spell caster
+     * @param target Target
+     * @param value Decrease value
+     * @param duration Effect duration
+     */
+    public static ActionEffect decreaseSight(PassiveFighter caster, PassiveFighter target, int value, int duration) {
+        return new ActionEffect(116, caster, target.id(), value, duration);
+    }
+
+    /**
      * Add action points for the current turn
      *
      * @param fighter The fighter

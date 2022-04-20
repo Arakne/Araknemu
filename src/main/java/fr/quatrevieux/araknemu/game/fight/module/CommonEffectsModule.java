@@ -31,6 +31,8 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.SpellRet
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddActionPointsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddCharacteristicHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddMovementPointsHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.BoostCasterSightHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.DecreaseCasterSightHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.RemoveActionPointsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.RemoveCharacteristicHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.RemoveMovementPointsHandler;
@@ -176,6 +178,9 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(171, new RemoveCharacteristicHandler(fight, Characteristic.CRITICAL_BONUS));
         handler.register(179, new RemoveCharacteristicHandler(fight, Characteristic.HEALTH_BOOST));
         handler.register(186, new RemoveCharacteristicHandler(fight, Characteristic.PERCENT_DAMAGE));
+
+        handler.register(135, new DecreaseCasterSightHandler(fight));
+        handler.register(136, new BoostCasterSightHandler(fight));
     }
 
     @Override
