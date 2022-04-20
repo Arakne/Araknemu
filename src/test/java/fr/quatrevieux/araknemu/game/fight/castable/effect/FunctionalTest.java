@@ -915,6 +915,14 @@ public class FunctionalTest extends FightBaseCase {
         assertEquals(-6, fighter1.characteristics().get(Characteristic.SIGHT_BOOST));
     }
 
+    @Test
+    void kill() {
+        castNormal(415, fighter2.cell());
+
+        assertTrue(fighter2.dead());
+        requestStack.assertOne(ActionEffect.fighterDie(fighter1, fighter2));
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 
