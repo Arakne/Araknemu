@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.spell.effect;
 
 import fr.quatrevieux.araknemu.game.spell.effect.area.SpellEffectArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget;
+import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
@@ -63,8 +64,9 @@ public interface SpellEffect {
     /**
      * Get the effect duration
      * If this value is zero, the effect will be applied immediately
+     * If the value is -1, the duration will be considered as infinite
      */
-    public @NonNegative int duration();
+    public @GTENegativeOne int duration();
 
     /**
      * The effect probability in percent

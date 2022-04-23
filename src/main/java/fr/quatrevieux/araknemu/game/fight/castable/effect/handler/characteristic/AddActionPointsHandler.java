@@ -34,7 +34,7 @@ public final class AddActionPointsHandler extends AbstractAlterCharacteristicHan
     private final Fight fight;
 
     public AddActionPointsHandler(Fight fight) {
-        super(AlterPointHook.addActionPoint(fight));
+        super(AlterPointHook.addActionPoint(fight), true);
 
         this.fight = fight;
     }

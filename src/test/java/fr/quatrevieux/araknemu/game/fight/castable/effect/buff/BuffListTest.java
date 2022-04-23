@@ -82,6 +82,27 @@ class BuffListTest extends FightBaseCase {
     }
 
     @Test
+    void addWithInfiniteDuration() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        BuffHook hook = Mockito.mock(BuffHook.class);
+
+        Mockito.when(effect.duration()).thenReturn(-1);
+
+        Buff buff = new Buff(effect, Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook);
+
+        list.add(buff);
+
+        assertEquals(-1, buff.remainingTurns());
+        assertTrue(buff.valid());
+        assertTrue(list.stream().anyMatch(buff::equals));
+
+        list.refresh();
+        assertEquals(-1, buff.remainingTurns());
+        assertTrue(buff.valid());
+        assertTrue(list.stream().anyMatch(buff::equals));
+    }
+
+    @Test
     void addMultiple() {
         Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), Mockito.mock(BuffHook.class));
         Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), Mockito.mock(BuffHook.class));

@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.SpellEffectArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget;
+import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
@@ -60,7 +61,7 @@ public final class BuffEffect implements SpellEffect {
     }
 
     @Override
-    public @NonNegative int duration() {
+    public @GTENegativeOne int duration() {
         return baseEffect.duration();
     }
 

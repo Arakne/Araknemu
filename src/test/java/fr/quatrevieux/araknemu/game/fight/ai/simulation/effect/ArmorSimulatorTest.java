@@ -88,6 +88,12 @@ class ArmorSimulatorTest extends FightBaseCase {
 
         Mockito.when(effect.duration()).thenReturn(3);
         assertEquals(150, performSimulation(spell, effect).selfBoost());
+
+        Mockito.when(effect.duration()).thenReturn(20);
+        assertEquals(500, performSimulation(spell, effect).selfBoost());
+
+        Mockito.when(effect.duration()).thenReturn(-1);
+        assertEquals(500, performSimulation(spell, effect).selfBoost());
     }
 
     @Test

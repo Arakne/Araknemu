@@ -32,8 +32,15 @@ import java.util.Set;
 public final class ArmorSimulator implements EffectSimulator {
     @Override
     public void simulate(CastSimulation simulation, CastScope.EffectScope effect) {
-        if (effect.effect().duration() < 1) {
+        int duration = effect.effect().duration();
+
+        if (duration == 0) {
             return;
+        }
+
+        // Limit duration to 10 for compute score
+        if (duration == -1 || duration > 10) {
+            duration = 10;
         }
 
         final Set<Element> elements = effect.effect().special() == 0
@@ -53,7 +60,7 @@ public final class ArmorSimulator implements EffectSimulator {
                     armor = armor * boost / 200;
                 }
 
-                simulation.addBoost(armor * effect.effect().duration(), target);
+                simulation.addBoost(armor * duration, target);
             }
         }
     }

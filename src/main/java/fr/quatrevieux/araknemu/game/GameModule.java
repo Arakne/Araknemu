@@ -923,6 +923,11 @@ public final class GameModule implements ContainerModule {
             simulator.register(138, new AlterCharacteristicSimulator(2)); // percent damage
             simulator.register(178, new AlterCharacteristicSimulator(8)); // heal
             simulator.register(182, new AlterCharacteristicSimulator(10)); // summoned creature
+            simulator.register(606, new AlterCharacteristicSimulator()); // Wisdom not dispellable
+            simulator.register(607, new AlterCharacteristicSimulator()); // Strength not dispellable
+            simulator.register(608, new AlterCharacteristicSimulator()); // Luck not dispellable
+            simulator.register(609, new AlterCharacteristicSimulator()); // Agility not dispellable
+            simulator.register(611, new AlterCharacteristicSimulator()); // Intelligence not dispellable
 
             // Characteristics malus
             simulator.register(116, new AlterCharacteristicSimulator(-5)); // sight malus

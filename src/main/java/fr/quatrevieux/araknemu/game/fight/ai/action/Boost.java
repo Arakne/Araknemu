@@ -70,7 +70,7 @@ public final class Boost<F extends ActiveFighter> implements ActionGenerator<F>,
             return false;
         }
 
-        if (simulation.spell().effects().stream().map(SpellEffect::duration).noneMatch(duration -> duration >= minDuration)) {
+        if (simulation.spell().effects().stream().mapToInt(SpellEffect::duration).noneMatch(duration -> duration == -1 || duration >= minDuration)) {
             return false;
         }
 

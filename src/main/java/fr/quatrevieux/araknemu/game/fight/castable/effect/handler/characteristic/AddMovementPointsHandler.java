@@ -34,7 +34,7 @@ public final class AddMovementPointsHandler extends AbstractAlterCharacteristicH
     private final Fight fight;
 
     public AddMovementPointsHandler(Fight fight) {
-        super(AlterPointHook.addMovementPoint(fight));
+        super(AlterPointHook.addMovementPoint(fight), true);
 
         this.fight = fight;
     }

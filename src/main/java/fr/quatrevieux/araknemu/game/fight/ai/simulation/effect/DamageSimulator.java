@@ -63,10 +63,11 @@ public final class DamageSimulator implements EffectSimulator {
             final Interval damage = value.map(base -> computeDamage(base, target));
             final int duration = spellEffect.duration();
 
-            if (duration >= 1) {
-                simulation.addPoison(damage, duration, target);
-            } else {
+            if (duration == 0) {
                 simulation.addDamage(damage, target);
+            } else {
+                // Limit duration to 10
+                simulation.addPoison(damage, duration < 1 || duration > 10 ? 10 : duration, target);
             }
         }
     }
