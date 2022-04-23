@@ -201,8 +201,8 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(243, new AddCharacteristicHandler(fight, Characteristic.RESISTANCE_FIRE));
         handler.register(244, new AddCharacteristicHandler(fight, Characteristic.RESISTANCE_NEUTRAL));
 
-        handler.register(163, new RemoveCharacteristicHandler(fight, Characteristic.RESISTANCE_ACTION_POINT));
-        handler.register(164, new RemoveCharacteristicHandler(fight, Characteristic.RESISTANCE_MOVEMENT_POINT));
+        handler.register(162, new RemoveCharacteristicHandler(fight, Characteristic.RESISTANCE_ACTION_POINT));
+        handler.register(163, new RemoveCharacteristicHandler(fight, Characteristic.RESISTANCE_MOVEMENT_POINT));
         handler.register(215, new RemoveCharacteristicHandler(fight, Characteristic.RESISTANCE_PERCENT_EARTH));
         handler.register(216, new RemoveCharacteristicHandler(fight, Characteristic.RESISTANCE_PERCENT_WATER));
         handler.register(217, new RemoveCharacteristicHandler(fight, Characteristic.RESISTANCE_PERCENT_AIR));
