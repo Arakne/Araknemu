@@ -101,6 +101,18 @@ class DamageSimulatorTest extends FightBaseCase {
         simulator.simulate(simulation, scope.effects().get(0));
 
         assertEquals(-22.5, simulation.selfLife());
+
+        Mockito.when(effect.duration()).thenReturn(5);
+        simulation = new CastSimulation(spell, fighter, fighter.cell());
+        scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        simulator.simulate(simulation, scope.effects().get(0));
+        assertEquals(-56.25, simulation.selfLife());
+
+        Mockito.when(effect.duration()).thenReturn(20);
+        simulation = new CastSimulation(spell, fighter, fighter.cell());
+        scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        simulator.simulate(simulation, scope.effects().get(0));
+        assertEquals(-112.5, simulation.selfLife());
     }
 
     @Test
