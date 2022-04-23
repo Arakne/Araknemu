@@ -23,10 +23,13 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 
 /**
- * Buff effect for removing characteristic points
+ * Buff effect for adding characteristic points
+ * Unlike {@link AddCharacteristicHandler}, the buff cannot be dispelled
+ *
+ * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff#canBeDispelled()
  */
-public class RemoveCharacteristicHandler extends AbstractAlterCharacteristicHandler {
-    public RemoveCharacteristicHandler(Fight fight, Characteristic characteristic) {
-        super(AlterCharacteristicHook.remove(fight, characteristic), true);
+public final class AddNotDispellableCharacteristicHandler extends AbstractAlterCharacteristicHandler {
+    public AddNotDispellableCharacteristicHandler(Fight fight, Characteristic characteristic) {
+        super(AlterCharacteristicHook.add(fight, characteristic), false);
     }
 }

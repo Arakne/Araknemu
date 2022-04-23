@@ -47,11 +47,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class AddCharacteristicHandlerTest extends FightBaseCase {
+class AddNotDispellableCharacteristicHandlerTest extends FightBaseCase {
     private Fight fight;
     private PlayerFighter caster;
     private PlayerFighter target;
-    private AddCharacteristicHandler handler;
+    private AddNotDispellableCharacteristicHandler handler;
 
     @Override
     @BeforeEach
@@ -67,7 +67,7 @@ class AddCharacteristicHandlerTest extends FightBaseCase {
 
         target.move(fight.map().get(123));
 
-        handler = new AddCharacteristicHandler(fight, Characteristic.LUCK);
+        handler = new AddNotDispellableCharacteristicHandler(fight, Characteristic.LUCK);
 
         requestStack.clear();
     }
@@ -113,8 +113,8 @@ class AddCharacteristicHandlerTest extends FightBaseCase {
 
         assertBetween(50, 60, buff1.get().effect().min());
         assertEquals(buff1.get().effect().min(), buff2.get().effect().min());
-        assertTrue(buff1.get().canBeDispelled());
-        assertTrue(buff2.get().canBeDispelled());
+        assertFalse(buff1.get().canBeDispelled());
+        assertFalse(buff2.get().canBeDispelled());
     }
 
     @Test

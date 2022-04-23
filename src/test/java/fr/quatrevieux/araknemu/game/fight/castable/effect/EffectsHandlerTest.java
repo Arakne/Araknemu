@@ -122,6 +122,33 @@ class EffectsHandlerTest extends FightBaseCase {
     }
 
     @Test
+    void applyInfiniteDurationEffect() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.effect()).thenReturn(100);
+        Mockito.when(effect.min()).thenReturn(10);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(effect.duration()).thenReturn(-1);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        handler.apply(makeCastScope(player.fighter(), spell, effect, other.fighter().cell()));
+        Optional<Buff> found = other.fighter().buffs().stream().filter(buff -> buff.effect().effect() == 100).findFirst();
+
+        assertTrue(found.isPresent());
+        assertEquals(player.fighter(), found.get().caster());
+        assertEquals(other.fighter(), found.get().target());
+        assertEquals(effect, found.get().effect());
+        assertEquals(spell, found.get().action());
+        assertInstanceOf(DamageHandler.class, found.get().hook());
+        assertEquals(-1, found.get().remainingTurns());
+        requestStack.assertLast(new AddBuff(found.get()));
+    }
+
+    @Test
     void applyStealLife() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);

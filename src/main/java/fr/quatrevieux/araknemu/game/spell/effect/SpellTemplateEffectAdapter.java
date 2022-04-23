@@ -22,6 +22,7 @@ package fr.quatrevieux.araknemu.game.spell.effect;
 import fr.quatrevieux.araknemu.data.value.SpellTemplateEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.SpellEffectArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.EffectTarget;
+import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
@@ -59,7 +60,7 @@ public final class SpellTemplateEffectAdapter implements SpellEffect {
     }
 
     @Override
-    public @NonNegative int duration() {
+    public @GTENegativeOne int duration() {
         return effect.duration();
     }
 

@@ -923,6 +923,21 @@ public class FunctionalTest extends FightBaseCase {
         requestStack.assertOne(ActionEffect.fighterDie(fighter1, fighter2));
     }
 
+    @Test
+    void addCharacteristicNotDispellable() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(185).charac(Characteristic.LUCK, 100))
+            .addAlly(fb -> fb.cell(199).charac(Characteristic.STRENGTH, 0))
+            .addEnemy(fb -> fb.cell(221))
+        );
+
+        castNormal(651, fighters.get(0).cell()); // Frénésie
+
+        assertBetween(121, 170, fighters.get(1).characteristics().get(Characteristic.STRENGTH));
+        fighters.get(1).buffs().removeAll();
+        assertBetween(121, 170, fighters.get(1).characteristics().get(Characteristic.STRENGTH));
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 

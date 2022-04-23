@@ -27,6 +27,6 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
  */
 public class AddCharacteristicHandler extends AbstractAlterCharacteristicHandler {
     public AddCharacteristicHandler(Fight fight, Characteristic characteristic) {
-        super(AlterCharacteristicHook.add(fight, characteristic));
+        super(AlterCharacteristicHook.add(fight, characteristic), true);
     }
 }

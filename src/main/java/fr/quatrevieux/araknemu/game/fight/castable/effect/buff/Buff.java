@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.Castable;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import org.checkerframework.checker.index.qual.GTENegativeOne;
 
 /**
  * Persistent effect
@@ -38,7 +39,7 @@ public final class Buff {
     private final BuffHook hook;
     private final boolean canBeDispelled;
 
-    private int remainingTurns;
+    private @GTENegativeOne int remainingTurns;
 
     public Buff(SpellEffect effect, Castable action, ActiveFighter caster, PassiveFighter target, BuffHook hook) {
         this(effect, action, caster, target, hook, true);
@@ -87,8 +88,9 @@ public final class Buff {
      * Remaining turns for the buff effect
      *
      * When this value reached 0, the buff should be removed
+     * In case of infinite effect, the returned value is -1
      */
-    public int remainingTurns() {
+    public @GTENegativeOne int remainingTurns() {
         return remainingTurns;
     }
 
@@ -98,7 +100,9 @@ public final class Buff {
      * You should call {@link Buff#valid()} for check if the buff is still valid or not
      */
     public void decrementRemainingTurns() {
-        --remainingTurns;
+        if (remainingTurns > 0) {
+            --remainingTurns;
+        }
     }
 
     /**
@@ -106,7 +110,9 @@ public final class Buff {
      * Use this method when a self-buff is added
      */
     void incrementRemainingTurns() {
-        ++remainingTurns;
+        if (remainingTurns != -1) {
+            ++remainingTurns;
+        }
     }
 
     /**
@@ -120,7 +126,7 @@ public final class Buff {
      * Check if the buff is still valid
      */
     public boolean valid() {
-        return remainingTurns > 0;
+        return remainingTurns != 0;
     }
 
     /**

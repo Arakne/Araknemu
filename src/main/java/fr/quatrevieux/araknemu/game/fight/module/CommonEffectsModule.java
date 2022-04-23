@@ -31,6 +31,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.SpellRet
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddActionPointsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddCharacteristicHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddMovementPointsHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddNotDispellableCharacteristicHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.BoostCasterSightHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.DecreaseCasterSightHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.RemoveActionPointsHandler;
@@ -170,6 +171,12 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(182, new AddCharacteristicHandler(fight, Characteristic.MAX_SUMMONED_CREATURES));
         handler.register(220, new AddCharacteristicHandler(fight, Characteristic.COUNTER_DAMAGE));
 
+        handler.register(606, new AddNotDispellableCharacteristicHandler(fight, Characteristic.WISDOM));
+        handler.register(607, new AddNotDispellableCharacteristicHandler(fight, Characteristic.STRENGTH));
+        handler.register(608, new AddNotDispellableCharacteristicHandler(fight, Characteristic.LUCK));
+        handler.register(609, new AddNotDispellableCharacteristicHandler(fight, Characteristic.AGILITY));
+        handler.register(611, new AddNotDispellableCharacteristicHandler(fight, Characteristic.INTELLIGENCE));
+
         handler.register(116, new RemoveCharacteristicHandler(fight, Characteristic.SIGHT_BOOST));
         handler.register(145, new RemoveCharacteristicHandler(fight, Characteristic.FIXED_DAMAGE));
         handler.register(152, new RemoveCharacteristicHandler(fight, Characteristic.LUCK));
@@ -180,6 +187,29 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(171, new RemoveCharacteristicHandler(fight, Characteristic.CRITICAL_BONUS));
         handler.register(179, new RemoveCharacteristicHandler(fight, Characteristic.HEALTH_BOOST));
         handler.register(186, new RemoveCharacteristicHandler(fight, Characteristic.PERCENT_DAMAGE));
+
+        handler.register(160, new AddCharacteristicHandler(fight, Characteristic.RESISTANCE_ACTION_POINT));
+        handler.register(161, new AddCharacteristicHandler(fight, Characteristic.RESISTANCE_MOVEMENT_POINT));
+        handler.register(210, new AddCharacteristicHandler(fight, Characteristic.RESISTANCE_PERCENT_EARTH));
+        handler.register(211, new AddCharacteristicHandler(fight, Characteristic.RESISTANCE_PERCENT_WATER));
+        handler.register(212, new AddCharacteristicHandler(fight, Characteristic.RESISTANCE_PERCENT_AIR));
+        handler.register(213, new AddCharacteristicHandler(fight, Characteristic.RESISTANCE_PERCENT_FIRE));
+        handler.register(214, new AddCharacteristicHandler(fight, Characteristic.RESISTANCE_PERCENT_NEUTRAL));
+        handler.register(240, new AddCharacteristicHandler(fight, Characteristic.RESISTANCE_EARTH));
+        handler.register(241, new AddCharacteristicHandler(fight, Characteristic.RESISTANCE_WATER));
+        handler.register(242, new AddCharacteristicHandler(fight, Characteristic.RESISTANCE_AIR));
+        handler.register(243, new AddCharacteristicHandler(fight, Characteristic.RESISTANCE_FIRE));
+        handler.register(244, new AddCharacteristicHandler(fight, Characteristic.RESISTANCE_NEUTRAL));
+
+        handler.register(163, new RemoveCharacteristicHandler(fight, Characteristic.RESISTANCE_ACTION_POINT));
+        handler.register(164, new RemoveCharacteristicHandler(fight, Characteristic.RESISTANCE_MOVEMENT_POINT));
+        handler.register(215, new RemoveCharacteristicHandler(fight, Characteristic.RESISTANCE_PERCENT_EARTH));
+        handler.register(216, new RemoveCharacteristicHandler(fight, Characteristic.RESISTANCE_PERCENT_WATER));
+        handler.register(217, new RemoveCharacteristicHandler(fight, Characteristic.RESISTANCE_PERCENT_AIR));
+        handler.register(218, new RemoveCharacteristicHandler(fight, Characteristic.RESISTANCE_PERCENT_FIRE));
+        handler.register(219, new RemoveCharacteristicHandler(fight, Characteristic.RESISTANCE_PERCENT_NEUTRAL));
+        handler.register(248, new RemoveCharacteristicHandler(fight, Characteristic.RESISTANCE_FIRE));
+        handler.register(249, new RemoveCharacteristicHandler(fight, Characteristic.RESISTANCE_NEUTRAL));
 
         handler.register(135, new DecreaseCasterSightHandler(fight));
         handler.register(136, new BoostCasterSightHandler(fight));

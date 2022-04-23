@@ -33,9 +33,11 @@ import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
  */
 public abstract class AbstractAlterCharacteristicHandler implements EffectHandler, BuffHook {
     private final AlterCharacteristicHook hook;
+    private final boolean canBeDispelled;
 
-    public AbstractAlterCharacteristicHandler(AlterCharacteristicHook hook) {
+    public AbstractAlterCharacteristicHandler(AlterCharacteristicHook hook, boolean canBeDispelled) {
         this.hook = hook;
+        this.canBeDispelled = canBeDispelled;
     }
 
     @Override
@@ -57,7 +59,8 @@ public abstract class AbstractAlterCharacteristicHandler implements EffectHandle
                 cast.action(),
                 caster,
                 target,
-                this
+                this,
+                canBeDispelled
             ))
         );
     }

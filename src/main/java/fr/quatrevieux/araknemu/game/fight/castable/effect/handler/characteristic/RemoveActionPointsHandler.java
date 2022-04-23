@@ -34,7 +34,7 @@ public final class RemoveActionPointsHandler extends AbstractAlterCharacteristic
     private final Fight fight;
 
     public RemoveActionPointsHandler(Fight fight) {
-        super(AlterPointHook.removeActionPoint(fight));
+        super(AlterPointHook.removeActionPoint(fight), true);
 
         this.fight = fight;
     }

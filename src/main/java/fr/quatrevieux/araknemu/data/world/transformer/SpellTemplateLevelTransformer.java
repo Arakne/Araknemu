@@ -147,7 +147,7 @@ public class SpellTemplateLevelTransformer implements Transformer<SpellTemplate.
             params.nextNonNegativeIntOrDefault(0),
             params.nextNonNegativeIntOrDefault(0),
             params.nextIntOrDefault(0),
-            Math.max(0, params.nextIntOrDefault(0)), // Some spells extracted from langs use -1 for duration
+            params.nextNonNegativeOrNegativeOneIntOrDefault(0),
             params.nextNonNegativeIntOrDefault(0),
             params.nextPartOrDefault("")
         );

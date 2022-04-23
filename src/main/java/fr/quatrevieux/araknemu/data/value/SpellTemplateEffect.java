@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.data.value;
 
+import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
@@ -29,11 +30,11 @@ public final class SpellTemplateEffect {
     private final @NonNegative int min;
     private final @NonNegative int max;
     private final int special;
-    private final @NonNegative int duration;
+    private final @GTENegativeOne int duration;
     private final @NonNegative int probability;
     private final String text;
 
-    public SpellTemplateEffect(int effect, @NonNegative int min, @NonNegative int max, int special, @NonNegative int duration, @NonNegative int probability, String text) {
+    public SpellTemplateEffect(int effect, @NonNegative int min, @NonNegative int max, int special, @GTENegativeOne int duration, @NonNegative int probability, String text) {
         this.effect = effect;
         this.min = min;
         this.max = max;
@@ -79,8 +80,9 @@ public final class SpellTemplateEffect {
     /**
      * Get the effect duration
      * If this value is zero, the effect will be applied immediately
+     * If the value is -1, the duration will be considered as infinite
      */
-    public @NonNegative int duration() {
+    public @GTENegativeOne int duration() {
         return duration;
     }
 
