@@ -48,9 +48,20 @@ public final class TurnMiddle {
                 continue;
             }
 
+            final int actionPoints;
+            final int movementPoints;
+
+            if (fighter.isPlaying()) {
+                actionPoints = fighter.turn().points().actionPoints();
+                movementPoints = fighter.turn().points().movementPoints();
+            } else {
+                actionPoints = fighter.characteristics().get(Characteristic.ACTION_POINT);
+                movementPoints = fighter.characteristics().get(Characteristic.MOVEMENT_POINT);
+            }
+
             sb.append("0;").append(fighter.life().current()).append(';')
-                .append(fighter.characteristics().get(Characteristic.ACTION_POINT)).append(';')
-                .append(fighter.characteristics().get(Characteristic.MOVEMENT_POINT)).append(';')
+                .append(actionPoints).append(';')
+                .append(movementPoints).append(';')
                 .append(fighter.cell().id()).append(';') // @todo set cell to -1 when hidden
                 .append(';') // Not used by client (line 348)
                 .append(fighter.life().max())

@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.game.fight.fighter;
 
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterLifeChanged;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterMaxLifeChanged;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
@@ -83,6 +84,23 @@ public final class BaseFighterLife implements FighterLife {
         }
 
         return value;
+    }
+
+    @Override
+    public void alterMax(PassiveFighter caster, int value) {
+        if (dead) {
+            return;
+        }
+
+        current = Math.max(0, current + value);
+        max = Math.max(0, max + value);
+
+        if (current == 0) {
+            dead = true;
+            fighter.fight().dispatch(new FighterDie(fighter, caster));
+        } else {
+            fighter.fight().dispatch(new FighterMaxLifeChanged(fighter, caster));
+        }
     }
 
     @Override

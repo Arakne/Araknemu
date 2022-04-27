@@ -32,6 +32,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddCharacteristicHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddMovementPointsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddNotDispellableCharacteristicHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AlterVitalityHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.BoostCasterSightHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.DecreaseCasterSightHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.RemoveActionPointsHandler;
@@ -157,6 +158,7 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(101, new ActionPointLostHandler(fight));
         handler.register(127, new MovementPointLostHandler(fight));
 
+        handler.register(110, AlterVitalityHandler.add(fight)); // Not sure for this effect
         handler.register(112, new AddCharacteristicHandler(fight, Characteristic.FIXED_DAMAGE));
         handler.register(115, new AddCharacteristicHandler(fight, Characteristic.CRITICAL_BONUS));
         handler.register(117, new AddCharacteristicHandler(fight, Characteristic.SIGHT_BOOST));
@@ -165,6 +167,7 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(122, new AddCharacteristicHandler(fight, Characteristic.FAIL_MALUS));
         handler.register(123, new AddCharacteristicHandler(fight, Characteristic.LUCK));
         handler.register(124, new AddCharacteristicHandler(fight, Characteristic.WISDOM));
+        handler.register(125, AlterVitalityHandler.add(fight));
         handler.register(126, new AddCharacteristicHandler(fight, Characteristic.INTELLIGENCE));
         handler.register(138, new AddCharacteristicHandler(fight, Characteristic.PERCENT_DAMAGE));
         handler.register(178, new AddCharacteristicHandler(fight, Characteristic.HEALTH_BOOST));
@@ -175,11 +178,13 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(607, new AddNotDispellableCharacteristicHandler(fight, Characteristic.STRENGTH));
         handler.register(608, new AddNotDispellableCharacteristicHandler(fight, Characteristic.LUCK));
         handler.register(609, new AddNotDispellableCharacteristicHandler(fight, Characteristic.AGILITY));
+        handler.register(610, AlterVitalityHandler.addNotDispellable(fight));
         handler.register(611, new AddNotDispellableCharacteristicHandler(fight, Characteristic.INTELLIGENCE));
 
         handler.register(116, new RemoveCharacteristicHandler(fight, Characteristic.SIGHT_BOOST));
         handler.register(145, new RemoveCharacteristicHandler(fight, Characteristic.FIXED_DAMAGE));
         handler.register(152, new RemoveCharacteristicHandler(fight, Characteristic.LUCK));
+        handler.register(153, AlterVitalityHandler.remove(fight));
         handler.register(154, new RemoveCharacteristicHandler(fight, Characteristic.AGILITY));
         handler.register(155, new RemoveCharacteristicHandler(fight, Characteristic.INTELLIGENCE));
         handler.register(156, new RemoveCharacteristicHandler(fight, Characteristic.WISDOM));

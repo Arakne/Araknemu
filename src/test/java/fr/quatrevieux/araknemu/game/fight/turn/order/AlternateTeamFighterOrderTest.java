@@ -177,6 +177,11 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
+        public boolean isPlaying() {
+            return false;
+        }
+
+        @Override
         public void perform(Consumer<FightTurn> action) {}
 
         @Override

@@ -263,6 +263,7 @@ class MonsterFighterTest extends FightBaseCase {
         fighter.play(turn);
 
         assertSame(turn, fighter.turn());
+        assertTrue(fighter.isPlaying());
 
         fighter.perform(ref::set);
         assertSame(turn, ref.get());
@@ -273,6 +274,7 @@ class MonsterFighterTest extends FightBaseCase {
         fighter.perform(ref::set);
 
         assertNull(ref.get());
+        assertFalse(fighter.isPlaying());
         assertThrows(FightException.class, () -> fighter.turn());
     }
 

@@ -39,6 +39,7 @@ import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.FightAction;
+import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -936,6 +937,42 @@ public class FunctionalTest extends FightBaseCase {
         assertBetween(121, 170, fighters.get(1).characteristics().get(Characteristic.STRENGTH));
         fighters.get(1).buffs().removeAll();
         assertBetween(121, 170, fighters.get(1).characteristics().get(Characteristic.STRENGTH));
+    }
+
+    @Test
+    void addVitality() {
+        int currentLife = fighter1.life().current();
+        int currentLifeMax = fighter1.life().max();
+
+        castNormal(155, fighter1.cell()); // Vitality
+
+        int diff = fighter1.life().max() - currentLifeMax;
+
+        requestStack.assertOne(new TurnMiddle(fight.fighters()));
+        assertBetween(151, 180, diff);
+        assertEquals(diff, fighter1.life().current() - currentLife);
+
+        passTurns(21);
+
+        assertEquals(currentLife, fighter1.life().current());
+        assertEquals(currentLifeMax, fighter1.life().max());
+    }
+
+    @Test
+    void addVitalityDieOnDebuff() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(185).charac(Characteristic.LUCK, 100).currentLife(100))
+            .addAlly(fb -> fb.cell(199).charac(Characteristic.STRENGTH, 0))
+            .addEnemy(fb -> fb.cell(221))
+        );
+
+        castNormal(155, fighters.get(0).cell()); // Vitality
+        fighters.get(0).life().alter(fighters.get(0), -110);
+
+        fighters.get(0).buffs().removeAll();
+
+        assertTrue(fighters.get(0).life().dead());
+        requestStack.assertOne(ActionEffect.fighterDie(fighters.get(0), fighters.get(0)));
     }
 
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {

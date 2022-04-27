@@ -69,6 +69,15 @@ public final class PlayerFighterLife implements FighterLife {
     }
 
     @Override
+    public void alterMax(PassiveFighter caster, int value) {
+        if (delegate == null) {
+            throw new IllegalStateException("PlayerFighterLife must be initialized");
+        }
+
+        delegate.alterMax(caster, value);
+    }
+
+    @Override
     public void kill(ActiveFighter caster) {
         if (delegate == null) {
             throw new IllegalStateException("PlayerFighterLife must be initialized");

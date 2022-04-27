@@ -73,6 +73,7 @@ class PlayerFighterLifeTest extends FightBaseCase {
         assertEquals(gamePlayer().properties().life().max(), life.max());
         assertThrows(IllegalStateException.class, () -> life.alter(fighter, -10));
         assertThrows(IllegalStateException.class, () -> life.kill(fighter));
+        assertThrows(IllegalStateException.class, () -> life.alterMax(fighter, 10));
     }
 
     @Test
@@ -215,6 +216,17 @@ class PlayerFighterLifeTest extends FightBaseCase {
         assertSame(caster, ref.get().caster());
         assertSame(fighter, ref.get().fighter());
         assertTrue(life.dead());
+    }
+
+    @Test
+    void alterMax() {
+        player.properties().life().set(100);
+        life.init();
+
+        life.alterMax(Mockito.mock(Fighter.class), 100);
+
+        assertEquals(395, life.max());
+        assertEquals(200, life.current());
     }
 
     @Test
