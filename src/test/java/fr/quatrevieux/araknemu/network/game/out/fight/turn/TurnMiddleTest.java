@@ -21,6 +21,7 @@ package fr.quatrevieux.araknemu.network.game.out.fight.turn;
 
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.turn.order.AlternateTeamFighterOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -41,6 +42,21 @@ class TurnMiddleTest extends FightBaseCase {
     void generate() {
         assertEquals(
             "GTM|1;0;295;6;3;122;;295|2;0;50;6;3;125;;50",
+            new TurnMiddle(fight.fighters()).toString()
+        );
+    }
+
+    @Test
+    void generateWithActiveTurnShouldShowTurnPoints() {
+        fight.turnList().init(new AlternateTeamFighterOrder());
+        fight.turnList().start();
+        fight.start();
+
+        fight.turnList().current().get().points().useActionPoints(3);
+        fight.turnList().current().get().points().useMovementPoints(1);
+
+        assertEquals(
+            "GTM|1;0;295;3;2;122;;295|2;0;50;6;3;125;;50",
             new TurnMiddle(fight.fighters()).toString()
         );
     }

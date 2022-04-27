@@ -162,6 +162,11 @@ public abstract class AbstractFighter implements Fighter {
     }
 
     @Override
+    public boolean isPlaying() {
+        return turn != null;
+    }
+
+    @Override
     public final void attach(Object key, Object value) {
         attachments.put(key, value);
     }

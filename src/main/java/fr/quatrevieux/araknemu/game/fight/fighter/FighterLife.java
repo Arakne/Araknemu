@@ -41,6 +41,20 @@ public interface FighterLife extends Life {
     public int alter(PassiveFighter caster, int value);
 
     /**
+     * Change the max life of the current fighter
+     * The current life will also be updated
+     *
+     * The `value` is simply added to `current` and `max` life point values
+     * If the current life reach 0, the fighter will be considered as dead
+     *
+     * @param caster The caster
+     * @param value Value to add to current and max. Can be negative for remove life.
+     *
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.event.FighterMaxLifeChanged Event triggered by this method
+     */
+    public void alterMax(PassiveFighter caster, int value);
+
+    /**
      * Kill the fighter
      */
     public void kill(ActiveFighter caster);

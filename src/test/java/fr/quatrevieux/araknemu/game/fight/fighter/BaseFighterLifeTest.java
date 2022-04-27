@@ -30,6 +30,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterDie;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterLifeChanged;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterMaxLifeChanged;
 import fr.quatrevieux.araknemu.game.fight.fighter.monster.MonsterFighter;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.monster.MonsterService;
@@ -240,6 +241,77 @@ class BaseFighterLifeTest extends FightBaseCase {
         life.alter(fighter, -1000);
 
         Mockito.verify(hook, Mockito.never()).onLifeAltered(Mockito.any(), Mockito.anyInt());
+    }
+
+    @Test
+    void alterMaxPositive() {
+        AtomicReference<FighterMaxLifeChanged> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterMaxLifeChanged.class, ref::set);
+
+        Fighter caster = Mockito.mock(Fighter.class);
+        life.alterMax(caster, 100);
+
+        assertEquals(200, life.current());
+        assertEquals(200, life.max());
+        assertNotNull(ref.get());
+        assertSame(caster, ref.get().caster());
+        assertSame(fighter, ref.get().fighter());
+    }
+
+    @Test
+    void alterMaxNotFullLife() {
+        life.alter(fighter, -50);
+
+        Fighter caster = Mockito.mock(Fighter.class);
+        life.alterMax(caster, 100);
+
+        assertEquals(150, life.current());
+        assertEquals(200, life.max());
+    }
+
+    @Test
+    void alterMaxNegative() {
+        AtomicReference<FighterMaxLifeChanged> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterMaxLifeChanged.class, ref::set);
+
+        Fighter caster = Mockito.mock(Fighter.class);
+        life.alterMax(caster, -50);
+
+        assertEquals(50, life.current());
+        assertEquals(50, life.max());
+        assertNotNull(ref.get());
+        assertSame(caster, ref.get().caster());
+        assertSame(fighter, ref.get().fighter());
+    }
+
+    @Test
+    void alterMaxNegativeMoreThanCurrentLifeShouldKillFighter() {
+        AtomicReference<FighterMaxLifeChanged> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterMaxLifeChanged.class, ref::set);
+
+        Fighter caster = Mockito.mock(Fighter.class);
+        life.alterMax(caster, -150);
+
+        assertEquals(0, life.current());
+        assertEquals(0, life.max());
+        assertTrue(life.dead());
+        assertNull(ref.get());
+    }
+
+    @Test
+    void alterMaxDeadShouldDoNothing() {
+        life.kill(fighter);
+
+        AtomicReference<FighterMaxLifeChanged> ref = new AtomicReference<>();
+        fight.dispatcher().add(FighterMaxLifeChanged.class, ref::set);
+
+        Fighter caster = Mockito.mock(Fighter.class);
+        life.alterMax(caster, 100);
+
+        assertEquals(0, life.current());
+        assertEquals(100, life.max());
+        assertTrue(life.dead());
+        assertNull(ref.get());
     }
 
     @Test

@@ -74,6 +74,14 @@ public interface Fighter extends Creature<FightCell>, Dispatcher, ActiveFighter 
     public void perform(Consumer<FightTurn> action);
 
     /**
+     * Does the current fighter can play ?
+     * Return true if it's the turn of the current fighter
+     *
+     * @see Fighter#turn() Can be called if this method return true
+     */
+    public boolean isPlaying();
+
+    /**
      * Attach an attribute to the fighter
      *
      * @param key The attachment key

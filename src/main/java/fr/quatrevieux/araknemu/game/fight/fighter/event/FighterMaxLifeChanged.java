@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2022 Vincent Quatrevieux
  */
 
 package fr.quatrevieux.araknemu.game.fight.fighter.event;
@@ -22,32 +22,28 @@ package fr.quatrevieux.araknemu.game.fight.fighter.event;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
 /**
- * Fighter life is changed
+ * Fighter max life has been updated
  */
-public final class FighterLifeChanged {
+public final class FighterMaxLifeChanged {
     private final PassiveFighter fighter;
     private final PassiveFighter caster;
-    private final int value;
 
-    public FighterLifeChanged(PassiveFighter fighter, PassiveFighter caster, int value) {
+    public FighterMaxLifeChanged(PassiveFighter fighter, PassiveFighter caster) {
         this.fighter = fighter;
         this.caster = caster;
-        this.value = value;
     }
 
+    /**
+     * The target: fighter which have its life updated
+     */
     public PassiveFighter fighter() {
         return fighter;
     }
 
+    /**
+     * Spell caster
+     */
     public PassiveFighter caster() {
         return caster;
-    }
-
-    /**
-     * Life change value
-     * Negative for loosing life, positive for heal
-     */
-    public int value() {
-        return value;
     }
 }
