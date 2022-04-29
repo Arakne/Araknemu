@@ -51,7 +51,7 @@ final class SqlMapTriggerRepository implements MapTriggerRepository {
                     "CELL_ID INTEGER," +
                     "ACTION INTEGER," +
                     "ARGUMENTS TEXT," +
-                    "CONDITIONS TEST," +
+                    "CONDITIONS TEXT," +
                     "PRIMARY KEY (MAP_ID, CELL_ID)" +
                 ")"
             );
