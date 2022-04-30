@@ -322,4 +322,61 @@ class DefaultListenerAggregateTest {
         dispatcher.dispatch(new A());
         assertIterableEquals(Arrays.asList(L1.class), listeners);
     }
+
+    @Test
+    void dispatchAndRemoveListenerWithSameEventDuringDispatch() {
+        final Collection<String> listeners = new ArrayList<>();
+
+        class E
+        {
+            public final int level;
+
+            public E(int level) {
+                this.level = level;
+            }
+        }
+
+        class L1 implements Listener<E> {
+            @Override
+            public void on(E event) {
+                listeners.add("L1-" + event.level);
+            }
+
+            @Override
+            public Class<E> event() {
+                return E.class;
+            }
+        }
+
+        class L2 implements Listener<E> {
+            @Override
+            public void on(E event) {
+                listeners.add("L2-" + event.level);
+
+                if (event.level == 0) {
+                    dispatcher.dispatch(new E(1));
+                    dispatcher.remove(L1.class);
+                }
+            }
+
+            @Override
+            public Class<E> event() {
+                return E.class;
+            }
+        }
+
+        dispatcher.add(new L2());
+        dispatcher.add(new L1());
+
+        dispatcher.dispatch(new E(0));
+        System.out.println(listeners);
+        assertIterableEquals(Arrays.asList("L2-0", "L2-1", "L1-1", "L1-0"), listeners);
+
+        assertTrue(dispatcher.has(L2.class));
+        assertFalse(dispatcher.has(L1.class));
+
+        listeners.clear();
+        dispatcher.dispatch(new E(0));
+        assertIterableEquals(Arrays.asList("L2-0", "L2-1"), listeners);
+    }
 }
