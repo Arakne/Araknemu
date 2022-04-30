@@ -22,26 +22,35 @@ package fr.quatrevieux.araknemu.core.event;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.EnsuresKeyForIf;
-import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.checker.nullness.util.NullnessUtil;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Default implementation for dispatcher, using maps
  *
- * @fixme Use ConcurrentHashMap instead of HashMap ?
+ * Adding or removing listeners is not thread safe
  */
 public final class DefaultListenerAggregate implements ListenerAggregate {
     private static final Logger defaultLogger = LogManager.getLogger(DefaultListenerAggregate.class);
 
     private final Logger logger;
+
+    /**
+     * Store listeners instances by their class
+     * Ensure that only one listener of a given type is registered
+     */
     private final Map<Class<? extends Listener>, Listener> listeners = new HashMap<>();
-    private final Map<Class, Set<@KeyFor("listeners") Class<? extends Listener>>> events = new HashMap<>();
+
+    /**
+     * Store listeners containers by their handled event class
+     */
+    private final Map<Class, ListenersContainer<?>> containers = new HashMap<>();
 
     public DefaultListenerAggregate() {
         this(defaultLogger);
@@ -53,15 +62,26 @@ public final class DefaultListenerAggregate implements ListenerAggregate {
 
     @Override
     public void dispatch(Object event) {
-        if (!events.containsKey(event.getClass())) {
+        final ListenersContainer<?> container = containers.get(event.getClass());
+
+        if (container == null || container.isEmpty()) {
             return;
         }
 
-        for (@KeyFor("listeners") Class<? extends Listener> listenerClass : events.get(event.getClass())) {
-            try {
-                listeners.get(listenerClass).on(event);
-            } catch (RuntimeException e) {
-                logger.error("Error during execution of listener " + listenerClass.getName(), e);
+        final boolean lastUse = container.use();
+
+        try {
+            // @todo use generics on dipatch parameter
+            for (Listener listener : container) {
+                try {
+                    listener.on(event);
+                } catch (RuntimeException e) {
+                    logger.error("Error during execution of listener " + listener.getClass().getName(), e);
+                }
+            }
+        } finally {
+            if (!lastUse) {
+                container.release();
             }
         }
     }
@@ -70,8 +90,26 @@ public final class DefaultListenerAggregate implements ListenerAggregate {
     public void add(Listener listener) {
         final Class<? extends Listener> listenerClass = listener.getClass();
 
-        listeners.put(listenerClass, listener);
-        events.computeIfAbsent(listener.event(), lc -> new LinkedHashSet<>()).add(listenerClass);
+        final Listener lastListener = listeners.put(listenerClass, listener);
+
+        if (lastListener != null) {
+            remove(lastListener);
+        }
+
+        final Class eventClass = listener.event();
+        ListenersContainer<?> eventListeners = containers.get(eventClass);
+
+        if (eventListeners == null) {
+            eventListeners = new ListenersContainer<>();
+            containers.put(eventClass, eventListeners);
+        } else if (eventListeners.inUse()) {
+            // Current event is in use : duplicate container for ignore concurrent modification
+            // See: https://github.com/Arakne/Araknemu/issues/250
+            eventListeners = new ListenersContainer<>(eventListeners);
+            containers.put(eventClass, eventListeners);
+        }
+
+        eventListeners.add(listener);
     }
 
     @Override
@@ -82,18 +120,124 @@ public final class DefaultListenerAggregate implements ListenerAggregate {
 
     @Override
     public void remove(Class<? extends Listener> listenerClass) {
-        if (!has(listenerClass)) {
-            return;
+        final Listener<?> listener = listeners.remove(listenerClass);
+
+        if (listener != null) {
+            remove(listener);
         }
-
-        final Listener listener = NullnessUtil.castNonNull(listeners.remove(listenerClass));
-
-        NullnessUtil.castNonNull(events.get(listener.event())).remove(listenerClass);
     }
 
     @Override
     @SuppressWarnings({"unchecked", "cast.unsafe"})
     public <E extends Listener> @Nullable E get(Class<E> listenerClass) {
         return (E) listeners.get(listenerClass);
+    }
+
+    /**
+     * Remove a listener instance from container
+     */
+    private <E> void remove(Listener<E> listener) {
+        final Class<E> eventClass = listener.event();
+        ListenersContainer<E> container = (ListenersContainer<E>) containers.get(eventClass);
+
+        if (container == null) {
+            return;
+        }
+
+        // Only requested listener is registered : simply remove the container
+        if (container.isSingleton()) {
+            containers.remove(eventClass);
+            return;
+        }
+
+        // Requested listener is in use : duplicate container for ignore concurrent modification
+        // See: https://github.com/Arakne/Araknemu/issues/250
+        if (container.inUse()) {
+            container = new ListenersContainer<>(container);
+            containers.put(eventClass, container);
+        }
+
+        container.remove(listener);
+    }
+
+    /**
+     * Contains listeners instances and "inUse" flag for handle concurrent modification
+     *
+     * See: https://github.com/Arakne/Araknemu/issues/250
+     *
+     * @param <E> Handled event class
+     */
+    private static class ListenersContainer<E> implements Iterable<Listener<E>> {
+        private final Collection<Listener<E>> listeners;
+        private final AtomicBoolean inUse = new AtomicBoolean(false);
+
+        public ListenersContainer(ListenersContainer<E> other) {
+            this.listeners = new ArrayList<>(other.listeners);
+        }
+
+        public ListenersContainer() {
+            this.listeners = new ArrayList<>();
+        }
+
+        /**
+         * Add a new listener to the container
+         * Note: container must not be in use
+         */
+        public void add(Listener<E> listener) {
+            assert !inUse();
+            listeners.add(listener);
+        }
+
+        /**
+         * Remove listener from the container
+         * Note: container must not be in use
+         */
+        public void remove(Listener<E> listener) {
+            assert !inUse();
+            listeners.remove(listener);
+        }
+
+        /**
+         * Does the container is empty ? (i.e. do not have any listeners)
+         */
+        public boolean isEmpty() {
+            return listeners.isEmpty();
+        }
+
+        /**
+         * Does the container has only one listener ?
+         */
+        public boolean isSingleton() {
+            return listeners.size() == 1;
+        }
+
+        /**
+         * Set the flag "inUse" to true
+         *
+         * @return The last state of "inUse" flag
+         */
+        public boolean use() {
+            return inUse.getAndSet(true);
+        }
+
+        /**
+         * Check if the "inUse" flag value
+         * If this value is true, modification of listeners is disallowed
+         */
+        public boolean inUse() {
+            return inUse.get();
+        }
+
+        /**
+         * Set the flag "inUse" to false
+         */
+        public void release() {
+            inUse.set(false);
+        }
+
+        @Override
+        public Iterator<Listener<E>> iterator() {
+            return listeners.iterator();
+        }
     }
 }
