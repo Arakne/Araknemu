@@ -975,6 +975,18 @@ public class FunctionalTest extends FightBaseCase {
         requestStack.assertOne(ActionEffect.fighterDie(fighters.get(0), fighters.get(0)));
     }
 
+    // See: https://github.com/Arakne/Araknemu/issues/250
+    @Test
+    void dieOnBuffRefresh() {
+        castNormal(155, fighter1.cell()); // Vitality
+        fighter1.life().alter(fighter1, -300);
+
+        passTurns(20);
+        fighter1.turn().stop();
+
+        assertTrue(fighter1.dead());
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 
