@@ -25,10 +25,15 @@ These instructions will get you a copy of the project up and running on your loc
     ```
     mvn package -DskipTests=true
     ```
-- Create database and configure the `conf.ini` file (The database is not provided)
+- Create Mysql database structure (the data are not provided)
+    ```
+    mysql -u <user> -p <database_name> < resources/init_mysql.sql
+    ```
+- Configure the `conf.ini` file 
 
 ### Running
 
+Run Mysql server.
 Launch the built jar.
 To run the server, your working directory should contains the `conf.ini` file.
 
