@@ -322,4 +322,24 @@ public final class ActionEffect {
     public static ActionEffect launchVisualEffect(PassiveFighter caster, FightCell targetCell, Spell spell) {
         return new ActionEffect(208, caster, targetCell.id(), spell.spriteId(), spell.spriteArgs(), spell.level());
     }
+
+    /**
+     * The fighter has been make invisible
+     *
+     * @param caster Spell caster
+     * @param target Effect target
+     */
+    public static ActionEffect fighterHidden(PassiveFighter caster, PassiveFighter target) {
+        return new ActionEffect(150, caster, target.id(), 1);
+    }
+
+    /**
+     * The invisibility effect is terminated
+     *
+     * @param caster Spell caster
+     * @param target Effect target
+     */
+    public static ActionEffect fighterVisible(PassiveFighter caster, PassiveFighter target) {
+        return new ActionEffect(150, caster, target.id(), 0);
+    }
 }

@@ -58,6 +58,11 @@ class FightActionTest {
                     }
 
                     @Override
+                    public boolean secret() {
+                        return false;
+                    }
+
+                    @Override
                     public void apply(FightTurn turn) {
 
                     }
@@ -92,6 +97,11 @@ class FightActionTest {
 
                     @Override
                     public boolean success() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean secret() {
                         return false;
                     }
 

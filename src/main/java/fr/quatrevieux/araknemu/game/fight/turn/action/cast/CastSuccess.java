@@ -70,6 +70,11 @@ public final class CastSuccess implements ActionResult {
         return true;
     }
 
+    @Override
+    public boolean secret() {
+        return false;
+    }
+
     /**
      * Is a critical hit ?
      */

@@ -166,11 +166,61 @@ class MoveTest extends FightBaseCase {
         assertEquals(198, MoveSuccess.class.cast(result).target().id());
 
         assertTrue(result.success());
+        assertFalse(result.secret());
         assertSame(fighter, result.performer());
         assertSame(fighter, result.performer());
         assertEquals(1, result.action());
         assertArrayEquals(new String[] {"ac5ddvfdg"}, result.arguments());
         assertEquals("Move{size=3, target=198}", move.toString());
+    }
+
+    @Test
+    void resultShouldBeSecretWhenHidden() {
+        turn.fighter().setHidden(turn.fighter(), true);
+
+        Move move = new Move(turn.fighter(),
+            new Path<>(
+                new Decoder<>(fight.map()),
+                Arrays.asList(
+                    new PathStep<>(fight.map().get(185), Direction.EAST),
+                    new PathStep<>(fight.map().get(199), Direction.SOUTH_WEST),
+                    new PathStep<>(fight.map().get(213), Direction.SOUTH_WEST),
+                    new PathStep<>(fight.map().get(198), Direction.NORTH_WEST)
+                )
+            ),
+            new FightPathValidator[0]
+        );
+
+        ActionResult result = move.start();
+
+        assertInstanceOf(MoveSuccess.class, result);
+        assertTrue(result.success());
+        assertTrue(result.secret());
+
+        move = new Move(turn.fighter(),
+            new Path<>(
+                new Decoder<>(fight.map()),
+                Arrays.asList(
+                    new PathStep<>(fight.map().get(185), Direction.EAST),
+                    new PathStep<>(fight.map().get(199), Direction.SOUTH_WEST),
+                    new PathStep<>(fight.map().get(213), Direction.SOUTH_WEST),
+                    new PathStep<>(fight.map().get(198), Direction.NORTH_WEST)
+                )
+            ),
+            new FightPathValidator[] {
+                new StopOnEnemyValidator(),
+                new TackleValidator(),
+            }
+        );
+
+        other.fighter().characteristics().alter(Characteristic.AGILITY, 500);
+        other.fighter().move(fight.map().get(170));
+
+        result = move.start();
+
+        assertInstanceOf(MoveFailed.class, result);
+        assertFalse(result.success());
+        assertTrue(result.secret());
     }
 
     @Test
@@ -236,6 +286,7 @@ class MoveTest extends FightBaseCase {
         assertEquals(1, MoveFailed.class.cast(result).path().size());
 
         assertFalse(result.success());
+        assertFalse(result.secret());
         assertSame(fighter, result.performer());
         assertSame(fighter, result.performer());
         assertEquals(104, result.action());

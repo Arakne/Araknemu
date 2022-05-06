@@ -151,6 +151,7 @@ class CloseCombatTest extends FightBaseCase {
         assertInstanceOf(CloseCombatFailed.class, result);
         assertEquals(305, result.action());
         assertFalse(result.success());
+        assertFalse(result.secret());
         assertEquals(fighter, result.performer());
         assertArrayEquals(new Object[0], result.arguments());
     }
@@ -176,6 +177,7 @@ class CloseCombatTest extends FightBaseCase {
         assertInstanceOf(CloseCombatSuccess.class, result);
         assertEquals(303, result.action());
         assertTrue(result.success());
+        assertFalse(result.secret());
         assertEquals(fighter, result.performer());
         assertArrayEquals(new Object[] {186}, result.arguments());
         assertFalse(CloseCombatSuccess.class.cast(result).critical());
@@ -203,6 +205,7 @@ class CloseCombatTest extends FightBaseCase {
         assertInstanceOf(CloseCombatSuccess.class, result);
         assertEquals(303, result.action());
         assertTrue(result.success());
+        assertFalse(result.secret());
         assertEquals(fighter, result.performer());
         assertArrayEquals(new Object[] {186}, result.arguments());
         assertTrue(CloseCombatSuccess.class.cast(result).critical());

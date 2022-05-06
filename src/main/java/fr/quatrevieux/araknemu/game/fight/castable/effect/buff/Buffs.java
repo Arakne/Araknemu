@@ -37,6 +37,11 @@ public interface Buffs extends Iterable<Buff> {
     public void add(Buff buff);
 
     /**
+     * @see BuffHook#onCast(Buff, CastScope)
+     */
+    public void onCast(CastScope cast);
+
+    /**
      * Apply buffs when the fighter is a target of a cast
      *
      * If false is returned, the scope targets should be reloaded to call this hook on new targets,
@@ -79,7 +84,7 @@ public interface Buffs extends Iterable<Buff> {
     public boolean onStartTurn();
 
     /**
-     * @see BuffHook#onEndTurn(Buff)
+     * @see BuffHook#onEndTurn(Buff, Turn)
      */
     public void onEndTurn(Turn turn);
 

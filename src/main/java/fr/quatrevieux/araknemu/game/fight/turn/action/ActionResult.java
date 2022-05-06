@@ -49,6 +49,16 @@ public interface ActionResult {
     public boolean success();
 
     /**
+     * Does the result should be only sent to perform ?
+     *
+     * If true, only the performer should get a feedback of the result
+     * If false, all fighters should see the action result
+     *
+     * Should be true for movement action if the fighter is hidden
+     */
+    public boolean secret();
+
+    /**
      * Apply the action result to fight
      *
      * A failed action will be applied directly (i.e. after start)

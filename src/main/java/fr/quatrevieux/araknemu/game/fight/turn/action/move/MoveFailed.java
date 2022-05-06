@@ -57,6 +57,11 @@ public final class MoveFailed implements MoveResult {
     }
 
     @Override
+    public boolean secret() {
+        return performer.hidden();
+    }
+
+    @Override
     public int lostActionPoints() {
         return lostActionPoints;
     }

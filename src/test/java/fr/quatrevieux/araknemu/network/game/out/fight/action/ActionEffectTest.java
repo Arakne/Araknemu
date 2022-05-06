@@ -342,4 +342,26 @@ class ActionEffectTest {
 
         assertEquals("GA;116;456;123,5,3", ActionEffect.decreaseSight(caster, target, 5, 3).toString());
     }
+
+    @Test
+    void fighterHidden() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Mockito.when(caster.id()).thenReturn(456);
+
+        Fighter target = Mockito.mock(Fighter.class);
+        Mockito.when(target.id()).thenReturn(123);
+
+        assertEquals("GA;150;456;123,1", ActionEffect.fighterHidden(caster, target).toString());
+    }
+
+    @Test
+    void fighterVisible() {
+        Fighter caster = Mockito.mock(Fighter.class);
+        Mockito.when(caster.id()).thenReturn(456);
+
+        Fighter target = Mockito.mock(Fighter.class);
+        Mockito.when(target.id()).thenReturn(123);
+
+        assertEquals("GA;150;456;123,0", ActionEffect.fighterVisible(caster, target).toString());
+    }
 }

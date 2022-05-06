@@ -200,6 +200,16 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
+        public boolean hidden() {
+            return false;
+        }
+
+        @Override
+        public void setHidden(PassiveFighter caster, boolean hidden) {
+
+        }
+
+        @Override
         public FighterCharacteristics characteristics() {
             return new FighterCharacteristics() {
                 @Override

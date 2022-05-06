@@ -69,6 +69,7 @@ public final class FightersHelper {
         return helper.cells().adjacent(cell)
             .map(FightCell::fighter)
             .filter(Optional::isPresent).map(Optional::get)
+            .filter(fighter -> !fighter.hidden())
             .filter(filter)
         ;
     }
@@ -94,10 +95,13 @@ public final class FightersHelper {
     public Optional<? extends PassiveFighter> nearest() {
         final CoordinateCell<FightCell> currentCell = ai.fighter().cell().coordinate();
 
-        return stream().min(
-            Comparator.<PassiveFighter>comparingInt(f -> currentCell.distance(f.cell()))
+        return stream()
+            .filter(fighter -> !fighter.hidden())
+            .min(Comparator
+                .<PassiveFighter>comparingInt(f -> currentCell.distance(f.cell()))
                 .thenComparingInt(f -> f.life().current())
-        );
+            )
+        ;
     }
 
     /**
@@ -106,7 +110,7 @@ public final class FightersHelper {
      * @return Stream of cells
      */
     public Stream<FightCell> cells() {
-        return stream().map(PassiveFighter::cell);
+        return stream().filter(fighter -> !fighter.hidden()).map(PassiveFighter::cell);
     }
 
     /**
@@ -119,7 +123,7 @@ public final class FightersHelper {
     public Stream<? extends PassiveFighter> inRange(Interval range) {
         final CoordinateCell<FightCell> currentCell = ai.fighter().cell().coordinate();
 
-        return stream().filter(fighter -> range.contains(currentCell.distance(fighter.cell())));
+        return stream().filter(fighter -> !fighter.hidden()).filter(fighter -> range.contains(currentCell.distance(fighter.cell())));
     }
 
     /**

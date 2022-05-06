@@ -25,7 +25,9 @@ import fr.quatrevieux.araknemu.core.event.ListenerAggregate;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterHidden;
 import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterInitialized;
+import fr.quatrevieux.araknemu.game.fight.fighter.event.FighterVisible;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -52,6 +54,7 @@ public abstract class AbstractFighter implements Fighter {
     private @MonotonicNonNull Fight fight;
     private @Nullable FightTurn turn;
     private Direction orientation = Direction.SOUTH_EAST;
+    private boolean hidden = false;
 
     @Override
     public void init() {
@@ -179,6 +182,24 @@ public abstract class AbstractFighter implements Fighter {
     @Override
     public final boolean isOnFight() {
         return fight != null && cell != null;
+    }
+
+    @Override
+    public boolean hidden() {
+        return hidden;
+    }
+
+    @Override
+    public void setHidden(PassiveFighter caster, boolean hidden) {
+        if (this.hidden == hidden) {
+            return;
+        }
+
+        this.hidden = hidden;
+
+        if (fight != null) {
+            fight.dispatch(hidden ? new FighterHidden(this, caster) : new FighterVisible(this, caster));
+        }
     }
 
     @Override

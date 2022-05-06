@@ -91,6 +91,16 @@ class PlayerFighterSpriteTest extends FightBaseCase {
     }
 
     @Test
+    void generateHidden() {
+        fighter.setHidden(fighter, true);
+
+        assertEquals(
+            "-1;1;0;1;Bob;1;10^100x100;0;50;0,0,0,0;7b;1c8;315;,,,,;295;6;3;0;0;0;0;0;0;0;0;;",
+            sprite.toString()
+        );
+    }
+
+    @Test
     void getters() throws SQLException, ContainerException {
         assertEquals(gamePlayer().id(), sprite.id());
         assertEquals(222, sprite.cell());

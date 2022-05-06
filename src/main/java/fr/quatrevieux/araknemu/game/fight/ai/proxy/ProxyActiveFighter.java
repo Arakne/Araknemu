@@ -132,6 +132,16 @@ public final class ProxyActiveFighter implements ActiveFighter {
     }
 
     @Override
+    public boolean hidden() {
+        return fighter.hidden();
+    }
+
+    @Override
+    public void setHidden(PassiveFighter caster, boolean hidden) {
+        throw new UnsupportedOperationException("Cannot modify a proxy fighter");
+    }
+
+    @Override
     public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;

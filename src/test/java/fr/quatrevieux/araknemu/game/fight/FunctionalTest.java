@@ -223,6 +223,11 @@ public class FunctionalTest extends GameBaseCase {
                     }
 
                     @Override
+                    public boolean secret() {
+                        return false;
+                    }
+
+                    @Override
                     public void apply(FightTurn turn) {
 
                     }

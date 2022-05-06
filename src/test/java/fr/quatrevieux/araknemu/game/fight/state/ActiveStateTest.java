@@ -131,6 +131,8 @@ class ActiveStateTest extends GameBaseCase {
         assertTrue(fight.dispatcher().has(SendTurnList.class));
         assertTrue(fight.dispatcher().has(RefreshBuffs.class));
         assertTrue(fight.dispatcher().has(SendFighterMaxLifeChanged.class));
+        assertTrue(fight.dispatcher().has(SendFighterVisible.class));
+        assertTrue(fight.dispatcher().has(SendFighterHidden.class));
 
         Thread.sleep(210); // Wait for start turn
 
@@ -164,6 +166,8 @@ class ActiveStateTest extends GameBaseCase {
         assertFalse(fight.dispatcher().has(SendTurnList.class));
         assertFalse(fight.dispatcher().has(RefreshBuffs.class));
         assertFalse(fight.dispatcher().has(SendFighterMaxLifeChanged.class));
+        assertFalse(fight.dispatcher().has(SendFighterVisible.class));
+        assertFalse(fight.dispatcher().has(SendFighterHidden.class));
 
         assertFalse(fight.turnList().current().isPresent());
         assertFalse(fight.active());

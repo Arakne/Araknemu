@@ -37,6 +37,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastSuccess;
 import fr.quatrevieux.araknemu.game.fight.turn.action.util.CriticalityStrategy;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellService;
+import fr.quatrevieux.araknemu.network.game.out.fight.CellShown;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.FightAction;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
@@ -985,6 +986,45 @@ public class FunctionalTest extends FightBaseCase {
         fighter1.turn().stop();
 
         assertTrue(fighter1.dead());
+    }
+
+    @Test
+    void invisibility() {
+        castNormal(72, fighter1.cell()); // Invisibilité
+
+        assertTrue(fighter1.hidden());
+        requestStack.assertOne(ActionEffect.fighterHidden(fighter1, fighter1));
+
+        passTurns(4);
+
+        assertFalse(fighter1.hidden());
+        requestStack.assertOne(ActionEffect.fighterVisible(fighter1, fighter1));
+    }
+
+    @Test
+    void invisibilityShouldShowCellWhenCastSpell() {
+        castNormal(72, fighter1.cell()); // Invisibilité
+
+        assertTrue(fighter1.hidden());
+        requestStack.assertOne(ActionEffect.fighterHidden(fighter1, fighter1));
+
+        castNormal(42, fighter1.cell()); // Chance
+
+        assertTrue(fighter1.hidden());
+        requestStack.assertOne(new CellShown(fighter1, fighter1.cell().id()));
+    }
+
+    @Test
+    void invisibilityShouldTerminateWhenCastDirectDamageSpell() {
+        castNormal(72, fighter1.cell()); // Invisibilité
+
+        assertTrue(fighter1.hidden());
+        requestStack.assertOne(ActionEffect.fighterHidden(fighter1, fighter1));
+
+        castNormal(109, fighter2.cell()); // Bluff
+
+        assertFalse(fighter1.hidden());
+        requestStack.assertOne(ActionEffect.fighterVisible(fighter1, fighter1));
     }
 
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
