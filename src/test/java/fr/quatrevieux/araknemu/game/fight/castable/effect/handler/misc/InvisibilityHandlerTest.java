@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -261,6 +262,40 @@ class InvisibilityHandlerTest extends FightBaseCase {
     }
 
     @Test
+    void onCastShouldNotShowFighterCellIfAlreadyVisible() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.special()).thenReturn(1234);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(effect.duration()).thenReturn(5);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        handler.buff(scope, scope.effects().get(0));
+
+        assertTrue(target.hidden());
+        requestStack.assertOne(new ActionEffect(150, caster, target.id(), 1));
+
+        target.setHidden(target, false);
+        requestStack.clear();
+
+        SpellEffect attackEffect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(attackEffect.area()).thenReturn(new CellArea());
+        Mockito.when(attackEffect.effect()).thenReturn(84);
+        Mockito.when(attackEffect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+
+        CastScope attackScope = makeCastScope(caster, spell, attackEffect, target.cell());
+        target.buffs().onCast(attackScope);
+
+        requestStack.assertEmpty();
+    }
+
+    @Test
     void buffTerminatedWithOtherBuffActiveShouldNotSetVisible() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
@@ -336,6 +371,44 @@ class InvisibilityHandlerTest extends FightBaseCase {
     }
 
     @Test
+    void buffTerminatedWithOtherBuffNotInvisibilityShouldBeIgnored() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.special()).thenReturn(1234);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(effect.duration()).thenReturn(3);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        handler.buff(scope, scope.effects().get(0));
+
+        SpellEffect otherBuffEffect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(otherBuffEffect.effect()).thenReturn(144);
+        Mockito.when(otherBuffEffect.duration()).thenReturn(10);
+
+        target.buffs().add(new Buff(otherBuffEffect, Mockito.mock(Spell.class), target, target, Mockito.mock(BuffHook.class)));
+
+        assertTrue(target.hidden());
+        requestStack.clear();
+
+        target.buffs().refresh();
+        target.buffs().refresh();
+        target.buffs().refresh();
+        target.buffs().refresh();
+
+        assertFalse(target.hidden());
+        requestStack.assertAll(
+            new FighterPositions(Collections.singleton(target)),
+            new ActionEffect(150, caster, target.id(), 0)
+        );
+    }
+
+    @Test
     void onCastWithTwoActiveBuffShouldOnlyShowCellOnce() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
@@ -349,6 +422,12 @@ class InvisibilityHandlerTest extends FightBaseCase {
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
         CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+
+        SpellEffect otherBuffEffect = Mockito.mock(SpellEffect.class);
+        Mockito.when(otherBuffEffect.effect()).thenReturn(144);
+        Mockito.when(otherBuffEffect.duration()).thenReturn(10);
+        target.buffs().add(new Buff(otherBuffEffect, Mockito.mock(Spell.class), target, target, Mockito.mock(BuffHook.class)));
+
         handler.buff(scope, scope.effects().get(0));
         handler.buff(scope, scope.effects().get(0));
 
@@ -361,6 +440,35 @@ class InvisibilityHandlerTest extends FightBaseCase {
 
         CastScope attackScope = makeCastScope(caster, spell, attackEffect, target.cell());
         target.buffs().onCast(attackScope);
+
+        assertTrue(target.hidden());
+        requestStack.assertAll(new CellShown(target, target.cell().id()));
+    }
+
+    @Test
+    void onCastUnitWithoutActiveBuffShouldShowCell() {
+        SpellEffect otherBuffEffect = Mockito.mock(SpellEffect.class);
+        Mockito.when(otherBuffEffect.effect()).thenReturn(144);
+        Mockito.when(otherBuffEffect.duration()).thenReturn(10);
+        Buff fakeBuff = new Buff(otherBuffEffect, Mockito.mock(Spell.class), target, target, Mockito.mock(BuffHook.class));
+
+        target.setHidden(target, true);
+
+        requestStack.clear();
+
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+        SpellEffect attackEffect = Mockito.mock(SpellEffect.class);
+
+        Mockito.when(attackEffect.area()).thenReturn(new CellArea());
+        Mockito.when(attackEffect.effect()).thenReturn(84);
+        Mockito.when(attackEffect.duration()).thenReturn(3);
+        Mockito.when(attackEffect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        CastScope attackScope = makeCastScope(caster, spell, attackEffect, target.cell());
+        handler.onCast(fakeBuff, attackScope);
 
         assertTrue(target.hidden());
         requestStack.assertAll(new CellShown(target, target.cell().id()));

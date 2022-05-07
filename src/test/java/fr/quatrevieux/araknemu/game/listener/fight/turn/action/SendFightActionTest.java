@@ -25,6 +25,7 @@ import fr.arakne.utils.maps.path.Path;
 import fr.arakne.utils.maps.path.PathStep;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionResult;
 import fr.quatrevieux.araknemu.game.fight.turn.action.event.FightActionStarted;
@@ -190,5 +191,33 @@ class SendFightActionTest extends FightBaseCase {
         listener.on(new FightActionStarted(move, result));
 
         requestStack.assertAll(new FightAction(result));
+    }
+
+    @Test
+    void whenSecretAndMonsterFighterShouldSendNothing() throws Exception {
+        fight = createPvmFight();
+        listener = new SendFightAction(fight);
+
+        Fighter monster = fight.fighters().get(1);
+
+        monster.setHidden(monster, true);
+        requestStack.clear();
+
+        Move move = new Move(
+            monster,
+            new Path<>(
+                new Decoder<>(fight.map()),
+                Arrays.asList(
+                    new PathStep<>(fight.map().get(125), Direction.EAST),
+                    new PathStep<>(fight.map().get(139), Direction.SOUTH_WEST)
+                )
+            ),
+            new FightPathValidator[0]
+        );
+
+        ActionResult result = move.start();
+
+        listener.on(new FightActionStarted(move, result));
+        requestStack.assertEmpty();
     }
 }
