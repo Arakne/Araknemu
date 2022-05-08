@@ -243,7 +243,7 @@ public class FunctionalTest extends FightBaseCase {
         assertTrue(removeIntel.isPresent());
         assertEquals(400, removeIntel.get().effect().min());
         assertEquals(-400, fighter2.characteristics().get(Characteristic.INTELLIGENCE));
-        requestStack.assertOne(ActionEffect.buff(removeIntel.get(), -removeIntel.get().effect().min()));
+        requestStack.assertOne(ActionEffect.buff(removeIntel.get(), 400));
 
         passTurns(5);
 
@@ -985,6 +985,24 @@ public class FunctionalTest extends FightBaseCase {
         fighter1.turn().stop();
 
         assertTrue(fighter1.dead());
+    }
+
+    @Test
+    void stealCharacteristic() {
+        castNormal(1723, fighter2.cell()); // Spajuste
+
+        int value = fighter1.characteristics().get(Characteristic.AGILITY);
+
+        assertBetween(16, 20, value);
+        assertEquals(-value, fighter2.characteristics().get(Characteristic.AGILITY));
+
+        requestStack.assertOne(ActionEffect.buff(fighter1.buffs().stream().filter(buff -> buff.effect().effect() == 119).findFirst().get(), value));
+        requestStack.assertOne(ActionEffect.buff(fighter2.buffs().stream().filter(buff -> buff.effect().effect() == 154).findFirst().get(), value));
+
+        passTurns(5);
+
+        assertEquals(0, fighter1.characteristics().get(Characteristic.AGILITY));
+        assertEquals(0, fighter2.characteristics().get(Characteristic.AGILITY));
     }
 
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {

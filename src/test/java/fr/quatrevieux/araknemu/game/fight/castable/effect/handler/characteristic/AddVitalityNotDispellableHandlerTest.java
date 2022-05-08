@@ -43,13 +43,16 @@ import org.mockito.Mockito;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class AlterVitalityHandlerTest extends FightBaseCase {
+class AddVitalityNotDispellableHandlerTest extends FightBaseCase {
     private Fight fight;
     private PlayerFighter caster;
     private PlayerFighter target;
-    private AlterVitalityHandler handler;
+    private AddVitalityNotDispellableHandler handler;
 
     @Override
     @BeforeEach
@@ -65,7 +68,7 @@ class AlterVitalityHandlerTest extends FightBaseCase {
 
         target.move(fight.map().get(123));
 
-        handler = AlterVitalityHandler.add(fight);
+        handler = new AddVitalityNotDispellableHandler(fight);
 
         requestStack.clear();
     }
@@ -111,8 +114,8 @@ class AlterVitalityHandlerTest extends FightBaseCase {
 
         assertBetween(50, 60, buff1.get().effect().min());
         assertEquals(buff1.get().effect().min(), buff2.get().effect().min());
-        assertTrue(buff1.get().canBeDispelled());
-        assertTrue(buff2.get().canBeDispelled());
+        assertFalse(buff1.get().canBeDispelled());
+        assertFalse(buff2.get().canBeDispelled());
     }
 
     @Test
@@ -164,42 +167,12 @@ class AlterVitalityHandlerTest extends FightBaseCase {
         handler.onBuffStarted(buff);
 
         requestStack.assertAll(
-            ActionEffect.buff(buff, 50),
-            new TurnMiddle(fight.fighters())
+            new TurnMiddle(fight.fighters()),
+            ActionEffect.buff(buff, 50)
         );
         assertEquals(50, target.characteristics().get(Characteristic.VITALITY));
         assertEquals(100, target.life().max());
         assertEquals(100, target.life().current());
-
-        handler.onBuffTerminated(buff);
-        requestStack.assertLast(new TurnMiddle(fight.fighters()));
-        assertEquals(0, target.characteristics().get(Characteristic.VITALITY));
-        assertEquals(50, target.life().max());
-        assertEquals(50, target.life().current());
-    }
-
-    @Test
-    void onBuffStartedAndTerminatedOnRemoveEffect() {
-        handler = AlterVitalityHandler.remove(fight);
-
-        requestStack.clear();
-        SpellEffect effect = Mockito.mock(SpellEffect.class);
-
-        Mockito.when(effect.effect()).thenReturn(123);
-        Mockito.when(effect.min()).thenReturn(10);
-        Mockito.when(effect.duration()).thenReturn(5);
-
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), caster, target, handler);
-
-        handler.onBuffStarted(buff);
-
-        requestStack.assertAll(
-            ActionEffect.buff(buff, 10),
-            new TurnMiddle(fight.fighters())
-        );
-        assertEquals(-10, target.characteristics().get(Characteristic.VITALITY));
-        assertEquals(40, target.life().max());
-        assertEquals(40, target.life().current());
 
         handler.onBuffTerminated(buff);
         requestStack.assertLast(new TurnMiddle(fight.fighters()));
