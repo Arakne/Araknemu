@@ -35,6 +35,10 @@ public abstract class AbstractAlterCharacteristicHandler implements EffectHandle
     private final AlterCharacteristicHook hook;
     private final boolean canBeDispelled;
 
+    /**
+     * @param hook Buff hook which handle characteristic change
+     * @param canBeDispelled Added buff effect can be dispelled. See: {@link Buff#canBeDispelled()}
+     */
     public AbstractAlterCharacteristicHandler(AlterCharacteristicHook hook, boolean canBeDispelled) {
         this.hook = hook;
         this.canBeDispelled = canBeDispelled;

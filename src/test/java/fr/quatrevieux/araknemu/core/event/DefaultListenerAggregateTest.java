@@ -369,7 +369,6 @@ class DefaultListenerAggregateTest {
         dispatcher.add(new L1());
 
         dispatcher.dispatch(new E(0));
-        System.out.println(listeners);
         assertIterableEquals(Arrays.asList("L2-0", "L2-1", "L1-1", "L1-0"), listeners);
 
         assertTrue(dispatcher.has(L2.class));
