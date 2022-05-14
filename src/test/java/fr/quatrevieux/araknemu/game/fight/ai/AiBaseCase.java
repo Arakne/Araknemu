@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Aggressive;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.module.AiModule;
 import fr.quatrevieux.araknemu.game.fight.module.CommonEffectsModule;
@@ -238,7 +239,7 @@ public class AiBaseCase extends FightBaseCase {
      * @param spellId The spell id
      */
     public void removeSpell(int spellId) throws NoSuchFieldException, IllegalAccessException {
-        SpellBook spells = (SpellBook) fighter.spells();
+        SpellBook spells = ((PlayerFighter) fighter).player().properties().spells();
         Field field = spells.getClass().getDeclaredField("entries");
         field.setAccessible(true);
 

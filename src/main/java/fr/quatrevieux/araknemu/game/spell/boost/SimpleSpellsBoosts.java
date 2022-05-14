@@ -45,7 +45,11 @@ public final class SimpleSpellsBoosts implements SpellsBoosts {
 
         final int newValue = modifiers.get(modifier) + value;
 
-        modifiers.put(modifier, newValue);
+        if (newValue == 0) {
+            modifiers.remove(modifier);
+        } else {
+            modifiers.put(modifier, newValue);
+        }
 
         return newValue;
     }
@@ -81,11 +85,13 @@ public final class SimpleSpellsBoosts implements SpellsBoosts {
 
     @Override
     public Spell get(Spell spell) {
-        if (!spellsModifiers.containsKey(spell.id())) {
+        final Map<Modifier, Integer> modifiers = spellsModifiers.get(spell.id());
+
+        if (modifiers == null || modifiers.isEmpty()) {
             return spell;
         }
 
-        return new BoostedSpell(spell, modifiers(spell.id()));
+        return new BoostedSpell(spell, new MapSpellModifiers(spell.id(), modifiers));
     }
 
     @Override

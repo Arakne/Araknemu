@@ -27,6 +27,7 @@ import fr.quatrevieux.araknemu.game.listener.fight.fighter.ApplyEndFightReward;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.ApplyLeaveReward;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.LeaveOnDisconnect;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendFightLeaved;
+import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendSpellBoosted;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.SendStats;
 import fr.quatrevieux.araknemu.game.listener.fight.fighter.StopFightSession;
 import fr.quatrevieux.araknemu.game.player.GamePlayer;
@@ -52,6 +53,7 @@ public final class DefaultFighterFactory implements FighterFactory {
         fighter.dispatcher().add(new LeaveOnDisconnect(fighter));
         fighter.dispatcher().add(new ApplyLeaveReward(fighter));
         fighter.dispatcher().add(new SendStats(fighter));
+        fighter.dispatcher().add(new SendSpellBoosted(fighter));
 
         dispatcher.dispatch(new PlayerFighterCreated(fighter));
 

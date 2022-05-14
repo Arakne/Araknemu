@@ -76,6 +76,8 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.MoveT
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.SwitchPositionHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.SwitchPositionOnAttackHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.shifting.TeleportHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier.BoostSpellHandler;
+import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
 
 /**
  * Module for register common fight effects
@@ -228,6 +230,13 @@ public final class CommonEffectsModule implements FightModule {
 
         handler.register(135, new DecreaseCasterSightHandler(fight));
         handler.register(136, new BoostCasterSightHandler(fight));
+
+        handler.register(284, new BoostSpellHandler(SpellsBoosts.Modifier.HEAL));
+        handler.register(285, new BoostSpellHandler(SpellsBoosts.Modifier.AP_COST));
+        handler.register(286, new BoostSpellHandler(SpellsBoosts.Modifier.REDUCE_DELAY));
+        handler.register(287, new BoostSpellHandler(SpellsBoosts.Modifier.CRITICAL));
+        handler.register(290, new BoostSpellHandler(SpellsBoosts.Modifier.LAUNCH_PER_TURN));
+        handler.register(293, new BoostSpellHandler(SpellsBoosts.Modifier.BASE_DAMAGE));
     }
 
     @Override
