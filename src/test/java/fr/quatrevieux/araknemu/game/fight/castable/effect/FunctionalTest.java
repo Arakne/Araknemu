@@ -1031,6 +1031,22 @@ public class FunctionalTest extends FightBaseCase {
         assertBetween(102, 106, damage);
     }
 
+    @Test
+    void healOnAttack() {
+        castNormal(1687, fighter1.cell()); // Soin Sylvestre
+        fighter2.life().alter(fighter2, -20);
+        fighter1.turn().stop();
+
+        int lastLife = fighter2.life().current();
+
+        castNormal(183, fighter1.cell()); // Simple attack
+
+        int damage = fighter1.life().max() - fighter1.life().current();
+
+        assertEquals(damage, fighter2.life().current() - lastLife);
+        requestStack.assertOne(ActionEffect.alterLifePoints(fighter1, fighter2, damage));
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 
