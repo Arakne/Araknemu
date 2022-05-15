@@ -39,7 +39,8 @@ public interface SpellsBoosts {
         LINE_OF_SIGHT(289),
         LAUNCH_PER_TURN(290),
         LAUNCH_PER_TARGET(291),
-        SET_DELAY(292);
+        SET_DELAY(292),
+        BASE_DAMAGE(293);
 
         private final int effectId;
 

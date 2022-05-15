@@ -45,11 +45,19 @@ public final class BoostedSpellEffect implements SpellEffect {
 
     @Override
     public @NonNegative int min() {
+        if (isBoostableDamageEffect()) {
+            return Math.max(effect.min() + modifiers.baseDamage(), 0);
+        }
+
         return effect.min();
     }
 
     @Override
     public @NonNegative int max() {
+        if (isBoostableDamageEffect()) {
+            return Math.max(effect.max() + modifiers.baseDamage(), 0);
+        }
+
         return effect.max();
     }
 

@@ -64,6 +64,20 @@ class SimpleSpellsBoostsTest extends GameBaseCase {
     }
 
     @Test
+    void boostWithNegativeValueShouldRemoveBoost() {
+        Spell spell = container.get(SpellService.class).get(3).level(2);
+
+        boosts.boost(3, SpellsBoosts.Modifier.CRITICAL, 10);
+        assertNotSame(spell, boosts.get(spell));
+
+        assertEquals(5, boosts.boost(3, SpellsBoosts.Modifier.CRITICAL, -5));
+        assertNotSame(spell, boosts.get(spell));
+
+        assertEquals(0, boosts.boost(3, SpellsBoosts.Modifier.CRITICAL, -5));
+        assertSame(spell, boosts.get(spell));
+    }
+
+    @Test
     void setNewValue() {
         assertEquals(5, boosts.set(1, SpellsBoosts.Modifier.DAMAGE, 5));
         assertEquals(5, boosts.modifiers(1).damage());
@@ -112,6 +126,22 @@ class SimpleSpellsBoostsTest extends GameBaseCase {
         assertEquals(5, boosted.effects().get(0).boost());
         assertEquals(7, boosted.effects().get(0).max());
         assertFalse(boosted.constraints().lineOfSight());
+    }
+
+    @Test
+    void getWithBoostRemovedShouldNotReturnBoostedSpell() throws ContainerException {
+        boosts.set(3, SpellsBoosts.Modifier.DAMAGE, 5);
+        boosts.set(3, SpellsBoosts.Modifier.LINE_OF_SIGHT, 1);
+
+        Spell spell = container.get(SpellService.class).get(3).level(2);
+
+        assertInstanceOf(BoostedSpell.class, boosts.get(spell));
+
+        boosts.unset(3, SpellsBoosts.Modifier.DAMAGE);
+        assertInstanceOf(BoostedSpell.class, boosts.get(spell));
+
+        boosts.unset(3, SpellsBoosts.Modifier.LINE_OF_SIGHT);
+        assertSame(spell, boosts.get(spell));
     }
 
     @Test

@@ -1005,6 +1005,32 @@ public class FunctionalTest extends FightBaseCase {
         assertEquals(0, fighter2.characteristics().get(Characteristic.AGILITY));
     }
 
+    @Test
+    void boostSpellDamage() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(311).charac(Characteristic.STRENGTH, 100).spell(171, 5))
+            .addEnemy(fb -> fb.cell(250).maxLife(500).currentLife(500))
+        );
+
+        castFromSpellList(171, fighters.get(1).cell()); // Flèche punitive
+
+        int current = fighters.get(1).life().current();
+        int damage = fighters.get(1).life().max() - current;
+
+        assertBetween(50, 54, damage);
+        assertEquals(51, fighters.get(0).spells().get(171).effects().get(0).min());
+        assertEquals(53, fighters.get(0).spells().get(171).effects().get(0).max());
+
+        fighters.get(0).turn().stop();
+        fighters.get(1).turn().stop();
+        fighters.get(0).turn().stop();
+        fighters.get(1).turn().stop();
+
+        castFromSpellList(171, fighters.get(1).cell()); // Flèche punitive
+        damage = current - fighters.get(1).life().current();
+        assertBetween(102, 106, damage);
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 
@@ -1032,6 +1058,30 @@ public class FunctionalTest extends FightBaseCase {
     private Spell castNormal(int spellId, FightCell target) {
         FightTurn currentTurn = fight.turnList().current().get();
         Spell spell = service.get(spellId).level(5);
+
+        currentTurn.perform(new Cast(
+            currentTurn.fighter(),
+            spell,
+            target,
+            new SpellConstraintsValidator(),
+
+            // Ensure no critical hit / fail
+            new CriticalityStrategy() {
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
+            }
+        ));
+
+        currentTurn.terminate();
+
+        return spell;
+    }
+
+    private Spell castFromSpellList(int spellId, FightCell target) {
+        FightTurn currentTurn = fight.turnList().current().get();
+        Spell spell = fight.turnList().currentFighter().spells().get(spellId);
 
         currentTurn.perform(new Cast(
             currentTurn.fighter(),

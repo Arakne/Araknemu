@@ -236,7 +236,7 @@ class MonsterFighterTest extends FightBaseCase {
 
     @Test
     void spells() {
-        assertSame(fighter.spells(), container.get(MonsterService.class).load(31).all().get(2).spells());
+        assertIterableEquals(fighter.spells(), container.get(MonsterService.class).load(31).all().get(2).spells());
     }
 
     @Test

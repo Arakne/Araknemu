@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.game.spell.boost.spell.BoostedSpell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicReference;
@@ -82,7 +83,7 @@ class DispatcherSpellsBoostsTest extends GameBaseCase {
 
         assertEquals(1, ref.get().spellId());
         assertEquals(SpellsBoosts.Modifier.DAMAGE, ref.get().modifier());
-        assertEquals(-1, ref.get().value());
+        assertEquals(0, ref.get().value());
     }
 
     @Test
