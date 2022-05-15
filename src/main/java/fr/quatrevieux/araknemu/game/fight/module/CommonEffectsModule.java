@@ -63,6 +63,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.heal.HealOnDam
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.ChangeAppearanceHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.DispelHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.KillHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.NoEffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.PushStateHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.RemoveStateHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.SkipTurnHandler;
@@ -237,6 +238,8 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(287, new BoostSpellHandler(SpellsBoosts.Modifier.CRITICAL));
         handler.register(290, new BoostSpellHandler(SpellsBoosts.Modifier.LAUNCH_PER_TURN));
         handler.register(293, new BoostSpellHandler(SpellsBoosts.Modifier.BASE_DAMAGE));
+
+        handler.register(666, new NoEffectHandler());
     }
 
     @Override
