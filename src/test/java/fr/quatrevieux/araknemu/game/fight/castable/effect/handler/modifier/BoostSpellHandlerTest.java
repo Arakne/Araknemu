@@ -24,6 +24,7 @@ import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
@@ -167,5 +168,30 @@ class BoostSpellHandlerTest extends FightBaseCase {
         assertEquals(30, caster.spells().get(3).criticalHit());
 
         requestStack.assertOne(new SpellBoost(3, SpellsBoosts.Modifier.CRITICAL, 20));
+    }
+
+    @Test
+    void hookWithTargetNotFighterInstanceShouldDoNothing() {
+        requestStack.clear();
+
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.effect()).thenReturn(123);
+        Mockito.when(effect.min()).thenReturn(3);
+        Mockito.when(effect.special()).thenReturn(20);
+        Mockito.when(effect.duration()).thenReturn(5);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        Buff buff = new Buff(effect, spell, caster, Mockito.mock(PassiveFighter.class), handler);
+
+        handler.onBuffStarted(buff);
+        handler.onBuffTerminated(buff);
+
+        requestStack.assertEmpty();
     }
 }
