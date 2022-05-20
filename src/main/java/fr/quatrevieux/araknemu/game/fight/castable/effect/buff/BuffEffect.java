@@ -33,11 +33,13 @@ public final class BuffEffect implements SpellEffect {
 
     private final int effect;
     private final @NonNegative int value;
+    private final @GTENegativeOne int duration;
 
-    private BuffEffect(SpellEffect baseEffect, int effect, @NonNegative int value) {
+    private BuffEffect(SpellEffect baseEffect, int effect, @NonNegative int value, @GTENegativeOne int duration) {
         this.baseEffect = baseEffect;
         this.effect = effect;
         this.value = value;
+        this.duration = duration;
     }
 
     @Override
@@ -62,7 +64,7 @@ public final class BuffEffect implements SpellEffect {
 
     @Override
     public @GTENegativeOne int duration() {
-        return baseEffect.duration();
+        return duration;
     }
 
     @Override
@@ -92,7 +94,7 @@ public final class BuffEffect implements SpellEffect {
      * @param value The applied value
      */
     public static BuffEffect fixed(SpellEffect baseEffect, @NonNegative int value) {
-        return new BuffEffect(baseEffect, baseEffect.effect(), value);
+        return new BuffEffect(baseEffect, baseEffect.effect(), value, baseEffect.duration());
     }
 
     /**
@@ -103,6 +105,17 @@ public final class BuffEffect implements SpellEffect {
      * @param value The applied value
      */
     public static BuffEffect withCustomEffect(SpellEffect baseEffect, int effect, @NonNegative int value) {
-        return new BuffEffect(baseEffect, effect, value);
+        return new BuffEffect(baseEffect, effect, value, baseEffect.duration());
+    }
+
+    /**
+     * Define an effect with custom effect id and duration, with a fixed value
+     *
+     * @param baseEffect The spell effect
+     * @param effect The overridden effect id
+     * @param value The overridden effect duration
+     */
+    public static BuffEffect withCustomEffectAndDuration(SpellEffect baseEffect, int effect, @NonNegative int value, @GTENegativeOne int duration) {
+        return new BuffEffect(baseEffect, effect, value, duration);
     }
 }
