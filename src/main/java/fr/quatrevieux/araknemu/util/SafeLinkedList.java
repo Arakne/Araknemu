@@ -53,8 +53,8 @@ import java.util.NoSuchElementException;
  * @param <E> Stored element type
  */
 public final class SafeLinkedList<E> implements Iterable<E> {
-    private Node<E> first;
-    private Node<E> last;
+    private @Nullable Node<E> first = null;
+    private @Nullable Node<E> last = null;
 
     /**
      * Add an element to the end of the list
@@ -83,7 +83,7 @@ public final class SafeLinkedList<E> implements Iterable<E> {
 
     private static class Node<E> {
         private final E element;
-        private Node<E> next;
+        private @Nullable Node<E> next = null;
 
         public Node(E element) {
             this.element = element;

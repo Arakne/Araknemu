@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
+import fr.quatrevieux.araknemu.util.Asserter;
 
 /**
  * Apply simple damage to fighter
@@ -186,7 +187,7 @@ public final class DamageApplier {
         final int actualDamage = applyDamage(caster, damage, target);
 
         if (actualDamage < 0 && !target.dead()) {
-            target.buffs().onDirectDamageApplied(caster, -actualDamage);
+            target.buffs().onDirectDamageApplied(caster, Asserter.castPositive(-actualDamage));
         }
 
         return actualDamage;

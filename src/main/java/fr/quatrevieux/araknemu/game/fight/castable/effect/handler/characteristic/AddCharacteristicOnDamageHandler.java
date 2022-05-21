@@ -29,6 +29,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
+import fr.quatrevieux.araknemu.util.Asserter;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 
@@ -125,7 +126,7 @@ public final class AddCharacteristicOnDamageHandler implements EffectHandler, Bu
         }
 
         target.buffs().add(new Buff(
-            BuffEffect.withCustomEffectAndDuration(buff.effect(), boostEffectId, Math.min(maximalValue, damage), buff.effect().special()),
+            BuffEffect.withCustomEffectAndDuration(buff.effect(), boostEffectId, Math.min(maximalValue, damage), Asserter.assertGTENegativeOne(buff.effect().special())),
             buff.action(),
             caster,
             target,
