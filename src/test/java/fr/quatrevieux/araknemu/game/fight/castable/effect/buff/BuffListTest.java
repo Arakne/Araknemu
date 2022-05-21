@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.castable.effect.buff;
 
+import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
@@ -45,13 +46,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 class BuffListTest extends FightBaseCase {
     private BuffList list;
+    private Fight fight;
 
     @Override
     @BeforeEach
     public void setUp() throws Exception {
         super.setUp();
 
-        createFight();
+        fight = createFight();
 
         list = new BuffList(player.fighter());
         requestStack.clear();
@@ -121,7 +123,10 @@ class BuffListTest extends FightBaseCase {
     }
 
     @Test
-    void addSelfBuffWillIncrementTurns() {
+    void addWhenTurnIsActiveShouldIncrementRemainingTurns() {
+        fight.nextState();
+        fight.turnList().start();
+
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         BuffHook hook = Mockito.mock(BuffHook.class);
 
