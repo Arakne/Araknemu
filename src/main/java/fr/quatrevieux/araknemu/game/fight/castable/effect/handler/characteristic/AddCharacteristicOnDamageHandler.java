@@ -119,7 +119,7 @@ public final class AddCharacteristicOnDamageHandler implements EffectHandler, Bu
             throw new IllegalArgumentException("Unsupported effect " + boostEffectId + " for punishment effect");
         }
 
-        final int maximalValue = buff.effect().max() - currentBoostValue(buff, caster);
+        final int maximalValue = buff.effect().max() - currentBoostValue(buff, target);
 
         if (maximalValue <= 0) {
             return;
@@ -128,19 +128,19 @@ public final class AddCharacteristicOnDamageHandler implements EffectHandler, Bu
         target.buffs().add(new Buff(
             BuffEffect.withCustomEffectAndDuration(buff.effect(), boostEffectId, Math.min(maximalValue, damage), Asserter.assertGTENegativeOne(buff.effect().special())),
             buff.action(),
-            caster,
+            buff.caster(),
             target,
             hook
         ));
     }
 
-    private @NonNegative int currentBoostValue(Buff buff, ActiveFighter caster) {
+    private @NonNegative int currentBoostValue(Buff buff, PassiveFighter target) {
         // Add 1 to duration in case of self damage
-        final int expectedEffectDuration = buff.effect().special() + (caster.equals(buff.target()) ? 1 : 0);
+        final int expectedEffectDuration = buff.effect().special() + (target.equals(fight.turnList().currentFighter()) ? 1 : 0);
 
         int boost = 0;
 
-        for (Buff activeBuff : buff.target().buffs()) {
+        for (Buff activeBuff : target.buffs()) {
             if (activeBuff.effect().effect() == buff.effect().min()
                 && activeBuff.remainingTurns() == expectedEffectDuration
                 && activeBuff.action().equals(buff.action())

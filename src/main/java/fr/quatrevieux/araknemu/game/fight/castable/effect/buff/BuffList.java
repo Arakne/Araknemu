@@ -70,8 +70,8 @@ public final class BuffList implements Iterable<Buff>, Buffs {
 
         fighter.fight().send(new AddBuff(buff));
 
-        // Add one turn on self-buff
-        if (fighter.equals(buff.caster())) {
+        // Add one turn when it's the turn of the current fighter
+        if (fighter.isPlaying()) {
             buff.incrementRemainingTurns();
         }
     }

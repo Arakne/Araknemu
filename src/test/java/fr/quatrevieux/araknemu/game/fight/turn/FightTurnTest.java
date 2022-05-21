@@ -65,6 +65,7 @@ class FightTurnTest extends FightBaseCase {
         fight.dispatcher().add(new RefreshStates());
 
         turn = new FightTurn(player.fighter(), fight, Duration.ofMillis(250));
+        player.fighter().play(turn);
     }
 
     @Override

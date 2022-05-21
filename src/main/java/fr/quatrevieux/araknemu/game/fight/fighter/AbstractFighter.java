@@ -163,7 +163,7 @@ public abstract class AbstractFighter implements Fighter {
 
     @Override
     public boolean isPlaying() {
-        return turn != null;
+        return turn != null && turn.active();
     }
 
     @Override

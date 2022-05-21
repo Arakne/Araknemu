@@ -52,6 +52,7 @@ class SkipTurnHandlerTest extends FightBaseCase {
 
         fight = createFight();
         fight.nextState();
+        fight.turnList().start();
 
         caster = player.fighter();
         target = other.fighter();
