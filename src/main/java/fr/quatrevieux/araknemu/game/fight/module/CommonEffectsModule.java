@@ -30,10 +30,12 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.ReflectD
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.armor.SpellReturnHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddActionPointsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddCharacteristicHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddCharacteristicOnDamageHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddMovementPointsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddNotDispellableCharacteristicHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddVitalityHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AddVitalityNotDispellableHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AlterVitalityHook;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.BoostCasterSightHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.DecreaseCasterSightHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.RemoveActionPointsHandler;
@@ -240,6 +242,15 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(287, new BoostSpellHandler(SpellsBoosts.Modifier.CRITICAL));
         handler.register(290, new BoostSpellHandler(SpellsBoosts.Modifier.LAUNCH_PER_TURN));
         handler.register(293, new BoostSpellHandler(SpellsBoosts.Modifier.BASE_DAMAGE));
+
+        handler.register(788, new AddCharacteristicOnDamageHandler(fight)
+            .register(108, AlterVitalityHook.add(fight))
+            .register(118, Characteristic.STRENGTH)
+            .register(119, Characteristic.AGILITY)
+            .register(123, Characteristic.LUCK)
+            .register(126, Characteristic.INTELLIGENCE)
+            .register(138, Characteristic.PERCENT_DAMAGE)
+        );
 
         handler.register(666, new NoEffectHandler());
     }

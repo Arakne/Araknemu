@@ -28,6 +28,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
+import fr.quatrevieux.araknemu.util.Asserter;
 
 /**
  * Apply simple damage to fighter
@@ -59,6 +60,7 @@ public final class DamageApplier {
      *
      * @see DamageApplier#apply(Buff) For apply a buff damage (i.e. poison)
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamage(ActiveFighter, Damage) The called buff hook
+     * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamageApplied(ActiveFighter, int) Buff called when damage are applied
      */
     public int apply(ActiveFighter caster, SpellEffect effect, PassiveFighter target) {
         final Damage damage = computeDamage(caster, effect, target);
@@ -82,6 +84,7 @@ public final class DamageApplier {
      *
      * @see DamageApplier#applyFixed(Buff, int) For apply a precomputed damage buff
      * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamage(ActiveFighter, Damage) The called buff hook
+     * @see fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buffs#onDirectDamageApplied(ActiveFighter, int) Buff called when damage are applied
      */
     public int applyFixed(ActiveFighter caster, int value, PassiveFighter target) {
         final Damage damage = createDamage(caster, target, value);
@@ -170,7 +173,7 @@ public final class DamageApplier {
     /**
      * Apply damage to the target for direct damage
      *
-     * This method will call direct damage buff and apply returned damage
+     * This method will call direct damage buffs and apply returned damage
      *
      * @return The life change value. Negative for damage, positive for heal.
      */
@@ -181,7 +184,13 @@ public final class DamageApplier {
             damage.reflect(target.characteristics().get(Characteristic.COUNTER_DAMAGE));
         }
 
-        return applyDamage(caster, damage, target);
+        final int actualDamage = applyDamage(caster, damage, target);
+
+        if (actualDamage < 0 && !target.dead()) {
+            target.buffs().onDirectDamageApplied(caster, Asserter.castPositive(-actualDamage));
+        }
+
+        return actualDamage;
     }
 
     /**

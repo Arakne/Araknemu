@@ -1047,6 +1047,41 @@ public class FunctionalTest extends FightBaseCase {
         requestStack.assertOne(ActionEffect.alterLifePoints(fighter1, fighter2, damage));
     }
 
+    @Test
+    void addCharacteristicOnDamage() {
+        castNormal(433, fighter1.cell()); // Châtiment Osé
+        fighter1.turn().stop();
+
+        castNormal(183, fighter1.cell()); // Simple attack
+
+        int damage = fighter1.life().max() - fighter1.life().current();
+        Buff buff = fighter1.buffs().stream().filter(b -> b.effect().effect() == 123).findFirst().get();
+
+        assertEquals(damage, fighter1.characteristics().get(Characteristic.LUCK));
+        assertEquals(damage, buff.effect().min());
+        assertEquals(123, buff.effect().effect());
+        assertEquals(5, buff.remainingTurns());
+        requestStack.assertOne(ActionEffect.buff(buff, damage));
+    }
+
+    @Test
+    void addVitalityOnDamage() {
+        castNormal(441, fighter1.cell()); // Châtiment Vitalesque
+        fighter1.turn().stop();
+
+        castNormal(183, fighter1.cell()); // Simple attack
+
+        int damage = fighter1.life().max() - fighter1.life().current();
+        Buff buff = fighter1.buffs().stream().filter(b -> b.effect().effect() == 108).findFirst().get();
+
+        assertEquals(damage, fighter1.characteristics().get(Characteristic.VITALITY));
+        assertEquals(295 + damage, fighter1.life().max());
+        assertEquals(damage, buff.effect().min());
+        assertEquals(108, buff.effect().effect());
+        assertEquals(2, buff.remainingTurns());
+        requestStack.assertOne(ActionEffect.buff(buff, damage));
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 
