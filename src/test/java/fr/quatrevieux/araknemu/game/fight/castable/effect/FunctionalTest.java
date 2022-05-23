@@ -1122,6 +1122,16 @@ public class FunctionalTest extends FightBaseCase {
         requestStack.assertOne(ActionEffect.buff(buff, damage));
     }
 
+    @Test
+    void revealInvisibleFighter() {
+        fighter2.setHidden(fighter2, true);
+
+        castNormal(64, fighter1.cell()); // Repérage
+
+        assertFalse(fighter2.hidden());
+        requestStack.assertOne(ActionEffect.fighterVisible(fighter1, fighter2));
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 
