@@ -49,7 +49,7 @@ public interface ActionResult {
     public boolean success();
 
     /**
-     * Does the result should be only sent to perform ?
+     * Does the result should be only sent to performer ?
      *
      * If true, only the performer should get a feedback of the result
      * If false, all fighters should see the action result
