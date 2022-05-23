@@ -19,6 +19,7 @@
 
 package fr.quatrevieux.araknemu.game.fight.turn.order;
 
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu._test.TestCase;
 import fr.quatrevieux.araknemu.data.constant.Alignment;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
@@ -27,15 +28,18 @@ import fr.quatrevieux.araknemu.game.fight.JoinFightError;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffList;
 import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.exception.JoinFightException;
-import fr.quatrevieux.araknemu.game.fight.fighter.*;
+import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterSpellList;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
+import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.TeamOptions;
 import fr.quatrevieux.araknemu.game.fight.turn.FightTurn;
-import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
-import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.game.world.creature.characteristics.Characteristics;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +48,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AlternateTeamFighterOrderTest extends TestCase {
     private AlternateTeamFighterOrder strategy = new AlternateTeamFighterOrder();
@@ -240,7 +244,7 @@ class AlternateTeamFighterOrderTest extends TestCase {
         }
 
         @Override
-        public SpellList spells() {
+        public FighterSpellList spells() {
             return null;
         }
 

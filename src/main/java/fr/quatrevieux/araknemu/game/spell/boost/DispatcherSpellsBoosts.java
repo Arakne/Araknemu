@@ -57,7 +57,7 @@ public final class DispatcherSpellsBoosts implements SpellsBoosts {
     @Override
     public void unset(int spellId, Modifier modifier) {
         boosts.unset(spellId, modifier);
-        dispatcher.dispatch(new SpellBoostChanged(spellId, modifier, -1));
+        dispatcher.dispatch(new SpellBoostChanged(spellId, modifier, 0));
     }
 
     @Override

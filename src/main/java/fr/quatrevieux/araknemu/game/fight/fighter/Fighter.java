@@ -113,6 +113,9 @@ public interface Fighter extends Creature<FightCell>, Dispatcher, ActiveFighter 
     @Override
     public BuffList buffs();
 
+    @Override
+    public FighterSpellList spells();
+
     /**
      * Join the fight
      *

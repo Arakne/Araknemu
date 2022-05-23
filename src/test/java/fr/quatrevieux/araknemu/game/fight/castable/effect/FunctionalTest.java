@@ -244,7 +244,7 @@ public class FunctionalTest extends FightBaseCase {
         assertTrue(removeIntel.isPresent());
         assertEquals(400, removeIntel.get().effect().min());
         assertEquals(-400, fighter2.characteristics().get(Characteristic.INTELLIGENCE));
-        requestStack.assertOne(ActionEffect.buff(removeIntel.get(), -removeIntel.get().effect().min()));
+        requestStack.assertOne(ActionEffect.buff(removeIntel.get(), 400));
 
         passTurns(5);
 
@@ -1027,6 +1027,101 @@ public class FunctionalTest extends FightBaseCase {
         requestStack.assertOne(ActionEffect.fighterVisible(fighter1, fighter1));
     }
 
+    @Test
+    void stealCharacteristic() {
+        castNormal(1723, fighter2.cell()); // Spajuste
+
+        int value = fighter1.characteristics().get(Characteristic.AGILITY);
+
+        assertBetween(16, 20, value);
+        assertEquals(-value, fighter2.characteristics().get(Characteristic.AGILITY));
+
+        requestStack.assertOne(ActionEffect.buff(fighter1.buffs().stream().filter(buff -> buff.effect().effect() == 119).findFirst().get(), value));
+        requestStack.assertOne(ActionEffect.buff(fighter2.buffs().stream().filter(buff -> buff.effect().effect() == 154).findFirst().get(), value));
+
+        passTurns(5);
+
+        assertEquals(0, fighter1.characteristics().get(Characteristic.AGILITY));
+        assertEquals(0, fighter2.characteristics().get(Characteristic.AGILITY));
+    }
+
+    @Test
+    void boostSpellDamage() {
+        List<Fighter> fighters = configureFight(builder -> builder
+            .addSelf(fb -> fb.cell(311).charac(Characteristic.STRENGTH, 100).spell(171, 5))
+            .addEnemy(fb -> fb.cell(250).maxLife(500).currentLife(500))
+        );
+
+        castFromSpellList(171, fighters.get(1).cell()); // Flèche punitive
+
+        int current = fighters.get(1).life().current();
+        int damage = fighters.get(1).life().max() - current;
+
+        assertBetween(50, 54, damage);
+        assertEquals(51, fighters.get(0).spells().get(171).effects().get(0).min());
+        assertEquals(53, fighters.get(0).spells().get(171).effects().get(0).max());
+
+        fighters.get(0).turn().stop();
+        fighters.get(1).turn().stop();
+        fighters.get(0).turn().stop();
+        fighters.get(1).turn().stop();
+
+        castFromSpellList(171, fighters.get(1).cell()); // Flèche punitive
+        damage = current - fighters.get(1).life().current();
+        assertBetween(102, 106, damage);
+    }
+
+    @Test
+    void healOnAttack() {
+        castNormal(1687, fighter1.cell()); // Soin Sylvestre
+        fighter2.life().alter(fighter2, -20);
+        fighter1.turn().stop();
+
+        int lastLife = fighter2.life().current();
+
+        castNormal(183, fighter1.cell()); // Simple attack
+
+        int damage = fighter1.life().max() - fighter1.life().current();
+
+        assertEquals(damage, fighter2.life().current() - lastLife);
+        requestStack.assertOne(ActionEffect.alterLifePoints(fighter1, fighter2, damage));
+    }
+
+    @Test
+    void addCharacteristicOnDamage() {
+        castNormal(433, fighter1.cell()); // Châtiment Osé
+        fighter1.turn().stop();
+
+        castNormal(183, fighter1.cell()); // Simple attack
+
+        int damage = fighter1.life().max() - fighter1.life().current();
+        Buff buff = fighter1.buffs().stream().filter(b -> b.effect().effect() == 123).findFirst().get();
+
+        assertEquals(damage, fighter1.characteristics().get(Characteristic.LUCK));
+        assertEquals(damage, buff.effect().min());
+        assertEquals(123, buff.effect().effect());
+        assertEquals(5, buff.remainingTurns());
+        requestStack.assertOne(ActionEffect.buff(buff, damage));
+    }
+
+    @Test
+    void addVitalityOnDamage() {
+        castNormal(441, fighter1.cell()); // Châtiment Vitalesque
+        fighter1.turn().stop();
+
+        castNormal(183, fighter1.cell()); // Simple attack
+
+        int damage = fighter1.life().max() - fighter1.life().current();
+        Buff buff = fighter1.buffs().stream().filter(b -> b.effect().effect() == 108).findFirst().get();
+
+        assertEquals(damage, fighter1.characteristics().get(Characteristic.VITALITY));
+        assertEquals(295 + damage, fighter1.life().max());
+        assertEquals(damage, buff.effect().min());
+        assertEquals(108, buff.effect().effect());
+        assertEquals(2, buff.remainingTurns());
+        requestStack.assertOne(ActionEffect.buff(buff, damage));
+    }
+
     private List<Fighter> configureFight(Consumer<FightBuilder> configurator) {
         fight.cancel(true);
 
@@ -1054,6 +1149,30 @@ public class FunctionalTest extends FightBaseCase {
     private Spell castNormal(int spellId, FightCell target) {
         FightTurn currentTurn = fight.turnList().current().get();
         Spell spell = service.get(spellId).level(5);
+
+        currentTurn.perform(new Cast(
+            currentTurn.fighter(),
+            spell,
+            target,
+            new SpellConstraintsValidator(),
+
+            // Ensure no critical hit / fail
+            new CriticalityStrategy() {
+                public int hitRate(ActiveFighter fighter, int base) { return 0; }
+                public int failureRate(ActiveFighter fighter, int base) { return 0; }
+                public boolean hit(ActiveFighter fighter, int baseRate) { return false; }
+                public boolean failed(ActiveFighter fighter, int baseRate) { return false; }
+            }
+        ));
+
+        currentTurn.terminate();
+
+        return spell;
+    }
+
+    private Spell castFromSpellList(int spellId, FightCell target) {
+        FightTurn currentTurn = fight.turnList().current().get();
+        Spell spell = fight.turnList().currentFighter().spells().get(spellId);
 
         currentTurn.perform(new Cast(
             currentTurn.fighter(),

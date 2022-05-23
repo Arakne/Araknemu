@@ -17,39 +17,39 @@
  * Copyright (c) 2017-2022 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic;
+package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier;
 
-import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.EffectValue;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
+import fr.quatrevieux.araknemu.game.spell.boost.SpellsBoosts;
+import fr.quatrevieux.araknemu.game.spell.boost.spell.BoostedSpell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CircleArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
-import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
-import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
+import fr.quatrevieux.araknemu.network.game.out.spell.SpellBoost;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class AlterVitalityHandlerTest extends FightBaseCase {
+class BoostSpellHandlerTest extends FightBaseCase {
     private Fight fight;
     private PlayerFighter caster;
     private PlayerFighter target;
-    private AlterVitalityHandler handler;
+    private BoostSpellHandler handler;
 
     @Override
     @BeforeEach
@@ -65,7 +65,7 @@ class AlterVitalityHandlerTest extends FightBaseCase {
 
         target.move(fight.map().get(123));
 
-        handler = AlterVitalityHandler.add(fight);
+        handler = new BoostSpellHandler(SpellsBoosts.Modifier.BASE_DAMAGE);
 
         requestStack.clear();
     }
@@ -92,8 +92,8 @@ class AlterVitalityHandlerTest extends FightBaseCase {
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.effect()).thenReturn(123);
-        Mockito.when(effect.min()).thenReturn(50);
-        Mockito.when(effect.max()).thenReturn(60);
+        Mockito.when(effect.min()).thenReturn(3);
+        Mockito.when(effect.special()).thenReturn(10);
         Mockito.when(effect.duration()).thenReturn(5);
         Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 10)));
         Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
@@ -109,102 +109,89 @@ class AlterVitalityHandlerTest extends FightBaseCase {
         assertTrue(buff1.isPresent());
         assertTrue(buff2.isPresent());
 
-        assertBetween(50, 60, buff1.get().effect().min());
-        assertEquals(buff1.get().effect().min(), buff2.get().effect().min());
-        assertTrue(buff1.get().canBeDispelled());
-        assertTrue(buff2.get().canBeDispelled());
+        assertEquals(3, buff1.get().effect().min());
+        assertEquals(3, buff2.get().effect().min());
     }
 
     @Test
-    void buffWithOneTargetMaximized() {
-        target.buffs().add(new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), target, target, new BuffHook() {
-            @Override
-            public void onEffectValueTarget(Buff buff, EffectValue value, PassiveFighter caster) {
-                value.maximize();
-            }
-        }));
+    void functional() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.effect()).thenReturn(123);
+        Mockito.when(effect.min()).thenReturn(3);
+        Mockito.when(effect.special()).thenReturn(20);
+        Mockito.when(effect.duration()).thenReturn(5);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        CastScope scope = makeCastScope(caster, spell, effect, caster.cell());
+        handler.buff(scope, scope.effects().get(0));
+
+        assertInstanceOf(BoostedSpell.class, caster.spells().get(3));
+        assertEquals(22, caster.spells().get(3).effects().get(0).min());
+        assertEquals(26, caster.spells().get(3).effects().get(0).max());
+
+        requestStack.assertOne(new SpellBoost(3, SpellsBoosts.Modifier.BASE_DAMAGE, 20));
+
+        caster.buffs().removeAll();
+
+        assertEquals(2, caster.spells().get(3).effects().get(0).min());
+        assertEquals(6, caster.spells().get(3).effects().get(0).max());
+        requestStack.assertOne(new SpellBoost(3, SpellsBoosts.Modifier.BASE_DAMAGE, 0));
+    }
+
+    @Test
+    void criticalBonus() {
+        handler = new BoostSpellHandler(SpellsBoosts.Modifier.CRITICAL);
 
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.effect()).thenReturn(123);
-        Mockito.when(effect.min()).thenReturn(0);
-        Mockito.when(effect.max()).thenReturn(10000);
+        Mockito.when(effect.min()).thenReturn(3);
+        Mockito.when(effect.special()).thenReturn(20);
         Mockito.when(effect.duration()).thenReturn(5);
-        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 10)));
+        Mockito.when(effect.area()).thenReturn(new CellArea());
         Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(target, spell, effect, caster.cell());
+        CastScope scope = makeCastScope(caster, spell, effect, caster.cell());
         handler.buff(scope, scope.effects().get(0));
 
-        Optional<Buff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
-        Optional<Buff> buff2 = target.buffs().stream().filter(buff -> buff.effect().effect() == 123).findFirst();
+        assertInstanceOf(BoostedSpell.class, caster.spells().get(3));
+        assertEquals(30, caster.spells().get(3).criticalHit());
 
-        assertTrue(buff1.isPresent());
-        assertTrue(buff2.isPresent());
-
-        assertBetween(0, 9999, buff1.get().effect().min());
-        assertEquals(10000, buff2.get().effect().min());
+        requestStack.assertOne(new SpellBoost(3, SpellsBoosts.Modifier.CRITICAL, 20));
     }
 
     @Test
-    void onBuffStartedAndTerminated() {
+    void hookWithTargetNotFighterInstanceShouldDoNothing() {
         requestStack.clear();
+
         SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
         Mockito.when(effect.effect()).thenReturn(123);
-        Mockito.when(effect.min()).thenReturn(50);
+        Mockito.when(effect.min()).thenReturn(3);
+        Mockito.when(effect.special()).thenReturn(20);
         Mockito.when(effect.duration()).thenReturn(5);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), caster, target, handler);
+        Buff buff = new Buff(effect, spell, caster, Mockito.mock(PassiveFighter.class), handler);
 
         handler.onBuffStarted(buff);
-
-        requestStack.assertAll(
-            ActionEffect.buff(buff, 50),
-            new TurnMiddle(fight.fighters())
-        );
-        assertEquals(50, target.characteristics().get(Characteristic.VITALITY));
-        assertEquals(100, target.life().max());
-        assertEquals(100, target.life().current());
-
         handler.onBuffTerminated(buff);
-        requestStack.assertLast(new TurnMiddle(fight.fighters()));
-        assertEquals(0, target.characteristics().get(Characteristic.VITALITY));
-        assertEquals(50, target.life().max());
-        assertEquals(50, target.life().current());
-    }
 
-    @Test
-    void onBuffStartedAndTerminatedOnRemoveEffect() {
-        handler = AlterVitalityHandler.remove(fight);
-
-        requestStack.clear();
-        SpellEffect effect = Mockito.mock(SpellEffect.class);
-
-        Mockito.when(effect.effect()).thenReturn(123);
-        Mockito.when(effect.min()).thenReturn(10);
-        Mockito.when(effect.duration()).thenReturn(5);
-
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), caster, target, handler);
-
-        handler.onBuffStarted(buff);
-
-        requestStack.assertAll(
-            ActionEffect.buff(buff, 10),
-            new TurnMiddle(fight.fighters())
-        );
-        assertEquals(-10, target.characteristics().get(Characteristic.VITALITY));
-        assertEquals(40, target.life().max());
-        assertEquals(40, target.life().current());
-
-        handler.onBuffTerminated(buff);
-        requestStack.assertLast(new TurnMiddle(fight.fighters()));
-        assertEquals(0, target.characteristics().get(Characteristic.VITALITY));
-        assertEquals(50, target.life().max());
-        assertEquals(50, target.life().current());
+        requestStack.assertEmpty();
     }
 }

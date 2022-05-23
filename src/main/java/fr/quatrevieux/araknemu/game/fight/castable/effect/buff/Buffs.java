@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Reflect
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
+import org.checkerframework.checker.index.qual.Positive;
 
 /**
  * Handle and store buff list for a fighter
@@ -67,6 +68,11 @@ public interface Buffs extends Iterable<Buff> {
      * @see BuffHook#onBuffDamage(Buff, Buff, Damage)
      */
     public void onBuffDamage(Buff poison, Damage value);
+
+    /**
+     * @see BuffHook#onDirectDamageApplied(Buff, ActiveFighter, int)
+     */
+    public void onDirectDamageApplied(ActiveFighter caster, @Positive int value);
 
     /**
      * @see BuffHook#onLifeAltered(Buff, int)

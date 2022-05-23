@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 
 /**
@@ -38,37 +39,58 @@ public class AlterCharacteristicHook implements BuffHook {
     private final Fight fight;
     private final Characteristic characteristic;
     private final int multiplier;
+    private final boolean applyMultiplierOnPacketValue;
 
-    protected AlterCharacteristicHook(Fight fight, Characteristic characteristic, int multiplier) {
+    /**
+     * @param fight Fight where the hook will take effect
+     * @param characteristic Characteristic to alter
+     * @param multiplier Value multiplier. -1 for removing characteristic, 1 for adding
+     * @param applyMultiplierOnPacketValue Does the actual altered value should be sent, or the raw effect value. Set to true if the client to not handle negative value by it-self (like AP removal)
+     */
+    protected AlterCharacteristicHook(Fight fight, Characteristic characteristic, int multiplier, boolean applyMultiplierOnPacketValue) {
         this.fight = fight;
         this.characteristic = characteristic;
         this.multiplier = multiplier;
+        this.applyMultiplierOnPacketValue = applyMultiplierOnPacketValue;
     }
 
     @Override
-    public void onBuffStarted(Buff buff) {
-        final int value = buff.effect().min() * multiplier;
+    public final void onBuffStarted(Buff buff) {
+        final int effectValue = buff.effect().min();
+        final int appliedValue = effectValue * multiplier;
 
-        buff.target().characteristics().alter(characteristic, value);
-        fight.send(ActionEffect.buff(buff, value));
+        apply(buff, buff.target(), appliedValue);
+        fight.send(ActionEffect.buff(buff, applyMultiplierOnPacketValue ? appliedValue : effectValue));
     }
 
     @Override
-    public void onBuffTerminated(Buff buff) {
-        buff.target().characteristics().alter(characteristic, -buff.effect().min() * multiplier);
+    public final void onBuffTerminated(Buff buff) {
+        apply(buff, buff.target(), -buff.effect().min() * multiplier);
+    }
+
+    /**
+     * Apply the buff effect to the buff target
+     * Can be overridden for apply custom effects
+     *
+     * @param buff Buff to apply
+     * @param target Buff target
+     * @param value Value to apply. Negative for removing, positive for adding
+     */
+    protected void apply(Buff buff, PassiveFighter target, int value) {
+        target.characteristics().alter(characteristic, value);
     }
 
     /**
      * Create the buff hook for add the given characteristic to the fighter
      */
     public static AlterCharacteristicHook add(Fight fight, Characteristic characteristic) {
-        return new AlterCharacteristicHook(fight, characteristic, 1);
+        return new AlterCharacteristicHook(fight, characteristic, 1, false);
     }
 
     /**
      * Create the buff hook for remove the given characteristic to the fighter
      */
     public static AlterCharacteristicHook remove(Fight fight, Characteristic characteristic) {
-        return new AlterCharacteristicHook(fight, characteristic, -1);
+        return new AlterCharacteristicHook(fight, characteristic, -1, false);
     }
 }

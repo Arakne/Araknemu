@@ -23,6 +23,7 @@ import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic.AlterCharacteristicHook;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.TurnPoints;
 import org.checkerframework.checker.index.qual.NonNegative;
 
@@ -37,18 +38,18 @@ public class AlterPointHook extends AlterCharacteristicHook {
     private final TurnPointsModifier modifier;
 
     protected AlterPointHook(Fight fight, Characteristic characteristic, int multiplier, TurnPointsModifier modifier) {
-        super(fight, characteristic, multiplier);
+        super(fight, characteristic, multiplier, true);
 
         this.fight = fight;
         this.modifier = modifier;
     }
 
     @Override
-    public void onBuffStarted(Buff buff) {
-        super.onBuffStarted(buff);
+    protected void apply(Buff buff, PassiveFighter target, int value) {
+        super.apply(buff, target, value);
 
         fight.turnList().current()
-            .filter(turn -> turn.fighter().equals(buff.target()))
+            .filter(turn -> turn.fighter().equals(target))
             .ifPresent(turn -> modifier.modify(turn.points(), buff.effect().min()))
         ;
     }

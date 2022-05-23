@@ -26,6 +26,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.damage.Reflect
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
+import org.checkerframework.checker.index.qual.Positive;
 
 /**
  * Hook action for apply buff effects
@@ -128,6 +129,21 @@ public interface BuffHook {
     public default void onDirectDamage(Buff buff, ActiveFighter caster, Damage value) {
         onDamage(buff, value);
     }
+
+    /**
+     * Direct damage has been applied to the current fighter
+     * This hook is called after {@link BuffHook#onDirectDamage(Buff, ActiveFighter, Damage)}
+     *
+     * Unlike {@link BuffHook#onLifeAltered(Buff, int)} this hook is only called by direct damage attack, so it ignores
+     * poison, push damage and some special effects.
+     *
+     * Note: this hook is not called if the attack has killed the fighter
+     *
+     * @param buff Active buff
+     * @param caster Attack caster
+     * @param damage Applied damage. Always positive. If an attack is inefficient, this hook will not be called.
+     */
+    public default void onDirectDamageApplied(Buff buff, ActiveFighter caster, @Positive int damage) {}
 
     /**
      * The fighter will take damages indirectly (like poison)

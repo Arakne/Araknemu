@@ -23,14 +23,15 @@ import fr.quatrevieux.araknemu.game.fight.castable.weapon.CastableWeapon;
 import fr.quatrevieux.araknemu.game.fight.exception.FightException;
 import fr.quatrevieux.araknemu.game.fight.fighter.AbstractFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterLife;
+import fr.quatrevieux.araknemu.game.fight.fighter.BaseFighterSpellList;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
+import fr.quatrevieux.araknemu.game.fight.fighter.FighterSpellList;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.team.FightTeam;
 import fr.quatrevieux.araknemu.game.fight.team.MonsterGroupTeam;
 import fr.quatrevieux.araknemu.game.monster.Monster;
 import fr.quatrevieux.araknemu.game.monster.reward.MonsterReward;
-import fr.quatrevieux.araknemu.game.spell.SpellList;
 import fr.quatrevieux.araknemu.game.world.creature.Sprite;
 import org.checkerframework.checker.index.qual.Positive;
 
@@ -45,6 +46,7 @@ public final class MonsterFighter extends AbstractFighter {
     private final BaseFighterLife life;
     private final MonsterFighterCharacteristics characteristics;
     private final MonsterFighterSprite sprite;
+    private final FighterSpellList spells;
 
     @SuppressWarnings({"assignment", "argument"})
     public MonsterFighter(int id, Monster monster, MonsterGroupTeam team) {
@@ -55,6 +57,7 @@ public final class MonsterFighter extends AbstractFighter {
         this.life = new BaseFighterLife(this, monster.life());
         this.characteristics = new MonsterFighterCharacteristics(monster, this);
         this.sprite = new MonsterFighterSprite(this, monster);
+        this.spells = new BaseFighterSpellList(monster.spells());
     }
 
     @Override
@@ -78,8 +81,8 @@ public final class MonsterFighter extends AbstractFighter {
     }
 
     @Override
-    public SpellList spells() {
-        return monster.spells();
+    public FighterSpellList spells() {
+        return spells;
     }
 
     @Override

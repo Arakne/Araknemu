@@ -83,6 +83,12 @@ class MapSpellModifiersTest {
     }
 
     @Test
+    void baseDamage() {
+        map.put(SpellsBoosts.Modifier.BASE_DAMAGE, 5);
+        assertEquals(5, modifiers.baseDamage());
+    }
+
+    @Test
     void heal() {
         map.put(SpellsBoosts.Modifier.HEAL, 5);
         assertEquals(5, modifiers.heal());

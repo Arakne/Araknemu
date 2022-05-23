@@ -14,38 +14,32 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Araknemu.  If not, see <https://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2017-2019 Vincent Quatrevieux
+ * Copyright (c) 2017-2022 Vincent Quatrevieux
  */
 
-package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.characteristic;
+package fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc;
 
-import fr.quatrevieux.araknemu.data.constant.Characteristic;
-import fr.quatrevieux.araknemu.data.value.EffectArea;
 import fr.quatrevieux.araknemu.game.fight.Fight;
 import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
-import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
 import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.SpellConstraints;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.game.spell.effect.area.CellArea;
-import fr.quatrevieux.araknemu.game.spell.effect.area.CircleArea;
 import fr.quatrevieux.araknemu.game.spell.effect.target.SpellEffectTarget;
-import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.Optional;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class RemoveCharacteristicHandlerTest extends FightBaseCase {
+class NoEffectHandlerTest extends FightBaseCase {
     private Fight fight;
     private PlayerFighter caster;
     private PlayerFighter target;
-    private RemoveCharacteristicHandler handler;
+    private NoEffectHandler handler;
 
     @Override
     @BeforeEach
@@ -61,70 +55,50 @@ class RemoveCharacteristicHandlerTest extends FightBaseCase {
 
         target.move(fight.map().get(123));
 
-        handler = new RemoveCharacteristicHandler(fight, Characteristic.LUCK);
+        handler = new NoEffectHandler();
 
         requestStack.clear();
     }
 
     @Test
-    void handle() {
+    void buffShouldDoNothing() {
+        requestStack.clear();
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);
         SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
 
+        Mockito.when(effect.special()).thenReturn(1234);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(effect.duration()).thenReturn(5);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        handler.buff(scope, scope.effects().get(0));
+
+        assertEquals(0, target.buffs().stream().count());
+        requestStack.assertEmpty();
+    }
+
+    @Test
+    void handleShouldNoNothing() {
+        requestStack.clear();
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.special()).thenReturn(1234);
         Mockito.when(effect.area()).thenReturn(new CellArea());
         Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
         Mockito.when(spell.constraints()).thenReturn(constraints);
         Mockito.when(constraints.freeCell()).thenReturn(false);
 
-        CastScope scope = makeCastScope(caster, spell, effect, caster.cell());
-        assertThrows(UnsupportedOperationException.class, () -> handler.handle(scope, scope.effects().get(0)));
-    }
+        CastScope scope = makeCastScope(caster, spell, effect, target.cell());
+        handler.handle(scope, scope.effects().get(0));
 
-    @Test
-    void buff() {
-        SpellEffect effect = Mockito.mock(SpellEffect.class);
-        Spell spell = Mockito.mock(Spell.class);
-        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+        assertFalse(target.buffs().stream().anyMatch(buff -> buff.effect().equals(effect)));
 
-        Mockito.when(effect.effect()).thenReturn(152);
-        Mockito.when(effect.min()).thenReturn(50);
-        Mockito.when(effect.min()).thenReturn(60);
-        Mockito.when(effect.duration()).thenReturn(5);
-        Mockito.when(effect.area()).thenReturn(new CircleArea(new EffectArea(EffectArea.Type.CIRCLE, 10)));
-        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
-        Mockito.when(spell.constraints()).thenReturn(constraints);
-        Mockito.when(constraints.freeCell()).thenReturn(false);
-
-        CastScope scope = makeCastScope(caster, spell, effect, caster.cell());
-        handler.buff(scope, scope.effects().get(0));
-
-        Optional<Buff> buff1 = caster.buffs().stream().filter(buff -> buff.effect().effect() == 152).findFirst();
-        Optional<Buff> buff2 = target.buffs().stream().filter(buff -> buff.effect().effect() == 152).findFirst();
-
-        assertTrue(buff1.isPresent());
-        assertTrue(buff2.isPresent());
-
-        assertBetween(50, 60, buff1.get().effect().min());
-        assertEquals(buff1.get().effect().min(), buff2.get().effect().min());
-    }
-
-    @Test
-    void onBuffStartedAndTerminated() {
-        SpellEffect effect = Mockito.mock(SpellEffect.class);
-
-        Mockito.when(effect.effect()).thenReturn(152);
-        Mockito.when(effect.min()).thenReturn(50);
-        Mockito.when(effect.duration()).thenReturn(5);
-
-        Buff buff = new Buff(effect, Mockito.mock(Spell.class), caster, target, handler);
-
-        handler.onBuffStarted(buff);
-
-        requestStack.assertLast(ActionEffect.buff(buff, 50));
-        assertEquals(-50, target.characteristics().get(Characteristic.LUCK));
-
-        handler.onBuffTerminated(buff);
-        assertEquals(0, target.characteristics().get(Characteristic.LUCK));
+        requestStack.assertEmpty();
     }
 }

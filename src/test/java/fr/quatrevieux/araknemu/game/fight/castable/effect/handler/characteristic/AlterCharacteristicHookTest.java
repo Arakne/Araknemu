@@ -93,7 +93,7 @@ class AlterCharacteristicHookTest extends FightBaseCase {
         target.buffs().add(buff);
 
         assertEquals(-50, target.characteristics().get(Characteristic.STRENGTH));
-        requestStack.assertOne(ActionEffect.buff(buff, -50));
+        requestStack.assertOne(ActionEffect.buff(buff, 50));
 
         target.buffs().refresh();
         assertEquals(0, target.characteristics().get(Characteristic.STRENGTH));

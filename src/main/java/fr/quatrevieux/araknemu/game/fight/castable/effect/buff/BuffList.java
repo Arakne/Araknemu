@@ -28,10 +28,10 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.Turn;
 import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
+import fr.quatrevieux.araknemu.util.SafeLinkedList;
+import org.checkerframework.checker.index.qual.Positive;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -41,7 +41,7 @@ import java.util.stream.StreamSupport;
  */
 public final class BuffList implements Iterable<Buff>, Buffs {
     private final Fighter fighter;
-    private final Collection<Buff> buffs = new LinkedList<>();
+    private final SafeLinkedList<Buff> buffs = new SafeLinkedList<>();
 
     public BuffList(Fighter fighter) {
         this.fighter = fighter;
@@ -70,8 +70,8 @@ public final class BuffList implements Iterable<Buff>, Buffs {
 
         fighter.fight().send(new AddBuff(buff));
 
-        // Add one turn on self-buff
-        if (fighter.equals(buff.caster())) {
+        // Add one turn when it's the turn of the current fighter
+        if (fighter.isPlaying()) {
             buff.incrementRemainingTurns();
         }
     }
@@ -130,6 +130,13 @@ public final class BuffList implements Iterable<Buff>, Buffs {
     public void onBuffDamage(Buff poison, Damage value) {
         for (Buff buff : buffs) {
             buff.hook().onBuffDamage(buff, poison, value);
+        }
+    }
+
+    @Override
+    public void onDirectDamageApplied(ActiveFighter caster, @Positive int value) {
+        for (Buff buff : buffs) {
+            buff.hook().onDirectDamageApplied(buff, caster, value);
         }
     }
 
