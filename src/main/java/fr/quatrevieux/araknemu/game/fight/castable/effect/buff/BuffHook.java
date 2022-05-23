@@ -57,6 +57,12 @@ public interface BuffHook {
     public default void onBuffTerminated(Buff buff) {}
 
     /**
+     * The fighter has cast a spell or close combat attack
+     * This buff is called before apply effects and resolve targets using {@link BuffHook#onCastTarget(Buff, CastScope)}
+     */
+    public default void onCast(Buff buff, CastScope cast) {}
+
+    /**
      * The fighter is a target of a cast
      *
      * To get the spell caster, use {@code cast.caster()}, and to get the target, use {@code buff.target()}.

@@ -76,6 +76,27 @@ public interface PassiveFighter extends Creature<FightCell> {
     public Team<? extends PassiveFighter> team();
 
     /**
+     * Check the hidden state of the fighter
+     * If true, cell must not be sent to other fighters, movement actions must be hidden
+     * and AI should ignore fighter position
+     */
+    public boolean hidden();
+
+    /**
+     * Change the hidden state of the fighter
+     * An event will be dispatched to the fight if effective
+     *
+     * Note: this method will do nothing if the fighter is already on the requested state
+     *
+     * @param caster Effect caster
+     * @param hidden New hidden state
+     *
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.event.FighterHidden Trigger when the fighter is actually hidden
+     * @see fr.quatrevieux.araknemu.game.fight.fighter.event.FighterVisible Trigger when the fighter is actually visible
+     */
+    public void setHidden(PassiveFighter caster, boolean hidden);
+
+    /**
      * Check if the player is dead
      */
     public default boolean dead() {

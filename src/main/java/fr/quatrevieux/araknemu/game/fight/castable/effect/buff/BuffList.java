@@ -95,6 +95,13 @@ public final class BuffList implements Iterable<Buff>, Buffs {
     }
 
     @Override
+    public void onCast(CastScope cast) {
+        for (Buff buff : buffs) {
+            buff.hook().onCast(buff, cast);
+        }
+    }
+
+    @Override
     public boolean onCastTarget(CastScope cast) {
         for (Buff buff : buffs) {
             if (!buff.hook().onCastTarget(buff, cast)) {
@@ -170,11 +177,9 @@ public final class BuffList implements Iterable<Buff>, Buffs {
 
     @Override
     public void refresh() {
-        removeIf(buff -> {
-            buff.decrementRemainingTurns();
-
-            return !buff.valid();
-        });
+        // invalidate buffs before removing it in case of buffs are iterated by onBuffTerminated() hook
+        buffs.forEach(Buff::decrementRemainingTurns);
+        removeIf(buff -> !buff.valid());
     }
 
     @Override

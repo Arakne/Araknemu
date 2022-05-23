@@ -136,6 +136,7 @@ class CastTest extends FightBaseCase {
 
         assertInstanceOf(CastSuccess.class, result);
         assertTrue(result.success());
+        assertFalse(result.secret());
         assertEquals(300, result.action());
         assertSame(fighter, result.performer());
         assertArrayEquals(new Object[] {3, 186, 103, 1, "30,1,1"}, result.arguments());
@@ -184,6 +185,7 @@ class CastTest extends FightBaseCase {
 
         assertInstanceOf(CastSuccess.class, result);
         assertTrue(result.success());
+        assertFalse(result.secret());
         assertEquals(300, result.action());
         assertSame(fighter, result.performer());
         assertArrayEquals(new Object[] {3, 186, 103, 1, "30,1,1"}, result.arguments());
@@ -211,6 +213,7 @@ class CastTest extends FightBaseCase {
 
         assertInstanceOf(CastFailed.class, result);
         assertFalse(result.success());
+        assertFalse(result.secret());
         assertEquals(302, result.action());
         assertSame(fighter, result.performer());
         assertArrayEquals(new Object[] {3}, result.arguments());

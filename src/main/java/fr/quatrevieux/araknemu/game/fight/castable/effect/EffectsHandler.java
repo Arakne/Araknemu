@@ -20,6 +20,7 @@
 package fr.quatrevieux.araknemu.game.fight.castable.effect;
 
 import fr.quatrevieux.araknemu.game.fight.castable.CastScope;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.buff.Buff;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.EffectHandler;
 import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 
@@ -40,8 +41,17 @@ public final class EffectsHandler {
 
     /**
      * Apply a cast to the fight
+     *
+     * First, this method will call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook#onCast(Buff, CastScope)} to caster
+     * Then call {@link fr.quatrevieux.araknemu.game.fight.castable.effect.buff.BuffHook#onCastTarget(Buff, CastScope)} to all targets
+     *
+     * After that, all effects will be applied by calling :
+     * - {@link EffectHandler#handle(CastScope, CastScope.EffectScope)} if duration is 0
+     * - {@link EffectHandler#buff(CastScope, CastScope.EffectScope)} if the effect has a duration
      */
     public void apply(CastScope cast) {
+        cast.caster().buffs().onCast(cast);
+
         applyCastTarget(cast);
 
         for (CastScope.EffectScope effect : cast.effects()) {

@@ -47,6 +47,16 @@ class TurnMiddleTest extends FightBaseCase {
     }
 
     @Test
+    void generateWithHiddenFighterShouldNotSendCell() {
+        fight.fighters().get(1).setHidden(fight.fighters().get(1), true);
+
+        assertEquals(
+            "GTM|1;0;295;6;3;122;;295|2;0;50;6;3;-1;;50",
+            new TurnMiddle(fight.fighters()).toString()
+        );
+    }
+
+    @Test
     void generateWithActiveTurnShouldShowTurnPoints() {
         fight.turnList().init(new AlternateTeamFighterOrder());
         fight.turnList().start();

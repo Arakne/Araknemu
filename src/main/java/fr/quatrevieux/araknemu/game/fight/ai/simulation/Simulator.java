@@ -84,6 +84,13 @@ public final class Simulator {
      * @param scope The cast scope
      */
     private CastSimulation simulate(Spell spell, CastScope scope) {
+        // Remove invisible fighters from simulation
+        scope.targets().forEach(target -> {
+            if (target.hidden()) {
+                scope.removeTarget(target);
+            }
+        });
+
         final CastSimulation simulation = new CastSimulation(spell, scope.caster(), scope.target());
 
         for (CastScope.EffectScope effect : scope.effects()) {

@@ -98,6 +98,12 @@ class MonsterFighterSpriteTest extends FightBaseCase {
     }
 
     @Test
+    void generateHidden() {
+        fighter.setHidden(fighter, true);
+        assertEquals("-1;1;0;-1;31;-2;1563^100;3;-1;-1;-1;0,0,0,0;20;4;2;3;7;7;-7;-7;7;5;1", sprite.toString());
+    }
+
+    @Test
     void values() {
         assertEquals(-1, sprite.id());
         assertEquals(123, sprite.cell());

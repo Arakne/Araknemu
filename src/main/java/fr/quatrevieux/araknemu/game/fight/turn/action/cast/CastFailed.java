@@ -57,6 +57,11 @@ public final class CastFailed implements ActionResult {
     }
 
     @Override
+    public boolean secret() {
+        return false;
+    }
+
+    @Override
     public void apply(FightTurn turn) {
         turn.points().useActionPoints(spell.apCost());
 

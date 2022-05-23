@@ -202,6 +202,27 @@ class BuffListTest extends FightBaseCase {
     }
 
     @Test
+    void onCast() {
+        BuffHook hook1, hook2, hook3;
+
+        Buff buff1 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook1 = Mockito.mock(BuffHook.class));
+        Buff buff2 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook2 = Mockito.mock(BuffHook.class));
+        Buff buff3 = new Buff(Mockito.mock(SpellEffect.class), Mockito.mock(Spell.class), other.fighter(), player.fighter(), hook3 = Mockito.mock(BuffHook.class));
+
+        list.add(buff1);
+        list.add(buff2);
+        list.add(buff3);
+
+        CastScope cast = CastScope.simple(Mockito.mock(Spell.class), player.fighter(), null, Collections.emptyList());
+
+        list.onCast(cast);
+
+        Mockito.verify(hook1).onCast(buff1, cast);
+        Mockito.verify(hook2).onCast(buff2, cast);
+        Mockito.verify(hook3).onCast(buff3, cast);
+    }
+
+    @Test
     void onCastTarget() {
         BuffHook hook1, hook2, hook3;
 

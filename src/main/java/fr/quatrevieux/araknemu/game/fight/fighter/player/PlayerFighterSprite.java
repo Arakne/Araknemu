@@ -47,7 +47,7 @@ public final class PlayerFighterSprite implements Sprite {
 
     @Override
     public int cell() {
-        return fighter.dead() ? -1 : fighter.cell().id();
+        return fighter.dead() || fighter.hidden() ? -1 : fighter.cell().id();
     }
 
     @Override

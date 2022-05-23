@@ -51,6 +51,7 @@ class ProxyPassiveFighterTest extends AiBaseCase {
 
         assertEquals(ai.enemy().get().id(), fighter.id());
         assertEquals(ai.enemy().get().dead(), fighter.dead());
+        assertEquals(ai.enemy().get().hidden(), fighter.hidden());
     }
 
     @Test
@@ -86,6 +87,19 @@ class ProxyPassiveFighterTest extends AiBaseCase {
         ProxyPassiveFighter fighter = new ProxyPassiveFighter(ai.enemy().get(), ai);
 
         assertThrows(UnsupportedOperationException.class, () -> fighter.move(ai.map().get(123)));
+    }
+
+    @Test
+    void setHiddenIsNotAllowed() {
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(152))
+            .addEnemy(builder -> builder.cell(167))
+            .addAlly(builder -> builder.cell(166))
+        );
+
+        ProxyPassiveFighter fighter = new ProxyPassiveFighter(ai.enemy().get(), ai);
+
+        assertThrows(UnsupportedOperationException.class, () -> fighter.setHidden(fighter, true));
     }
 
     @Test

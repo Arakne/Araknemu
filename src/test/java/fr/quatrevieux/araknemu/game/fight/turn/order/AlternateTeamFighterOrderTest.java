@@ -32,6 +32,7 @@ import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterCharacteristics;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterLife;
 import fr.quatrevieux.araknemu.game.fight.fighter.FighterSpellList;
+import fr.quatrevieux.araknemu.game.fight.fighter.PassiveFighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.States;
 import fr.quatrevieux.araknemu.game.fight.fighter.operation.FighterOperation;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
@@ -200,6 +201,16 @@ class AlternateTeamFighterOrderTest extends TestCase {
         @Override
         public boolean isOnFight() {
             return true;
+        }
+
+        @Override
+        public boolean hidden() {
+            return false;
+        }
+
+        @Override
+        public void setHidden(PassiveFighter caster, boolean hidden) {
+
         }
 
         @Override

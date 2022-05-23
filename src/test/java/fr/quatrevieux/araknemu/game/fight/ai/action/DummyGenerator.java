@@ -68,6 +68,11 @@ public class DummyGenerator implements ActionGenerator {
                         }
 
                         @Override
+                        public boolean secret() {
+                            return false;
+                        }
+
+                        @Override
                         public void apply(FightTurn turn) {
 
                         }

@@ -32,6 +32,7 @@ import fr.quatrevieux.araknemu.game.spell.Spell;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.AddBuff;
 import fr.quatrevieux.araknemu.network.game.out.fight.BeginFight;
+import fr.quatrevieux.araknemu.network.game.out.fight.action.ActionEffect;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.FighterTurnOrder;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.StartTurn;
 import fr.quatrevieux.araknemu.network.game.out.fight.turn.TurnMiddle;
@@ -154,6 +155,29 @@ class SendFightStateToSpectatorTest extends FightBaseCase {
             new StartTurn(fight.turnList().current().get()),
             new AddBuff(buff1),
             new AddBuff(buff2)
+        );
+    }
+
+    @Test
+    void onStartWatchFightWithInvisibility() throws SQLException {
+        SendFightStateToSpectator listener = new SendFightStateToSpectator(new Spectator(gamePlayer(), fight));
+
+        fight.nextState();
+        fight.turnList().start();
+
+        fight.fighters().get(0).setHidden(fight.fighters().get(0), true);
+        requestStack.clear();
+
+        listener.on(new StartWatchFight());
+
+        requestStack.assertAll(
+            new fr.quatrevieux.araknemu.network.game.out.fight.JoinFightAsSpectator(fight),
+            new AddSprites(fight.fighters().stream().map(Fighter::sprite).collect(Collectors.toList())),
+            new BeginFight(),
+            new FighterTurnOrder(fight.turnList()),
+            new TurnMiddle(fight.fighters()),
+            new StartTurn(fight.turnList().current().get()),
+            ActionEffect.fighterHidden(fight.fighters().get(0), fight.fighters().get(0))
         );
     }
 }

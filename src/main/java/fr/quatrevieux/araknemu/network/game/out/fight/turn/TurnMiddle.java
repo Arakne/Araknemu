@@ -62,7 +62,7 @@ public final class TurnMiddle {
             sb.append("0;").append(fighter.life().current()).append(';')
                 .append(actionPoints).append(';')
                 .append(movementPoints).append(';')
-                .append(fighter.cell().id()).append(';') // @todo set cell to -1 when hidden
+                .append(fighter.hidden() ? -1 : fighter.cell().id()).append(';') // @todo send real cell to hidden fighter ?
                 .append(';') // Not used by client (line 348)
                 .append(fighter.life().max())
             ;

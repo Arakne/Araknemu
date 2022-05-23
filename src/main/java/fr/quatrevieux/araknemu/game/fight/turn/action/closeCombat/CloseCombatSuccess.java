@@ -68,6 +68,11 @@ public final class CloseCombatSuccess implements ActionResult {
         return true;
     }
 
+    @Override
+    public boolean secret() {
+        return false;
+    }
+
     /**
      * Is a critical hit ?
      */
