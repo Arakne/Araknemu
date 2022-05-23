@@ -34,7 +34,7 @@
 
     <groupId>fr.quatrevieux.araknemu</groupId>
     <artifactId>araknemu</artifactId>
-    <version>0.9.1-alpha</version>
+    <version>0.10-alpha</version>
     <dependencies>
         <dependency>
             <groupId>io.netty</groupId>
