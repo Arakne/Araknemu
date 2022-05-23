@@ -70,6 +70,7 @@ import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.KillHandl
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.NoEffectHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.PushStateHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.RemoveStateHandler;
+import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.RevealInvisibleHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.misc.SkipTurnHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier.MaximizeTargetEffectsHandler;
 import fr.quatrevieux.araknemu.game.fight.castable.effect.handler.modifier.MinimizeCastedEffectsHandler;
@@ -147,6 +148,7 @@ public final class CommonEffectsModule implements FightModule {
         handler.register(951, new RemoveStateHandler());
         handler.register(141, new KillHandler());
         handler.register(150, new InvisibilityHandler(fight));
+        handler.register(202, new RevealInvisibleHandler());
 
         handler.register(79,  new HealOrMultiplyDamageHandler());
         handler.register(105, new ReduceDamageHandler());
