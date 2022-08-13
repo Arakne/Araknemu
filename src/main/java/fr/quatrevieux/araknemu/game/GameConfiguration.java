@@ -367,5 +367,25 @@ public final class GameConfiguration {
         public Duration pvmPlacementDuration() {
             return pool.duration("fight.pvm.placementDuration", Duration.ofSeconds(45));
         }
+
+        /**
+         * Get the XP multiplier
+         * The value should be a positive decimal number.
+         * Default value : 1.0
+         */
+        public double xpRate() {
+            return pool.decimal("fight.rate.xp", 1.0);
+        }
+
+        /**
+         * Get the drop rate multiplier
+         * The value should be a positive decimal number.
+         * This value will modify the object drop chance, but not the maximum dropped items per monster
+         * nor minimal discernment requirement.
+         * Default value : 1.0
+         */
+        public double dropRate() {
+            return pool.decimal("fight.rate.drop", 1.0);
+        }
     }
 }

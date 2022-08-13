@@ -212,6 +212,16 @@ game.dbname = araknemu
 ; > The value should be a duration string like 30s, 1m10s
 ; > Default value : 45s
 ;fight.pvm.placementDuration = 45s
+; > Get the XP multiplier
+; > The value should be a positive decimal number.
+; > Default value : 1.0
+;fight.rate.xp = 1.0
+; > Get the drop rate multiplier
+; > The value should be a positive decimal number.
+; > This value will modify the object drop chance, but not the maximum dropped items per monster
+; > nor minimal discernment requirement.
+; > Default value : 1.0
+;fight.rate.drop = 1.0
 
 ; Auto save
 ; ---------

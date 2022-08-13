@@ -106,6 +106,33 @@ class PvmItemDropProviderTest extends FightBaseCase {
     }
 
     @Test
+    void withRandomRateAndRateMultiplier() {
+        monsterFighters.get(0).reward().items().clear();
+
+        monsterFighters.get(0).reward().items().add(new MonsterRewardItem(0, 12, 2, 100, 10));
+
+        EndFightResults results = new EndFightResults(
+            fight,
+            Collections.singletonList(player.fighter()),
+            Collections.singletonList(monsterFighters.get(0))
+        );
+
+        formula = new PvmItemDropProvider(2.5);
+
+        int count = 0;
+
+        for (int i = 0; i < 1000; ++i) {
+            DropReward reward = new DropReward(RewardType.WINNER, player.fighter(), Collections.emptyList());
+
+            formula.initialize(results).provide(reward);
+            count += reward.items().getOrDefault(12, 0);
+        }
+
+        // rate = 25%
+        assertBetween(225, 275, count);
+    }
+
+    @Test
     void filterByDiscernment() {
         monsterFighters.get(0).reward().items().clear();
 
