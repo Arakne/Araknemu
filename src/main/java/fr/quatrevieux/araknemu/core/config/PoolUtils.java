@@ -26,6 +26,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.common.value.qual.IntRange;
 
 import java.time.Duration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Define utility methods for Pool
@@ -45,6 +48,16 @@ public final class PoolUtils implements Pool {
     @Override
     public @Nullable String get(String key) {
         return pool.get(key);
+    }
+
+    @Override
+    public List<String> getAll(String key) {
+        return pool.getAll(key);
+    }
+
+    @Override
+    public Iterator<Map.Entry<String, String>> iterator() {
+        return pool.iterator();
     }
 
     /**
