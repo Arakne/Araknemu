@@ -23,6 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -82,6 +83,14 @@ class PoolUtilsTest {
     @Test
     void getAll() {
         assertEquals(Collections.singletonList("yes"), pool.getAll("test_bool"));
+    }
+
+    @Test
+    void iterator() {
+        assertIterableEquals(
+            map.entrySet(),
+            pool
+        );
     }
 
     @Test
