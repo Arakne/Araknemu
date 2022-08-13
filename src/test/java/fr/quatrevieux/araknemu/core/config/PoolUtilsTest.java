@@ -23,7 +23,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -50,6 +54,16 @@ class PoolUtilsTest {
                 public String get(String key) {
                     return map.get(key);
                 }
+
+                @Override
+                public List<String> getAll(String key) {
+                    return has(key) ? Collections.singletonList(get(key)) : Collections.emptyList();
+                }
+
+                @Override
+                public Iterator<Map.Entry<String, String>> iterator() {
+                    return map.entrySet().iterator();
+                }
             }
         );
     }
@@ -63,6 +77,11 @@ class PoolUtilsTest {
     @Test
     void get() {
         assertEquals("yes", pool.get("test_bool"));
+    }
+
+    @Test
+    void getAll() {
+        assertEquals(Collections.singletonList("yes"), pool.getAll("test_bool"));
     }
 
     @Test

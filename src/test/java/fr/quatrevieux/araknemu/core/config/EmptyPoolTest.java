@@ -21,6 +21,8 @@ package fr.quatrevieux.araknemu.core.config;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class EmptyPoolTest {
@@ -28,5 +30,7 @@ class EmptyPoolTest {
     void values() {
         assertFalse(new EmptyPool().has("foo"));
         assertNull(new EmptyPool().get("foo"));
+        assertEquals(Collections.emptyList(), new EmptyPool().getAll("foo"));
+        assertIterableEquals(Collections.emptyList(), new EmptyPool());
     }
 }

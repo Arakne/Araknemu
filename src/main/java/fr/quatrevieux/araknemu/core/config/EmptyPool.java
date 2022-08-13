@@ -21,6 +21,11 @@ package fr.quatrevieux.araknemu.core.config;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 /**
  * NullObject for Pool
  */
@@ -33,5 +38,15 @@ public final class EmptyPool implements Pool {
     @Override
     public @Nullable String get(String key) {
         return null;
+    }
+
+    @Override
+    public List<String> getAll(String key) {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Iterator<Map.Entry<String, String>> iterator() {
+        return Collections.emptyIterator();
     }
 }
