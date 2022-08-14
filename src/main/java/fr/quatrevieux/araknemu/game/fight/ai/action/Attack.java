@@ -94,21 +94,10 @@ public final class Attack<F extends ActiveFighter> implements ActionGenerator<F>
     }
 
     @Override
-    public boolean compare(CastSimulation a, CastSimulation b) {
-        return score(a) > score(b);
-    }
-
-    /**
-     * Compute the score for the given simulation
-     *
-     * @param simulation The simulation result
-     *
-     * @return The score of the simulation. 0 is null
-     */
     public double score(CastSimulation simulation) {
         final double score = damageScore(simulation) + killScore(simulation) + boostScore(simulation);
 
-        return score / simulation.spell().apCost();
+        return score / simulation.actionPointsCost();
     }
 
     private double damageScore(CastSimulation simulation) {

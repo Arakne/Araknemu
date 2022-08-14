@@ -84,18 +84,7 @@ public final class Boost<F extends ActiveFighter> implements ActionGenerator<F>,
     }
 
     @Override
-    public boolean compare(CastSimulation a, CastSimulation b) {
-        return score(a) > score(b);
-    }
-
-    /**
-     * Compute the score for the given simulation
-     *
-     * @param simulation The simulation result
-     *
-     * @return The score of the simulation
-     */
-    private double score(CastSimulation simulation) {
+    public double score(CastSimulation simulation) {
         double score =
             + simulation.alliesBoost() * alliesBoostRate
             + simulation.selfBoost() * selfBoostRate
@@ -110,7 +99,7 @@ public final class Boost<F extends ActiveFighter> implements ActionGenerator<F>,
             score += simulation.selfLife();
         }
 
-        return score / simulation.spell().apCost();
+        return score / simulation.actionPointsCost();
     }
 
     /**

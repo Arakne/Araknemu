@@ -74,6 +74,17 @@ public final class CastSpell<F extends ActiveFighter> implements ActionGenerator
          *
          * Note: The simulations may be null
          */
-        public boolean compare(CastSimulation a, CastSimulation b);
+        public default boolean compare(CastSimulation a, CastSimulation b) {
+            return score(a) > score(b);
+        }
+
+        /**
+         * Compute the score for the given simulation
+         *
+         * @param simulation The simulation result
+         *
+         * @return The score of the simulation. 0 is null
+         */
+        public double score(CastSimulation simulation);
     }
 }
