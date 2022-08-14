@@ -264,4 +264,30 @@ class CastSimulationTest extends FightBaseCase {
 
         assertEquals(1.5, simulation.actionPointsCost());
     }
+
+    @Test
+    void addHealBuff() {
+        fighter.life().alter(fighter, -10);
+        simulation.addHealBuff(new Interval(5, 10), 3, fighter);
+
+        assertEquals(7.5, simulation.selfLife());
+        assertEquals(11.25, simulation.selfBoost());
+    }
+
+    @Test
+    void addHealBuffAlreadyFullLife() {
+        simulation.addHealBuff(new Interval(5, 10), 3, fighter);
+
+        assertEquals(0, simulation.selfLife());
+        assertEquals(11.25, simulation.selfBoost());
+    }
+
+    @Test
+    void addHealBuffOnlyOneTurnShouldNotSetAsBuff() {
+        fighter.life().alter(fighter, -10);
+        simulation.addHealBuff(new Interval(5, 10), 1, fighter);
+
+        assertEquals(7.5, simulation.selfLife());
+        assertEquals(0, simulation.selfBoost());
+    }
 }

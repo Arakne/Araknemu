@@ -121,6 +121,20 @@ public final class CastSimulation {
     }
 
     /**
+     * Heal a target using a buff
+     *
+     * @param value The heal value
+     * @param target The target fighter
+     */
+    public void addHealBuff(final Interval value, final @Positive int duration, final PassiveFighter target) {
+        addHeal(value, target);
+
+        if (duration > 1) {
+            addBoost(value.average() * POISON_RATE * (duration - 1), target);
+        }
+    }
+
+    /**
      * Add a damage on the target
      *
      * @param value The damage value

@@ -142,6 +142,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AlterCharacteristicSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.ArmorSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.DamageSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.HealSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.StealLifeSimulator;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilderFactory;
@@ -948,6 +949,9 @@ public final class GameModule implements ContainerModule {
 
             simulator.register(105, new ArmorSimulator());
             simulator.register(265, new ArmorSimulator());
+
+            // Heal
+            simulator.register(108, new HealSimulator());
 
             return simulator;
         });
