@@ -76,6 +76,30 @@ class HealTest extends AiBaseCase {
     }
 
     @Test
+    void shouldIgnoreIfHealMostlyEnemies() throws SQLException {
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(327).currentLife(50).maxLife(100).spell(130))
+            .addEnemy(builder -> builder.cell(341).currentLife(50).maxLife(100))
+            .addEnemy(builder -> builder.cell(312).currentLife(50).maxLife(100))
+            .addEnemy(builder -> builder.cell(313).currentLife(50).maxLife(100))
+            .addEnemy(builder -> builder.cell(342).currentLife(50).maxLife(100))
+        );
+
+        assertDotNotGenerateAction();
+    }
+
+    @Test
+    void shouldIgnoreIfCanKillAllyOrItself() {
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(327).currentLife(15).maxLife(100).spell(102))
+            .addAlly(builder -> builder.cell(326).currentLife(15).maxLife(100).spell(102))
+            .addEnemy(builder -> builder.cell(342))
+        );
+
+        assertDotNotGenerateAction();
+    }
+
+    @Test
     void withAreaSpell() throws SQLException {
         configureFight(fb -> fb
             .addSelf(builder -> builder.cell(126).spells(223).currentLife(50).maxLife(100).spell(121).spell(131).spell(130))
