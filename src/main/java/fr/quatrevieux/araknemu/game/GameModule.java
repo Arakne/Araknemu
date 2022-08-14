@@ -866,7 +866,12 @@ public final class GameModule implements ContainerModule {
                     // to ensure that level up (which trigger restore life) is performed after life synchronisation
                     Arrays.asList(new SynchronizeLife(), new AddExperience(), new AddKamas(), new AddItems(container.get(ItemService.class))),
                     Arrays.asList(new SetDead(), new ReturnToSavePosition()),
-                    Arrays.asList(new PvmXpProvider(), new PvmKamasProvider(), new PvmItemDropProvider(), new PvmEndFightActionProvider())
+                    Arrays.asList(
+                        new PvmXpProvider(container.get(GameConfiguration.class).fight().xpRate()),
+                        new PvmKamasProvider(),
+                        new PvmItemDropProvider(container.get(GameConfiguration.class).fight().dropRate()),
+                        new PvmEndFightActionProvider()
+                    )
                 ),
                 container.get(GameConfiguration.class).fight()
             )

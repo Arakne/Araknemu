@@ -31,6 +31,16 @@ import org.checkerframework.checker.index.qual.NonNegative;
  * Base formula for compute the Pvm experience
  */
 public final class PvmXpProvider implements DropRewardProvider {
+    private final double rate;
+
+    public PvmXpProvider() {
+        this(1.0);
+    }
+
+    public PvmXpProvider(double rate) {
+        this.rate = rate;
+    }
+
     @Override
     public DropRewardProvider.Scope initialize(EndFightResults results) {
         return new Scope(
@@ -42,7 +52,7 @@ public final class PvmXpProvider implements DropRewardProvider {
     }
 
     private long totalXp(EndFightResults results) {
-        return results.applyToLoosers(new ExtractXp()).get();
+        return (long) (results.applyToLoosers(new ExtractXp()).get() * rate);
     }
 
     private double teamLevelDeviationBonus(EndFightResults results) {
