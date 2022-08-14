@@ -24,9 +24,11 @@ import fr.quatrevieux.araknemu.game.fight.FightBaseCase;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.DummyGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.builder.GeneratorBuilder;
+import fr.quatrevieux.araknemu.game.fight.ai.action.util.CastSpell;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.AbstractAiBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.ChainAiFactory;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Aggressive;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
 import fr.quatrevieux.araknemu.game.fight.fighter.Fighter;
 import fr.quatrevieux.araknemu.game.fight.fighter.player.PlayerFighter;
@@ -38,6 +40,7 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.Move;
 import fr.quatrevieux.araknemu.game.player.spell.SpellBook;
+import fr.quatrevieux.araknemu.game.spell.SpellService;
 import fr.quatrevieux.araknemu.game.spell.effect.SpellEffect;
 
 import java.lang.reflect.Field;
@@ -244,5 +247,15 @@ public class AiBaseCase extends FightBaseCase {
         field.setAccessible(true);
 
         ((Map) field.get(spells)).remove(spellId);
+    }
+
+    public double computeScore(int spellId, int targetCell) {
+        CastSimulation simulation = container.get(Simulator.class).simulate(
+            container.get(SpellService.class).get(spellId).level(5),
+            fighter,
+            fight.map().get(targetCell)
+        );
+
+        return CastSpell.SimulationSelector.class.cast(action).score(simulation);
     }
 }

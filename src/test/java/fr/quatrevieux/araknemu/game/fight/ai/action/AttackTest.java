@@ -19,12 +19,18 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
+import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
+import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.Cast;
+import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.sql.SQLException;
 
@@ -318,5 +324,43 @@ class AttackTest extends AiBaseCase {
         removeSpell(3);
 
         assertCast(183, 167);
+    }
+
+    @Test
+    void scoreShouldHandleSpellAPCost() {
+        Spell spell = Mockito.mock(Spell.class);
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122))
+            .addEnemy(builder -> builder.player(other).cell(125))
+        );
+
+        CastSimulation simulation = new CastSimulation(spell, fighter, fight.map().get(125));
+
+        simulation.addDamage(new Interval(5, 10), other.fighter());
+
+        Mockito.when(spell.apCost()).thenReturn(3);
+        assertEquals(2.5, Attack.class.cast(action).score(simulation));
+
+        Mockito.when(spell.apCost()).thenReturn(4);
+        assertEquals(1.875, Attack.class.cast(action).score(simulation));
+
+        Mockito.when(spell.apCost()).thenReturn(3);
+        simulation.alterActionPoints(1);
+        assertEquals(3.75, Attack.class.cast(action).score(simulation));
+    }
+
+    @Test
+    void score() throws SQLException {
+        dataSet.pushFunctionalSpells();
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122))
+            .addEnemy(builder -> builder.player(other).cell(125))
+        );
+
+        assertEquals(5.05, computeScore(183, 125), 0.001); // 20 * 98% + 30 * 2% / 4 AP
+        assertEquals(-10.1, computeScore(183, 122), 0.001); // ^ * -2 (self damage)
+        assertEquals(0, computeScore(183, 110), 0.001); // no target
     }
 }

@@ -19,11 +19,17 @@
 
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
+import fr.arakne.utils.value.Interval;
 import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.game.fight.ai.AiBaseCase;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.CastSimulation;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
+import fr.quatrevieux.araknemu.game.spell.Spell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BoostTest extends AiBaseCase {
     @Override
@@ -193,5 +199,31 @@ class BoostTest extends AiBaseCase {
         removeSpell(6);
 
         assertDotNotGenerateAction();
+    }
+
+    @Test
+    void scoreShouldHandleSpellAPCost() {
+        Boost action = Boost.self(container.get(Simulator.class));
+
+        Spell spell = Mockito.mock(Spell.class);
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122))
+            .addEnemy(builder -> builder.player(other).cell(125))
+        );
+
+        CastSimulation simulation = new CastSimulation(spell, fighter, fight.map().get(125));
+
+        simulation.addBoost(5, fighter);
+
+        Mockito.when(spell.apCost()).thenReturn(3);
+        assertEquals(3.33, action.score(simulation), 0.01);
+
+        Mockito.when(spell.apCost()).thenReturn(4);
+        assertEquals(2.5, action.score(simulation), 0.01);
+
+        Mockito.when(spell.apCost()).thenReturn(3);
+        simulation.alterActionPoints(1);
+        assertEquals(5, action.score(simulation), 0.01);
     }
 }

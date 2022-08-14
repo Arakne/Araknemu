@@ -51,6 +51,8 @@ public final class CastSimulation {
     private double killedEnemies;
     private double suicide;
 
+    private double actionPointsModifier = 0;
+
     public CastSimulation(Spell spell, ActiveFighter caster, FightCell target) {
         this.spell = spell;
         this.caster = caster;
@@ -161,6 +163,16 @@ public final class CastSimulation {
     }
 
     /**
+     * Action point alternation for the current fighter
+     * A positive value means that the current spell will add action points on the current turn of the fighter
+     *
+     * This value will be removed from spell action point cost for compute actual action point cost.
+     */
+    public void alterActionPoints(double value) {
+        actionPointsModifier += value;
+    }
+
+    /**
      * Apply the effect values to a target
      *
      * @param values Computed effect values
@@ -243,6 +255,18 @@ public final class CastSimulation {
     }
 
     /**
+     * Get the actual action points cost of the current action
+     * Actions points change on the current fighter will be taken in account
+     *
+     * ex: if the spell cost 4 AP, but give 1 AP, the cost will be 3 AP
+     *
+     * The minimal value is bounded to 0.1
+     */
+    public double actionPointsCost() {
+        return Math.max(spell.apCost() - actionPointsModifier, 0.1);
+    }
+
+    /**
      * Merge the simulation result into the current simulation
      *
      * All results will be added considering the percent,
@@ -263,6 +287,8 @@ public final class CastSimulation {
         killedAllies += simulation.killedAllies * percent / 100d;
         killedEnemies += simulation.killedEnemies * percent / 100d;
         suicide += simulation.suicide * percent / 100d;
+
+        actionPointsModifier += simulation.actionPointsModifier * percent / 100d;
     }
 
     /**
