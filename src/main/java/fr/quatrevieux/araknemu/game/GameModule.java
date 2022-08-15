@@ -40,6 +40,7 @@ import fr.quatrevieux.araknemu.core.network.session.SessionConfigurator;
 import fr.quatrevieux.araknemu.core.network.session.SessionFactory;
 import fr.quatrevieux.araknemu.core.network.session.extension.RateLimiter;
 import fr.quatrevieux.araknemu.core.network.session.extension.SessionLogger;
+import fr.quatrevieux.araknemu.data.constant.Characteristic;
 import fr.quatrevieux.araknemu.data.living.constraint.player.PlayerConstraints;
 import fr.quatrevieux.araknemu.data.living.repository.BanIpRepository;
 import fr.quatrevieux.araknemu.data.living.repository.account.AccountBankRepository;
@@ -139,10 +140,12 @@ import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Runaway;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Support;
 import fr.quatrevieux.araknemu.game.fight.ai.factory.type.Tactical;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.Simulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AlterActionPointsSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AlterCharacteristicSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.ArmorSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.DamageSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.HealSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.RemovePointsSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.StealLifeSimulator;
 import fr.quatrevieux.araknemu.game.fight.builder.ChallengeBuilderFactory;
 import fr.quatrevieux.araknemu.game.fight.builder.PvmBuilderFactory;
@@ -907,14 +910,16 @@ public final class GameModule implements ContainerModule {
             simulator.register(100, new DamageSimulator(Element.NEUTRAL));
 
             // AP
-            simulator.register(111, new AlterCharacteristicSimulator(200));
-            simulator.register(120, new AlterCharacteristicSimulator(200));
-            simulator.register(168, new AlterCharacteristicSimulator(-200));
+            simulator.register(111, new AlterActionPointsSimulator(200));
+            simulator.register(120, new AlterActionPointsSimulator(200));
+            simulator.register(168, new AlterActionPointsSimulator(-200));
+            simulator.register(101, new RemovePointsSimulator(Characteristic.ACTION_POINT, Characteristic.RESISTANCE_ACTION_POINT, 200));
 
             // MP
             simulator.register(78,  new AlterCharacteristicSimulator(200));
             simulator.register(128, new AlterCharacteristicSimulator(200));
             simulator.register(169, new AlterCharacteristicSimulator(-200));
+            simulator.register(127, new RemovePointsSimulator(Characteristic.MOVEMENT_POINT, Characteristic.RESISTANCE_MOVEMENT_POINT, 200));
 
             // Characteristics boost
             simulator.register(112, new AlterCharacteristicSimulator(10)); // damage
