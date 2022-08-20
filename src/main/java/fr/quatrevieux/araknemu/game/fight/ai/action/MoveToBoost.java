@@ -28,50 +28,33 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
 import java.util.Optional;
 
 /**
- * Try to move for perform an attack
+ * Try to move for perform the optimal boost
  *
- * The nearest cell for perform an attack is selected.
- * If the current cell permit attacking, the fighter will not perform any move.
+ * The best cell for cast the boost is selected.
+ * If the current cell permit boost and the fighter is surrounded by enemies, the fighter will not perform any move.
  *
  * For select the cell, the generator will iterate over all reachable cells
- * with the current amount of MPs, sort them by distance,
+ * with the current amount of MPs,
  * and check all spells on all available cells.
- * The first matching cell is selected.
+ * The best effective cell and cast is selected.
  */
-public final class MoveToAttack<F extends ActiveFighter> implements ActionGenerator<F> {
+public final class MoveToBoost<F extends ActiveFighter> implements ActionGenerator<F> {
     private final MoveToCast<F> generator;
-    private final Attack<F> attack;
+    private final Boost<F> action;
 
-    private MoveToAttack(Simulator simulator, MoveToCast.TargetSelectionStrategy<F> strategy) {
-        this.attack = new Attack<>(simulator);
-        this.generator = new MoveToCast<>(simulator, attack, strategy);
+    public MoveToBoost(Simulator simulator) {
+        action = Boost.allies(simulator);
+        generator = new MoveToCast<>(simulator, action, new MoveToCast.BestTargetStrategy<>());
     }
 
     @Override
     public void initialize(AI<F> ai) {
-        attack.initialize(ai);
+        action.initialize(ai);
         generator.initialize(ai);
     }
 
     @Override
     public Optional<Action> generate(AI<F> ai, ActionsFactory<F> actions) {
         return generator.generate(ai, actions);
-    }
-
-    /**
-     * Select the nearest cell where a cast is possible
-     *
-     * Note: This selected cell is not the best cell for perform an attack, but the nearest cell.
-     *       So, it do not perform the best move for maximize damage.
-     */
-    public static <F extends ActiveFighter> MoveToAttack<F> nearest(Simulator simulator) {
-        return new MoveToAttack<>(simulator, new MoveToCast.NearestStrategy<>());
-    }
-
-    /**
-     * Select the best target cell for cast a spell, and maximizing damage
-     */
-    public static <F extends ActiveFighter> MoveToAttack<F> bestTarget(Simulator simulator) {
-        return new MoveToAttack<>(simulator, new MoveToCast.BestTargetStrategy<>());
     }
 }
