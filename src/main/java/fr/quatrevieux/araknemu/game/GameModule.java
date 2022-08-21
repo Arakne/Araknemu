@@ -145,6 +145,7 @@ import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.AlterCharacterist
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.ArmorSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.DamageSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.HealSimulator;
+import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.PunishmentSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.RemovePointsSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.SetStateSimulator;
 import fr.quatrevieux.araknemu.game.fight.ai.simulation.effect.StealLifeSimulator;
@@ -963,6 +964,7 @@ public final class GameModule implements ContainerModule {
             simulator.register(950, new SetStateSimulator()
                 .state(50, -500) // Altruiste
             );
+            simulator.register(150, new PunishmentSimulator());
 
             return simulator;
         });
