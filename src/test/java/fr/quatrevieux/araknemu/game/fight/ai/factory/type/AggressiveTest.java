@@ -131,6 +131,20 @@ class AggressiveTest extends AiBaseCase {
     }
 
     @Test
+    void shouldHealIfCantMoveOrAttackOrBoost() throws NoSuchFieldException, IllegalAccessException {
+        configureFight(b -> b
+            .addSelf(fb -> fb.cell(210).spell(121).currentLife(50).maxLife(100))
+            .addAlly(fb -> fb.cell(22))
+            .addEnemy(fb -> fb.cell(52))
+        );
+
+        setMP(0);
+        removeSpell(6);
+
+        assertCast(121, 210);
+    }
+
+    @Test
     void shouldDoNothingOtherwise() throws NoSuchFieldException, IllegalAccessException {
         configureFight(b -> b
             .addSelf(fb -> fb.cell(210).spell(27, 5))

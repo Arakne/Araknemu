@@ -50,4 +50,11 @@ public final class Predicates {
     public static <F extends ActiveFighter> Predicate<AI<F>> hasAllies() {
         return ai -> ai.helper().allies().stream().findAny().isPresent();
     }
+
+    /**
+     * Check if the current has less than the given percent life
+     */
+    public static <F extends ActiveFighter> Predicate<AI<F>> hasLessThanPercentLife(int percentLife) {
+        return ai -> (100 * ai.fighter().life().current() / ai.fighter().life().max()) <= percentLife;
+    }
 }

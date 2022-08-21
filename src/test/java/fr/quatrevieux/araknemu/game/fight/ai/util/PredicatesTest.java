@@ -87,4 +87,16 @@ class PredicatesTest extends AiBaseCase {
 
         assertFalse(Predicates.<Fighter>hasAllies().test(ai));
     }
+
+    @Test
+    void hasLessThanPercentLife() {
+        configureFight(fb -> fb
+            .addSelf(b -> b.cell(123).currentLife(50).maxLife(100))
+            .addEnemy(b -> b.cell(256))
+        );
+
+        assertFalse(Predicates.<Fighter>hasLessThanPercentLife(10).test(ai));
+        assertTrue(Predicates.<Fighter>hasLessThanPercentLife(50).test(ai));
+        assertTrue(Predicates.<Fighter>hasLessThanPercentLife(51).test(ai));
+    }
 }

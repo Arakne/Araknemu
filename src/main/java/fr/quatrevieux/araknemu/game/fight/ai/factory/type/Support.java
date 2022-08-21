@@ -48,9 +48,10 @@ public final class Support extends AbstractAiBuilderFactory {
     public void configure(GeneratorBuilder<Fighter> builder, Fighter fighter) {
         builder.when(Predicates.hasAllies(), cb -> cb
             .success(sb -> sb
-                .boostAllies(simulator)
+                .moveToBoost(simulator)
+                .heal(simulator)
+                .debuff(simulator)
                 .attack(simulator)
-                // @todo move to boost
                 .moveNearAllies()
             )
             .otherwise(sb -> aloneAi.configure(sb, fighter))
