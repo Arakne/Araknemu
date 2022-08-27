@@ -22,11 +22,12 @@ package fr.quatrevieux.araknemu.game.fight.turn.action.factory;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Create action for fight
  */
-public interface FightActionFactory<F extends ActiveFighter> {
+public interface FightActionFactory<@NonNull F extends @NonNull ActiveFighter> {
     /**
      * Create the action
      *

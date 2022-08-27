@@ -25,11 +25,12 @@ import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionFactory;
 import fr.quatrevieux.araknemu.game.spell.Spell;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Factory for create a cast action
  */
-public interface CastActionFactory<F extends ActiveFighter> extends FightActionFactory<F> {
+public interface CastActionFactory<@NonNull F extends @NonNull ActiveFighter> extends FightActionFactory<F> {
     /**
      * Create the cast action
      *

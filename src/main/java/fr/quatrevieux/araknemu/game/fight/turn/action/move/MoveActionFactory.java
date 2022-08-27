@@ -24,11 +24,12 @@ import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.FightActionFactory;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Factory for a move action
  */
-public interface MoveActionFactory<F extends ActiveFighter> extends FightActionFactory<F> {
+public interface MoveActionFactory<@NonNull F extends @NonNull ActiveFighter> extends FightActionFactory<F> {
     /**
      * Create the move action
      *
