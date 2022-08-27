@@ -144,6 +144,51 @@ class TacticalTest extends AiBaseCase {
     }
 
     @Test
+    void shouldHealIfLessThan50PercentLife() throws NoSuchFieldException, IllegalAccessException {
+        configureFight(b -> b
+            .addSelf(fb -> fb.cell(298).spell(121).spell(81).currentLife(50).maxLife(100))
+            .addAlly(fb -> fb.cell(22))
+            .addEnemy(fb -> fb.cell(256))
+        );
+
+        setMP(0);
+        removeSpell(6);
+        removeSpell(3);
+
+        assertCast(121, 298);
+    }
+
+    @Test
+    void shouldDebuffIfCantBoostOrAttack() throws NoSuchFieldException, IllegalAccessException {
+        configureFight(b -> b
+            .addSelf(fb -> fb.cell(298).spell(121).spell(81).currentLife(80).maxLife(100))
+            .addAlly(fb -> fb.cell(22))
+            .addEnemy(fb -> fb.cell(256))
+        );
+
+        setMP(0);
+        removeSpell(6);
+        removeSpell(3);
+
+        assertCast(81, 256);
+    }
+
+    @Test
+    void shouldHealIfCantDebuff() throws NoSuchFieldException, IllegalAccessException {
+        configureFight(b -> b
+            .addSelf(fb -> fb.cell(298).spell(121).currentLife(80).maxLife(100))
+            .addAlly(fb -> fb.cell(22))
+            .addEnemy(fb -> fb.cell(256))
+        );
+
+        setMP(0);
+        removeSpell(6);
+        removeSpell(3);
+
+        assertCast(121, 298);
+    }
+
+    @Test
     void shouldDoNothingOtherwise() throws NoSuchFieldException, IllegalAccessException {
         configureFight(b -> b
             .addSelf(fb -> fb.cell(210).spell(27, 5))

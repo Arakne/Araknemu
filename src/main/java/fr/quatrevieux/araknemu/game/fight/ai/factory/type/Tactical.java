@@ -45,7 +45,10 @@ public final class Tactical extends AbstractAiBuilderFactory {
         builder
             .boostSelf(simulator)
             .attackFromBestCell(simulator)
+            .when(Predicates.hasLessThanPercentLife(50), cond -> cond.success(gb -> gb.heal(simulator)))
+            .debuff(simulator)
             .boostAllies(simulator)
+            .heal(simulator)
             .when(Predicates.hasEnemyInRange(), cond -> cond
                 .success(GeneratorBuilder::moveFarEnemies)
                 .otherwise(GeneratorBuilder::moveOrTeleportNearEnemy)

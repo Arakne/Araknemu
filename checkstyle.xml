@@ -242,6 +242,12 @@
         <property name="files" value="network"/>
     </module>
 
+    <!-- Ignore line number of GameModule - TODO must be refactored -->
+    <module name="SuppressionSingleFilter">
+        <property name="checks" value="FileLength"/>
+        <property name="files" value="GameModule"/>
+    </module>
+
     <!-- Ignore modified control variable on CLI argument parsing -->
     <module name="SuppressionSingleFilter">
         <property name="checks" value="ModifiedControlVariableCheck"/>

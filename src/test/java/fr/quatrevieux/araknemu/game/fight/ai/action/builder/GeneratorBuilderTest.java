@@ -23,10 +23,13 @@ import fr.quatrevieux.araknemu._test.TestCase;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Attack;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Boost;
+import fr.quatrevieux.araknemu.game.fight.ai.action.Debuff;
+import fr.quatrevieux.araknemu.game.fight.ai.action.Heal;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveFarEnemies;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearAllies;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToAttack;
+import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToBoost;
 import fr.quatrevieux.araknemu.game.fight.ai.action.TeleportNearEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.ConditionalGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.GeneratorAggregate;
@@ -152,6 +155,21 @@ class GeneratorBuilderTest extends TestCase {
     @Test
     void moveNearAllies() {
         assertInstanceOf(MoveNearAllies.class, builder.moveNearAllies().build());
+    }
+
+    @Test
+    void moveToBoost() throws NoSuchFieldException, IllegalAccessException {
+        assertActions(builder.moveToBoost(simulator).build(), MoveToBoost.class, Boost.class);
+    }
+
+    @Test
+    void heal() {
+        assertInstanceOf(Heal.class, builder.heal(simulator).build());
+    }
+
+    @Test
+    void debuff() {
+        assertInstanceOf(Debuff.class, builder.debuff(simulator).build());
     }
 
     private void assertActions(ActionGenerator<Fighter> action, Class<? extends ActionGenerator> ...types) throws NoSuchFieldException, IllegalAccessException {

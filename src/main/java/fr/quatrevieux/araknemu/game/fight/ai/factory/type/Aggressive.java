@@ -55,6 +55,7 @@ public final class Aggressive extends AbstractAiBuilderFactory {
         builder
             .moveOrTeleportNearEnemy()
             .boostAllies(simulator)
+            .heal(simulator)
         ;
     }
 

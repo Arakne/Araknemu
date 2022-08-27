@@ -20,10 +20,12 @@
 package fr.quatrevieux.araknemu.game.fight.ai.action;
 
 import fr.arakne.utils.maps.CoordinateCell;
+import fr.arakne.utils.maps.constant.Direction;
 import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.util.Movement;
 import fr.quatrevieux.araknemu.game.fight.ai.util.AIHelper;
 import fr.quatrevieux.araknemu.game.fight.fighter.ActiveFighter;
+import fr.quatrevieux.araknemu.game.fight.map.BattlefieldMap;
 import fr.quatrevieux.araknemu.game.fight.map.FightCell;
 import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.factory.ActionsFactory;
@@ -68,20 +70,46 @@ public final class MoveNearAllies<F extends ActiveFighter> implements ActionGene
      * The score function
      *
      * Select the lowest distance from one ally + lowest average distance
+     * If the target cell will block an ally by taking the only free adjacent cell, the score will be lowered
      */
     private double score(CoordinateCell<FightCell> cell) {
+        final BattlefieldMap map = cell.cell().map();
+
         double min = Double.MAX_VALUE;
         double total = 0;
         int count = 0;
+        int malus = 0;
 
         for (CoordinateCell<FightCell> allyCell : alliesCells) {
-            final double distance = cell.distance(allyCell);
+            final int distance = cell.distance(allyCell);
 
             min = Math.min(min, distance);
             total += distance;
             ++count;
+
+            // Selected cell will block the ally because there are not enough free cell around him
+            if (distance == 1 && freeAdjacentCellsCount(map, allyCell) < 2) {
+                malus += 100;
+            }
         }
 
-        return -(min + (total / count));
+        return - (min + (total / count)) - malus;
+    }
+
+    /**
+     * Compute the count of free cells around the given ally cell
+     */
+    private static int freeAdjacentCellsCount(BattlefieldMap map, CoordinateCell<FightCell> allyCell) {
+        int walkableAdjacentCellsCount = 0;
+
+        for (Direction direction : Direction.restrictedDirections()) {
+            final int adjacentCellId = allyCell.id() + direction.nextCellIncrement(map.dimensions().width());
+
+            if (adjacentCellId >= 0 && adjacentCellId < map.size() && map.get(adjacentCellId).walkable()) {
+                ++walkableAdjacentCellsCount;
+            }
+        }
+
+        return walkableAdjacentCellsCount;
     }
 }

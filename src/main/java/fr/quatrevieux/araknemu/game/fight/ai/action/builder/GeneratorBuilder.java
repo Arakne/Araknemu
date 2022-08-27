@@ -23,10 +23,13 @@ import fr.quatrevieux.araknemu.game.fight.ai.AI;
 import fr.quatrevieux.araknemu.game.fight.ai.action.ActionGenerator;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Attack;
 import fr.quatrevieux.araknemu.game.fight.ai.action.Boost;
+import fr.quatrevieux.araknemu.game.fight.ai.action.Debuff;
+import fr.quatrevieux.araknemu.game.fight.ai.action.Heal;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveFarEnemies;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearAllies;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveNearEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToAttack;
+import fr.quatrevieux.araknemu.game.fight.ai.action.MoveToBoost;
 import fr.quatrevieux.araknemu.game.fight.ai.action.TeleportNearEnemy;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.GeneratorAggregate;
 import fr.quatrevieux.araknemu.game.fight.ai.action.logic.NullGenerator;
@@ -218,6 +221,48 @@ public class GeneratorBuilder<F extends ActiveFighter> {
      */
     public final GeneratorBuilder<F> boostAllies(Simulator simulator) {
         return add(Boost.allies(simulator));
+    }
+
+    /**
+     * Try to move to the best cell for cast a boost spell
+     *
+     * To ensure that the move will be performed, add the boost action after this one.
+     * The action will not be performed if there is a tackle chance and if an boost is possible from the current cell
+     *
+     * @param simulator Simulator used by AI
+     *
+     * @return The builder instance
+     *
+     * @see MoveToBoost The used action generator
+     */
+    public final GeneratorBuilder<F> moveToBoost(Simulator simulator) {
+        return add(new MoveToBoost<>(simulator)).boostAllies(simulator);
+    }
+
+    /**
+     * Try to heal allies or self
+     *
+     * @param simulator Simulator used by AI
+     *
+     * @return The builder instance
+     *
+     * @see Heal The used action generator
+     */
+    public final GeneratorBuilder<F> heal(Simulator simulator) {
+        return add(new Heal<>(simulator));
+    }
+
+    /**
+     * Try to debuff (i.e. apply negative buff) enemies
+     *
+     * @param simulator Simulator used by AI
+     *
+     * @return The builder instance
+     *
+     * @see Debuff The used action generator
+     */
+    public final GeneratorBuilder<F> debuff(Simulator simulator) {
+        return add(new Debuff<>(simulator));
     }
 
     /**

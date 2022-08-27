@@ -25,13 +25,12 @@ import fr.quatrevieux.araknemu.game.fight.turn.action.Action;
 import fr.quatrevieux.araknemu.game.fight.turn.action.ActionType;
 import fr.quatrevieux.araknemu.game.fight.turn.action.cast.CastActionFactory;
 import fr.quatrevieux.araknemu.game.fight.turn.action.move.MoveActionFactory;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Factory for fight actions
- *
- * @todo refactor : do not link with turn, and define the factory globally to fight
  */
-public interface ActionsFactory<F extends ActiveFighter> {
+public interface ActionsFactory<@NonNull F extends @NonNull ActiveFighter> {
     /**
      * Create a fight action
      *
