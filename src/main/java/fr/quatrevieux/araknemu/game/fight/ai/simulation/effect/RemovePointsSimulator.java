@@ -71,8 +71,8 @@ public final class RemovePointsSimulator implements EffectSimulator {
 
             final int targetResistance = Math.max(target.characteristics().get(resistanceCharacteristic), 1);
             final double percent = Math.min(0.5 * casterChance / targetResistance, 1.0);
-            final int value = multiplier * EffectValue.create(effect.effect(), simulation.caster(), target).value();
-            final int maxValue = currentPoints * multiplier;
+            final double value = multiplier * EffectValue.create(effect.effect(), simulation.caster(), target).interval().average();
+            final double maxValue = currentPoints * multiplier;
 
             simulation.addBoost(
                 - Math.min(maxValue, percent * value) * duration,

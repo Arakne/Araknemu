@@ -95,7 +95,10 @@ public final class Attack<F extends ActiveFighter> implements ActionGenerator<F>
 
     @Override
     public double score(CastSimulation simulation) {
-        final double score = damageScore(simulation) + killScore(simulation) + boostScore(simulation);
+        final double damageScore = damageScore(simulation);
+        // Limit boost score to ensure that spell with small damage but high boost will not be prioritized
+        final double boostScore = Math.min(Math.max(damageScore, 0), boostScore(simulation));
+        final double score = damageScore + boostScore + killScore(simulation);
 
         return score / simulation.actionPointsCost();
     }
