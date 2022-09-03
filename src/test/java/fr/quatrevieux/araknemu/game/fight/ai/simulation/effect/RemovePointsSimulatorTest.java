@@ -79,6 +79,27 @@ class RemovePointsSimulatorTest extends FightBaseCase {
     }
 
     @Test
+    void simulateWithInterval() {
+        SpellEffect effect = Mockito.mock(SpellEffect.class);
+        Spell spell = Mockito.mock(Spell.class);
+        SpellConstraints constraints = Mockito.mock(SpellConstraints.class);
+
+        Mockito.when(effect.min()).thenReturn(2);
+        Mockito.when(effect.max()).thenReturn(3);
+        Mockito.when(effect.area()).thenReturn(new CellArea());
+        Mockito.when(effect.target()).thenReturn(SpellEffectTarget.DEFAULT);
+        Mockito.when(spell.constraints()).thenReturn(constraints);
+        Mockito.when(constraints.freeCell()).thenReturn(false);
+
+        CastSimulation simulation = new CastSimulation(spell, fighter, fighter.cell());
+
+        CastScope scope = makeCastScope(fighter, spell, effect, fighter.cell());
+        simulator.simulate(simulation, scope.effects().get(0));
+
+        assertEquals(-250, simulation.selfBoost());
+    }
+
+    @Test
     void simulateBuff() {
         SpellEffect effect = Mockito.mock(SpellEffect.class);
         Spell spell = Mockito.mock(Spell.class);

@@ -363,4 +363,20 @@ class AttackTest extends AiBaseCase {
         assertEquals(-10.1, computeScore(183, 122), 0.001); // ^ * -2 (self damage)
         assertEquals(0, computeScore(183, 110), 0.001); // no target
     }
+
+    @Test
+    void scoreShouldLimitBoostAndDebuff() throws SQLException {
+        dataSet.pushFunctionalSpells();
+
+        configureFight(fb -> fb
+            .addSelf(builder -> builder.cell(122)
+                .charac(Characteristic.INTELLIGENCE, 0)
+                .charac(Characteristic.STRENGTH, 0)
+            )
+            .addEnemy(builder -> builder.player(other).cell(125))
+        );
+
+        assertEquals(0.816, computeScore(3, 1, 125), 0.001); // 4 * 98% + 8 * 2% / 5 AP
+        assertEquals(0.68, computeScore(2, 1, 125), 0.001); // (1 + 1) * 98% + (2 + 2) * 2% / 3 AP
+    }
 }
